@@ -1,0 +1,15 @@
+Possibilities:
+- C#
+- F#
+- Boo
+- Cobra
+- Nemerle
+- IronPython
+- IronRuby
+
+
+What we want
+- Static typing & dynamic typing
+- Compilable (into dll / exe)
+- Long living
+- VS integration
