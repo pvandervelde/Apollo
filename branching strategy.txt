@@ -1,0 +1,3 @@
+- Using the version number based branching strategy. each version number will have it's own directory inside which the branches for that version number are stored. Each version number directory will always have an initial and a release directory.
+- The main directory will contain the current, stable state
+- The unstable directory will contain all the branches that have the unstable stuff
