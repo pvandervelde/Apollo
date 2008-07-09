@@ -10,3 +10,8 @@
 
 - Define structure of system. Which modules / components use which other modules and how
 - Define how numerics & physics will be constructed --> Define tree that describes the building blocks --> NO INTERFACES ETC
+
+
+- Think of the developer story too. 
+  - How will they use the api
+  - Debugging & testing
