@@ -2,7 +2,6 @@ Possibilities:
 - C#
 - F#
 - Boo
-- Nemerle
 - IronPython
 - IronRuby
 

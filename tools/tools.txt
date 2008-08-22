@@ -1,13 +1,23 @@
-Build
-- Msbuild
 
-Testing
-- MbUnit V3
-- NCover
-- Fxcop
 
-Documentation
-- Sandcastle + docproject
+Thirdparty
+  Build
+  - Msbuild
 
-Install
-- Wix
+  Testing
+  - MbUnit V3
+  - NCover
+  - Fxcop
+  - Stylecop
+
+  Documentation
+  - Sandcastle + docproject
+
+  Install
+  - Wix
+
+Internal
+  Debug
+  - Debug visualizers
+
+
