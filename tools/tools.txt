@@ -16,6 +16,11 @@ Thirdparty
   Install
   - Wix
 
+  Libraries
+  - IOC / Mocking
+  - AOP
+  - Design by contract
+
 Internal
   Debug
   - Debug visualizers

@@ -1,8 +1,2 @@
-- famous scientists
-- Element names
-- Planets
-- cartoon caracters
-  - Animaniacs
-  - Ice age
-  - Incredibles
+- Greek (sub-)god names / Greek mythology
 

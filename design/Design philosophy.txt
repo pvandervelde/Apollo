@@ -1,0 +1,3 @@
+Apollo should be constructed to the highest standards possible. Use every possible tool to get highly robust and thoroughly tested software.
+
+Apollo should be super user friendly and support the user in their work but never get in the way.
