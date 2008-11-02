@@ -1,0 +1,10 @@
+- Towards the next generation in CFD
+  Presentation that describes the features next generation CFD tools should have.
+  - Adaption
+  - CAD integration
+
+- Opportunities for breakthroughs in large-scale computational simulation and design
+  NASA report describing the improvements necessary to increase the usefulness of simulations
+  in design of aerospace vehicles.
+  - Automation
+  - Reduction of turn-around time
