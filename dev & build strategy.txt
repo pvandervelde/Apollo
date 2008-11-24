@@ -1,0 +1,15 @@
+== Development ==
+
+
+
+== Build ==
+
+
+Version numbering
+Format: Major.Minor.Release.Build
+Increase build on each succesful build(?)
+Increase Release for each release which only contains fixes. Releases never have features added
+Increase Minor for each release which has both bug fixes and some features added
+Increase Major for each release that makes either:
+  - Breaking changes
+  - Changes the internal or external storage format
