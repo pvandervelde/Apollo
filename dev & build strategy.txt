@@ -1,6 +1,10 @@
 == Development ==
 
 
+== Issue tracking ==
+Bugs are tracked in a bug tracker
+To-do / Features should be tracked differently (wiki or something)
+
 
 == Build ==
 
