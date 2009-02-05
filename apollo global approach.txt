@@ -1,1 +1,4 @@
-So how do we start and where and how and ...?
+1) Write down the user uses / features of the system. A bullet list will do, no need to write it out completely. Mindmaps may help here. 
+2) Create a diagram with the possible use cases and identify all the actors for apollo. It's pretty certain that the user will not be the only actor.
+3) For each feature attach it to a use case. If a feature has no matching use case then we're missing something in the use case diagram.
+4)
