@@ -1,4 +1,21 @@
-1) Write down the user uses / features of the system. A bullet list will do, no need to write it out completely. Mindmaps may help here. 
-2) Create a diagram with the possible use cases and identify all the actors for apollo. It's pretty certain that the user will not be the only actor.
-3) For each feature attach it to a use case. If a feature has no matching use case then we're missing something in the use case diagram.
-4)
+GearLocker.Core --> VCS
+
+G1) Finish design for GearLocker.Core. The VCS part is going to be a very important part of Apollo.
+G2) Implement GearLocker.Core and iron out any issues with the in-memory VCS system and the serialization system.
+
+
+
+D1) Create design for the symbolic system in dnA. This will also be an important part of apollo.
+D2) Implement the symbolic system in dnA.
+
+
+
+A1) Write down the user uses / features of the system. A bullet list will do, no need to write it out completely. Mindmaps may help here. 
+
+A2) Create a diagram with the possible use cases and identify all the actors for apollo. It's pretty certain that the user will not be the only actor.
+
+A3) For each feature attach it to a use case. If a feature has no matching use case then we're missing something in the use case diagram.
+
+A4)
+
+An) Define the programming languages used for Apollo. Obviously C# will be used in some spots, however F# also looks pretty good but it has some raw sides (i.e. source files have to be ordered, etc.). Boo might also be a solution, however we'll need to find out how BooLangStudio is doing.
