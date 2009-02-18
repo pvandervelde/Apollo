@@ -22,4 +22,4 @@ A3) For each feature attach it to a use case. If a feature has no matching use c
 
 A4)
 
-An) Define the programming languages used for Apollo. Obviously C# will be used in some spots, however F# also looks pretty good but it has some raw sides (i.e. source files have to be ordered, etc.). Boo might also be a solution, however we'll need to find out how BooLangStudio is doing.
+An) Define the programming languages used for Apollo. Obviously C# will be used in some spots, however F# also looks pretty good but it has some raw sides (i.e. source files have to be ordered, etc.).
