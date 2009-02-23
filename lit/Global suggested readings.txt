@@ -1,0 +1,4 @@
+- From scientific software libraries to problem solving environments
+  Paper by J.R. Rice on PSE's and their development. 
+  Describes what we need to do to enable PSE's to work successfully and what the benefits are of this.
+  Has some good suggestions on steps to take for commerical tools that want to do this kind of stuff (aka apollo)
