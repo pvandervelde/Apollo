@@ -6,6 +6,10 @@ Bugs are tracked in a bug tracker
 To-do / Features should be tracked differently (wiki or something)
 
 
+== VCS usage ==
+- Tag each version that can be build with: GBD - DATE (where GBOTD stands for GearLocker Build of the Day)
+
+
 == Build ==
 
 
