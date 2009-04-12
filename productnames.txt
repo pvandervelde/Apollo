@@ -1,3 +1,3 @@
 - need a cool product name. Can either be something related to what the product does or totally unrelated
-  - Need to have a good description of what product will do before we can name it.
-    - Enable product design?
+- Need to have a good description of what product will do before we can name it.
+- Enable product design?

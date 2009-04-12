@@ -1,3 +1,9 @@
 ~$*.docx
 *.tmp
 design/Thumbs.db
+*.dll
+*.pdb
+bin
+obj
+*.suo
+*.user
