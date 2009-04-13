@@ -6,11 +6,11 @@
 <node COLOR="#0033ff" CREATED="1183316720781" HGAP="-1" ID="Freemind_Link_920364966" MODIFIED="1221956154140" POSITION="right" TEXT="Mission / purpose" VSHIFT="-106">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
-<node COLOR="#00b439" CREATED="1183316738515" ID="Freemind_Link_815637427" MODIFIED="1221715998937" TEXT="To provide designers / engineers with a &#xa;design tool that helps them develop kick-ass &#xa;products by providing them with the right simulation tools" VSHIFT="-80">
+<node COLOR="#00b439" CREATED="1183316738515" HGAP="22" ID="Freemind_Link_815637427" MODIFIED="1239617198109" TEXT="To provide designers / engineers with a &#xa;design tool that helps them develop kick-ass &#xa;products by providing them with the right simulation tools" VSHIFT="-4">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 </node>
-<node COLOR="#00b439" CREATED="1183316786953" HGAP="28" ID="Freemind_Link_1151601904" MODIFIED="1221715998937" TEXT="Provide necessary knowledge" VSHIFT="-30">
+<node COLOR="#00b439" CREATED="1183316786953" HGAP="22" ID="Freemind_Link_1151601904" MODIFIED="1239617203656" TEXT="Provide necessary knowledge" VSHIFT="3">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1215427171046" ID="Freemind_Link_580437647" MODIFIED="1215427175484" TEXT="Base level physics info">
@@ -23,7 +23,7 @@
 <font NAME="SansSerif" SIZE="14"/>
 </node>
 </node>
-<node COLOR="#00b439" CREATED="1183316798625" ID="Freemind_Link_1078055201" MODIFIED="1221715998937" TEXT="Simpify simulation tools" VSHIFT="28">
+<node COLOR="#00b439" CREATED="1183316798625" HGAP="24" ID="Freemind_Link_1078055201" MODIFIED="1239617200609" TEXT="Simpify simulation tools" VSHIFT="-22">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1183316804843" ID="Freemind_Link_182490317" MODIFIED="1215427198578" TEXT="Integrate simulations" VSHIFT="21">
@@ -37,10 +37,10 @@
 </node>
 </node>
 </node>
-<node COLOR="#0033ff" CREATED="1183316727250" HGAP="7" ID="Freemind_Link_216287726" MODIFIED="1221956147359" POSITION="left" TEXT="audience" VSHIFT="78">
+<node COLOR="#0033ff" CREATED="1183316727250" HGAP="11" ID="Freemind_Link_216287726" MODIFIED="1239617215593" POSITION="left" TEXT="audience" VSHIFT="-73">
 <edge STYLE="sharp_bezier" WIDTH="8"/>
 <font NAME="SansSerif" SIZE="18"/>
-<node COLOR="#00b439" CREATED="1183317043765" HGAP="12" ID="Freemind_Link_1896803953" MODIFIED="1221956161968" TEXT="Designer / engineer" VSHIFT="-62">
+<node COLOR="#00b439" CREATED="1183317043765" HGAP="10" ID="Freemind_Link_1896803953" MODIFIED="1239617208140" TEXT="Designer / engineer" VSHIFT="-34">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
 <node COLOR="#990000" CREATED="1183317071328" HGAP="16" ID="Freemind_Link_1010978857" MODIFIED="1221956234453" TEXT="Should not need to know about numerics" VSHIFT="-22">
@@ -78,6 +78,10 @@
 </node>
 <node COLOR="#111111" CREATED="1221803198734" HGAP="14" ID="ID_1681954751" MODIFIED="1221956218343" TEXT="Improve existing design" VSHIFT="-9"/>
 </node>
+<node COLOR="#990000" CREATED="1239617263359" ID="ID_71734873" MODIFIED="1239617277484" TEXT="Aim at small shops?">
+<font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1239617286437" ID="ID_119862802" MODIFIED="1239617292359" TEXT="Do we need networked stuff?"/>
+</node>
 </node>
 <node COLOR="#00b439" CREATED="1183316948171" HGAP="16" ID="Freemind_Link_1275555554" MODIFIED="1221956204578" TEXT="Developers" VSHIFT="-86">
 <edge STYLE="bezier" WIDTH="thin"/>
@@ -104,6 +108,43 @@
 <node COLOR="#00b439" CREATED="1215513528921" ID="Freemind_Link_1775391216" MODIFIED="1221715998937" TEXT="Allow the user to kick-ass at their job">
 <edge STYLE="bezier" WIDTH="thin"/>
 <font NAME="SansSerif" SIZE="16"/>
+</node>
+</node>
+<node COLOR="#0033ff" CREATED="1239617223296" ID="ID_1590119815" MODIFIED="1239617229765" POSITION="left" TEXT="Goals">
+<edge STYLE="sharp_bezier" WIDTH="8"/>
+<font NAME="SansSerif" SIZE="18"/>
+<node COLOR="#00b439" CREATED="1239617245984" ID="ID_1564976237" MODIFIED="1239617249937" TEXT="Optimization">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+</node>
+<node COLOR="#00b439" CREATED="1239617337453" ID="ID_1960387531" MODIFIED="1239617341031" TEXT="Physics">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="16"/>
+<node COLOR="#990000" CREATED="1239617244328" ID="ID_702150056" MODIFIED="1239617347203" TEXT="Heat" VSHIFT="-15">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+</node>
+<node COLOR="#990000" CREATED="1239617241296" ID="ID_64184325" MODIFIED="1239617351109" TEXT="Structures">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+<node COLOR="#111111" CREATED="1239617311156" ID="ID_1227629336" MODIFIED="1239617351109" TEXT="Rigid body calcs">
+<font NAME="SansSerif" SIZE="12"/>
+</node>
+<node COLOR="#111111" CREATED="1239617318687" ID="ID_278922862" MODIFIED="1239617351109" TEXT="Flexible body calcs">
+<font NAME="SansSerif" SIZE="12"/>
+</node>
+<node COLOR="#111111" CREATED="1239617324187" ID="ID_1642260465" MODIFIED="1239617351109" TEXT="FEM">
+<font NAME="SansSerif" SIZE="12"/>
+</node>
+</node>
+<node COLOR="#990000" CREATED="1239617236328" ID="ID_307094611" MODIFIED="1239617353750" TEXT="Fluid dynamics">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+</node>
+<node COLOR="#990000" CREATED="1239617231406" ID="ID_198613772" MODIFIED="1239617356125" TEXT="Multi-physics">
+<edge STYLE="bezier" WIDTH="thin"/>
+<font NAME="SansSerif" SIZE="14"/>
+</node>
 </node>
 </node>
 </node>
