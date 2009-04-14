@@ -2,3 +2,5 @@
   Paper by J.R. Rice on PSE's and their development. 
   Describes what we need to do to enable PSE's to work successfully and what the benefits are of this.
   Has some good suggestions on steps to take for commerical tools that want to do this kind of stuff (aka apollo)
+- An integrated design-object modeling environment - pluggable metamodel mechanism
+  Describes a meta-model that could be useful for connecting physics, materials, boundary conditions etc.
