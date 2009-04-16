@@ -7,7 +7,7 @@ To-do / Features should be tracked differently (wiki or something)
 
 
 == VCS usage ==
-- Tag each version that can be build with: GBD - DATE (where GBOTD stands for GearLocker Build of the Day)
+- Tag each version that can be build with: ABOTD - DATE (where ABOTD stands for Apollo Build Of The Day)
 
 
 == Build ==
@@ -21,3 +21,55 @@ Increase Minor for each release which has both bug fixes and some features added
 Increase Major for each release that makes either:
   - Breaking changes
   - Changes the internal or external storage format
+
+
+== Build scripts ==
+Build:
+- Version number generation
+- Installer
+- Documentation
+
+
+
+Generation of the different build types:
+- Build (Debug) --> Build numbers are fixed
+  --> Build all source
+- Check (Debug)  --> Build numbers are fixed
+  --> Build all source
+  --> Build documentation
+  --> Build installer
+  --> Run unit tests
+  --> Run code coverage
+  --> Run FxCop
+- Internal (Release) --> Build numbers are major.minor.revision.automatic
+  --> Build all source
+  --> Build documentation
+  --> Build installer
+  --> Run unit tests
+  --> Run code coverage
+  --> Run FxCop
+- Beta (Release) --> Build numbers are major.minor.fixed.automatic
+  --> Build all source
+  --> Build documentation
+  --> Build installer
+  --> Run unit tests
+  --> Run code coverage
+  --> Run FxCop
+  --> Check company data (rhino plugins, documentation, assembly info, logo's etc.)
+  --> Run profile tests
+  --> Run verification & validation
+  --> Publish to server
+  --> Update beta-update manifest
+  --> Notify
+- Release --> Build numbers are major.minor.fixed.automatic
+  --> Build all source
+  --> Build documentation
+  --> Build installer
+  --> Run unit tests
+  --> Run code coverage
+  --> Run FxCop
+  --> Run profile tests
+  --> Run verification & validation
+  --> Publish to server
+  --> Update release-update manifest
+  --> Notify

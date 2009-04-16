@@ -2,9 +2,7 @@ A1) Write down the user uses / features of the system. A bullet list will do, no
 A2) Find possible examples for all the different use cases. These will be used to test the implementation later on
 A3) Create a diagram with the possible use cases and identify all the actors for apollo. It's pretty certain that the user will not be the only actor.
 A4) For each feature attach it to a use case. If a feature has no matching use case then we're missing something in the use case diagram.
-
-A5)
-
+A5) Create the global design for all of the areas. Do NOT design Apollo to be a framework or platform, it's simply not worth it. The pay off isn't big enough. Place it as an application but make sure to use the right layering. This is where learning about framework construction comes in handy.
 A6) Write prototypes for the different important sub-parts of Apollo
 A6.1) VCS & Serialization
 A6.2) Symbolic system (part of dnA)
@@ -17,4 +15,20 @@ B2) Get a good name for the company
 
 C1) Start the implementation
 
-Notes: Do NOT design Apollo to be a framework or platform, it's simply not worth it. The pay off isn't big enough. Place it as an application but make sure to use the right layering. This is where learning about framework construction comes in handy.
+
+D1) Order in which to implement the physics stuff:
+D1.1) Rigid body solver
+D1.2) Constraints
+D1.3) Solver --> PDE or iterative?
+D1.4) Contact
+D1.5) Friction
+D1.6) Rotations / Velocity / Acceleration / Forces etc.?
+D1.7) Membrane solver
+D1.8) No stretching
+D1.9) Wrinkle model
+D1.10) Structures solver
+D1.12) ?
+D1.13) Heat transfer?
+D1.14) Flow solver
+D1.15) Turbulence
+D1.16) Subsonic / transonic / supersonic
