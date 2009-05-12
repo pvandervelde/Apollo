@@ -8,3 +8,5 @@ obj
 *.suo
 *.user
 *.backup
+backup_*
+Backup_Of_*.*
