@@ -1,4 +1,5 @@
 == Development ==
+- Use PQM to commit to the trunk branch
 
 
 == Issue tracking ==

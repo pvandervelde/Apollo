@@ -10,3 +10,4 @@ obj
 *.backup
 backup_*
 Backup_Of_*.*
+~$*.xlsx
