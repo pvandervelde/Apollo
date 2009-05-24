@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Apollo.Ui.Common">
+</Property><Property Name="Solution File" Value="D:\documents\petrik\software\apollo\code\unstable\prealpha\modules\ui\common\src\Apollo.Ui.Common.sln">
+</Property><Property Name="Date" Value="Sunday, 24 May 2009">
+</Property><Property Name="Time" Value="13:57">
+</Property></Properties><Event ErrorLevel="0" Project="Apollo.Ui.Common" Source="common\Apollo.Ui.Common.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Apollo.Ui.Common" Source="common\Apollo.Ui.Common.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Apollo.Ui.Common.Test.Ui" Source="common.test.ui\Apollo.Ui.Common.Test.Ui.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Apollo.Ui.Common.Test.Ui" Source="common.test.ui\Apollo.Ui.Common.Test.Ui.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Apollo.Ui.Common.Test.Unit" Source="common.test.unit\Apollo.Ui.Common.Test.Unit.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Apollo.Ui.Common.Test.Unit" Source="common.test.unit\Apollo.Ui.Common.Test.Unit.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="" Source="Apollo.Ui.Common.sln" Description="Solution converted successfully">
+</Event><Event ErrorLevel="3" Project="" Source="Apollo.Ui.Common.sln" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Apollo.Ui.Common" Source="common\Apollo.Ui.Common.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Apollo.Ui.Common.Test.Ui" Source="common.test.ui\Apollo.Ui.Common.Test.Ui.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event><Event ErrorLevel="0" Project="Apollo.Ui.Common.Test.Unit" Source="common.test.unit\Apollo.Ui.Common.Test.Unit.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

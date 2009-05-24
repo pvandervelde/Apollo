@@ -1,0 +1,41 @@
+﻿<UserControl x:Class="Apollo.Ui.Common.Controls.ToolTipWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="100" d:DesignWidth="100">
+    <Border x:Name="bdrMain" Padding="0" CornerRadius="3" BorderBrush="Blue" BorderThickness="1">
+        <Grid x:Name="gMain">
+            <Grid.RowDefinitions>
+                <!-- Title -->
+                <RowDefinition Height="Auto" />
+                <!-- Description -->
+                <RowDefinition Height="*"  />
+                <!-- Line -->
+                <RowDefinition Height="Auto" />
+                <!-- More help line -->
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            
+            <!-- Title -->
+            <StackPanel Grid.Row="0" x:Name="spTitle" Background="Blue">
+                <Label x:Name="lblTitle" FontWeight="Bold" Foreground="White" />
+            </StackPanel>
+
+            <!-- Description -->
+            <StackPanel Grid.Row="1" x:Name="spDescription">
+                <TextBlock x:Name="tbDescription" TextWrapping="Wrap" />
+            </StackPanel>
+
+            <!-- Separator -->
+            <Line Grid.Row="2" x:Name="lSeparator" Stroke="Black" Margin="3,0,3,0" X1="0" X2="100" Y1="1" Y2="1" />
+
+            <!-- Further help -->
+            <StackPanel Grid.Row="3" x:Name="spMoreHelp" Orientation="Horizontal">
+                <Image x:Name="imgHelp" Margin="2" />
+                <Label x:Name="lblHelp" FontWeight="Bold" />
+            </StackPanel>
+        </Grid>
+    </Border>
+</UserControl>
