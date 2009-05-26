@@ -46,12 +46,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\thirdparty\bindable\Bindable.Windows.dll</HintPath>
     </Reference>
+    <Reference Include="Hardcodet.Wpf.GenericTreeView, Version=1.0.7.39590, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\thirdparty\wpftreeview\Hardcodet.Wpf.GenericTreeView.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\thirdparty\bindable\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -74,6 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants.cs" />
+    <Compile Include="Controls\ProgressTree.cs" />
+    <Compile Include="Controls\ProgressTreeNode.xaml.cs">
+      <DependentUpon>ProgressTreeNode.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ToolTipWindow.xaml.cs">
       <DependentUpon>ToolTipWindow.xaml</DependentUpon>
     </Compile>
@@ -94,6 +103,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="ViewModels\IDataSetViewModel.cs" />
+    <Compile Include="ViewModels\IProcessableDataViewModel.cs" />
+    <Compile Include="ViewModels\IProjectViewModel.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -105,6 +117,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ProgressTreeNode.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\ToolTipWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -124,6 +140,54 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ProgressTreeNode_Play_Icon_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_256x256.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

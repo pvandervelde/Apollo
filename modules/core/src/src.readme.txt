@@ -1,1 +1,0 @@
-Store the entire solution in the source directory. Store test projects as: xxx.tests.unit, xxx.tests.perf and xxx.tests.vv, where xxx is the project name

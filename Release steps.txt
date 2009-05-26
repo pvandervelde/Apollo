@@ -1,0 +1,2 @@
+- Ensure that all binaries are compiled in release mode. This includes all thirdparty stuff
+- Try to combine as many as binaries as possible. This includes thirdparty stuff
