@@ -18,7 +18,7 @@
     <Entity type="Interface">
       <Name>IObjectLoader</Name>
       <Access>Public</Access>
-      <Location left="1683" top="1783" />
+      <Location left="1673" top="1783" />
       <Size width="162" height="65" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -227,7 +227,7 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>1726</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1764</X>
+        <X>1754</X>
         <Y>1722</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
