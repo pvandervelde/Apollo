@@ -18,7 +18,7 @@
     <Entity type="Interface">
       <Name>IObjectLoader</Name>
       <Access>Public</Access>
-      <Location left="1673" top="1783" />
+      <Location left="1683" top="1783" />
       <Size width="162" height="65" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -47,7 +47,7 @@
     <Entity type="Interface">
       <Name>IGraphNodeCreator</Name>
       <Access>Public</Access>
-      <Location left="1444" top="677" />
+      <Location left="1442" top="677" />
       <Size width="162" height="65" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -98,7 +98,7 @@ By separating the actual generated data from the 'description' data we can allow
     <Entity type="Interface">
       <Name>IGenerator</Name>
       <Access>Public</Access>
-      <Location left="1673" top="902" />
+      <Location left="1683" top="902" />
       <Size width="162" height="66" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -184,7 +184,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Interface">
-      <Name>ICommandCentralProxy</Name>
+      <Name>IMessageCentralProxy</Name>
       <Access>Public</Access>
       <Location left="338" top="539" />
       <Size width="162" height="83" />
@@ -227,7 +227,7 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>1726</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1754</X>
+        <X>1764</X>
         <Y>1722</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -242,7 +242,7 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>889</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1415</X>
+        <X>1413</X>
         <Y>706</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -331,7 +331,7 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>1232</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1862</X>
+        <X>1872</X>
         <Y>914</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>

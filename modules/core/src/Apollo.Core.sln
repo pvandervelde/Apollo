@@ -3,6 +3,12 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 10
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core", "core\Apollo.Core.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Test.Unit", "core.test.unit\Apollo.Core.Test.Unit.csproj", "{29E1985A-7DF2-4400-AA03-544722E11848}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Test.Perf", "core.test.perf\Apollo.Core.Test.Perf.csproj", "{85CA9D10-DD8C-4019-A078-DDC37ED60D54}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Test.Integration", "core.test.integration\Apollo.Core.Test.Integration.csproj", "{84AE7167-B8F9-465A-9348-C3C0AC76FD32}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -13,6 +19,18 @@ Global
 		{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}.Debug|x86.Build.0 = Debug|x86
 		{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}.Release|x86.ActiveCfg = Release|x86
 		{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}.Release|x86.Build.0 = Release|x86
+		{29E1985A-7DF2-4400-AA03-544722E11848}.Debug|x86.ActiveCfg = Debug|x86
+		{29E1985A-7DF2-4400-AA03-544722E11848}.Debug|x86.Build.0 = Debug|x86
+		{29E1985A-7DF2-4400-AA03-544722E11848}.Release|x86.ActiveCfg = Release|x86
+		{29E1985A-7DF2-4400-AA03-544722E11848}.Release|x86.Build.0 = Release|x86
+		{85CA9D10-DD8C-4019-A078-DDC37ED60D54}.Debug|x86.ActiveCfg = Debug|x86
+		{85CA9D10-DD8C-4019-A078-DDC37ED60D54}.Debug|x86.Build.0 = Debug|x86
+		{85CA9D10-DD8C-4019-A078-DDC37ED60D54}.Release|x86.ActiveCfg = Release|x86
+		{85CA9D10-DD8C-4019-A078-DDC37ED60D54}.Release|x86.Build.0 = Release|x86
+		{84AE7167-B8F9-465A-9348-C3C0AC76FD32}.Debug|x86.ActiveCfg = Debug|x86
+		{84AE7167-B8F9-465A-9348-C3C0AC76FD32}.Debug|x86.Build.0 = Debug|x86
+		{84AE7167-B8F9-465A-9348-C3C0AC76FD32}.Release|x86.ActiveCfg = Release|x86
+		{84AE7167-B8F9-465A-9348-C3C0AC76FD32}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

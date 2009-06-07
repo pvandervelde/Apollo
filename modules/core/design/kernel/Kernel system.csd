@@ -1,326 +1,551 @@
 <ClassProject>
   <Language>CSharp</Language>
   <Entities>
-    <Entity type="Interface">
-      <Name>IService</Name>
-      <Access>Public</Access>
-      <Location left="1087" top="527" />
-      <Size width="162" height="65" />
-      <Collapsed>False</Collapsed>
-    </Entity>
     <Entity type="Class">
       <Name>BootStrapper</Name>
       <Access>Public</Access>
-      <Location left="168" top="688" />
-      <Size width="162" height="85" />
+      <Location left="292" top="221" />
+      <Size width="162" height="94" />
       <Collapsed>False</Collapsed>
+      <Member type="Method">public void Start()</Member>
       <Modifier>Abstract</Modifier>
     </Entity>
     <Entity type="Interface">
       <Name>IAppDomainBuilder</Name>
       <Access>Public</Access>
-      <Location left="465" top="288" />
+      <Location left="710" top="261" />
       <Size width="162" height="65" />
-      <Collapsed>False</Collapsed>
-    </Entity>
-    <Entity type="Interface">
-      <Name>IUserInterfaceService</Name>
-      <Access>Public</Access>
-      <Location left="865" top="674" />
-      <Size width="162" height="96" />
-      <Collapsed>False</Collapsed>
-    </Entity>
-    <Entity type="Interface">
-      <Name>IProjectService</Name>
-      <Access>Public</Access>
-      <Location left="1275" top="688" />
-      <Size width="162" height="86" />
-      <Collapsed>False</Collapsed>
-    </Entity>
-    <Entity type="Interface">
-      <Name>IPluginRepository</Name>
-      <Access>Public</Access>
-      <Location left="939" top="95" />
-      <Size width="162" height="126" />
-      <Collapsed>False</Collapsed>
-    </Entity>
-    <Entity type="Comment">
-      <Text>How do we deal with commands here? Services will need to add their commands to the system.</Text>
-      <Location left="1711" top="542" />
-      <Size width="177" height="79" />
-    </Entity>
-    <Entity type="Interface">
-      <Name>IMessagePipeline</Name>
-      <Access>Public</Access>
-      <Location left="1289" top="274" />
-      <Size width="162" height="126" />
-      <Collapsed>False</Collapsed>
-    </Entity>
-    <Entity type="Interface">
-      <Name>ICommandService</Name>
-      <Access>Public</Access>
-      <Location left="1406" top="489" />
-      <Size width="162" height="139" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Comment">
       <Text>Could we do a fluent API for the core system? That will allow easy additions too (think extention methods)?</Text>
-      <Location left="1711" top="423" />
+      <Location left="1005" top="1475" />
       <Size width="190" height="76" />
     </Entity>
-    <Entity type="Interface">
-      <Name>ILogSink</Name>
-      <Access>Public</Access>
-      <Location left="748" top="213" />
-      <Size width="162" height="131" />
-      <Collapsed>False</Collapsed>
-    </Entity>
     <Entity type="Comment">
-      <Text>Loads the different parts of the system.</Text>
-      <Location left="168" top="542" />
-      <Size width="162" height="72" />
+      <Text>Loads the User Interface service. All other services will be started from the dependencies for the UI service</Text>
+      <Location left="270" top="77" />
+      <Size width="204" height="69" />
     </Entity>
     <Entity type="Interface">
       <Name>INeedStartup</Name>
       <Access>Public</Access>
-      <Location left="415" top="674" />
-      <Size width="329" height="112" />
+      <Location left="437" top="1135" />
+      <Size width="354" height="112" />
       <Collapsed>False</Collapsed>
-      <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; Progress</Member>
+      <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+      <Member type="Method">void Start()</Member>
     </Entity>
     <Entity type="Comment">
       <Text>Needs way to do:
 - error stuff
 - async stuff
 - Indicate complete</Text>
-      <Location left="520" top="983" />
+      <Location left="543" top="1355" />
       <Size width="206" height="102" />
     </Entity>
     <Entity type="Comment">
       <Text>Forms the front end of the project sub-system</Text>
-      <Location left="1633" top="700" />
+      <Location left="1502" top="699" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Comment">
-      <Text>Where does history come into all of this? Both UI and Project will need a history. We'll need to stitch these two together somehow.</Text>
-      <Location left="10" top="10" />
-      <Size width="220" height="107" />
-    </Entity>
-    <Entity type="Comment">
       <Text>All communication between services runs through the message pipeline</Text>
-      <Location left="814" top="396" />
+      <Location left="1472" top="373" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Interface">
       <Name>IOwnServices</Name>
       <Access>Public</Access>
-      <Location left="477" top="514" />
-      <Size width="162" height="84" />
+      <Location left="437" top="750" />
+      <Size width="236" height="175" />
       <Collapsed>False</Collapsed>
+      <Member type="Method">void Install(IService service)</Member>
+      <Member type="Method">void Uninstall(IService service)</Member>
+      <Member type="Method">void Start(IService service)</Member>
+      <Member type="Method">void Start(Type serviceType)</Member>
+      <Member type="Method">void Stop(IService service)</Member>
+      <Member type="Method">void Restart(IService service)</Member>
     </Entity>
     <Entity type="Comment">
       <Text>Services have dependencies which have to be loaded before the service can be loaded.
 
 A service is not normally running. Once a message for the service arrives it will be loaded and the message can be processed. 
 Some services will be started on application start up.</Text>
-      <Location left="1052" top="781" />
+      <Location left="1005" top="1297" />
       <Size width="187" height="160" />
     </Entity>
     <Entity type="Interface">
-      <Name>ITimeLineService</Name>
+      <Name>ICommand</Name>
       <Access>Public</Access>
-      <Location left="1252" top="127" />
+      <Location left="2132" top="261" />
       <Size width="162" height="85" />
       <Collapsed>False</Collapsed>
     </Entity>
+    <Entity type="Interface">
+      <Name>IMessage</Name>
+      <Access>Public</Access>
+      <Location left="1847" top="423" />
+      <Size width="162" height="71" />
+      <Collapsed>False</Collapsed>
+    </Entity>
+    <Entity type="Interface">
+      <Name>ICommandMessage</Name>
+      <Access>Public</Access>
+      <Location left="1847" top="261" />
+      <Size width="162" height="74" />
+      <Collapsed>False</Collapsed>
+    </Entity>
     <Entity type="Comment">
-      <Text>How do we deal with dependencies? Using messages only is to limited? Use commands directly?</Text>
-      <Location left="1052" top="1052" />
-      <Size width="171" height="106" />
+      <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
+      <Location left="1813" top="1275" />
+      <Size width="243" height="92" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>Allows the core system to easily interact with the different services on an equal level. Mainly use to get to the message pipeline.</Text>
+      <Location left="986" top="328" />
+      <Size width="209" height="83" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>Need some way of allowing additional services to be started without needing to rely on the dependencies coming from the UI service</Text>
+      <Location left="517" top="77" />
+      <Size width="256" height="66" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>Could create a single class for services (KernelService or something) which is then responsible for starting / maintaining all the stuff behind the scenes. This would allow loading stuff into different AppDomains etc.</Text>
+      <Location left="1230" top="1545" />
+      <Size width="190" height="136" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>This also needs to do license verification?</Text>
+      <Location left="76" top="232" />
+      <Size width="162" height="72" />
+    </Entity>
+    <Entity type="Class">
+      <Name>KernelService</Name>
+      <Access>Public</Access>
+      <Location left="1230" top="1105" />
+      <Size width="302" height="153" />
+      <Collapsed>False</Collapsed>
+      <Member type="Property">public abstract ServiceType ServiceType { get; }</Member>
+      <Member type="Method">public abstract IEnumerable&lt;Type&gt; Dependencies()</Member>
+      <Member type="Method">public abstract void RecieveMessage(KernelMessage message)</Member>
+      <Modifier>Abstract</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>MarshalByRef</Name>
+      <Access>Public</Access>
+      <Location left="1287" top="1355" />
+      <Size width="162" height="82" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Abstract</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>UserInterfaceService</Name>
+      <Access>Public</Access>
+      <Location left="2140" top="1366" />
+      <Size width="162" height="96" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>ProjectService</Name>
+      <Access>Public</Access>
+      <Location left="1472" top="822" />
+      <Size width="162" height="92" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>TimelineService</Name>
+      <Access>Public</Access>
+      <Location left="1897" top="1135" />
+      <Size width="162" height="85" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>MessagePipeline</Name>
+      <Access>Public</Access>
+      <Location left="1472" top="506" />
+      <Size width="162" height="84" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>LogSink</Name>
+      <Access>Public</Access>
+      <Location left="812" top="1366" />
+      <Size width="162" height="90" />
+      <Collapsed>False</Collapsed>
+      <Modifier>None</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>PluginRepository</Name>
+      <Access>Public</Access>
+      <Location left="1005" top="853" />
+      <Size width="162" height="122" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>CoreProxy</Name>
+      <Access>Public</Access>
+      <Location left="1005" top="476" />
+      <Size width="162" height="112" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Class">
+      <Name>ServiceProvider</Name>
+      <Access>Public</Access>
+      <Location left="437" top="410" />
+      <Size width="253" height="129" />
+      <Collapsed>False</Collapsed>
+      <Modifier>None</Modifier>
     </Entity>
   </Entities>
   <Relations>
-    <Relation type="Generalization" first="5" second="0">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1125</X>
-        <Y>163</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1152</X>
-        <Y>500</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Generalization" first="7" second="0">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1262</X>
-        <Y>358</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1214</X>
-        <Y>451</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Comment" first="6" second="8">
+    <Relation type="Comment" first="3" second="0">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
     </Relation>
-    <Relation type="Generalization" first="10" second="0">
+    <Relation type="Comment" first="5" second="4">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="False">
+        <X>646</X>
+        <Y>1276</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="12" second="11">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Association" first="12" second="10">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="15" second="0">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="False">
+        <X>439</X>
+        <Y>196</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Realization" first="18" second="4">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1191</X>
+        <Y>1188</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>820</X>
+        <Y>1188</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="18" second="19">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Comment" first="9" second="18">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="False">
+        <X>1190</X>
+        <Y>1233</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Comment" first="2" second="18">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>935</X>
-        <Y>294</Y>
+        <X>1228</X>
+        <Y>1506</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1130</X>
-        <Y>502</Y>
+        <X>1251</X>
+        <Y>1283</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Comment" first="11" second="1">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-    </Relation>
-    <Relation type="Association" first="1" second="12">
-      <StartOrientation>Vertical</StartOrientation>
+    <Relation type="Comment" first="16" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>249</X>
-        <Y>805</Y>
+        <X>1445</X>
+        <Y>1634</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>554</X>
-        <Y>856</Y>
+        <X>1477</X>
+        <Y>1293</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Comment" first="13" second="22">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Comment" first="6" second="21">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Association" first="21" second="22">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1568</X>
+        <Y>939</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1841</X>
+        <Y>1163</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Comment" first="13" second="12">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="False">
-        <X>623</X>
-        <Y>839</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Comment" first="14" second="4">
+    <Relation type="Association" first="20" second="22">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1586</X>
-        <Y>732</Y>
+        <X>2115</X>
+        <Y>1394</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1494</X>
-        <Y>726</Y>
+        <X>2084</X>
+        <Y>1183</Y>
       </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Generalization" first="8" second="0">
+    <Relation type="Association" first="20" second="23">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1378</X>
-        <Y>562</Y>
+        <X>2111</X>
+        <Y>1378</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1301</X>
-        <Y>562</Y>
+        <X>2111</X>
+        <Y>560</Y>
       </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Generalization" first="4" second="0">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="False">
-        <X>1228</X>
-        <Y>617</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Generalization" first="3" second="0">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="False">
-        <X>1111</X>
-        <Y>617</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Comment" first="16" second="0">
+    <Relation type="Generalization" first="20" second="18">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1040</X>
-        <Y>430</Y>
+        <X>2070</X>
+        <Y>1410</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1111</X>
-        <Y>491</Y>
+        <X>1501</X>
+        <Y>1379</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Association" first="17" second="0">
+    <Relation type="Generalization" first="21" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1433</X>
+        <Y>885</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1433</X>
+        <Y>1063</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="22" second="23">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>704</X>
-        <Y>545</Y>
+        <X>2096</X>
+        <Y>1159</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1045</X>
-        <Y>545</Y>
+        <X>1659</X>
+        <Y>575</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Association" first="21" second="23">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1436</X>
+        <Y>857</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1430</X>
+        <Y>567</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Generalization" first="22" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1870</X>
+        <Y>1190</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1582</X>
+        <Y>1190</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="23" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1446</X>
+        <Y>556</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1395</X>
+        <Y>1080</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="24" second="18">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="False">
+        <X>1143</X>
+        <Y>1209</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="25" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1206</X>
+        <Y>905</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1295</X>
+        <Y>1076</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Generalization" first="26" second="18">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>958</X>
+        <Y>536</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1193</X>
+        <Y>1150</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="25" second="23">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1192</X>
+        <Y>893</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1390</X>
+        <Y>538</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Association" first="26" second="23">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1215</X>
+        <Y>524</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1324</X>
+        <Y>524</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="7" second="23">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Comment" first="14" second="26">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Realization" first="27" second="8">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+    </Relation>
+    <Relation type="Realization" first="27" second="4">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>403</X>
+        <Y>504</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>395</X>
+        <Y>1190</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="27" second="26">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>757</X>
+        <Y>506</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>971</X>
+        <Y>506</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Comment" first="9" second="0">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
+    <Relation type="Association" first="0" second="27">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1660</X>
-        <Y>447</Y>
+        <X>385</X>
+        <Y>344</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1230</X>
-        <Y>502</Y>
+        <X>406</X>
+        <Y>476</Y>
       </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Generalization" first="17" second="12">
+    <Relation type="Comment" first="17" second="0">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
     </Relation>
-    <Relation type="Generalization" first="0" second="12">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>684</X>
-        <Y>571</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>684</X>
-        <Y>641</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Comment" first="18" second="0">
+    <Relation type="Association" first="27" second="1">
       <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-    </Relation>
-    <Relation type="Generalization" first="19" second="0">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1210</X>
-        <Y>164</Y>
-      </BendPoint>
+      <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="False">
-        <X>1194</X>
-        <Y>500</Y>
+        <X>672</X>
+        <Y>296</Y>
       </BendPoint>
-    </Relation>
-    <Relation type="Comment" first="20" second="18">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
     </Relation>
   </Relations>
 </ClassProject>
