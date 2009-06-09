@@ -35,7 +35,7 @@ namespace Apollo.Core
             }
 
             m_Progress = progress;
-            m_CurrentlyProcessing = currentlyProcessing;
+            m_CurrentlyProcessing = currentlyProcessing ?? string.Empty;
         }
 
         /// <summary>

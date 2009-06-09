@@ -1,13 +1,27 @@
-﻿using System;
+﻿// Copyright (c) P. van der Velde. All rights reserved.
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
+    /// <summary>
+    /// Defines the type of a service, either background or foreground.
+    /// </summary>
     public enum ServiceType
     {
+        // Foreground is the default value for a service type.
+        /// <summary>
+        /// The service is a foreground service. This means that it will
+        /// communicate with other services and actively take part in the
+        /// running of the application.
+        /// </summary>
         Foreground,
+        /// <summary>
+        /// The service is a background service. This means that the service
+        /// normally only provides data for other services.
+        /// </summary>
         Background,
     }
 
@@ -16,35 +30,33 @@ namespace Apollo.Core
     /// </summary>
     public abstract class KernelService : MarshalByRefObject, INeedStartup
     {
+        // Note: Because this is a MarshalByRef object you shouldn't really use
+        // properties. You never know where the real object is so even property calls can
+        // take a long time.
+
+        /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
+        /// Stores the current startup state.
+        /// </summary>
+        private StartupState m_StartupState = StartupState.NotStarted;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KernelService"/> class.
+        /// </summary>
+        protected KernelService()
+        { }
+
         /// <summary>
         /// Gets the type of the service. Currently either a background service
         /// or a foreground service.
         /// </summary>
         /// <value>The type of the service.</value>
-        public abstract ServiceType ServiceType { get; }
-
-        /// <summary>
-        /// Returns a set of types indicating on which services the current service
-        /// depends.
-        /// </summary>
-        /// <returns>
-        ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
-        ///     on which this service depends.
-        /// </returns>
-        public abstract IEnumerable<Type> Dependencies();
-
-        /// <summary>
-        /// Receives a single message that is directed at the current service.
-        /// </summary>
-        /// <param name="message">The message that should be processed.</param>
-        public abstract void ReceiveMessage(KernelMessage message);
-
-        /// <summary>
-        /// Receives a set of messages which are directed at the current service.
-        /// </summary>
-        /// <param name="messages">The set of messages which should be processed.</param>
-        public abstract void ReceiveMessages(IEnumerable<KernelMessage> messages);
-
+        public abstract ServiceType ServiceType();
+        
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
@@ -55,7 +67,7 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="progress">The progress percentage which ranges between 0 and 100.</param>
         /// <param name="currentAction">The current action which is being processed.</param>
-        protected void FireStartupProgress(int progress, string currentAction)
+        protected void OnStartupProgress(int progress, string currentAction)
         {
             EventHandler<StartupProgressEventArgs> local = StartupProgress;
             if (local != null)
@@ -67,15 +79,40 @@ namespace Apollo.Core
         /// <summary>
         /// Starts the startup process.
         /// </summary>
-        public abstract void Start();
+        public void Start()
+        {
+            // Loads the different parts of the service
+            lock(m_Lock)
+            {
+                m_StartupState = StartupState.Starting; 
+            }
+
+            try
+            {
+                throw new NotImplementedException();
+            }
+            finally
+            {
+                // Check the startup state.
+                // If there was an error we should set the state to not started
+                var finalState = StartupState.Started;
+                lock (m_Lock)
+                {
+                    m_StartupState = finalState;
+                }
+            }
+        }
 
         /// <summary>
         /// Returns a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        /// <value></value>
-        public abstract StartupState StartupState { get; }
+        /// <returns>
+        /// The current startup state for the object.
+        /// </returns>
+        public StartupState GetStartupState()
+        { 
+            return m_StartupState; 
+        }
     }
-
-    
 }

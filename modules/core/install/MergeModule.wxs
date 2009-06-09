@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Module Id="Apollo.Core.Install" Language="1033" Version="1.0.0.0">
+		<Package Id="42b2de16-8a74-4bf3-91c4-48c9796324a0" Manufacturer="Apollo.Core.Install" InstallerVersion="200" />
+
+		<Directory Id="TARGETDIR" Name="SourceDir">
+			<Directory Id="MergeRedirectFolder">
+
+				<!-- TODO: Remove the comments around this Component element in order to add resources to this module. -->
+				<!-- <Component Id="ModuleComponent" Guid="f8da78c5-b3b4-44e7-a8dd-150a45dafd8e"> -->
+					<!-- TODO: Insert files, registry keys, and other resources here. -->
+				<!-- </Component> -->
+
+			</Directory>
+		</Directory>
+	</Module>
+</Wix>

@@ -11,3 +11,6 @@ obj
 backup_*
 Backup_Of_*.*
 ~$*.xlsx
+bin
+bin/doc
+bin/doc

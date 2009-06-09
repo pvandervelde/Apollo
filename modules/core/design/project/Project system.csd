@@ -123,11 +123,6 @@ By separating the actual generated data from the 'description' data we can allow
       <Size width="162" height="66" />
       <Collapsed>False</Collapsed>
     </Entity>
-    <Entity type="Comment">
-      <Text>Think about the relation between the generator and the project extention. Should all generators extend the project?</Text>
-      <Location left="1819" top="481" />
-      <Size width="220" height="86" />
-    </Entity>
     <Entity type="Interface">
       <Name>IExtensionCommandCentral&lt;IProjectCommand&gt;</Name>
       <Access>Public</Access>
@@ -146,11 +141,6 @@ By separating the actual generated data from the 'description' data we can allow
       <Text>There's no need to create a pooling system for these as we expect that nodes will not be created often, given that each node contains a complete data set.</Text>
       <Location left="1413" top="802" />
       <Size width="231" height="89" />
-    </Entity>
-    <Entity type="Comment">
-      <Text>Each command can indicate if it is public or not. Non-publics can only be used by the project and the creator type.</Text>
-      <Location left="1764" top="257" />
-      <Size width="188" height="83" />
     </Entity>
     <Entity type="Interface">
       <Name>ITimeLineProxy</Name>
@@ -216,6 +206,11 @@ By separating the actual generated data from the 'description' data we can allow
       <Location left="2284" top="1509" />
       <Size width="162" height="88" />
       <Collapsed>False</Collapsed>
+    </Entity>
+    <Entity type="Comment">
+      <Text>E.g. for simulations there is the Run command.</Text>
+      <Location left="1949" top="581" />
+      <Size width="162" height="72" />
     </Entity>
   </Entities>
   <Relations>
@@ -353,22 +348,6 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Generalization" first="13" second="3">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-    </Relation>
-    <Relation type="Generalization" first="11" second="3">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Horizontal</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1972</X>
-        <Y>860</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1847</X>
-        <Y>609</Y>
-      </BendPoint>
-    </Relation>
     <Relation type="Generalization" first="15" second="14">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
@@ -395,21 +374,6 @@ By separating the actual generated data from the 'description' data we can allow
       <Direction>Unidirectional</Direction>
       <IsAggregation>True</IsAggregation>
       <IsComposition>False</IsComposition>
-    </Relation>
-    <Relation type="Association" first="3" second="15">
-      <StartOrientation>Vertical</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1709</X>
-        <Y>556</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1589</X>
-        <Y>361</Y>
-      </BendPoint>
-      <Direction>Unidirectional</Direction>
-      <IsAggregation>False</IsAggregation>
-      <IsComposition>True</IsComposition>
     </Relation>
     <Relation type="Generalization" first="10" second="16">
       <StartOrientation>Vertical</StartOrientation>
@@ -456,19 +420,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Comment" first="17" second="3">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1768</X>
-        <Y>512</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1767</X>
-        <Y>556</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Association" first="3" second="18">
+    <Relation type="Association" first="3" second="17">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -479,7 +431,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="0" second="18">
+    <Relation type="Association" first="0" second="17">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -494,7 +446,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="12" second="19">
+    <Relation type="Association" first="12" second="18">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -509,23 +461,11 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Comment" first="20" second="6">
+    <Relation type="Comment" first="19" second="6">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
     </Relation>
-    <Relation type="Comment" first="21" second="15">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Horizontal</EndOrientation>
-      <BendPoint relativeToStartShape="True">
-        <X>1711</X>
-        <Y>302</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>1683</X>
-        <Y>302</Y>
-      </BendPoint>
-    </Relation>
-    <Relation type="Association" first="0" second="22">
+    <Relation type="Association" first="0" second="20">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -540,7 +480,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Comment" first="23" second="0">
+    <Relation type="Comment" first="21" second="0">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="False">
@@ -548,11 +488,11 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>671</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Comment" first="24" second="18">
+    <Relation type="Comment" first="22" second="17">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
     </Relation>
-    <Relation type="Association" first="18" second="10">
+    <Relation type="Association" first="17" second="10">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -567,7 +507,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>True</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="22" second="19">
+    <Relation type="Association" first="20" second="18">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -582,7 +522,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>True</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="26" second="0">
+    <Relation type="Association" first="24" second="0">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -597,14 +537,14 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="26" second="22">
+    <Relation type="Association" first="24" second="20">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="26" second="25">
+    <Relation type="Association" first="24" second="23">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -619,7 +559,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="26" second="27">
+    <Relation type="Association" first="24" second="25">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -649,14 +589,14 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="29" second="5">
+    <Relation type="Association" first="27" second="5">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="0" second="29">
+    <Relation type="Association" first="0" second="27">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="False">
@@ -667,7 +607,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Comment" first="30" second="7">
+    <Relation type="Comment" first="28" second="7">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="False">
@@ -675,7 +615,7 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>1194</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Association" first="28" second="31">
+    <Relation type="Association" first="26" second="29">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -690,7 +630,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="28" second="1">
+    <Relation type="Association" first="26" second="1">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -701,7 +641,7 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Association" first="28" second="28">
+    <Relation type="Association" first="26" second="26">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -716,12 +656,38 @@ By separating the actual generated data from the 'description' data we can allow
       <IsAggregation>True</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="7" second="28">
+    <Relation type="Association" first="7" second="26">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Association" first="13" second="3">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Association" first="3" second="15">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="30" second="3">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1908</X>
+        <Y>617</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1835</X>
+        <Y>617</Y>
+      </BendPoint>
     </Relation>
   </Relations>
 </ClassProject>

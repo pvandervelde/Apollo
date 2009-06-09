@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// Copyright (c) P. van der Velde. All rights reserved.
+
+using System;
 
 namespace Apollo.Core
 {
@@ -14,6 +13,10 @@ namespace Apollo.Core
         /// The state is unknown.
         /// </summary>
         Unknown,
+        /// <summary>
+        /// The object has not been started yet.
+        /// </summary>
+        NotStarted,
         /// <summary>
         /// The object is starting up but has not finished the start process yet.
         /// </summary>
@@ -47,6 +50,9 @@ namespace Apollo.Core
         /// Returns a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        StartupState StartupState { get; }
+        /// <returns>
+        ///   The current startup state for the object.
+        /// </returns>
+        StartupState GetStartupState();
     }
 }
