@@ -17,7 +17,7 @@ namespace Apollo.Core
         /// </summary>
         /// <returns></returns>
         /// <value>The type of the service.</value>
-        public override ServiceType ServiceType()
+        public override ServiceType ServicePreferenceType()
         {
             throw new NotImplementedException();
         }

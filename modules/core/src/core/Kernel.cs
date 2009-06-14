@@ -6,6 +6,9 @@ namespace Apollo.Core
 {
     internal sealed class Kernel : IOwnServices
     {
+        // How do we discover services? MEF?
+
+
         /// <summary>
         /// Installs the service of the specified type.
         /// </summary>

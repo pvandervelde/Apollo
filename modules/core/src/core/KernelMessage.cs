@@ -10,7 +10,8 @@ namespace Apollo.Core
     /// <summary>
     /// Defines the base class for message objects.
     /// </summary>
-    public abstract class KernelMessage
+    internal abstract class KernelMessage
     {
+        // do messages throw if they can't be delivered?  --> Yes but how do we throw into the sending AppDomain?
     }
 }

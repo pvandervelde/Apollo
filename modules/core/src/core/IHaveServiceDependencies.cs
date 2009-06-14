@@ -26,5 +26,7 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="dependency">The dependency service.</param>
         void ConnectToDependency(KernelService dependency);
+
+        // Disconnect from dependency?
     }
 }

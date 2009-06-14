@@ -18,7 +18,9 @@
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Comment">
-      <Text>Could we do a fluent API for the core system? That will allow easy additions too (think extention methods)?</Text>
+      <Text>Services can also specify LoadBefore information. This indicates before which services they need to be loaded. 
+
+Note that most system services are always loaded in a specific order / time. e.g. logging, messages, license</Text>
       <Location left="724" top="1546" />
       <Size width="190" height="76" />
     </Entity>
@@ -41,17 +43,17 @@
 - error stuff
 - async stuff
 - Indicate complete</Text>
-      <Location left="637" top="984" />
+      <Location left="642" top="984" />
       <Size width="206" height="102" />
     </Entity>
     <Entity type="Comment">
       <Text>Forms the front end of the project sub-system</Text>
-      <Location left="2112" top="754" />
+      <Location left="2516" top="754" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Comment">
       <Text>All communication between services runs through the message pipeline</Text>
-      <Location left="2082" top="428" />
+      <Location left="2486" top="428" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Interface">
@@ -78,27 +80,27 @@ Some services will be started on application start up.</Text>
     <Entity type="Interface">
       <Name>ICommand</Name>
       <Access>Public</Access>
-      <Location left="2864" top="316" />
+      <Location left="3033" top="222" />
       <Size width="162" height="85" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Interface">
       <Name>IMessage</Name>
       <Access>Public</Access>
-      <Location left="2579" top="478" />
+      <Location left="2743" top="384" />
       <Size width="162" height="71" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Interface">
       <Name>ICommandMessage</Name>
       <Access>Public</Access>
-      <Location left="2579" top="316" />
+      <Location left="2743" top="222" />
       <Size width="162" height="74" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Comment">
       <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
-      <Location left="2545" top="1330" />
+      <Location left="2949" top="1330" />
       <Size width="243" height="92" />
     </Entity>
     <Entity type="Comment">
@@ -136,7 +138,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>UserInterfaceService</Name>
       <Access>Public</Access>
-      <Location left="2864" top="1421" />
+      <Location left="3268" top="1421" />
       <Size width="162" height="96" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -144,7 +146,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>ProjectService</Name>
       <Access>Public</Access>
-      <Location left="2082" top="877" />
+      <Location left="2486" top="877" />
       <Size width="162" height="92" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -152,7 +154,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>TimelineService</Name>
       <Access>Public</Access>
-      <Location left="2629" top="1190" />
+      <Location left="3033" top="1190" />
       <Size width="162" height="85" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -160,7 +162,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>MessagePipeline</Name>
       <Access>Public</Access>
-      <Location left="2082" top="561" />
+      <Location left="2486" top="561" />
       <Size width="162" height="84" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -190,17 +192,12 @@ Some services will be started on application start up.</Text>
       <Modifier>Sealed</Modifier>
     </Entity>
     <Entity type="Class">
-      <Name>ServiceProvider</Name>
+      <Name>Kernel</Name>
       <Access>Public</Access>
       <Location left="563" top="465" />
       <Size width="253" height="129" />
       <Collapsed>False</Collapsed>
       <Modifier>None</Modifier>
-    </Entity>
-    <Entity type="Comment">
-      <Text>How do we deal with data storage? Does that need to be a service too? Could be a smart way of handling storage because then we can abstract it. Allows file / database etc.</Text>
-      <Location left="202" top="833" />
-      <Size width="230" height="107" />
     </Entity>
     <Entity type="Comment">
       <Text>Does the kernel do the exception handling? Or is there a service for that?
@@ -212,7 +209,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
     <Entity type="Class">
       <Name>PersistenceService</Name>
       <Access>Public</Access>
-      <Location left="2247" top="1683" />
+      <Location left="2651" top="1683" />
       <Size width="162" height="94" />
       <Collapsed>False</Collapsed>
       <Modifier>None</Modifier>
@@ -235,6 +232,30 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <Size width="238" height="83" />
       <Collapsed>False</Collapsed>
       <Member type="Method">IEnumerator&lt;Type&gt; Dependencies()</Member>
+    </Entity>
+    <Entity type="Class">
+      <Name>LicenseService</Name>
+      <Access>Public</Access>
+      <Location left="2013" top="1006" />
+      <Size width="162" height="105" />
+      <Collapsed>False</Collapsed>
+      <Modifier>Sealed</Modifier>
+    </Entity>
+    <Entity type="Comment">
+      <Text>how to deal with configurations? Where do we store the default config file. And how do we write the config files.</Text>
+      <Location left="2747" top="1995" />
+      <Size width="202" height="86" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>Could we do something with hashkeys to verify that the answers coming from the license service are correct?
+Obvious problem is that all data runs on the users machine so they have full access to the system.</Text>
+      <Location left="1987" top="1127" />
+      <Size width="280" height="103" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>What happens to messages that can't be delivered? e.g. due to a service dying etc.?</Text>
+      <Location left="3004" top="384" />
+      <Size width="217" height="62" />
     </Entity>
   </Entities>
   <Relations>
@@ -325,11 +346,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2198</X>
+        <X>2602</X>
         <Y>1000</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2573</X>
+        <X>2977</X>
         <Y>1218</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -340,11 +361,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2839</X>
+        <X>3243</X>
         <Y>1449</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2816</X>
+        <X>3220</X>
         <Y>1238</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -355,11 +376,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2895</X>
+        <X>3299</X>
         <Y>1368</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2721</X>
+        <X>3125</X>
         <Y>615</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -370,8 +391,8 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2794</X>
-        <Y>1465</Y>
+        <X>3194</X>
+        <Y>1485</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>1899</X>
@@ -382,8 +403,8 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2043</X>
-        <Y>940</Y>
+        <X>2450</X>
+        <Y>932</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>1831</X>
@@ -394,11 +415,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2828</X>
+        <X>3232</X>
         <Y>1214</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2269</X>
+        <X>2673</X>
         <Y>630</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -409,11 +430,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2046</X>
+        <X>2450</X>
         <Y>912</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2040</X>
+        <X>2444</X>
         <Y>622</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -424,7 +445,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2602</X>
+        <X>3006</X>
         <Y>1245</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -436,7 +457,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2056</X>
+        <X>2460</X>
         <Y>611</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -465,11 +486,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       </BendPoint>
     </Relation>
     <Relation type="Generalization" first="25" second="17">
-      <StartOrientation>Horizontal</StartOrientation>
+      <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>963</X>
-        <Y>587</Y>
+        <X>1110</X>
+        <Y>698</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>1591</X>
@@ -484,7 +505,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Y>850</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2000</X>
+        <X>2404</X>
         <Y>593</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -499,7 +520,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Y>579</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1934</X>
+        <X>2338</X>
         <Y>579</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -575,7 +596,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <IsAggregation>False</IsAggregation>
       <IsComposition>True</IsComposition>
     </Relation>
-    <Relation type="Comment" first="28" second="26">
+    <Relation type="Comment" first="27" second="26">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -587,11 +608,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Y>548</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Generalization" first="29" second="17">
+    <Relation type="Generalization" first="28" second="17">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2196</X>
+        <X>2600</X>
         <Y>1728</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -599,48 +620,48 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Y>1358</Y>
       </BendPoint>
     </Relation>
-    <Relation type="Association" first="19" second="29">
+    <Relation type="Association" first="19" second="28">
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2799</X>
-        <Y>1483</Y>
+        <X>3200</X>
+        <Y>1500</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2382</X>
+        <X>2786</X>
         <Y>1647</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="20" second="29">
+    <Relation type="Association" first="20" second="28">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2180</X>
+        <X>2584</X>
         <Y>997</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2217</X>
+        <X>2621</X>
         <Y>1707</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="23" second="29">
+    <Relation type="Association" first="23" second="28">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="False">
-        <X>2075</X>
+        <X>2479</X>
         <Y>1751</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="24" second="29">
+    <Relation type="Association" first="24" second="28">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
@@ -648,23 +669,104 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Y>1112</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2298</X>
+        <X>2702</X>
         <Y>1839</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
     </Relation>
-    <Relation type="Association" first="25" second="29">
+    <Relation type="Association" first="25" second="28">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="False">
-        <X>2332</X>
+        <X>2736</X>
         <Y>1857</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
       <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Generalization" first="31" second="17">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1966</X>
+        <Y>1048</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1886</X>
+        <Y>1135</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="20" second="31">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2442</X>
+        <Y>952</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Association" first="28" second="31">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2626</X>
+        <Y>1716</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2488</X>
+        <Y>1076</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="32" second="28">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="False">
+        <X>2776</X>
+        <Y>1802</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Comment" first="33" second="31">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2292</X>
+        <Y>1161</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2200</X>
+        <Y>1097</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="22" second="11">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2735</X>
+        <Y>590</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="34" second="11">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2979</X>
+        <Y>419</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2930</X>
+        <Y>419</Y>
+      </BendPoint>
     </Relation>
   </Relations>
 </ClassProject>

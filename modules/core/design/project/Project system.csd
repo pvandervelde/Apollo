@@ -37,7 +37,7 @@
       <Size width="282" height="147" />
     </Entity>
     <Entity type="Interface">
-      <Name>IDataSetGraph</Name>
+      <Name>IDataSetTree</Name>
       <Access>Public</Access>
       <Location left="1178" top="920" />
       <Size width="227" height="78" />
@@ -151,7 +151,7 @@ By separating the actual generated data from the 'description' data we can allow
     </Entity>
     <Entity type="Comment">
       <Text>The project data is also stored in the project graph as the root node. So a project doesn't have any data itself.</Text>
-      <Location left="867" top="839" />
+      <Location left="758" top="710" />
       <Size width="214" height="80" />
     </Entity>
     <Entity type="Comment">
@@ -162,21 +162,21 @@ By separating the actual generated data from the 'description' data we can allow
     <Entity type="Interface">
       <Name>IProjectBuilder</Name>
       <Access>Public</Access>
-      <Location left="647" top="360" />
+      <Location left="644" top="180" />
       <Size width="162" height="81" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Interface">
       <Name>IProjectService</Name>
       <Access>Public</Access>
-      <Location left="632" top="554" />
+      <Location left="629" top="400" />
       <Size width="162" height="80" />
       <Collapsed>False</Collapsed>
     </Entity>
     <Entity type="Interface">
       <Name>IMessageCentralProxy</Name>
       <Access>Public</Access>
-      <Location left="338" top="539" />
+      <Location left="345" top="400" />
       <Size width="162" height="83" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -190,10 +190,10 @@ By separating the actual generated data from the 'description' data we can allow
     <Entity type="Interface">
       <Name>IDataSetStore</Name>
       <Access>Public</Access>
-      <Location left="1095" top="710" />
-      <Size width="193" height="78" />
+      <Location left="1083" top="710" />
+      <Size width="221" height="95" />
       <Collapsed>False</Collapsed>
-      <Member type="Property">IDataSet ProjectData { get; }</Member>
+      <Member type="Property">IProjectDataSet ProjectData { get; }</Member>
     </Entity>
     <Entity type="Comment">
       <Text>Only the data is stored in the individual data set files. All component related information is stored in the project file.</Text>
@@ -211,6 +211,33 @@ By separating the actual generated data from the 'description' data we can allow
       <Text>E.g. for simulations there is the Run command.</Text>
       <Location left="1949" top="581" />
       <Size width="162" height="72" />
+    </Entity>
+    <Entity type="Interface">
+      <Name>IProjectDataSet</Name>
+      <Access>Public</Access>
+      <Location left="799" top="951" />
+      <Size width="320" height="146" />
+      <Collapsed>False</Collapsed>
+      <Member type="Method">IProjectDataSet CopyToNewChild()</Member>
+      <Member type="Method">IProjectDataSet CloneToSibbling()</Member>
+      <Member type="Method">IEnumerable&lt;IProjectDataSet&gt; Children()</Member>
+      <Member type="Property">boolean CanCopy { get; }</Member>
+      <Member type="Property">GenerationReason GenerationReason { get; }</Member>
+    </Entity>
+    <Entity type="Enum">
+      <Name>GenerationReason</Name>
+      <Access>Public</Access>
+      <Location left="811" top="1165" />
+      <Size width="162" height="110" />
+      <Collapsed>False</Collapsed>
+      <Value>User</Value>
+      <Value>System</Value>
+    </Entity>
+    <Entity type="Comment">
+      <Text>The component service is responsible for component loading and also tracking which components exist in a data set. 
+Note that data sets only store differential component information. i.e. the parent data set defines the base components. The individual data sets then override these definitions.</Text>
+      <Location left="1879" top="1726" />
+      <Size width="262" height="131" />
     </Entity>
   </Entities>
   <Relations>
@@ -326,8 +353,8 @@ By separating the actual generated data from the 'description' data we can allow
         <Y>1232</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1872</X>
-        <Y>914</Y>
+        <X>1877</X>
+        <Y>939</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -467,14 +494,14 @@ By separating the actual generated data from the 'description' data we can allow
     </Relation>
     <Relation type="Association" first="0" second="20">
       <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Horizontal</EndOrientation>
+      <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>908</X>
+        <X>938</X>
         <Y>629</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>778</X>
-        <Y>934</Y>
+        <X>715</X>
+        <Y>871</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -523,11 +550,11 @@ By separating the actual generated data from the 'description' data we can allow
       <IsComposition>False</IsComposition>
     </Relation>
     <Relation type="Association" first="24" second="0">
-      <StartOrientation>Horizontal</StartOrientation>
+      <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>871</X>
-        <Y>602</Y>
+        <X>734</X>
+        <Y>510</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>913</X>
@@ -548,12 +575,12 @@ By separating the actual generated data from the 'description' data we can allow
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>706</X>
-        <Y>510</Y>
+        <X>703</X>
+        <Y>356</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>706</X>
-        <Y>467</Y>
+        <X>703</X>
+        <Y>287</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -563,12 +590,12 @@ By separating the actual generated data from the 'description' data we can allow
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>589</X>
-        <Y>582</Y>
+        <X>586</X>
+        <Y>428</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>534</X>
-        <Y>582</Y>
+        <X>537</X>
+        <Y>428</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -599,8 +626,12 @@ By separating the actual generated data from the 'description' data we can allow
     <Relation type="Association" first="0" second="27">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1035</X>
+        <Y>671</Y>
+      </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1047</X>
+        <X>1035</X>
         <Y>750</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -687,6 +718,33 @@ By separating the actual generated data from the 'description' data we can allow
       <BendPoint relativeToStartShape="False">
         <X>1835</X>
         <Y>617</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Association" first="27" second="31">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1058</X>
+        <Y>765</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1037</X>
+        <Y>925</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>False</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="33" second="26">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1945</X>
+        <Y>1701</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1945</X>
+        <Y>1612</Y>
       </BendPoint>
     </Relation>
   </Relations>

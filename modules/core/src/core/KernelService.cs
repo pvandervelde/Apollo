@@ -55,7 +55,10 @@ namespace Apollo.Core
         /// or a foreground service.
         /// </summary>
         /// <value>The type of the service.</value>
-        public abstract ServiceType ServiceType();
+        public virtual ServiceType ServicePreferenceType() // <-- Needs renaming.
+        {
+            return Apollo.Core.ServiceType.Foreground;
+        }
         
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
