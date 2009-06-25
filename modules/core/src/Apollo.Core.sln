@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Test.Perf", "co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Test.Integration", "core.test.integration\Apollo.Core.Test.Integration.csproj", "{84AE7167-B8F9-465A-9348-C3C0AC76FD32}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utils", "Utils", "{584419C3-1439-45E7-BBE4-173A0F5E27DC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{584419C3-1439-45E7-BBE4-173A0F5E27DC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utils", "..\..\utils\src\utils\Apollo.Utils.csproj", "{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}"
 EndProject

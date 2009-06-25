@@ -87,7 +87,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Interface">
       <Name>IMessage</Name>
       <Access>Public</Access>
-      <Location left="2743" top="384" />
+      <Location left="2747" top="384" />
       <Size width="162" height="71" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -469,8 +469,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="False">
-        <X>1603</X>
-        <Y>1302</Y>
+        <X>1599</X>
+        <Y>1291</Y>
       </BendPoint>
     </Relation>
     <Relation type="Generalization" first="24" second="17">
@@ -481,8 +481,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>1115</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1540</X>
-        <Y>1182</Y>
+        <X>1603</X>
+        <Y>1204</Y>
       </BendPoint>
     </Relation>
     <Relation type="Generalization" first="25" second="17">
@@ -493,8 +493,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>698</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1591</X>
-        <Y>1205</Y>
+        <X>1594</X>
+        <Y>1223</Y>
       </BendPoint>
     </Relation>
     <Relation type="Association" first="24" second="22">
@@ -764,7 +764,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>419</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2930</X>
+        <X>2934</X>
         <Y>419</Y>
       </BendPoint>
     </Relation>

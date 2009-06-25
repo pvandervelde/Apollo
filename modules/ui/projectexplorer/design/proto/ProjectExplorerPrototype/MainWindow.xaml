@@ -1,10 +1,14 @@
 ﻿<Window x:Class="ProjectExplorerPrototype.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:graph="clr-namespace:BarberBornander.UI.Physics;assembly=BarberBornander.UI.Physics"
-        Title="Project Explorer" Height="600" Width="800" Name="wndMain" Loaded="MainWindow_Loaded" >
+        xmlns:filters="clr-namespace:ProjectExplorerPrototype.Filters"
+        xmlns:projects="clr-namespace:ProjectExplorerPrototype.Projects"
+        xmlns:converters="clr-namespace:ProjectExplorerPrototype.Converters"
+        Title="Project Explorer" Height="600" Width="800" Name="wndMain" MinHeight="600" MinWidth="800"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     
     <Window.Resources>
+        <!--
         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -20,12 +24,12 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <!--
+                                <!-
                                  Note that the following do not work, but I believe the top 2 should?!
                                  <ToggleButton IsChecked="{TemplateBinding IsExpanded}" ClickMode="Press" Name="Expander">
                                  <ToggleButton IsChecked="{TemplateBinding Property=IsExpanded}" ClickMode="Press" Name="Expander">
                                  <ToggleButton IsChecked="{TemplateBinding Path=IsExpanded}" ClickMode="Press" Name="Expander">
-                                 -->
+                                 ->
                                 <ToggleButton IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Name="Expander" Visibility="Collapsed">
                                     <ToggleButton.Style>
                                         <Style TargetType="ToggleButton">
@@ -105,9 +109,87 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        -->
+       
+        <Style x:Key="internalBorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="Margin" Value="10" />
+            <Setter Property="Padding" Value="10" />
+            <Setter Property="BorderBrush" Value="Black" />
+            <Setter Property="BorderThickness" Value="2" />
+            <Setter Property="Background" Value="White" />
+            <Setter Property="HorizontalAlignment" Value="Stretch" />
+            <Setter Property="VerticalAlignment" Value="Stretch" />
+        </Style>
         
+        <Style x:Key="listviewItemStyle" TargetType="{x:Type ListViewItem}">
+            <Style.Resources>
+                <converters:ListviewBackgroundConverter x:Key="listviewBackgroundConverter" />
+            </Style.Resources>
+            <Setter Property="Background">
+                <Setter.Value>
+                    <Binding RelativeSource="{RelativeSource Self}" Converter="{StaticResource listviewBackgroundConverter}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+
+        <Style x:Key="columnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}" >
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Width" Value="Auto" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+        </Style>
         
+        <Style x:Key="nonsizingColumnHeaderStyle" TargetType="{x:Type GridViewColumnHeader}" BasedOn="{StaticResource columnHeaderStyle}">
+            
+        </Style>
         
+        <DataTemplate x:Key="filterNameTemplate" DataType="{x:Type filters:Filter}">
+            <DataTemplate.Resources>
+                <converters:FilterIsActiveToOpacityConverter x:Key="filterToOpacityConverter" />
+            </DataTemplate.Resources>
+            
+            <TextBox Text="{Binding Path=Name, Mode=TwoWay}" 
+                     FontSize="14"
+                     Opacity="{Binding Path=IsActive, Converter={StaticResource filterToOpacityConverter}}"
+                     HorizontalAlignment="Stretch" VerticalAlignment="Center"
+                     Margin="2"
+                     >
+            </TextBox>
+        </DataTemplate>
+        
+        <DataTemplate x:Key="filterOnOffTemplate" DataType="{x:Type filters:Filter}">
+            <DataTemplate.Resources>
+                <converters:FilterIsActiveConverter x:Key="filterIsActiveConverter" />
+            </DataTemplate.Resources>
+            
+            <Button x:Name="btnActive" 
+                    Command="{Binding Path=ChangeActiveStateCommand}"
+                    Margin="2"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Height="48"
+                    Width="48"
+                    >
+                <Image x:Name="imgOnOff" Source="{Binding Path=IsActive, Converter={StaticResource filterIsActiveConverter}}" />
+            </Button>
+        </DataTemplate>
+
+        <HierarchicalDataTemplate x:Key="datasetTemplate" 
+                                  DataType="{x:Type projects:DataSetViewModel}" 
+                                  ItemsSource="{Binding Path=Children}">
+            
+            <Border BorderBrush="Blue"
+                    BorderThickness="1"
+                    CornerRadius="3"
+                    Margin="2"
+                    Padding="2">
+                <StackPanel>
+                    <TextBlock Text="{Binding Name}" />
+                    <Expander></Expander>
+                </StackPanel>
+            </Border>
+        </HierarchicalDataTemplate>
     </Window.Resources>
     
     <Grid>
@@ -127,7 +209,7 @@
         
         <DockPanel Grid.Row="1" Name="dpMainContent">
             <!-- Properties control -->
-            <Border DockPanel.Dock="Right" Name="bdrProperties" CornerRadius="5" Margin="10,0,10,0">
+            <Border DockPanel.Dock="Right" Name="bdrProperties" CornerRadius="5" Margin="10,0,10,0" BorderThickness="1">
                 <StackPanel Name="spProperties" >
 
                 </StackPanel>
@@ -136,115 +218,42 @@
             <!-- Graph -->
             <Grid DockPanel.Dock="Left">
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
 
 
                 <!-- Graph -->
-                <Border Grid.Row="0" CornerRadius="10" Margin="10,10,10,10" Name="bdrGraph" BorderBrush="Black" Background="White">
-                    <graph:ParticleCanvas x:Name="pcGraph" />
+                <Border Style="{StaticResource internalBorderStyle}">
+                    <TreeView Name="tvProject"
+                              ItemsSource="{Binding Path=Project}"
+                              ItemTemplate="{StaticResource datasetTemplate}"
+                              >
+                    </TreeView>
                 </Border>
                 
-                <GridSplitter Grid.Row="1" Name="gsplSplitter" />
+                <GridSplitter Grid.Row="1" Name="gsplSplitter" VerticalAlignment="Center" HorizontalAlignment="Stretch" ResizeBehavior="PreviousAndNext" BorderThickness="2" BorderBrush="Red" ShowsPreview="True" Margin="2" />
 
-                <Border Grid.Row="2" CornerRadius="10" Margin="10,10,10,10" Name="bdrProgress" BorderBrush="Black" Background="White">
-                    <!-- Progress window -->
-                    <StackPanel Name="spProgress" CanVerticallyScroll="True">
-                        
-
-                        <!-- First Progress set -->
-                        <Border Margin="5,5,5,5" CornerRadius="2,2,2,2" BorderBrush="#FF0833DA">
-                            <TreeView>
-                                <TreeView.Items>
-                                    <TreeViewItem IsExpanded="True">
-                                        <TreeViewItem.Header>
-                                            <!-- Parent progress -->
-                                            <StackPanel Margin="5">
-                                                <TextBlock>
-                                                    Parent Progress:
-                                                </TextBlock>
-
-                                                <DockPanel>
-
-                                                    <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2" />
-                                                    <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2"/>
-                                                    <ProgressBar Margin="2" Value="40" />
-                                                </DockPanel>
-                                            </StackPanel>
-                                        </TreeViewItem.Header>
-                                        <TreeViewItem.Items>
-                                            <TreeViewItem>
-                                                <TreeViewItem.Header>
-                                                    <!-- First Child -->
-                                                    <DockPanel>
-                                                        <StackPanel Margin="5" DockPanel.Dock="Right">
-                                                            <TextBlock>
-                                                            Progress:
-                                                            </TextBlock>
-
-                                                            <DockPanel>
-
-                                                                <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2" />
-                                                                <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2"/>
-                                                                <ProgressBar Margin="2" Value="75" Foreground="#FFD37901" />
-                                                            </DockPanel>
-                                                        </StackPanel>
-                                                    </DockPanel>
-                                                </TreeViewItem.Header>
-                                            </TreeViewItem>
-                                            <TreeViewItem>
-                                                <TreeViewItem.Header>
-                                                    <!-- First Child -->
-                                                    <DockPanel>
-                                                        <StackPanel Margin="5" DockPanel.Dock="Right">
-                                                            <TextBlock>
-                                                            Progress:
-                                                            </TextBlock>
-
-                                                            <DockPanel>
-
-                                                                <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2" />
-                                                                <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2"/>
-                                                                <ProgressBar Margin="2" Value="50" />
-                                                            </DockPanel>
-                                                        </StackPanel>
-                                                    </DockPanel>
-                                                </TreeViewItem.Header>
-                                            </TreeViewItem>
-                                        </TreeViewItem.Items>
-                                    </TreeViewItem>
-                                </TreeView.Items>
-                            </TreeView>
-                        </Border>
-                        
-                        <Border Margin="5,5,5,5" CornerRadius="2,2,2,2" BorderBrush="#FF0833DA">
-                            <TreeView>
-                                <TreeView.Items>
-                                    <TreeViewItem>
-                                        <TreeViewItem.Header>
-                                            <StackPanel Margin="5">
-
-
-                                                <TextBlock>
-                                                    Progress:
-                                                </TextBlock>
-
-                                                <DockPanel>
-
-                                                    <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2" />
-                                                    <Button DockPanel.Dock="Right" MinWidth="23" MinHeight="23" Margin="2"/>
-                                                    <ProgressBar Margin="2" Value="30" />
-                                                </DockPanel>
-                                            </StackPanel>
-                                        </TreeViewItem.Header>
-                                    </TreeViewItem>
-                                </TreeView.Items>
-                            </TreeView>
-                        </Border>
-                        
-                    </StackPanel>
+                <Border Grid.Row="2" 
+                        Name="bdrFilters" 
+                        Style="{StaticResource internalBorderStyle}">
+                    <ListView Name="lvwFilters"
+                              ItemsSource="{Binding Path=Filters}"
+                              ItemContainerStyle="{StaticResource listviewItemStyle}">
+                        <ListView.View>
+                            <GridView ColumnHeaderContainerStyle="{StaticResource columnHeaderStyle}">
+                                <GridViewColumn Header="Filter name" 
+                                                CellTemplate="{StaticResource filterNameTemplate}"
+                                                >
+                                </GridViewColumn>
+                                <GridViewColumn Header="On / Off"
+                                                CellTemplate="{StaticResource filterOnOffTemplate}"
+                                                HeaderContainerStyle="{StaticResource nonsizingColumnHeaderStyle}">
+                                </GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </Border>
             </Grid>
 
@@ -261,11 +270,6 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="Auto" />
             </Grid.ColumnDefinitions>
-            
-            
-           
-            
-            
         </Grid>
         
         <!-- Status bar -->
