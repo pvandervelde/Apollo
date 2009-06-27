@@ -14,3 +14,4 @@ Backup_Of_*.*
 bin
 bin/doc
 bin/doc
+AssemblyInfo.VersionNumber.cs
