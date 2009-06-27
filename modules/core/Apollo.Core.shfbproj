@@ -16,7 +16,7 @@
     <!-- SHFB properties -->
     <OutputPath>bin\doc\Help\</OutputPath>
     <HtmlHelpName>Documentation</HtmlHelpName>
-    <BuildLogFile>bin\reports\doc.sandcastle.log</BuildLogFile>
+    <BuildLogFile>bin\logs\doc.sandcastle.log</BuildLogFile>
     <FrameworkVersion>3.5</FrameworkVersion>
     <HelpFileFormat>Website</HelpFileFormat>
     <CopyrightText>Copyright %28c%29 - P. van der Velde</CopyrightText>

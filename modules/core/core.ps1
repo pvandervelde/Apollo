@@ -96,6 +96,7 @@ properties{
 	$logMsiBuild = 'core_msi.log'
 	$logMsBuild = 'core_msbuild.log'
 	$logFxCop = 'core_fxcop.xml'
+	$logNCover = 'core_ncover.xml'
 	
 	# version numbers
 	$versionMajor = 1
@@ -217,8 +218,11 @@ task runInit -depends runClean{
 
 task buildBinaries -depends runInit, getVersion{
 	"Building binaries..."
+	
+	# Set the version numbers
 	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile ($versionMajor, $versionMinor, $versionBuild, $versionRevision)
 
+	# build the core binaries
 	"Building Apollo.Core..."	
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
@@ -247,13 +251,29 @@ task runUnitTests -depends buildBinaries{
 	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
 	if ($shouldCheckCoverage)
 	{
-		$runner = /r NCover
+		#
+		# FIX THIS.... NEED COVERAGE!!!!!!!!!!
+		#
+	
+		throw "Code coverage doesn't work at the moment. Please run without coverage"
+		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+		#   process. This means we can't load explicit 32-bit binaries. However using the 
+		#   isolated process runner we can
+		$logFile = Join-Path $dirReports $logNCover
+		& $mbunitExe /hd:$dirMbUnit /wd:$dirBin /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Core.dll'" (Join-Path $dirBin 'Apollo.Core.Test.Unit.dll')
+	}
+	else
+	{
+		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+		#   process. This means we can't load explicit 32-bit binaries. However using the 
+		#   isolated process runner we can
+		& $mbunitExe /hd:$dirMbUnit /wd:$dirBin /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBin 'Apollo.Core.Test.Unit.dll')	
 	}
 	
-	# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-	#   process. This means we can't load explicit 32-bit binaries. However using the 
-	#   isolated process runner we can
-	& $mbunitExe /hd:$dirMbUnit /wd:$dirBin /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBin 'Apollo.Core.Test.Unit.dll')
+	#
+	# FIX THIS: NEED TO HAVE BUILD FAILURES!!!!
+	#	
+	
 	#if ($LastExitCode -ne 0)
 	#{
 	#	throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
@@ -311,10 +331,10 @@ task runDuplicateFinder -depends buildBinaries{
 	# FAIL THE BUILD IF THERE IS ANYTHING WRONG
 }
 
-task runVerify -depends runStyleCop, runFxCop, runDuplicateFinder{
-	"Finished verification..."
-}
+task runVerify -depends runStyleCop, runFxCop, runDuplicateFinder
 
 task buildInstaller -depends buildBinaries{
 	"Building installer..."
+	
+	# Use Wix to build all the merge modules
 }
