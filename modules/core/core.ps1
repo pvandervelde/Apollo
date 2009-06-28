@@ -181,7 +181,7 @@ task runClean{
 		"Cleaning..."
 		
 		$msbuildExe = Get-MsbuildExe
-		& $msbuildExe $slnCallImport /t:Clean
+		& $msbuildExe $slnCore /t:Clean
 		
 		# Clean the bin dir
 		if (Test-Path -Path $dirBin -PathType Container)
@@ -269,15 +269,11 @@ task runUnitTests -depends buildBinaries{
 		#   isolated process runner we can
 		& $mbunitExe /hd:$dirMbUnit /wd:$dirBin /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBin 'Apollo.Core.Test.Unit.dll')	
 	}
-	
-	#
-	# FIX THIS: NEED TO HAVE BUILD FAILURES!!!!
-	#	
-	
-	#if ($LastExitCode -ne 0)
-	#{
-	#	throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
-	#}
+
+	if ($LastExitCode -ne 0)
+	{
+		throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
+	}
 }
 
 task runIntegrationTests -depends buildBinaries{
@@ -294,6 +290,8 @@ task buildApiDoc -depends buildBinaries{
 	{
 		throw "Sandcastle help file builder failed on Apollo.Core with return code: $LastExitCode"
 	}
+	
+	# Should fail are release build if there's anything missing?
 }
 
 task runStyleCop -depends buildBinaries{
@@ -305,7 +303,7 @@ task runStyleCop -depends buildBinaries{
 		throw "Stylecop failed on Apollo.Core with return code: $LastExitCode"
 	}
 	
-	# FAIL THE BUILD IF THERE IS ANYTHING WRONG
+	# Check the MsBuild file (in the templates directory) for failure conditions	
 }
 
 task runFxCop -depends buildBinaries{

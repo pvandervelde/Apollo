@@ -45,14 +45,12 @@
             <Output TaskParameter="FailedFiles" ItemName="Failures"/> 
         </MSBuild.ExtensionPack.CodeQuality.StyleCop>
         
-        <!--
 		<ItemGroup>
-            <WarningsFile Include="$(ProjectDir)\StyleCopViolations.xml" /> 
+            <WarningsFile Include="$(BaseDir)\StyleCopViolations.xml" /> 
         </ItemGroup>
         
         <Copy SourceFiles="@(WarningsFile)" DestinationFolder="$(ReportsDir)\%(RecursiveDir)"></Copy>
         <Delete Files="@(WarningsFile)" />
-		-->
 
         <!-- Log the summary of the results --> 
         <Message Text="StyleCop Succeeded: $(AllPassed), Violations: $(Violations)"/>
@@ -74,7 +72,7 @@
         <!-- The StyleCop task does not throw an error if the analysis failed,  
         so we need to check the return value and if we choose to treat errors as warnings  
         we need to set the error state, if set it will cause us to jump to the failure target --> 
-        <!-- <Error Text="StyleCop analysis warnings occured" Condition="'$(AllPassed)' == 'False'"  /> -->
+        <Error Text="StyleCop analysis warnings occured" Condition="'$(AllPassed)' == 'False'"  />
     </Target>
 
 </Project>

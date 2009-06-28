@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Utils;
-using System.Diagnostics.Contracts;
 
 namespace Apollo.Core
 {
@@ -73,12 +72,6 @@ namespace Apollo.Core
         /// <param name="currentAction">The current action which is being processed.</param>
         protected void OnStartupProgress(int progress, string currentAction)
         {
-            // Argument validation.
-            {
-                Contract.Requires<ArgumentOutOfRangeException>(progress >= 0);
-                Contract.Requires<ArgumentOutOfRangeException>(progress <= 100);
-            }
-
             EventHandler<StartupProgressEventArgs> local = StartupProgress;
             if (local != null)
             { 

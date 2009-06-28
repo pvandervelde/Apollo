@@ -1,7 +1,6 @@
 ﻿// Copyright (c) P. van der Velde. All rights reserved.
 
 using System;
-using System.Diagnostics.Contracts;
 
 namespace Apollo.Core
 {
@@ -30,8 +29,15 @@ namespace Apollo.Core
         {
             // Argument validation.
             {
-                Contract.Requires<ArgumentOutOfRangeException>(progress >= 0);
-                Contract.Requires<ArgumentOutOfRangeException>(progress <= 100); 
+                if (progress < 0)
+                {
+                    throw new ArgumentOutOfRangeException("progress", "Progress needs to be 0% or larger.");
+                }
+
+                if (progress > 100)
+                {
+                    throw new ArgumentOutOfRangeException("progress", "Progress needs to be 100% or smaller.");
+                }
             }
 
             m_Progress = progress;
