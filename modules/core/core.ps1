@@ -61,6 +61,11 @@ properties{
 
 	# solution directories
 	$dirSrc = Join-Path $dirBase 'src'
+	
+	#
+	# ADD A BUILD DIRECTORY WHERE WE CAN STORE THE FINAL BINARIES --> THAT WAY WE ARE NOT IN TROUBLE IF WE EVER
+	# GET MORE FILES / DIRECTORIES!
+	#
 	$dirBin = Join-Path $dirBase 'bin'
 	
 	$dirResource = Join-Path $dirBase 'resource'
@@ -144,7 +149,7 @@ task IntegrationTests -depends runIntegrationTests
 task ApiDoc -depends buildApiDoc
 
 # Runs the verifications
-task Verify -depends runVerify
+task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
 
 # Builds the installer modules
 task Installer -depends buildBinaries
@@ -175,13 +180,41 @@ task getVersion{
 ###############################################################################
 # EXECUTING TASKS
 
+# The Help task displays the available commandline arguments
+task Help{
+@"
+In order to run this build script please call a specific target.
+The following build tasks are available
+	'incremental':		Turns on the incremental building of the binaries
+	'debug':			Runs the script in debug mode. Mutually exclusive with the 'release' task
+	'release':			Runs the script in release mode. Mutually exclusive with the 'debug' task
+	'clean':			Cleans the output directory
+	'build':			Cleans the output directory and builds the binaries
+	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
+	'integrationtest':	Cleans the output directory, builds the binaries and runs the integration tests
+	'apidoc':			Builds the API documentation from the source comments
+	'verify':			Runs the source and binary verification. Returning one or more reports
+						describing the flaws in the source / binaries.
+	'installer':		Builds the merge module package
+
+	./build.ps1 <TARGET>
+Multiple build tasks can be specified separated by a comma. Also build tasks can be combined 
+in any order. In most cases the build script will ensure that the tasks are executed in the
+correct order. Note that this is NOT the case for the 'incremental', 'debug' and 'release' tasks.
+In order to get a correct effect these tasks need to be the first tasks being called!
+       
+In order to run this build script please call this script via PSAKE like:
+	psake core.ps1 incremental,debug,clean,build,unittest,verify,install -framework 3.5 -timing
+"@
+}
+
 task runClean{
 	if ($shouldClean)
 	{
 		"Cleaning..."
 		
 		$msbuildExe = Get-MsbuildExe
-		& $msbuildExe $slnCore /t:Clean
+		& $msbuildExe $slnCore /t:Clean /verbosity:minimal
 		
 		# Clean the bin dir
 		if (Test-Path -Path $dirBin -PathType Container)
@@ -227,7 +260,7 @@ task buildBinaries -depends runInit, getVersion{
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
 	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $slnCore /p:Configuration=$configuration /clp:Summary /clp:ShowTimeStamp /clp:Verbosity=normal /fileLoggerParameters:LogFile=$logPath	
+	& $msbuildExe $slnCore /p:Configuration=$configuration /clp:Summary /clp:ShowTimeStamp /clp:Verbosity=minimal /flp:LogFile=$logPath /flp:Verbosity=normal
 	if ($LastExitCode -ne 0)
 	{
 		throw "Apollo.Core build failed with return code: $LastExitCode"
@@ -239,10 +272,10 @@ task buildBinaries -depends runInit, getVersion{
 	$dirBinIntegration = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.integration') 'bin') $configuration
 	$dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.perf') 'bin') $configuration
 	
-	Copy-Item (Join-Path $dirBinCore '*') $dirBin
-	Copy-Item (Join-Path $dirBinUnit '*') $dirBin
-	Copy-Item (Join-Path $dirBinIntegration '*') $dirBin
-	Copy-Item (Join-Path $dirBinPerf '*') $dirBin
+	Copy-Item (Join-Path $dirBinCore '*') $dirBin -Force
+	Copy-Item (Join-Path $dirBinUnit '*') $dirBin -Force
+	Copy-Item (Join-Path $dirBinIntegration '*') $dirBin -Force
+	Copy-Item (Join-Path $dirBinPerf '*') $dirBin -Force
 }
 
 task runUnitTests -depends buildBinaries{
@@ -297,7 +330,7 @@ task buildApiDoc -depends buildBinaries{
 task runStyleCop -depends buildBinaries{
 	$msbuildExe = Get-MsbuildExe
 	
-	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:MsBuildExtensionPack=$dirMsbuildExtensionPack /p:ProjectDir=$dirBase /p:SrcDir=$dirBase /p:ReportsDir=$dirReports
+	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:MsBuildExtensionPack=$dirMsbuildExtensionPack /p:ProjectDir=$dirBase /p:SrcDir=$dirBase /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
 	if ($LastExitCode -ne 0)
 	{
 		throw "Stylecop failed on Apollo.Core with return code: $LastExitCode"
@@ -321,6 +354,12 @@ task runFxCop -depends buildBinaries{
 	}
 	
 	# FAIL THE BUILD IF THERE IS ANYTHING WRONG
+	
+	#
+	#
+	# CHANGE THE FXCOP PROJECT FILE. WE CAN USE FAR MORE RELATIVE PATHS!!!!!!!!
+	#
+	#
 }
 
 task runDuplicateFinder -depends buildBinaries{
@@ -328,8 +367,6 @@ task runDuplicateFinder -depends buildBinaries{
 	
 	# FAIL THE BUILD IF THERE IS ANYTHING WRONG
 }
-
-task runVerify -depends runStyleCop, runFxCop, runDuplicateFinder
 
 task buildInstaller -depends buildBinaries{
 	"Building installer..."
