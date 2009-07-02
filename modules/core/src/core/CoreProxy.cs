@@ -1,4 +1,8 @@
-﻿// Copyright (c) P. van der Velde. All rights reserved.
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -15,8 +19,7 @@ namespace Apollo.Core
         /// Gets the type of the service. Currently either a background service
         /// or a foreground service.
         /// </summary>
-        /// <returns></returns>
-        /// <value>The type of the service.</value>
+        /// <returns>The type of the service.</returns>
         public override ServiceType ServicePreferenceType()
         {
             throw new NotImplementedException();
@@ -35,7 +38,6 @@ namespace Apollo.Core
             // Depends on the:
             // - Persistence service
             // - Message pipeline
-
             throw new NotImplementedException();
         }
 

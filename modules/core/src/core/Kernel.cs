@@ -1,13 +1,19 @@
-﻿// Copyright (c) P. van der Velde. All rights reserved.
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 using System;
 
 namespace Apollo.Core
 {
+    /// <summary>
+    /// Defines the core class that controls the kernel of the Apollo application.
+    /// </summary>
     internal sealed class Kernel : IOwnServices
     {
         // How do we discover services? MEF?
-
 
         /// <summary>
         /// Installs the service of the specified type.

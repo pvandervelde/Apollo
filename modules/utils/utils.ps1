@@ -66,7 +66,6 @@ properties{
 	$dirBuild = Join-Path $dirBin 'build'
 	
 	$dirResource = Join-Path $dirBase 'resource'
-	$dirInstall = Join-Path $dirBase 'install'
 	
 	$dirLib = Join-Path $dirBase 'lib'
 	$dirLib3rdParty = Join-Path $dirLib 'thirdparty'
@@ -83,22 +82,22 @@ properties{
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
 	
 	# solution files
-	$slnCore = Join-Path $dirSrc 'Apollo.Core.sln'
+	$slnUtils = Join-Path $dirSrc 'Apollo.Utils.sln'
 	
 	$msbuildStyleCop = Join-Path (Join-Path((Get-Item $dirBase).parent.parent.fullname) 'templates') 'StyleCop.msbuild'
-	$configFxCop = Join-Path $dirBase 'Apollo.Core.fxcop'
+	$configFxCop = Join-Path $dirBase 'Apollo.Utils.fxcop'
 	
-	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Core.shfbproj'
+	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Utils.shfbproj'
 	
 	$versionFile = Join-Path $dirBase 'Version.xml'
 	$versionTemplateFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
 	
 	# output files
-	$logMsiBuild = 'core_msi.log'
-	$logMsBuild = 'core_msbuild.log'
-	$logFxCop = 'core_fxcop.xml'
-	$logNCover = 'core_ncover.xml'
+	$logMsiBuild = 'utils_msi.log'
+	$logMsBuild = 'utils_msbuild.log'
+	$logFxCop = 'utils_fxcop.xml'
+	$logNCover = 'utils_ncover.xml'
 	
 	# version numbers
 	$versionMajor = 1
@@ -197,7 +196,7 @@ correct order. Note that this is NOT the case for the 'incremental', 'debug' and
 In order to get a correct effect these tasks need to be the first tasks being called!
        
 In order to run this build script please call this script via PSAKE like:
-	psake core.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing
+	psake utils.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing
 "@
 }
 
@@ -207,7 +206,7 @@ task runClean{
 		"Cleaning..."
 		
 		$msbuildExe = Get-MsbuildExe
-		& $msbuildExe $slnCore /t:Clean /verbosity:minimal
+		& $msbuildExe $slnUtils /t:Clean /verbosity:minimal
 		
 		# Clean the bin dir
 		if (Test-Path -Path $dirBin -PathType Container)
@@ -254,25 +253,25 @@ task buildBinaries -depends runInit, getVersion{
 	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile ($versionMajor, $versionMinor, $versionBuild, $versionRevision)
 
 	# build the core binaries
-	"Building Apollo.Core..."	
+	"Building Apollo.Utils..."	
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
 	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $slnCore /p:Configuration=$configuration /clp:Summary /clp:ShowTimeStamp /clp:Verbosity=minimal /flp:LogFile=$logPath /flp:Verbosity=normal
+	& $msbuildExe $slnUtils /p:Configuration=$configuration /clp:Summary /clp:ShowTimeStamp /clp:Verbosity=minimal /flp:LogFile=$logPath /flp:Verbosity=normal
 	if ($LastExitCode -ne 0)
 	{
 		throw "Apollo.Core build failed with return code: $LastExitCode"
 	}
 	
 	# Copy the binaries
-	$dirBinCore = Join-Path (Join-Path (Join-Path $dirSrc 'core') 'bin') $configuration
-	$dirBinUnit = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.unit') 'bin') $configuration
-	$dirBinIntegration = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.integration') 'bin') $configuration
-	$dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.perf') 'bin') $configuration
+	$dirBinUtils = Join-Path (Join-Path (Join-Path $dirSrc 'utils') 'bin') $configuration
+	$dirBinUtilsSrcOnly = Join-Path (Join-Path (Join-Path $dirSrc 'utils.srconly') 'bin') $configuration
+	$dirBinUnit = Join-Path (Join-Path (Join-Path $dirSrc 'utils.test.unit') 'bin') $configuration
+	$dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'utils.test.perf') 'bin') $configuration
 	
-	Copy-Item (Join-Path $dirBinCore '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinUtils '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinUtilsSrcOnly '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinUnit '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinIntegration '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinPerf '*') $dirBuild -Force
 }
 
@@ -291,26 +290,25 @@ task runUnitTests -depends buildBinaries{
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
 		#   isolated process runner we can
 		$logFile = Join-Path $dirReports $logNCover
-		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Core.dll'" (Join-Path $dirBuild 'Apollo.Core.Test.Unit.dll')
+		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Utils.dll'" (Join-Path $dirBuild 'Apollo.Utils.Test.Unit.dll')
 	}
 	else
 	{
 		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
 		#   isolated process runner we can
-		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBuild 'Apollo.Core.Test.Unit.dll')	
+		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBuild 'Apollo.Utils.Test.Unit.dll')	
 	}
 
 	if ($LastExitCode -ne 0)
 	{
-		throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
+		#throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
 	}
 }
 
 task runIntegrationTests -depends buildBinaries{
 	"Running integration tests..."
-	"There are currently no integration tests. You should make some ..."
-	# ???
+	"There are no integration tests."
 }
 
 task buildApiDoc -depends buildBinaries{
@@ -320,7 +318,7 @@ task buildApiDoc -depends buildBinaries{
 	& $msbuildExe $msbuildApiDoc
 	if ($LastExitCode -ne 0)
 	{
-		throw "Sandcastle help file builder failed on Apollo.Core with return code: $LastExitCode"
+		throw "Sandcastle help file builder failed on Apollo.Utils with return code: $LastExitCode"
 	}
 	
 	if( $configuration -eq 'release')
@@ -335,7 +333,7 @@ task runStyleCop -depends buildBinaries{
 	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:MsBuildExtensionPack=$dirMsbuildExtensionPack /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
 	if ($LastExitCode -ne 0)
 	{
-		throw "Stylecop failed on Apollo.Core with return code: $LastExitCode"
+		throw "Stylecop failed on Apollo.Utils with return code: $LastExitCode"
 	}
 	
 	# Check the MsBuild file (in the templates directory) for failure conditions	
@@ -352,7 +350,7 @@ task runFxCop -depends buildBinaries{
 	& $fxcopExe /project:$configFxCop /out:$outFile
 	if ($LastExitCode -ne 0)
 	{
-		throw "FxCop failed on Apollo.Core with return code: $LastExitCode"
+		throw "FxCop failed on Apollo.Utils with return code: $LastExitCode"
 	}
 	
 	if ($configuration -eq 'release')

@@ -1,4 +1,8 @@
-﻿// Copyright (c) P. van der Velde. All rights reserved.
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 using System;
 
@@ -7,12 +11,13 @@ namespace Apollo.Core
     /// <summary>
     /// Event arguments used for startup progress events.
     /// </summary>
-    public sealed class StartupProgressEventArgs: EventArgs
+    public sealed class StartupProgressEventArgs : EventArgs
     {
         /// <summary>
         /// Stores the current progress percentage, ranging from 0 to 100.
         /// </summary>
         private readonly int m_Progress;
+        
         /// <summary>
         /// Stores the element that is currently being processed.
         /// </summary>
@@ -54,7 +59,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Returns a string describing the action that is currently being processed.
+        /// Gets a string describing the action that is currently being processed.
         /// </summary>
         /// <value>The action that is currently being processed.</value>
         public string CurrentlyProcessing

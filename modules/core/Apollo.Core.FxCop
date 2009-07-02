@@ -2,12 +2,12 @@
 <FxCopProject Version="1.36" Name="Apollo.Core">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
-  <Stylesheet Apply="True">d:\documents\petrik\software\apollo\code\unstable\prealpha\tools\thirdparty\fxcop\Xml\FxCopReport.xsl</Stylesheet>
+  <Stylesheet Apply="False" />
   <SaveMessages>
    <Project Status="Active, Excluded" NewOnly="False" />
    <Report Status="Active, Excluded, ExcludedInSource" NewOnly="False" />
   </SaveMessages>
-  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="True" />
+  <ProjectFile Compress="True" DefaultTargetCheck="True" DefaultRuleCheck="True" SaveByRuleGroup="" Deterministic="False" />
   <EnableMultithreadedLoad>True</EnableMultithreadedLoad>
   <EnableMultithreadedAnalysis>True</EnableMultithreadedAnalysis>
   <SourceLookup>True</SourceLookup>
@@ -19,10 +19,11 @@
   <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
+  <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
-  <Target Name="$(ProjectDir)/bin/Apollo.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/bin/Apollo.Utils.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -39,7 +40,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36">
+ <FxCopReport Version="1.36" LastAnalysis="2009-06-29 20:23:15Z">
   <Namespaces>
    <Namespace Name="Apollo.Utils">
     <Messages>
@@ -53,17 +54,12 @@
    </Namespace>
   </Namespaces>
   <Targets>
-   <Target Name="$(ProjectDir)/bin/Apollo.Core.dll">
+   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll">
     <Modules>
      <Module Name="apollo.core.dll">
       <Messages>
        <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-06-26 14:40:34Z">
         <Issue Name="NoStrongName">
-         <Item>'Apollo.Core.dll'</Item>
-        </Issue>
-       </Message>
-       <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Created="2009-06-26 14:40:34Z">
-        <Issue>
          <Item>'Apollo.Core.dll'</Item>
         </Issue>
        </Message>
@@ -122,7 +118,7 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/bin/Apollo.Utils.dll">
+   <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.dll">
     <Modules>
      <Module Name="apollo.utils.dll">
       <Messages>
@@ -134,21 +130,6 @@
        <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-06-26 14:40:34Z">
         <Issue Name="Assembly">
          <Item>Utils</Item>
-         <Item>'Apollo.Utils.dll'</Item>
-        </Issue>
-       </Message>
-       <Message TypeName="MarkAssembliesWithAssemblyVersion" Category="Microsoft.Design" CheckId="CA1016" Created="2009-06-26 14:40:34Z">
-        <Issue>
-         <Item>'Apollo.Utils.dll'</Item>
-        </Issue>
-       </Message>
-       <Message TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014" Created="2009-06-26 14:40:34Z">
-        <Issue>
-         <Item>'Apollo.Utils.dll'</Item>
-        </Issue>
-       </Message>
-       <Message TypeName="MarkAssembliesWithComVisible" Category="Microsoft.Design" CheckId="CA1017" Created="2009-06-26 14:40:34Z">
-        <Issue Name="NoAttribute" Level="CriticalError">
          <Item>'Apollo.Utils.dll'</Item>
         </Issue>
        </Message>
@@ -188,15 +169,6 @@
    </Rule>
    <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
     <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
-   </Rule>
-   <Rule TypeName="MarkAssembliesWithAssemblyVersion" Category="Microsoft.Design" CheckId="CA1016">
-    <Resolution Name="Default">Add an AssemblyVersion attribute to {0}.</Resolution>
-   </Rule>
-   <Rule TypeName="MarkAssembliesWithClsCompliant" Category="Microsoft.Design" CheckId="CA1014">
-    <Resolution Name="Default">Mark {0} with CLSCompliant(true) because it exposes externally visible types.</Resolution>
-   </Rule>
-   <Rule TypeName="MarkAssembliesWithComVisible" Category="Microsoft.Design" CheckId="CA1017">
-    <Resolution Name="NoAttribute">Because {0} exposes externally visible types, mark it with ComVisible(false) at the assembly level and then mark all types within the assembly that should be exposed to COM clients with ComVisible(true).</Resolution>
    </Rule>
    <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
     <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>

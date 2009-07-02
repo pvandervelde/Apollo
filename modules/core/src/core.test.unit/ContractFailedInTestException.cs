@@ -1,7 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 
 namespace Apollo.Core.Test.Unit
 {
@@ -10,10 +13,12 @@ namespace Apollo.Core.Test.Unit
     {
         public ContractFailedInTestException()
             : base("A contract failed.")
-        { }
+        { 
+        }
 
         public ContractFailedInTestException(string message)
             : base(message)
-        { }
+        { 
+        }
     }
 }

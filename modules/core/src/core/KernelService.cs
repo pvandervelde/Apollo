@@ -1,4 +1,8 @@
-﻿// Copyright (c) P. van der Velde. All rights reserved.
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -12,12 +16,14 @@ namespace Apollo.Core
     public enum ServiceType
     {
         // Foreground is the default value for a service type.
+
         /// <summary>
         /// The service is a foreground service. This means that it will
         /// communicate with other services and actively take part in the
         /// running of the application.
         /// </summary>
         Foreground,
+        
         /// <summary>
         /// The service is a background service. This means that the service
         /// normally only provides data for other services.
@@ -48,13 +54,14 @@ namespace Apollo.Core
         /// Initializes a new instance of the <see cref="KernelService"/> class.
         /// </summary>
         protected KernelService()
-        { }
+        { 
+        }
 
         /// <summary>
         /// Gets the type of the service. Currently either a background service
         /// or a foreground service.
         /// </summary>
-        /// <value>The type of the service.</value>
+        /// <returns>The type of the service.</returns>
         public virtual ServiceType ServicePreferenceType() // <-- Needs renaming.
         {
             return Apollo.Core.ServiceType.Foreground;

@@ -3,6 +3,24 @@ function global:Get-ScriptLocation{
 	Split-Path $MyInvocation.ScriptName
 }
 
+function global:Print-PrettyPrintHeader([string]$value){
+	"=" * 15 + " " + $value + " " + "="*15
+}
+
+function global:Run-PsakeScript([string]$script, [String[]]$targets){
+
+	Print-PrettyPrintHeader "Starting $script"
+	""
+	& run-psake -noexit $script $targets -showfullerror -timing -framework 4.0
+	if (!$psake_buildSucceeded)
+	{
+		throw "$scriptName failed with return code: $LastExitCode"
+	}
+	
+	Print-PrettyPrintHeader "Finished $script"
+	""
+}
+
 # Properties
 properties{
 	$dirBase = Get-ScriptLocation
@@ -28,15 +46,18 @@ properties{
 					'batchservice' = Join-Path $dirModulesUiBatchService 'batchservice.ps1';
 					'rhino' = Join-Path $dirModulesUiRhino 'rhino.ps1';
 					'utils' = Join-Path $dirModulesUtils 'utils.ps1';
-					
 				 }
 	
 	# script-wide variables
 	$shouldClean = $true
+	$shouldRunUnitTests = $false
+	$shouldRunVerify = $false
 	$shouldBuildApiDocs = $false
 	$shouldBuildUserDocs = $false
 	$shouldBuildInstaller = $false
 	$configuration = 'debug'
+	
+	$tasks = New-Object System.Collections.Specialized.StringCollection
 }
 
 # Configuration tasks
@@ -50,6 +71,14 @@ task Debug{
 
 task Release{
 	Set-Variable -Name configuration -Value 'release' -Scope 2
+}
+
+task UnitTests{
+	Set-Variable -Name shouldRunUnitTests -Value $true -Scope 2
+}
+
+task Verify{
+	Set-Variable -Name shouldRunVerify -Value $true -Scope 2
 }
 
 task ApiDocs{
@@ -67,10 +96,13 @@ task Installer{
 # Actual build tasks
 
 # Clean all the generated files
-task Clean -depends runClean
+task Clean -depends runScripts
 
-# Run the build
-task Build -depends assembleApiDocs, buildUserDoc, assembleInstaller, collectMetrics
+# Run the developer build. Doesn't do installers and documentation
+task DeveloperBuild -depends runScripts
+
+# Runs a full build
+task FullBuild -depends runScripts, assembleApiDocs, buildUserDoc, assembleInstaller, collectMetrics
 
 ###############################################################################
 # HELPER TASKS
@@ -79,30 +111,48 @@ task Build -depends assembleApiDocs, buildUserDoc, assembleInstaller, collectMet
 ###############################################################################
 # EXECUTING TASKS
 
-task runClean{
-	"Cleaning..."
-	
+task createTasks{
+	$tasks.Clear()
+
+	if ($configuration -eq 'debug')
+	{ $tasks.Add('Debug') | Out-Null }
+	else
+	{ $tasks.Add('Release') | Out-Null }
+		
+	if (!$shouldClean) { $tasks.Add('Incremental') | Out-Null }
+	if ($shouldRunUnitTests) { $tasks.Add('UnitTests') | Out-Null }
+	if ($shouldRunVerify) { $tasks.Add('Verify') | Out-Null }
+	if ($shouldBuildApiDocs) { $tasks.Add('ApiDoc') | Out-Null }
 }
 
-task runInit -depends runClean{
-	"Initializing build..."
+task runScripts -depends createTasks{
+	Run-PsakeScript $projects['utils'] $tasks
+	Run-PsakeScript $projects['core'] $tasks
+	#Run-PsakeScript $projects['uicommon'] $tasks
+	#Run-PsakeScript $projects['projectexplorer'] $tasks
+	#Run-PsakeScript $projects['batchservice'] $tasks
+	#Run-PsakeScript $projects['rhino'] $tasks
 }
 
-task buildBinaries -depends runInit{
-	"Calling module build scripts..."
-}
-
-task assembleApiDocs -depends buildBinaries{
+task assembleApiDocs -depends runScripts{
 	"Assembling API docs..."
+	
+	# Collect API docs from different folders and assemble them
 }
 
 task buildUserDoc{
+	"Building user docs..."
+	# Build the user docs
 }
 
-task assembleInstaller -depends buildBinaries{
+task assembleInstaller -depends runScripts{
 	"Assembling installer..."
+	
+	# Grab all the merge modules and make them into a single installer
 }
 
-task collectMetrics -depends buildBinaries{
+task collectMetrics -depends runScripts{
 	"Collecting statistics..."
+	
+	# collect metrics and so something with them ...
 }

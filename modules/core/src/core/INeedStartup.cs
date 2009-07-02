@@ -1,6 +1,11 @@
-﻿// Copyright (c) P. van der Velde. All rights reserved.
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core
 {
@@ -13,18 +18,22 @@ namespace Apollo.Core
         /// The state is unknown.
         /// </summary>
         Unknown,
+
         /// <summary>
         /// The object has not been started yet.
         /// </summary>
         NotStarted,
+        
         /// <summary>
         /// The object is starting up but has not finished the start process yet.
         /// </summary>
         Starting,
+        
         /// <summary>
         /// The object has finished the start process and is running.
         /// </summary>
         Started,
+        
         /// <summary>
         /// The object has been running and entered a non-started state.
         /// </summary>
@@ -32,7 +41,7 @@ namespace Apollo.Core
     }
 
     /// <summary>
-    /// Defines the interface for classes that provide startup progress
+    /// Defines the interface for classes that provide startup progress.
     /// </summary>
     public interface INeedStartup
     {
@@ -53,6 +62,8 @@ namespace Apollo.Core
         /// <returns>
         ///   The current startup state for the object.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", 
+            Justification="See: Framework Design Guidelines; Section 5.1, page 136.")]
         StartupState GetStartupState();
     }
 }
