@@ -1,0 +1,10 @@
+CORE:
+* SmartApps - An application centric approach to high performance computing
+* 
+
+
+UI:
+
+
+
+PLUGINS:

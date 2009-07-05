@@ -84,7 +84,7 @@ By separating the actual generated data from the 'description' data we can allow
     <Entity type="Interface">
       <Name>IVisualizer</Name>
       <Access>Public</Access>
-      <Location left="1933" top="902" />
+      <Location left="2107" top="902" />
       <Size width="162" height="65" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -169,7 +169,7 @@ By separating the actual generated data from the 'description' data we can allow
     <Entity type="Interface">
       <Name>IProjectService</Name>
       <Access>Public</Access>
-      <Location left="629" top="400" />
+      <Location left="644" top="400" />
       <Size width="162" height="80" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -209,7 +209,7 @@ By separating the actual generated data from the 'description' data we can allow
     </Entity>
     <Entity type="Comment">
       <Text>E.g. for simulations there is the Run command.</Text>
-      <Location left="1949" top="581" />
+      <Location left="1778" top="400" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Interface">
@@ -238,6 +238,30 @@ By separating the actual generated data from the 'description' data we can allow
 Note that data sets only store differential component information. i.e. the parent data set defines the base components. The individual data sets then override these definitions.</Text>
       <Location left="1879" top="1726" />
       <Size width="262" height="131" />
+    </Entity>
+    <Entity type="Interface">
+      <Name>IExecutor</Name>
+      <Access>Public</Access>
+      <Location left="429" top="581" />
+      <Size width="162" height="84" />
+      <Collapsed>False</Collapsed>
+    </Entity>
+    <Entity type="Comment">
+      <Text>Allow saving a new project from any specific node downwards. This means we'll need to copy in all the parent information into the new top level node.</Text>
+      <Location left="10" top="462" />
+      <Size width="284" height="80" />
+    </Entity>
+    <Entity type="Interface">
+      <Name>IProcessSchedule</Name>
+      <Access>Public</Access>
+      <Location left="1986" top="581" />
+      <Size width="162" height="77" />
+      <Collapsed>False</Collapsed>
+    </Entity>
+    <Entity type="Comment">
+      <Text>Process schedules are processed by the executor. This is passed in from the project service.</Text>
+      <Location left="2326" top="581" />
+      <Size width="212" height="78" />
     </Entity>
   </Entities>
   <Relations>
@@ -361,14 +385,14 @@ Note that data sets only store differential component information. i.e. the pare
       <IsComposition>True</IsComposition>
     </Relation>
     <Relation type="Association" first="7" second="11">
-      <StartOrientation>Vertical</StartOrientation>
+      <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1954</X>
-        <Y>1206</Y>
+        <X>2160</X>
+        <Y>1283</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2018</X>
+        <X>2192</X>
         <Y>1005</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
@@ -424,9 +448,13 @@ Note that data sets only store differential component information. i.e. the pare
     <Relation type="Association" first="13" second="12">
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1804</X>
+        <Y>877</Y>
+      </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2388</X>
-        <Y>800</Y>
+        <X>2380</X>
+        <Y>852</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -436,12 +464,12 @@ Note that data sets only store differential component information. i.e. the pare
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2014</X>
-        <Y>866</Y>
+        <X>2236</X>
+        <Y>870</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2350</X>
-        <Y>832</Y>
+        <X>2356</X>
+        <Y>870</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -542,8 +570,8 @@ Note that data sets only store differential component information. i.e. the pare
         <Y>1016</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2640</X>
-        <Y>1436</Y>
+        <X>2588</X>
+        <Y>1439</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>True</IsAggregation>
@@ -553,7 +581,7 @@ Note that data sets only store differential component information. i.e. the pare
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>734</X>
+        <X>749</X>
         <Y>510</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -575,7 +603,7 @@ Note that data sets only store differential component information. i.e. the pare
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>703</X>
+        <X>718</X>
         <Y>356</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -590,7 +618,7 @@ Note that data sets only store differential component information. i.e. the pare
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>586</X>
+        <X>601</X>
         <Y>428</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
@@ -709,11 +737,11 @@ Note that data sets only store differential component information. i.e. the pare
       <IsComposition>True</IsComposition>
     </Relation>
     <Relation type="Comment" first="30" second="3">
-      <StartOrientation>Horizontal</StartOrientation>
+      <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>1908</X>
-        <Y>617</Y>
+        <X>1841</X>
+        <Y>498</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>1835</X>
@@ -746,6 +774,51 @@ Note that data sets only store differential component information. i.e. the pare
         <X>1945</X>
         <Y>1612</Y>
       </BendPoint>
+    </Relation>
+    <Relation type="Association" first="24" second="34">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>674</X>
+        <Y>512</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Association" first="13" second="36">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1768</X>
+        <Y>875</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2043</X>
+        <Y>683</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Association" first="11" second="36">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2162</X>
+        <Y>877</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2104</X>
+        <Y>685</Y>
+      </BendPoint>
+      <Direction>Unidirectional</Direction>
+      <IsAggregation>False</IsAggregation>
+      <IsComposition>True</IsComposition>
+    </Relation>
+    <Relation type="Comment" first="37" second="36">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
     </Relation>
   </Relations>
 </ClassProject>

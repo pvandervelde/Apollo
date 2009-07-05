@@ -48,7 +48,7 @@ Note that most system services are always loaded in a specific order / time. e.g
     </Entity>
     <Entity type="Comment">
       <Text>Forms the front end of the project sub-system</Text>
-      <Location left="2516" top="754" />
+      <Location left="2516" top="692" />
       <Size width="162" height="72" />
     </Entity>
     <Entity type="Comment">
@@ -87,7 +87,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Interface">
       <Name>IMessage</Name>
       <Access>Public</Access>
-      <Location left="2747" top="384" />
+      <Location left="2743" top="384" />
       <Size width="162" height="71" />
       <Collapsed>False</Collapsed>
     </Entity>
@@ -100,7 +100,7 @@ Some services will be started on application start up.</Text>
     </Entity>
     <Entity type="Comment">
       <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
-      <Location left="2949" top="1330" />
+      <Location left="2977" top="1478" />
       <Size width="243" height="92" />
     </Entity>
     <Entity type="Comment">
@@ -138,7 +138,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>UserInterfaceService</Name>
       <Access>Public</Access>
-      <Location left="3268" top="1421" />
+      <Location left="3296" top="1569" />
       <Size width="162" height="96" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -146,7 +146,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>ProjectService</Name>
       <Access>Public</Access>
-      <Location left="2486" top="877" />
+      <Location left="2486" top="815" />
       <Size width="162" height="92" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -154,7 +154,7 @@ Some services will be started on application start up.</Text>
     <Entity type="Class">
       <Name>TimelineService</Name>
       <Access>Public</Access>
-      <Location left="3033" top="1190" />
+      <Location left="3061" top="1338" />
       <Size width="162" height="85" />
       <Collapsed>False</Collapsed>
       <Modifier>Sealed</Modifier>
@@ -257,6 +257,16 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <Location left="3004" top="384" />
       <Size width="217" height="62" />
     </Entity>
+    <Entity type="Comment">
+      <Text>Services should be able to register scanners / filters etc.?</Text>
+      <Location left="1414" top="908" />
+      <Size width="162" height="72" />
+    </Entity>
+    <Entity type="Comment">
+      <Text>Can we do the license system so that we store some code / IL in an encrypted part of the application. The license key is then used to unencrypt that code. The code can then be 'compiled' and passed on to the different services. That way we can extract different parts of the project / UI / persistence service into an encrypted part of the application (private key encrypted, decrypt with the public key).</Text>
+      <Location left="1987" top="1245" />
+      <Size width="340" height="118" />
+    </Entity>
   </Entities>
   <Relations>
     <Relation type="Comment" first="3" second="0">
@@ -347,11 +357,11 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
         <X>2602</X>
-        <Y>1000</Y>
+        <Y>938</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2977</X>
-        <Y>1218</Y>
+        <X>3005</X>
+        <Y>1366</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -361,12 +371,12 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3243</X>
-        <Y>1449</Y>
+        <X>3271</X>
+        <Y>1597</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>3220</X>
-        <Y>1238</Y>
+        <X>3248</X>
+        <Y>1386</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -376,8 +386,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Vertical</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3299</X>
-        <Y>1368</Y>
+        <X>3327</X>
+        <Y>1516</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>3125</X>
@@ -391,12 +401,12 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3194</X>
-        <Y>1485</Y>
+        <X>3222</X>
+        <Y>1633</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1899</X>
-        <Y>1434</Y>
+        <X>1842</X>
+        <Y>1432</Y>
       </BendPoint>
     </Relation>
     <Relation type="Generalization" first="20" second="17">
@@ -404,7 +414,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
         <X>2450</X>
-        <Y>932</Y>
+        <Y>870</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>1831</X>
@@ -415,8 +425,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3232</X>
-        <Y>1214</Y>
+        <X>3260</X>
+        <Y>1362</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>2673</X>
@@ -431,7 +441,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
         <X>2450</X>
-        <Y>912</Y>
+        <Y>850</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>2444</X>
@@ -443,14 +453,14 @@ Obvious problem is that all data runs on the users machine so they have full acc
     </Relation>
     <Relation type="Generalization" first="21" second="17">
       <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Horizontal</EndOrientation>
+      <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3006</X>
-        <Y>1245</Y>
+        <X>3034</X>
+        <Y>1393</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1980</X>
-        <Y>1245</Y>
+        <X>1884</X>
+        <Y>1374</Y>
       </BendPoint>
     </Relation>
     <Relation type="Generalization" first="22" second="17">
@@ -616,20 +626,16 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>1728</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>1876</X>
-        <Y>1358</Y>
+        <X>1812</X>
+        <Y>1356</Y>
       </BendPoint>
     </Relation>
     <Relation type="Association" first="19" second="28">
-      <StartOrientation>Horizontal</StartOrientation>
-      <EndOrientation>Vertical</EndOrientation>
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>3200</X>
-        <Y>1500</Y>
-      </BendPoint>
-      <BendPoint relativeToStartShape="False">
-        <X>2786</X>
-        <Y>1647</Y>
+        <X>3362</X>
+        <Y>1708</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -640,7 +646,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
         <X>2584</X>
-        <Y>997</Y>
+        <Y>935</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>2621</X>
@@ -704,7 +710,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <EndOrientation>Vertical</EndOrientation>
       <BendPoint relativeToStartShape="True">
         <X>2442</X>
-        <Y>952</Y>
+        <Y>890</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -718,8 +724,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>1716</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2488</X>
-        <Y>1076</Y>
+        <X>2482</X>
+        <Y>1040</Y>
       </BendPoint>
       <Direction>Unidirectional</Direction>
       <IsAggregation>False</IsAggregation>
@@ -737,8 +743,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <StartOrientation>Horizontal</StartOrientation>
       <EndOrientation>Horizontal</EndOrientation>
       <BendPoint relativeToStartShape="True">
-        <X>2292</X>
-        <Y>1161</Y>
+        <X>2294</X>
+        <Y>1180</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
         <X>2200</X>
@@ -764,8 +770,32 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Y>419</Y>
       </BendPoint>
       <BendPoint relativeToStartShape="False">
-        <X>2934</X>
+        <X>2930</X>
         <Y>419</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Comment" first="35" second="24">
+      <StartOrientation>Vertical</StartOrientation>
+      <EndOrientation>Vertical</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>1492</X>
+        <Y>852</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>1268</X>
+        <Y>883</Y>
+      </BendPoint>
+    </Relation>
+    <Relation type="Comment" first="36" second="31">
+      <StartOrientation>Horizontal</StartOrientation>
+      <EndOrientation>Horizontal</EndOrientation>
+      <BendPoint relativeToStartShape="True">
+        <X>2352</X>
+        <Y>1296</Y>
+      </BendPoint>
+      <BendPoint relativeToStartShape="False">
+        <X>2318</X>
+        <Y>1072</Y>
       </BendPoint>
     </Relation>
   </Relations>
