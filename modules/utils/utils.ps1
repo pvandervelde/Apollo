@@ -54,6 +54,15 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [str
 	Set-Content $newPath $text
 }
 
+function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
+	# only do this when we run the tests
+
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@ASSEMBLYNAME@', $assemblyName
+	
+	Set-Content $newPath $text
+}
+
 # Properties
 properties{
 	"Setting properties.."
@@ -74,6 +83,12 @@ properties{
 	$dirLogs = Join-Path $dirBin "logs"
 	$dirReports = Join-Path $dirBin 'reports'
 	
+	# assembly names
+	$assemblyNameUnitTest = 'Apollo.Utils.Test.Unit'
+	
+	# templates dirs
+	$dirTemplates = Join-Path ((Get-Item $dirBase).parent.parent.fullname) 'templates'
+	
 	# tools dirs
 	$dirTools = Join-Path (Join-Path ((Get-Item $dirBase).parent.parent.fullname) 'tools') 'thirdparty'
 	$dirStyleCop = Join-Path $dirTools 'StyleCop'
@@ -84,14 +99,17 @@ properties{
 	# solution files
 	$slnUtils = Join-Path $dirSrc 'Apollo.Utils.sln'
 	
-	$msbuildStyleCop = Join-Path (Join-Path((Get-Item $dirBase).parent.parent.fullname) 'templates') 'StyleCop.msbuild'
+	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
 	$configFxCop = Join-Path $dirBase 'Apollo.Utils.fxcop'
-	
 	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Utils.shfbproj'
-	
+
+	# template files
 	$versionFile = Join-Path $dirBase 'Version.xml'
-	$versionTemplateFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs.in'
+	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
+	
+	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
+	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
 	
 	# output files
 	$logMsiBuild = 'utils_msi.log'
@@ -251,6 +269,9 @@ task buildBinaries -depends runInit, getVersion{
 	
 	# Set the version numbers
 	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile ($versionMajor, $versionMinor, $versionBuild, $versionRevision)
+	
+	# Set the InternalsVisibleTo attribute
+	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $assemblyNameUnitTest
 
 	# build the core binaries
 	"Building Apollo.Utils..."	
