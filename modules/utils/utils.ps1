@@ -323,7 +323,7 @@ task runUnitTests -depends buildBinaries{
 
 	if ($LastExitCode -ne 0)
 	{
-		#throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
+		throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
 	}
 }
 

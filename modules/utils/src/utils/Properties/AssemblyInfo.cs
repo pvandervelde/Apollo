@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
@@ -19,3 +20,6 @@ using System.Runtime.InteropServices;
 
 // Indicate that the assembly is CLS compliant.
 [assembly: CLSCompliant(true)]
+
+// Tell the code analysis to ignore the 'incorrect' spelling of the term utils
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Utils")]

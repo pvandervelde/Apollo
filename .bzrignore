@@ -15,3 +15,4 @@ bin
 bin/doc
 bin/doc
 AssemblyInfo.VersionNumber.cs
+*.cache

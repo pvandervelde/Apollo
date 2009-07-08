@@ -11,5 +11,8 @@ namespace Apollo.Utils
     /// </summary>
     public interface ILockObject
     {
+        // Does this need an identifier
+        // Does this need a description? --> Explaining why the lock
+        // Does this need a 'target'? --> Explaining what gets locked?
     }
 }

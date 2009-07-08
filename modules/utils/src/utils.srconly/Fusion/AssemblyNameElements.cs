@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -29,6 +35,12 @@ namespace Apollo.Utils.Fusion
         /// The separator used to separate the key and values in the AssemblyName.
         /// </summary>
         public const string KeyValueSeparator = "=";
+
+        /// <summary>
+        /// The string used for the invariant culture.
+        /// </summary>
+        public const string InvariantCulture = "neutral";
+
         /// <summary>
         /// The null string used for non-existent public key tokens.
         /// </summary>

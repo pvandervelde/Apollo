@@ -1,4 +1,10 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,6 +13,7 @@ using System.IO;
 using System.Diagnostics;
 using System.Globalization;
 using System.Security;
+using System.Diagnostics.CodeAnalysis;
 
 
 namespace Apollo.Utils.Fusion
@@ -19,6 +26,34 @@ namespace Apollo.Utils.Fusion
     /// is not possible to place this class in a separate assembly from the
     /// elements which need to provide assembly loading assistence.
     /// </remarks>
+    /// <design>
+    /// <para>
+    /// The goal of the <c>FusionHelper</c> class is to provide a fallback for the
+    /// assembly loading process. The <c>LocateAssemblyOnAssemblyLoadFailure</c> method
+    /// is attached to the <c>AppDomain.AssemblyResolve</c> event. 
+    /// </para>
+    /// <para>
+    /// The <c>FusionHelper</c> searches through a set of directories for assembly files.
+    /// The assembly files that are found are checked to see if they match with the requested
+    /// assembly file.
+    /// </para>
+    /// <para>
+    /// The choice was made to search through a set of directories, and not for instance
+    /// a list of known assemblies, because:
+    /// <list type="Bullet">
+    /// <item>
+    /// It is not possible to know which dependencies exist in the assemblies we have to load
+    /// </item>
+    /// <item>
+    /// We do not know which assemblies can safely be loaded in the AppDomain prior to setting up
+    /// the loader. On the other hand it is easier to make the load / not-load decision based on
+    /// the directory that the assemblies have to come from.
+    /// </item>
+    /// </list>
+    /// </para>
+    /// </design>
+    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", 
+        Justification="Source will be linked from other projects and thus be used.")]
     internal static class FusionHelper
     {
         // @TODO: Do we need to make this all thread safe? Probably, but how...
@@ -43,6 +78,8 @@ namespace Apollo.Utils.Fusion
         /// Gets or sets the file enumerator which is used to enumerate the files in a specific directory. 
         /// Setting the file enumerator is ONLY used for testing!
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         internal static Func<string, IEnumerable<string>> FileEnumerator
         {
             private get 
@@ -56,7 +93,6 @@ namespace Apollo.Utils.Fusion
             }
             set 
             {
-                Debug.Assert(value != null, "Enumerator must not be null!");
                 s_FileEnumerator = value;
             }
         }
@@ -65,6 +101,8 @@ namespace Apollo.Utils.Fusion
         /// Gets or sets the assembly loader which is used to load assemblies from a specific path.
         /// Setting the assembly loader is ONLY used for testing!
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         internal static Func<string, Assembly> AssemblyLoader 
         {
             private get 
@@ -77,7 +115,6 @@ namespace Apollo.Utils.Fusion
             }
             set 
             {
-                Debug.Assert(value != null, "Assembly loader must not be null");
                 s_AssemblyLoader = value;
             }
         }
@@ -90,6 +127,8 @@ namespace Apollo.Utils.Fusion
         ///     The directory which should be probed in case of an assembly loading
         ///     failure.
         /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void AddProbingDirectory(DirectoryInfo directoryToProbe)
         {
             Debug.Assert(directoryToProbe != null, "The directory must not be null");
@@ -104,6 +143,8 @@ namespace Apollo.Utils.Fusion
         ///     The collection of directory which should be probed in case of an assembly loading
         ///     failure.
         /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void AddProbingDirectories(params DirectoryInfo[] directoriesToProbe)
         {
             Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
@@ -118,36 +159,8 @@ namespace Apollo.Utils.Fusion
         ///     The collection of directory which should be probed in case of an assembly loading
         ///     failure.
         /// </param>
-        public static void AddProbingDirectories(ICollection<DirectoryInfo> directoriesToProbe)
-        {
-            Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
-            AddProbingDirectories(directoriesToProbe.AsEnumerable<DirectoryInfo>());
-        }
-
-        /// <summary>
-        /// Adds a collection of directories to the list of directories that should be 
-        /// probed in case of a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesToProbe">
-        ///     The collection of directory which should be probed in case of an assembly loading
-        ///     failure.
-        /// </param>
-        public static void AddProbingDirectories(Func<IEnumerable<DirectoryInfo>> directoriesToProbe)
-        {
-            Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
-
-            var enumerator = directoriesToProbe();
-            AddProbingDirectories(enumerator);
-        }
-
-        /// <summary>
-        /// Adds a collection of directories to the list of directories that should be 
-        /// probed in case of a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesToProbe">
-        ///     The collection of directory which should be probed in case of an assembly loading
-        ///     failure.
-        /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void AddProbingDirectories(IEnumerable<DirectoryInfo> directoriesToProbe)
         {
             Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
@@ -176,6 +189,8 @@ namespace Apollo.Utils.Fusion
         ///     The directory which should be removed from the collection of directories which
         ///     are probed in case of an assembly loading failure.
         /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void RemoveProbingDirectory(DirectoryInfo directoryNotToProbe)
         {
             Debug.Assert(directoryNotToProbe != null, "The directory must not be null");
@@ -190,6 +205,8 @@ namespace Apollo.Utils.Fusion
         ///     The directories which should be removed from the collection of directories which
         ///     are probed in case of an assembly loading failure.
         /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void RemoveProbingDirectories(params DirectoryInfo[] directoriesNotToProbe)
         {
             Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
@@ -204,36 +221,8 @@ namespace Apollo.Utils.Fusion
         ///     The directories which should be removed from the collection of directories which
         ///     are probed in case of an assembly loading failure.
         /// </param>
-        public static void RemoveProbingDirectories(ICollection<DirectoryInfo> directoriesNotToProbe)
-        {
-            Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
-            RemoveProbingDirectories(directoriesNotToProbe.AsEnumerable<DirectoryInfo>());
-        }
-
-        /// <summary>
-        /// Removes a set of directories from the collection of directories that are probed in case of
-        /// a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesNotToProbe">
-        ///     The directories which should be removed from the collection of directories which
-        ///     are probed in case of an assembly loading failure.
-        /// </param>
-        public static void RemoveProbingDirectories(Func<IEnumerable<DirectoryInfo>> directoriesNotToProbe)
-        {
-            Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
-
-            var enumerator = directoriesNotToProbe();
-            RemoveProbingDirectories(enumerator);
-        }
-
-        /// <summary>
-        /// Removes a set of directories from the collection of directories that are probed in case of
-        /// a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesNotToProbe">
-        ///     The directories which should be removed from the collection of directories which
-        ///     are probed in case of an assembly loading failure.
-        /// </param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         public static void RemoveProbingDirectories(IEnumerable<DirectoryInfo> directoriesNotToProbe)
         {
             Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
@@ -355,7 +344,7 @@ namespace Apollo.Utils.Fusion
         private static string MakeModuleNameQualifiedFileName(string fileName)
         {
             return (fileName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
-                string.Format("{0}.{1}", fileName, FileExtensions.AssemblyExtension) :
+                string.Format("{0}{1}", fileName, FileExtensions.AssemblyExtension) :
                 fileName;
         }
 
@@ -372,14 +361,14 @@ namespace Apollo.Utils.Fusion
         /// </returns>
         private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
-            if (!Path.GetFileName(filePath).Equals(fileName))
+            if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase))
             {
                 return false;
             }
 
             // The path exists so there is a file with the specific file name. This is probably
             // an assembly.
-            if ((version != string.Empty) || (culture != string.Empty) || (publicKey != string.Empty))
+            if ((!string.IsNullOrEmpty(version)) || (!string.IsNullOrEmpty(culture)) || (!string.IsNullOrEmpty(publicKey)))
             {
                 AssemblyName assemblyName = null;
                 try
@@ -405,7 +394,7 @@ namespace Apollo.Utils.Fusion
                     return false;
                 }
 
-                if (version != string.Empty)
+                if (!string.IsNullOrEmpty(version))
                 {
                     Version expectedVersion = new Version(version);
                     if (!expectedVersion.Equals(assemblyName.Version))
@@ -414,8 +403,15 @@ namespace Apollo.Utils.Fusion
                     }
                 }
 
-                if (culture != string.Empty)
+                if (!string.IsNullOrEmpty(culture))
                 {
+                    // The 'Neutral' culture is actually the invariant culture. This is the culture an
+                    // assembly gets if no culture was specified so...
+                    if (culture.Equals(AssemblyNameElements.InvariantCulture, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        culture = string.Empty;
+                    }
+
                     CultureInfo expectedCulture = new CultureInfo(culture);
                     if (!expectedCulture.Equals(assemblyName.CultureInfo))
                     {
@@ -423,11 +419,11 @@ namespace Apollo.Utils.Fusion
                     }
                 }
 
-                if ((publicKey != string.Empty) && (publicKey != AssemblyNameElements.NullString))
+                if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.CurrentCultureIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
                     var str = new System.Text.ASCIIEncoding().GetString(actualPublicKeyToken);
-                    return str.Equals(publicKey);
+                    return str.Equals(publicKey, StringComparison.CurrentCultureIgnoreCase);
                 }
             }
 

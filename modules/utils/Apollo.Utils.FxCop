@@ -16,7 +16,7 @@
   <Spelling Locale="en-US" />
   <OverrideRuleVisibilities>True</OverrideRuleVisibilities>
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
-  <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
+  <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
   <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
@@ -40,7 +40,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2009-07-01 12:08:41Z">
+ <FxCopReport Version="1.36" LastAnalysis="2009-07-08 06:17:38Z">
   <Namespaces>
    <Namespace Name="Apollo.Utils">
     <Messages>
@@ -48,6 +48,16 @@
       <Issue Name="Namespace">
        <Item>Utils</Item>
        <Item>Apollo.Utils</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Apollo.Utils.Fusion">
+    <Messages>
+     <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-07-07 10:48:21Z" FixCategory="NonBreaking">
+      <Issue Name="Namespace">
+       <Item>Utils</Item>
+       <Item>Apollo.Utils.Fusion</Item>
       </Issue>
      </Message>
     </Messages>
@@ -60,12 +70,6 @@
       <Messages>
        <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-07-01 12:08:41Z">
         <Issue Name="NoStrongName">
-         <Item>'Apollo.Utils.dll'</Item>
-        </Issue>
-       </Message>
-       <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-07-01 12:08:41Z">
-        <Issue Name="Assembly">
-         <Item>Utils</Item>
          <Item>'Apollo.Utils.dll'</Item>
         </Issue>
        </Message>
@@ -92,24 +96,131 @@
     <Modules>
      <Module Name="apollo.utils.srconly.dll">
       <Messages>
-       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2009-07-01 12:08:41Z">
-        <Issue Name="NoStrongName">
-         <Item>'Apollo.Utils.SrcOnly.dll'</Item>
-        </Issue>
-       </Message>
        <Message Id="Src" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-07-01 12:08:41Z" FixCategory="NonBreaking">
         <Issue Name="Assembly">
          <Item>Src</Item>
          <Item>'Apollo.Utils.SrcOnly.dll'</Item>
         </Issue>
        </Message>
-       <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-07-01 12:08:41Z" FixCategory="NonBreaking">
-        <Issue Name="Assembly">
-         <Item>Utils</Item>
-         <Item>'Apollo.Utils.SrcOnly.dll'</Item>
-        </Issue>
-       </Message>
       </Messages>
+      <Namespaces>
+       <Namespace Name="Apollo.Utils.Fusion">
+        <Types>
+         <Type Name="FusionHelper">
+          <Members>
+           <Member Name="#AssemblyLoader">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2009-07-07 10:48:21Z" FixCategory="NonBreaking">
+              <Issue Name="MakeMoreAccessible" Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="83">
+               <Item>'FusionHelper.AssemblyLoader'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ExtractValueFromKeyValuePair(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="312">
+               <Item>'FusionHelper.ExtractValueFromKeyValuePair(string)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.String.IndexOf(System.String)" TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="313">
+               <Item>'FusionHelper.ExtractValueFromKeyValuePair(string)'</Item>
+               <Item>'string.IndexOf(string)'</Item>
+               <Item>'string.IndexOf(string, StringComparison)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#FileEnumerator">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="60">
+               <Item>'FusionHelper.FileEnumerator'</Item>
+               <Item>'Func&lt;string, IEnumerable&lt;string&gt;&gt;'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2009-07-07 10:48:21Z" FixCategory="NonBreaking">
+              <Issue Name="MakeMoreAccessible" Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="60">
+               <Item>'FusionHelper.FileEnumerator'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#IsAssemblyNameFullyQualified(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="304">
+               <Item>'FusionHelper.IsAssemblyNameFullyQualified(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#LocateAssembly(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue>
+               <Item>'FusionHelper.LocateAssembly(string)'</Item>
+              </Issue>
+             </Message>
+             <Message TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820" Created="2009-07-07 10:48:21Z">
+              <Issue Name="IsNullOrEmpty" Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="244">
+               <Item>'string.operator !=(string, string)'</Item>
+               <Item>'FusionHelper.LocateAssembly(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#LocateAssemblyOnAssemblyLoadFailure(System.Object,System.ResolveEventArgs)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="234">
+               <Item>'FusionHelper.LocateAssemblyOnAssemblyLoadFailure(object, ResolveEventArgs)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#MakeModuleNameQualifiedFileName(System.String)">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="319">
+               <Item>'FusionHelper.MakeModuleNameQualifiedFileName(string)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.String.Format(System.String,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="320">
+               <Item>'string.Format(string, object, object)'</Item>
+               <Item>'FusionHelper.MakeModuleNameQualifiedFileName(string)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RemoveAllProbingDirectories()">
+            <Messages>
+             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2009-07-07 10:48:21Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="219">
+               <Item>'FusionHelper.RemoveAllProbingDirectories()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#s_FileEnumerator">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2009-07-07 10:48:21Z">
+              <Issue>
+               <Item>'FusionHelper.s_FileEnumerator'</Item>
+               <Item>'Func&lt;string, IEnumerable&lt;string&gt;&gt;'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
      </Module>
     </Modules>
    </Target>
@@ -121,9 +232,27 @@
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
+   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
+    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006">
+    <Resolution Name="Default">Consider a design where {0} doesn't nest generic type {1}.</Resolution>
+   </Rule>
    <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
     <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
     <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
+   </Rule>
+   <Rule TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044">
+    <Resolution Name="MakeMoreAccessible">Because the property getter for {0} is less visible than its setter, either increase the accessibility of its getter or decrease the accessibility of its setter.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307">
+    <Resolution Name="Default">{0} makes a call to {1} that does not explicitly provide a StringComparison. This should be replaced with a call to {2}.</Resolution>
+   </Rule>
+   <Rule TypeName="TestForEmptyStringsUsingStringLength" Category="Microsoft.Performance" CheckId="CA1820">
+    <Resolution Name="IsNullOrEmpty">Replace the call to {0} in {1} with a call to 'String.IsNullOrEmpty'.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>
