@@ -129,6 +129,7 @@
     <Compile Include="Filters\FilterCollection.cs" />
     <Compile Include="Filters\IsRunningFilter.cs" />
     <Compile Include="Filters\IsSystemGeneratedFilter.cs" />
+    <Compile Include="Converters\ProjectRunningConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -200,6 +201,11 @@
     <Content Include="Images\DiagramRootNode.png">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Pause_256x256.png" />
+    <None Include="Resources\Pause_48x48.png" />
+    <None Include="Resources\Pause_32x32.png" />
+    <None Include="Resources\Pause_24x24.png" />
+    <None Include="Resources\Pause_16x16.png" />
     <None Include="Resources\LightOn.png" />
     <None Include="Resources\LightOff.png" />
     <None Include="Resources\Stop_256x256.png" />

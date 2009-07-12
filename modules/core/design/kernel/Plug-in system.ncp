@@ -1,0 +1,137 @@
+<Project>
+  <Name>Plug-in system</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>PluginAttribute</Name>
+        <Access>Public</Access>
+        <Location left="706" top="74" />
+        <Size width="162" height="113" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginRepository</Name>
+        <Access>Public</Access>
+        <Location left="1395" top="431" />
+        <Size width="162" height="139" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScanner</Name>
+        <Access>Public</Access>
+        <Location left="960" top="30" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IFilter</Name>
+        <Access>Public</Access>
+        <Location left="1304" top="74" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>how will we store the information about plug-ins. Will we let MEF do that or do we control that ourselves. We do want to be able to combine attribute values in a search so it sounds like a database (local one) would be ideal to handle that.</Text>
+        <Location left="10" top="10" />
+        <Size width="254" height="117" />
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginTracker</Name>
+        <Access>Public</Access>
+        <Location left="466" top="370" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IPluginTracker</Name>
+        <Access>Public</Access>
+        <Location left="466" top="59" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAssemblyFinder</Name>
+        <Access>Public</Access>
+        <Location left="478" top="698" />
+        <Size width="162" height="140" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>AssemblyWatcher</Name>
+        <Access>Public</Access>
+        <Location left="767" top="618" />
+        <Size width="162" height="125" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DirectoryScanner</Name>
+        <Access>Public</Access>
+        <Location left="767" top="817" />
+        <Size width="162" height="102" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Defines an interface for classes that search for assemblies. These classes should always search in async mode.</Text>
+        <Location left="130" top="756" />
+        <Size width="196" height="88" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Plug-in (assembly) information needs to be stored with a version number so that we can always determine the version numbers. Also we'll probably need culture information. So somehow we'll need to match up to the full assembly name.</Text>
+        <Location left="10" top="141" />
+        <Size width="254" height="113" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="5" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="5" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Realization" first="8" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>712</X>
+          <Y>648</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>602</X>
+          <Y>648</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="9" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>724</X>
+          <Y>885</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>616</X>
+          <Y>864</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="10" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>422</X>
+          <Y>722</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

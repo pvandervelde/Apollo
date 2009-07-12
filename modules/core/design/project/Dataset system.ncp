@@ -1,0 +1,322 @@
+<Project>
+  <Name>Dataset system</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>Variables</Name>
+        <Access>Public</Access>
+        <Location left="1239" top="78" />
+        <Size width="162" height="85" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Expressions</Name>
+        <Access>Public</Access>
+        <Location left="1425" top="78" />
+        <Size width="162" height="85" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataSet</Name>
+        <Access>Public</Access>
+        <Location left="483" top="554" />
+        <Size width="376" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; set; }</Member>
+        <Member type="Property">string Description { get; set; }</Member>
+        <Member type="Method">ReadOnlyCollection&lt;string,IScheduleInformation&gt; Expressions()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGenerator</Name>
+        <Access>Public</Access>
+        <Location left="454" top="332" />
+        <Size width="162" height="74" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IVisualizer</Name>
+        <Access>Public</Access>
+        <Location left="787" top="330" />
+        <Size width="162" height="85" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataStorage</Name>
+        <Access>Public</Access>
+        <Location left="1093" top="330" />
+        <Size width="162" height="93" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProcessSchedule</Name>
+        <Access>Public</Access>
+        <Location left="565" top="35" />
+        <Size width="228" height="121" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; }</Member>
+        <Member type="Property">string Description { get; }</Member>
+        <Member type="Property">Expression&lt;T&gt; Expression { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHistory</Name>
+        <Access>Public</Access>
+        <Location left="1380" top="478" />
+        <Size width="162" height="99" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IComponentService</Name>
+        <Access>Public</Access>
+        <Location left="697" top="764" />
+        <Size width="162" height="103" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ILinkedComponentStore</Name>
+        <Access>Public</Access>
+        <Location left="1048" top="764" />
+        <Size width="198" height="113" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IComponentBuilder</Name>
+        <Access>Public</Access>
+        <Location left="439" top="882" />
+        <Size width="162" height="119" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IObjectLoader</Name>
+        <Access>Public</Access>
+        <Location left="439" top="1097" />
+        <Size width="162" height="116" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Load types asynchronuously. The idea is to load the assemblies in an async way so that we're not waiting for them for too long.</Text>
+        <Location left="88" top="899" />
+        <Size width="192" height="95" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Provides the entry point for all the capabilities of a data set. Users only talk to the IDataSet object, not to the individual parts behind it.
+
+Schedule information is passed through a IScheduleInformation object. Schedules can't be edited directly.</Text>
+        <Location left="65" top="541" />
+        <Size width="244" height="129" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The component service is responsible for component loading and also tracking which components exist in a data set.
+Note that data sets only store differential component information. i.e. the parent data set defines the base components. The individual data sets then override these definitions.</Text>
+        <Location left="665" top="1037" />
+        <Size width="258" height="139" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="8" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>634</X>
+          <Y>804</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="10" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="8" second="9">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>918</X>
+          <Y>827</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1013</X>
+          <Y>827</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="8" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>892</X>
+          <Y>849</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>833</X>
+          <Y>897</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="2" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="2" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>614</X>
+          <Y>528</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="2" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>711</X>
+          <Y>529</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="2" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>898</X>
+          <Y>587</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="5" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1341</X>
+          <Y>378</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="4" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>864</X>
+          <Y>277</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1135</X>
+          <Y>305</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="3" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>545</X>
+          <Y>261</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1154</X>
+          <Y>305</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="4" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>839</X>
+          <Y>305</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>818</X>
+          <Y>85</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="3" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>513</X>
+          <Y>306</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>518</X>
+          <Y>82</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="5" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1197</X>
+          <Y>123</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="5" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1213</X>
+          <Y>305</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>312</X>
+          <Y>948</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>404</X>
+          <Y>948</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

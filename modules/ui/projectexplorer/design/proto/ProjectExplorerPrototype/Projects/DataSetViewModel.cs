@@ -11,6 +11,8 @@ namespace ProjectExplorerPrototype.Projects
 
         private string m_Name;
 
+        private string m_Description;
+
         public DataSetViewModel()
         { }
 
@@ -52,6 +54,24 @@ namespace ProjectExplorerPrototype.Projects
             {
                 m_Name = value;
             }
+        }
+
+        public string Description
+        {
+            get 
+            {
+                return m_Description;
+            }
+            set
+            {
+                m_Description = value;
+            }
+        }
+
+        public bool IsRunning
+        {
+            get;
+            set;
         }
     }
 }

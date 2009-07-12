@@ -1,0 +1,677 @@
+<Project>
+  <Name>Project system</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Untitled</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IProject</Name>
+        <Access>Public</Access>
+        <Location left="1300" top="829" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProjectExtension</Name>
+        <Access>Public</Access>
+        <Location left="1973" top="829" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The project system is responsible for tracking the project tree which holds the connections between the different 'data units'. Creation of sub-unit, sibbling unit etc. always runs through project!
+
+</Text>
+        <Location left="10" top="18" />
+        <Size width="282" height="147" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataSetTree</Name>
+        <Access>Public</Access>
+        <Location left="1515" top="1168" />
+        <Size width="227" height="78" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">IDataSetGraphNode Root { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGraphNodeCreator</Name>
+        <Access>Public</Access>
+        <Location left="1779" top="925" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataSet</Name>
+        <Access>Public</Access>
+        <Location left="2115" top="1168" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Note that the 'data-unit' graph only needs to hold the 'description' of each initial data set. The descriptions hold all the variables, geometry and other data which can be changed to obtain another 'data-unit'. 
+
+The generator, visualization and actual data sets can be linked to the 'data-unit'-description but they don't necessarily need to be in the tree.
+
+By separating the actual generated data from the 'description' data we can allow modification (copy/clone/modify/edit etc.) of a 'data-unit' without having to digg through all the generated data. This also forces components / users to indicate what data should be considered in the tree and what data doesn't need to be considered.</Text>
+        <Location left="10" top="188" />
+        <Size width="282" height="261" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataSetGraphNode</Name>
+        <Access>Public</Access>
+        <Location left="1503" top="1413" />
+        <Size width="162" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICommandCentral&lt;IProjectCommand&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1268" top="520" />
+        <Size width="255" height="66" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICommand</Name>
+        <Access>Public</Access>
+        <Location left="1779" top="370" />
+        <Size width="162" height="64" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProjectCommand</Name>
+        <Access>Public</Access>
+        <Location left="1814" top="520" />
+        <Size width="162" height="63" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICommandCentral&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1319" top="370" />
+        <Size width="162" height="66" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IExtensionCommandCentral&lt;IProjectCommand&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1477" top="729" />
+        <Size width="313" height="69" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHistory</Name>
+        <Access>Public</Access>
+        <Location left="882" top="1129" />
+        <Size width="162" height="76" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>There's no need to create a pooling system for these as we expect that nodes will not be created often, given that each node contains a complete data set.</Text>
+        <Location left="1750" top="1050" />
+        <Size width="231" height="89" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ITimeLineProxy</Name>
+        <Access>Public</Access>
+        <Location left="882" top="958" />
+        <Size width="162" height="66" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The project data is also stored in the project graph as the root node. So a project doesn't have any data itself.</Text>
+        <Location left="1095" top="958" />
+        <Size width="214" height="80" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Holds the commands that are accessable to the different project extensions</Text>
+        <Location left="1591" top="578" />
+        <Size width="162" height="72" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProjectBuilder</Name>
+        <Access>Public</Access>
+        <Location left="777" top="428" />
+        <Size width="162" height="81" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProjectService</Name>
+        <Access>Public</Access>
+        <Location left="981" top="648" />
+        <Size width="162" height="80" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IMessageCentralProxy</Name>
+        <Access>Public</Access>
+        <Location left="682" top="648" />
+        <Size width="162" height="83" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDataSetStore</Name>
+        <Access>Public</Access>
+        <Location left="1420" top="958" />
+        <Size width="221" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">IProjectDataSet ProjectData { get; }</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Only the data is stored in the individual data set files. All component related information is stored in the project file.</Text>
+        <Location left="1888" top="1257" />
+        <Size width="206" height="83" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>E.g. for simulations there is the Run command.</Text>
+        <Location left="2115" top="648" />
+        <Size width="162" height="72" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProjectDataSet</Name>
+        <Access>Public</Access>
+        <Location left="1136" top="1199" />
+        <Size width="320" height="146" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">IProjectDataSet CopyToNewChild()</Member>
+        <Member type="Method">IProjectDataSet CloneToSibbling()</Member>
+        <Member type="Method">IEnumerable&lt;IProjectDataSet&gt; Children()</Member>
+        <Member type="Property">boolean CanCopy { get; }</Member>
+        <Member type="Property">GenerationReason GenerationReason { get; }</Member>
+      </Entity>
+      <Entity type="Enum">
+        <Name>GenerationReason</Name>
+        <Access>Public</Access>
+        <Location left="1148" top="1413" />
+        <Size width="162" height="110" />
+        <Collapsed>False</Collapsed>
+        <Value>User</Value>
+        <Value>System</Value>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IExecutor</Name>
+        <Access>Public</Access>
+        <Location left="948" top="54" />
+        <Size width="333" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Execute(IProcessSchedule scheduleToExecute)</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Allow saving a new project from any specific node downwards. This means we'll need to copy in all the parent information into the new top level node.</Text>
+        <Location left="10" top="470" />
+        <Size width="284" height="80" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProcessSchedule</Name>
+        <Access>Public</Access>
+        <Location left="2278" top="999" />
+        <Size width="162" height="77" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Process schedules are processed by the executor. This is passed in from the project service.</Text>
+        <Location left="2352" top="707" />
+        <Size width="212" height="78" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The executor handles all the processing of schedules. It should be  able to run locally and on a remote machine. Dito it should be able to push the schedule to another executor (local and on an other machine).</Text>
+        <Location left="466" top="30" />
+        <Size width="286" height="82" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Allow:
+- Run local
+- Run remote
+- Hand off (to other executor)
+- Schedule</Text>
+        <Location left="532" top="292" />
+        <Size width="209" height="97" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScheduleController</Name>
+        <Access>Public</Access>
+        <Location left="981" top="292" />
+        <Size width="231" height="97" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Allow:
+- Start / Continue
+- Stop / Cancel
+- Pause</Text>
+        <Location left="606" top="158" />
+        <Size width="133" height="77" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="3" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1654</X>
+          <Y>1137</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1750</X>
+          <Y>954</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="3" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="7" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1585</X>
+          <Y>1502</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1445</X>
+          <Y>1443</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="7" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1701</X>
+          <Y>1443</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2205</X>
+          <Y>1311</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="0" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="0" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1526</X>
+          <Y>863</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1917</X>
+          <Y>863</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Generalization" first="10" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1874</X>
+          <Y>495</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1867</X>
+          <Y>460</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="8" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1592</X>
+          <Y>551</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1788</X>
+          <Y>551</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="11" second="9">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1529</X>
+          <Y>400</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1728</X>
+          <Y>400</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="1" second="12">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1934</X>
+          <Y>846</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="0" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1411</X>
+          <Y>804</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1450</X>
+          <Y>770</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="0" second="15">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1275</X>
+          <Y>877</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1011</X>
+          <Y>927</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1311</X>
+          <Y>919</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="17" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="12" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1452</X>
+          <Y>751</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1412</X>
+          <Y>618</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="15" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>957</X>
+          <Y>1071</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>957</X>
+          <Y>1104</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>True</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="19" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1086</X>
+          <Y>758</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1250</X>
+          <Y>850</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="19" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="19" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1015</X>
+          <Y>609</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>836</X>
+          <Y>535</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="19" second="20">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>938</X>
+          <Y>676</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>874</X>
+          <Y>676</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="21" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="0" second="21">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1372</X>
+          <Y>919</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1372</X>
+          <Y>998</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="22" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2013</X>
+          <Y>1180</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="1" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="23" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2178</X>
+          <Y>746</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2172</X>
+          <Y>865</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="21" second="24">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1395</X>
+          <Y>1013</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1374</X>
+          <Y>1173</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="29" second="28">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="26" second="28">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1352</X>
+          <Y>108</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2326</X>
+          <Y>964</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="30" second="26">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>802</X>
+          <Y>99</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>919</X>
+          <Y>99</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="19" second="32">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="32" second="26">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="31" second="32">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>789</X>
+          <Y>335</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>933</X>
+          <Y>335</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="33" second="26">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>781</X>
+          <Y>206</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>971</X>
+          <Y>175</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="24" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1399</X>
+          <Y>1376</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1553</X>
+          <Y>1271</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="5" second="28">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2242</X>
+          <Y>1143</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="5" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2151</X>
+          <Y>1143</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>True</IsComposition>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

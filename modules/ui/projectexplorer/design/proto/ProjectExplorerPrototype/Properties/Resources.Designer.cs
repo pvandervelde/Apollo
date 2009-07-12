@@ -92,6 +92,41 @@ namespace ProjectExplorerPrototype.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Pause_16 {
+            get {
+                object obj = ResourceManager.GetObject("Pause_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Pause_24 {
+            get {
+                object obj = ResourceManager.GetObject("Pause_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Pause_256 {
+            get {
+                object obj = ResourceManager.GetObject("Pause_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Pause_32 {
+            get {
+                object obj = ResourceManager.GetObject("Pause_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Pause_48 {
+            get {
+                object obj = ResourceManager.GetObject("Pause_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Play_256 {
             get {
                 object obj = ResourceManager.GetObject("Play_256", resourceCulture);

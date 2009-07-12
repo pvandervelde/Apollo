@@ -58,12 +58,14 @@ namespace ProjectExplorerPrototype
             {
                 parent = new DataSetViewModel(child);
                 parent.Name = "This is child: " + (10 - i).ToString();
+                parent.Description = "This is the description for child:" + (10 - i).ToString();
 
                 child = parent;
             }
 
             var projectData = new DataSetViewModel(parent);
             projectData.Name = "This is the project data.";
+            projectData.Description = "This is the description for the project data ... bla bla bla bla";
 
             m_Project = new List<DataSetViewModel>();
             m_Project.Add(projectData);
