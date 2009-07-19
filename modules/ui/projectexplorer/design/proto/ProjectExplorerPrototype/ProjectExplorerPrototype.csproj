@@ -114,6 +114,9 @@
     <Compile Include="Converters\FilterIsActiveConverter.cs" />
     <Compile Include="Converters\FilterIsActiveToOpacityConverter.cs" />
     <Compile Include="Converters\ListviewBackgroundConverter.cs" />
+    <Compile Include="Converters\ProgressConverter.cs" />
+    <Compile Include="Converters\ProjectLockStateConverter.cs" />
+    <Compile Include="Converters\ProjectProcessStateConverter.cs" />
     <Compile Include="Diagram\DiagramNode.xaml.cs">
       <DependentUpon>DiagramNode.xaml</DependentUpon>
     </Compile>
@@ -149,6 +152,8 @@
       <DependentUpon>ProjectControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Projects\DataSetViewModel.cs" />
+    <Compile Include="Projects\LockState.cs" />
+    <Compile Include="Projects\ProcessState.cs" />
     <Compile Include="Projects\ProjectViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

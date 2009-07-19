@@ -8,6 +8,7 @@
         DataContext="{Binding RelativeSource={RelativeSource Self}}">
     
     <Window.Resources>
+        <!--
         <Style TargetType="TreeViewItem" BasedOn="{StaticResource {x:Type TreeViewItem}}">
             <Setter Property="HorizontalContentAlignment" Value="Center"/>
             <Setter Property="Template">
@@ -23,12 +24,12 @@
                                     <RowDefinition Height="Auto" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
-                                <!--
+                                <!-
                                  Note that the following do not work, but I believe the top 2 should?!
                                  <ToggleButton IsChecked="{TemplateBinding IsExpanded}" ClickMode="Press" Name="Expander">
                                  <ToggleButton IsChecked="{TemplateBinding Property=IsExpanded}" ClickMode="Press" Name="Expander">
                                  <ToggleButton IsChecked="{TemplateBinding Path=IsExpanded}" ClickMode="Press" Name="Expander">
-                                 -->
+                                 ->
                                 <ToggleButton IsChecked="{Binding Path=IsExpanded, RelativeSource={RelativeSource TemplatedParent}}" ClickMode="Press" Name="Expander" Visibility="Collapsed">
                                     <ToggleButton.Style>
                                         <Style TargetType="ToggleButton">
@@ -108,6 +109,7 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        -->
        
         <Style x:Key="internalBorderStyle" TargetType="{x:Type Border}">
             <Setter Property="CornerRadius" Value="10" />
@@ -179,44 +181,37 @@
             <HierarchicalDataTemplate.Resources>
                 <converters:ProjectRunningConverter x:Key="projectRunningConverter" />
                 <converters:FilterIsActiveConverter x:Key="filterIsActiveConverter" />
+                <converters:ProjectProcessStateConverter x:Key="projectProcessStateConverter" />
+                <converters:ProjectLockStateConverter x:Key="projectLockStateConverter" />
+                <converters:ProgressConverter x:Key="projectProgressConverter" />
             </HierarchicalDataTemplate.Resources>
             
-            <Border BorderBrush="Blue"
+            <Border x:Name="dataSetBorder"
+                    BorderBrush="Blue"
                     BorderThickness="1"
                     CornerRadius="3"
                     Margin="2"
                     Padding="2">
-                <Expander>
-                    <Expander.Header>
-                        <TextBlock Text="{Binding Name}" />
-                    </Expander.Header>
-                    <Expander.Content>
-                        <StackPanel Orientation="Vertical">
-                            <TextBlock Text="{Binding Description}" />
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                
-                                <ProgressBar Grid.Column="0">
-
-                                </ProgressBar>
-                                <Button Grid.Column="1"
-                                        Height="32"
-                                        Width="32">
-                                    <Image x:Name="imgPlayPause" Source="{Binding Path=IsRunning, Converter={StaticResource projectRunningConverter}}" />
-                                </Button>
-                                <Button Grid.Column="2"
-                                        Height="32"
-                                        Width="32">
-                                    <Image x:Name="imgOnOff" Source="{Binding Path=IsRunning, Converter={StaticResource projectRunningConverter}}" />
-                                </Button>
-                            </Grid>
+                <Grid>
+                    <ProgressBar Value="{Binding Path=PercentComplete}" Background="White" Opacity="50" />
+                    <StackPanel Orientation="Horizontal" >
+                        <!-- Image for lock -->
+                        <Image Source="{Binding Path=ProcessState, Converter={StaticResource projectProcessStateConverter}}" Width="16" Height="16" Margin="3,0,3,0" />
+                        
+                        <!-- Image for lock -->
+                        <Image Source="{Binding Path=LockState, Converter={StaticResource projectLockStateConverter}}" Width="16" Height="16" Margin="3,0,3,0" />
+                        
+                        <StackPanel Orientation="Vertical" Margin="3,0,3,0">
+                            <Label>Location:</Label>
+                            <TextBlock Text="{Binding Location}"  />
                         </StackPanel>
-                    </Expander.Content>
-                </Expander>
+                        
+                        <StackPanel Orientation="Vertical" Margin="3,0,3,0">
+                            <Label>Name:</Label>
+                            <TextBlock Text="{Binding Name}" />    
+                        </StackPanel>
+                    </StackPanel>
+                </Grid>
             </Border>
         </HierarchicalDataTemplate>
     </Window.Resources>
@@ -236,20 +231,19 @@
             
         </StackPanel>
         
-        <DockPanel Grid.Row="1" Name="dpMainContent">
-            <!-- Properties control -->
-            <Border DockPanel.Dock="Right" Name="bdrProperties" CornerRadius="5" Margin="10,0,10,0" BorderThickness="1">
-                <StackPanel Name="spProperties" >
-
-                </StackPanel>
-            </Border>
+        <Grid Grid.Row="1" Name="dpMainContent">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="150" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="Auto" MinWidth="100" />
+            </Grid.ColumnDefinitions>
             
             <!-- Graph -->
-            <Grid DockPanel.Dock="Left">
+            <Grid Grid.Column="0">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="3*" />
+                    <RowDefinition Height="3*" MinHeight="150" />
                     <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" MinHeight="100" />
                 </Grid.RowDefinitions>
 
 
@@ -285,14 +279,23 @@
                     </ListView>
                 </Border>
             </Grid>
+            
+            <GridSplitter Grid.Column="1" Name="gsplVerticalSplitter" VerticalAlignment="Stretch" HorizontalAlignment="Center" ResizeBehavior="PreviousAndNext" BorderThickness="2" BorderBrush="Red" ShowsPreview="True" Margin="2" />
+            
+            <!-- Properties control -->
+            <Border Grid.Column="2" Name="bdrProperties" CornerRadius="5" Margin="10,0,10,0" BorderThickness="1">
+                <StackPanel Name="spProperties" >
 
-            <DockPanel.Background>
+                </StackPanel>
+            </Border>
+
+            <Grid.Background>
                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                     <GradientStop Color="#FF6993FF" Offset="0" />
                     <GradientStop Color="#FFB4B6B6" Offset="1" />
                 </LinearGradientBrush>
-            </DockPanel.Background>
-        </DockPanel>
+            </Grid.Background>
+        </Grid>
         
         <Grid Grid.Row="1">
             <Grid.ColumnDefinitions>

@@ -59,6 +59,10 @@ namespace ProjectExplorerPrototype
                 parent = new DataSetViewModel(child);
                 parent.Name = "This is child: " + (10 - i).ToString();
                 parent.Description = "This is the description for child:" + (10 - i).ToString();
+                parent.Location = i % 2 == 0 ? "local" : "remote";
+                parent.LockState = LockState.Unlocked;
+                parent.ProcessState = ProcessState.NotStarted;
+                parent.PercentComplete = (10 - i) * 10;
 
                 child = parent;
             }

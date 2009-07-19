@@ -73,5 +73,29 @@ namespace ProjectExplorerPrototype.Projects
             get;
             set;
         }
+
+        public string Location
+        {
+            get;
+            set;
+        }
+
+        public ProcessState ProcessState
+        {
+            get;
+            set;
+        }
+
+        public LockState LockState
+        {
+            get;
+            set;
+        }
+
+        public int PercentComplete
+        {
+            get;
+            set;
+        }
     }
 }

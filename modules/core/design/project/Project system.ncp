@@ -241,6 +241,30 @@ By separating the actual generated data from the 'description' data we can allow
         <Location left="606" top="158" />
         <Size width="133" height="77" />
       </Entity>
+      <Entity type="Interface">
+        <Name>IPersistenceProxy</Name>
+        <Access>Public</Access>
+        <Location left="682" top="829" />
+        <Size width="162" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The generation reason for a dataset might need to be more specific. There might be a difference between generation by the system (global) or a component. 
+
+Also we may need comments. e.g. the user might want to add a comment on why the data set was copied / cloned.</Text>
+        <Location left="1096" top="1614" />
+        <Size width="286" height="124" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>What about meta-data on a data-set? e.g. the UI might want to hide data-sets from the user?</Text>
+        <Location left="732" top="1256" />
+        <Size width="198" height="90" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>How can we let data-sets get data from sub-data-sets? e.g. a parent data-set should be able to extract data from child-data sets IF those children were created by request of the parent data-set</Text>
+        <Location left="2430" top="1168" />
+        <Size width="254" height="94" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="4">
@@ -671,6 +695,33 @@ By separating the actual generated data from the 'description' data we can allow
         <Direction>Unidirectional</Direction>
         <IsAggregation>False</IsAggregation>
         <IsComposition>True</IsComposition>
+      </Relationship>
+      <Relationship type="Association" first="19" second="34">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1008</X>
+          <Y>753</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <IsAggregation>False</IsAggregation>
+        <IsComposition>False</IsComposition>
+      </Relationship>
+      <Relationship type="Comment" first="35" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="36" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="37" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2238</X>
+          <Y>1287</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

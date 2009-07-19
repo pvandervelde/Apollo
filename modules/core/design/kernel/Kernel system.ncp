@@ -16,9 +16,13 @@
       <Entity type="Interface">
         <Name>IAppDomainBuilder</Name>
         <Access>Public</Access>
-        <Location left="826" top="316" />
-        <Size width="162" height="65" />
+        <Location left="734" top="72" />
+        <Size width="487" height="129" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">AppDomain Create()</Member>
+        <Member type="Method">AppDomain Create(ISecuritySet securitySet)</Member>
+        <Member type="Method">AppDomain Create(ICollection&lt;DirectoryInfo&gt; searchPaths)</Member>
+        <Member type="Method">AppDomain Create(ISecuritySet securitySet, ICollection&lt;DirectoryInfo&gt; searchPaths)</Member>
       </Entity>
       <Entity type="Comment">
         <Text>Services can also specify LoadBefore information. This indicates before which services they need to be loaded. 
@@ -102,24 +106,14 @@ Some services will be started on application start up.</Text>
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
-        <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
-        <Location left="2977" top="1478" />
-        <Size width="243" height="92" />
+        <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in, loading a new project etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
+        <Location left="2923" top="1478" />
+        <Size width="300" height="87" />
       </Entity>
       <Entity type="Comment">
         <Text>Allows the core system to easily interact with the different services on an equal level. Mainly use to get to the message pipeline.</Text>
         <Location left="1034" top="368" />
         <Size width="209" height="83" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Need some way of allowing additional services to be started without needing to rely on the dependencies coming from the UI service</Text>
-        <Location left="642" top="132" />
-        <Size width="256" height="66" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>This also needs to do license verification?</Text>
-        <Location left="202" top="287" />
-        <Size width="162" height="72" />
       </Entity>
       <Entity type="Class">
         <Name>KernelService</Name>
@@ -295,15 +289,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="15" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>565</X>
-          <Y>251</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="17" second="4">
+      <Relationship type="Realization" first="15" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -315,7 +301,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1243</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="17" second="18">
+      <Relationship type="Generalization" first="15" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -323,7 +309,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1100</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="9" second="17">
+      <Relationship type="Comment" first="9" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -335,7 +321,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1256</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="2" second="17">
+      <Relationship type="Comment" first="2" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -347,15 +333,15 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1274</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="13" second="21">
+      <Relationship type="Comment" first="13" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="6" second="20">
+      <Relationship type="Comment" first="6" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="20" second="21">
+      <Relationship type="Association" first="18" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -370,7 +356,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="19" second="21">
+      <Relationship type="Association" first="17" second="19">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -385,7 +371,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="19" second="22">
+      <Relationship type="Association" first="17" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -400,7 +386,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Generalization" first="19" second="17">
+      <Relationship type="Generalization" first="17" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -412,7 +398,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1432</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="20" second="17">
+      <Relationship type="Generalization" first="18" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -424,7 +410,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1118</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="21" second="22">
+      <Relationship type="Association" first="19" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -439,7 +425,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="20" second="22">
+      <Relationship type="Association" first="18" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -454,7 +440,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Generalization" first="21" second="17">
+      <Relationship type="Generalization" first="19" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -466,7 +452,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1374</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="22" second="17">
+      <Relationship type="Generalization" first="20" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -478,7 +464,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1135</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="23" second="17">
+      <Relationship type="Generalization" first="21" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -486,7 +472,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1291</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="24" second="17">
+      <Relationship type="Generalization" first="22" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -498,7 +484,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1204</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="25" second="17">
+      <Relationship type="Generalization" first="23" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -510,7 +496,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1223</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="24" second="22">
+      <Relationship type="Association" first="22" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -525,7 +511,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="25" second="22">
+      <Relationship type="Association" first="23" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -540,19 +526,19 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="7" second="22">
+      <Relationship type="Comment" first="7" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="14" second="25">
+      <Relationship type="Comment" first="14" second="23">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="26" second="8">
+      <Relationship type="Realization" first="24" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="26" second="4">
+      <Relationship type="Realization" first="24" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -564,7 +550,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1245</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="26" second="25">
+      <Relationship type="Association" first="24" second="23">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -579,7 +565,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>True</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="0" second="26">
+      <Relationship type="Association" first="0" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -594,22 +580,18 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="16" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="26" second="1">
+      <Relationship type="Association" first="24" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>788</X>
-          <Y>351</Y>
+          <X>690</X>
+          <Y>139</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <IsAggregation>False</IsAggregation>
         <IsComposition>True</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="27" second="26">
+      <Relationship type="Comment" first="25" second="24">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -621,7 +603,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>548</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="28" second="17">
+      <Relationship type="Generalization" first="26" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -633,7 +615,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1356</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="19" second="28">
+      <Relationship type="Association" first="17" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -644,7 +626,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="20" second="28">
+      <Relationship type="Association" first="18" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -659,7 +641,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="23" second="28">
+      <Relationship type="Association" first="21" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -670,7 +652,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="24" second="28">
+      <Relationship type="Association" first="22" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -685,7 +667,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="25" second="28">
+      <Relationship type="Association" first="23" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -696,7 +678,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Generalization" first="31" second="17">
+      <Relationship type="Generalization" first="29" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -708,7 +690,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1135</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="20" second="31">
+      <Relationship type="Association" first="18" second="29">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -719,7 +701,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Association" first="28" second="31">
+      <Relationship type="Association" first="26" second="29">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -734,7 +716,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="32" second="28">
+      <Relationship type="Comment" first="30" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -742,7 +724,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1802</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="33" second="31">
+      <Relationship type="Comment" first="31" second="29">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -754,7 +736,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1097</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="22" second="11">
+      <Relationship type="Association" first="20" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -765,7 +747,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <IsAggregation>False</IsAggregation>
         <IsComposition>False</IsComposition>
       </Relationship>
-      <Relationship type="Comment" first="34" second="11">
+      <Relationship type="Comment" first="32" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -777,7 +759,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>419</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="35" second="24">
+      <Relationship type="Comment" first="33" second="22">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -789,7 +771,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>883</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="36" second="31">
+      <Relationship type="Comment" first="34" second="29">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
