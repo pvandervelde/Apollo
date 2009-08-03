@@ -1,66 +1,53 @@
 <Project>
   <Name>Message pipeline</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
     <Name>Overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
         <Name>MessagePipeline</Name>
         <Access>Public</Access>
-        <Location left="220" top="712" />
-        <Size width="590" height="264" />
+        <Location left="429" top="873" />
+        <Size width="590" height="281" />
         <Collapsed>False</Collapsed>
         <Member type="Field">readonly IMessageQueue m_MessageQueue</Member>
         <Member type="Field">readonly INameService m_Dns</Member>
         <Member type="Method">public void RegisterAsListener(IProcessMessages service)</Member>
         <Member type="Method">public void RegisterAsListener(IProcessMessages service, IEnumerator&lt;MessageType&gt; messageTypesToListenTo)</Member>
         <Member type="Method">public void RegisterAsSender(ISendMessages service)</Member>
+        <Member type="Method">public void Register(IMessageNode service)</Member>
+        <Member type="Method">public void Register(IMessageNode service, IEnumerator&lt;MessageType&gt; messagesToListenTo)</Member>
         <Member type="Method">public void Unregister(object service)</Member>
         <Member type="Method">public void UnregisterAsSender(ISendMessages service)</Member>
         <Member type="Method">public void UnregisterAsListener(IProcessMessages service)</Member>
         <Member type="Method">public void UnregisterAsListener(IProcessMessages service, IEnumerator&lt;MessageType&gt; messageTypesToListenTo)</Member>
-        <Member type="Method">public MessageId Send(IMessage messageToSend)</Member>
+        <Member type="Method">public MessageId Send(Message messageToSend)</Member>
         <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IMessage&lt;T&gt;</Name>
-        <Access>Public</Access>
-        <Location left="612" top="487" />
-        <Size width="224" height="112" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">MessageHeader Header { get; }</Member>
-        <Member type="Property">MessageBody Message { get; }</Member>
-        <Member type="Property">T Data { get; }</Member>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IMessageQueue</Name>
-        <Access>Public</Access>
-        <Location left="982" top="712" />
-        <Size width="162" height="152" />
-        <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>INameService</Name>
         <Access>Public</Access>
-        <Location left="982" top="938" />
-        <Size width="162" height="216" />
+        <Location left="1259" top="932" />
+        <Size width="448" height="139" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">void AddName(DnsName name, IDnsNameObject node)</Member>
+        <Member type="Method">void Remove(DnsName name)</Member>
+        <Member type="Method">bool HasName(DnsName name)</Member>
+        <Member type="Method">IEnumerator&lt;KeyValuePair&lt;DnsName,IDnsNameObject&gt;&gt; GetEnumerator()</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
         <Access>Public</Access>
-        <Location left="1255" top="624" />
+        <Location left="1708" top="194" />
         <Size width="347" height="146" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">DnsName DnsName { get; }</Member>
-        <Member type="Method">void ProcessMessages(IMessage message)</Member>
-        <Member type="Method">void ProcessMessages(IEnumerator&lt;IMessage&gt; messages)</Member>
-        <Member type="Method">void ProcessMessages(params IMessage[] messages)</Member>
+        <Member type="Method">void ProcessMessages(Message message)</Member>
+        <Member type="Method">void ProcessMessages(IEnumerator&lt;Message&gt; messages)</Member>
       </Entity>
       <Entity type="Structure">
         <Name>DnsName</Name>
         <Access>Public</Access>
-        <Location left="205" top="10" />
+        <Location left="10" top="189" />
         <Size width="220" height="213" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private string m_Name</Member>
@@ -75,47 +62,36 @@
       <Entity type="Interface">
         <Name>ISendMessages</Name>
         <Access>Public</Access>
-        <Location left="1255" top="460" />
-        <Size width="419" height="140" />
+        <Location left="1250" top="231" />
+        <Size width="419" height="102" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Message has:
-- Header;
-  - Sender
-  - Recipient
-  - ID
-- Body
-  - Message
-  - Data</Text>
-        <Location left="982" top="487" />
-        <Size width="154" height="145" />
       </Entity>
       <Entity type="Structure">
         <Name>MessageHeader</Name>
         <Access>Public</Access>
-        <Location left="589" top="48" />
-        <Size width="218" height="216" />
+        <Location left="457" top="10" />
+        <Size width="419" height="247" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">MessageId m_Id</Member>
+        <Member type="Field">DnsName m_Sender</Member>
+        <Member type="Field">DnsName m_Recipient</Member>
+        <Member type="Field">MessageId m_ReplyTo</Member>
+        <Member type="Constructor">public MessageHeader(DnsName sender, DnsName recipient)</Member>
+        <Member type="Constructor">public MessageHeader(DnsName sender, DnsName recipient, MessageId replyTo)</Member>
         <Member type="Property">public DnsName Sender { get; }</Member>
         <Member type="Property">public DnsName Recipient { get; }</Member>
         <Member type="Property">public MessageId MessageId { get; }</Member>
-      </Entity>
-      <Entity type="Structure">
-        <Name>MessageBody</Name>
-        <Access>Public</Access>
-        <Location left="859" top="48" />
-        <Size width="162" height="216" />
-        <Collapsed>False</Collapsed>
+        <Member type="Property">public MessageId ReplyTo { get; }</Member>
       </Entity>
       <Entity type="Structure">
         <Name>MessageId</Name>
         <Access>Public</Access>
         <Location left="10" top="10" />
-        <Size width="162" height="155" />
+        <Size width="204" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private Guid m_Id</Member>
+        <Member type="Property">public static MessageId None { get; }</Member>
         <Member type="Method">public override bool Equals(object obj)</Member>
         <Member type="Method">public override int GetHashCode()</Member>
         <Member type="Method">public override string ToString()</Member>
@@ -126,68 +102,220 @@
 The other DNS names (which are not related to a specific service) are:
 - AllServices (used for broadcast)
 - Nobody (used to make message disappear)</Text>
-        <Location left="189" top="282" />
+        <Location left="10" top="473" />
         <Size width="254" height="148" />
       </Entity>
       <Entity type="Comment">
         <Text>What do we store in the message body. It must be possible for services to select a message based on stuff in the body too so the types have to be known a head of time...</Text>
-        <Location left="1182" top="97" />
+        <Location left="891" top="325" />
         <Size width="215" height="100" />
+      </Entity>
+      <Entity type="Class">
+        <Name>MessageEventArgs</Name>
+        <Access>Public</Access>
+        <Location left="1732" top="35" />
+        <Size width="214" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">MessageId m_Id</Member>
+        <Member type="Field">IDeliveryFailure m_Failure</Member>
+        <Member type="Property">public MessageId Id { get; }</Member>
+        <Member type="Property">public IDeliveryFailure Failure { get; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDeliveryFailure</Name>
+        <Access>Public</Access>
+        <Location left="1250" top="10" />
+        <Size width="162" height="111" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>Message</Name>
+        <Access>Public</Access>
+        <Location left="550" top="511" />
+        <Size width="329" height="230" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">MessageHeader m_Header</Member>
+        <Member type="Field">MessageBody m_Body</Member>
+        <Member type="Constructor">public Message(MessageHeader header, MessageBody body)</Member>
+        <Member type="Constructor">public Message(Message messageToClone)</Member>
+        <Member type="Property">public abstract MessageHeader Header { get; }</Member>
+        <Member type="Property">public abstract MessageBody Body { get; }</Member>
+        <Member type="Method">public override Equals Equals(object obj)</Member>
+        <Member type="Method">public override GetHashCode GetHashCode()</Member>
+        <Member type="Method">public override ToString ToString()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MessageBody</Name>
+        <Access>Public</Access>
+        <Location left="891" top="10" />
+        <Size width="235" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public abstract MessageBody Clone()</Member>
+        <Member type="Method">public abstract override Equals Equals(object obj)</Member>
+        <Member type="Method">public abstract override GetHashCode GetHashCode()</Member>
+        <Member type="Method">public abstract override ToString ToString()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Must be serializable</Text>
+        <Location left="579" top="351" />
+        <Size width="124" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The message pipeline is not expected to handle extremely large volumes of messages. The largest amount of messages will probably be generated between the project and the UI for visualizations and progress updates.</Text>
+        <Location left="23" top="884" />
+        <Size width="242" height="120" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we multithread this thing?
+
+Remember that some services can only execute on a specific thread (i.e. the UI) so we'll have to marshall those calls.</Text>
+        <Location left="47" top="1063" />
+        <Size width="217" height="91" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Must be serializable</Text>
+        <Location left="1520" top="51" />
+        <Size width="124" height="50" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDnsNameObject</Name>
+        <Access>Public</Access>
+        <Location left="1589" top="477" />
+        <Size width="193" height="90" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">DnsName Name { get; }</Member>
       </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>566</X>
-          <Y>523</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
-      </Relationship>
-      <Relationship type="Association" first="0" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>859</X>
-          <Y>789</Y>
+          <X>1076</X>
+          <Y>997</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>935</X>
-          <Y>789</Y>
+          <X>1215</X>
+          <Y>997</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="0" second="3">
+      <Relationship type="Comment" first="7" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="0" second="11">
+        <Label>Handles</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>661</X>
+          <Y>326</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>971</X>
+          <Y>242</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>498</X>
+          <Y>848</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="15" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>553</X>
+          <Y>1179</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>516</X>
+          <Y>370</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>295</X>
+          <Y>91</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>551</X>
+          <Y>382</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>290</X>
+          <Y>382</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>938</X>
-          <Y>1062</Y>
+        <BendPoint relativeToStartShape="True">
+          <X>1615</X>
+          <Y>126</Y>
         </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>724</X>
-          <Y>636</Y>
+          <X>1690</X>
+          <Y>150</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="11" second="5">
+      <Relationship type="Generalization" first="4" second="17">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1630</X>
+          <Y>452</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="12" second="9">
+      <Relationship type="Generalization" first="2" second="17">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1740</X>
+          <Y>452</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

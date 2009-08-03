@@ -1,13 +1,13 @@
 <Project>
   <Name>ComponentDefinition</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
     <Name>Untitled</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
         <Name>ComponentId</Name>
         <Access>Public</Access>
-        <Location left="3" top="208" />
+        <Location left="10" top="208" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -53,14 +53,6 @@
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>Schedule</Name>
-        <Access>Public</Access>
-        <Location left="3" top="300" />
-        <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
         <Name>ExternalInterfaces</Name>
         <Access>Public</Access>
         <Location left="708" top="577" />
@@ -71,7 +63,7 @@
       <Entity type="Class">
         <Name>State</Name>
         <Access>Public</Access>
-        <Location left="3" top="393" />
+        <Location left="10" top="312" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -147,7 +139,7 @@ Note that some elements are manditory but others are not. Some components may ha
       </Entity>
       <Entity type="Comment">
         <Text>Stores the state for a single component. Only state is persisted</Text>
-        <Location left="226" top="393" />
+        <Location left="226" top="312" />
         <Size width="162" height="72" />
       </Entity>
       <Entity type="Comment">
@@ -164,7 +156,9 @@ e.g. a action could be defined by a set of coworker methods (on different object
       </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Association" first="3" second="7">
+      <Relationship type="Association" first="3" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -176,10 +170,11 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>604</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="4" second="7">
+      <Relationship type="Association" first="4" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -191,10 +186,11 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>600</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="7" second="5">
+      <Relationship type="Association" first="6" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -206,10 +202,9 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>691</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="10" second="3">
+      <Relationship type="Comment" first="9" second="3">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -221,7 +216,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>429</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="11" second="4">
+      <Relationship type="Comment" first="10" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -233,7 +228,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>436</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="13" second="1">
+      <Relationship type="Comment" first="12" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -245,7 +240,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>39</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="14" second="2">
+      <Relationship type="Comment" first="13" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -257,7 +252,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>130</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="15" second="12">
+      <Relationship type="Comment" first="14" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -269,7 +264,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>241</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="18" second="7">
+      <Relationship type="Comment" first="17" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -281,7 +276,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>627</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="19" second="5">
+      <Relationship type="Comment" first="18" second="5">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -293,19 +288,19 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>752</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="20" second="8">
+      <Relationship type="Comment" first="19" second="7">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>201</X>
-          <Y>425</Y>
+          <Y>344</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>190</X>
-          <Y>425</Y>
+          <X>197</X>
+          <Y>344</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="21" second="1">
+      <Relationship type="Comment" first="20" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -317,7 +312,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>42</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="21" second="2">
+      <Relationship type="Comment" first="20" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -329,7 +324,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>136</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="16" second="12">
+      <Relationship type="Comment" first="15" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -341,7 +336,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
           <Y>240</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="22" second="7">
+      <Relationship type="Comment" first="21" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">

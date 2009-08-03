@@ -1,6 +1,6 @@
 <Project>
   <Name>Kernel system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
     <Name>Untitled</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -10,7 +10,7 @@
         <Location left="418" top="276" />
         <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public void Load()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Interface">
@@ -50,7 +50,7 @@ Note that most system services are always loaded in a specific order / time. e.g
 - error stuff
 - async stuff
 - Indicate complete</Text>
-        <Location left="642" top="984" />
+        <Location left="637" top="984" />
         <Size width="206" height="102" />
       </Entity>
       <Entity type="Comment">
@@ -71,10 +71,6 @@ Note that most system services are always loaded in a specific order / time. e.g
         <Collapsed>False</Collapsed>
         <Member type="Method">void Install(IService service)</Member>
         <Member type="Method">void Uninstall(IService service)</Member>
-        <Member type="Method">void Start(IService service)</Member>
-        <Member type="Method">void Start(Type serviceType)</Member>
-        <Member type="Method">void Stop(IService service)</Member>
-        <Member type="Method">void Restart(IService service)</Member>
       </Entity>
       <Entity type="Comment">
         <Text>Services have dependencies which have to be loaded before the service can be loaded.
@@ -214,18 +210,17 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
         <Access>Public</Access>
-        <Location left="1691" top="240" />
+        <Location left="1342" top="145" />
         <Size width="393" height="129" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">void ProcessMessage(KernelMessage message)</Member>
-        <Member type="Method">void ProcessMessages(params KernelMessage[] messages)</Member>
-        <Member type="Method">void ProcessMessages(IEnumerable&lt;KernelMessage&gt; messages)</Member>
-        <Member type="Method">void ProcessMessages(IEnumerator&lt;KernelMessages&gt; messages)</Member>
+        <Member type="Property">DnsName DnsName { get; }</Member>
+        <Member type="Method">void ProcessMessages(IMessage message)</Member>
+        <Member type="Method">void ProcessMessages(IEnumerator&lt;IMessage&gt; messages)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IHaveServiceDependencies</Name>
         <Access>Public</Access>
-        <Location left="1341" top="287" />
+        <Location left="1342" top="30" />
         <Size width="238" height="83" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerator&lt;Type&gt; Dependencies()</Member>
@@ -264,6 +259,15 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Location left="1987" top="1245" />
         <Size width="340" height="118" />
       </Entity>
+      <Entity type="Interface">
+        <Name>ISendMessages</Name>
+        <Access>Public</Access>
+        <Location left="1342" top="299" />
+        <Size width="393" height="98" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">DnsName DnsName { get; }</Member>
+        <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="3" second="0">
@@ -286,8 +290,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Realization" first="15" second="4">
         <StartOrientation>Horizontal</StartOrientation>
@@ -353,8 +356,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1366</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="17" second="19">
         <StartOrientation>Horizontal</StartOrientation>
@@ -368,8 +370,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1386</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="17" second="20">
         <StartOrientation>Vertical</StartOrientation>
@@ -383,8 +384,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>615</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Generalization" first="17" second="15">
         <StartOrientation>Horizontal</StartOrientation>
@@ -422,8 +422,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>630</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="18" second="20">
         <StartOrientation>Horizontal</StartOrientation>
@@ -437,8 +436,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>622</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Generalization" first="19" second="15">
         <StartOrientation>Horizontal</StartOrientation>
@@ -508,8 +506,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>593</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="20">
         <StartOrientation>Horizontal</StartOrientation>
@@ -523,8 +520,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>579</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="7" second="20">
         <StartOrientation>Vertical</StartOrientation>
@@ -562,8 +558,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>561</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="24">
         <StartOrientation>Vertical</StartOrientation>
@@ -577,19 +572,21 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>531</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="24" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>654</X>
+          <Y>439</Y>
+        </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>690</X>
           <Y>139</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="25" second="24">
         <StartOrientation>Horizontal</StartOrientation>
@@ -623,8 +620,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1708</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="18" second="26">
         <StartOrientation>Vertical</StartOrientation>
@@ -638,8 +634,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1707</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="26">
         <StartOrientation>Vertical</StartOrientation>
@@ -649,8 +644,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1751</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="26">
         <StartOrientation>Vertical</StartOrientation>
@@ -664,8 +658,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1839</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="26">
         <StartOrientation>Vertical</StartOrientation>
@@ -675,8 +668,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1857</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Generalization" first="29" second="15">
         <StartOrientation>Horizontal</StartOrientation>
@@ -698,8 +690,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>890</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="26" second="29">
         <StartOrientation>Horizontal</StartOrientation>
@@ -713,8 +704,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1040</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="30" second="26">
         <StartOrientation>Vertical</StartOrientation>
@@ -744,8 +734,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>590</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="32" second="11">
         <StartOrientation>Horizontal</StartOrientation>
