@@ -40,6 +40,7 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
+    <Compile Include="Fusion\AppDomainBuilder.cs" />
     <Compile Include="Fusion\AssemblyNameElements.cs" />
     <Compile Include="Fusion\FileExtensions.cs" />
     <Compile Include="Fusion\FusionHelper.cs" />

@@ -5,17 +5,13 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Apollo.Core
+namespace Apollo.Utils.Fusion
 {
     /// <summary>
-    /// Defines the base class for message objects.
+    /// Builds AppDomains with unhandled exception handlers and fusion loading events.
     /// </summary>
-    public abstract class KernelMessage
+    internal sealed class AppDomainBuilder
     {
-        // do messages throw if they can't be delivered?  --> Yes but how do we throw into the sending AppDomain?
     }
 }

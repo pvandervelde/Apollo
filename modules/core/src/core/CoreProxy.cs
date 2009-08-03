@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 
 namespace Apollo.Core
 {
@@ -26,26 +27,38 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Returns a set of types indicating on which services the current service
-        /// depends.
+        /// Returns a set of types indicating which services need to be present
+        /// for the current service to be functional.
         /// </summary>
         /// <returns>
-        /// An <see cref="IEnumerable{Type}"/> which contains the types of services
-        /// on which this service depends.
+        ///     An <see cref="IEnumerable{Type}"/> which contains the types of 
+        ///     services which this service requires to be functional.
+        /// </returns>
+        public IEnumerable<Type> ServicesToBeAvailable()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a set of types indicating which services the current service
+        /// needs to be linked to in order to be functional.
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
+        ///     on which this service depends.
         /// </returns>
         public IEnumerable<Type> Dependencies()
         {
             // Depends on the:
-            // - Persistence service
             // - Message pipeline
-            throw new NotImplementedException();
+            yield return typeof(object);
         }
 
         /// <summary>
         /// Provides one of the services on which the current service depends.
         /// </summary>
         /// <param name="dependency">The dependency service.</param>
-        public void ConnectToDependency(KernelService dependency)
+        public void ConnectTo(KernelService dependency)
         {
             throw new NotImplementedException();
         }

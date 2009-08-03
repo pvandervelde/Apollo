@@ -14,20 +14,26 @@ namespace Apollo.Core
     public interface IOwnServices
     {
         /// <summary>
-        /// Installs the service of the specified type.
+        /// Installs the specified service.
         /// </summary>
         /// <remarks>
+        /// <para>
         ///     Only services that are 'installed' can be used by the service manager.
         ///     Services that have not been installed are simply unknown to the service
         ///     manager.
+        /// </para>
+        /// <para>
+        ///     Note that only one instance for each <c>Type</c> can be provided to
+        ///     the service manager.
+        /// </para>
         /// </remarks>
         /// <param name="service">
         ///     The service which should be installed.
         /// </param>
-        void Install(Type service);
+        void Install(KernelService service);
 
         /// <summary>
-        /// Uninstalls the service of the specified type.
+        /// Uninstalls the specified service.
         /// </summary>
         /// <remarks>
         ///     Once a service is uninstalled it can no longer be started. It is effectively
@@ -36,33 +42,6 @@ namespace Apollo.Core
         /// <param name="service">
         ///     The type of service that needs to be uninstalled.
         /// </param>
-        void Uninstall(Type service);
-
-        /// <summary>
-        /// Starts the a service of the specified type.
-        /// </summary>
-        /// <param name="service">
-        ///     The type of the service that needs to be started.
-        /// </param>
-        void Start(Type service);
-
-        /// <summary>
-        /// Stops the specified service.
-        /// </summary>
-        /// <param name="service">
-        ///     The service which should be stopped.
-        /// </param>
-        void Stop(KernelService service);
-
-        /// <summary>
-        /// Restarts the specified service and returns a link to the newly started service.
-        /// </summary>
-        /// <param name="service">
-        ///     The service which should be restarted.
-        /// </param>
-        /// <returns>
-        ///     A new instance of the service.
-        /// </returns>
-        KernelService Restart(KernelService service);
+        void Uninstall(KernelService service);
     }
 }

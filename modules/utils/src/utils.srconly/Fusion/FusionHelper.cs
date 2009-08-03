@@ -349,7 +349,8 @@ namespace Apollo.Utils.Fusion
         }
 
         /// <summary>
-        /// 
+        /// Determines if the file at the specified <paramref name="filePath"/> is the assembly that the loader is
+        /// looking for.
         /// </summary>
         /// <param name="filePath">The absolute file path to the file which might be the desired assembly.</param>
         /// <param name="fileName">The file name and extension for the desired assembly.</param>
