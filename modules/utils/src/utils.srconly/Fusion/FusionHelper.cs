@@ -54,7 +54,7 @@ namespace Apollo.Utils.Fusion
     /// </design>
     [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", 
         Justification="Source will be linked from other projects and thus be used.")]
-    internal static class FusionHelper
+    internal sealed class FusionHelper
     {
         // @TODO: Do we need to make this all thread safe? Probably, but how...
 
@@ -62,188 +62,82 @@ namespace Apollo.Utils.Fusion
         /// The collection that holds all the directories that should be searched
         /// for the 'missing' assemblies.
         /// </summary>
-        private static List<string> s_Directories = new List<string>();
+        private string m_Directory;
 
         /// <summary>
         /// The delegate which is used to return a file enumerator based on a specific directory.
         /// </summary>
-        private static Func<string, IEnumerable<string>> s_FileEnumerator;
+        private Func<IEnumerable<string>> m_FileEnumerator;
 
         /// <summary>
         /// The delegate which is used to load an assembly from a specific file path.
         /// </summary>
-        private static Func<string, Assembly> s_AssemblyLoader;
+        private Func<string, Assembly> m_AssemblyLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        public FusionHelper() : this((string)null)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        /// <param name="baseDirectory">The base directory.</param>
+        public FusionHelper(DirectoryInfo baseDirectory) : this(baseDirectory.FullName)
+        { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        /// <param name="baseDirectory">The base directory.</param>
+        public FusionHelper(string baseDirectory)
+        {
+            m_Directory = baseDirectory;
+        }
 
         /// <summary>
         /// Gets or sets the file enumerator which is used to enumerate the files in a specific directory. 
-        /// Setting the file enumerator is ONLY used for testing!
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
-        internal static Func<string, IEnumerable<string>> FileEnumerator
+        internal Func<IEnumerable<string>> FileEnumerator
         {
             private get 
             {
-                if (s_FileEnumerator == null)
+                if (m_FileEnumerator == null)
                 {
-                    s_FileEnumerator = (directory) => Directory.GetFiles(directory, FileExtensions.AssemblyExtension, SearchOption.AllDirectories);
+                    Debug.Assert(!string.IsNullOrEmpty(m_Directory), "The directory must be specified!");
+                    m_FileEnumerator = () => Directory.GetFiles(m_Directory, FileExtensions.AssemblyExtension, SearchOption.AllDirectories);
                 }
 
-                return s_FileEnumerator;
+                return m_FileEnumerator;
             }
             set 
             {
-                s_FileEnumerator = value;
+                m_FileEnumerator = value;
             }
         }
 
         /// <summary>
         /// Gets or sets the assembly loader which is used to load assemblies from a specific path.
-        /// Setting the assembly loader is ONLY used for testing!
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
-        internal static Func<string, Assembly> AssemblyLoader 
+        internal Func<string, Assembly> AssemblyLoader 
         {
             private get 
             {
-                if (s_AssemblyLoader == null)
+                if (m_AssemblyLoader == null)
                 {
-                    s_AssemblyLoader = (path) => Assembly.LoadFrom(path);
+                    m_AssemblyLoader = (path) => Assembly.LoadFrom(path);
                 }
-                return s_AssemblyLoader;
+                return m_AssemblyLoader;
             }
             set 
             {
-                s_AssemblyLoader = value;
+                m_AssemblyLoader = value;
             }
-        }
-
-        /// <summary>
-        /// Adds one directory to the list of directories that should be 
-        /// probed in case of a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoryToProbe">
-        ///     The directory which should be probed in case of an assembly loading
-        ///     failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void AddProbingDirectory(DirectoryInfo directoryToProbe)
-        {
-            Debug.Assert(directoryToProbe != null, "The directory must not be null");
-            AddProbingDirectories(new DirectoryInfo[] { directoryToProbe });
-        }
-
-        /// <summary>
-        /// Adds a collection of directories to the list of directories that should be 
-        /// probed in case of a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesToProbe">
-        ///     The collection of directory which should be probed in case of an assembly loading
-        ///     failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void AddProbingDirectories(params DirectoryInfo[] directoriesToProbe)
-        {
-            Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
-            AddProbingDirectories(directoriesToProbe.AsEnumerable<DirectoryInfo>());
-        }
-
-        /// <summary>
-        /// Adds a collection of directories to the list of directories that should be 
-        /// probed in case of a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesToProbe">
-        ///     The collection of directory which should be probed in case of an assembly loading
-        ///     failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void AddProbingDirectories(IEnumerable<DirectoryInfo> directoriesToProbe)
-        {
-            Debug.Assert(directoriesToProbe != null, "The directory list must not be null");
-
-            foreach (var directory in directoriesToProbe)
-            {
-                // Check that each directory info element exists
-                if (!directory.Exists)
-                    continue;
-
-                // Store the full name of the directory in string format. DirectoryInfo inherits from
-                // MarshalByRefObject which means it is lifetime limited (somehow)
-                string directoryPath = directory.FullName;
-                if (!s_Directories.Contains(directoryPath))
-                {
-                    s_Directories.Add(directoryPath);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Removes a directory from the collection of directories that are probed in case of
-        /// a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoryNotToProbe">
-        ///     The directory which should be removed from the collection of directories which
-        ///     are probed in case of an assembly loading failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void RemoveProbingDirectory(DirectoryInfo directoryNotToProbe)
-        {
-            Debug.Assert(directoryNotToProbe != null, "The directory must not be null");
-            RemoveProbingDirectories(new DirectoryInfo[] { directoryNotToProbe });
-        }
-
-        /// <summary>
-        /// Removes a set of directories from the collection of directories that are probed in case of
-        /// a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesNotToProbe">
-        ///     The directories which should be removed from the collection of directories which
-        ///     are probed in case of an assembly loading failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void RemoveProbingDirectories(params DirectoryInfo[] directoriesNotToProbe)
-        {
-            Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
-            RemoveProbingDirectories(directoriesNotToProbe.AsEnumerable<DirectoryInfo>());
-        }
-
-        /// <summary>
-        /// Removes a set of directories from the collection of directories that are probed in case of
-        /// a failure to load an assembly.
-        /// </summary>
-        /// <param name="directoriesNotToProbe">
-        ///     The directories which should be removed from the collection of directories which
-        ///     are probed in case of an assembly loading failure.
-        /// </param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public static void RemoveProbingDirectories(IEnumerable<DirectoryInfo> directoriesNotToProbe)
-        {
-            Debug.Assert(directoriesNotToProbe != null, "The directory list must not be null");
-
-            foreach (var directory in directoriesNotToProbe)
-            {
-                var directoryPath = directory.FullName;
-                if (s_Directories.Contains(directoryPath))
-                {
-                    s_Directories.Remove(directoryPath);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Removes all directories from the collection of directories that are probed in case
-        /// of a failure to load an assembly.
-        /// </summary>
-        public static void RemoveAllProbingDirectories()
-        {
-            s_Directories.Clear();
         }
 
         /// <summary>
@@ -256,16 +150,15 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         ///     An assembly reference if the required assembly can be found; otherwise <see langword="null"/>.
         /// </returns>
-        public static Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
+        public Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
         {
             // This handler is called only when the common language runtime tries to bind to 
             // an assembly and fails to locate the assembly.
             return LocateAssembly(args.Name);
         }
 
-        private static Assembly LocateAssembly(string assemblyFullName)
+        private Assembly LocateAssembly(string assemblyFullName)
         {
-            Debug.Assert(s_Directories.Count > 0, "Need directories to scan for the desired assembly file.");
             Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");
             Debug.Assert(assemblyFullName != string.Empty, "Expected a non-empty assembly name string.");
 
@@ -305,29 +198,27 @@ namespace Apollo.Utils.Fusion
 
             // Search through all the directories and see if we can match the assemblyFileName with any of
             // the files in the stored directories
-            foreach (var current in s_Directories)
+            var files = FileEnumerator();
+
+            // Search for the first file that matches the assembly we're looking for
+            var match = (from filePath in files
+                         where (IsFileTheDesiredAssembly(filePath, fileName, version, culture, publicKey))
+                         select filePath)
+                         .FirstOrDefault();
+
+            if (match != null)
             {
-                // @TODO: This could be trouble in testing. Maybe give a delegate?
-                var files = FileEnumerator(current);
-
-                // Search for the first file that matches the assembly we're looking for
-                var match = (from filePath in files
-                             where (IsFileTheDesiredAssembly(filePath, fileName, version, culture, publicKey))
-                             select filePath)
-                             .FirstOrDefault();
-
-                if (match != null)
-                {
-                    return AssemblyLoader(match); 
-                }
+                return AssemblyLoader(match); 
             }
 
             // Did not find the assembly.
             return null;
         }
 
-        private static bool IsAssemblyNameFullyQualified(string assemblyFullName)
+        private  bool IsAssemblyNameFullyQualified(string assemblyFullName)
         {
+            Debug.Assert(!string.IsNullOrEmpty(assemblyFullName), "The assembly full name should not be empty.");
+
             // We will assume that the name is fully qualified if there is a comma in the file name.
             // If there is a comma in the file name it is relatively safe to assume that the file name is NOT
             // a qualified assembly file path so it will probably be a fully qualified assembly name.
@@ -335,7 +226,9 @@ namespace Apollo.Utils.Fusion
         }
 
         private static string ExtractValueFromKeyValuePair(string input)
-        { 
+        {
+            Debug.Assert(!string.IsNullOrEmpty(input), "The input should not be empty.");
+
             return input
                 .Substring(input.IndexOf(AssemblyNameElements.KeyValueSeparator) + AssemblyNameElements.KeyValueSeparator.Length)
                 .Trim();
@@ -343,6 +236,8 @@ namespace Apollo.Utils.Fusion
 
         private static string MakeModuleNameQualifiedFileName(string fileName)
         {
+            Debug.Assert(!string.IsNullOrEmpty(fileName), "The assembly file name should not be empty.");
+
             return (fileName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
                 string.Format("{0}{1}", fileName, FileExtensions.AssemblyExtension) :
                 fileName;
@@ -360,12 +255,15 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         ///     <see langword="true"/> if the filePath points to the desired assembly; otherwise <see langword="false"/>.
         /// </returns>
-        private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
+        private bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
+            Debug.Assert(!string.IsNullOrEmpty(filePath), "The assembly file path should not be empty.");
             if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase))
             {
                 return false;
             }
+
+            // Check the file version and culture too            
 
             // The path exists so there is a file with the specific file name. This is probably
             // an assembly.
@@ -374,24 +272,32 @@ namespace Apollo.Utils.Fusion
                 AssemblyName assemblyName = null;
                 try
                 {
-                    // Assume that the file is an assembly file. If not we'll find out
-                    // soon enough.
-                    assemblyName = AssemblyLoader(filePath).GetName(false);
+                    // Load the assembly name but without loading the assembly file into the AppDomain.
+                    assemblyName = AssemblyName.GetAssemblyName(filePath);
                 }
-                catch (FileLoadException)
+                catch (ArgumentException)
                 {
+                    // filePath is invalid, e.g. an assembly with an invalid culture.
                     return false;
                 }
-                catch (BadImageFormatException)
+                catch (FileNotFoundException)
                 {
+                    // filePath doesn't point to a valid file or doesn't exist
                     return false;
                 }
                 catch (SecurityException)
                 {
+                    // The caller doesn't have discovery permission for the given path
                     return false;
                 }
-                catch (PathTooLongException)
+                catch (BadImageFormatException)
+                { 
+                    // The file is not a valid assembly file
+                    return false;
+                }
+                catch (FileLoadException)
                 {
+                    // the file was already loaded but with a different set of evidence
                     return false;
                 }
 

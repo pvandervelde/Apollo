@@ -6,14 +6,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MbUnit.Framework;
-using System.Reflection;
-using Gallio.Reflection;
-using Apollo.Utils.Fusion;
-using System.IO;
 using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using Apollo.Utils.Fusion;
+using MbUnit.Framework;
 
 namespace Apollo.Utils
 {
@@ -40,23 +38,11 @@ namespace Apollo.Utils
             m_Assemblies.Add(GetAssemblyPath(Assembly.GetExecutingAssembly()), Assembly.GetExecutingAssembly());
         }
 
-        [TearDown]
-        public void TearDown()
+        private void InitializeFusionHelper(FusionHelper helper)
         {
-            FusionHelper.FileEnumerator = null;
-            FusionHelper.AssemblyLoader = null;
-
-            FusionHelper.RemoveAllProbingDirectories();
-        }
-
-        private void InitializeFusionHelper()
-        {
-            // Create the probing directories. There just needs to be one.
-            FusionHelper.AddProbingDirectory(new DirectoryInfo(Path.GetDirectoryName(GetAssemblyPath(Assembly.GetExecutingAssembly()))));
-
             // Can effectively just return the current assembly / gallio assemblies / system
-            FusionHelper.FileEnumerator = (basePath) => { return m_Assemblies.Keys.ToArray<string>(); };
-            FusionHelper.AssemblyLoader = (assemblyPath) =>
+            helper.FileEnumerator = () => { return m_Assemblies.Keys.ToArray<string>(); };
+            helper.AssemblyLoader = (assemblyPath) =>
             {
                 return m_Assemblies[assemblyPath];
             };
@@ -68,86 +54,87 @@ namespace Apollo.Utils
         }
 
         // Private method used to run the FusionHelper.LoadAssembly method
-        private Assembly ExecuteLoadAssembly(string assemblyName)
+        private Assembly ExecuteLoadAssembly(FusionHelper helper, string assemblyName)
         {
-            return FusionHelper.LocateAssemblyOnAssemblyLoadFailure(null, new ResolveEventArgs(assemblyName));
-        }
-
-        [Test]
-        public void LoadAssemblyWithoutProbingDirectories()
-        { 
-            Assert.IsNull(ExecuteLoadAssembly(Assembly.GetExecutingAssembly().GetName().Name));
+            return helper.LocateAssemblyOnAssemblyLoadFailure(null, new ResolveEventArgs(assemblyName));
         }
 
         [Test]
         public void LoadAssemblyWithExistingSimpleName()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var name = Assembly.GetExecutingAssembly().GetName().Name;
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
         public void LoadAssemblyWithNonExistingSimpleName()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var name = typeof(FusionHelper).Assembly.GetName().Name;
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
         public void LoadAssemblyWithExistingSimpleNameWithExtension()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var name = Assembly.GetExecutingAssembly().GetName().Name + ".dll";
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
         public void LoadAssemblyWithNonExistingSimpleNameWithExtension()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var name = typeof(FusionHelper).Assembly.GetName().Name + ".dll";
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
         public void LoadAssemblyWithExistingFullName()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var name = Assembly.GetExecutingAssembly().GetName().FullName;
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
         public void LoadAssemblyWithNonExistingFullNameBasedOnModule()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var assemblyName = typeof(FusionHelper).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, assemblyName.CultureInfo, "null");
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
         public void LoadAssemblyWithNonExistingFullNameBasedOnVersion()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, new Version(0, 0, 0, 0), assemblyName.CultureInfo, new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
@@ -155,22 +142,24 @@ namespace Apollo.Utils
         [Test]
         public void LoadAssemblyWithNonExistingFullNameBasedOnCulture()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, new CultureInfo("en-US"), new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
         public void LoadAssemblyWithNonExistingFullNameBasedOnPublicToken()
         {
-            InitializeFusionHelper();
+            var helper = new FusionHelper();
+            InitializeFusionHelper(helper);
 
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, new CultureInfo("en-US"), "null");
-            var result = ExecuteLoadAssembly(name);
+            var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
     }

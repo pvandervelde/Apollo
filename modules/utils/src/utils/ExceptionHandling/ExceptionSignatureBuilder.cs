@@ -104,7 +104,7 @@ namespace Apollo.Utils.ExceptionHandling
         /// <summary>
         /// Add one exception to the builder and traverse all its inner exceptions
         /// </summary>
-        /// <param name="exc">The exception to add</param>
+        /// <param name="exception">The exception to add</param>
         public void AddException(Exception exception)
         {
             AddException(exception, true);
@@ -113,7 +113,7 @@ namespace Apollo.Utils.ExceptionHandling
         /// <summary>
         /// Add one exception to the builder optionally traversing all of its inner exceptions
         /// </summary>
-        /// <param name="exc">The exception to add</param>
+        /// <param name="exception">The exception to add</param>
         /// <param name="traverseInnerException">Whether or not to include all inner exceptions in the signature</param>
         public void AddException(Exception exception, bool traverseInnerException)
         {
@@ -406,6 +406,9 @@ namespace Apollo.Utils.ExceptionHandling
             return ToSignatureString();
         }
 
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
         public void Dispose()
         {
             if (_signatureBuffer != null)

@@ -33,7 +33,7 @@ Note that most system services are always loaded in a specific order / time. e.g
       </Entity>
       <Entity type="Comment">
         <Text>Loads the User Interface service. All other services will be started from the dependencies for the UI service</Text>
-        <Location left="395" top="132" />
+        <Location left="137" top="289" />
         <Size width="204" height="69" />
       </Entity>
       <Entity type="Interface">

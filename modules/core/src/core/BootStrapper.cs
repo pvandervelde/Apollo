@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.ComponentModel.Composition.Hosting;
-using System.Reflection;
+using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using Apollo.Utils.Fusion;
 
 namespace Apollo.Core
 {
@@ -43,11 +45,11 @@ namespace Apollo.Core
     /// </item>
     /// </list>
     /// </design>
-    public abstract class BootStrapper
+    public abstract partial class BootStrapper
     {
         // We need an exception handling mechanism? If so then we need to be able to either:
         // - Load UI into other AppDomains (ew)
-        // - Send data to the UI appdomain. This requires a way to display an error dialog
+        // - Send data to the UI appdomain. This requires a way to display an error dialog --> Use a MarshalByRefObject for this
 
         // Assembly loading data comes in the form of a collection of paths
         // --> Where do we get these from and how
@@ -61,6 +63,11 @@ namespace Apollo.Core
         // We load these from the config file. The base sets
         // are hard-coded (i.e. we can never change the directory structure)
 
+        //protected BootStrapper(KernelStartInfo startInfo, IExceptionHandler exceptionHandler)
+        //{ 
+
+        //}
+
         /// <summary>
         /// Loads the Apollo system and starts the kernel.
         /// </summary>
@@ -68,19 +75,82 @@ namespace Apollo.Core
         { 
             // Link assembly resolver to current AppDomain
             // Link exception handlers to current domain
+            //PrepareUserInterfaceAppDomain(xx, yy);
 
-            // Create the kernel appdomain. Set:
+            // Create the kernel appdomain. 
+            var kernel = CreateKernelAppDomain();
+
+            // Prepare the appdomain, set:
             // - Security levels
             // - search paths
             // - assembly resolver
             // - exception handlers
-            // Must be done partially by injecting a loader into the
-            // AppDomain
+            // And then create the kernel
+            //kernel.PrepareAppDomain(aa, yy);
+            kernel.CreateKernel();
 
             // Scan the current assembly for all exported parts.
-            
+            var serviceTypes = GetServiceTypes();
 
-            // Load the kernel objects. Done by the loader
+            // Create all the services and pass them to the kernel
+            foreach (var serviceType in serviceTypes)
+            {
+                AppDomain serviceDomain = null; // CreateAppDomain(bb);
+                var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
+
+                // Prepare the appdomain, set:
+                // - Security levels
+                // - search paths
+                // - assembly resolver
+                // - exception handlers
+                // And then create the kernel
+                //injector.PrepareAppDomain(cc, yy);
+                KernelService service = injector.CreateService(serviceType);
+                kernel.InstallService(service);
+            }
+
+            // Finally start the kernel and wait for it to finish starting
+            //kernel.Start();
         }
+
+        private void PrepareUserInterfaceAppDomain(IEnumerable<FileInfo> assemblyDirectories,
+                IExceptionHandler exceptionHandler)
+        {
+            throw new NotImplementedException();
+        }
+
+        private IInjectKernels CreateKernelAppDomain()
+        {
+            // Create the kernel appdomain. 
+            AppDomain kernelDomain = null; // CreateAppDomain(zz);
+            return kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+        }
+
+        private AppDomain CreateAppDomain(IEnumerable<DirectoryInfo> searchPaths)
+        {
+            AppDomainSetup setup = new AppDomainSetup();
+            setup.ApplicationName = string.Empty;
+            
+            // Shadow copy files
+            setup.ShadowCopyFiles = "true";
+
+            // Do not load any assemblies from HTTP connections
+            setup.DisallowCodeDownload = true;
+
+            throw new NotImplementedException();
+        }
+
+        private IEnumerable<Type> GetServiceTypes()
+        {
+            // Find all Kernel services that are not auto loaded.
+            var serviceTypes = (from type in Assembly.GetExecutingAssembly().GetTypes()
+                                where typeof(KernelService).IsAssignableFrom(type) &&
+                                      type.GetCustomAttributes(typeof(AutoLoadAttribute),true).Length == 0
+                                select type);
+
+            return serviceTypes;
+        }
+
+        
     }
 }

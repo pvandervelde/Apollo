@@ -40,13 +40,16 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
-    <Compile Include="Fusion\AppDomainBuilder.cs" />
     <Compile Include="Fusion\AssemblyNameElements.cs" />
     <Compile Include="Fusion\FileExtensions.cs" />
     <Compile Include="Fusion\FusionHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\thirdparty\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>

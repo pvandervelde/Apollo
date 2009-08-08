@@ -82,6 +82,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\lib\thirdparty\autofac\Autofac.Integration.Mef.dll</HintPath>
     </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\lib\thirdparty\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition, Version=2009.7.8.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -99,9 +103,6 @@
     <Compile Include="..\..\..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\AppDomainBuilder.cs">
-      <Link>Utils\AppDomainBuilder.cs</Link>
-    </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\AssemblyNameElements.cs">
       <Link>Utils\AssemblyNameElements.cs</Link>
     </Compile>
@@ -117,14 +118,26 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="AppDomainBuilder.cs" />
+    <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
+    <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
+    <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="BootStrapper.cs" />
+    <Compile Include="BootStrapper.KernelInjector.cs" />
+    <Compile Include="BootStrapper.ServiceInjector.cs" />
+    <Compile Include="IAppDomainAssemblyResolver.cs" />
+    <Compile Include="IExceptionHandler.cs" />
     <Compile Include="IHaveServiceDependencies.cs" />
+    <Compile Include="IInjectKernels.cs" />
+    <Compile Include="IInjectServices.cs" />
     <Compile Include="INeedStartup.cs" />
     <Compile Include="IOwnServices.cs" />
     <Compile Include="IProcessMessages.cs" />
     <Compile Include="CoreProxy.cs" />
     <Compile Include="Kernel.cs" />
+    <Compile Include="KernelMessage.cs" />
     <Compile Include="KernelService.cs" />
+    <Compile Include="KernelStartInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StartupProgressEventArgs.cs" />
   </ItemGroup>

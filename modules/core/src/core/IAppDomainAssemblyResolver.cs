@@ -6,12 +6,17 @@
 
 using System;
 
-namespace Apollo.Utils.Fusion
+namespace Apollo.Core
 {
     /// <summary>
-    /// Builds AppDomains with unhandled exception handlers and fusion loading events.
+    /// Defines the interface for classes which deal with assembly resolution.
     /// </summary>
-    internal sealed class AppDomainBuilder
+    internal interface IAppDomainAssemblyResolver
     {
+        /// <summary>
+        /// Attaches the assembly resolution method to the <see cref="AppDomain.AssemblyResolve"/>
+        /// event.
+        /// </summary>
+        void Attach();
     }
 }

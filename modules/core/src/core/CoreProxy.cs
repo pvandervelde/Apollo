@@ -14,6 +14,11 @@ namespace Apollo.Core
     /// Defines the service that is used by the <c>Kernel</c> to 
     /// interact with the other services on an equal basis.
     /// </summary>
+    /// <remarks>
+    /// The <c>CoreProxy</c> is automatically loaded by the <see cref="Kernel"/>
+    /// so there is no need to request the bootstrapper to load it.
+    /// </remarks>
+    [AutoLoad]
     internal sealed class CoreProxy : KernelService, IHaveServiceDependencies
     {
         /// <summary>
@@ -44,14 +49,12 @@ namespace Apollo.Core
         /// needs to be linked to in order to be functional.
         /// </summary>
         /// <returns>
-        ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
-        ///     on which this service depends.
+        /// An <see cref="IEnumerable{Type}"/> which contains the types of services
+        /// on which this service depends.
         /// </returns>
-        public IEnumerable<Type> Dependencies()
+        public IEnumerable<Type> ServicesToConnectTo()
         {
-            // Depends on the:
-            // - Message pipeline
-            yield return typeof(object);
+            throw new NotImplementedException();
         }
 
         /// <summary>

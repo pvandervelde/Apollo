@@ -39,6 +39,16 @@ namespace Apollo.Core
         /// </summary>
         public event EventHandler<StartupProgressEventArgs> StartupProgress;
 
+        private void RaiseStartupProgress()
+        {
+            EventHandler<StartupProgressEventArgs> local = StartupProgress;
+            if (local != null)
+            { 
+                local(this, new StartupProgressEventArgs(0, "bla"));
+                throw new NotImplementedException();
+            }
+        }
+
         /// <summary>
         /// Starts the startup process.
         /// </summary>
@@ -82,6 +92,11 @@ namespace Apollo.Core
         /// </param>
         public void Install(KernelService service)
         {
+            // What happens with the lifetime management of all the services
+            // Effectively they should live until we lose them or until the
+            // app gets shut down 
+            // or until their AppDomain gets killed.
+
             throw new NotImplementedException();
         }
 
