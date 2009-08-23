@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="_Run" 
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         ToolsVersion="3.5">
+
+	<!-- 
+        You must pass:
+        PsakePath -> The path to PSAKE
+        VersionChangeFile -> The path to the file that contains the version changing psake script
+    -->
+		 
+	<Import Project="$(MSBuildProjectDirectory)\tools\thirdparty\msbuild\Powershell.targets"
+            Condition="Exists('$(MSBuildProjectDirectory)\tools\thirdparty\msbuild\Powershell.targets')"/> 
+
+    <!-- File paths -->
+    <PropertyGroup>
+        <!-- The directory where this build file lives. From here we can get the other file artifacts -->
+        <BaseDir>$(MSBuildProjectDirectory)</BaseDir>
+
+        <ProjectDir>$(BaseDir)</ProjectDir>
+        <SrcDir>$(BaseDir)</SrcDir>
+        <ReportsDir>$(BaseDir)\bin\reports</ReportsDir>
+    </PropertyGroup>
+	
+	<!-- File paths -->
+    <PropertyGroup>
+        <!-- The directory where this build file lives. From here we can get the other file artifacts -->
+        <BaseDir>$(MSBuildProjectDirectory)</BaseDir>
+        <PsakePath>$(BaseDir)</PsakePath>
+        
+        <Script>build.ps1</Script>
+    </PropertyGroup>	
+	
+	<PropertyGroup>
+	    <!--
+		<VersionScript><![CDATA[out-host $script %3B $file = [IO.Path]::GetFullPath('$script')%3B out-host $file %3B import-module psake %3B run-psake $file $targets -timing]]></VersionScript>
+		-->
+		<VersionScript><![CDATA[Write-Host ("{0}" -f (([int]$value1) + ([int]$value2)))]]></VersionScript>
+    </PropertyGroup>	
+    
+    <!--
+        Runs the specified powershell script
+    -->
+    <Target Name="_Run" >
+		<!-- If powershell is installed get the proper version number -->
+        <Powershell Script="$(VersionScript)" Arguments="script=$(Script);targets=$(targets)" >
+			<Output TaskParameter="Output" PropertyName="ScriptOutput" />
+		</Powershell>
+		
+		<Message Lines="$(ScriptOutput)"/>
+    </Target>
+
+</Project>

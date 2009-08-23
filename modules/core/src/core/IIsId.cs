@@ -9,9 +9,9 @@ using System;
 namespace Apollo.Core
 {
     /// <summary>
-    /// Defines the base class for messages send inside the core of the Apollo system.
+    /// Defines the interface for objects that act as ID numbers.
     /// </summary>
-    public abstract class KernelMessage
+    public interface IIsId
     {
     }
 }

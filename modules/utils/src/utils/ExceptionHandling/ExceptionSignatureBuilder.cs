@@ -208,7 +208,7 @@ namespace Apollo.Utils.ExceptionHandling
             return _signatureBuffer.ToString();
         }
 
-        private string[] GetParameterStrings(ParameterInfo[] parameterInfo)
+        private static string[] GetParameterStrings(ParameterInfo[] parameterInfo)
         {
             if (parameterInfo == null)
                 throw new ArgumentNullException("parameterInfo");

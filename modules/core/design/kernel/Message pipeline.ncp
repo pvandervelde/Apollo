@@ -1,6 +1,6 @@
 <Project>
   <Name>Message pipeline</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.1.1160.0, Culture=neutral, PublicKeyToken=null">
     <Name>Overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -8,32 +8,30 @@
         <Name>MessagePipeline</Name>
         <Access>Public</Access>
         <Location left="429" top="873" />
-        <Size width="590" height="281" />
+        <Size width="590" height="254" />
         <Collapsed>False</Collapsed>
         <Member type="Field">readonly IMessageQueue m_MessageQueue</Member>
         <Member type="Field">readonly INameService m_Dns</Member>
         <Member type="Method">public void RegisterAsListener(IProcessMessages service)</Member>
-        <Member type="Method">public void RegisterAsListener(IProcessMessages service, IEnumerator&lt;MessageType&gt; messageTypesToListenTo)</Member>
         <Member type="Method">public void RegisterAsSender(ISendMessages service)</Member>
-        <Member type="Method">public void Register(IMessageNode service)</Member>
-        <Member type="Method">public void Register(IMessageNode service, IEnumerator&lt;MessageType&gt; messagesToListenTo)</Member>
+        <Member type="Method">public void Register(object service)</Member>
         <Member type="Method">public void Unregister(object service)</Member>
         <Member type="Method">public void UnregisterAsSender(ISendMessages service)</Member>
         <Member type="Method">public void UnregisterAsListener(IProcessMessages service)</Member>
-        <Member type="Method">public void UnregisterAsListener(IProcessMessages service, IEnumerator&lt;MessageType&gt; messageTypesToListenTo)</Member>
-        <Member type="Method">public MessageId Send(Message messageToSend)</Member>
+        <Member type="Method">public MessageId Send(DnsName sender, DnsName recipient, MessageBody information)</Member>
+        <Member type="Method">public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>INameService</Name>
         <Access>Public</Access>
         <Location left="1259" top="932" />
-        <Size width="448" height="139" />
+        <Size width="324" height="139" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">void AddName(DnsName name, IDnsNameObject node)</Member>
+        <Member type="Method">void AddName(DnsName name, IDnsNameObject obj)</Member>
         <Member type="Method">void Remove(DnsName name)</Member>
         <Member type="Method">bool HasName(DnsName name)</Member>
-        <Member type="Method">IEnumerator&lt;KeyValuePair&lt;DnsName,IDnsNameObject&gt;&gt; GetEnumerator()</Member>
+        <Member type="Method">IEnumerator&lt;IDnsNameObject&gt; GetEnumerator()</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
@@ -188,6 +186,11 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <Collapsed>False</Collapsed>
         <Member type="Property">DnsName Name { get; }</Member>
       </Entity>
+      <Entity type="Comment">
+        <Text>Need a IsServiceAlive message</Text>
+        <Location left="1058" top="531" />
+        <Size width="162" height="72" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
@@ -257,8 +260,8 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>553</X>
-          <Y>1179</Y>
+          <X>552</X>
+          <Y>1170</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="13" second="6">
@@ -316,6 +319,10 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <X>1740</X>
           <Y>452</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

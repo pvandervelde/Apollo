@@ -90,7 +90,9 @@ namespace Apollo.Core
         ///     new <c>AppDomain</c>.
         /// </design>
         public AppDomain Assemble(DirectoryInfo basePath, IEnumerable<FileInfo> assemblyFiles, IExceptionHandler exceptionHandler)
-        {
+        {   
+            // @TODO: SECURITY SET?
+
             return Assemble(string.Empty, basePath, assemblyFiles, exceptionHandler);
         }
 
@@ -119,6 +121,8 @@ namespace Apollo.Core
         /// </design>
         public AppDomain Assemble(string friendlyName, DirectoryInfo basePath, IEnumerable<FileInfo> assemblyFiles, IExceptionHandler exceptionHandler)
         {
+            // @TODO: SECURITY SET?
+
             {
                 Enforce.Argument(() => basePath);
                 Enforce.That(() => basePath.Exists);
@@ -170,6 +174,8 @@ namespace Apollo.Core
         /// </design>
         public AppDomain Assemble(DirectoryInfo basePath, IEnumerable<DirectoryInfo> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
+            // @TODO: SECURITY SET?
+
             return Assemble(string.Empty, basePath, assemblyDirectories, exceptionHandler);
         }
 
@@ -198,6 +204,8 @@ namespace Apollo.Core
         /// </design>
         public AppDomain Assemble(string friendlyName, DirectoryInfo basePath, IEnumerable<DirectoryInfo> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
+            // @TODO: SECURITY SET?
+
             {
                 Enforce.Argument(() => basePath);
                 Enforce.That(() => basePath.Exists);

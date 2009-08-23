@@ -10,6 +10,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Apollo.Utils.Fusion;
+using Lokad;
 
 namespace Apollo.Core
 {
@@ -47,26 +48,36 @@ namespace Apollo.Core
     /// </design>
     public abstract partial class BootStrapper
     {
-        // We need an exception handling mechanism? If so then we need to be able to either:
-        // - Load UI into other AppDomains (ew)
-        // - Send data to the UI appdomain. This requires a way to display an error dialog --> Use a MarshalByRefObject for this
+        /// <summary>
+        /// The collection that contains the base and private path information
+        /// for the <c>AppDomain</c>s that need to be created.
+        /// </summary>
+        private readonly KernelStartInfo m_StartInfo;
 
-        // Assembly loading data comes in the form of a collection of paths
-        // --> Where do we get these from and how
-        // --> Also they differ per part of the app, so we need extension ability
-        //     - Config files? --> Partially, only for the plug-in search paths
+        /// <summary>
+        /// The factory used to create <c>IExceptionHandler</c> objects.
+        /// </summary>
+        private readonly Func<IExceptionHandler> m_ExceptionHandlerFactory;
 
-        // Which assembly paths do we need?
-        // - Core set
-        // - Plug-ins (can be extended at run-time)
-        // - UI paths
-        // We load these from the config file. The base sets
-        // are hard-coded (i.e. we can never change the directory structure)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BootStrapper"/> class.
+        /// </summary>
+        /// <param name="startInfo">
+        ///     The collection of <c>AppDomain</c> base and private paths.
+        /// </param>
+        /// <param name="exceptionHandlerFactory">
+        ///     The factory used for the creation of <see cref="IExceptionHandler"/> objects.
+        /// </param>
+        protected BootStrapper(KernelStartInfo startInfo, Func<IExceptionHandler> exceptionHandlerFactory)
+        {
+            {
+                Enforce.Argument(() => startInfo);
+                Enforce.Argument(() => exceptionHandlerFactory);
+            }
 
-        //protected BootStrapper(KernelStartInfo startInfo, IExceptionHandler exceptionHandler)
-        //{ 
-
-        //}
+            m_StartInfo = startInfo;
+            m_ExceptionHandlerFactory = exceptionHandlerFactory;
+        }
 
         /// <summary>
         /// Loads the Apollo system and starts the kernel.
@@ -75,7 +86,7 @@ namespace Apollo.Core
         { 
             // Link assembly resolver to current AppDomain
             // Link exception handlers to current domain
-            //PrepareUserInterfaceAppDomain(xx, yy);
+            PrepareUserInterfaceAppDomain(xx, yy);
 
             // Create the kernel appdomain. 
             var kernel = CreateKernelAppDomain();
@@ -86,7 +97,7 @@ namespace Apollo.Core
             // - assembly resolver
             // - exception handlers
             // And then create the kernel
-            //kernel.PrepareAppDomain(aa, yy);
+            kernel.PrepareAppDomain(aa, yy);
             kernel.CreateKernel();
 
             // Scan the current assembly for all exported parts.
@@ -95,7 +106,7 @@ namespace Apollo.Core
             // Create all the services and pass them to the kernel
             foreach (var serviceType in serviceTypes)
             {
-                AppDomain serviceDomain = null; // CreateAppDomain(bb);
+                AppDomain serviceDomain = CreateAppDomain(bb);
                 var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
 
                 // Prepare the appdomain, set:
@@ -104,13 +115,13 @@ namespace Apollo.Core
                 // - assembly resolver
                 // - exception handlers
                 // And then create the kernel
-                //injector.PrepareAppDomain(cc, yy);
+                injector.PrepareAppDomain(cc, yy);
                 KernelService service = injector.CreateService(serviceType);
                 kernel.InstallService(service);
             }
 
             // Finally start the kernel and wait for it to finish starting
-            //kernel.Start();
+            kernel.Start();
         }
 
         private void PrepareUserInterfaceAppDomain(IEnumerable<FileInfo> assemblyDirectories,
@@ -122,7 +133,7 @@ namespace Apollo.Core
         private IInjectKernels CreateKernelAppDomain()
         {
             // Create the kernel appdomain. 
-            AppDomain kernelDomain = null; // CreateAppDomain(zz);
+            AppDomain kernelDomain = CreateAppDomain(zz);
             return kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
         }
 
@@ -150,7 +161,5 @@ namespace Apollo.Core
 
             return serviceTypes;
         }
-
-        
     }
 }

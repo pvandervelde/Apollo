@@ -13,7 +13,7 @@ namespace Apollo.Core
     /// Defines the interface for <see cref="KernelService"/> objects that need
     /// to be able to process messages.
     /// </summary>
-    public interface IProcessMessages
+    public interface IProcessMessages : IDnsNameObject
     {
         /// <summary>
         /// Processes a single message that is directed at the current service.

@@ -67,6 +67,8 @@ namespace Apollo.Utils.Fusion
         /// <summary>
         /// The delegate which is used to return a file enumerator based on a specific directory.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification="Use of nested generic signatures is ok for core internal use.")]
         private Func<IEnumerable<string>> m_FileEnumerator;
 
         /// <summary>
@@ -101,6 +103,8 @@ namespace Apollo.Utils.Fusion
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification="Property is used internally only.")]
         internal Func<IEnumerable<string>> FileEnumerator
         {
             private get 
@@ -160,7 +164,7 @@ namespace Apollo.Utils.Fusion
         private Assembly LocateAssembly(string assemblyFullName)
         {
             Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");
-            Debug.Assert(assemblyFullName != string.Empty, "Expected a non-empty assembly name string.");
+            Debug.Assert(assemblyFullName.Length != 0, "Expected a non-empty assembly name string.");
 
             // It is not possible to use the AssemblyName class because that attempts to load the 
             // assembly. Obviously we're are currently trying to find the assembly.
@@ -215,7 +219,7 @@ namespace Apollo.Utils.Fusion
             return null;
         }
 
-        private  bool IsAssemblyNameFullyQualified(string assemblyFullName)
+        private static bool IsAssemblyNameFullyQualified(string assemblyFullName)
         {
             Debug.Assert(!string.IsNullOrEmpty(assemblyFullName), "The assembly full name should not be empty.");
 
@@ -230,7 +234,7 @@ namespace Apollo.Utils.Fusion
             Debug.Assert(!string.IsNullOrEmpty(input), "The input should not be empty.");
 
             return input
-                .Substring(input.IndexOf(AssemblyNameElements.KeyValueSeparator) + AssemblyNameElements.KeyValueSeparator.Length)
+                .Substring(input.IndexOf(AssemblyNameElements.KeyValueSeparator, StringComparison.OrdinalIgnoreCase) + AssemblyNameElements.KeyValueSeparator.Length)
                 .Trim();
         }
 
@@ -239,7 +243,7 @@ namespace Apollo.Utils.Fusion
             Debug.Assert(!string.IsNullOrEmpty(fileName), "The assembly file name should not be empty.");
 
             return (fileName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
-                string.Format("{0}{1}", fileName, FileExtensions.AssemblyExtension) :
+                string.Format(CultureInfo.InvariantCulture,"{0}{1}", fileName, FileExtensions.AssemblyExtension) :
                 fileName;
         }
 
@@ -255,7 +259,7 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         ///     <see langword="true"/> if the filePath points to the desired assembly; otherwise <see langword="false"/>.
         /// </returns>
-        private bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
+        private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
             Debug.Assert(!string.IsNullOrEmpty(filePath), "The assembly file path should not be empty.");
             if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase))
@@ -314,7 +318,7 @@ namespace Apollo.Utils.Fusion
                 {
                     // The 'Neutral' culture is actually the invariant culture. This is the culture an
                     // assembly gets if no culture was specified so...
-                    if (culture.Equals(AssemblyNameElements.InvariantCulture, StringComparison.InvariantCultureIgnoreCase))
+                    if (culture.Equals(AssemblyNameElements.InvariantCulture, StringComparison.OrdinalIgnoreCase))
                     {
                         culture = string.Empty;
                     }
@@ -326,11 +330,11 @@ namespace Apollo.Utils.Fusion
                     }
                 }
 
-                if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.CurrentCultureIgnoreCase)))
+                if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
                     var str = new System.Text.ASCIIEncoding().GetString(actualPublicKeyToken);
-                    return str.Equals(publicKey, StringComparison.CurrentCultureIgnoreCase);
+                    return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
