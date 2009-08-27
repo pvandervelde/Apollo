@@ -7,11 +7,11 @@ function global:Print-PrettyPrintHeader([string]$value){
 	"=" * 15 + " " + $value + " " + "="*15
 }
 
-function global:Run-PsakeScript([string]$script, [String[]]$targets){
+function global:Invoke-PsakeScript([string]$script, [String[]]$targets){
 
 	Print-PrettyPrintHeader "Starting $script"
 	""
-	& run-psake -noexit $script $targets -showfullerror -timing -framework 4.0
+	& invoke-psake $script $targets -noexit -showfullerror -timing -framework 4.0
 	if (!$psake_buildSucceeded)
 	{
 		throw "$scriptName failed with return code: $LastExitCode"
@@ -126,12 +126,12 @@ task createTasks{
 }
 
 task runScripts -depends createTasks{
-	Run-PsakeScript $projects['utils'] $tasks
-	Run-PsakeScript $projects['core'] $tasks
-	#Run-PsakeScript $projects['uicommon'] $tasks
-	#Run-PsakeScript $projects['projectexplorer'] $tasks
-	#Run-PsakeScript $projects['batchservice'] $tasks
-	#Run-PsakeScript $projects['rhino'] $tasks
+	Invoke-PsakeScript $projects['utils'] $tasks
+	Invoke-PsakeScript $projects['core'] $tasks
+	#Invoke-PsakeScript $projects['uicommon'] $tasks
+	#Invoke-PsakeScript $projects['projectexplorer'] $tasks
+	#Invoke-PsakeScript $projects['batchservice'] $tasks
+	#Invoke-PsakeScript $projects['rhino'] $tasks
 }
 
 task assembleApiDocs -depends runScripts{

@@ -214,7 +214,7 @@ correct order. Note that this is NOT the case for the 'incremental', 'debug' and
 In order to get a correct effect these tasks need to be the first tasks being called!
        
 In order to run this build script please call this script via PSAKE like:
-	psake utils.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing
+	invoke-psake utils.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing
 "@
 }
 
