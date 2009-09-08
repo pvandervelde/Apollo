@@ -88,10 +88,10 @@ properties{
 	$assemblyNameUnitTest = 'Apollo.Core.Test.Unit'
 	
 	# templates dirs
-	$dirTemplates = Join-Path ((Get-Item $dirBase).parent.parent.fullname) 'templates'
+	$dirTemplates = Join-Path $dirBase 'templates'
 	
 	# tools dirs
-	$dirTools = Join-Path (Join-Path ((Get-Item $dirBase).parent.parent.fullname) 'tools') 'thirdparty'
+	$dirTools = Join-Path $dirBase 'tools'
 	$dirStyleCop = Join-Path $dirTools 'StyleCop'
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
@@ -353,7 +353,7 @@ task buildApiDoc -depends buildBinaries{
 task runStyleCop -depends buildBinaries{
 	$msbuildExe = Get-MsbuildExe
 	
-	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:MsBuildExtensionPack=$dirMsbuildExtensionPack /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
+	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
 	if ($LastExitCode -ne 0)
 	{
 		throw "Stylecop failed on Apollo.Core with return code: $LastExitCode"

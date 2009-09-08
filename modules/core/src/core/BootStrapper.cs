@@ -86,7 +86,7 @@ namespace Apollo.Core
         { 
             // Link assembly resolver to current AppDomain
             // Link exception handlers to current domain
-            PrepareUserInterfaceAppDomain(xx, yy);
+            //PrepareUserInterfaceAppDomain(xx, yy);
 
             // Create the kernel appdomain. 
             var kernel = CreateKernelAppDomain();
@@ -97,7 +97,7 @@ namespace Apollo.Core
             // - assembly resolver
             // - exception handlers
             // And then create the kernel
-            kernel.PrepareAppDomain(aa, yy);
+            //kernel.PrepareAppDomain(aa, yy);
             kernel.CreateKernel();
 
             // Scan the current assembly for all exported parts.
@@ -106,8 +106,8 @@ namespace Apollo.Core
             // Create all the services and pass them to the kernel
             foreach (var serviceType in serviceTypes)
             {
-                AppDomain serviceDomain = CreateAppDomain(bb);
-                var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
+                //AppDomain serviceDomain = CreateAppDomain(bb);
+                //var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
 
                 // Prepare the appdomain, set:
                 // - Security levels
@@ -115,13 +115,13 @@ namespace Apollo.Core
                 // - assembly resolver
                 // - exception handlers
                 // And then create the kernel
-                injector.PrepareAppDomain(cc, yy);
-                KernelService service = injector.CreateService(serviceType);
-                kernel.InstallService(service);
+                //injector.PrepareAppDomain(cc, yy);
+                //KernelService service = injector.CreateService(serviceType);
+                //kernel.InstallService(service);
             }
 
             // Finally start the kernel and wait for it to finish starting
-            kernel.Start();
+            //kernel.Start();
         }
 
         private void PrepareUserInterfaceAppDomain(IEnumerable<FileInfo> assemblyDirectories,
@@ -133,8 +133,10 @@ namespace Apollo.Core
         private IInjectKernels CreateKernelAppDomain()
         {
             // Create the kernel appdomain. 
-            AppDomain kernelDomain = CreateAppDomain(zz);
-            return kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+            //AppDomain kernelDomain = CreateAppDomain(zz);
+            //return kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+
+            throw new NotImplementedException();
         }
 
         private AppDomain CreateAppDomain(IEnumerable<DirectoryInfo> searchPaths)

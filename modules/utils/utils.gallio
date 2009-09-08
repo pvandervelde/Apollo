@@ -2,7 +2,9 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gallio.org/">
   <testPackageConfig>
     <assemblyFiles>
-      <assemblyFile>..\..\..\..\..\..\math.net\unstable\precision\src\Managed.UnitTests\bin\Debug\MathNet.Numerics.UnitTests.dll</assemblyFile>
+      <assemblyFile>..\..\..\..\..\..\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.dll</assemblyFile>
+      <assemblyFile>..\..\..\..\..\..\nSarrac\code\unstable\v1\bin\build\NSarrac.Processors.BugTrackers.Test.Unit.dll</assemblyFile>
+      <assemblyFile>..\..\..\..\..\..\nSarrac\code\unstable\v1\bin\build\NSarrac.Processors.Test.Unit.dll</assemblyFile>
     </assemblyFiles>
     <hintDirectories />
     <excludedFrameworkIds />
@@ -15,7 +17,7 @@
     </hostSetup>
   </testPackageConfig>
   <testFilters>
-    <testFilter filterName="AutoSave" filter="Id: 4493f4020741144a" />
-    <testFilter filterName="LastRun" filter="Id: 4493f4020741144a" />
+    <testFilter filterName="LastRun" filter="" />
+    <testFilter filterName="AutoSave" filter="" />
   </testFilters>
 </project>

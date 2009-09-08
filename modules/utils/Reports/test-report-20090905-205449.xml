@@ -1,0 +1,1166 @@
+<?xml version="1.0" encoding="utf-8"?>
+<report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.gallio.org/">
+  <testPackageConfig>
+    <assemblyFiles>
+      <assemblyFile>D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.dll</assemblyFile>
+      <assemblyFile>D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Processors.BugTrackers.Test.Unit.dll</assemblyFile>
+      <assemblyFile>D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Processors.Test.Unit.dll</assemblyFile>
+    </assemblyFiles>
+    <hintDirectories />
+    <excludedFrameworkIds />
+    <hostSetup enableShadowCopy="false" debug="true" configurationFileLocation="appBase" processorArchitecture="None">
+      <configuration legacyUnhandledExceptionPolicyEnabled="true" assertUiEnabled="false" remotingCustomErrorsEnabled="false">
+        <assemblyQualifications />
+        <assemblyDependencies />
+        <supportedRuntimeVersions />
+      </configuration>
+    </hostSetup>
+  </testPackageConfig>
+  <testModel>
+    <test id="c2722843734a7a54" name="Root" fullName="" isTestCase="false">
+      <codeReference />
+      <codeLocation />
+      <metadata>
+        <entry key="TestKind">
+          <value>Root</value>
+        </entry>
+      </metadata>
+      <children>
+        <test id="e9ba7b32f33cfad8" name="MbUnit v3.0.6.787" fullName="MbUnit v3.0.6.787" isTestCase="false">
+          <codeReference />
+          <codeLocation />
+          <metadata>
+            <entry key="TestKind">
+              <value>Framework</value>
+            </entry>
+          </metadata>
+          <children>
+            <test id="e63718b972bc983d" name="NSarrac.Framework.Test.Unit" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit" isTestCase="false">
+              <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+              <codeLocation path="D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.DLL" />
+              <metadata>
+                <entry key="TestKind">
+                  <value>Assembly</value>
+                </entry>
+                <entry key="CodeBase">
+                  <value>D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.DLL</value>
+                </entry>
+                <entry key="Company">
+                  <value>Microsoft</value>
+                </entry>
+                <entry key="Copyright">
+                  <value>Copyright © Microsoft 2009</value>
+                </entry>
+                <entry key="FileVersion">
+                  <value>1.0.0.0</value>
+                </entry>
+                <entry key="Product">
+                  <value>NSarrac.Framework</value>
+                </entry>
+                <entry key="Title">
+                  <value>NSarrac.Framework</value>
+                </entry>
+                <entry key="Version">
+                  <value>1.0.0.0</value>
+                </entry>
+              </metadata>
+              <children>
+                <test id="f30bb0da75518d20" name="MachineDataTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest" isTestCase="false">
+                  <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" />
+                  <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" />
+                  <metadata>
+                    <entry key="TestKind">
+                      <value>Fixture</value>
+                    </entry>
+                    <entry key="Description">
+                      <value>Tests the MachineData class.</value>
+                    </entry>
+                  </metadata>
+                  <children>
+                    <test id="1f42f36b368ae5da" name="Create" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/Create" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="Create" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="22" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that machine data is stored poperly.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="38bafe1661a21591" name="EqualsWithNullData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNullData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNullData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="55" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a null MachineData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="19acc0ebe743cda4" name="EqualsWithNonEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="63" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a different MachineData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="6d7d6a687f37c445" name="EqualsWithEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithEqualData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithEqualData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="73" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to an equivalent MachineData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="a42f3e85917365e5" name="CreateWithoutName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithoutName" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithoutName" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="34" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created without a name.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="7d5599a476d1b9ed" name="CreateWithEmptyName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithEmptyName" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithEmptyName" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="41" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created with an empty name.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="5b8f3337ea926fa8" name="CreateWithNegativeMemory" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithNegativeMemory" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithNegativeMemory" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="48" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created with a negative amount of RAM.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="3ef522402ad07f68" name="EqualsWithNonEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="110" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a different object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="1070bfe988cb6ea8" name="EqualsWithEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithEqualObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithEqualObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="120" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to an equivalent object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="41e3806c9bfeb204" name="EqualsWithSelfObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithSelfObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithSelfObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="130" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to itself.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="bf52306f98181452" name="EqualsWithSelfData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithSelfData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithSelfData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="83" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to itself.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="3bba96b9a1f849d1" name="EqualsWithNullObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNullObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNullObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="92" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a null object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="b0f6d1e1305f2f72" name="EqualsWithNonEqualType" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualType" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualType" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="101" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a object of a different type.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                  </children>
+                  <parameters />
+                </test>
+                <test id="3a03ccfeb8f69d96" name="OperatingSystemDataTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest" isTestCase="false">
+                  <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" />
+                  <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" />
+                  <metadata>
+                    <entry key="TestKind">
+                      <value>Fixture</value>
+                    </entry>
+                    <entry key="Description">
+                      <value>Tests the OperatingSystemData class.</value>
+                    </entry>
+                  </metadata>
+                  <children>
+                    <test id="7ba5240822fbccf3" name="EqualsWithSelfObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithSelfObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithSelfObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="202" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to itself.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="53f7728cb9bdbecd" name="Create" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/Create" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="Create" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="20" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that operating system data is stored properly.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="c46b6a57cfa8d928" name="EqualsWithEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithEqualObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithEqualObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="183" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to an equivalent object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="b325f1eb4328e41e" name="CreateWithNullCulture" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullCulture" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullCulture" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="64" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created without a culture.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="7eaa47c36003d8ca" name="EqualsWithNullData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithNullData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithNullData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="74" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a null OperatingSytemData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="fe5fd2d51e108aa" name="CreateWithNullPlatform" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullPlatform" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullPlatform" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="54" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created without a platform.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="f3d19fd0bda9b6d5" name="CreateWithNullName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullName" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullName" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="34" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created without a name.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="2acc21d4bda61677" name="CreateWithEmptyName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithEmptyName" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithEmptyName" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="44" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that the data object cannot be created with an empty name.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="7ba68cc978e847dd" name="EqualsWithNonEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithNonEqualData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithNonEqualData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="87" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a different OperatingSytemData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="e18c8dc8c003bb4c" name="EqualsWithNonEqualType" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithNonEqualType" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithNonEqualType" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="151" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a object of a different type.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="aed6956bd771b893" name="EqualsWithNonEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithNonEqualObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithNonEqualObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="164" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a different object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="f73d51c5434f3831" name="EqualsWithNullObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithNullObject" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithNullObject" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="138" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is not equal to a null object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="3584c3096b9b9c67" name="EqualsWithEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithEqualData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithEqualData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="106" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to an equivalent OperatingSytemData object.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="d39d7eac187d3f8e" name="EqualsWithSelfData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithSelfData" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithSelfData" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="125" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that an object is equal to itself.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                  </children>
+                  <parameters />
+                </test>
+                <test id="fb19391cf8a2be8a" name="ReportBodyTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportBodyTest" isTestCase="false">
+                  <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework" type="NSarrac.Framework.ReportBodyTest" />
+                  <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportBodyTest.cs" />
+                  <metadata>
+                    <entry key="TestKind">
+                      <value>Fixture</value>
+                    </entry>
+                    <entry key="Description">
+                      <value>Tests the ReportBody class.</value>
+                    </entry>
+                  </metadata>
+                  <children>
+                    <test id="5a38fc2f48593e27" name="ReplaceAssemblies" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportBodyTest/ReplaceAssemblies" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework" type="NSarrac.Framework.ReportBodyTest" member="ReplaceAssemblies" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportBodyTest.cs" line="44" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that new assembly information overwrites existing assembly information.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="267951f042c55fcb" name="AddAssemblies" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportBodyTest/AddAssemblies" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework" type="NSarrac.Framework.ReportBodyTest" member="AddAssemblies" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportBodyTest.cs" line="22" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that assembly information is stored properly.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="3c0a216679879f7a" name="ReplaceConfigurations" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportBodyTest/ReplaceConfigurations" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework" type="NSarrac.Framework.ReportBodyTest" member="ReplaceConfigurations" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportBodyTest.cs" line="83" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that new configuration information overwrites existing configuration information.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="4a80afba3c8942e5" name="AddConfigurations" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportBodyTest/AddConfigurations" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework" type="NSarrac.Framework.ReportBodyTest" member="AddConfigurations" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportBodyTest.cs" line="64" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Checks that configuration information is stored properly.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                  </children>
+                  <parameters />
+                </test>
+                <test id="a169046a59785a96" name="ReportTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportTest" isTestCase="false">
+                  <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.ReportTest" />
+                  <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportTest.cs" />
+                  <metadata>
+                    <entry key="TestKind">
+                      <value>Fixture</value>
+                    </entry>
+                    <entry key="Description">
+                      <value>Tests the Report class.</value>
+                    </entry>
+                  </metadata>
+                  <children>
+                    <test id="84a9d9c67d32914a" name="Create" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportTest/Create" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.ReportTest" member="Create" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportTest.cs" line="20" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Tests that a report stores the report body correctly.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                    <test id="7fa19f0cc29172a" name="CreateWithNullStream" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/ReportTest/CreateWithNullStream" isTestCase="true">
+                      <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.ReportTest" member="CreateWithNullStream" />
+                      <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\ReportTest.cs" line="30" />
+                      <metadata>
+                        <entry key="TestKind">
+                          <value>Test</value>
+                        </entry>
+                        <entry key="Description">
+                          <value>Tests that a report cannot be created without a body.</value>
+                        </entry>
+                      </metadata>
+                      <children />
+                      <parameters />
+                    </test>
+                  </children>
+                  <parameters />
+                </test>
+              </children>
+              <parameters />
+            </test>
+          </children>
+          <parameters />
+        </test>
+      </children>
+      <parameters />
+    </test>
+    <annotations />
+  </testModel>
+  <testPackageRun startTime="2009-09-05T20:54:49.4527911+12:00" endTime="2009-09-05T20:57:54.0523496+12:00">
+    <testStepRun startTime="2009-09-05T20:55:31.970223+12:00" endTime="2009-09-05T20:57:52.9852886+12:00">
+      <testStep id="a26bed45567ae9fe" name="Root" fullName="" testId="c2722843734a7a54" isPrimary="true" isTestCase="false" isDynamic="false">
+        <codeReference />
+        <codeLocation />
+        <metadata>
+          <entry key="TestKind">
+            <value>Root</value>
+          </entry>
+        </metadata>
+      </testStep>
+      <children>
+        <testStepRun startTime="2009-09-05T20:55:32.0142255+12:00" endTime="0001-01-01T00:00:00">
+          <testStep id="42311cf081814a6f" name="MbUnit v3.0.6.787" fullName="MbUnit v3.0.6.787" testId="e9ba7b32f33cfad8" isPrimary="true" isTestCase="false" isDynamic="false">
+            <codeReference />
+            <codeLocation />
+            <metadata>
+              <entry key="TestKind">
+                <value>Framework</value>
+              </entry>
+            </metadata>
+          </testStep>
+          <children>
+            <testStepRun startTime="2009-09-05T20:55:32.0522277+12:00" endTime="0001-01-01T00:00:00">
+              <testStep id="5e9a8f5a9e29b7a9" name="NSarrac.Framework.Test.Unit" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit" testId="e63718b972bc983d" isPrimary="true" isTestCase="false" isDynamic="false">
+                <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+                <codeLocation path="D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.DLL" />
+                <metadata>
+                  <entry key="TestKind">
+                    <value>Assembly</value>
+                  </entry>
+                  <entry key="CodeBase">
+                    <value>D:\documents\petrik\software\nSarrac\code\unstable\v1\bin\build\NSarrac.Framework.Test.Unit.DLL</value>
+                  </entry>
+                  <entry key="Company">
+                    <value>Microsoft</value>
+                  </entry>
+                  <entry key="Copyright">
+                    <value>Copyright © Microsoft 2009</value>
+                  </entry>
+                  <entry key="FileVersion">
+                    <value>1.0.0.0</value>
+                  </entry>
+                  <entry key="Product">
+                    <value>NSarrac.Framework</value>
+                  </entry>
+                  <entry key="Title">
+                    <value>NSarrac.Framework</value>
+                  </entry>
+                  <entry key="Version">
+                    <value>1.0.0.0</value>
+                  </entry>
+                </metadata>
+              </testStep>
+              <children>
+                <testStepRun startTime="2009-09-05T20:55:32.0642283+12:00" endTime="2009-09-05T20:55:33.0402842+12:00">
+                  <testStep id="8bc53a022c71a918" name="MachineDataTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest" testId="f30bb0da75518d20" isPrimary="true" isTestCase="false" isDynamic="false">
+                    <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" />
+                    <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" />
+                    <metadata>
+                      <entry key="TestKind">
+                        <value>Fixture</value>
+                      </entry>
+                      <entry key="Description">
+                        <value>Tests the MachineData class.</value>
+                      </entry>
+                    </metadata>
+                  </testStep>
+                  <children>
+                    <testStepRun startTime="2009-09-05T20:55:32.0832294+12:00" endTime="2009-09-05T20:55:32.1602338+12:00">
+                      <testStep id="3d98b73670ddee94" name="Create" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/Create" testId="1f42f36b368ae5da" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="Create" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="22" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that machine data is stored poperly.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="2" duration="0.0767438">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.1752347+12:00" endTime="2009-09-05T20:55:32.2532392+12:00">
+                      <testStep id="6ca09c9c40f49efa" name="CreateWithEmptyName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithEmptyName" testId="7d5599a476d1b9ed" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithEmptyName" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="41" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created with an empty name.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.07884179999999999">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.26824+12:00" endTime="2009-09-05T20:55:32.3272434+12:00">
+                      <testStep id="5063b8012e4da6ae" name="CreateWithNegativeMemory" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithNegativeMemory" testId="5b8f3337ea926fa8" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithNegativeMemory" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="48" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created with a negative amount of RAM.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.059623699999999995">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.3502447+12:00" endTime="2009-09-05T20:55:32.4152484+12:00">
+                      <testStep id="5b464f8bc230f6d" name="CreateWithoutName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/CreateWithoutName" testId="a42f3e85917365e5" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="CreateWithoutName" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="34" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created without a name.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.066360099999999991">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.4322494+12:00" endTime="2009-09-05T20:55:32.4592509+12:00">
+                      <testStep id="6f66d8ad5614fdd3" name="EqualsWithEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithEqualData" testId="6d7d6a687f37c445" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithEqualData" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="73" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is equal to an equivalent MachineData object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.028545599999999997">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.4742518+12:00" endTime="2009-09-05T20:55:32.4892527+12:00">
+                      <testStep id="b2bddc6c51961dfb" name="EqualsWithEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithEqualObject" testId="1070bfe988cb6ea8" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithEqualObject" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="120" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is equal to an equivalent object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.016188">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.5022534+12:00" endTime="2009-09-05T20:55:32.5182543+12:00">
+                      <testStep id="6988dbca410067cd" name="EqualsWithNonEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualData" testId="19acc0ebe743cda4" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualData" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="63" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is not equal to a different MachineData object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.016502199999999998">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.5312551+12:00" endTime="2009-09-05T20:55:32.5462559+12:00">
+                      <testStep id="7b441ce47ce5a584" name="EqualsWithNonEqualObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualObject" testId="3ef522402ad07f68" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualObject" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="110" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is not equal to a different object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.0160324">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.5892584+12:00" endTime="2009-09-05T20:55:32.6162599+12:00">
+                      <testStep id="584c380216c677c8" name="EqualsWithNonEqualType" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNonEqualType" testId="b0f6d1e1305f2f72" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNonEqualType" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="101" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is not equal to a object of a different type.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.028607999999999998">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.7432672+12:00" endTime="2009-09-05T20:55:32.7732689+12:00">
+                      <testStep id="3b23ecab029cff68" name="EqualsWithNullData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNullData" testId="38bafe1661a21591" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNullData" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="55" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is not equal to a null MachineData object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.031953499999999996">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.9022763+12:00" endTime="2009-09-05T20:55:32.9242775+12:00">
+                      <testStep id="1a64ca3dd106fb34" name="EqualsWithNullObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithNullObject" testId="3bba96b9a1f849d1" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithNullObject" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="92" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is not equal to a null object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.0227336">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.949279+12:00" endTime="2009-09-05T20:55:32.9712802+12:00">
+                      <testStep id="1baf2e484d389118" name="EqualsWithSelfData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithSelfData" testId="bf52306f98181452" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithSelfData" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="83" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is equal to itself.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.0225999">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:32.9882812+12:00" endTime="2009-09-05T20:55:33.0152827+12:00">
+                      <testStep id="4b86a5530ec648b8" name="EqualsWithSelfObject" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/MachineDataTest/EqualsWithSelfObject" testId="41e3806c9bfeb204" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.MachineDataTest" member="EqualsWithSelfObject" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\MachineDataTest.cs" line="130" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is equal to itself.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.028491199999999998">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                  </children>
+                  <result assertCount="14" duration="0.9786612">
+                    <outcome status="passed" />
+                  </result>
+                  <testLog>
+                    <streams />
+                    <attachments />
+                  </testLog>
+                </testStepRun>
+                <testStepRun startTime="2009-09-05T20:55:33.055285+12:00" endTime="0001-01-01T00:00:00">
+                  <testStep id="73578f5e5475154c" name="OperatingSystemDataTest" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest" testId="3a03ccfeb8f69d96" isPrimary="true" isTestCase="false" isDynamic="false">
+                    <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" />
+                    <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" />
+                    <metadata>
+                      <entry key="TestKind">
+                        <value>Fixture</value>
+                      </entry>
+                      <entry key="Description">
+                        <value>Tests the OperatingSystemData class.</value>
+                      </entry>
+                    </metadata>
+                  </testStep>
+                  <children>
+                    <testStepRun startTime="2009-09-05T20:55:33.0672857+12:00" endTime="2009-09-05T20:55:33.0862868+12:00">
+                      <testStep id="705ab73211fc0c47" name="Create" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/Create" testId="53f7728cb9bdbecd" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="Create" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="20" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that operating system data is stored properly.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="3" duration="0.0196798">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:33.0992875+12:00" endTime="2009-09-05T20:55:33.1562908+12:00">
+                      <testStep id="8f1353671ac22553" name="CreateWithEmptyName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithEmptyName" testId="2acc21d4bda61677" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithEmptyName" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="44" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created with an empty name.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.058266599999999995">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:33.1912928+12:00" endTime="2009-09-05T20:55:33.2662971+12:00">
+                      <testStep id="dcfad80f449fe819" name="CreateWithNullCulture" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullCulture" testId="b325f1eb4328e41e" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullCulture" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="64" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created without a culture.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.0766569">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:33.2852982+12:00" endTime="2009-09-05T20:55:33.3493018+12:00">
+                      <testStep id="f138979b46658b25" name="CreateWithNullName" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullName" testId="f3d19fd0bda9b6d5" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullName" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="34" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created without a name.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.0656846">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:33.369303+12:00" endTime="2009-09-05T20:55:33.4363068+12:00">
+                      <testStep id="8140036f58bb1137" name="CreateWithNullPlatform" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/CreateWithNullPlatform" testId="fe5fd2d51e108aa" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="CreateWithNullPlatform" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="54" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that the data object cannot be created without a platform.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="1" duration="0.068525099999999992">
+                        <outcome status="passed" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                    <testStepRun startTime="2009-09-05T20:55:33.4553079+12:00" endTime="0001-01-01T00:00:00">
+                      <testStep id="789c6053ba84ea48" name="EqualsWithEqualData" fullName="MbUnit v3.0.6.787/NSarrac.Framework.Test.Unit/OperatingSystemDataTest/EqualsWithEqualData" testId="3584c3096b9b9c67" isPrimary="true" isTestCase="true" isDynamic="false">
+                        <codeReference assembly="NSarrac.Framework.Test.Unit, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" namespace="NSarrac.Framework.Test.Unit" type="NSarrac.Framework.Test.Unit.OperatingSystemDataTest" member="EqualsWithEqualData" />
+                        <codeLocation path="d:\documents\petrik\software\nSarrac\code\unstable\v1\src\framework.test.unit\OperatingSystemDataTest.cs" line="106" />
+                        <metadata>
+                          <entry key="TestKind">
+                            <value>Test</value>
+                          </entry>
+                          <entry key="Description">
+                            <value>Checks that an object is equal to an equivalent OperatingSytemData object.</value>
+                          </entry>
+                        </metadata>
+                      </testStep>
+                      <children />
+                      <result assertCount="0" duration="0">
+                        <outcome status="inconclusive" />
+                      </result>
+                      <testLog>
+                        <streams />
+                        <attachments />
+                      </testLog>
+                    </testStepRun>
+                  </children>
+                  <result assertCount="0" duration="0">
+                    <outcome status="inconclusive" />
+                  </result>
+                  <testLog>
+                    <streams />
+                    <attachments />
+                  </testLog>
+                </testStepRun>
+              </children>
+              <result assertCount="0" duration="0">
+                <outcome status="inconclusive" />
+              </result>
+              <testLog>
+                <streams />
+                <attachments />
+              </testLog>
+            </testStepRun>
+          </children>
+          <result assertCount="0" duration="0">
+            <outcome status="inconclusive" />
+          </result>
+          <testLog>
+            <streams />
+            <attachments />
+          </testLog>
+        </testStepRun>
+      </children>
+      <result assertCount="0" duration="173.4275554">
+        <outcome status="passed" />
+      </result>
+      <testLog>
+        <streams />
+        <attachments />
+      </testLog>
+    </testStepRun>
+    <statistics assertCount="14" duration="184.5952705" runCount="18" passedCount="18" failedCount="0" inconclusiveCount="0" skippedCount="0" testCount="18" stepCount="20">
+      <outcomeSummaries>
+        <outcomeSummary count="18">
+          <outcome status="passed" />
+        </outcomeSummary>
+      </outcomeSummaries>
+    </statistics>
+  </testPackageRun>
+  <logEntries>
+    <logEntry severity="info" message="Host started at 5/09/2009 20:54:49." />
+    <logEntry severity="important" message="Attaching the debugger to the host." />
+    <logEntry severity="debug" message="Listening for connections on IPC port: 'IsolatedProcessHost.5ffeff5d50186f5c'" />
+    <logEntry severity="warning" message="Watchdog timer expired!" />
+    <logEntry severity="warning" message="A fatal exception occurred while disposing a test driver." details="System.Runtime.Remoting.RemotingException: Port is Busy: All pipe instances are busy.&#xA;&#xA;&#xA;Server stack trace: &#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcPort.Connect(String portName, Boolean secure, TokenImpersonationLevel impersonationLevel, Int32 timeout)&#xA;   at System.Runtime.Remoting.Channels.Ipc.ConnectionCache.GetConnection(String portName, Boolean secure, TokenImpersonationLevel level, Int32 timeout)&#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcClientTransportSink.ProcessMessage(IMessage msg, ITransportHeaders requestHeaders, Stream requestStream, ITransportHeaders&amp; responseHeaders, Stream&amp; responseStream)&#xA;   at System.Runtime.Remoting.Channels.BinaryClientFormatterSink.SyncProcessMessage(IMessage msg)&#xA;&#xA;Exception rethrown at [0]: &#xA;   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)&#xA;   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData&amp; msgData, Int32 type)&#xA;   at System.IDisposable.Dispose()&#xA;   at Gallio.Runner.Drivers.RemoteTestDriver.Dispose(Boolean disposing) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\RemoteTestDriver.cs:line 65&#xA;   at Gallio.Runner.Drivers.BaseTestDriver.Dispose() in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\BaseTestDriver.cs:line 58&#xA;   at Gallio.Runner.Drivers.AggregateTestDriver.&lt;&gt;c__DisplayClass9.&lt;ExploreOrRunEachPartition&gt;b__8(IList`1 partitions) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\AggregateTestDriver.cs:line 102" />
+    <logEntry severity="important" message="Detaching the debugger from the host." />
+    <logEntry severity="info" message="Host stopped at 5/09/2009 20:57:53." />
+    <logEntry severity="info" message="Host process exited with code: 0" />
+    <logEntry severity="error" message="A fatal exception occurred while running tests.  Possible causes include invalid test runner parameters and stack overflows." details="System.Runtime.Remoting.RemotingException: An error occurred while processing the request on the server: System.Threading.ThreadAbortException: Thread was being aborted.&#xA;   at System.Runtime.Remoting.Channels.BinaryServerFormatterSink.ProcessMessage(IServerChannelSinkStack sinkStack, IMessage requestMsg, ITransportHeaders requestHeaders, Stream requestStream, IMessage&amp; responseMsg, ITransportHeaders&amp; responseHeaders, Stream&amp; responseStream)&#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcServerTransportSink.ServiceRequest(Object state)&#xA;&#xA;Server stack trace: &#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcServerHandler.ReadToEndOfHeaders(BaseTransportHeaders headers)&#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcClientHandler.ReadHeaders()&#xA;   at System.Runtime.Remoting.Channels.Ipc.IpcClientTransportSink.ProcessMessage(IMessage msg, ITransportHeaders requestHeaders, Stream requestStream, ITransportHeaders&amp; responseHeaders, Stream&amp; responseStream)&#xA;   at System.Runtime.Remoting.Channels.BinaryClientFormatterSink.SyncProcessMessage(IMessage msg)&#xA;&#xA;Exception rethrown at [0]: &#xA;   at System.Runtime.Remoting.Proxies.RealProxy.HandleReturnMessage(IMessage reqMsg, IMessage retMsg)&#xA;   at System.Runtime.Remoting.Proxies.RealProxy.PrivateInvoke(MessageData&amp; msgData, Int32 type)&#xA;   at Gallio.Runner.Drivers.ITestDriver.Run(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, ITestExplorationListener testExplorationListener, TestExecutionOptions testExecutionOptions, ITestExecutionListener testExecutionListener, IProgressMonitor progressMonitor)&#xA;   at Gallio.Runner.Drivers.RemoteTestDriver.RunImpl(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, ITestExplorationListener testExplorationListener, TestExecutionOptions testExecutionOptions, ITestExecutionListener testExecutionListener, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\RemoteTestDriver.cs:line 93&#xA;   at Gallio.Runner.Drivers.BaseTestDriver.Run(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, ITestExplorationListener testExplorationListener, TestExecutionOptions testExecutionOptions, ITestExecutionListener testExecutionListener, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\BaseTestDriver.cs:line 92&#xA;   at Gallio.Runner.Drivers.AggregateTestDriver.&lt;&gt;c__DisplayClass6.&lt;RunImpl&gt;b__4(ITestDriver testDriver, TestPackageConfig partitionConfig, Listener listener, IProgressMonitor subProgressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\AggregateTestDriver.cs:line 62&#xA;   at Gallio.Runner.Drivers.AggregateTestDriver.&lt;&gt;c__DisplayClass9.&lt;ExploreOrRunEachPartition&gt;b__8(IList`1 partitions) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\AggregateTestDriver.cs:line 94&#xA;   at Gallio.Runner.Drivers.HostedTestDriver.DoWithPartitions(TestPackageConfig testPackageConfig, Action`1 action, Action`1 setStatus) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\HostedTestDriver.cs:line 123&#xA;   at Gallio.Runner.Drivers.AggregateTestDriver.ExploreOrRunEachPartition(TestPackageConfig testPackageConfig, ITestExplorationListener testExplorationListener, ITestExecutionListener testExecutionListener, PartitionAction action, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\AggregateTestDriver.cs:line 74&#xA;   at Gallio.Runner.Drivers.AggregateTestDriver.RunImpl(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, ITestExplorationListener testExplorationListener, TestExecutionOptions testExecutionOptions, ITestExecutionListener testExecutionListener, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\AggregateTestDriver.cs:line 60&#xA;   at Gallio.Runner.Drivers.BaseTestDriver.Run(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, ITestExplorationListener testExplorationListener, TestExecutionOptions testExecutionOptions, ITestExecutionListener testExecutionListener, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\Drivers\BaseTestDriver.cs:line 92&#xA;   at Gallio.Runner.DefaultTestRunner.Run(TestPackageConfig testPackageConfig, TestExplorationOptions testExplorationOptions, TestExecutionOptions testExecutionOptions, IProgressMonitor progressMonitor) in c:\RelEng\Projects\MbUnit v3.0.6\Work\src\Gallio\Gallio\Runner\DefaultTestRunner.cs:line 292" />
+  </logEntries>
+</report>

@@ -6,9 +6,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.ComponentModel.Composition;
-using System.ComponentModel.Composition.Hosting;
-using System.Reflection;
 
 namespace Apollo.Core
 {

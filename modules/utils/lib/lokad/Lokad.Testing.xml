@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Lokad.Testing</name>
+    </assembly>
+    <members>
+        <member name="T:GlobalAssemblyInfo">
+            <summary>
+             Assembly information class that is shared between all projects
+            </summary>
+        </member>
+        <member name="T:Lokad.Testing.MockContainer">
+            <summary>
+            Container that automatically resolves all unknown dependencies as stubs
+            </summary>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.For``1">
+            <summary>
+            Creates strongly-typed mocking container
+            </summary>
+            <typeparam name="TSubject">The type of the subject.</typeparam>
+            <returns>new container instance</returns>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Testing.MockContainer"/> class.
+            </summary>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Register``1">
+            <summary>
+            Registers the specified component in this container.
+            </summary>
+            <typeparam name="TComponent">The type of the component.</typeparam>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Register``1(``0)">
+            <summary>
+            Registers the specified component instance in this container.
+            </summary>
+            <typeparam name="TComponent">The type of the component.</typeparam>
+            <param name="instance">The actual instance.</param>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Build(System.Action{Autofac.Builder.ContainerBuilder})">
+            <summary>
+            Builds the specified registration into the container.
+            </summary>
+            <param name="registration">The registration.</param>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Resolve``1">
+            <summary>
+            Resolves the specified service from the container
+            </summary>
+            <typeparam name="TService">The type of the service.</typeparam>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.Stub``2(System.Func{``0,``1})">
+            <summary>
+            Stubs the specified action against the specified service.
+            </summary>
+            <typeparam name="TService">The type of the service.</typeparam>
+            <typeparam name="TResult">The type of the result.</typeparam>
+            <param name="action">The action.</param>
+            <returns>method options for the additional configuration</returns>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.RaiseEventOn``1(System.Action{``0},System.Object[])">
+            <summary>
+            Raises the specified event on the <typeparamref name="TEventSource"/> resolved from the container.
+            </summary>
+            <typeparam name="TEventSource">The type of the service.</typeparam>
+            <param name="eventSubscription">The event subscription that specifies the event to be called.</param>
+            <param name="args">The optional arguments to be passed to the event.</param>
+            <returns>same instance of the mock container</returns>
+            <seealso cref="M:Rhino.Mocks.RhinoMocksExtensions.GetEventRaiser``1(``0,System.Action{``0})"/>
+            <seealso cref="M:Rhino.Mocks.Interfaces.IEventRaiser.Raise(System.Object[])"/>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer.AssertWasCalled``1(System.Action{``0})">
+            <summary>
+            Asserts that a particular method was called on the specified mock object
+            </summary>
+            <typeparam name="TService">The type of the service.</typeparam>
+            <param name="action">The action.</param>
+            <seealso cref="M:Rhino.Mocks.RhinoMocksExtensions.AssertWasCalled``1(``0,System.Action{``0})"/>
+            <returns>same instance of the mock container</returns>
+        </member>
+        <member name="P:Lokad.Testing.MockContainer.Container">
+            <summary>
+            Gets the actial container.
+            </summary>
+            <value>The container.</value>
+        </member>
+        <member name="T:Lokad.Testing.MockContainer`1">
+            <summary>
+            Extends the <see cref="T:Lokad.Testing.MockContainer"/> and autoregisters the specified subject.
+            </summary>
+            <typeparam name="TSubject">The type of the subject.</typeparam>
+        </member>
+        <member name="M:Lokad.Testing.MockContainer`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Lokad.Testing.MockContainer`1"/> class.
+            </summary>
+        </member>
+        <member name="P:Lokad.Testing.MockContainer`1.Subject">
+            <summary>
+            Testing subject
+            </summary>
+        </member>
+    </members>
+</doc>

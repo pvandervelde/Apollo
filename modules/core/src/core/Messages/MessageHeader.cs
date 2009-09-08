@@ -15,7 +15,7 @@ namespace Apollo.Core.Messages
     /// from one service to another service.
     /// </summary>
     [Serializable]
-    public struct MessageHeader : IEquatable<MessageHeader>
+    public sealed class MessageHeader : IEquatable<MessageHeader>
     {
         /// <summary>
         /// The unique ID number of this message.
@@ -144,7 +144,7 @@ namespace Apollo.Core.Messages
         /// </summary>
         /// <param name="other">The <c>MessageHeader</c> to compare with this instance.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified <c>MessageHeader</c> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <c>MessageHeader</c> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         public bool Equals(MessageHeader other)
         {
@@ -156,7 +156,7 @@ namespace Apollo.Core.Messages
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         public override bool Equals(object obj)
         {

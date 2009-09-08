@@ -23,7 +23,7 @@ function Build-ReleaseDev{
 
 	'Running release developer build'
 	'Running script from: $script'
-	& invoke-psake $script -noexit -showfullerror -timing -framework 4.0 Release,UnitTests,Verify,DeveloperBuild | Out-Host
+	& invoke-psake $script -noexit -showfullerror -timing -framework 4.0 Release,UnitTests,Verify,DeveloperBuild
 }
 
 function Build-DebugFull{
@@ -31,7 +31,7 @@ function Build-DebugFull{
 
 	'Running debug full build'
 	'Running script from: $script'
-	& invoke-psake $script -noexit -showfullerror -timing -framework 4.0 Debug,UnitTests,Verify,ApiDocs,UserDocs,Installer,FullBuild | Out-Host
+	& invoke-psake $script -noexit -showfullerror -timing -framework 4.0 Debug,UnitTests,Verify,ApiDocs,UserDocs,Installer,FullBuild
 }
 
 function Build-ReleaseFull{

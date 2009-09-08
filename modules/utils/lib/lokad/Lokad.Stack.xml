@@ -1,0 +1,233 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Lokad.Stack</name>
+    </assembly>
+    <members>
+        <member name="T:GlobalAssemblyInfo">
+            <summary>
+             Assembly information class that is shared between all projects
+            </summary>
+        </member>
+        <member name="T:Lokad.Container.AutoRegistrationModule">
+            <summary>
+            Autofac extension module that provides auto-registration
+            capabilities.
+            </summary>
+        </member>
+        <member name="M:Lokad.Container.AutoRegistrationModule.AddAssembly(System.Reflection.Assembly)">
+            <summary>
+            Adds the assembly to the autoregistration list.
+            </summary>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Lokad.Container.AutoRegistrationModule.Configure(Autofac.IContainer)">
+            <summary>
+            <see cref="M:Autofac.IModule.Configure(Autofac.IContainer)"/>
+            </summary>
+            <param name="container"></param>
+        </member>
+        <member name="P:Lokad.Container.AutoRegistrationModule.IncludeAssemblies">
+            <summary>
+            Same as <see cref="M:Lokad.Container.AutoRegistrationModule.AddAssembly(System.Reflection.Assembly)"/> but for the XML configs
+            </summary>
+        </member>
+        <member name="T:Lokad.Container.ContainerBuilderExtensions">
+            <summary>
+            Extensions for the <see cref="T:Autofac.Builder.ContainerBuilder"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.AutoRegister``1(Autofac.Builder.ContainerBuilder)">
+            <see cref="M:Lokad.Container.ContainerBuilderExtensions.AutoRegisterType(System.Type,Autofac.Builder.ContainerBuilder)"/>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.AutoRegister(Autofac.Builder.ContainerBuilder,System.Collections.Generic.IEnumerable{System.Type})">
+            <see cref="M:Lokad.Container.ContainerBuilderExtensions.AutoRegisterType(System.Type,Autofac.Builder.ContainerBuilder)"/>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.AutoRegisterAssembly(Autofac.Builder.ContainerBuilder)">
+            <summary>
+            Performs autoregistration of all types in this assembly, 
+            using the attrubite-based rules
+            </summary>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.AutoRegisterAssembly(Autofac.Builder.ContainerBuilder,System.Reflection.Assembly)">
+            <summary>
+            Performs autoregistration of all types in the specified assembly, 
+            using the attribute-based rules
+            </summary>
+            <param name="builder"></param>
+            <param name="assembly"></param>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.AutoRegisterType(System.Type,Autofac.Builder.ContainerBuilder)">
+            <summary>
+            Runs auto-registration based on the <see cref="T:Lokad.Container.ComponentAttribute"/>
+            </summary>
+            <param name="type"></param>
+            <param name="builder"></param>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.GetScope(Lokad.Container.RegistrationScope)">
+            <summary>
+            Converts <see cref="T:Lokad.Container.RegistrationScope"/> to <see cref="T:Autofac.InstanceScope"/>
+            </summary>
+            <param name="scope"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Lokad.Container.ContainerBuilderExtensions.LoadDecorators(Autofac.IContainer,System.Collections.Generic.IEnumerable{Lokad.Container.DecoratorInfo})">
+            <summary>
+            Loads decorators into the container
+            </summary>
+            <param name="container"></param>
+            <param name="decorators"></param>
+        </member>
+        <member name="T:Autofac.PendingAutofacExtensions">
+            <summary>
+            Pending extensions. To be pulled upstream to Autofac, if they prove useful in multiple projects
+            </summary>
+        </member>
+        <member name="M:Autofac.PendingAutofacExtensions.Build(Autofac.IContainer,System.Action{Autofac.Builder.ContainerBuilder})">
+            <summary>
+            Builds the specified registration into the container.
+            </summary>
+            <param name="container">The container.</param>
+            <param name="registration">The registration.</param>
+        </member>
+        <member name="T:Lokad.Logging.LoggingModule">
+            <summary>
+            Autofac extension module that provides integration with the log4net
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LoggingModule.Configure(Autofac.IContainer)">
+            <summary>
+            <see cref="M:Autofac.IModule.Configure(Autofac.IContainer)"/>
+            </summary>
+            <param name="container"></param>
+        </member>
+        <member name="P:Lokad.Logging.LoggingModule.UseConfig">
+            <summary>
+            Informs the module to use the config file
+            </summary>
+        </member>
+        <member name="P:Lokad.Logging.LoggingModule.FileName">
+            <summary>
+            Informs the module to use the provided file
+            </summary>
+        </member>
+        <member name="T:Lokad.Logging.LoggingMode">
+            <summary>
+            Defines log modes for the <see cref="T:Lokad.Logging.LoggingModule"/>
+            </summary>
+        </member>
+        <member name="F:Lokad.Logging.LoggingMode.Console">
+            <summary>
+            Initializes logging system to write to the console.
+            </summary>
+        </member>
+        <member name="F:Lokad.Logging.LoggingMode.Config">
+            <summary>
+            All logging is configured via lognet config
+            </summary>
+        </member>
+        <member name="F:Lokad.Logging.LoggingMode.File">
+            <summary>
+            Logging is configured from file
+            </summary>
+        </member>
+        <member name="T:Lokad.Logging.LogProviderWrapper">
+            <summary>
+            Uses <see cref="N:log4net"/> as the logging backend
+            </summary>
+        </member>
+        <member name="F:Lokad.Logging.LogProviderWrapper.Instance">
+            <summary>
+            Singleton instance of the <see cref="T:Lokad.INamedProvider`1"/> for <see cref="T:Lokad.ILog"/>
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LogProviderWrapper.Get(System.String)">
+            <summary>
+            Creates new named log
+            </summary>
+            <param name="key">Name of the log to use</param>
+            <returns></returns>
+        </member>
+        <member name="T:Lokad.Logging.LogSyntax">
+            <summary>
+            Syntax for configuring logging within the logging stack
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LogSyntax.Filter(Lokad.LogLevel,Lokad.LogLevel)">
+            <summary>
+            Appends inclusive filter to the log
+            </summary>
+            <param name="minRange">The min range.</param>
+            <param name="maxRange">The max range.</param>
+            <returns>same syntax</returns>
+        </member>
+        <member name="T:Lokad.Logging.LogWrapper">
+            <summary>
+            Wrapper around <see cref="T:log4net.ILog"/>
+            </summary>
+        </member>
+        <member name="T:Lokad.Logging.LoggingStack">
+            <summary>
+             This class provides hookup routines to the logging library
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.UseConsole">
+            <summary>
+            Configures the logging system to write to console
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.UseConfig">
+            <summary>
+            Logging system is configured from App.config
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.Reset">
+            <summary>
+            Resets logging configuration to the default state.
+            </summary>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.ConfigureFromFile(System.String)">
+            <summary>
+            File is used to configure the logging system
+            </summary>
+            <param name="fileName"></param>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.UseEventLog(System.String,System.String)">
+            <summary> Defines logging to Windows Event Log and returns syntax
+            to tweak the settings </summary>
+            <param name="logName">Name of the event log.</param>
+            <param name="applicationName">Name of the application.</param>
+            <returns>configuration syntax</returns>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.UseDailyLog(System.String)">
+            <summary>
+            Defines logging to rolling text logs with one log per day
+            </summary>
+            <param name="path">The path.</param>
+            <returns>configuration syntax</returns>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.UseRollingLog(System.String,System.Int64,System.Int32)">
+            <summary>
+            Defines logging to rolling text logs with <paramref name="maxSize"/> 
+            and <paramref name="numberOfBackups"/> to keep.
+            </summary>
+            <param name="path">The path to store logs in.</param>
+            <param name="maxSize">Max size of the log.</param>
+            <param name="numberOfBackups">The number of backups.</param>
+            <returns>configuration syntax</returns>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.GetLogProvider">
+            <summary>
+            Get log provider
+            </summary>
+            <returns>provider instance</returns>
+        </member>
+        <member name="M:Lokad.Logging.LoggingStack.GetLog">
+            <summary>
+            Gets the log with the "Default" name.
+            </summary>
+            <returns>new log instance</returns>
+        </member>
+    </members>
+</doc>

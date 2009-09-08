@@ -11,17 +11,22 @@ using Lokad;
 
 namespace Apollo.Core.Messages
 {
+    /// <summary>
+    /// Defines the name of a service.
+    /// </summary>
     public struct DnsName : IEquatable<DnsName>, IComparable<DnsName>, IComparable
     {
+        // RENAME THIS!!!!!
+
         /// <summary>
         /// The unique identifier for the combination of all services.
         /// </summary>
-        private const DnsName s_AllServices = new DnsName(@"AllServices");
+        private readonly static DnsName s_AllServices = new DnsName(@"AllServices");
 
         /// <summary>
         /// The unique identifier for none of the services.
         /// </summary>
-        private const DnsName s_Nobody = new DnsName(@"Nobody");
+        private readonly static DnsName s_Nobody = new DnsName(@"Nobody");
 
         /// <summary>
         /// Returns the <c>DnsName</c> for the combination of all services.
@@ -132,9 +137,9 @@ namespace Apollo.Core.Messages
         /// <summary>
         /// Determines whether the specified <c>DnsName</c> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <c>DnsName</c> to compare with this instance.</param>
+        /// <param name="other">The <c>DnsName</c> to compare with this instance.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified <c>DnsName</c> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <c>DnsName</c> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         public bool Equals(DnsName other)
         {
@@ -146,7 +151,7 @@ namespace Apollo.Core.Messages
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         public override bool Equals(object obj)
         {
