@@ -366,17 +366,20 @@ task runFxCop -depends buildBinaries{
 	# - fail if in release mode
 	
 	$fxcopExe = Join-Path $dirFxCop 'FxCopcmd.exe'
+	$rulesDir = Join-Path $dirFxCop 'Rules'
 	$outFile = Join-Path $dirReports $logFxCop
 	
-	& $fxcopExe /project:$configFxCop /out:$outFile
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { (($_.Name -like "*Apollo*") -and !( $_.Name -like "*Test*"))}
+
+	$files = ""
+	$assemblies | ForEach-Object -Process { $files += "/file:" + '"' + $_.FullName + '" '}
+	
+	$command = "& '" + "$fxcopExe" + "' " + "$files /rule:" + "'" + "$rulesDir" + "'" + " /out:" + "'" + "$outFile" + "'"
+	$command
+	Invoke-Expression $command
 	if ($LastExitCode -ne 0)
 	{
-		throw "FxCop failed on Apollo.Utils with return code: $LastExitCode"
-	}
-	
-	if ($configuration -eq 'release')
-	{
-		# check that there were no violations
+		throw "FxCop failed on NSarrac.Framework with return code: $LastExitCode"
 	}
 }
 
