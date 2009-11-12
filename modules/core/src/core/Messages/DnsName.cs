@@ -91,11 +91,11 @@ namespace Apollo.Core.Messages
         /// Value
         /// Meaning
         /// Less than zero
-        /// This instance is less than <paramref name="obj"/>.
+        /// This instance is less than <paramref name="other"/>.
         /// Zero
-        /// This instance is equal to <paramref name="obj"/>.
+        /// This instance is equal to <paramref name="other"/>.
         /// Greater than zero
-        /// This instance is greater than <paramref name="obj"/>.
+        /// This instance is greater than <paramref name="other"/>.
         /// </returns>
         public int CompareTo(DnsName other)
         {

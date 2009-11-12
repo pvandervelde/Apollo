@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utils;
+using Lokad;
 
 namespace Apollo.Core
 {
@@ -21,7 +23,7 @@ namespace Apollo.Core
         /// <summary>
         /// Stores the element that is currently being processed.
         /// </summary>
-        private readonly string m_CurrentlyProcessing;
+        private readonly IProgressMark m_CurrentlyProcessing;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StartupProgressEventArgs"/> class.
@@ -30,7 +32,7 @@ namespace Apollo.Core
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is less than 0.</exception>
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is more than 100.</exception>
-        public StartupProgressEventArgs(int progress, string currentlyProcessing)
+        public StartupProgressEventArgs(int progress, IProgressMark currentlyProcessing)
         {
             // Argument validation.
             {
@@ -43,10 +45,12 @@ namespace Apollo.Core
                 {
                     throw new ArgumentOutOfRangeException("progress", "Progress needs to be 100% or smaller.");
                 }
+
+                Enforce.Argument(() => currentlyProcessing);
             }
 
             m_Progress = progress;
-            m_CurrentlyProcessing = currentlyProcessing ?? string.Empty;
+            m_CurrentlyProcessing = currentlyProcessing;
         }
 
         /// <summary>
@@ -55,16 +59,22 @@ namespace Apollo.Core
         /// <value>The progress percentage.</value>
         public int Progress
         {
-            get { return m_Progress; }
+            get 
+            { 
+                return m_Progress; 
+            }
         }
 
         /// <summary>
         /// Gets a string describing the action that is currently being processed.
         /// </summary>
         /// <value>The action that is currently being processed.</value>
-        public string CurrentlyProcessing
+        public IProgressMark CurrentlyProcessing
         {
-            get { return m_CurrentlyProcessing; }
+            get 
+            { 
+                return m_CurrentlyProcessing; 
+            }
         }
     }
 }

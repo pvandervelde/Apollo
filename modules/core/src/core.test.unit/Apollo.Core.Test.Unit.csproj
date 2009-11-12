@@ -65,9 +65,16 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\mbunit\MbUnit35.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\tools\moq\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\..\utils\src\utils\Apollo.Utils.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
     <ProjectReference Include="..\core\Apollo.Core.csproj">
       <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
       <Name>Apollo.Core</Name>

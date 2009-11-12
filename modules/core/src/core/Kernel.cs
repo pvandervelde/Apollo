@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -36,13 +37,17 @@ namespace Apollo.Core
         /// </summary>
         public event EventHandler<StartupProgressEventArgs> StartupProgress;
 
-        private void RaiseStartupProgress()
+        /// <summary>
+        /// Raises the startup progress event.
+        /// </summary>
+        /// <param name="progress">The progress.</param>
+        /// <param name="mark">The mark.</param>
+        private void RaiseStartupProgress(int progress, IProgressMark mark)
         {
             EventHandler<StartupProgressEventArgs> local = StartupProgress;
             if (local != null)
             { 
-                local(this, new StartupProgressEventArgs(0, "bla"));
-                throw new NotImplementedException();
+                local(this, new StartupProgressEventArgs(progress, mark));
             }
         }
 

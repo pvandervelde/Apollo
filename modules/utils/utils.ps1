@@ -147,6 +147,8 @@ task Release{
 }
 
 # Build
+task default -depends Help
+
 # Cleans all the generated files
 task Clean -depends runClean
 
@@ -154,10 +156,10 @@ task Clean -depends runClean
 task Build -depends buildBinaries
 
 # Runs the unit tests
-task UnitTests -depends runUnitTests
+task UnitTest -depends runUnitTests
 
 # Runs the integration tests
-task IntegrationTests -depends runIntegrationTests
+task IntegrationTest -depends runIntegrationTests
 
 # Builds the API documentation
 task ApiDoc -depends buildApiDoc

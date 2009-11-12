@@ -13,6 +13,7 @@ namespace Apollo.Core
     /// that the specific service type is automatically loaded.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
-    internal class AutoLoadAttribute : Attribute
-    { }
+    internal sealed class AutoLoadAttribute : Attribute
+    {
+    }
 }

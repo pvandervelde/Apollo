@@ -4,9 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
-using System.IO;
-
 namespace Apollo.Core
 {
     /// <summary>
@@ -16,27 +13,6 @@ namespace Apollo.Core
     /// </summary>
     internal interface IInjectKernels
     {
-        /// <summary>
-        /// Prepares the <c>AppDomain</c> for use.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// Preparation of an <c>AppDomain</c> means that the assembly resolution
-        /// methods and the top level exception handlers are attached to the
-        /// correct events on the <c>AppDomain</c>.
-        /// </para>
-        /// </remarks>
-        /// <param name="assemblyDirectories">
-        ///     The collection of files that might 
-        ///     need to be loaded into the <c>AppDomain</c>.
-        /// </param>
-        /// <param name="exceptionHandler">
-        ///     The exception handler which forms the last defence against errors
-        ///     in the application.
-        /// </param>
-        void PrepareAppDomain(IEnumerable<FileInfo> assemblyDirectories,
-            IExceptionHandler exceptionHandler);
-
         /// <summary>
         /// Creates the kernel.
         /// </summary>
@@ -49,5 +25,10 @@ namespace Apollo.Core
         ///     The service which should be installed.
         /// </param>
         void InstallService(KernelService serviceToInstall);
+
+        /// <summary>
+        /// Starts the kernel.
+        /// </summary>
+        void Start();
     }
 }

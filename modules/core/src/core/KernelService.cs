@@ -11,35 +11,15 @@ using Apollo.Utils;
 namespace Apollo.Core
 {
     /// <summary>
-    /// Defines the type of a service, either background or foreground.
-    /// </summary>
-    public enum ServiceType
-    {
-        // Foreground is the default value for a service type.
-
-        /// <summary>
-        /// The service is a foreground service. This means that it will
-        /// communicate with other services and actively take part in the
-        /// running of the application.
-        /// </summary>
-        Foreground,
-        
-        /// <summary>
-        /// The service is a background service. This means that the service
-        /// normally only provides data for other services.
-        /// </summary>
-        Background,
-    }
-
-    /// <summary>
     /// Defines the base class for services running in the kernel of the Apollo application.
     /// </summary>
+    /// <design>
+    /// Because this is a MarshalByRef object you shouldn't really use
+    /// properties. You never know where the real object is so even property calls can
+    /// take a long time.
+    /// </design>
     public abstract class KernelService : MarshalByRefObject, INeedStartup
     {
-        // Note: Because this is a MarshalByRef object you shouldn't really use
-        // properties. You never know where the real object is so even property calls can
-        // take a long time.
-
         /// <summary>
         /// The object used to lock on.
         /// </summary>
@@ -62,8 +42,9 @@ namespace Apollo.Core
         /// or a foreground service.
         /// </summary>
         /// <returns>The type of the service.</returns>
-        public virtual ServiceType ServicePreferenceType() // <-- Needs renaming.
+        public virtual ServiceType ServicePreferenceType()
         {
+            // @TODO: Needs renaming.
             return Apollo.Core.ServiceType.Foreground;
         }
         
@@ -77,7 +58,7 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="progress">The progress percentage which ranges between 0 and 100.</param>
         /// <param name="currentAction">The current action which is being processed.</param>
-        protected void OnStartupProgress(int progress, string currentAction)
+        protected void OnStartupProgress(int progress, IProgressMark currentAction)
         {
             EventHandler<StartupProgressEventArgs> local = StartupProgress;
             if (local != null)
@@ -87,7 +68,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Starts the startup process.
+        /// Starts the process.
         /// </summary>
         public void Start()
         {

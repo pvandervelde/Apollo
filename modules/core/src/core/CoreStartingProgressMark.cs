@@ -4,16 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Utils.Fusion
+using Apollo.Utils;
+
+namespace Apollo.Core
 {
     /// <summary>
-    /// Provides constants for file extensions.
+    /// Defines an <see cref="IProgressMark"/> which indicates that the application core is starting.
     /// </summary>
-    internal static class FileExtensions
+    internal sealed class CoreStartingProgressMark : IProgressMark
     {
-        /// <summary>
-        /// The extension for an assembly file.
-        /// </summary>
-        public const string AssemblyExtension = ".dll";
     }
 }
+

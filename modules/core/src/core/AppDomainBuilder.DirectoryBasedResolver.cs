@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using Lokad;
 using Apollo.Utils.Fusion;
+using Lokad;
 
 namespace Apollo.Core
 { 
@@ -28,7 +28,7 @@ namespace Apollo.Core
             /// Explicitly store the directory paths in strings because DirectoryInfo objects are eventually
             /// nuked because DirectoryInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
-            private IList<string> m_Directories;
+            private Func<IEnumerable<string>> m_Directories;
 
             /// <summary>
             /// Stores the paths to the relevant directories.
@@ -36,21 +36,26 @@ namespace Apollo.Core
             /// <param name="directoryPaths">
             ///     The paths to the relevant directories
             /// </param>
-            public void StoreDirectoryPaths(IEnumerable<DirectoryInfo> directoryPaths)
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="directoryPaths"/> is <see langword="null" />.
+            /// </exception>
+            public void StoreDirectoryPaths(Func<IEnumerable<string>> directoryPaths)
             {
                 {
                     Enforce.Argument(() => directoryPaths);
                 }
 
-                var paths = from path in directoryPaths
-                            select path.FullName;
-                m_Directories = new List<string>(paths);
+                m_Directories = directoryPaths;
             }
 
             /// <summary>
             /// Attaches the assembly resolution method to the <see cref="AppDomain.AssemblyResolve"/>
-            /// event.
+            /// event of the current <see cref="AppDomain"/>.
             /// </summary>
+            /// <exception cref="InvalidOperationException">
+            /// Thrown when <see cref="DirectoryBasedResolver.StoreDirectoryPaths"/> has not been called prior to
+            /// attaching the directory resolver to an <see cref="AppDomain"/>.
+            /// </exception>
             public void Attach()
             {
                 {
@@ -58,11 +63,11 @@ namespace Apollo.Core
                 }
 
                 var domain = AppDomain.CurrentDomain;
-
-                var helper = new FusionHelper();
-                helper.FileEnumerator = () => m_Directories.SelectMany((dir) => Directory.GetFiles(dir, FileExtensions.AssemblyExtension, SearchOption.AllDirectories));
-
-                domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                {
+                    // For each path in the list get all the assembly files in that path.
+                    var helper = new FusionHelper(() => m_Directories().SelectMany((dir) => Directory.GetFiles(dir, FileExtensions.AssemblyExtension, SearchOption.AllDirectories)));
+                    domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                }
             }
         }
     }

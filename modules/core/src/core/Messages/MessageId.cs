@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utils;
 
 namespace Apollo.Core.Messages
 {
@@ -12,8 +13,11 @@ namespace Apollo.Core.Messages
     /// Defines an ID number for messages.
     /// </summary>
     [Serializable]
-    public sealed class MessageId : IIsId, IEquatable<MessageId>
+    public sealed class MessageId : Id<MessageId, Guid>
     {
+        /// <summary>
+        /// Defines the ID number for a message without an ID number.
+        /// </summary>
         private readonly static MessageId s_NoneId = new MessageId(Guid.NewGuid());
 
         /// <summary>
@@ -24,74 +28,38 @@ namespace Apollo.Core.Messages
         {
             get
             {
-                throw new NotImplementedException();
+                return s_NoneId;
             }
         }
 
-        private readonly Guid m_Id;
+        /// <summary>
+        /// Generates the next <see cref="MessageId"/> in the sequence.
+        /// </summary>
+        /// <returns>
+        /// A new and unique message ID number.
+        /// </returns>
+        public MessageId Next()
+        {
+            return new MessageId(Guid.NewGuid());
+        }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageId"/> class.
+        /// </summary>
+        /// <param name="id">The <see cref="Guid"/> which serves as the internal ID number.</param>
         private MessageId(Guid id)
+            : base(id)
         {
-            m_Id = id;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageId"/> class.
+        /// Clones the specified value.
         /// </summary>
-        /// <param name="idToCopy">The id to copy.</param>
-        public MessageId(MessageId idToCopy)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageId"/> class.
-        /// </summary>
-        /// <param name="idToCopy">The id to copy.</param>
-        public MessageId(IIsId idToCopy)
-        { }
-
-        /// <summary>
-        /// Copies this instance.
-        /// </summary>
+        /// <param name="value">The value.</param>
         /// <returns></returns>
-        public MessageId Copy()
+        protected override MessageId Clone(Guid value)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Equalses the specified other.
-        /// </summary>
-        /// <param name="other">The other.</param>
-        /// <returns></returns>
-        public bool Equals(MessageId other)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
-        /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
-        /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
-        /// </returns>
-        /// <exception cref="T:System.NullReferenceException">
-        /// The <paramref name="obj"/> parameter is null.
-        /// </exception>
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
-
-        /// <summary>
-        /// Returns a hash code for this instance.
-        /// </summary>
-        /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
-        /// </returns>
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
+            return new MessageId(value);
         }
 
         /// <summary>
@@ -102,7 +70,7 @@ namespace Apollo.Core.Messages
         /// </returns>
         public override string ToString()
         {
-            return base.ToString();
+            return string.Format("Message ID with number: {0}", m_Value);
         }
     }
 }

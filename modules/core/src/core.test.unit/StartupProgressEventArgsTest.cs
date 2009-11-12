@@ -4,61 +4,48 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
+using System;
+using Apollo.Utils;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Core.Test.Unit
 {
     [TestFixture]
+    [Description("Tests the StartupProgressEventArgs class.")]
     public sealed class StartupProgressEventArgsTest
     {
         [Test]
+        [Description("Checks that it is not possible to create progress event arguments.")]
         public void Create()
         {
             int progress = 10;
-            string action = "SomeAction";
+            var progressMock = new Mock<IProgressMark>();
 
-            var args = new StartupProgressEventArgs(progress, action);
+            var args = new StartupProgressEventArgs(progress, progressMock.Object);
             Assert.AreEqual<int>(progress, args.Progress);
-            Assert.AreEqual<string>(action, args.CurrentlyProcessing);
+            Assert.AreEqual<IProgressMark>(progressMock.Object, args.CurrentlyProcessing);
         }
 
         [Test]
-        public void CreateWithNullString()
+        [Description("Checks that it is not possible to create progress event arguments without a mark.")]
+        public void CreateWithNullMarker()
         {
-            int progress = 10;
-            string action = null;
-
-            var args = new StartupProgressEventArgs(progress, action);
-            Assert.AreEqual<int>(progress, args.Progress);
-            Assert.AreEqual<string>(string.Empty, args.CurrentlyProcessing);
+            Assert.Throws<ArgumentNullException>(() => new StartupProgressEventArgs(10, null));
         }
 
         [Test]
-        public void CreateWithEmptyString()
-        {
-            int progress = 10;
-            string action = string.Empty;
-
-            var args = new StartupProgressEventArgs(progress, action);
-            Assert.AreEqual<int>(progress, args.Progress);
-            Assert.AreEqual<string>(action, args.CurrentlyProcessing);
-        }
-
-        [Test]
-        [ExpectedArgumentOutOfRangeException]
+        [Description("Checks that it is not possible to create progress event arguments with negative progress.")]
         public void CreateWithTooLowNumber()
         {
-            var args = new StartupProgressEventArgs(-10, null);
-            Assert.Fail("Shouldn't be able to get here...");
+            Assert.Throws<ArgumentOutOfRangeException>(() => new StartupProgressEventArgs(-10, new Mock<IProgressMark>().Object));
         }
 
         [Test]
-        [ExpectedArgumentOutOfRangeException]
+        [Description("Checks that it is not possible to create progress event arguments with more than 100% progress.")]
         public void CreateWithTooHighNumber()
         {
-            var args = new StartupProgressEventArgs(110, null);
-            Assert.Fail("Shouldn't be able to get here...");
+            Assert.Throws<ArgumentOutOfRangeException>(() => new StartupProgressEventArgs(110, new Mock<IProgressMark>().Object));
         }
     }
 }

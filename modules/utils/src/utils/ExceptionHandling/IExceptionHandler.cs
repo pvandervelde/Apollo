@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core
+namespace Apollo.Utils.ExceptionHandling
 {
     /// <summary>
     /// Defines the interface for objects which take care of the last chance exception handling 

@@ -148,6 +148,8 @@ task Release{
 }
 
 # Build
+task default -depends Help
+
 # Cleans all the generated files
 task Clean -depends runClean
 
@@ -155,10 +157,10 @@ task Clean -depends runClean
 task Build -depends buildBinaries
 
 # Runs the unit tests
-task UnitTests -depends runUnitTests
+task UnitTest -depends runUnitTests
 
 # Runs the integration tests
-task IntegrationTests -depends runIntegrationTests
+task IntegrationTest -depends runIntegrationTests
 
 # Builds the API documentation
 task ApiDoc -depends buildApiDoc
@@ -368,17 +370,20 @@ task runFxCop -depends buildBinaries{
 	# - fail if in release mode
 	
 	$fxcopExe = Join-Path $dirFxCop 'FxCopcmd.exe'
+	$rulesDir = Join-Path $dirFxCop 'Rules'
 	$outFile = Join-Path $dirReports $logFxCop
 	
-	& $fxcopExe /project:$configFxCop /out:$outFile
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { (($_.Name -like "*Apollo*") -and !( $_.Name -like "*Test*"))}
+
+	$files = ""
+	$assemblies | ForEach-Object -Process { $files += "/file:" + '"' + $_.FullName + '" '}
+	
+	$command = "& '" + "$fxcopExe" + "' " + "$files /rule:" + "'" + "$rulesDir" + "'" + " /out:" + "'" + "$outFile" + "'"
+	$command
+	Invoke-Expression $command
 	if ($LastExitCode -ne 0)
 	{
-		throw "FxCop failed on Apollo.Core with return code: $LastExitCode"
-	}
-	
-	if ($configuration -eq 'release')
-	{
-		# check that there were no violations
+		throw "FxCop failed on NSarrac.Framework with return code: $LastExitCode"
 	}
 }
 

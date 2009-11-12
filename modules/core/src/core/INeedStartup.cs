@@ -10,37 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 namespace Apollo.Core
 {
     /// <summary>
-    /// Indicates the startup state for the <see cref="INeedStartup"/> object.
-    /// </summary>
-    public enum StartupState
-    {
-        /// <summary>
-        /// The state is unknown.
-        /// </summary>
-        Unknown,
-
-        /// <summary>
-        /// The object has not been started yet.
-        /// </summary>
-        NotStarted,
-        
-        /// <summary>
-        /// The object is starting up but has not finished the start process yet.
-        /// </summary>
-        Starting,
-        
-        /// <summary>
-        /// The object has finished the start process and is running.
-        /// </summary>
-        Started,
-        
-        /// <summary>
-        /// The object has been running and entered a non-started state.
-        /// </summary>
-        Other,
-    }
-
-    /// <summary>
     /// Defines the interface for classes that provide startup progress.
     /// </summary>
     public interface INeedStartup
@@ -51,7 +20,7 @@ namespace Apollo.Core
         event EventHandler<StartupProgressEventArgs> StartupProgress;
 
         /// <summary>
-        /// Starts the startup process.
+        /// Starts the process.
         /// </summary>
         void Start();
 

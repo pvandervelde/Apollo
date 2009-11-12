@@ -29,17 +29,13 @@ using System.Runtime.InteropServices;
 [assembly: Guid("5e7e5812-1024-4596-a343-93cda0cfe0c9")]
 
 // Version information for an assembly consists of the following four values:
-//
 //      Major Version
 //      Minor Version 
 //      Build Number
 //      Revision
-//
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 // Tell the code analysis to ignore the 'incorrect' spelling of the term utils
 [assembly: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Utils")]
-
-
 [assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]

@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Apollo.Utils.Fusion;
@@ -16,6 +16,9 @@ using MbUnit.Framework;
 namespace Apollo.Utils
 {
     [TestFixture]
+    [Description("Tests the FusionHelper class.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+            Justification = "Unit tests do not need documentation.")]
     public sealed class FusionHelperTest
     {
         private readonly Dictionary<string, Assembly> m_Assemblies = new Dictionary<string, Assembly>();
@@ -32,20 +35,24 @@ namespace Apollo.Utils
         {
             // mscorlib
             m_Assemblies.Add(GetAssemblyPath(typeof(string).Assembly), typeof(string).Assembly);
+
             // gallio
             m_Assemblies.Add(GetAssemblyPath(typeof(FixtureSetUpAttribute).Assembly), typeof(FixtureSetUpAttribute).Assembly);
+
             // us
             m_Assemblies.Add(GetAssemblyPath(Assembly.GetExecutingAssembly()), Assembly.GetExecutingAssembly());
         }
 
-        private void InitializeFusionHelper(FusionHelper helper)
+        private FusionHelper InitializeFusionHelper()
         {
             // Can effectively just return the current assembly / gallio assemblies / system
-            helper.FileEnumerator = () => { return m_Assemblies.Keys.ToArray<string>(); };
+            var helper = new FusionHelper(() => { return m_Assemblies.Keys.ToArray<string>(); });
             helper.AssemblyLoader = (assemblyPath) =>
             {
                 return m_Assemblies[assemblyPath];
             };
+
+            return helper;
         }
 
         private string CreateFullAssemblyName(string assemblyName, Version version, CultureInfo culture, string publicToken)
@@ -60,91 +67,71 @@ namespace Apollo.Utils
         }
 
         [Test]
+        [Description("Tests that an assembly can be loaded with a simple name, i.e. only the module name.")]
         public void LoadAssemblyWithExistingSimpleName()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().Name;
             var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
+        [Description("Tests that an assembly cannot be loaded with a non-existing simple name, i.e. only the module name.")]
         public void LoadAssemblyWithNonExistingSimpleName()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var name = typeof(FusionHelper).Assembly.GetName().Name;
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
+        [Description("Tests that an assembly can be loaded with a simple name with file extension.")]
         public void LoadAssemblyWithExistingSimpleNameWithExtension()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().Name + ".dll";
             var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
+        [Description("Tests that an assembly cannot be loaded with a non-existing simple name with file extension.")]
         public void LoadAssemblyWithNonExistingSimpleNameWithExtension()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var name = typeof(FusionHelper).Assembly.GetName().Name + ".dll";
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
         [Test]
+        [Description("Tests that an assembly can be loaded with a full name.")]
         public void LoadAssemblyWithExistingFullName()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().FullName;
             var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
-        public void LoadAssemblyWithNonExistingFullNameBasedOnModule()
-        {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
-            var assemblyName = typeof(FusionHelper).Assembly.GetName();
-            var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, assemblyName.CultureInfo, "null");
-            var result = ExecuteLoadAssembly(helper, name);
-            Assert.IsNull(result);
-        }
-
-        [Test]
+        [Description("Tests that an assembly cannot be loaded with a full name that misses the version number.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnVersion()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, new Version(0, 0, 0, 0), assemblyName.CultureInfo, new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
 
-
         [Test]
+        [Description("Tests that an assembly cannot be loaded with a full name that misses the culture.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnCulture()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
+            var helper = InitializeFusionHelper();
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
             var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, new CultureInfo("en-US"), new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
             var result = ExecuteLoadAssembly(helper, name);
@@ -152,13 +139,12 @@ namespace Apollo.Utils
         }
 
         [Test]
+        [Description("Tests that an assembly cannot be loaded with a full name that misses the public key.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnPublicToken()
         {
-            var helper = new FusionHelper();
-            InitializeFusionHelper(helper);
-
-            var assemblyName = typeof(TestAttribute).Assembly.GetName();
-            var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, new CultureInfo("en-US"), "null");
+            var helper = InitializeFusionHelper();
+            var assemblyName = typeof(FusionHelper).Assembly.GetName();
+            var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, assemblyName.CultureInfo, "null");
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }

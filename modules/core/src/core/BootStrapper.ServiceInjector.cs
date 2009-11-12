@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.IO;
 
 namespace Apollo.Core
 {
@@ -24,54 +22,6 @@ namespace Apollo.Core
         /// </design>
         internal sealed class ServiceInjector : MarshalByRefObject, IInjectServices
         {
-            /// <summary>
-            /// Prepares the <c>AppDomain</c> for use.
-            /// </summary>
-            /// <remarks>
-            /// <para>
-            /// Preparation of an <c>AppDomain</c> means that the assembly resolution
-            /// methods and the top level exception handlers are attached to the
-            /// correct events on the <c>AppDomain</c>.
-            /// </para>
-            /// </remarks>
-            /// <param name="assemblyDirectories">
-            ///     The collection of files that might 
-            ///     need to be loaded into the <c>AppDomain</c>.
-            /// </param>
-            /// <param name="exceptionHandler">
-            ///     The exception handler which forms the last defence against errors
-            ///     in the application.
-            /// </param>
-            public void PrepareAppDomain(IEnumerable<FileInfo> assemblyDirectories,
-                IExceptionHandler exceptionHandler)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Prepares the <c>AppDomain</c> for use.
-            /// </summary>
-            /// <remarks>
-            /// <para>
-            /// Preparation of an <c>AppDomain</c> means that the assembly resolution
-            /// methods and the top level exception handlers are attached to the
-            /// correct events on the <c>AppDomain</c>.
-            /// </para>
-            /// </remarks>
-            /// <param name="assemblyDirectories">
-            ///     The collection of directories that contain assemblies that might 
-            ///     need to be loaded into the <c>AppDomain</c>.
-            /// </param>
-            /// <param name="exceptionHandler">
-            ///     The exception handler which forms the last defence against errors
-            ///     in the application.
-            /// </param>
-            public void PrepareAppDomain(IEnumerable<DirectoryInfo> assemblyDirectories,
-                IExceptionHandler exceptionHandler)
-            {
-                throw new NotImplementedException();
-            }
-
             /// <summary>
             /// Creates the kernel service and returns a proxy to the service.
             /// </summary>

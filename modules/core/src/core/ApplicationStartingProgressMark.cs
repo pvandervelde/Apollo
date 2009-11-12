@@ -4,14 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
     /// <summary>
-    /// Defines the interface for objects that act as ID numbers.
+    /// Defines an <see cref="IProgressMark"/> which indicates that the application is starting.
     /// </summary>
-    public interface IIsId
+    internal sealed class ApplicationStartingProgressMark : IProgressMark
     {
     }
 }

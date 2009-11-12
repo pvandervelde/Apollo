@@ -4,16 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Utils.Fusion
+namespace Apollo.Utils
 {
     /// <summary>
-    /// Provides constants for file extensions.
+    /// Defines the interface for classes that define progress points in an action taken by the application.
     /// </summary>
-    internal static class FileExtensions
+    public interface IProgressMark
     {
-        /// <summary>
-        /// The extension for an assembly file.
-        /// </summary>
-        public const string AssemblyExtension = ".dll";
+        // Time
+        // Description
+        // Started / Finished
     }
 }

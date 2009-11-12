@@ -6,8 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -28,7 +26,7 @@ namespace Apollo.Core
             /// Explicitly store the file paths in strings because FileInfo objects are eventually
             /// nuked because FileInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
-            private IList<string> m_Files;
+            private Func<IEnumerable<string>> m_Files;
 
             /// <summary>
             /// Stores the paths to the relevant assemblies.
@@ -36,33 +34,37 @@ namespace Apollo.Core
             /// <param name="filePaths">
             ///     The paths to the relevant assemblies
             /// </param>
-            public void StoreFilePaths(IEnumerable<FileInfo> filePaths)
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="filePaths"/> is <see langword="null" />.
+            /// </exception>
+            public void StoreFilePaths(Func<IEnumerable<string>> filePaths)
             {
                 {
                     Enforce.Argument(() => filePaths); 
                 }
 
-                var paths = from path in filePaths
-                            select path.FullName;
-                m_Files = new List<string>(paths);
+                m_Files = filePaths;
             }
 
             /// <summary>
             /// Attaches the assembly resolution method to the <see cref="AppDomain.AssemblyResolve"/>
-            /// event.
+            /// event of the current <see cref="AppDomain"/>.
             /// </summary>
+            /// <exception cref="InvalidOperationException">
+            /// Thrown when <see cref="FileBasedResolver.StoreFilePaths"/> has not been called prior to
+            /// attaching the directory resolver to an <see cref="AppDomain"/>.
+            /// </exception>
             public void Attach()
             {
                 {
-                    Enforce.NotNull(() => m_Files); 
+                    Enforce.NotNull(() => m_Files);
                 }
 
                 var domain = AppDomain.CurrentDomain;
-
-                var helper = new FusionHelper();
-                helper.FileEnumerator = () => m_Files;
-
-                domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                {
+                    var helper = new FusionHelper(m_Files);
+                    domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                }
             }
         }
     }

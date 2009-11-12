@@ -13,7 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
-
+using Lokad;
 
 namespace Apollo.Utils.Fusion
 {
@@ -52,172 +52,20 @@ namespace Apollo.Utils.Fusion
     /// </para>
     /// </design>
     [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", 
-        Justification="Source will be linked from other projects and thus be used.")]
+        Justification = "Source will be linked from other projects and thus be used.")]
     internal sealed class FusionHelper
     {
         // @TODO: Do we need to make this all thread safe? Probably, but how...
 
         /// <summary>
-        /// The collection that holds all the directories that should be searched
-        /// for the 'missing' assemblies.
+        /// Determines whether the assembly name fully qualified, i.e. contains the name, version, culture and public key.
         /// </summary>
-        private string m_Directory;
-
-        /// <summary>
-        /// The delegate which is used to return a file enumerator based on a specific directory.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification="Use of nested generic signatures is ok for core internal use.")]
-        private Func<IEnumerable<string>> m_FileEnumerator;
-
-        /// <summary>
-        /// The delegate which is used to load an assembly from a specific file path.
-        /// </summary>
-        private Func<string, Assembly> m_AssemblyLoader;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
-        /// </summary>
-        public FusionHelper() : this((string)null)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
-        /// </summary>
-        /// <param name="baseDirectory">The base directory.</param>
-        public FusionHelper(DirectoryInfo baseDirectory) : this(baseDirectory.FullName)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
-        /// </summary>
-        /// <param name="baseDirectory">The base directory.</param>
-        public FusionHelper(string baseDirectory)
-        {
-            m_Directory = baseDirectory;
-        }
-
-        /// <summary>
-        /// Gets or sets the file enumerator which is used to enumerate the files in a specific directory. 
-        /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification="Property is used internally only.")]
-        internal Func<IEnumerable<string>> FileEnumerator
-        {
-            private get 
-            {
-                if (m_FileEnumerator == null)
-                {
-                    Debug.Assert(!string.IsNullOrEmpty(m_Directory), "The directory must be specified!");
-                    m_FileEnumerator = () => Directory.GetFiles(m_Directory, FileExtensions.AssemblyExtension, SearchOption.AllDirectories);
-                }
-
-                return m_FileEnumerator;
-            }
-            set 
-            {
-                m_FileEnumerator = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the assembly loader which is used to load assemblies from a specific path.
-        /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        internal Func<string, Assembly> AssemblyLoader 
-        {
-            private get 
-            {
-                if (m_AssemblyLoader == null)
-                {
-                    m_AssemblyLoader = (path) => Assembly.LoadFrom(path);
-                }
-                return m_AssemblyLoader;
-            }
-            set 
-            {
-                m_AssemblyLoader = value;
-            }
-        }
-
-        /// <summary>
-        /// An event handler which is invoked when the search for an assembly fails.
-        /// </summary>
-        /// <param name="sender">The object which raised the event.</param>
-        /// <param name="args">
-        ///     The <see cref="System.ResolveEventArgs"/> instance containing the event data.
-        /// </param>
+        /// <param name="assemblyFullName">Full name of the assembly.</param>
         /// <returns>
-        ///     An assembly reference if the required assembly can be found; otherwise <see langword="null"/>.
+        ///     <see langword="true"/> if the assembly name is a fully qualified assembly name; otherwise, <see langword="false"/>.
         /// </returns>
-        public Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
-        {
-            // This handler is called only when the common language runtime tries to bind to 
-            // an assembly and fails to locate the assembly.
-            return LocateAssembly(args.Name);
-        }
-
-        private Assembly LocateAssembly(string assemblyFullName)
-        {
-            Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");
-            Debug.Assert(assemblyFullName.Length != 0, "Expected a non-empty assembly name string.");
-
-            // It is not possible to use the AssemblyName class because that attempts to load the 
-            // assembly. Obviously we're are currently trying to find the assembly.
-            // So parse the actual assembly name from the name string
-            
-            // First check if we have been passed a fully qualified name or only a module name
-            string fileName = assemblyFullName;
-            string version = string.Empty;
-            string culture = string.Empty;
-            string publicKey = string.Empty;
-            if (IsAssemblyNameFullyQualified(assemblyFullName))
-            {
-                // Split the assembly name out into different parts. The name
-                // normally consists of:
-                // - File name
-                // - Version
-                // - Culture
-                // - PublicKeyToken
-                // e.g.: mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
-                string[] nameSections = assemblyFullName.Split(',');
-                Debug.Assert(nameSections.Length == 4, "There should be 4 sections in the assembly name.");
-
-                // The first section is the module name
-                fileName = nameSections[0].Trim();
-                // The second section is the version number
-                version = ExtractValueFromKeyValuePair(nameSections[1]);
-                // The third element is the culture
-                culture = ExtractValueFromKeyValuePair(nameSections[2]);
-                // The final element is the public key
-                publicKey = ExtractValueFromKeyValuePair(nameSections[3]);
-            }
-
-            // If the file name already has the '.dll' extension then we don't need to add that, otherwise we do
-            fileName = MakeModuleNameQualifiedFileName(fileName);
-
-            // Search through all the directories and see if we can match the assemblyFileName with any of
-            // the files in the stored directories
-            var files = FileEnumerator();
-
-            // Search for the first file that matches the assembly we're looking for
-            var match = (from filePath in files
-                         where (IsFileTheDesiredAssembly(filePath, fileName, version, culture, publicKey))
-                         select filePath)
-                         .FirstOrDefault();
-
-            if (match != null)
-            {
-                return AssemblyLoader(match); 
-            }
-
-            // Did not find the assembly.
-            return null;
-        }
-
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         private static bool IsAssemblyNameFullyQualified(string assemblyFullName)
         {
             Debug.Assert(!string.IsNullOrEmpty(assemblyFullName), "The assembly full name should not be empty.");
@@ -228,6 +76,13 @@ namespace Apollo.Utils.Fusion
             return assemblyFullName.Contains(",");
         }
 
+        /// <summary>
+        /// Extracts the value from a key value pair which is embedded in the assembly full name.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>
+        /// The value part of the key-value pair.
+        /// </returns>
         private static string ExtractValueFromKeyValuePair(string input)
         {
             Debug.Assert(!string.IsNullOrEmpty(input), "The input should not be empty.");
@@ -237,13 +92,20 @@ namespace Apollo.Utils.Fusion
                 .Trim();
         }
 
-        private static string MakeModuleNameQualifiedFileName(string fileName)
+        /// <summary>
+        /// Turns the module name into a qualified file name by adding the default assembly extension.
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <returns>
+        /// The expected name of the assembly file that contains the module.
+        /// </returns>
+        private static string MakeModuleNameQualifiedFileName(string moduleName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(fileName), "The assembly file name should not be empty.");
+            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
 
-            return (fileName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
-                string.Format(CultureInfo.InvariantCulture,"{0}{1}", fileName, FileExtensions.AssemblyExtension) :
-                fileName;
+            return (moduleName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
+                string.Format(CultureInfo.InvariantCulture, "{0}{1}", moduleName, FileExtensions.AssemblyExtension) :
+                moduleName;
         }
 
         /// <summary>
@@ -258,6 +120,8 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         ///     <see langword="true"/> if the filePath points to the desired assembly; otherwise <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
             Debug.Assert(!string.IsNullOrEmpty(filePath), "The assembly file path should not be empty.");
@@ -265,8 +129,6 @@ namespace Apollo.Utils.Fusion
             {
                 return false;
             }
-
-            // @TODO:Check the file version and culture too            
 
             // The path exists so there is a file with the specific file name. This is probably
             // an assembly.
@@ -294,7 +156,7 @@ namespace Apollo.Utils.Fusion
                     return false;
                 }
                 catch (BadImageFormatException)
-                { 
+                {
                     // The file is not a valid assembly file
                     return false;
                 }
@@ -338,6 +200,202 @@ namespace Apollo.Utils.Fusion
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// The collection that holds all the directories that should be searched
+        /// for the 'missing' assemblies.
+        /// </summary>
+        private string m_Directory;
+
+        /// <summary>
+        /// The delegate which is used to return a file enumerator based on a specific directory.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification="Use of nested generic signatures is ok for core internal use.")]
+        private Func<IEnumerable<string>> m_FileEnumerator;
+
+        /// <summary>
+        /// The delegate which is used to load an assembly from a specific file path.
+        /// </summary>
+        private Func<string, Assembly> m_AssemblyLoader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        /// <param name="fileEnumerator">The enumerator which returns all the files that are potentially of interest.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The use of the Func<> delegate is the most efficient way to pass a lazy evaluation of the enumerable.")]
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        public FusionHelper(Func<IEnumerable<string>> fileEnumerator)
+        {
+            {
+                Enforce.Argument(() => fileEnumerator);
+            }
+
+            m_FileEnumerator = fileEnumerator;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        /// <param name="baseDirectory">The base directory.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        public FusionHelper(DirectoryInfo baseDirectory) : this(baseDirectory.FullName)
+        { 
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
+        /// </summary>
+        /// <param name="baseDirectory">The base directory.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        public FusionHelper(string baseDirectory)
+        {
+            {
+                Enforce.That(!string.IsNullOrEmpty(baseDirectory));
+                Enforce.That(Directory.Exists(baseDirectory));
+            }
+
+            m_Directory = baseDirectory;
+        }
+
+        /// <summary>
+        /// Gets the file enumerator which is used to enumerate the files in a specific directory. 
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification="Property is used internally only.")]
+        private Func<IEnumerable<string>> FileEnumerator
+        {
+            get 
+            {
+                if (m_FileEnumerator == null)
+                {
+                    Debug.Assert(!string.IsNullOrEmpty(m_Directory), "The directory must be specified!");
+                    m_FileEnumerator = () => Directory.GetFiles(m_Directory, FileExtensions.AssemblyExtension, SearchOption.AllDirectories);
+                }
+
+                return m_FileEnumerator;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the assembly loader which is used to load assemblies from a specific path.
+        /// </summary>
+        /// <todo>
+        /// The assembly loader should also deal with NGEN-ed assemblies. This means that using
+        /// Assembly.LoadFrom is not the best choice.
+        /// </todo>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        internal Func<string, Assembly> AssemblyLoader 
+        {
+            private get 
+            {
+                if (m_AssemblyLoader == null)
+                {
+                    m_AssemblyLoader = (path) => Assembly.LoadFrom(path);
+                }
+
+                return m_AssemblyLoader;
+            }
+
+            set 
+            {
+                m_AssemblyLoader = value;
+            }
+        }
+
+        /// <summary>
+        /// An event handler which is invoked when the search for an assembly fails.
+        /// </summary>
+        /// <param name="sender">The object which raised the event.</param>
+        /// <param name="args">
+        ///     The <see cref="System.ResolveEventArgs"/> instance containing the event data.
+        /// </param>
+        /// <returns>
+        ///     An assembly reference if the required assembly can be found; otherwise <see langword="null"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
+        public Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
+        {
+            // This handler is called only when the common language runtime tries to bind to 
+            // an assembly and fails to locate the assembly.
+            return LocateAssembly(args.Name);
+        }
+
+        /// <summary>
+        /// Tries to locate the assembly specified by the assembly name.
+        /// </summary>
+        /// <param name="assemblyFullName">Full name of the assembly.</param>
+        /// <returns>
+        /// The desired assembly if is is in the search path; otherwise, <see langword="null"/>.
+        /// </returns>
+        private Assembly LocateAssembly(string assemblyFullName)
+        {
+            Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");
+            Debug.Assert(assemblyFullName.Length != 0, "Expected a non-empty assembly name string.");
+
+            // It is not possible to use the AssemblyName class because that attempts to load the 
+            // assembly. Obviously we're are currently trying to find the assembly.
+            // So parse the actual assembly name from the name string
+            
+            // First check if we have been passed a fully qualified name or only a module name
+            string fileName = assemblyFullName;
+            string version = string.Empty;
+            string culture = string.Empty;
+            string publicKey = string.Empty;
+            if (IsAssemblyNameFullyQualified(assemblyFullName))
+            {
+                // Split the assembly name out into different parts. The name
+                // normally consists of:
+                // - File name
+                // - Version
+                // - Culture
+                // - PublicKeyToken
+                // e.g.: mscorlib, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089
+                string[] nameSections = assemblyFullName.Split(',');
+                Debug.Assert(nameSections.Length == 4, "There should be 4 sections in the assembly name.");
+
+                // The first section is the module name
+                fileName = nameSections[0].Trim();
+
+                // The second section is the version number
+                version = ExtractValueFromKeyValuePair(nameSections[1]);
+
+                // The third element is the culture
+                culture = ExtractValueFromKeyValuePair(nameSections[2]);
+
+                // The final element is the public key
+                publicKey = ExtractValueFromKeyValuePair(nameSections[3]);
+            }
+
+            // If the file name already has the '.dll' extension then we don't need to add that, otherwise we do
+            fileName = MakeModuleNameQualifiedFileName(fileName);
+
+            // Search through all the directories and see if we can match the assemblyFileName with any of
+            // the files in the stored directories
+            var files = FileEnumerator();
+
+            // Search for the first file that matches the assembly we're looking for
+            var match = (from filePath in files
+                         where IsFileTheDesiredAssembly(filePath, fileName, version, culture, publicKey)
+                         select filePath)
+                         .FirstOrDefault();
+
+            if (match != null)
+            {
+                return AssemblyLoader(match);
+            }
+
+            // Did not find the assembly.
+            return null;
         }
     }
 }

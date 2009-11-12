@@ -73,7 +73,7 @@ task Release{
 	Set-Variable -Name configuration -Value 'release' -Scope 2
 }
 
-task UnitTests{
+task UnitTest{
 	Set-Variable -Name shouldRunUnitTests -Value $true -Scope 2
 }
 
@@ -81,15 +81,15 @@ task Verify{
 	Set-Variable -Name shouldRunVerify -Value $true -Scope 2
 }
 
-task ApiDocs{
+task ApiDoc{
 	Set-Variable -Name shouldBuildApiDocs -Value $true -Scope 2
 }
 
-task UserDocs{
+task UserDoc{
 	Set-Variable -Name shouldBuildUserDocs -Value $true -Scope 2
 }
 
-task Installer{
+task Install{
 	Set-Variable -Name shouldBuildInstaller -Value $true -Scope 2
 }
 
@@ -120,7 +120,7 @@ task createTasks{
 	{ $tasks.Add('Release') | Out-Null }
 		
 	if (!$shouldClean) { $tasks.Add('Incremental') | Out-Null }
-	if ($shouldRunUnitTests) { $tasks.Add('UnitTests') | Out-Null }
+	if ($shouldRunUnitTests) { $tasks.Add('UnitTest') | Out-Null }
 	if ($shouldRunVerify) { $tasks.Add('Verify') | Out-Null }
 	if ($shouldBuildApiDocs) { $tasks.Add('ApiDoc') | Out-Null }
 }

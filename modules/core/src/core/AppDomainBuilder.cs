@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
-using System.Linq;
+using Apollo.Utils.ExceptionHandling;
 using Lokad;
 
 namespace Apollo.Core
@@ -60,7 +60,8 @@ namespace Apollo.Core
             setup.ShadowCopyFiles = "false";
             setup.DisallowCodeDownload = true;
 
-            AppDomain result = AppDomain.CreateDomain(string.IsNullOrEmpty(name) ? GenerateNewAppDomainName() : name,
+            AppDomain result = AppDomain.CreateDomain(
+                string.IsNullOrEmpty(name) ? GenerateNewAppDomainName() : name,
                 null,
                 setup);
             return result;
@@ -89,11 +90,9 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        public AppDomain Assemble(DirectoryInfo basePath, IEnumerable<FileInfo> assemblyFiles, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithFilePaths(DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
         {   
-            // @TODO: SECURITY SET?
-
-            return Assemble(string.Empty, basePath, assemblyFiles, exceptionHandler);
+            return AssembleWithFilePaths(string.Empty, basePath, assemblyFiles, exceptionHandler);
         }
 
         /// <summary>
@@ -119,39 +118,9 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        public AppDomain Assemble(string friendlyName, DirectoryInfo basePath, IEnumerable<FileInfo> assemblyFiles, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithFilePaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
         {
-            // @TODO: SECURITY SET?
-
-            {
-                Enforce.Argument(() => basePath);
-                Enforce.That(() => basePath.Exists);
-
-                Enforce.Argument(() => assemblyFiles);
-                Enforce.Argument(() => exceptionHandler);
-            }
-
-            // Common sense debug checks
-            {
-                Debug.Assert(assemblyFiles.Exists(), "There should be at least one element in the directory list");
-            }
-
-            var domain = Create(friendlyName, basePath);
-
-            // Attach to the assembly resolve event
-            {
-                var resolver = domain.CreateInstanceAndUnwrap(typeof(FileBasedResolver).Assembly.FullName,
-                    typeof(FileBasedResolver).FullName) as FileBasedResolver;
-                resolver.StoreFilePaths(assemblyFiles);
-                resolver.Attach(); 
-            }
-
-            // Attach the exception handler
-            {
-                domain.UnhandledException += new UnhandledExceptionEventHandler(exceptionHandler.OnUnhandledException); 
-            }
-
-            return domain;
+            return AssembleWithFileAndDirectoryPaths(friendlyName, basePath, assemblyFiles, null, exceptionHandler);
         }
 
         /// <summary>
@@ -172,11 +141,9 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        public AppDomain Assemble(DirectoryInfo basePath, IEnumerable<DirectoryInfo> assemblyDirectories, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithDirectoryPaths(DirectoryInfo basePath, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
-            // @TODO: SECURITY SET?
-
-            return Assemble(string.Empty, basePath, assemblyDirectories, exceptionHandler);
+            return AssembleWithDirectoryPaths(string.Empty, basePath, assemblyDirectories, exceptionHandler);
         }
 
         /// <summary>
@@ -202,26 +169,85 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        public AppDomain Assemble(string friendlyName, DirectoryInfo basePath, IEnumerable<DirectoryInfo> assemblyDirectories, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithDirectoryPaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
-            // @TODO: SECURITY SET?
+            return AssembleWithFileAndDirectoryPaths(friendlyName, basePath, null, assemblyDirectories, exceptionHandler);
+        }
 
+        /// <summary>
+        /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
+        /// </summary>
+        /// <param name="basePath">The base path for the new <c>AppDomain</c>.</param>
+        /// <param name="assemblyFiles">
+        ///     The assembly files which are allowed to be loaded into the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="assemblyDirectories">
+        ///     The directories from which assemblies are allowed to be loaded into the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="exceptionHandler">
+        ///     The exception handler which will take care of all unhandled exceptions in the
+        ///     <c>AppDomain</c>.
+        /// </param>
+        /// <returns>The newly created <c>AppDomain</c>.</returns>
+        /// <design>
+        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     then a private path to the current assembly will be added to ensure that we can always load
+        ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
+        ///     new <c>AppDomain</c>.
+        /// </design>
+        public AppDomain AssembleWithFileAndDirectoryPaths(DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
+        {
+            return AssembleWithFileAndDirectoryPaths(string.Empty, basePath, assemblyFiles, assemblyDirectories, exceptionHandler);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
+        /// </summary>
+        /// <param name="friendlyName">
+        ///     The friendly name of the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="basePath">
+        ///     The base path for the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="assemblyFiles">
+        ///     The assembly files which are allowed to be loaded into the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="assemblyDirectories">
+        ///     The directories from which assemblies are allowed to be loaded into the new <c>AppDomain</c>.
+        /// </param>
+        /// <param name="exceptionHandler">
+        ///     The exception handler which will take care of all unhandled exceptions in the
+        ///     <c>AppDomain</c>.
+        /// </param>
+        /// <returns>The newly created <c>AppDomain</c>.</returns>
+        /// <design>
+        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     then a private path to the current assembly will be added to ensure that we can always load
+        ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
+        ///     new <c>AppDomain</c>.
+        /// </design>
+        public AppDomain AssembleWithFileAndDirectoryPaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
+        {
             {
                 Enforce.Argument(() => basePath);
                 Enforce.That(() => basePath.Exists);
 
-                Enforce.Argument(() => assemblyDirectories);
                 Enforce.Argument(() => exceptionHandler);
-            }
-
-            // Common sense debug checks
-            {
-                Debug.Assert(assemblyDirectories.Exists(), "There should be at least one element in the directory list");
             }
 
             var domain = Create(friendlyName, basePath);
 
-            // Attach to the assembly resolve event
+            // Attach to the assembly file resolve event
+            if (assemblyFiles != null)
+            {
+                var resolver = domain.CreateInstanceAndUnwrap(typeof(FileBasedResolver).Assembly.FullName,
+                    typeof(FileBasedResolver).FullName) as FileBasedResolver;
+                resolver.StoreFilePaths(assemblyFiles);
+                resolver.Attach();
+            }
+
+            // Attach to the assembly directory resolve event
+            if (assemblyDirectories != null)
             {
                 var resolver = domain.CreateInstanceAndUnwrap(typeof(DirectoryBasedResolver).Assembly.FullName,
                     typeof(DirectoryBasedResolver).FullName) as DirectoryBasedResolver;

@@ -104,7 +104,7 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// 	<see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         /// <exception cref="T:System.NullReferenceException">
         /// The <paramref name="obj"/> parameter is null.
