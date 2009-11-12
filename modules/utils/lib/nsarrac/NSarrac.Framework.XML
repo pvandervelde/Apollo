@@ -1,0 +1,1582 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NSarrac.Framework</name>
+    </assembly>
+    <members>
+        <member name="T:NSarrac.Framework.ApplicationData">
+            <summary>
+            Stores information about the application which reported an
+            error.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ApplicationData.#ctor(System.String,System.Version,System.Globalization.CultureInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ApplicationData"/> class.
+            </summary>
+            <param name="name">The name of the application.</param>
+            <param name="version">The version of the application.</param>
+            <param name="culture">The culture of the application.</param>
+        </member>
+        <member name="M:NSarrac.Framework.ApplicationData.Equals(NSarrac.Framework.ApplicationData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.ApplicationData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.ApplicationData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.ApplicationData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ApplicationData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ApplicationData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ApplicationData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.ApplicationData.Name">
+            <summary>
+            Gets the name of the application.
+            </summary>
+            <value>The name of the application.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ApplicationData.Version">
+            <summary>
+            Gets the version of the application.
+            </summary>
+            <value>The version of the application.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ApplicationData.Culture">
+            <summary>
+            Gets the culture of the application.
+            </summary>
+            <value>The culture.</value>
+        </member>
+        <member name="T:NSarrac.Framework.AssemblyData">
+            <summary>
+            Stores information about a single assembly that was loaded into the
+            application process when it experienced an unrecoverable error.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.GetAssemblyPublicKeyToken(System.Byte[])">
+            <summary>  
+            Gets the public key token of the supplied argument.
+            </summary>  
+            <param name="token">The <c>byte</c> array describing the public token for an assembly.</param>  
+            <returns>
+                A string describing the assembly public key, or an empty string if the 
+                array is <see langword="null" /> or empty.
+            </returns>  
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+            <param name="wasInGlobalAssemblyCache">
+                Indicates if the assembly was stored in the Global Assembly cache.
+            </param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version,System.Globalization.CultureInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+            <param name="culture">The culture of the assembly.</param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version,System.Globalization.CultureInfo,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+            <param name="culture">The culture of the assembly.</param>
+            <param name="wasInGlobalAssemblyCache">
+                Indicates if the assembly was stored in the Global Assembly cache.
+            </param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version,System.Globalization.CultureInfo,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+            <param name="culture">The culture of the assembly.</param>
+            <param name="publicKey">The public key of the assembly.</param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.String,System.Version,System.Globalization.CultureInfo,System.String,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="name">The name of the assembly.</param>
+            <param name="version">The version of the assembly.</param>
+            <param name="culture">The culture of the assembly.</param>
+            <param name="publicKey">The public key of the assembly.</param>
+            <param name="wasInGlobalAssemblyCache">
+                Indicates if the assembly was stored in the Global Assembly cache.
+            </param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.Reflection.AssemblyName)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="assemblyName">Name of the assembly.</param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.#ctor(System.Reflection.AssemblyName,System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.AssemblyData"/> class.
+            </summary>
+            <param name="assemblyName">Name of the assembly.</param>
+            <param name="wasInGlobalAssemblyCache">
+                Indicates if the assembly was stored in the Global Assembly cache.
+            </param>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.Equals(NSarrac.Framework.AssemblyData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.AssemblyData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.AssemblyData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.AssemblyData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.AssemblyData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.AssemblyData.Name">
+            <summary>
+            Gets the name of the assembly.
+            </summary>
+            <value>The name of the assembly.</value>
+        </member>
+        <member name="P:NSarrac.Framework.AssemblyData.Version">
+            <summary>
+            Gets the version of the assembly.
+            </summary>
+            <value>The version of the assembly.</value>
+        </member>
+        <member name="P:NSarrac.Framework.AssemblyData.Culture">
+            <summary>
+            Gets the culture of the assembly.
+            </summary>
+            <value>The culture of the assembly.</value>
+        </member>
+        <member name="P:NSarrac.Framework.AssemblyData.PublicKey">
+            <summary>
+            Gets the public key of the assembly.
+            </summary>
+            <value>The public key of the assembly.</value>
+        </member>
+        <member name="P:NSarrac.Framework.AssemblyData.WasStoredInTheGlobalAssemblyCache">
+            <summary>
+            Gets a value indicating whether the assembly was stored in the Global Assembly Cache (GAC).
+            </summary>
+            <value>
+                <see langword="true"/> if the assembly was stored in the Global Assembly Cache; 
+                otherwise, <see langword="false"/>.
+            </value>
+        </member>
+        <member name="T:NSarrac.Framework.ConfigurationData">
+            <summary>
+            Stores information about a single configuration setting.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ConfigurationData.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ConfigurationData"/> class.
+            </summary>
+            <param name="path">
+                The path for the configuration setting. This path could be an
+                XPath in the case of XML configuration settings, a registry path
+                or any other kind of path which uniquely identifies the
+                configuration setting.
+            </param>
+            <param name="value">The value for the configuration setting.</param>
+        </member>
+        <member name="M:NSarrac.Framework.ConfigurationData.Equals(NSarrac.Framework.ConfigurationData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.ConfigurationData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.ConfigurationData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.ConfigurationData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ConfigurationData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ConfigurationData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ConfigurationData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.ConfigurationData.Path">
+            <summary>
+            Gets the path for the configuration setting. This path
+            could be an XPath in case of XML configuration settings, 
+            a registry path or any other kind of path which 
+            uniquely identifies the configuration setting.
+            </summary>
+            <value>The path for the setting.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ConfigurationData.Value">
+            <summary>
+            Gets the value of the configuration setting.
+            </summary>
+            <value>The value for the setting.</value>
+        </member>
+        <member name="T:NSarrac.Framework.EmbeddedResourceExtracter">
+            <summary>
+            Defines utility methods for dealing with resources stored in the assembly.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.EmbeddedResourceExtracter.LoadEmbeddedTextFile(System.Reflection.Assembly,System.String)">
+            <summary>
+            Extracts an embedded file out of a given assembly.
+            </summary>
+            <param name="assembly">The assembly in which the embedded resource can be found.</param>
+            <param name="filePath">The name of the file to extract.</param>
+            <returns>A stream containing the file data.</returns>
+            <exception cref="T:System.ArgumentNullException">
+            Thrown if <paramref name="filePath"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.InvalidOperationException">
+            Thrown if <paramref name="filePath"/> is an empty string.
+            </exception>
+            <exception cref="T:NSarrac.Framework.TemplateLoadException">
+            Thrown if the embedded text file either could not be loaded or was empty.
+            </exception>
+        </member>
+        <member name="T:NSarrac.Framework.ErrorData">
+            <summary>
+            Stores information about an error.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.Diagnostics.StackTrace)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified stack trace.
+            </summary>
+            <param name="stack">The stack trace for the error.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="stack"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.Diagnostics.StackTrace,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified stack trace and error code.
+            </summary>
+            <param name="stack">The stack trace for the error.</param>
+            <param name="errorCode">The error code for the error.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="stack"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="errorCode"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified stack trace.
+            </summary>
+            <param name="stack">The stack trace for the error.</param>
+            <exception cref="T:System.InvalidOperationException">
+                Thrown if <paramref name="stack"/> is <see langword="null"/> or empty.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.String,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified stack trace and error code.
+            </summary>
+            <param name="stack">The stack trace for the error.</param>
+            <param name="errorCode">The error code for the error.</param>
+            <exception cref="T:System.InvalidOperationException">
+                Thrown if <paramref name="stack"/> is <see langword="null"/> or empty.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="errorCode"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified exception.
+            </summary>
+            <param name="exception">The exception for the error.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="exception"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.#ctor(System.Exception,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorData"/> class
+            with the specified stack trace and error code.
+            </summary>
+            <param name="exception">The exception for the error.</param>
+            <param name="errorCode">The error code for the error.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="exception"/> is <see langword="null"/>.
+            </exception>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="errorCode"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.Equals(NSarrac.Framework.ErrorData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.ErrorData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.ErrorData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.ErrorData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.ErrorData.Exception">
+            <summary>
+            Gets the exception which caused the error.
+            </summary>
+            <value>The exception which caused the error.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ErrorData.Message">
+            <summary>
+            Gets the message that belongs to the exception which caused the error.
+            </summary>
+            <value>The message for the error.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ErrorData.Stack">
+            <summary>
+            Gets the stack trace for the error.
+            </summary>
+            <value>The stack trace for the error.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ErrorData.ErrorCode">
+            <summary>
+            Gets the error code for the error.
+            </summary>
+            <value>The error code.</value>
+        </member>
+        <member name="T:NSarrac.Framework.ErrorResolution">
+            <summary>
+            Defines the interface for objects which describe the solution
+            to a specific error condition.
+            </summary>
+            <design>
+            The <c>ErrorResolution</c> has been defined as an abstract class
+            because it is (apparently) not possible to remote interfaces 
+            with the ASP.NET web service system.
+            </design>
+        </member>
+        <member name="T:NSarrac.Framework.IBuildReports">
+            <summary>
+            Defines the interface for objects which assemble <see cref="T:NSarrac.Framework.Report"/>s.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.ForError(NSarrac.Framework.ErrorData)">
+            <summary>
+            Links an error to the current report data.
+            </summary>
+            <param name="errorData">The error which should be incorporated in the report.</param>
+            <returns>
+                An instance of the report builder with the error data stored against the 
+                report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.AtTime(System.DateTimeOffset,System.TimeZoneInfo)">
+            <summary>
+            Links a time and time zone to the current report data.
+            </summary>
+            <param name="time">The time which should be incorporated in the report.</param>
+            <param name="timeZone">The time zone which should be incorporated in the report.</param>
+            <returns>
+                An instance of the report builder with the time and time zone data stored 
+                against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.InApplication(NSarrac.Framework.ApplicationData)">
+            <summary>
+            Links application information to the current report data.
+            </summary>
+            <param name="application">
+                The application which should be incorporated in the report.
+            </param>
+            <returns>
+                An instance of the report builder with the application data stored
+                against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.WithAssemblies(System.Collections.Generic.IEnumerable{NSarrac.Framework.AssemblyData})">
+            <summary>
+            Links a set of assembly data to the current report.
+            </summary>
+            <param name="assemblies">
+                The collection of assembly data that should be incorporated
+                in the report.
+            </param>
+            <returns>
+                An instance of the report builder with the assembly data
+                stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.WithConfiguration(System.Collections.Generic.IEnumerable{NSarrac.Framework.ConfigurationData})">
+            <summary>
+            Links a set of configuration data to the current report.
+            </summary>
+            <param name="configuration">
+                The configuration data that should be incorporated in the
+                report.
+            </param>
+            <returns>
+                An instance of the report builder with the configuration data
+                stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.OnOperatingSystem(NSarrac.Framework.OperatingSystemData)">
+            <summary>
+            Links data about the operating system to the current report.
+            </summary>
+            <param name="operatingSystem">
+                The operating system data that should be incorporated in 
+                the report.
+            </param>
+            <returns>
+                An instance of the report builder with the operating system data
+                stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.OnMachine(NSarrac.Framework.MachineData)">
+            <summary>
+            Links data about the physical hardware to the current report.
+            </summary>
+            <param name="machine">
+                The machine data which should be incorporated in the report.
+            </param>
+            <returns>
+                An instance of the report builder with the operating system data
+                stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IBuildReports.ToReport">
+            <summary>
+            Creates a report with the provided information.
+            </summary>
+            <returns>A new error report.</returns>
+        </member>
+        <member name="P:NSarrac.Framework.IBuildReports.Version">
+            <summary>
+            Gets the version of the report which will be created
+            by the current <c>IBuildReport</c> object.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="T:NSarrac.Framework.ICompressData">
+            <summary>
+            Compresses report streams.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ICompressData.Compress(System.IO.Stream)">
+            <summary>
+            Compresses the specified stream.
+            </summary>
+            <param name="stream">The stream which contains the data that should be compressed.</param>
+            <returns>The stream containing the compressed data.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.IDecryptData">
+            <summary>
+            Decrypts encrypted report streams.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.IDecryptData.Decrypt(System.IO.Stream)">
+            <summary>
+            Decrypts the specified encrypted stream.
+            </summary>
+            <param name="encryptedStream">The encrypted stream.</param>
+            <returns>A normal, un-encrypted, stream.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.IEncryptData">
+            <summary>
+            Encrypts report streams.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.IEncryptData.Encrypt(System.IO.Stream)">
+            <summary>
+            Encrypts the specified stream.
+            </summary>
+            <param name="stream">The stream.</param>
+            <returns>An encrypted stream.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.ErrorCode">
+            <summary>
+            Stores an error code.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.op_Equality(NSarrac.Framework.ErrorCode,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Implements the operator ==.
+            </summary>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.op_Inequality(NSarrac.Framework.ErrorCode,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Implements the operator !=.
+            </summary>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.op_GreaterThan(NSarrac.Framework.ErrorCode,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Implements the operator &gt;.
+            </summary>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.op_LessThan(NSarrac.Framework.ErrorCode,NSarrac.Framework.ErrorCode)">
+            <summary>
+            Implements the operator &lt;.
+            </summary>
+            <param name="first">The first object.</param>
+            <param name="second">The second object.</param>
+            <returns>The result of the operator.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.ToSerializedString(NSarrac.Framework.ErrorCode)">
+            <summary>
+            Serializes the specified error code.
+            </summary>
+            <param name="code">The error code.</param>
+            <returns>A string describing the error code.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.FromSerializedString(System.String)">
+            <summary>
+            Creates a new <c>ErrorCode</c> with the given error code string.
+            </summary>
+            <param name="code">The error code string.</param>
+            <returns>A new <c>ErrorCode</c>.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.None">
+            <summary>
+            Returns an <c>ErrorCode</c> which signifies the empty error code.
+            </summary>
+            <returns>
+                The empty error code.
+            </returns>
+        </member>
+        <member name="F:NSarrac.Framework.ErrorCode.m_Code">
+            <summary>
+            The error code.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ErrorCode"/> class.
+            </summary>
+            <param name="code">The error code.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="code"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.CompareTo(NSarrac.Framework.ErrorCode)">
+            <summary>
+            Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+            </summary>
+            <param name="other">An object to compare with this instance.</param>
+            <returns>
+            A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+            Value
+            Meaning
+            Less than zero
+            This instance is less than <paramref name="other"/>.
+            Zero
+            This instance is equal to <paramref name="other"/>.
+            Greater than zero
+            This instance is greater than <paramref name="other"/>.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="other"/> is not the same type as this instance.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.CompareTo(System.Object)">
+            <summary>
+            Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+            </summary>
+            <param name="obj">An object to compare with this instance.</param>
+            <returns>
+            A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+            Value
+            Meaning
+            Less than zero
+            This instance is less than <paramref name="obj"/>.
+            Zero
+            This instance is equal to <paramref name="obj"/>.
+            Greater than zero
+            This instance is greater than <paramref name="obj"/>.
+            </returns>
+            <exception cref="T:System.ArgumentException">
+                <paramref name="obj"/> is not the same type as this instance.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.Equals(NSarrac.Framework.ErrorCode)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.ErrorCode"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.ErrorCode"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.ErrorCode"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ErrorCode.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="T:NSarrac.Framework.IReportBodySerializer">
+            <summary>
+            Defines the interface for classes that serialize 
+            <see cref="T:NSarrac.Framework.ReportBody"/> objects to and from a 
+            <see cref="T:System.IO.Stream"/>.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.IReportBodySerializer.ReadFromStream(System.IO.Stream)">
+            <summary>
+            Reads the stream and creates a new <see cref="T:NSarrac.Framework.ReportBody"/> object
+            with the information contained in the stream.
+            </summary>
+            <param name="body">The stream describing the report.</param>
+            <remarks>
+            All readers should expect to read the stream with the <c>UTF-8</c>
+            encoding.
+            </remarks>
+            <returns>
+                A new <c>ReportBody</c> object created based on the 
+                information stored in the stream.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.IReportBodySerializer.WriteToStream(NSarrac.Framework.ReportBody)">
+            <summary>
+            Writes the information contained in the <paramref name="body"/>
+            to an output stream.
+            </summary>
+            <param name="body">The report which should be serialized.</param>
+            <remarks>
+            All writer routines should write to the stream with the <c>UTF-8</c>
+            encoding.
+            </remarks>
+            <returns>
+                A new <see cref="T:System.IO.Stream"/> which contains the information
+                stored in the <paramref name="body"/>.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.IReportBodySerializer.Version">
+            <summary>
+            Gets the version for the current <c>IReportBodySerializer</c> object.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="T:NSarrac.Framework.IUncompressData">
+            <summary>
+            Uncompresses report streams.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.IUncompressData.Uncompress(System.IO.Stream)">
+            <summary>
+            Uncompresses the specified stream.
+            </summary>
+            <param name="stream">The stream which contains the compressed data.</param>
+            <returns>The stream containing the uncompressed data.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.MachineData">
+            <summary>
+            Stores information about a physical computer.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.MachineData.#ctor(System.String,System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.MachineData"/> class.
+            </summary>
+            <param name="cpu">The cpu description for the machine.</param>
+            <param name="installedMemoryInMB">The amount of installed memory in Mb.</param>
+        </member>
+        <member name="M:NSarrac.Framework.MachineData.Equals(NSarrac.Framework.MachineData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.MachineData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.MachineData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.MachineData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.MachineData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.MachineData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.MachineData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.MachineData.Cpu">
+            <summary>
+            Gets the description of the cpu in the machine.
+            </summary>
+            <value>The cpu description.</value>
+        </member>
+        <member name="P:NSarrac.Framework.MachineData.InstalledMemoryInMB">
+            <summary>
+            Gets the amount of installed memory in MB.
+            </summary>
+            <value>The amount installed memory in MB.</value>
+        </member>
+        <member name="T:NSarrac.Framework.OperatingSystemData">
+            <summary>
+            Stores information about the operating system on which the application
+            was running.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.OperatingSystemData.#ctor(System.String,System.Version,System.Globalization.CultureInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.OperatingSystemData"/> class.
+            </summary>
+            <param name="name">The name of the operating system.</param>
+            <param name="version">The operating system version.</param>
+            <param name="culture">The culture of the operating system.</param>
+        </member>
+        <member name="M:NSarrac.Framework.OperatingSystemData.Equals(NSarrac.Framework.OperatingSystemData)">
+            <summary>
+            Determines whether the specified <see cref="T:NSarrac.Framework.OperatingSystemData"/> is equal to this instance.
+            </summary>
+            <param name="other">The <see cref="T:NSarrac.Framework.OperatingSystemData"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:NSarrac.Framework.OperatingSystemData"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.OperatingSystemData.Equals(System.Object)">
+            <summary>
+            Determines whether the specified <see cref="T:System.Object"/> is equal to this instance.
+            </summary>
+            <param name="obj">The <see cref="T:System.Object"/> to compare with this instance.</param>
+            <returns>
+                <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.OperatingSystemData.GetHashCode">
+            <summary>
+            Returns a hash code for this instance.
+            </summary>
+            <returns>
+            A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.OperatingSystemData.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.OperatingSystemData.Name">
+            <summary>
+            Gets the name of the operating system.
+            </summary>
+            <value>The name of the operating system.</value>
+        </member>
+        <member name="P:NSarrac.Framework.OperatingSystemData.PlatformVersion">
+            <summary>
+            Gets the platform information.
+            </summary>
+            <value>The platform.</value>
+        </member>
+        <member name="P:NSarrac.Framework.OperatingSystemData.Culture">
+            <summary>
+            Gets the culture of the operating system.
+            </summary>
+            <value>The culture.</value>
+        </member>
+        <member name="T:NSarrac.Framework.Properties.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.Exceptions_Messages_CouldNotLoadTemplate">
+            <summary>
+              Looks up a localized string similar to The specified template could not be loaded from the resource stream..
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.Exceptions_Messages_ErrorCode_CompareArgument">
+            <summary>
+              Looks up a localized string similar to The given object ({0}) is not of the same type as the object ({1}) to compare to..
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.Exceptions_Messages_VersionIncorrect">
+            <summary>
+              Looks up a localized string similar to The version number for the report does not match the version of the report reader..
+            </summary>
+        </member>
+        <member name="P:NSarrac.Framework.Properties.Resources.Exceptions_Messages_VersionIncorrect_WithVersions">
+            <summary>
+              Looks up a localized string similar to The version number for the report (version: {0}) does not match the version of the report reader (version: {1}).
+            </summary>
+        </member>
+        <member name="T:NSarrac.Framework.Report">
+            <summary>
+            Stores information about a critical error in a specific 
+            application.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.Report.m_Body">
+            <summary>
+            The body of the report, stored as encrypted stream.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Report.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.Report"/> class.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Report.#ctor(System.IO.Stream)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.Report"/> class.
+            </summary>
+            <param name="body">The body of the report as encrypted stream.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="body"/> is <see langword="null"/>
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.Report.Body">
+            <summary>
+            Returns the encrypted stream that contains the report body.
+            </summary>
+            <returns>
+                The encrypted stream that contains the report body.
+            </returns>
+        </member>
+        <member name="T:NSarrac.Framework.ReportBody">
+            <summary>
+            Stores the actual error report information.
+            </summary>
+            <remarks>
+            The <c>ReportBody</c> class is not stored in a <see cref="T:NSarrac.Framework.Report"/> object.
+            <c>Report</c> objects store an encrypted serialized form of the <c>ReportBody</c> object.
+            This is done because the <c>Report</c> object will be send across a HTTP connection to
+            the reporting webservice. Since it is possible that the <c>ReportBody</c> contains
+            potentially sensitive information it is desirable that this information is
+            encrypted.
+            </remarks>
+        </member>
+        <member name="F:NSarrac.Framework.ReportBody.m_Assemblies">
+            <summary>
+            Stores the assembly data.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportBody.m_Configuration">
+            <summary>
+            Stores the configuration data.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ReportBody.StoreLoadedAssemblies(System.Collections.Generic.IEnumerable{NSarrac.Framework.AssemblyData})">
+            <summary>
+            Stores data about the loaded assemblies.
+            </summary>
+            <param name="assemblies">The data describing the loaded assemblies.</param>
+        </member>
+        <member name="M:NSarrac.Framework.ReportBody.StoreConfigurationData(System.Collections.Generic.IEnumerable{NSarrac.Framework.ConfigurationData})">
+            <summary>
+            Stores the configuration data.
+            </summary>
+            <param name="configuration">The configuration data.</param>
+        </member>
+        <member name="M:NSarrac.Framework.ReportBody.ToString">
+            <summary>
+            Returns a <see cref="T:System.String"/> that represents this instance.
+            </summary>
+            <returns>
+            A <see cref="T:System.String"/> that represents this instance.
+            </returns>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.ErrorData">
+            <summary>
+            Gets information about the error that occured.
+            </summary>
+            <value>The error information.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.Time">
+            <summary>
+            Gets the time at which the error was reported.
+            </summary>
+            <value>The time the error was reported.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.TimeZone">
+            <summary>
+            Gets the time zone in which the application which
+            created the error report is located.
+            </summary>
+            <value>The time zone in which the application is located.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.Application">
+            <summary>
+            Gets the application information for this error report.
+            </summary>
+            <value>The application information for this error report.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.LoadedAssemblies">
+            <summary>
+            Gets the collection of all assemblies that were
+            loaded at the time of the error.
+            </summary>
+            <value>
+                The collection of assemblies that were loaded at the 
+                time of the error.
+            </value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.Configuration">
+            <summary>
+            Gets the configuration information for the application 
+            which reported the error.
+            </summary>
+            <value>The configuration for the application.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.Platform">
+            <summary>
+            Gets information about the operating system on which
+            the application was running.
+            </summary>
+            <value>The operating system.</value>
+        </member>
+        <member name="P:NSarrac.Framework.ReportBody.Machine">
+            <summary>
+            Gets information about the physical machine on
+            which the application was running.
+            </summary>
+            <value>The machine.</value>
+        </member>
+        <member name="T:NSarrac.Framework.ReportReader">
+            <summary>
+            Reads a report and creates a <see cref="T:NSarrac.Framework.ReportBody"/> object.
+            </summary>
+            <seealso cref="T:NSarrac.Framework.ReportWriter"/>
+        </member>
+        <member name="F:NSarrac.Framework.ReportReader.m_Serializer">
+            <summary>
+            The serializer which is used to write the report body to a 
+            stream.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportReader.m_Compressor">
+            <summary>
+            The object which compresses the report body data stream.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportReader.m_Decrypter">
+            <summary>
+            The object which decrypts the report body data stream.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ReportReader.#ctor(NSarrac.Framework.IReportBodySerializer,NSarrac.Framework.IUncompressData,NSarrac.Framework.IDecryptData)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ReportReader"/> class.
+            </summary>
+            <param name="serializer">The serializer which turns the report stream into a <see cref="T:NSarrac.Framework.ReportBody"/>.</param>
+            <param name="compressor">The compressor which uncompresses the compressed report stream.</param>
+            <param name="decrypter">The decrypter which decrypts the encrypted report stream..</param>
+        </member>
+        <member name="M:NSarrac.Framework.ReportReader.Read(NSarrac.Framework.Report)">
+            <summary>
+            Reads the specified report and creates a <see cref="T:NSarrac.Framework.ReportBody"/>.
+            </summary>
+            <param name="report">The report which should be converted.</param>
+            <returns>A new report body with the information from the report.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.ReportWriter">
+            <summary>
+            Assembles error reports.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Serializer">
+            <summary>
+            The serializer which is used to write the report body to a 
+            stream.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Compressor">
+            <summary>
+            The object which compresses the report body data stream.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Encrypter">
+            <summary>
+            The object which encrypts the report body data stream.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Assemblies">
+            <summary>
+            Stores a collection of assembly data for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Configuration">
+            <summary>
+            Stores a collection of configuration information for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Error">
+            <summary>
+            Stores the error data for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Time">
+            <summary>
+            Stores the date and time information for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_TimeZone">
+            <summary>
+            Stores the time zone information for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_Application">
+            <summary>
+            Stores the application data for the future report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_OperatingSystem">
+            <summary>
+            Stores the operating system information for the furture report.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.ReportWriter.m_MachineData">
+            <summary>
+            Stores information about the physical machine for the future report.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.#ctor(NSarrac.Framework.IReportBodySerializer,NSarrac.Framework.ICompressData,NSarrac.Framework.IEncryptData)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.ReportWriter"/> class.
+            </summary>
+            <param name="serializer">The serializer which will create the serialized <see cref="T:NSarrac.Framework.ReportBody"/>.</param>
+            <param name="compressor">The compressor which will perform the compression of the report body stream.</param>
+            <param name="encrypter">The decrypter which will perform the encryption of the report body stream.</param>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.ForError(NSarrac.Framework.ErrorData)">
+            <summary>
+            Links an error to the current report data.
+            </summary>
+            <param name="errorData">The error which should be incorporated in the report.</param>
+            <returns>
+            An instance of the report builder with the error data stored against the
+            report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.AtTime(System.DateTimeOffset,System.TimeZoneInfo)">
+            <summary>
+            Links a time and time zone to the current report data.
+            </summary>
+            <param name="time">The time which should be incorporated in the report.</param>
+            <param name="timeZone">The time zone which should be incorporated in the report.</param>
+            <returns>
+            An instance of the report builder with the time and time zone data stored
+            against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.InApplication(NSarrac.Framework.ApplicationData)">
+            <summary>
+            Links application information to the current report data.
+            </summary>
+            <param name="application">The application which should be incorporated in the report.</param>
+            <returns>
+            An instance of the report builder with the application data stored
+            against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.WithAssemblies(System.Collections.Generic.IEnumerable{NSarrac.Framework.AssemblyData})">
+            <summary>
+            Links a set of assembly data to the current report.
+            </summary>
+            <param name="assemblies">The collection of assembly data that should be incorporated
+            in the report.</param>
+            <returns>
+            An instance of the report builder with the assembly data
+            stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.WithConfiguration(System.Collections.Generic.IEnumerable{NSarrac.Framework.ConfigurationData})">
+            <summary>
+            Links a set of configuration data to the current report.
+            </summary>
+            <param name="configuration">The configuration data that should be incorporated in the
+            report.</param>
+            <returns>
+            An instance of the report builder with the configuration data
+            stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.OnOperatingSystem(NSarrac.Framework.OperatingSystemData)">
+            <summary>
+            Links data about the operating system to the current report.
+            </summary>
+            <param name="operatingSystem">The operating system data that should be incorporated in
+            the report.</param>
+            <returns>
+            An instance of the report builder with the operating system data
+            stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.OnMachine(NSarrac.Framework.MachineData)">
+            <summary>
+            Links data about the physical hardware to the current report.
+            </summary>
+            <param name="machine">The machine data which should be incorporated in the report.</param>
+            <returns>
+            An instance of the report builder with the operating system data
+            stored against the report.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.ReportWriter.ToReport">
+            <summary>
+            Creates a report with the provided information.
+            </summary>
+            <returns>A new error report.</returns>
+        </member>
+        <member name="P:NSarrac.Framework.ReportWriter.Version">
+            <summary>
+            Gets the version of the report which will be created
+            by the current <c>IBuildReport</c> object.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="T:NSarrac.Framework.Serialization.ReportBodySerializer">
+            <summary>
+            Serializes <see cref="T:NSarrac.Framework.ReportBody"/> objects.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.Serialization.ReportBodySerializer.s_Version">
+            <summary>
+            Stores the version number.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.ReportBodySerializer.ReadFromStream(System.IO.Stream)">
+            <summary>
+            Reads the stream and creates a new <see cref="T:NSarrac.Framework.ReportBody"/> object
+            with the information contained in the stream.
+            </summary>
+            <param name="body">The stream describing the report.</param>
+            <returns>
+            A new <c>ReportBody</c> object created based on the
+            information stored in the stream.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.ReportBodySerializer.WriteToStream(NSarrac.Framework.ReportBody)">
+            <summary>
+            Writes the information contained in the <paramref name="body"/>
+            to an output stream.
+            </summary>
+            <param name="body">The report which should be serialized.</param>
+            <returns>
+            A new <see cref="T:System.IO.Stream"/> which contains the information
+            stored in the <paramref name="body"/>.
+            </returns>
+            <remarks>
+            <para>
+            The data format for the file is:
+            </para>
+            <code>
+            <ErrorReport Serializer="{Serializer_Type_FullName}" SerialiserAssembly="{Serializer_Assembly_FullName}" Version="{Version}">
+                 <Error Code="{ErrorCode}">
+                     <![CDATA[{StackTrace}]]>
+                 </Error>
+                 <Time TimeZone="{TimeZone}">
+                     {Date and Time}
+                 </Time>
+                 <Application>
+                     <Name><![CDATA[{ApplicationName}]]></Name>
+                     <Version>{ApplicationVersion}</Version>
+                     <Culture>{ApplicationCulture}</Culture>
+                 </Application>
+                 <PlatformVersion>
+                     <Name><![CDATA[${PlatformVersion.Name}$]]></Name>
+                     <Os>${PlatformVersion.OsInfo}$</Os>
+                     <Culture>${PlatformVersion.Culture}$</Culture>
+                 </PlatformVersion>
+                 <Machine>
+                     <Cpu><![CDATA[{MachineCpuDescription}]]></Cpu>
+                     <RamInMb>{MachineMemorySize}</RamInMb>
+                 </Machine>
+                 <Assemblies>
+                     <Assembly>
+                         <Name>{AssemblyName}</Name>
+                         <Version>{AssemblyVersion}</Version>
+                         <Culture>{AssemblyCulture}</Culture>
+                         <PublicKey>{AssemblyPublicKey}</PublicKey>
+                         <WasInGac>{True if in GAC, false if not}</WasInGac>
+                     </Assembly>
+                     ... more assembly info here ...
+                 </Assemblies>
+                 <Configuration>
+                     <Configuration>
+                         <Path><![CDATA[{ConfigurationElementPath}]]></Path>
+                         <Value><![CDATA[{ConfigurationElementValue}]]></Value>
+                     </Configuration>
+                     ... more configuration info here ...
+                 </Configuration>
+            </ErrorReport>
+            </code>
+            </remarks>
+        </member>
+        <member name="P:NSarrac.Framework.Serialization.ReportBodySerializer.Version">
+            <summary>
+            Gets the version for the current <c>ReportBodySerializer</c> object.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="T:NSarrac.Framework.Serialization.GzipStreamCompressor">
+            <summary>
+            Transforms a stream into a compressed stream and visa versa.
+            </summary>
+        </member>
+        <member name="T:NSarrac.Framework.Serialization.StreamTransformer">
+            <summary>
+            The base class for classes that transform streams.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.Serialization.StreamTransformer.s_DefaultBufferSize">
+            <summary>
+            The default size for byte buffers.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamTransformer.CopyInternalDataToNewStream(System.IO.Stream)">
+            <summary>
+            Copies the internal data to a new stream.
+            </summary>
+            <param name="input">The input.</param>
+            <returns>A new stream containing the information in the original input stream.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamTransformer.GetBufferFromStream(System.IO.Stream)">
+            <summary>
+            Creates an array of <c>byte</c>s from the stream.
+            </summary>
+            <param name="input">The input stream.</param>
+            <returns>An array of bytes describing the contents of the input stream.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.GzipStreamCompressor.Compress(System.IO.Stream)">
+            <summary>
+            Compresses the specified stream with the GZip algorithm.
+            </summary>
+            <param name="stream">The stream which contains the data that should be compressed.</param>
+            <returns>The stream containing the compressed data.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.GzipStreamCompressor.Uncompress(System.IO.Stream)">
+            <summary>
+            Uncompresses the specified stream with the Gzip algorithm.
+            </summary>
+            <param name="stream">The stream which contains the compressed data.</param>
+            <returns>The stream containing the uncompressed data.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.Serialization.StreamEncrypter">
+            <summary>
+            Transforms a report stream into an encrypted report stream.
+            </summary>
+            <remarks>
+            The report stream is encrypted with the symmetric AES algorithm. Then the
+            encryption key is encrypted with the public key provided by the error 
+            reporting server.
+            </remarks>
+        </member>
+        <member name="F:NSarrac.Framework.Serialization.StreamEncrypter.s_DefaultKeySize">
+            <summary>
+            Defines the default key size for the symmetric AES algorithm.
+            </summary>
+        </member>
+        <member name="F:NSarrac.Framework.Serialization.StreamEncrypter.s_RsaKeyName">
+            <summary>
+            Defines the key name that will be used to identify the correct
+            section of the encrypted XML.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.CreateReportDocument(System.IO.Stream)">
+            <summary>
+            Creates a new XML document which contains the original report stream as a
+            base 64 string.
+            </summary>
+            <param name="reportStream">The stream which contains the error data.</param>
+            <returns>A new XML document containing the converted error stream.</returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.CreateReportStream(System.Xml.XmlDocument)">
+            <summary>
+            Fills a stream with the information obtained from an XML document containing a
+            base 64 encoded string.
+            </summary>
+            <param name="xmlReport">The <c>XmlDocument</c> which contains the report stream.</param>
+            <returns>A new stream containing the error information.</returns>
+        </member>
+        <member name="F:NSarrac.Framework.Serialization.StreamEncrypter.m_KeyProvider">
+            <summary>
+            The function which is called to get the public key of the
+            error reporting server.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.#ctor(System.Func{System.Security.Cryptography.RSAParameters})">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.Serialization.StreamEncrypter"/> class.
+            </summary>
+            <param name="encryptionKey">The function which returns the asymmetric public key.</param>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="encryptionKey"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.Encrypt(System.IO.Stream)">
+            <summary>
+            Encrypts the specified stream.
+            </summary>
+            <param name="stream">The stream which has to be encrypted.</param>
+            <returns>An encrypted stream.</returns>
+            <exception cref="T:System.ArgumentNullException">
+                Thrown if <paramref name="stream"/> is <see langword="null"/>.
+            </exception>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.EncryptDataInXml(System.Xml.XmlElement)">
+            <summary>
+            Encrypts the XML element with a symmetric algorithm. The information about the
+            algorithm is placed on the new XML node and the symmetric key is encrypted with
+            the provided asymmetric public key.
+            </summary>
+            <param name="elementToEncrypt">The element to encrypt.</param>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.EncryptSymmetricKeyWithRsa(System.Security.Cryptography.SymmetricAlgorithm)">
+            <summary>
+            Encrypts a symmetric key with the RSA public key.
+            </summary>
+            <param name="sessionKey">The symmetric key.</param>
+            <returns>
+            The encrypted symmetric key and all the information necessary for the receiver.
+            </returns>
+        </member>
+        <member name="M:NSarrac.Framework.Serialization.StreamEncrypter.Decrypt(System.IO.Stream)">
+            <summary>
+            Decrypts the specified encrypted stream.
+            </summary>
+            <param name="encryptedStream">The encrypted stream.</param>
+            <returns>A normal, un-encrypted, stream.</returns>
+        </member>
+        <member name="T:NSarrac.Framework.TemplateLoadException">
+            <summary>
+            An exception thrown when the <see cref="T:NSarrac.Framework.IReportBodySerializer"/> fails to read 
+            a template file from the assembly.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.TemplateLoadException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.TemplateLoadException"/> class.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.TemplateLoadException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.TemplateLoadException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:NSarrac.Framework.TemplateLoadException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.TemplateLoadException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:NSarrac.Framework.TemplateLoadException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.TemplateLoadException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
+        <member name="T:NSarrac.Framework.VersionIncorrectException">
+            <summary>
+            An exception thrown when the <see cref="T:NSarrac.Framework.ReportBody"/> tries to read 
+            a stream which contains incompatible report information.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.VersionIncorrectException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.VersionIncorrectException"/> class.
+            </summary>
+        </member>
+        <member name="M:NSarrac.Framework.VersionIncorrectException.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.VersionIncorrectException"/> class.
+            </summary>
+            <param name="dataVersion">The version of the report.</param>
+            <param name="readerVersion">The version of the report reader.</param>
+        </member>
+        <member name="M:NSarrac.Framework.VersionIncorrectException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.VersionIncorrectException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:NSarrac.Framework.VersionIncorrectException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.VersionIncorrectException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:NSarrac.Framework.VersionIncorrectException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:NSarrac.Framework.VersionIncorrectException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
+    </members>
+</doc>
