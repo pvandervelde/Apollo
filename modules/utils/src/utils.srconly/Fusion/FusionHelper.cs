@@ -40,14 +40,14 @@ namespace Apollo.Utils.Fusion
     /// The choice was made to search through a set of directories, and not for instance
     /// a list of known assemblies, because:
     /// <list type="Bullet">
-    /// <item>
+    /// <serviceType>
     /// It is not possible to know which dependencies exist in the assemblies we have to load
-    /// </item>
-    /// <item>
+    /// </serviceType>
+    /// <serviceType>
     /// We do not know which assemblies can safely be loaded in the AppDomain prior to setting up
     /// the loader. On the other hand it is easier to make the load / not-load decision based on
     /// the directory that the assemblies have to come from.
-    /// </item>
+    /// </serviceType>
     /// </list>
     /// </para>
     /// </design>
@@ -212,7 +212,7 @@ namespace Apollo.Utils.Fusion
         /// The delegate which is used to return a file enumerator based on a specific directory.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification="Use of nested generic signatures is ok for core internal use.")]
+            Justification = "Use of nested generic signatures is ok for core internal use.")]
         private Func<IEnumerable<string>> m_FileEnumerator;
 
         /// <summary>
@@ -269,7 +269,7 @@ namespace Apollo.Utils.Fusion
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification="Property is used internally only.")]
+            Justification = "Property is used internally only.")]
         private Func<IEnumerable<string>> FileEnumerator
         {
             get 
@@ -337,6 +337,8 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         /// The desired assembly if is is in the search path; otherwise, <see langword="null"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "Source will be linked from other projects and thus be used.")]
         private Assembly LocateAssembly(string assemblyFullName)
         {
             Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");

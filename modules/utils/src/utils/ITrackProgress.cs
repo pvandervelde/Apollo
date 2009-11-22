@@ -22,8 +22,13 @@ namespace Apollo.Utils
         /// <summary>
         /// Marks the current time with the specified marker.
         /// </summary>
-        /// <param name="mark">The mark.</param>
-        void Mark(IProgressMark mark);
+        /// <param name="progressMark">The progress mark.</param>
+        void Mark(IProgressMark progressMark);
+
+        /// <summary>
+        /// Occurs when a new mark is provided to the tracker.
+        /// </summary>
+        event EventHandler<ProgressMarkEventArgs> MarkAdded;
 
         /// <summary>
         /// Stops the tracking of the progress.

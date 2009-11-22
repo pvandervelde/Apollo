@@ -4,15 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Apollo.Utils.Configuration
 {
     /// <summary>
-    /// 
+    /// Defines the interface for objects that serve as keys for the <see cref="IConfiguration"/> collection.
     /// </summary>
     public interface IConfigurationKey
     {

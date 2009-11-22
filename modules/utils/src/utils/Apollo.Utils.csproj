@@ -119,6 +119,7 @@
     <Compile Include="IStoreMarkerTimes.cs" />
     <Compile Include="ITrackProgress.cs" />
     <Compile Include="LockObject.cs" />
+    <Compile Include="ProgressMarkEventArgs.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

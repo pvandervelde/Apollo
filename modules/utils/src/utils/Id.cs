@@ -40,7 +40,7 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
+            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
             {
                 return false;
             }
@@ -59,7 +59,7 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
+            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
             {
                 return false;
             }
@@ -78,7 +78,7 @@ namespace Apollo.Utils
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            if (ReferenceEquals(first, null))
             {
                 return false;
             }
@@ -86,7 +86,7 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
+            if (ReferenceEquals(second, null))
             {
                 return false;
             }
@@ -105,7 +105,7 @@ namespace Apollo.Utils
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            if (ReferenceEquals(first, null))
             {
                 return false;
             }
@@ -113,7 +113,7 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
+            if (ReferenceEquals(second, null))
             {
                 return false;
             }
@@ -124,7 +124,7 @@ namespace Apollo.Utils
         /// <summary>
         /// The internal value which defines the value for the current ID.
         /// </summary>
-        protected readonly TInternalValue m_Value;
+        private readonly TInternalValue m_Value;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Id&lt;TId, TInternalValue&gt;"/> class.
@@ -140,6 +140,18 @@ namespace Apollo.Utils
         protected Id(TInternalValue value)
         {
             m_Value = value;
+        }
+
+        /// <summary>
+        /// Gets the internal value in a readonly fashion.
+        /// </summary>
+        /// <value>The internal value.</value>
+        protected TInternalValue InternalValue
+        {
+            get 
+            {
+                return m_Value;
+            }
         }
 
         /// <summary>
@@ -241,7 +253,7 @@ namespace Apollo.Utils
         ///     <see langword="true"/> if the specified <see cref="Id&lt;TId, TInternalValue&gt;"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-          Justification = "Documentation can start with a language keyword")]
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(TId other)
         {
             if (ReferenceEquals(this, other))
@@ -268,7 +280,7 @@ namespace Apollo.Utils
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-          Justification = "Documentation can start with a language keyword")]
+            Justification = "Documentation can start with a language keyword")]
         public sealed override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))

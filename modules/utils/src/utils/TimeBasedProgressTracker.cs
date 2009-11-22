@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using Apollo.Utils.Configuration;
 using Lokad;
 
 namespace Apollo.Utils
@@ -15,7 +15,7 @@ namespace Apollo.Utils
     /// Defines methods used to track progress based on an estimate of the time
     /// required to finish the operation previously.
     /// </summary>
-    public sealed class TimeBasedProgressTracker : ITrackProgress
+    public sealed class TimeBasedProgressTracker : ITrackProgress, IDisposable
     {
         /// <summary>
         /// The timer which is used to fire the progress event.
@@ -23,15 +23,15 @@ namespace Apollo.Utils
         private readonly System.Timers.Timer m_ProgressTimer = new System.Timers.Timer();
 
         /// <summary>
+        /// The value used to indicate an unknown progress level.
+        /// </summary>
+        private readonly int m_UnknownProgressValue;
+
+        /// <summary>
         /// The time delay between two successive timer updates.
         /// </summary>
         private readonly TimeSpan m_TimerUpdateInterval;
 
-        /// <summary>
-        /// The configuration object which holds the appliation configuration values.
-        /// </summary>
-        private readonly IConfiguration m_Configuration;
-        
         /// <summary>
         /// The object which stores the progress timing for each of the known markers.
         /// </summary>
@@ -51,7 +51,7 @@ namespace Apollo.Utils
         /// <source>
         /// http://msdn.microsoft.com/en-us/library/system.timers.timer.stop.aspx
         /// </source>
-        private int m_SyncPoint = 0;
+        private int m_SyncPoint;
 
         /// <summary>
         /// Returns the time that has elapsed since starting the progress
@@ -67,31 +67,31 @@ namespace Apollo.Utils
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeBasedProgressTracker"/> class.
         /// </summary>
+        /// <param name="unknownProgressValue">The value used to indicate an unknown progress level.</param>
         /// <param name="timerUpdateInterval">The time delay between two succesive timer updates.</param>
-        /// <param name="configuration">The configuration.</param>
         /// <param name="markerTimes">The marker times.</param>
+        /// <exception cref="InvalidOperationException">
+        /// Thrown when <paramref name="unknownProgressValue"/> is between 0 and 100.
+        /// </exception>
         /// <exception cref="InvalidOperationException">
         /// Thrown when <paramref name="timerUpdateInterval"/> is smaller or equal to <see cref="TimeSpan.Zero"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="configuration"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="markerTimes"/> is <see langword="null" />.
+        /// Thrown when <paramref name="markerTimes"/> is <see langword="null"/>.
         /// </exception>
         public TimeBasedProgressTracker(
+            int unknownProgressValue,
             TimeSpan timerUpdateInterval,
-            IConfiguration configuration,
             IStoreMarkerTimes markerTimes)
         {
             {
+                Enforce.That((unknownProgressValue < 0) || (unknownProgressValue > 100));
                 Enforce.That(timerUpdateInterval > TimeSpan.Zero);
-                Enforce.Argument(() => configuration);
                 Enforce.Argument(() => markerTimes);
             }
 
+            m_UnknownProgressValue = unknownProgressValue;
             m_TimerUpdateInterval = timerUpdateInterval;
-            m_Configuration = configuration;
             m_MarkerTimers = markerTimes;
         }
 
@@ -127,8 +127,9 @@ namespace Apollo.Utils
         /// <summary>
         /// Processes the elapsed event of the progress timer.
         /// </summary>
-        /// <param name="time">The time.</param>
+        /// <param name="time">The time at which the timer elapsed even took place.</param>
         /// <design>
+        /// <para>
         /// This example assumes that overlapping events can be
         /// discarded. That is, if an Elapsed event is raised before 
         /// the previous event is finished processing, the second
@@ -137,6 +138,17 @@ namespace Apollo.Utils
         /// processing onto a seperate thread so the execution of
         /// the event should not take very long compared to the 
         /// timer interval.
+        /// </para>
+        /// <para>
+        /// Each time the timer fires we update the progress. We assume:
+        /// <list type="bullet">
+        /// <item>that progress is linear over the entire process</item>
+        /// <item>
+        ///     that progress in the current startup is roughly the same as 
+        ///     the one for which we have the data.
+        /// </item>
+        /// </list>
+        /// </para>
         /// </design>
         /// <source>
         /// http://msdn.microsoft.com/en-us/library/system.timers.timer.stop.aspx
@@ -160,18 +172,19 @@ namespace Apollo.Utils
                 // No other event was executing.
                 // Note that the only other event that could be
                 // executing, is us.
-                //
-                // Each time the timer fires we update the
-                // progress. We assume:
-                // - that progress is linear(?) between two progress points
-                // - that progress in the current startup is roughly the same
-                //   as in the last start up
                 ThreadPool.QueueUserWorkItem(state =>
                     {
                         var elapsedTime = m_ElapsedTime(time);
                         var estimatedTime = m_MarkerTimers.TotalTime;
+                        
+                        // If there is no known time then we return
+                        // a special progress count.
+                        int progress = m_UnknownProgressValue;
+                        if (m_MarkerTimers.TotalTime != TimeSpan.Zero)
+                        {
+                            progress = (int)(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks);
+                        }
 
-                        var progress = (int)(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks);
                         m_Progress(progress, m_CurrentMark);
                     });
 
@@ -183,10 +196,31 @@ namespace Apollo.Utils
         /// <summary>
         /// Marks the current time with the specified marker.
         /// </summary>
-        /// <param name="mark">The mark.</param>
-        public void Mark(IProgressMark mark)
+        /// <param name="progressMark">The progress mark.</param>
+        public void Mark(IProgressMark progressMark)
         {
-            m_CurrentMark = mark;
+            m_CurrentMark = progressMark;
+            RaiseMarkAdded(progressMark);
+        }
+
+        /// <summary>
+        /// Occurs when a new mark is provided to the tracker.
+        /// </summary>
+        public event EventHandler<ProgressMarkEventArgs> MarkAdded;
+
+        /// <summary>
+        /// Raises the mark added event.
+        /// </summary>
+        /// <param name="mark">The progress mark.</param>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises the MarkAdded event.")]
+        private void RaiseMarkAdded(IProgressMark mark)
+        {
+            EventHandler<ProgressMarkEventArgs> local = MarkAdded;
+            if (local != null)
+            { 
+                local(this, new ProgressMarkEventArgs(mark));
+            }
         }
 
         /// <summary>
@@ -253,6 +287,17 @@ namespace Apollo.Utils
         {
             StopProgressTimer();
             m_Progress = null;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_ProgressTimer != null)
+            {
+                m_ProgressTimer.Dispose();
+            }
         }
     }
 }

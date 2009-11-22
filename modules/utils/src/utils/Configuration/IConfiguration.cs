@@ -1,7 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
 
 namespace Apollo.Utils.Configuration
 {
@@ -14,7 +15,7 @@ namespace Apollo.Utils.Configuration
         /// Returns the value for the given configuration key.
         /// </summary>
         /// <typeparam name="T">The type of the return value.</typeparam>
-        /// <param name="key">The key.</param>
+        /// <param name="key">The configuration key.</param>
         /// <returns>
         /// The desired value.
         /// </returns>
