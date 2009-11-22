@@ -78,11 +78,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph.Data">
+      <HintPath>..\..\lib\quickgraph\QuickGraph.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
-      <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
@@ -114,6 +117,7 @@
     <Compile Include="BootStrapper.cs" />
     <Compile Include="BootStrapper.KernelInjector.cs" />
     <Compile Include="BootStrapper.ServiceInjector.cs" />
+    <Compile Include="CannotUninstallNonEquivalentServiceException.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
@@ -127,9 +131,14 @@
     <Compile Include="IOwnServices.cs" />
     <Compile Include="CoreProxy.cs" />
     <Compile Include="Kernel.cs" />
+    <Compile Include="Kernel.ServiceVertex.cs" />
     <Compile Include="KernelService.cs" />
+    <Compile Include="KernelServiceStartupFailedException.cs" />
+    <Compile Include="KernelStartupFailedException.cs" />
     <Compile Include="Messages\DnsName.cs" />
+    <Compile Include="Messages\IDeliveryFailureReason.cs" />
     <Compile Include="Messages\IDnsNameObject.cs" />
+    <Compile Include="Messages\IMessagePipeline.cs" />
     <Compile Include="Messages\INameService.cs" />
     <Compile Include="Messages\IProcessMessages.cs" />
     <Compile Include="Messages\ISendMessages.cs" />
@@ -139,13 +148,20 @@
     <Compile Include="Messages\MessageHeader.cs" />
     <Compile Include="Messages\MessageId.cs" />
     <Compile Include="Messages\MessagePipeline.cs" />
+    <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="PrivateBinPathOption.cs" />
     <Compile Include="PrivateBinPathRequirementsAttribute.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ServiceType.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
     <Compile Include="StartupProgressEventArgs.cs" />
     <Compile Include="StartupState.cs" />
+    <Compile Include="UnknownKernelServiceTypeException.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
@@ -161,6 +177,12 @@
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

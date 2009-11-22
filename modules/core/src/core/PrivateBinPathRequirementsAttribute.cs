@@ -29,7 +29,7 @@ namespace Apollo.Core
 
         /// <summary>
         /// Gets the option that describes which private bin path
-        /// should be provided for the service on which this attribute is placed
+        /// should be provided for the service on which this attribute is placed.
         /// </summary>
         /// <value>The option.</value>
         public PrivateBinPathOption Option 

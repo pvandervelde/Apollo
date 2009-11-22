@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Apollo.Core.Properties;
 using Lokad;
 
 namespace Apollo.Core.Messages
@@ -18,78 +20,112 @@ namespace Apollo.Core.Messages
     public sealed class MessageHeader : IEquatable<MessageHeader>
     {
         /// <summary>
-        /// The unique ID number of this message.
-        /// </summary>
-        private readonly MessageId m_Id = MessageId.None;
-
-        /// <summary>
-        /// The ID number of the message to which this message is a reply.
-        /// </summary>
-        private readonly MessageId m_InReplyTo = MessageId.None;
-
-        /// <summary>
-        /// The unique name of the service that send this message.
-        /// </summary>
-        private readonly DnsName m_Sender = DnsName.Nobody;
-
-        /// <summary>
-        /// The unique name of the service to which this message is send.
-        /// </summary>
-        private readonly DnsName m_Recipient = DnsName.Nobody;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageHeader"/> struct and 
+        /// Initializes a new instance of the <see cref="MessageHeader"/> class and 
         /// sets it up to send a message to all services, excluding the sending
         /// service.
         /// </summary>
-        /// <param name="id">The unique ID number of the message.</param>
-        /// <param name="sender">The sender of the message.</param>
-        public MessageHeader(MessageId id, DnsName sender)
-            : this(id, sender, DnsName.AllServices, MessageId.None)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageHeader"/> struct and
-        /// sets it up to send a message to the specified recipient.
-        /// </summary>
-        /// <param name="id">The unique ID number of the message.</param>
-        /// <param name="sender">The sender of the message.</param>
-        /// <param name="recipient">The recipient of the message.</param>
-        public MessageHeader(MessageId id, DnsName sender, DnsName recipient)
-            : this(id, sender, recipient, MessageId.None)
-        { }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MessageHeader"/> struct.
-        /// </summary>
-        /// <param name="id">The unique ID number of the message.</param>
-        /// <param name="sender">The sender of the message.</param>
-        /// <param name="recipient">The recipient of the message.</param>
-        /// <param name="inReplyTo">
-        ///     The ID number of the message to which the current message is a reply.
-        /// </param>
-        public MessageHeader(MessageId id, DnsName sender, DnsName recipient, MessageId inReplyTo)
-        {
-            {
-                Enforce.That(!id.Equals(MessageId.None));
-
-                Enforce.That(!sender.Equals(DnsName.Nobody));
-                Enforce.That(!sender.Equals(DnsName.AllServices));
-            }
-
-            m_Recipient = recipient;
-            m_Sender = sender;
-            m_InReplyTo = inReplyTo;
+        /// <param name="messageId">The unique ID number of the message.</param>
+        /// <param name="senderDns">The sender of the message.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="messageId"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.AllServices"/> name.
+        /// </exception>
+        public MessageHeader(MessageId messageId, DnsName senderDns)
+            : this(messageId, senderDns, DnsName.AllServices, MessageId.None)
+        { 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MessageHeader"/> struct by
+        /// Initializes a new instance of the <see cref="MessageHeader"/> class and
+        /// sets it up to send a message to the specified recipient.
+        /// </summary>
+        /// <param name="messageId">The unique ID number of the message.</param>
+        /// <param name="senderDns">The sender of the message.</param>
+        /// <param name="recipientDns">The recipient of the message.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="messageId"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.AllServices"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="recipientDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
+        /// </exception>
+        public MessageHeader(MessageId messageId, DnsName senderDns, DnsName recipientDns)
+            : this(messageId, senderDns, recipientDns, MessageId.None)
+        { 
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageHeader"/> class.
+        /// </summary>
+        /// <param name="messageId">The unique ID number of the message.</param>
+        /// <param name="senderDns">The sender of the message.</param>
+        /// <param name="recipientDns">The recipient of the message.</param>
+        /// <param name="replyToId">
+        ///     The ID number of the message to which the current message is a reply.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="messageId"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.AllServices"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when <paramref name="recipientDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="replyToId"/> is <see langword="null" />.
+        /// </exception>
+        public MessageHeader(MessageId messageId, DnsName senderDns, DnsName recipientDns, MessageId replyToId)
+        {
+            {
+                Enforce.Argument(() => messageId);
+                Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources.Exceptions_Messages_CannotCreateAMessageWithoutId);
+
+                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.AllServices), Resources.Exceptions_Messages_CannotSendAMessageFromAllServices);
+
+                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+
+                Enforce.Argument(() => replyToId);
+            }
+
+            Id = messageId;
+            Recipient = recipientDns;
+            Sender = senderDns;
+            InReplyTo = replyToId;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageHeader"/> class by
         /// copying the provided <c>MessageHeader</c>.
         /// </summary>
         /// <param name="headerToCopy">The message header which should be copied.</param>
         public MessageHeader(MessageHeader headerToCopy) 
             : this(headerToCopy.Id, headerToCopy.Sender, headerToCopy.Recipient, headerToCopy.InReplyTo)
-        { }
+        { 
+        }
 
         /// <summary>
         /// Gets the sender of this message.
@@ -97,10 +133,8 @@ namespace Apollo.Core.Messages
         /// <value>The sender.</value>
         public DnsName Sender
         {
-            get
-            {
-                return m_Sender;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -109,34 +143,28 @@ namespace Apollo.Core.Messages
         /// <value>The recipient.</value>
         public DnsName Recipient
         {
-            get 
-            {
-                return m_Recipient;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
         /// Gets the ID of this message.
         /// </summary>
-        /// <value>The ID.</value>
+        /// <value>The ID number of this message.</value>
         public MessageId Id
         {
-            get
-            {
-                return m_Id;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
-        /// Returns the ID number of the message to which this message is a reply.
+        /// Gets the ID number of the message to which this message is a reply.
         /// </summary>
         /// <value>The ID number of the message.</value>
         public MessageId InReplyTo
         {
-            get
-            {
-                return m_InReplyTo;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
@@ -146,6 +174,8 @@ namespace Apollo.Core.Messages
         /// <returns>
         ///     <see langword="true"/> if the specified <c>MessageHeader</c> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(MessageHeader other)
         {
             return other.Id.Equals(Id);
@@ -158,6 +188,8 @@ namespace Apollo.Core.Messages
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -169,6 +201,7 @@ namespace Apollo.Core.Messages
             {
                 return Equals((MessageHeader)obj);
             }
+
             return false;
         }
 
@@ -180,7 +213,7 @@ namespace Apollo.Core.Messages
         /// </returns>
         public override int GetHashCode()
         {
-            return m_Id.GetHashCode();
+            return Id.GetHashCode();
         }
 
         /// <summary>
@@ -193,7 +226,7 @@ namespace Apollo.Core.Messages
         {
             // No need to translate this. This should never show up in the 
             // user interface.
-            return string.Format(CultureInfo.InvariantCulture, @"Message {0} send by {1} to {2} in reply to {3}", m_Id, m_Sender, m_Recipient, m_InReplyTo);
+            return string.Format(CultureInfo.InvariantCulture, @"Message [{0}] send by [{1}] to [{2}] in reply to [{3}]", Id, Sender, Recipient, InReplyTo);
         }
     }
 }

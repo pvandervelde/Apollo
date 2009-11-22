@@ -5,9 +5,13 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Lokad;
 
 namespace Apollo.Core
 {
+    /// <content>
+    /// Contains the definition of the <see cref="KernelInjector"/> class.
+    /// </content>
     public abstract partial class BootStrapper
     {
         /// <summary>
@@ -23,11 +27,16 @@ namespace Apollo.Core
         internal sealed class KernelInjector : MarshalByRefObject, IInjectKernels
         {
             /// <summary>
+            /// The kernel object.
+            /// </summary>
+            private Kernel m_Kernel;
+
+            /// <summary>
             /// Creates the kernel.
             /// </summary>
             public void CreateKernel()
             {
-                throw new NotImplementedException();
+                m_Kernel = new Kernel();
             }
 
             /// <summary>
@@ -38,15 +47,24 @@ namespace Apollo.Core
             /// </param>
             public void InstallService(KernelService serviceToInstall)
             {
-                throw new NotImplementedException();
+                {
+                    Enforce.Argument(() => serviceToInstall);
+                }
+
+                m_Kernel.Install(serviceToInstall);
             }
 
             /// <summary>
             /// Starts the kernel.
             /// </summary>
+            /// <design>
+            /// The <see cref="Kernel.Start"/> method will not be called on a
+            /// separate thread because the <c>Kernel.Start</c> method 
+            /// creates its own threads which power the kernel.
+            /// </design>
             public void Start()
             {
-                throw new NotImplementedException();
+                m_Kernel.Start();
             }
         }
     }

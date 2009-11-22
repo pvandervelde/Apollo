@@ -18,17 +18,21 @@ namespace Apollo.Core.Messages
         /// <summary>
         /// Defines the ID number for a message without an ID number.
         /// </summary>
-        private readonly static MessageId s_NoneId = new MessageId(Guid.NewGuid());
+        /// <design>
+        /// The GUID is hard-coded in order to keep it constant between different
+        /// revisions of the software.
+        /// </design>
+        private static readonly Guid s_NoneId = new Guid(@"6C01758E-D1E7-4DF8-B847-51ED22083E96");
 
         /// <summary>
-        /// Returns the ID number for messages without an ID.
+        /// Gets the ID number for messages without an ID.
         /// </summary>
         /// <value>The none ID.</value>
         public static MessageId None
         {
             get
             {
-                return s_NoneId;
+                return new MessageId(s_NoneId);
             }
         }
 
@@ -38,7 +42,7 @@ namespace Apollo.Core.Messages
         /// <returns>
         /// A new and unique message ID number.
         /// </returns>
-        public MessageId Next()
+        public static MessageId Next()
         {
             return new MessageId(Guid.NewGuid());
         }
@@ -56,7 +60,9 @@ namespace Apollo.Core.Messages
         /// Clones the specified value.
         /// </summary>
         /// <param name="value">The value.</param>
-        /// <returns></returns>
+        /// <returns>
+        /// A new <see cref="MessageId"/> which is an exact copy of the original.
+        /// </returns>
         protected override MessageId Clone(Guid value)
         {
             return new MessageId(value);
@@ -70,7 +76,7 @@ namespace Apollo.Core.Messages
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Message ID with number: {0}", m_Value);
+            return string.Format("Message ID with number: {0}", InternalValue);
         }
     }
 }

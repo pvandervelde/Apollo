@@ -5,31 +5,33 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Lokad;
+using Lokad.Rules;
 
 namespace Apollo.Core.Messages
 {
     /// <summary>
     /// Defines the name of a service.
     /// </summary>
+    /// <todo>
+    /// This class should probably be renamed.
+    /// </todo>
     public struct DnsName : IEquatable<DnsName>, IComparable<DnsName>, IComparable
     {
-        // RENAME THIS!!!!!
-
         /// <summary>
         /// The unique identifier for the combination of all services.
         /// </summary>
-        private readonly static DnsName s_AllServices = new DnsName(@"AllServices");
+        private static readonly DnsName s_AllServices = new DnsName(@"AllServices");
 
         /// <summary>
         /// The unique identifier for none of the services.
         /// </summary>
-        private readonly static DnsName s_Nobody = new DnsName(@"Nobody");
+        private static readonly DnsName s_Nobody = new DnsName(@"Nobody");
 
         /// <summary>
-        /// Returns the <c>DnsName</c> for the combination of all services.
+        /// Gets the <c>DnsName</c> for the combination of all services.
         /// Any messages send with this <c>DnsName</c> as recipient will
         /// be send to all active services, except for the originating 
         /// service.
@@ -44,7 +46,7 @@ namespace Apollo.Core.Messages
         }
 
         /// <summary>
-        /// Returns the <c>DnsName</c> for none of the services.
+        /// Gets the <c>DnsName</c> for none of the services.
         /// Any messages send with this <c>DnsName</c> as recipient will
         /// be removed by the message pipeline.
         /// </summary>
@@ -65,11 +67,18 @@ namespace Apollo.Core.Messages
         /// <summary>
         /// Initializes a new instance of the <see cref="DnsName"/> struct.
         /// </summary>
-        /// <param name="name">The name.</param>
+        /// <param name="name">The name for the <see cref="DnsName"/>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="name"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown if <paramref name="name"/> is an empty string.
+        /// </exception>
         public DnsName(string name)
         { 
             {
-                Enforce.That(!string.IsNullOrEmpty(name), "The DNS name should be specified.");
+                Enforce.Argument(() => name);
+                Enforce.Argument(() => name, StringIs.NotEmpty);
             }
 
             m_Name = name;
@@ -79,8 +88,10 @@ namespace Apollo.Core.Messages
         /// Initializes a new instance of the <see cref="DnsName"/> struct.
         /// </summary>
         /// <param name="nameToCopy">The <c>DnsName</c> which should be copied.</param>
-        public DnsName(DnsName nameToCopy) : this(nameToCopy.m_Name)
-        { }
+        public DnsName(DnsName nameToCopy) 
+            : this(nameToCopy.m_Name)
+        { 
+        }
 
         /// <summary>
         /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
@@ -118,7 +129,7 @@ namespace Apollo.Core.Messages
         /// This instance is greater than <paramref name="obj"/>.
         /// </returns>
         /// <exception cref="T:System.ArgumentException">
-        /// 	<paramref name="obj"/> is not the same type as this instance.
+        ///     <paramref name="obj"/> is not the same type as this instance.
         /// </exception>
         int IComparable.CompareTo(object obj)
         {
@@ -131,6 +142,7 @@ namespace Apollo.Core.Messages
             { 
                 throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, @"Cannot compare these objects: {0} and {1}", this, obj));
             }
+
             return CompareTo((DnsName)obj);
         }
 
@@ -141,9 +153,11 @@ namespace Apollo.Core.Messages
         /// <returns>
         ///     <see langword="true"/> if the specified <c>DnsName</c> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(DnsName other)
         {
-            throw new NotImplementedException();
+            return other.m_Name.Equals(m_Name);
         }
 
         /// <summary>
@@ -153,6 +167,8 @@ namespace Apollo.Core.Messages
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -164,6 +180,7 @@ namespace Apollo.Core.Messages
             {
                 return Equals((DnsName)obj);
             }
+
             return false;
         }
 
@@ -188,7 +205,5 @@ namespace Apollo.Core.Messages
         {
             return string.Format(CultureInfo.InvariantCulture, @"DnsName: {0}", m_Name);
         }
-
-
     }
 }

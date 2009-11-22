@@ -1,7 +1,7 @@
 <Project>
   <Name>Plug-in system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Plugins</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
@@ -94,11 +94,12 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Realization" first="8" second="7">
         <StartOrientation>Horizontal</StartOrientation>

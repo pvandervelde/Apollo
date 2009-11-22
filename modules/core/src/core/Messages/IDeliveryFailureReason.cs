@@ -7,15 +7,10 @@
 namespace Apollo.Core.Messages
 {
     /// <summary>
-    /// Defines the interface for objects which have a unique <see cref=" DnsName"/> with 
-    /// which they can be identified.
+    /// Defines the interface for objects which describe a reason for the
+    /// failure to deliver a message.
     /// </summary>
-    public interface IDnsNameObject
+    public interface IDeliveryFailureReason
     {
-        /// <summary>
-        /// Gets the identifier of the object.
-        /// </summary>
-        /// <value>The identifier.</value>
-        DnsName Name { get; }
     }
 }

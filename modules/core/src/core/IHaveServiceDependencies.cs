@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core
 {
@@ -45,5 +46,24 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="dependency">The dependency service.</param>
         void ConnectTo(KernelService dependency);
+
+        /// <summary>
+        /// Disconnects from one of the services on which the current service depends.
+        /// </summary>
+        /// <param name="dependency">The dependency service.</param>
+        void DisconnectFrom(KernelService dependency);
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is connected to all dependencies.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is connected to all dependencies; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+          Justification = "Documentation can start with a language keyword")]
+        bool IsConnectedToAllDependencies
+        {
+            get;
+        }
     }
 }

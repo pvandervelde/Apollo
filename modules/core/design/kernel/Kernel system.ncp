@@ -45,6 +45,7 @@ Note that most system services are always loaded in a specific order / time. e.g
         <Collapsed>False</Collapsed>
         <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
         <Member type="Method">void Start()</Member>
+        <Member type="Method">StartupState GetStartupState()</Member>
       </Entity>
       <Entity type="Comment">
         <Text>Needs way to do:
@@ -64,15 +65,6 @@ Note that most system services are always loaded in a specific order / time. e.g
         <Location left="2788" top="498" />
         <Size width="162" height="72" />
       </Entity>
-      <Entity type="Interface">
-        <Name>IOwnServices</Name>
-        <Access>Public</Access>
-        <Location left="865" top="812" />
-        <Size width="236" height="175" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">void Install(IService service)</Member>
-        <Member type="Method">void Uninstall(IService service)</Member>
-      </Entity>
       <Entity type="Comment">
         <Text>Services have dependencies which have to be loaded before the service can be loaded.
 
@@ -80,27 +72,6 @@ A service is not normally running. Once a message for the service arrives it wil
 Some services will be started on application start up.</Text>
         <Location left="1012" top="1421" />
         <Size width="187" height="160" />
-      </Entity>
-      <Entity type="Interface">
-        <Name>ICommand</Name>
-        <Access>Public</Access>
-        <Location left="3335" top="292" />
-        <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IMessage</Name>
-        <Access>Public</Access>
-        <Location left="3045" top="454" />
-        <Size width="162" height="71" />
-        <Collapsed>False</Collapsed>
-      </Entity>
-      <Entity type="Interface">
-        <Name>ICommandMessage</Name>
-        <Access>Public</Access>
-        <Location left="3045" top="292" />
-        <Size width="162" height="74" />
-        <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in, loading a new project etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
@@ -118,11 +89,14 @@ Some services will be started on application start up.</Text>
         <Location left="1930" top="1230" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public abstract ServiceType ServiceType { get; }</Member>
+        <Member type="Method">protected abstract void StartService()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>MarshalByRef</Name>
+        <Name>MarshalByRefObject</Name>
         <Access>Public</Access>
         <Location left="1672" top="1120" />
         <Size width="162" height="82" />
@@ -188,9 +162,14 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>Kernel</Name>
         <Access>Public</Access>
-        <Location left="865" top="535" />
-        <Size width="253" height="129" />
+        <Location left="866" top="535" />
+        <Size width="253" height="162" />
         <Collapsed>False</Collapsed>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Member type="Method">public void Install(KernelService service)</Member>
+        <Member type="Method">public void Uninstall(KernelService service)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
@@ -212,7 +191,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Name>IProcessMessages</Name>
         <Access>Public</Access>
         <Location left="1644" top="215" />
-        <Size width="393" height="129" />
+        <Size width="338" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Property">DnsName DnsName { get; }</Member>
         <Member type="Method">void ProcessMessages(IMessage message)</Member>
@@ -221,10 +200,14 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <Entity type="Interface">
         <Name>IHaveServiceDependencies</Name>
         <Access>Public</Access>
-        <Location left="1644" top="100" />
-        <Size width="238" height="83" />
+        <Location left="1644" top="60" />
+        <Size width="286" height="146" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">IEnumerator&lt;Type&gt; Dependencies()</Member>
+        <Member type="Method">IEnumerable&lt;Type&gt; ServicesToBeAvailable()</Member>
+        <Member type="Method">IEnumerable&lt;Type&gt; ServicesToConnectTo()</Member>
+        <Member type="Method">void ConnectTo(KernelService dependency)</Member>
+        <Member type="Method">void DisconnectFrom(KernelService dependency)</Member>
+        <Member type="Property">bool IsConnectedToAllDependencies { get; }</Member>
       </Entity>
       <Entity type="Class">
         <Name>LicenseService</Name>
@@ -246,11 +229,6 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Size width="280" height="103" />
       </Entity>
       <Entity type="Comment">
-        <Text>What happens to messages that can't be delivered? e.g. due to a service dying etc.?</Text>
-        <Location left="3306" top="454" />
-        <Size width="217" height="62" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Services should be able to register scanners / filters etc.?</Text>
         <Location left="1716" top="978" />
         <Size width="162" height="72" />
@@ -263,8 +241,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <Entity type="Interface">
         <Name>ISendMessages</Name>
         <Access>Public</Access>
-        <Location left="1644" top="369" />
-        <Size width="393" height="98" />
+        <Location left="1644" top="342" />
+        <Size width="390" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">DnsName DnsName { get; }</Member>
         <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
@@ -277,6 +255,20 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Collapsed>False</Collapsed>
         <Member type="Method">void Load()</Member>
         <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+      </Entity>
+      <Entity type="Enum">
+        <Name>StartupState</Name>
+        <Access>Public</Access>
+        <Location left="526" top="1231" />
+        <Size width="163" height="180" />
+        <Collapsed>False</Collapsed>
+        <Value>Unknown</Value>
+        <Value>NotStarted</Value>
+        <Value>Starting</Value>
+        <Value>Started</Value>
+        <Value>Failed</Value>
+        <Value>Stopping</Value>
+        <Value>Stopped</Value>
       </Entity>
     </Entities>
     <Relationships>
@@ -300,17 +292,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1220</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="12" second="11">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="12" second="10">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="15" second="4">
+      <Relationship type="Realization" first="11" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -322,7 +304,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1313</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="15" second="16">
+      <Relationship type="Generalization" first="11" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -330,7 +312,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1170</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="9" second="15">
+      <Relationship type="Comment" first="8" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -342,7 +324,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1326</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="2" second="15">
+      <Relationship type="Comment" first="2" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -354,20 +336,21 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1344</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="13" second="19">
+      <Relationship type="Comment" first="9" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="6" second="18">
+      <Relationship type="Comment" first="6" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="18" second="19">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="14" second="15">
+        <Label>Depends on</Label>
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2904</X>
-          <Y>1008</Y>
+          <X>2978</X>
+          <Y>941</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>3307</X>
@@ -376,7 +359,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="17" second="19">
+      <Relationship type="Association" first="13" second="15">
+        <Label>Uses</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -390,7 +374,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="17" second="20">
+      <Relationship type="Association" first="13" second="16">
+        <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -404,7 +389,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="17" second="15">
+      <Relationship type="Generalization" first="13" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -416,24 +401,25 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1502</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="18" second="15">
+      <Relationship type="Generalization" first="14" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2752</X>
-          <Y>940</Y>
+          <X>2753</X>
+          <Y>922</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2133</X>
           <Y>1188</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="19" second="20">
-        <StartOrientation>Horizontal</StartOrientation>
+      <Relationship type="Association" first="15" second="16">
+        <Label>Depends on</Label>
+        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3562</X>
-          <Y>1432</Y>
+          <X>3422</X>
+          <Y>1345</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2975</X>
@@ -442,21 +428,22 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="20">
+      <Relationship type="Association" first="14" second="16">
+        <Label>Depends on</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2752</X>
-          <Y>920</Y>
+          <X>2685</X>
+          <Y>906</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2746</X>
-          <Y>692</Y>
+          <X>2752</X>
+          <Y>704</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="19" second="15">
+      <Relationship type="Generalization" first="15" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -468,19 +455,19 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1444</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="20" second="15">
+      <Relationship type="Generalization" first="16" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2762</X>
-          <Y>681</Y>
+          <X>2763</X>
+          <Y>691</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2095</X>
           <Y>1205</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="21" second="15">
+      <Relationship type="Generalization" first="17" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -488,7 +475,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1361</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="22" second="15">
+      <Relationship type="Generalization" first="18" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -500,7 +487,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1274</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="23" second="15">
+      <Relationship type="Generalization" first="19" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -512,7 +499,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1293</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="22" second="20">
+      <Relationship type="Association" first="18" second="16">
+        <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -520,17 +508,18 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>920</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2706</X>
-          <Y>663</Y>
+          <X>2750</X>
+          <Y>681</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="23" second="20">
+      <Relationship type="Association" first="19" second="16">
+        <Label>Depends on</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1511</X>
+          <X>1516</X>
           <Y>649</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -540,23 +529,19 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="7" second="20">
+      <Relationship type="Comment" first="7" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="14" second="23">
+      <Relationship type="Comment" first="10" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="24" second="8">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="24" second="4">
+      <Relationship type="Realization" first="20" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>831</X>
+          <X>832</X>
           <Y>629</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -564,11 +549,11 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1315</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="24" second="23">
+      <Relationship type="Association" first="20" second="19">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1185</X>
+          <X>1186</X>
           <Y>631</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -578,7 +563,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="0" second="24">
+      <Relationship type="Association" first="0" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -586,27 +571,13 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>482</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>834</X>
+          <X>835</X>
           <Y>601</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="24" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>956</X>
-          <Y>509</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>992</X>
-          <Y>210</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="25" second="24">
+      <Relationship type="Comment" first="21" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -614,11 +585,11 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>617</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>840</X>
+          <X>841</X>
           <Y>618</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="26" second="15">
+      <Relationship type="Generalization" first="22" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -630,7 +601,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1426</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="17" second="26">
+      <Relationship type="Association" first="13" second="22">
+        <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -640,12 +612,13 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="26">
+      <Relationship type="Association" first="14" second="22">
+        <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2886</X>
-          <Y>1005</Y>
+          <X>2872</X>
+          <Y>1008</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2923</X>
@@ -654,7 +627,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="21" second="26">
+      <Relationship type="Association" first="17" second="22">
+        <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -664,7 +638,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="22" second="26">
+      <Relationship type="Association" first="18" second="22">
+        <Label>Uses</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -678,17 +653,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="23" second="26">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>3038</X>
-          <Y>1927</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Generalization" first="29" second="15">
+      <Relationship type="Generalization" first="25" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -700,7 +665,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1205</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="18" second="29">
+      <Relationship type="Association" first="14" second="25">
+        <Label>Uses</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -710,7 +676,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="26" second="29">
+      <Relationship type="Association" first="22" second="25">
+        <Label>Uses</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -718,13 +685,13 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1786</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2784</X>
+          <X>2590</X>
           <Y>1110</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="30" second="26">
+      <Relationship type="Comment" first="26" second="22">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -732,7 +699,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1872</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="31" second="29">
+      <Relationship type="Comment" first="27" second="25">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -744,29 +711,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1167</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="20" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3037</X>
-          <Y>660</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="32" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3281</X>
-          <Y>489</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3232</X>
-          <Y>489</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="33" second="22">
+      <Relationship type="Comment" first="28" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -778,7 +723,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>953</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="34" second="29">
+      <Relationship type="Comment" first="29" second="25">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -790,7 +735,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1142</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="0" second="36">
+      <Relationship type="Realization" first="0" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -801,6 +746,18 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <X>738</X>
           <Y>244</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>981</X>
+          <Y>406</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>

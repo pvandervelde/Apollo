@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Messages
 {
@@ -40,6 +41,20 @@ namespace Apollo.Core.Messages
         ///     <see langword="true"/> if an object is registered with the specified 
         ///     <c>DnsName</c>; otherwise <see langword="false" />.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         bool HasName(DnsName name);
+
+        /// <summary>
+        /// Gets the <see cref="Apollo.Core.Messages.IDnsNameObject"/> with the specified name.
+        /// </summary>
+        /// <param name="name">The <see cref="DnsName"/> of the desired object.</param>
+        /// <value>
+        /// The <see cref="IDnsNameObject"/> object with the specified name.
+        /// </value>
+        IDnsNameObject this[DnsName name]
+        {
+            get;
+        }
     }
 }

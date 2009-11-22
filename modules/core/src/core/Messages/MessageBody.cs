@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Messages
 {
@@ -18,13 +19,14 @@ namespace Apollo.Core.Messages
     /// across <see cref="AppDomain"/> boundaries.
     /// </remarks>
     [Serializable]
-    public abstract class MessageBody
+    public abstract class MessageBody : IEquatable<MessageBody>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageBody"/> class.
         /// </summary>
         protected MessageBody()
-        { }
+        { 
+        }
 
         /// <summary>
         /// Copies this instance.
@@ -35,12 +37,25 @@ namespace Apollo.Core.Messages
         public abstract MessageBody Copy();
 
         /// <summary>
+        /// Determines whether the specified <see cref="MessageBody"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="MessageBody"/> to compare with this instance.</param>
+        /// <returns>
+        ///     <see langword="true"/> if the specified <see cref="MessageBody"/> is equal to this instance; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public abstract bool Equals(MessageBody other);
+
+        /// <summary>
         /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public abstract override bool Equals(object obj);
 
         /// <summary>

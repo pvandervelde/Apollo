@@ -10,7 +10,10 @@ using Apollo.Utils.Fusion;
 using Lokad;
 
 namespace Apollo.Core
-{ 
+{
+    /// <content>
+    /// Contains the definition of the <see cref="FileBasedResolver"/> class.
+    /// </content>
     internal sealed partial class AppDomainBuilder
     {
         /// <summary>
@@ -32,7 +35,7 @@ namespace Apollo.Core
             /// Stores the paths to the relevant assemblies.
             /// </summary>
             /// <param name="filePaths">
-            ///     The paths to the relevant assemblies
+            ///     The paths to the relevant assemblies.
             /// </param>
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="filePaths"/> is <see langword="null" />.

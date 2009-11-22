@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Lokad;
 
 namespace Apollo.Core.Messages
 {
@@ -17,7 +15,46 @@ namespace Apollo.Core.Messages
     [Serializable]
     public sealed class MessageEventArgs : EventArgs
     {
-        // Id
-        // Delivery failure
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageEventArgs"/> class.
+        /// </summary>
+        /// <param name="messageId">The message id.</param>
+        /// <param name="deliveryFailureReason">The delivery failure reason.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="messageId"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="deliveryFailureReason"/> is <see langword="null"/>.
+        /// </exception>
+        public MessageEventArgs(MessageId messageId, IDeliveryFailureReason deliveryFailureReason)
+        {
+            {
+                Enforce.Argument(() => messageId);
+                Enforce.Argument(() => deliveryFailureReason);
+            }
+
+            Id = messageId;
+            FailureReason = deliveryFailureReason;
+        }
+
+        /// <summary>
+        /// Gets the ID of the message for which delivery failed.
+        /// </summary>
+        /// <value>The ID of the message.</value>
+        public MessageId Id
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the reason for the delivery failure.
+        /// </summary>
+        /// <value>The failure delivery reason.</value>
+        public IDeliveryFailureReason FailureReason
+        {
+            get;
+            private set;
+        }
     }
 }

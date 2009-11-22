@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 
-namespace Apollo.Core
+namespace Apollo.Core.Messages
 {
     /// <summary>
     /// Defines the interface for <see cref="KernelService"/> objects that need

@@ -5,11 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Messages;
 using Lokad;
 
-namespace Apollo.Core
+namespace Apollo.Core.Messages
 {
     /// <summary>
     /// Defines the base class for messages send inside the core of the Apollo system.
@@ -17,16 +17,6 @@ namespace Apollo.Core
     [Serializable]
     public sealed class KernelMessage : IEquatable<KernelMessage>
     {
-        /// <summary>
-        /// The header of the the current message.
-        /// </summary>
-        private readonly MessageHeader m_Header;
-
-        /// <summary>
-        /// The data attached to this message.
-        /// </summary>
-        private readonly MessageBody m_Body;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelMessage"/> class.
         /// </summary>
@@ -37,54 +27,55 @@ namespace Apollo.Core
                 Enforce.Argument(() => messageToCopy);
             }
 
-            m_Header = new MessageHeader(messageToCopy.Header);
-            m_Body = messageToCopy.Body.Copy();
+            Header = new MessageHeader(messageToCopy.Header);
+            Body = messageToCopy.Body.Copy();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelMessage"/> class.
         /// </summary>
-        /// <param name="header">The header which identifies the message.</param>
-        /// <param name="body">The data for the message.</param>
-        public KernelMessage(MessageHeader header, MessageBody body)
+        /// <param name="messageHeader">The header which identifies the message.</param>
+        /// <param name="messageBody">The data for the message.</param>
+        public KernelMessage(MessageHeader messageHeader, MessageBody messageBody)
         {
             {
-                Enforce.Argument(() => body);
+                Enforce.Argument(() => messageHeader);
+                Enforce.Argument(() => messageBody);
             }
 
-            m_Header = header;
-            m_Body = body;
+            Header = messageHeader;
+            Body = messageBody;
         }
 
         /// <summary>
         /// Gets the header which identifies this message.
         /// </summary>
-        /// <value>The header.</value>
+        /// <value>The header of the message.</value>
         public MessageHeader Header
         {
-            get
-            {
-                return m_Header;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
         /// Gets the data for the message.
         /// </summary>
-        /// <value>The data.</value>
+        /// <value>The data that comes with the message.</value>
         public MessageBody Body
         {
-            get
-            {
-                return m_Body;
-            }
+            get;
+            private set;
         }
 
         /// <summary>
         /// Equalses the specified other.
         /// </summary>
         /// <param name="other">The other.</param>
-        /// <returns></returns>
+        /// <returns>
+        ///     <see langword="true"/> if the specified <see cref="KernelMessage"/> is equal to this instance; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(KernelMessage other)
         {
             if (ReferenceEquals(this, other))
@@ -94,8 +85,9 @@ namespace Apollo.Core
 
             if (other != null)
             {
-                return other.Header.Equals(m_Header);
+                return other.Header.Equals(Header);
             }
+
             return false;
         }
 
@@ -106,9 +98,8 @@ namespace Apollo.Core
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <exception cref="T:System.NullReferenceException">
-        /// The <paramref name="obj"/> parameter is null.
-        /// </exception>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
@@ -121,6 +112,7 @@ namespace Apollo.Core
             {
                 return Equals(other);
             }
+
             return false;
         }
 
@@ -132,7 +124,7 @@ namespace Apollo.Core
         /// </returns>
         public override int GetHashCode()
         {
-            return m_Header.GetHashCode();
+            return Header.GetHashCode();
         }
 
         /// <summary>
@@ -145,9 +137,11 @@ namespace Apollo.Core
         {
             // No need to translate this. This should never show up in the 
             // user interface.
-            return string.Format(CultureInfo.InvariantCulture, 
-                @"Message {0} send by {1} to {2} in reply to {3} with information {4}", 
-                m_Header.Id, m_Header.Sender, m_Header.Recipient, m_Header.InReplyTo, m_Body);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                @"{0}" + Environment.NewLine + "with information: {1}", 
+                Header, 
+                Body);
         }
     }
 }

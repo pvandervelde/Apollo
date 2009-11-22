@@ -24,33 +24,66 @@ namespace Apollo.Core
     /// The bootstrapper will load the kernel objects and provide them with starting
     /// data. The loading takes place in the following order:
     /// <list type="number">
-    /// <item>
+    /// <serviceType>
     ///   Link the assembly resolver into the current AppDomain. This AppDomain will later 
     ///   be used for the User Interface (UI) because it is possible that the Apollo system
     ///   gets started as plug-in to another application, which means that there is no
     ///   control over where and how the first AppDomain is created. Furthermore the
     ///   hosting application will expect that all action takes place in the first AppDomain.
-    /// </item>
-    /// <item>
+    /// </serviceType>
+    /// <serviceType>
     ///   Create a new AppDomain in which the kernel objects will reside. When creating this
     ///   AppDomain it is also necessary to initialize the security levels, set the search
     ///   paths, attach the assembly loaders and deal with the exception handlers
-    /// </item>
-    /// <item>
+    /// </serviceType>
+    /// <serviceType>
     ///   Inject a remote object loader into the new AppDomain. This object loader is used
     ///   to create the kernel objects and initialize them.
-    /// </item>
-    /// <item>
+    /// </serviceType>
+    /// <serviceType>
     ///   Load the kernel object and start it
-    /// </item>
-    /// <item>
+    /// </serviceType>
+    /// <serviceType>
     ///   Once the kernel is up and running the bootstrapper can be discarded since it is no
     ///   longer useful.
-    /// </item>
+    /// </serviceType>
     /// </list>
     /// </design>
     public abstract partial class BootStrapper : IBootstrapper
     {
+        /// <summary>
+        /// Gets all the service types stored in the current assembly.
+        /// </summary>
+        /// <returns>
+        /// A collection containing all the <see cref="Type"/> objects that derive from <see cref="KernelService"/>.
+        /// </returns>
+        /// <todo>
+        /// Perform the search for the services via a IOC container.
+        /// </todo>
+        private static IEnumerable<Type> GetServiceTypes()
+        {
+            var serviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
+                               where typeof(KernelService).IsAssignableFrom(type) &&
+                                     type.GetCustomAttributes(typeof(AutoLoadAttribute), true).Length == 0
+                               select type;
+
+            return serviceTypes;
+        }
+
+        /// <summary>
+        /// Concatenates two IEnumerable sequences.
+        /// </summary>
+        /// <typeparam name="T">The object type in the sequence.</typeparam>
+        /// <param name="existingSequence">The existing sequence.</param>
+        /// <param name="newSequence">The new sequence.</param>
+        /// <returns>
+        /// The concatenation of the two sequences.
+        /// </returns>
+        private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
+        {
+            return (existingSequence != null) ? existingSequence.Concat(newSequence) : newSequence;
+        }
+
         /// <summary>
         /// The <c>AppDomain</c> builder that is used to create the application domains.
         /// </summary>
@@ -103,8 +136,6 @@ namespace Apollo.Core
             m_Progress = progress;
         }
 
-        
-
         /// <summary>
         /// Loads the Apollo system and starts the kernel.
         /// </summary>
@@ -117,7 +148,7 @@ namespace Apollo.Core
             }
 
             // Link assembly resolver to current AppDomain
-            // Link exception handlers to current domain
+            // Link exception handlers to current AppDomain
             PrepareUserInterfaceAppDomain();
 
             // Mark progress from UI to core
@@ -128,7 +159,7 @@ namespace Apollo.Core
             var coreBasePath = new DirectoryInfo(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
             var kernel = CreateKernel(coreBasePath);
 
-            // Scan the current assembly for all exported parts.l
+            // Scan the current assembly for all exported parts.
             var serviceTypes = GetServiceTypes();
 
             // Create all the services and pass them to the kernel
@@ -145,7 +176,7 @@ namespace Apollo.Core
             // Finally start the kernel and wait for it to finish starting
             kernel.Start();
 
-            // Mark progress to starting core
+            // Indicate core startup is done
             {
                 m_Progress.StopTracking();
             }
@@ -162,12 +193,12 @@ namespace Apollo.Core
             // Set the assembly resolver. Because we are inside the
             // UI appdomain it doesn't matter how we set this up.
             var fusionHelper = new FusionHelper(() =>
-            {
-                // Concatenate the two sequences and then turn the FileInfo objects into the
-                // string representation of the file fullname
-                var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
-                return from file in totalSequence select file.FullName;
-            });
+                {
+                    // Concatenate the two sequences and then turn the FileInfo objects into the
+                    // string representation of the file fullname
+                    var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
+                    return from file in totalSequence select file.FullName;
+                });
             currentDomain.AssemblyResolve += new ResolveEventHandler(fusionHelper.LocateAssemblyOnAssemblyLoadFailure);
 
             // Set the exception handler. Adding the event ensures that
@@ -198,25 +229,6 @@ namespace Apollo.Core
             // And then create the kernel
             kernel.CreateKernel();
             return kernel;
-        }
-
-        /// <summary>
-        /// Gets all the service types stored in the current assembly.
-        /// </summary>
-        /// <returns>
-        /// A collection containing all the <see cref="Type"/> objects that derive from <see cref="KernelService"/>.
-        /// </returns>
-        private static IEnumerable<Type> GetServiceTypes()
-        {
-            // Can we do this via AutoFac?
-
-            // Find all Kernel services that are not auto loaded.
-            var serviceTypes = (from type in Assembly.GetExecutingAssembly().GetTypes()
-                                where typeof(KernelService).IsAssignableFrom(type) &&
-                                      type.GetCustomAttributes(typeof(AutoLoadAttribute), true).Length == 0
-                                select type);
-
-            return serviceTypes;
         }
 
         /// <summary>
@@ -315,20 +327,6 @@ namespace Apollo.Core
             {
                 directories = () => from directory in directoryPaths select directory.FullName;
             }
-        }
-
-        /// <summary>
-        /// Concatenates two IEnumerable sequences.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="existingSequence">The existing sequence.</param>
-        /// <param name="newSequence">The new sequence.</param>
-        /// <returns>
-        /// The concatenation of the two sequences.
-        /// </returns>
-        private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
-        { 
-            return (existingSequence != null) ? existingSequence.Concat(newSequence) : newSequence;
         }
 
         /// <summary>

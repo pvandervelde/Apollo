@@ -1,0 +1,17 @@
+<Project>
+  <Name>Taxonomy</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Taxonomy</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>ITaxonomy</Name>
+        <Access>Public</Access>
+        <Location left="519" top="230" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+    </Entities>
+    <Relationships />
+  </ProjectItem>
+</Project>

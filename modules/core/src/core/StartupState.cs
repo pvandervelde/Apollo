@@ -32,8 +32,18 @@ namespace Apollo.Core
         Started,
 
         /// <summary>
-        /// The object has been running and entered a non-started state.
+        /// The object has failed during the startup process.
         /// </summary>
-        Other,
+        Failed,
+
+        /// <summary>
+        /// The object was running but is in the process of stopping.
+        /// </summary>
+        Stopping,
+
+        /// <summary>
+        /// The object was running but is now stopped.
+        /// </summary>
+        Stopped,
     }
 }

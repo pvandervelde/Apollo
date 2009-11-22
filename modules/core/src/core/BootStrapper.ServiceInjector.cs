@@ -5,9 +5,13 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 
 namespace Apollo.Core
 {
+    /// <content>
+    /// Contains the definition of the <see cref="ServiceInjector"/> class.
+    /// </content>
     public abstract partial class BootStrapper
     {
         /// <summary>
@@ -33,7 +37,8 @@ namespace Apollo.Core
             /// </returns>
             public KernelService CreateService(Type typeToLoad)
             {
-                throw new NotImplementedException();
+                Debug.Assert(typeof(KernelService).IsAssignableFrom(typeToLoad), "The service type does not derive from KernelService.");
+                return Activator.CreateInstance(typeToLoad) as KernelService;
             }
         }
     }

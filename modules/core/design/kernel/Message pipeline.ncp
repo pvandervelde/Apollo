@@ -1,6 +1,6 @@
 <Project>
   <Name>Message pipeline</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.1.1160.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
     <Name>Overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -26,17 +26,18 @@
         <Name>INameService</Name>
         <Access>Public</Access>
         <Location left="1259" top="932" />
-        <Size width="324" height="139" />
+        <Size width="324" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void AddName(DnsName name, IDnsNameObject obj)</Member>
         <Member type="Method">void Remove(DnsName name)</Member>
         <Member type="Method">bool HasName(DnsName name)</Member>
         <Member type="Method">IEnumerator&lt;IDnsNameObject&gt; GetEnumerator()</Member>
+        <Member type="Property">IDnsNameObject this[DnsName name] { get; }</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
         <Access>Public</Access>
-        <Location left="1708" top="194" />
+        <Location left="1914" top="256" />
         <Size width="347" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void ProcessMessages(Message message)</Member>
@@ -45,7 +46,7 @@
       <Entity type="Structure">
         <Name>DnsName</Name>
         <Access>Public</Access>
-        <Location left="10" top="189" />
+        <Location left="10" top="221" />
         <Size width="220" height="213" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private string m_Name</Member>
@@ -60,7 +61,7 @@
       <Entity type="Interface">
         <Name>ISendMessages</Name>
         <Access>Public</Access>
-        <Location left="1250" top="231" />
+        <Location left="1456" top="293" />
         <Size width="419" height="102" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
@@ -68,19 +69,20 @@
       <Entity type="Structure">
         <Name>MessageHeader</Name>
         <Access>Public</Access>
-        <Location left="457" top="10" />
-        <Size width="419" height="247" />
+        <Location left="462" top="10" />
+        <Size width="532" height="264" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">MessageId m_Id</Member>
-        <Member type="Field">DnsName m_Sender</Member>
-        <Member type="Field">DnsName m_Recipient</Member>
-        <Member type="Field">MessageId m_ReplyTo</Member>
-        <Member type="Constructor">public MessageHeader(DnsName sender, DnsName recipient)</Member>
-        <Member type="Constructor">public MessageHeader(DnsName sender, DnsName recipient, MessageId replyTo)</Member>
-        <Member type="Property">public DnsName Sender { get; }</Member>
-        <Member type="Property">public DnsName Recipient { get; }</Member>
-        <Member type="Property">public MessageId MessageId { get; }</Member>
-        <Member type="Property">public MessageId ReplyTo { get; }</Member>
+        <Member type="Constructor">public MessageHeader(MessageId messageId, DnsName sender)</Member>
+        <Member type="Constructor">public MessageHeader(MessageId messageId, DnsName sender, DnsName recipient)</Member>
+        <Member type="Constructor">public MessageHeader(MessageId messageId, DnsName sender, DnsName recipient, MessageId replyTo)</Member>
+        <Member type="Property">public DnsName Sender { get; private set; }</Member>
+        <Member type="Property">public DnsName Recipient { get; private set; }</Member>
+        <Member type="Property">public MessageId MessageId { get; private set; }</Member>
+        <Member type="Property">public MessageId ReplyTo { get; private set; }</Member>
+        <Member type="Method">public bool Equals(MessageHeader other)</Member>
+        <Member type="Method">public override bool Equals(object obj)</Member>
+        <Member type="Method">public override int GetHashCode()</Member>
+        <Member type="Method">public override string ToString()</Member>
       </Entity>
       <Entity type="Structure">
         <Name>MessageId</Name>
@@ -100,45 +102,43 @@
 The other DNS names (which are not related to a specific service) are:
 - AllServices (used for broadcast)
 - Nobody (used to make message disappear)</Text>
-        <Location left="10" top="473" />
+        <Location left="10" top="505" />
         <Size width="254" height="148" />
       </Entity>
       <Entity type="Comment">
         <Text>What do we store in the message body. It must be possible for services to select a message based on stuff in the body too so the types have to be known a head of time...</Text>
-        <Location left="891" top="325" />
+        <Location left="1141" top="323" />
         <Size width="215" height="100" />
       </Entity>
       <Entity type="Class">
         <Name>MessageEventArgs</Name>
         <Access>Public</Access>
-        <Location left="1732" top="35" />
-        <Size width="214" height="145" />
+        <Location left="1917" top="46" />
+        <Size width="408" height="128" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">MessageId m_Id</Member>
-        <Member type="Field">IDeliveryFailure m_Failure</Member>
-        <Member type="Property">public MessageId Id { get; }</Member>
-        <Member type="Property">public IDeliveryFailure Failure { get; }</Member>
+        <Member type="Constructor">public MessageEventArgs(MessageId messageId, IDeliveryFailure deliveryFailure)</Member>
+        <Member type="Property">public MessageId Id { get; private set; }</Member>
+        <Member type="Property">public IDeliveryFailure Failure { get; private set; }</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IDeliveryFailure</Name>
         <Access>Public</Access>
-        <Location left="1250" top="10" />
+        <Location left="1435" top="21" />
         <Size width="162" height="111" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
-        <Name>Message</Name>
+        <Name>KernelMessage</Name>
         <Access>Public</Access>
-        <Location left="550" top="511" />
-        <Size width="329" height="230" />
+        <Location left="550" top="505" />
+        <Size width="339" height="230" />
         <Collapsed>False</Collapsed>
-        <Member type="Field">MessageHeader m_Header</Member>
-        <Member type="Field">MessageBody m_Body</Member>
-        <Member type="Constructor">public Message(MessageHeader header, MessageBody body)</Member>
-        <Member type="Constructor">public Message(Message messageToClone)</Member>
-        <Member type="Property">public abstract MessageHeader Header { get; }</Member>
-        <Member type="Property">public abstract MessageBody Body { get; }</Member>
+        <Member type="Constructor">public KernelMessage(MessageHeader messageHeader, MessageBody messageBody)</Member>
+        <Member type="Constructor">public KernelMessage(KernelMessage messageToClone)</Member>
+        <Member type="Property">public abstract MessageHeader Header { get; private set; }</Member>
+        <Member type="Property">public abstract MessageBody Body { get; private set; }</Member>
+        <Member type="Method">public bool Equals(KernelMessage other)</Member>
         <Member type="Method">public override Equals Equals(object obj)</Member>
         <Member type="Method">public override GetHashCode GetHashCode()</Member>
         <Member type="Method">public override ToString ToString()</Member>
@@ -147,10 +147,11 @@ The other DNS names (which are not related to a specific service) are:
       <Entity type="Class">
         <Name>MessageBody</Name>
         <Access>Public</Access>
-        <Location left="891" top="10" />
-        <Size width="235" height="145" />
+        <Location left="1058" top="10" />
+        <Size width="235" height="162" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public abstract MessageBody Clone()</Member>
+        <Member type="Method">public abstract MessageBody Copy()</Member>
+        <Member type="Method">public bool Equals(MessageBody other)</Member>
         <Member type="Method">public abstract override Equals Equals(object obj)</Member>
         <Member type="Method">public abstract override GetHashCode GetHashCode()</Member>
         <Member type="Method">public abstract override ToString ToString()</Member>
@@ -158,7 +159,7 @@ The other DNS names (which are not related to a specific service) are:
       </Entity>
       <Entity type="Comment">
         <Text>Must be serializable</Text>
-        <Location left="579" top="351" />
+        <Location left="606" top="383" />
         <Size width="124" height="50" />
       </Entity>
       <Entity type="Comment">
@@ -175,13 +176,13 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
       </Entity>
       <Entity type="Comment">
         <Text>Must be serializable</Text>
-        <Location left="1520" top="51" />
+        <Location left="1705" top="62" />
         <Size width="124" height="50" />
       </Entity>
       <Entity type="Interface">
         <Name>IDnsNameObject</Name>
         <Access>Public</Access>
-        <Location left="1589" top="477" />
+        <Location left="1795" top="539" />
         <Size width="193" height="90" />
         <Collapsed>False</Collapsed>
         <Member type="Property">DnsName Name { get; }</Member>
@@ -240,12 +241,12 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>661</X>
-          <Y>326</Y>
+          <X>688</X>
+          <Y>358</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>971</X>
-          <Y>242</Y>
+          <X>1138</X>
+          <Y>259</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="14" second="0">
@@ -268,8 +269,8 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>516</X>
-          <Y>370</Y>
+          <X>543</X>
+          <Y>402</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>295</X>
@@ -280,12 +281,12 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>551</X>
-          <Y>382</Y>
+          <X>578</X>
+          <Y>414</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>290</X>
-          <Y>382</Y>
+          <Y>414</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="16" second="10">
@@ -296,28 +297,28 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1615</X>
-          <Y>126</Y>
+          <X>1800</X>
+          <Y>137</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1690</X>
-          <Y>150</Y>
+          <X>1875</X>
+          <Y>161</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="4" second="17">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1630</X>
-          <Y>452</Y>
+          <X>1836</X>
+          <Y>514</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="2" second="17">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1740</X>
-          <Y>452</Y>
+          <X>1946</X>
+          <Y>514</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="18" second="11">

@@ -12,7 +12,10 @@ using Apollo.Utils.Fusion;
 using Lokad;
 
 namespace Apollo.Core
-{ 
+{
+    /// <content>
+    /// Contains the definition of the <see cref="DirectoryBasedResolver"/> class.
+    /// </content>
     internal sealed partial class AppDomainBuilder
     {
         /// <summary>
@@ -34,7 +37,7 @@ namespace Apollo.Core
             /// Stores the paths to the relevant directories.
             /// </summary>
             /// <param name="directoryPaths">
-            ///     The paths to the relevant directories
+            ///     The paths to the relevant directories.
             /// </param>
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="directoryPaths"/> is <see langword="null" />.

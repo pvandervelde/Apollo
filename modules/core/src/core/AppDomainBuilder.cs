@@ -58,6 +58,8 @@ namespace Apollo.Core
             // assembly resolver extensively there will be many files that can't be shadow
             // copied. So in order to be consistent we will not shadow copy any files.
             setup.ShadowCopyFiles = "false";
+
+            // do not allow random assembly downloads
             setup.DisallowCodeDownload = true;
 
             AppDomain result = AppDomain.CreateDomain(
@@ -85,7 +87,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -113,7 +115,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -136,7 +138,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -164,7 +166,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -190,7 +192,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -221,7 +223,7 @@ namespace Apollo.Core
         /// </param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         /// <design>
-        ///     The the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
+        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
         ///     then a private path to the current assembly will be added to ensure that we can always load
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
@@ -238,18 +240,24 @@ namespace Apollo.Core
             var domain = Create(friendlyName, basePath);
 
             // Attach to the assembly file resolve event
+            // We check for a null reference but not for an empty one,
+            // there is after all no reason why the collection wouldn't fill up later.
             if (assemblyFiles != null)
             {
-                var resolver = domain.CreateInstanceAndUnwrap(typeof(FileBasedResolver).Assembly.FullName,
+                var resolver = domain.CreateInstanceAndUnwrap(
+                    typeof(FileBasedResolver).Assembly.FullName,
                     typeof(FileBasedResolver).FullName) as FileBasedResolver;
                 resolver.StoreFilePaths(assemblyFiles);
                 resolver.Attach();
             }
 
             // Attach to the assembly directory resolve event
+            // We check for a null reference but not for an empty one,
+            // there is after all no reason why the collection wouldn't fill up later.
             if (assemblyDirectories != null)
             {
-                var resolver = domain.CreateInstanceAndUnwrap(typeof(DirectoryBasedResolver).Assembly.FullName,
+                var resolver = domain.CreateInstanceAndUnwrap(
+                    typeof(DirectoryBasedResolver).Assembly.FullName,
                     typeof(DirectoryBasedResolver).FullName) as DirectoryBasedResolver;
                 resolver.StoreDirectoryPaths(assemblyDirectories);
                 resolver.Attach();

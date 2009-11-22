@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -21,11 +20,6 @@ namespace Apollo.Core
     public abstract class KernelService : MarshalByRefObject, INeedStartup
     {
         /// <summary>
-        /// The object used to lock on.
-        /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
-
-        /// <summary>
         /// Stores the current startup state.
         /// </summary>
         private StartupState m_StartupState = StartupState.NotStarted;
@@ -37,17 +31,6 @@ namespace Apollo.Core
         { 
         }
 
-        /// <summary>
-        /// Gets the type of the service. Currently either a background service
-        /// or a foreground service.
-        /// </summary>
-        /// <returns>The type of the service.</returns>
-        public virtual ServiceType ServicePreferenceType()
-        {
-            // @TODO: Needs renaming.
-            return Apollo.Core.ServiceType.Foreground;
-        }
-        
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
@@ -72,27 +55,26 @@ namespace Apollo.Core
         /// </summary>
         public void Start()
         {
-            // Loads the different parts of the service
-            lock(m_Lock)
-            {
-                m_StartupState = StartupState.Starting; 
-            }
-
+            m_StartupState = StartupState.Starting;
             try
             {
-                throw new NotImplementedException();
+                StartService();
+
+                // If we get here then we have started successfully
+                m_StartupState = StartupState.Started;
             }
-            finally
+            catch (Exception)
             {
-                // Check the startup state.
-                // If there was an error we should set the state to not started
-                var finalState = StartupState.Started;
-                lock (m_Lock)
-                {
-                    m_StartupState = finalState;
-                }
+                m_StartupState = StartupState.Failed;
+
+                throw;
             }
         }
+
+        /// <summary>
+        /// Starts the service.
+        /// </summary>
+        protected abstract void StartService();
 
         /// <summary>
         /// Returns a value indicating what the state of the object is regarding
@@ -101,6 +83,11 @@ namespace Apollo.Core
         /// <returns>
         /// The current startup state for the object.
         /// </returns>
+        /// <design>
+        /// This is a method and not a property because the most of the main objects
+        /// in the kernel space will live in their own AppDomain. This means that
+        /// access of properties can be slow and could possibly have side effects.
+        /// </design>
         public StartupState GetStartupState()
         { 
             return m_StartupState; 

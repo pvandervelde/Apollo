@@ -1,0 +1,147 @@
+<Project>
+  <Name>Tag API</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Tags</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>ITag</Name>
+        <Access>Public</Access>
+        <Location left="480" top="145" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGoal</Name>
+        <Access>Public</Access>
+        <Location left="869" top="341" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IConstraint</Name>
+        <Access>Public</Access>
+        <Location left="271" top="341" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IRequirement</Name>
+        <Access>Public</Access>
+        <Location left="447" top="341" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDeliverable</Name>
+        <Access>Public</Access>
+        <Location left="689" top="341" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we need a language for tags so that we can combine them? Is this specific for each tag type?</Text>
+        <Location left="759" top="2" />
+        <Size width="162" height="89" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICondition</Name>
+        <Access>Public</Access>
+        <Location left="94" top="341" />
+        <Size width="162" height="65" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Have meta data proxies that allow storing tags as meta data?</Text>
+        <Location left="240" top="2" />
+        <Size width="162" height="72" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>391</X>
+          <Y>316</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>455</X>
+          <Y>186</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="1" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>946</X>
+          <Y>316</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>667</X>
+          <Y>165</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="3" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>539</X>
+          <Y>316</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>539</X>
+          <Y>235</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="4" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>759</X>
+          <Y>316</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>667</X>
+          <Y>190</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>734</X>
+          <Y>46</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>593</X>
+          <Y>120</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="6" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>171</X>
+          <Y>316</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>455</X>
+          <Y>165</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="7" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>427</X>
+          <Y>47</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>538</X>
+          <Y>120</Y>
+        </BendPoint>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

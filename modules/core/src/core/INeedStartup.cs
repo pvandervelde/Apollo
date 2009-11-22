@@ -31,8 +31,13 @@ namespace Apollo.Core
         /// <returns>
         ///   The current startup state for the object.
         /// </returns>
+        /// <design>
+        /// This is a method and not a property because the most of the main objects
+        /// in the kernel space will live in their own AppDomain. This means that
+        /// access of properties can be slow and could possibly have side effects.
+        /// </design>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", 
-            Justification="See: Framework Design Guidelines; Section 5.1, page 136.")]
+            Justification = "See: Framework Design Guidelines; Section 5.1, page 136.")]
         StartupState GetStartupState();
     }
 }

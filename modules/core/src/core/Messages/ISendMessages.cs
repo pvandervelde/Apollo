@@ -10,7 +10,7 @@ namespace Apollo.Core.Messages
     /// The interface for objects which use the <see cref="MessagePipeline"/> to send messages
     /// to the services running in the kernel.
     /// </summary>
-    public interface ISendMessages
+    public interface ISendMessages : IDnsNameObject
     {
         /// <summary>
         /// Called when a message could not be delivered.
