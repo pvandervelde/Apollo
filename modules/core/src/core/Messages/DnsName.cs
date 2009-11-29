@@ -18,7 +18,7 @@ namespace Apollo.Core.Messages
     /// <todo>
     /// This class should probably be renamed.
     /// </todo>
-    public struct DnsName : IEquatable<DnsName>, IComparable<DnsName>, IComparable
+    public sealed class DnsName : IEquatable<DnsName>, IComparable<DnsName>, IComparable
     {
         /// <summary>
         /// The unique identifier for the combination of all services.
@@ -65,7 +65,7 @@ namespace Apollo.Core.Messages
         private readonly string m_Name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DnsName"/> struct.
+        /// Initializes a new instance of the <see cref="DnsName"/> class.
         /// </summary>
         /// <param name="name">The name for the <see cref="DnsName"/>.</param>
         /// <exception cref="ArgumentNullException">
@@ -85,7 +85,7 @@ namespace Apollo.Core.Messages
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DnsName"/> struct.
+        /// Initializes a new instance of the <see cref="DnsName"/> class.
         /// </summary>
         /// <param name="nameToCopy">The <c>DnsName</c> which should be copied.</param>
         public DnsName(DnsName nameToCopy) 

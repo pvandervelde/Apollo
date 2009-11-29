@@ -85,7 +85,7 @@ namespace Apollo.Core
         public void ConnectTo(KernelService dependency)
         {
             var pipeline = dependency as IMessagePipeline;
-            if (pipeline != null)
+            if ((pipeline != null) && (m_MessageSink == null))
             {
                 m_MessageSink = pipeline;
             }

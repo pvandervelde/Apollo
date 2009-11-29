@@ -1,7 +1,7 @@
 <Project>
   <Name>Message pipeline</Name>
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Overview</Name>
+    <Name>Message pipeline - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
@@ -195,8 +195,6 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">

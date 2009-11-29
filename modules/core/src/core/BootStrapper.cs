@@ -224,11 +224,11 @@ namespace Apollo.Core
                         return from file in m_StartInfo.CoreAssemblies select file.FullName;
                     },
                 m_ExceptionHandlerFactory());
-            var kernel = kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+            var kernelInjector = kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
 
             // And then create the kernel
-            kernel.CreateKernel();
-            return kernel;
+            kernelInjector.CreateKernel();
+            return kernelInjector;
         }
 
         /// <summary>
@@ -269,7 +269,9 @@ namespace Apollo.Core
             var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
 
             // Prepare the appdomain
-            KernelService service = injector.CreateService(serviceType);
+            KernelService service = injector.CreateService(
+                serviceType, 
+                serviceToUninstall => kernel.UninstallService(serviceToUninstall));
             kernel.InstallService(service);
         }
 

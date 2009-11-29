@@ -123,8 +123,14 @@
   <data name="Exceptions_Messages_CannotCreateAMessageWithoutSender" xml:space="preserve">
     <value>Cannot create a message with no or an invalid sender name.</value>
   </data>
+  <data name="Exceptions_Messages_CannotSendAMessageBackToTheSender" xml:space="preserve">
+    <value>Cannot create a message where both the sender and the recipient are the same.</value>
+  </data>
   <data name="Exceptions_Messages_CannotSendAMessageFromAllServices" xml:space="preserve">
     <value>Cannot create a message with the 'AllServices' sender name.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotSendAMessageToNoService" xml:space="preserve">
+    <value>Cannot create a message that is send to nobody.</value>
   </data>
   <data name="Exceptions_Messages_CannotUninstallNonEquivalentService" xml:space="preserve">
     <value>Cannot uninstall the service. The provided service is not the service which is installed. Please use the original service when uninstalling.</value>
@@ -143,6 +149,12 @@
   </data>
   <data name="Exceptions_Messages_MissingServiceDependency" xml:space="preserve">
     <value>The startup of the kernel service failed due to a missing a dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_ServiceCannotDependOnGenericKernelService" xml:space="preserve">
+    <value>A kernel service cannot have the KernelService type as dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_ServiceCannotDependOnItself" xml:space="preserve">
+    <value>A kernel service cannot have its own type as dependency.</value>
   </data>
   <data name="Exceptions_Messages_ServiceTypeAlreadyInstalled" xml:space="preserve">
     <value>A service object of the given type is already installed.</value>

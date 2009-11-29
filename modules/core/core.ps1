@@ -8,6 +8,31 @@ function global:Get-MsBuildExe
 	'msbuild'
 }
 
+function global:Invoke-MsBuild([string]$solution, [string]$configuration, [string]$logPath, [string]$verbosity, [string[]]$parameters){
+	$msbuildExe = Get-MsBuildExe
+	$msBuildParameters = "/p:Configuration=$configuration"
+	if ($parameters.Length -ne 0)
+	{
+		$msBuildParameters += ' /p:' +  ([string]::Join(" /p:", ( $parameters )))
+	}
+	
+	$command = "$msbuildExe"
+	$command += " '"
+	$command += "$solution"
+	$command += "'"
+	$command += " $msbuildParameters"
+	$command += " /m"
+	$command += " /clp:Verbosity=$verbosity /clp:Summary /clp:NoItemAndPropertyList /clp:ShowTimestamp"
+	$command += " /flp:LogFile='$logPath' /flp:verbosity=$verbosity /flp:Summary /flp:ShowTimestamp"
+
+	"Building $solution with command: $command"
+	Invoke-Expression $command
+	if ($LastExitCode -ne 0)
+	{
+		throw "$solution build failed with return code: $LastExitCode"
+	}
+}
+
 function global:Get-BzrExe{
 	'bzr'
 }
@@ -39,19 +64,14 @@ function global:Get-BzrVersion{
 	$versionInfo.SubString(0, $index)
 }
 
-function global:Create-VersionResourceFile([string]$path, [string]$newPath, [string[]]$versionNumber){
-	if (!($versionNumber.Length -eq 4))
-	{
-		throw "Incorrect version number provided. Version number is: $versionNumber"
-	}
-	
+function global:Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
-	$text = $text -replace '@MAJOR@', $versionNumber[0]
-	$text = $text -replace '@MINOR@', $versionNumber[1]
-	$text = $text -replace '@BUILD@', $versionNumber[2]
-	$text = $text -replace '@REVISION@', $versionNumber[3]
+	$text = $text -replace '@MAJOR@', $versionNumber.Major
+	$text = $text -replace '@MINOR@', $versionNumber.Minor
+	$text = $text -replace '@BUILD@', $versionNumber.Build
+	$text = $text -replace '@REVISION@', $versionNumber.Revision
 
-	Set-Content $newPath $text
+	Set-Content -Path $newPath -Value $text
 }
 
 function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
@@ -118,37 +138,35 @@ properties{
 	$logFxCop = 'core_fxcop.xml'
 	$logNCover = 'core_ncover.xml'
 	
-	# version numbers
-	$versionMajor = 1
-	$versionMinor = 0
-	$versionBuild = 0
-	$versionRevision = 0
+	# Version number
+	$versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
 	
-	# script-wide variables
+	# incremental state
 	$shouldClean = $true
-	$shouldCheckCoverage = $false
 	$configuration = 'debug'
+	$shouldCheckCoverage = $false
 }
 
+# The default task doesn't do anything. This just calls the help function. Useful
+#   for new people
+task default -depends Help
+
 # Configuration tasks
-task Incremental{
+task Incremental -action{
 	Set-Variable -Name shouldClean -Value $true -Scope 2
 }
 
-task Coverage{
+task Coverage -action{
 	Set-Variable -Name shouldCheckCoverage -Value $true -Scope 2
 }
 
-task Debug{
+task Debug -action{
 	Set-Variable -Name configuration -Value 'debug' -Scope 2
 }
 
-task Release{
+task Release -action{
 	Set-Variable -Name configuration -Value 'release' -Scope 2
 }
-
-# Build
-task default -depends Help
 
 # Cleans all the generated files
 task Clean -depends runClean
@@ -171,31 +189,25 @@ task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
 ###############################################################################
 # HELPER TASKS
 
-task getVersion{
-	# Get the version number from the bzr repository
+task getVersion -action{
+	#Get the file version from the version.xml file
 	[xml]$xmlFile = Get-Content $versionFile
 	$major = $xmlFile.version | %{$_.major} | Select-Object -Unique
-	Set-Variable -Name versionMajor -Value $major -Scope 2
-	"major version number at:	$versionMajor"
-	
 	$minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
-	Set-Variable -Name versionMinor -Value $minor -Scope 2
-	"minor version number at:	$versionMinor"
-	
 	$build = $xmlFile.version | %{$_.build} | Select-Object -Unique
-	Set-Variable -Name versionBuild -Value $build -Scope 2
-	"build version number at:	$versionBuild"
-
 	$revision = Get-BzrVersion
-	Set-Variable -Name versionRevision -Value $revision -Scope 2
-	"revision version number at:	$versionRevision"	
+
+	$version = New-Object -TypeName System.Version -ArgumentList "$major.$minor.$build.$revision"
+	"version is: $version"
+	
+	Set-Variable -Name versionNumber -Value $version -Scope 2
 }
 
 ###############################################################################
 # EXECUTING TASKS
 
 # The Help task displays the available commandline arguments
-task Help{
+task Help -action{
 @"
 In order to run this build script please call a specific target.
 The following build tasks are available
@@ -221,24 +233,21 @@ In order to run this build script please call this script via PSAKE like:
 "@
 }
 
-task runClean{
-	if ($shouldClean)
+task runClean -precondition{ $shouldClean } -action{
+	"Cleaning..."
+	
+	$msbuildExe = Get-MsbuildExe
+	& $msbuildExe $slnCore /t:Clean /verbosity:minimal
+	
+	# Clean the bin dir
+	if (Test-Path -Path $dirBin -PathType Container)
 	{
-		"Cleaning..."
-		
-		$msbuildExe = Get-MsbuildExe
-		& $msbuildExe $slnCore /t:Clean /verbosity:minimal
-		
-		# Clean the bin dir
-		if (Test-Path -Path $dirBin -PathType Container)
-		{
-			"Removing the bin directory..."
-			Remove-Item $dirBin -Force -Recurse
-		}
+		"Removing the bin directory..."
+		Remove-Item $dirBin -Force -Recurse
 	}
 }
 
-task runInit -depends runClean{
+task runInit -depends runClean -action{
 	"Initializing build..."
 	
 	if (!(Test-Path -Path $dirBin -PathType Container))
@@ -267,21 +276,19 @@ task runInit -depends runClean{
 	}
 }
 
-task buildBinaries -depends runInit, getVersion{
-	"Building binaries..."
+task buildBinaries -depends runInit, getVersion -action{
+	"Building Apollo.Core..."
 	
 	# Set the version numbers
-	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile ($versionMajor, $versionMinor, $versionBuild, $versionRevision)
+	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile $versionNumber
 	
 	# Set the InternalsVisibleTo attribute
 	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $assemblyNameUnitTest
 
-	# build the core binaries
-	"Building Apollo.Core..."	
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
 	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $slnCore /p:Configuration=$configuration /clp:Summary /clp:ShowTimeStamp /clp:Verbosity=minimal /flp:LogFile=$logPath /flp:Verbosity=normal
+	Invoke-MsBuild $slnCore $configuration $logPath 'minimal' ("platform='Any CPU'")
 	if ($LastExitCode -ne 0)
 	{
 		throw "Apollo.Core build failed with return code: $LastExitCode"
@@ -299,10 +306,16 @@ task buildBinaries -depends runInit, getVersion{
 	Copy-Item (Join-Path $dirBinPerf '*') $dirBuild -Force
 }
 
-task runUnitTests -depends buildBinaries{
+task runUnitTests -depends buildBinaries -action{
 	"Running unit tests..."
 	
 	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+	
+	$files = ""
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
+	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+	$command = "& '" + "$mbunitExe" + "' " + "/hd:'" + $dirMbUnit + "' /sc /rd:'" + $dirReports + "' /rt:XHtml-Condensed /rt:Xml-inline /r:IsolatedProcess " + $files
+	
 	if ($shouldCheckCoverage)
 	{
 		#
@@ -313,15 +326,15 @@ task runUnitTests -depends buildBinaries{
 		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
 		#   isolated process runner we can
-		$logFile = Join-Path $dirReports $logNCover
-		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Core.dll'" (Join-Path $dirBuild 'Apollo.Core.Test.Unit.dll')
+		#$logFile = Join-Path $dirReports $logNCover
+		#& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Core.dll'" (Join-Path $dirBuild 'Apollo.Core.Test.Unit.dll')
 	}
 	else
 	{
 		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
 		#   isolated process runner we can
-		& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:IsolatedProcess (Join-Path $dirBuild 'Apollo.Core.Test.Unit.dll')	
+		Invoke-Expression $command	
 	}
 
 	if ($LastExitCode -ne 0)
@@ -330,13 +343,13 @@ task runUnitTests -depends buildBinaries{
 	}
 }
 
-task runIntegrationTests -depends buildBinaries{
+task runIntegrationTests -depends buildBinaries -action{
 	"Running integration tests..."
 	"There are currently no integration tests. You should make some ..."
 	# ???
 }
 
-task buildApiDoc -depends buildBinaries{
+task buildApiDoc -depends buildBinaries -action{
 	"Build the API docs..."
 	
 	$msbuildExe = Get-MsbuildExe
@@ -352,7 +365,7 @@ task buildApiDoc -depends buildBinaries{
 	}
 }
 
-task runStyleCop -depends buildBinaries{
+task runStyleCop -depends buildBinaries -action{
 	$msbuildExe = Get-MsbuildExe
 	
 	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
@@ -364,7 +377,7 @@ task runStyleCop -depends buildBinaries{
 	# Check the MsBuild file (in the templates directory) for failure conditions	
 }
 
-task runFxCop -depends buildBinaries{
+task runFxCop -depends buildBinaries -action{
 	# could set different targets depending on configuration:
 	# - skip some rules if in debug mode
 	# - fail if in release mode
@@ -387,7 +400,7 @@ task runFxCop -depends buildBinaries{
 	}
 }
 
-task runDuplicateFinder -depends buildBinaries{
+task runDuplicateFinder -depends buildBinaries -action{
 	"Running duplicate check ..."
 	
 	# FAIL THE BUILD IF THERE IS ANYTHING WRONG

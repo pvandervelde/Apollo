@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace Apollo.Core
 {
     /// <content>
-    /// Contains the definition of the <see cref="ServiceVertex"/> class.
+    /// Contains the definition of the <c>ServiceVertex</c> class.
     /// </content>
     internal sealed partial class Kernel
     {

@@ -1,7 +1,7 @@
 <Project>
   <Name>Variable handling API</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Variables - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Comment">
@@ -183,8 +183,6 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="4" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -223,8 +221,6 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="4" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -251,8 +247,6 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -303,8 +297,6 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="21" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">

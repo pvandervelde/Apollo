@@ -1,7 +1,7 @@
 <Project>
   <Name>Project system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1124.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Projects - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Interface">
@@ -101,7 +101,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IHistory</Name>
         <Access>Public</Access>
-        <Location left="882" top="1129" />
+        <Location left="941" top="1129" />
         <Size width="162" height="76" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -113,13 +113,13 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>ITimeLineProxy</Name>
         <Access>Public</Access>
-        <Location left="882" top="958" />
+        <Location left="941" top="958" />
         <Size width="162" height="66" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>The project data is also stored in the project graph as the root node. So a project doesn't have any data itself.</Text>
-        <Location left="1095" top="958" />
+        <Location left="1136" top="958" />
         <Size width="214" height="80" />
       </Entity>
       <Entity type="Comment">
@@ -265,6 +265,21 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Location left="2430" top="1168" />
         <Size width="254" height="94" />
       </Entity>
+      <Entity type="Interface">
+        <Name>IComponentResolver</Name>
+        <Access>Public</Access>
+        <Location left="682" top="986" />
+        <Size width="162" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>- Define default objects that get substituted for specific types, attribute values etc.. This is just like an IOC container. e.g. when using Autofac you hardcode that resolving interface X always gets you an instance of object Y. We can do a similar system for simple system components (e.g. a logger, a console application runner etc.)
+- If we make this mechanism available over the entire application then we can allow the higher level components to create substitutions too. That way we could allow the project to setup the resolvers for different simulation components based on the type of simulation that the user has selected. When using this system we'll get a sort of distributed, dynamic IOC container where all the reference types get filled in at the last possible minute.
+- We'll need to figure out how we are going to store all this information though. We could mabye use an actual IOC container and dynamically create builders (which we can discard when ever we want)
+- Another issue is figuring out a way to be able to load components without having the entire  object graph availabe. We might be able to create dynamic proxies that only load up their suggested component once they are needed?</Text>
+        <Location left="88" top="888" />
+        <Size width="423" height="254" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="4">
@@ -279,15 +294,13 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>954</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="7">
         <StartOrientation>Vertical</StartOrientation>
@@ -301,8 +314,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1443</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="5">
         <StartOrientation>Horizontal</StartOrientation>
@@ -316,15 +328,13 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1311</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
         <StartOrientation>Horizontal</StartOrientation>
@@ -338,8 +348,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>863</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Generalization" first="10" second="9">
         <StartOrientation>Vertical</StartOrientation>
@@ -365,8 +374,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>551</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Generalization" first="8" second="11">
         <StartOrientation>Vertical</StartOrientation>
@@ -384,8 +392,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>400</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="12">
         <StartOrientation>Horizontal</StartOrientation>
@@ -395,8 +402,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>846</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="12">
         <StartOrientation>Vertical</StartOrientation>
@@ -410,8 +416,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>770</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="14" second="4">
         <StartOrientation>Vertical</StartOrientation>
@@ -425,12 +430,11 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>877</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1011</X>
+          <X>1070</X>
           <Y>927</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="16" second="0">
         <StartOrientation>Vertical</StartOrientation>
@@ -456,45 +460,41 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>618</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="13">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>957</X>
+          <X>1016</X>
           <Y>1071</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>957</X>
+          <X>1016</X>
           <Y>1104</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>True</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1086</X>
-          <Y>758</Y>
+          <X>1071</X>
+          <Y>763</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1250</X>
           <Y>850</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="18">
         <StartOrientation>Vertical</StartOrientation>
@@ -508,8 +508,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>535</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="20">
         <StartOrientation>Horizontal</StartOrientation>
@@ -523,15 +522,13 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>676</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="3">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="21">
         <StartOrientation>Vertical</StartOrientation>
@@ -545,8 +542,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>998</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="22" second="5">
         <StartOrientation>Vertical</StartOrientation>
@@ -560,8 +556,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="23" second="1">
         <StartOrientation>Vertical</StartOrientation>
@@ -587,8 +582,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1173</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="29" second="28">
         <StartOrientation>Vertical</StartOrientation>
@@ -606,8 +600,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>964</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="30" second="26">
         <StartOrientation>Horizontal</StartOrientation>
@@ -625,15 +618,13 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="32" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="31" second="32">
         <StartOrientation>Horizontal</StartOrientation>
@@ -671,8 +662,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1271</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="28">
         <StartOrientation>Vertical</StartOrientation>
@@ -682,8 +672,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1143</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="1">
         <StartOrientation>Vertical</StartOrientation>
@@ -693,8 +682,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1143</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>True</IsComposition>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="34">
         <StartOrientation>Vertical</StartOrientation>
@@ -704,8 +692,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>753</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <IsAggregation>False</IsAggregation>
-        <IsComposition>False</IsComposition>
+        <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="35" second="25">
         <StartOrientation>Vertical</StartOrientation>
@@ -722,6 +709,24 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <X>2238</X>
           <Y>1287</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="19" second="38">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1025</X>
+          <Y>796</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>890</X>
+          <Y>896</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="39" second="38">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

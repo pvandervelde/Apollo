@@ -79,11 +79,29 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot create a message where both the sender and the recipient are the same..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotSendAMessageBackToTheSender {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageBackToTheSender", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create a message with the &apos;AllServices&apos; sender name..
         /// </summary>
         internal static string Exceptions_Messages_CannotSendAMessageFromAllServices {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageFromAllServices", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot create a message that is send to nobody..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotSendAMessageToNoService {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageToNoService", resourceCulture);
             }
         }
         
@@ -138,6 +156,24 @@ namespace Apollo.Core.Properties {
         internal static string Exceptions_Messages_MissingServiceDependency {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MissingServiceDependency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A kernel service cannot have the KernelService type as dependency..
+        /// </summary>
+        internal static string Exceptions_Messages_ServiceCannotDependOnGenericKernelService {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ServiceCannotDependOnGenericKernelService", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A kernel service cannot have its own type as dependency..
+        /// </summary>
+        internal static string Exceptions_Messages_ServiceCannotDependOnItself {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ServiceCannotDependOnItself", resourceCulture);
             }
         }
         

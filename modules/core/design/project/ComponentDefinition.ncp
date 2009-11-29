@@ -1,7 +1,7 @@
 <Project>
   <Name>ComponentDefinition</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Components - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
@@ -157,8 +157,6 @@ e.g. a action could be defined by a set of coworker methods (on different object
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -173,8 +171,6 @@ e.g. a action could be defined by a set of coworker methods (on different object
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -189,8 +185,6 @@ e.g. a action could be defined by a set of coworker methods (on different object
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="6" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">

@@ -32,6 +32,9 @@ namespace Apollo.Core.Messages
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="senderDns"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
         /// </exception>
@@ -56,11 +59,17 @@ namespace Apollo.Core.Messages
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="senderDns"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.AllServices"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="recipientDns"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="recipientDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
@@ -85,11 +94,17 @@ namespace Apollo.Core.Messages
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="messageId"/> is equal to the <see cref="MessageId.None"/> ID.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="senderDns"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="senderDns"/> is equal to the <see cref="DnsName.AllServices"/> name.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="recipientDns"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown when <paramref name="recipientDns"/> is equal to the <see cref="DnsName.Nobody"/> name.
@@ -103,10 +118,13 @@ namespace Apollo.Core.Messages
                 Enforce.Argument(() => messageId);
                 Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources.Exceptions_Messages_CannotCreateAMessageWithoutId);
 
+                Enforce.Argument(() => senderDns);
                 Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
                 Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.AllServices), Resources.Exceptions_Messages_CannotSendAMessageFromAllServices);
 
-                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                Enforce.Argument(() => recipientDns);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
 
                 Enforce.Argument(() => replyToId);
             }

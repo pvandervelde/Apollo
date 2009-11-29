@@ -35,12 +35,17 @@ namespace Apollo.Core
     /// <serviceType>Project service</serviceType>
     /// </list>
     /// </design>
-    internal sealed partial class Kernel : INeedStartup
+    internal sealed partial class Kernel : MarshalByRefObject, INeedStartup
     {
         /// <summary>
         /// The collection of services that are currently known to the kernel.
         /// </summary>
         private readonly Dictionary<Type, KernelService> m_Services = new Dictionary<Type, KernelService>();
+
+        /// <summary>
+        /// The collection which tracks the connections between a service and it's dependencies.
+        /// </summary>
+        private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = new Dictionary<KernelService, List<ConnectionMap>>();
 
         /// <summary>
         /// The start-up state of the kernel.
@@ -175,7 +180,9 @@ namespace Apollo.Core
                 var typedCollection = new Dictionary<Type, ServiceVertex>();
                 foreach (var pair in m_Services)
                 {
-                    typedCollection.Add(pair.Key, new ServiceVertex(pair.Value));
+                    var vertex = new ServiceVertex(pair.Value);
+                    graph.AddVertex(vertex);
+                    typedCollection.Add(pair.Key, vertex);
                 }
 
                 // create the edges. They point from a dependency to the
@@ -185,12 +192,29 @@ namespace Apollo.Core
                     var target = pair.Value;
                     if (target.HasDependencies)
                     {
-                        var dependencyHolder = target.ServiceAsDependencyHolder();
-                        var dependencies = GetDependencies(dependencyHolder.ServicesToConnectTo());
-                        dependencies.ForEach(service => graph.AddEdge(new Edge<ServiceVertex>(typedCollection[service.GetType()], target)));
+                        // Handle the connections
+                        var dependencies = m_Connections[target.Service];
+                        foreach (var dependent in dependencies)
+                        {
+                            Debug.Assert(typedCollection.ContainsKey(dependent.Applied.GetType()), "Missing a service type.");
+                            var source = typedCollection[dependent.Applied.GetType()];
 
-                        var connections = GetDependencies(dependencyHolder.ServicesToBeAvailable());
-                        connections.ForEach(service => graph.AddEdge(new Edge<ServiceVertex>(typedCollection[service.GetType()], target)));
+                            graph.AddEdge(new Edge<ServiceVertex>(source, target));
+                        }
+
+                        // Handle the available demands
+                        var connections = GetInstalledDependencies(target.ServiceAsDependencyHolder().ServicesToBeAvailable());
+                        foreach (var connection in connections)
+                        {
+                            Debug.Assert(typedCollection.ContainsKey(connection.Value.GetType()), "Missing a service type.");
+                            var source = typedCollection[connection.Value.GetType()];
+
+                            // Remove any duplicate edges before we create them
+                            if (!graph.ContainsEdge(source, target))
+                            {
+                                graph.AddEdge(new Edge<ServiceVertex>(source, target));
+                            }
+                        }
                     }
                 }
             }
@@ -283,46 +307,102 @@ namespace Apollo.Core
             var dependencyHolder = service as IHaveServiceDependencies;
             if (dependencyHolder != null)
             {
-                var selectedService = GetInstalledDependencies(dependencyHolder);
-                selectedService.ForEach(demandedService => dependencyHolder.ConnectTo(demandedService));
+                if (dependencyHolder.ServicesToBeAvailable().Contains(dependencyHolder.GetType()) ||
+                    dependencyHolder.ServicesToConnectTo().Contains(dependencyHolder.GetType()))
+                {
+                    throw new ServiceCannotDependOnItselfException();
+                }
+
+                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof(KernelService)) ||
+                    dependencyHolder.ServicesToConnectTo().Contains(typeof(KernelService)))
+                {
+                    throw new ServiceCannotDependOnGenericKernelServiceException();
+                }
+
+                var selectedService = GetInstalledDependencies(dependencyHolder.ServicesToConnectTo());
+                foreach (var map in selectedService)
+                {
+                    if (!m_Connections.ContainsKey(service))
+                    {
+                        m_Connections.Add(service, new List<ConnectionMap>());
+                    }
+
+                    var connection = m_Connections[service];
+                    connection.Add(new ConnectionMap(map.Key, map.Value));
+                    dependencyHolder.ConnectTo(map.Value);
+                }
             }
 
             // Then check all the existing ones and see what we can add 
             // there.
-            var selectedServices = GetDependentServices(service.GetType());
-            selectedServices.ForEach(selectedService => selectedService.ConnectTo(service));
+            var selectedServices = GetDependentServices(service);
+            foreach (var map in selectedServices)
+            {
+                if (!m_Connections.ContainsKey(map.Value))
+                {
+                    m_Connections.Add(map.Value, new List<ConnectionMap>());
+                }
+
+                var connection = m_Connections[map.Value];
+                connection.Add(new ConnectionMap(map.Key, service));
+
+                var dependent = map.Value as IHaveServiceDependencies;
+                Debug.Assert(dependent != null, "The service should be able to handle dependencies.");
+
+                dependent.ConnectTo(service);
+            }
 
             // Finally add the service
             m_Services.Add(service.GetType(), service);
         }
 
         /// <summary>
-        /// Gets the dependency services that are currently available.
+        /// Gets the dependency services that are currently available based on the given collection of dependencies.
         /// </summary>
-        /// <param name="dependencyHolder">The object for which the dependencies should be determined.</param>
+        /// <param name="demandedServices">The collection of types which should be matched up with the installed services.</param>
         /// <returns>
-        /// A collection of existing services that match the dependency demands of the given object.
+        /// A collection containing a mapping between the demanded dependency and the service that would
+        /// serve for this dependency.
         /// </returns>
-        private IEnumerable<KernelService> GetInstalledDependencies(IHaveServiceDependencies dependencyHolder)
+        /// <design>
+        /// Note that the current connection strategy only works if there are no demands for duplicates OR 
+        /// services with the same interfaces.
+        /// </design>
+        private IEnumerable<KeyValuePair<Type, KernelService>> GetInstalledDependencies(IEnumerable<Type> demandedServices)
         {
-            var demandedServices = dependencyHolder.ServicesToConnectTo();
-            return GetDependencies(demandedServices);
-        }
+            // Create a copy of the available service list. Then when we 
+            // select a service we'll remove it from this list.
+            var available = new List<KernelService>(from service in m_Services select service.Value);
 
-        /// <summary>
-        /// Gets the installed services that match the selection of types in the collection.
-        /// </summary>
-        /// <param name="demandedServices">The collection of demanded service types.</param>
-        /// <returns>
-        /// A collection of existing services that match the dependency demands of the given object.
-        /// </returns>
-        private IEnumerable<KernelService> GetDependencies(IEnumerable<Type> demandedServices)
-        {
-            var selectedService = from storedService in m_Services
-                                  from demandedService in demandedServices
-                                  where demandedService.IsAssignableFrom(storedService.Key)
-                                  select storedService.Value;
-            return selectedService;
+            // Dependencies have just gotten a whole lot more complex
+            // We want to be able to match up interfaces & abstract classes too
+            // The problem is that we only want to pass each service only once
+            var result = new List<KeyValuePair<Type, KernelService>>();
+            foreach (var dependency in demandedServices)
+            {
+                KernelService selected = null;
+                foreach (var storedService in available)
+                {
+                    if (dependency.IsAssignableFrom(storedService.GetType()))
+                    {
+                        selected = storedService;
+                        break;
+                    }
+                }
+
+                if (selected != null)
+                {
+                    available.Remove(selected);
+                    result.Add(new KeyValuePair<Type, KernelService>(dependency, selected));
+                }
+
+                if (available.Count == 0)
+                {
+                    break;
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -330,21 +410,29 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="service">The service type.</param>
         /// <returns>
-        /// A collection of existing services that depend on the specified service type.
+        /// A collection containing a mapping between the demanded dependency and the service that would
+        /// serve for this dependency.
         /// </returns>
-        private IEnumerable<IHaveServiceDependencies> GetDependentServices(Type service)
+        private IEnumerable<KeyValuePair<Type, KernelService>> GetDependentServices(KernelService service)
         {
-            Debug.Assert(typeof(KernelService).IsAssignableFrom(service), "Can only search for a KernelService type.");
+            var result = new List<KeyValuePair<Type, KernelService>>();
+            foreach (var map in m_Services)
+            {
+                var dependencyHolder = map.Value as IHaveServiceDependencies;
+                if (dependencyHolder != null)
+                {
+                    foreach (var dependency in dependencyHolder.ServicesToConnectTo())
+                    {
+                        if (dependency.IsAssignableFrom(service.GetType()))
+                        {
+                            result.Add(new KeyValuePair<Type, KernelService>(dependency, map.Value));
+                            break;
+                        }
+                    }
+                }
+            }
 
-            var dependencyHolders = from demandedService in m_Services
-                                    where (demandedService.Value is IHaveServiceDependencies)
-                                    select (demandedService.Value as IHaveServiceDependencies);
-
-            var selectedServices = from demandedService in dependencyHolders
-                                   from dependency in demandedService.ServicesToConnectTo()
-                                   where dependency.IsAssignableFrom(service)
-                                   select demandedService;
-            return selectedServices;
+            return result;
         }
 
         /// <summary>
@@ -378,15 +466,33 @@ namespace Apollo.Core
             }
 
             // Get all the services that depend on this one.
-            var selectedServices = GetDependentServices(service.GetType());
-            selectedServices.ForEach(selectedService => selectedService.DisconnectFrom(service));
+            var connected = new List<KeyValuePair<KernelService, int>>();
+            foreach (var pair in m_Connections)
+            {
+                int index = pair.Value.FindIndex(map => map.Applied.Equals(service));
+                if (index > -1)
+                {
+                    connected.Add(new KeyValuePair<KernelService, int>(pair.Key, index));
+                }
+            }
+
+            foreach (var map in connected)
+            {
+                ((IHaveServiceDependencies)map.Key).DisconnectFrom(service);
+                m_Connections[map.Key].RemoveAt(map.Value);
+            }
 
             // Disconnect the service from all it's dependencies
             var dependencyHolder = service as IHaveServiceDependencies;
             if (dependencyHolder != null)
             {
-                var selectedService = GetInstalledDependencies(dependencyHolder);
-                selectedService.ForEach(demandedService => dependencyHolder.DisconnectFrom(demandedService));
+                var connections = m_Connections[service];
+                foreach (var map in connections)
+                {
+                    dependencyHolder.DisconnectFrom(map.Applied);
+                }
+
+                m_Connections.Remove(service);
             }
 
             // Finally remove the service from the collection

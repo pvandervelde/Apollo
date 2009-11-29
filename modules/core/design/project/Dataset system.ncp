@@ -1,7 +1,7 @@
 <Project>
   <Name>Dataset system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.0.1143.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Data set - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
@@ -129,6 +129,11 @@ Note that data sets only store differential component information. i.e. the pare
         <Location left="413" top="1341" />
         <Size width="206" height="81" />
       </Entity>
+      <Entity type="Comment">
+        <Text>The builder links to a resolution system which is controlled from the top level project system (or from another service?). </Text>
+        <Location left="85" top="1079" />
+        <Size width="195" height="77" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="8" second="10">
@@ -197,8 +202,8 @@ Note that data sets only store differential component information. i.e. the pare
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>614</X>
-          <Y>528</Y>
+          <X>548</X>
+          <Y>529</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -366,6 +371,14 @@ Note that data sets only store differential component information. i.e. the pare
       <Relationship type="Comment" first="17" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>470</X>
+          <Y>1026</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

@@ -1,7 +1,7 @@
 <Project>
   <Name>Kernel system</Name>
   <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
-    <Name>Untitled</Name>
+    <Name>Kernel - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Class">
@@ -550,6 +550,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="20" second="19">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -564,6 +566,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="20">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -748,8 +752,6 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
