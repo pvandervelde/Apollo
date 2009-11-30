@@ -88,6 +88,7 @@ namespace Apollo.Core
             if ((pipeline != null) && (m_MessageSink == null))
             {
                 m_MessageSink = pipeline;
+                m_MessageSink.RegisterAsSender(this);
             }
         }
 
@@ -100,6 +101,7 @@ namespace Apollo.Core
             var pipeline = dependency as IMessagePipeline;
             if ((pipeline != null) && ReferenceEquals(m_MessageSink, pipeline))
             {
+                m_MessageSink.UnregisterAsSender(this);
                 m_MessageSink = null;
             }
         }
@@ -127,9 +129,23 @@ namespace Apollo.Core
         /// <summary>
         /// Called when a message could not be delivered.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="Apollo.Core.Messages.MessageEventArgs"/> instance containing the event data.</param>
-        public void OnMessageDeliveryFailure(object sender, MessageEventArgs e)
+        /// <param name="messageId">The message ID of the failed message.</param>
+        /// <param name="recipient">The recipient to which the failed message was to be send.</param>
+        /// <param name="information">The information.</param>
+        /// <param name="failureReason">The reason the message delivery failed.</param>
+        public void OnMessageDeliveryFailure(MessageId messageId, DnsName recipient, MessageBody information, IDeliveryFailureReason failureReason)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Called when a message could not be delivered.
+        /// </summary>
+        /// <param name="messageId">The message ID of the failed message.</param>
+        /// <param name="recipient">The recipient to which the failed message was to be send.</param>
+        /// <param name="information">The information.</param>
+        /// <param name="exception">The exception which occurred during the message sending.</param>
+        public void OnMessageDeliveryFailure(MessageId messageId, DnsName recipient, MessageBody information, Exception exception)
         {
             throw new NotImplementedException();
         }

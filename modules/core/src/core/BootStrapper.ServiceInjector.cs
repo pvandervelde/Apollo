@@ -12,7 +12,7 @@ namespace Apollo.Core
     /// <content>
     /// Contains the definition of the <see cref="ServiceInjector"/> class.
     /// </content>
-    public abstract partial class BootStrapper
+    public abstract partial class Bootstrapper
     {
         /// <summary>
         /// A class used to inject kernel services into a specially

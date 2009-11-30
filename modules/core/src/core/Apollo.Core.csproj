@@ -87,7 +87,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -112,6 +112,41 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x86'">
+    <OutputPath>bin\x86\Deploy\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
+    <OutputPath>bin\Deploy\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x64'">
+    <OutputPath>bin\x64\Deploy\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
     <Optimize>true</Optimize>
@@ -119,6 +154,8 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
@@ -161,10 +198,10 @@
     <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
-    <Compile Include="BootStrapper.cs" />
-    <Compile Include="BootStrapper.KernelInjector.cs" />
-    <Compile Include="BootStrapper.ServiceInjector.cs" />
-    <Compile Include="CannotUninstallNonEquivalentServiceException.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="Bootstrapper.KernelInjector.cs" />
+    <Compile Include="Bootstrapper.ServiceInjector.cs" />
+    <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
@@ -183,19 +220,21 @@
     <Compile Include="KernelService.cs" />
     <Compile Include="KernelServiceStartupFailedException.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
+    <Compile Include="Messages\CouldNotCreateMessageReason.cs" />
     <Compile Include="Messages\DnsName.cs" />
+    <Compile Include="Messages\DuplicateDnsNameException.cs" />
     <Compile Include="Messages\IDeliveryFailureReason.cs" />
     <Compile Include="Messages\IDnsNameObject.cs" />
     <Compile Include="Messages\IMessagePipeline.cs" />
-    <Compile Include="Messages\INameService.cs" />
     <Compile Include="Messages\IProcessMessages.cs" />
     <Compile Include="Messages\ISendMessages.cs" />
     <Compile Include="Messages\KernelMessage.cs" />
     <Compile Include="Messages\MessageBody.cs" />
-    <Compile Include="Messages\MessageEventArgs.cs" />
     <Compile Include="Messages\MessageHeader.cs" />
     <Compile Include="Messages\MessageId.cs" />
     <Compile Include="Messages\MessagePipeline.cs" />
+    <Compile Include="Messages\MessageRecipientUnknownReason.cs" />
+    <Compile Include="Messages\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="PrivateBinPathOption.cs" />
     <Compile Include="PrivateBinPathRequirementsAttribute.cs" />

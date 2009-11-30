@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -49,10 +50,10 @@ namespace Apollo.Core
     /// </serviceType>
     /// </list>
     /// </design>
-    public abstract partial class BootStrapper : IBootstrapper
+    public abstract partial class Bootstrapper : IBootstrapper
     {
         /// <summary>
-        /// Gets all the service types stored in the current assembly.
+        /// Finds all the service types stored in the current assembly.
         /// </summary>
         /// <returns>
         /// A collection containing all the <see cref="Type"/> objects that derive from <see cref="KernelService"/>.
@@ -60,7 +61,7 @@ namespace Apollo.Core
         /// <todo>
         /// Perform the search for the services via a IOC container.
         /// </todo>
-        private static IEnumerable<Type> GetServiceTypes()
+        private static IEnumerable<Type> FindServiceTypes()
         {
             var serviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
                                where typeof(KernelService).IsAssignableFrom(type) &&
@@ -106,7 +107,7 @@ namespace Apollo.Core
         private readonly ITrackProgress m_Progress;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BootStrapper"/> class.
+        /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
         /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
         /// <param name="exceptionHandlerFactory">The factory used for the creation of <see cref="IExceptionHandler"/> objects.</param>
@@ -120,7 +121,7 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
-        protected BootStrapper(
+        protected Bootstrapper(
             IKernelStartInfo startInfo, 
             Func<IExceptionHandler> exceptionHandlerFactory, 
             ITrackProgress progress)
@@ -160,7 +161,7 @@ namespace Apollo.Core
             var kernel = CreateKernel(coreBasePath);
 
             // Scan the current assembly for all exported parts.
-            var serviceTypes = GetServiceTypes();
+            var serviceTypes = FindServiceTypes();
 
             // Create all the services and pass them to the kernel
             foreach (var serviceType in serviceTypes)
@@ -281,6 +282,10 @@ namespace Apollo.Core
         /// <param name="serviceType">Type of the service.</param>
         /// <param name="files">The files.</param>
         /// <param name="directories">The directories.</param>
+        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", 
+            Justification = "It seems overkill to define a custom type to encapsulate the return values.")]
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "The use of the Type class indicates better what we want to achieve.")]
         private void SelectPaths(Type serviceType, out Func<IEnumerable<string>> files, out Func<IEnumerable<string>> directories)
         {
             // Determine which log paths should be applied. 
@@ -310,8 +315,8 @@ namespace Apollo.Core
                     case PrivateBinPathOption.UserInterface:
                         filePaths = ConcatSequences(filePaths, m_StartInfo.UserInterfaceAssemblies);
                         break;
-                    case PrivateBinPathOption.Plugins:
-                        directoryPaths = m_StartInfo.PluginDirectories;
+                    case PrivateBinPathOption.PlugIns:
+                        directoryPaths = m_StartInfo.PlugInDirectories;
                         break;
                     default:
                         throw new NotImplementedException();
@@ -342,6 +347,8 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
             EventHandler<StartupProgressEventArgs> local = StartupProgress;

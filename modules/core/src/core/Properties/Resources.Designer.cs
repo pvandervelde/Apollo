@@ -115,6 +115,24 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified DNS name is a duplicate of another DNS name..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateDnsName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateDnsName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified DNS name is a duplicate of another DNS name. The name is: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateDnsName_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateDnsName_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The startup of a service failed..
         /// </summary>
         internal static string Exceptions_Messages_KernelServiceStartupFailed {
@@ -187,11 +205,93 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified DNS name is unknown..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownDnsName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownDnsName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified DNS name is unknown. The name is: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownDnsName_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownDnsName_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No kernel service of the given type is installed..
         /// </summary>
         internal static string Exceptions_Messages_UnknownKernelServiceType {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownKernelServiceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new message listener object was added with name: {0}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_ListenerAdded {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_ListenerAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new message listener object was removed with name: {0}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_ListenerRemoved {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_ListenerRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The delivery of message [{2}] has failed because {3}. The message was send by {0} to {1}..
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to report the message delivery failure to {0}. The message [{2}] was send to {1} and failed because {3}. The stack trace is: {4}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReas" +
+                        "onAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The message pipeline was started..
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_PipelineStarted {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_PipelineStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new message sender object was added with name: {0}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_SenderAdded {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_SenderAdded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A new message sender object was removed with name: {0}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_SenderRemoved {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_SenderRemoved", resourceCulture);
             }
         }
     }

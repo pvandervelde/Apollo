@@ -505,7 +505,7 @@ namespace Apollo.Core.Test.Unit
             var proxy = new CoreProxy();
 
             var kernel = new Kernel();
-            Assert.Throws<CannotUninstallNonEquivalentServiceException>(() => kernel.Uninstall(proxy));
+            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(proxy));
         }
 
         [Test]

@@ -20,21 +20,21 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="ProgressMarkerTypeAttribute"/> class.
         /// </summary>
-        /// <param name="progressMarkerType">The <see cref="Type"/> which implements the <see cref="IProgressMark"/>.</param>
+        /// <param name="markerType">The <see cref="Type"/> which implements the <see cref="IProgressMark"/>.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="progressMarkerType"/> is <see langword="null" />.
+        /// Thrown when <paramref name="markerType"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="InvalidOperationException">
-        /// Thrown when <paramref name="progressMarkerType"/> does not implement the <see cref="IProgressMark"/> interface.
+        /// Thrown when <paramref name="markerType"/> does not implement the <see cref="IProgressMark"/> interface.
         /// </exception>
-        public ProgressMarkerTypeAttribute(Type progressMarkerType)
+        public ProgressMarkerTypeAttribute(Type markerType)
         {
             {
-                Enforce.Argument(() => progressMarkerType);
-                Enforce.That(typeof(IProgressMark).IsAssignableFrom(progressMarkerType));
+                Enforce.Argument(() => markerType);
+                Enforce.That(typeof(IProgressMark).IsAssignableFrom(markerType));
             }
 
-            MarkerType = progressMarkerType;
+            MarkerType = markerType;
         }
 
         /// <summary>

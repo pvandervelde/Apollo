@@ -37,7 +37,7 @@
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
         <Access>Public</Access>
-        <Location left="1914" top="256" />
+        <Location left="1414" top="402" />
         <Size width="347" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void ProcessMessages(Message message)</Member>
@@ -61,10 +61,11 @@
       <Entity type="Interface">
         <Name>ISendMessages</Name>
         <Access>Public</Access>
-        <Location left="1456" top="293" />
-        <Size width="419" height="102" />
+        <Location left="1414" top="213" />
+        <Size width="739" height="95" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
+        <Member type="Method">void OnMessageDeliveryFailure(MesageId messageId, DnsName recipient, MessageBody information, IDeliveryFailureReason failureReason)</Member>
+        <Member type="Method">void OnMessageDeliveryFailure(MesageId messageId, DnsName recipient, MessageBody information, Exception exception)</Member>
       </Entity>
       <Entity type="Structure">
         <Name>MessageHeader</Name>
@@ -109,17 +110,6 @@ The other DNS names (which are not related to a specific service) are:
         <Text>What do we store in the message body. It must be possible for services to select a message based on stuff in the body too so the types have to be known a head of time...</Text>
         <Location left="1141" top="323" />
         <Size width="215" height="100" />
-      </Entity>
-      <Entity type="Class">
-        <Name>MessageEventArgs</Name>
-        <Access>Public</Access>
-        <Location left="1917" top="46" />
-        <Size width="408" height="128" />
-        <Collapsed>False</Collapsed>
-        <Member type="Constructor">public MessageEventArgs(MessageId messageId, IDeliveryFailure deliveryFailure)</Member>
-        <Member type="Property">public MessageId Id { get; private set; }</Member>
-        <Member type="Property">public IDeliveryFailure Failure { get; private set; }</Member>
-        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IDeliveryFailure</Name>
@@ -176,13 +166,13 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
       </Entity>
       <Entity type="Comment">
         <Text>Must be serializable</Text>
-        <Location left="1705" top="62" />
+        <Location left="1652" top="59" />
         <Size width="124" height="50" />
       </Entity>
       <Entity type="Interface">
         <Name>IDnsNameObject</Name>
         <Access>Public</Access>
-        <Location left="1795" top="539" />
+        <Location left="1900" top="435" />
         <Size width="193" height="90" />
         <Collapsed>False</Collapsed>
         <Member type="Property">DnsName Name { get; }</Member>
@@ -214,7 +204,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="0" second="11">
+      <Relationship type="Association" first="0" second="10">
         <Label>Handles</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -223,19 +213,19 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Comment" first="8" second="12">
+      <Relationship type="Comment" first="8" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="13" second="5">
+      <Relationship type="Comment" first="12" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="13" second="11">
+      <Relationship type="Comment" first="12" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="13" second="12">
+      <Relationship type="Comment" first="12" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -247,7 +237,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>259</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="14" second="0">
+      <Relationship type="Comment" first="13" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -255,7 +245,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>848</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="15" second="0">
+      <Relationship type="Comment" first="14" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -263,7 +253,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>1170</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="13" second="6">
+      <Relationship type="Comment" first="12" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -275,7 +265,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>91</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="13" second="3">
+      <Relationship type="Comment" first="12" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -287,41 +277,45 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>414</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="16" second="10">
+      <Relationship type="Comment" first="15" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1545</X>
+          <Y>157</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="16" second="9">
+      <Relationship type="Generalization" first="4" second="16">
         <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1941</X>
+          <Y>410</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="16">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1800</X>
-          <Y>137</Y>
+          <X>1799</X>
+          <Y>467</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1875</X>
-          <Y>161</Y>
+          <X>1845</X>
+          <Y>467</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="4" second="17">
+      <Relationship type="Comment" first="17" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1836</X>
-          <Y>514</Y>
-        </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="2" second="17">
+      <Relationship type="Association" first="4" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1946</X>
-          <Y>514</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="18" second="11">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>

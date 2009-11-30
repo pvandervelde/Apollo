@@ -41,6 +41,6 @@ namespace Apollo.Core
         /// <summary>
         /// Indicates that the plugin set of paths should be provided.
         /// </summary>
-        Plugins,
+        PlugIns,
     }
 }

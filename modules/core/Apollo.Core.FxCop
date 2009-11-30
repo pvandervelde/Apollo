@@ -40,14 +40,23 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2009-06-29 20:23:15Z">
+ <FxCopReport Version="1.36" LastAnalysis="2009-11-30 07:39:20Z">
   <Namespaces>
-   <Namespace Name="Apollo.Utils">
+   <Namespace Name="Apollo.Utils.ExceptionHandling">
     <Messages>
-     <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-06-26 14:40:34Z">
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2009-11-29 09:24:44Z">
+      <Issue>
+       <Item>Apollo.Utils.ExceptionHandling</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Apollo.Utils.Fusion">
+    <Messages>
+     <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-11-29 09:24:44Z" FixCategory="NonBreaking">
       <Issue Name="Namespace">
        <Item>Utils</Item>
-       <Item>Apollo.Utils</Item>
+       <Item>Apollo.Utils.Fusion</Item>
       </Issue>
      </Message>
     </Messages>
@@ -67,36 +76,33 @@
       <Namespaces>
        <Namespace Name="Apollo.Core">
         <Types>
-         <Type Name="CoreProxy">
-          <Messages>
-           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Created="2009-06-26 14:40:34Z">
-            <Issue>
-             <Item>'CoreProxy'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="INeedStartup">
+         <Type Name="AppDomainBuilder">
           <Members>
-           <Member Name="#GetStartupState()">
+           <Member Name="#Create(System.String,System.IO.DirectoryInfo)">
             <Messages>
-             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2009-06-26 14:40:34Z">
-              <Issue Certainty="50">
-               <Item>'INeedStartup.GetStartupState()'</Item>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2009-11-30 06:28:31Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core" File="AppDomainBuilder.cs" Line="49">
+               <Item>'AppDomainBuilder.Create(string, DirectoryInfo)'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
           </Members>
          </Type>
-         <Type Name="IOwnServices">
+         <Type Name="Bootstrapper">
           <Members>
-           <Member Name="#Stop(Apollo.Core.KernelService)">
+           <Member Name="#PrepareUserInterfaceAppDomain()">
             <Messages>
-             <Message Id="Stop" TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716" Created="2009-06-26 14:40:34Z">
-              <Issue Name="Member">
-               <Item>'IOwnServices.Stop(KernelService)'</Item>
-               <Item>Stop</Item>
+             <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Created="2009-11-30 05:36:59Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core" File="Bootstrapper.cs" Line="190">
+               <Item>'Bootstrapper.PrepareUserInterfaceAppDomain()'</Item>
+               <Item>'AppDomain.AssemblyResolve.add(ResolveEventHandler)'</Item>
+               <Item>&#xD;&#xA;   -&gt;'Bootstrapper.PrepareUserInterfaceAppDomain()'&#xD;&#xA;   -&gt;'Bootstrapper.PrepareUserInterfaceAppDomain()'&#xD;&#xA;   -&gt;'Bootstrapper.Load()'</Item>
+              </Issue>
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core" File="Bootstrapper.cs" Line="190">
+               <Item>'Bootstrapper.PrepareUserInterfaceAppDomain()'</Item>
+               <Item>'AppDomain.UnhandledException.add(UnhandledExceptionEventHandler)'</Item>
+               <Item>&#xD;&#xA;   -&gt;'Bootstrapper.PrepareUserInterfaceAppDomain()'&#xD;&#xA;   -&gt;'Bootstrapper.PrepareUserInterfaceAppDomain()'&#xD;&#xA;   -&gt;'Bootstrapper.Load()'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -104,13 +110,82 @@
           </Members>
          </Type>
          <Type Name="Kernel">
+          <Members>
+           <Member Name="#GetDependentServices(Apollo.Core.KernelService)">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2009-11-29 09:24:44Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core" File="Kernel.cs" Line="423">
+               <Item>'Kernel.GetDependentServices(KernelService)'</Item>
+               <Item>'IEnumerable&lt;KeyValuePair&lt;Type, KernelService&gt;&gt;'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Core.Messages">
+        <Types>
+         <Type Name="DnsName">
+          <Members>
+           <Member Name="#CompareTo(Apollo.Core.Messages.DnsName)">
+            <Messages>
+             <Message Id="System.String.CompareTo(System.String)" TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307" Created="2009-11-29 09:24:44Z">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core\Messages" File="DnsName.cs" Line="205">
+               <Item>'DnsName.CompareTo(DnsName)'</Item>
+               <Item>'string.CompareTo(string)'</Item>
+               <Item>'string.Compare(string, string, StringComparison)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IDeliveryFailureReason">
           <Messages>
-           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Created="2009-06-26 14:40:34Z">
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-11-29 09:24:44Z">
             <Issue>
-             <Item>'Kernel'</Item>
+             <Item>'IDeliveryFailureReason'</Item>
             </Issue>
            </Message>
           </Messages>
+         </Type>
+         <Type Name="MessagePipeline">
+          <Members>
+           <Member Name="#Log(System.String)">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2009-11-29 09:24:44Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core\Messages" File="MessagePipeline.cs" Line="51">
+               <Item>'MessagePipeline.Log(string)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="message" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2009-11-29 09:24:44Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\core\src\core\Messages" File="MessagePipeline.cs" Line="51">
+               <Item>'message'</Item>
+               <Item>'MessagePipeline.Log(string)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Utils.Fusion">
+        <Types>
+         <Type Name="FusionHelper">
+          <Members>
+           <Member Name="#AssemblyLoader">
+            <Messages>
+             <Message TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044" Created="2009-11-29 09:24:44Z" FixCategory="NonBreaking">
+              <Issue Name="MakeMoreAccessible" Path="d:\documents\petrik\software\apollo\code\unstable\prealpha\modules\utils\src\utils.srconly\Fusion" File="FusionHelper.cs" Line="299">
+               <Item>'FusionHelper.AssemblyLoader'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
          </Type>
         </Types>
        </Namespace>
@@ -127,12 +202,6 @@
          <Item>'Apollo.Utils.dll'</Item>
         </Issue>
        </Message>
-       <Message Id="Utils" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2009-06-26 14:40:34Z">
-        <Issue Name="Assembly">
-         <Item>Utils</Item>
-         <Item>'Apollo.Utils.dll'</Item>
-        </Issue>
-       </Message>
       </Messages>
       <Namespaces>
        <Namespace Name="Apollo.Utils">
@@ -142,6 +211,42 @@
            <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-06-26 14:40:34Z">
             <Issue>
              <Item>'ILockObject'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="IProgressMark">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-11-29 09:24:44Z">
+            <Issue>
+             <Item>'IProgressMark'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Utils.Configuration">
+        <Types>
+         <Type Name="IConfiguration">
+          <Members>
+           <Member Name="#Value`1(Apollo.Utils.Configuration.IConfigurationKey)">
+            <Messages>
+             <Message TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004" Created="2009-11-29 09:24:44Z">
+              <Issue>
+               <Item>'IConfiguration.Value&lt;T&gt;(IConfigurationKey)'</Item>
+               <Item>'T'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="IConfigurationKey">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-11-29 09:24:44Z">
+            <Issue>
+             <Item>'IConfigurationKey'</Item>
             </Issue>
            </Message>
           </Messages>
@@ -160,18 +265,33 @@
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
-   <Rule TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812">
-    <Resolution Name="Default">{0} is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static methods, consider adding a private constructor to prevent the compiler from generating a default constructor.</Resolution>
+   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
+    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
+    <Resolution Name="Default">{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006">
+    <Resolution Name="Default">Consider a design where {0} doesn't nest generic type {1}.</Resolution>
+   </Rule>
+   <Rule TypeName="GenericMethodsShouldProvideTypeParameter" Category="Microsoft.Design" CheckId="CA1004">
+    <Resolution Name="Default">Consider a design where {0} doesn't require explicit type parameter {1} in any call to it.</Resolution>
    </Rule>
    <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
     <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
     <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
    </Rule>
-   <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
-    <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
    </Rule>
-   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
-    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
+   <Rule TypeName="PropertiesShouldNotBeWriteOnly" Category="Microsoft.Design" CheckId="CA1044">
+    <Resolution Name="MakeMoreAccessible">Because the property getter for {0} is less visible than its setter, either increase the accessibility of its getter or decrease the accessibility of its setter.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307">
+    <Resolution Name="Default">{0} makes a call to {1} that does not explicitly provide a StringComparison. This should be replaced with a call to {2}.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

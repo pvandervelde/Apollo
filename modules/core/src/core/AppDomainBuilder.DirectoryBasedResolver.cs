@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Apollo.Utils.Fusion;
@@ -31,6 +32,8 @@ namespace Apollo.Core
             /// Explicitly store the directory paths in strings because DirectoryInfo objects are eventually
             /// nuked because DirectoryInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
+            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
             private Func<IEnumerable<string>> m_Directories;
 
             /// <summary>
@@ -42,6 +45,8 @@ namespace Apollo.Core
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="directoryPaths"/> is <see langword="null" />.
             /// </exception>
+            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
             public void StoreDirectoryPaths(Func<IEnumerable<string>> directoryPaths)
             {
                 {

@@ -215,9 +215,10 @@ namespace Apollo.Core.Messages
                 return false;
             }
 
-            if (obj is MessageHeader)
+            var header = obj as MessageHeader;
+            if (header != null)
             {
-                return Equals((MessageHeader)obj);
+                return Equals(header);
             }
 
             return false;

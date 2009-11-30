@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using Apollo.Utils;
 
 namespace Apollo.Core.Messages
@@ -76,7 +77,7 @@ namespace Apollo.Core.Messages
         /// </returns>
         public override string ToString()
         {
-            return string.Format("Message ID with number: {0}", InternalValue);
+            return string.Format(CultureInfo.InvariantCulture, "Message ID with number: {0}", InternalValue);
         }
     }
 }

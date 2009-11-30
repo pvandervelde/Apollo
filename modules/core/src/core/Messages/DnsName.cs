@@ -31,6 +31,98 @@ namespace Apollo.Core.Messages
         private static readonly DnsName s_Nobody = new DnsName(@"Nobody");
 
         /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(DnsName first, DnsName second)
+        {
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            return first.Equals(second);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(DnsName first, DnsName second)
+        {
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            return !first.Equals(second);
+        }
+
+        /// <summary>
+        /// Implements the operator &gt;.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator >(DnsName first, DnsName second)
+        {
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return false;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            return first.CompareTo(second) > 0;
+        }
+
+        /// <summary>
+        /// Implements the operator &lt;.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator <(DnsName first, DnsName second)
+        {
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return false;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            return first.CompareTo(second) < 0;
+        }
+
+        /// <summary>
         /// Gets the <c>DnsName</c> for the combination of all services.
         /// Any messages send with this <c>DnsName</c> as recipient will
         /// be send to all active services, except for the originating 
@@ -138,12 +230,15 @@ namespace Apollo.Core.Messages
                 return 1;
             }
 
-            if (!(obj is DnsName))
-            { 
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator.
+            var name = obj as DnsName;
+            if (ReferenceEquals(name, null))
+            {
                 throw new ArgumentException(String.Format(CultureInfo.InvariantCulture, @"Cannot compare these objects: {0} and {1}", this, obj));
             }
 
-            return CompareTo((DnsName)obj);
+            return CompareTo(name);
         }
 
         /// <summary>
@@ -176,9 +271,12 @@ namespace Apollo.Core.Messages
                 return false;
             }
 
-            if (obj is DnsName)
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator.
+            var name = obj as DnsName;
+            if (!ReferenceEquals(name, null))
             {
-                return Equals((DnsName)obj);
+                return Equals(name);
             }
 
             return false;

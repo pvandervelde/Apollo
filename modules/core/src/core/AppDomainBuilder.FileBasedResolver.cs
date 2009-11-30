@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -29,6 +30,8 @@ namespace Apollo.Core
             /// Explicitly store the file paths in strings because FileInfo objects are eventually
             /// nuked because FileInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
+            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
             private Func<IEnumerable<string>> m_Files;
 
             /// <summary>
@@ -40,6 +43,8 @@ namespace Apollo.Core
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="filePaths"/> is <see langword="null" />.
             /// </exception>
+            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
             public void StoreFilePaths(Func<IEnumerable<string>> filePaths)
             {
                 {

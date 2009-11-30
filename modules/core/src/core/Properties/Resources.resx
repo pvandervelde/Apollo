@@ -135,6 +135,12 @@
   <data name="Exceptions_Messages_CannotUninstallNonEquivalentService" xml:space="preserve">
     <value>Cannot uninstall the service. The provided service is not the service which is installed. Please use the original service when uninstalling.</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateDnsName" xml:space="preserve">
+    <value>The specified DNS name is a duplicate of another DNS name.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateDnsName_WithName" xml:space="preserve">
+    <value>The specified DNS name is a duplicate of another DNS name. The name is: {0}</value>
+  </data>
   <data name="Exceptions_Messages_KernelServiceStartupFailed" xml:space="preserve">
     <value>The startup of a service failed.</value>
   </data>
@@ -159,7 +165,34 @@
   <data name="Exceptions_Messages_ServiceTypeAlreadyInstalled" xml:space="preserve">
     <value>A service object of the given type is already installed.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownDnsName" xml:space="preserve">
+    <value>The specified DNS name is unknown.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownDnsName_WithName" xml:space="preserve">
+    <value>The specified DNS name is unknown. The name is: {0}</value>
+  </data>
   <data name="Exceptions_Messages_UnknownKernelServiceType" xml:space="preserve">
     <value>No kernel service of the given type is installed.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_ListenerAdded" xml:space="preserve">
+    <value>A new message listener object was added with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_ListenerRemoved" xml:space="preserve">
+    <value>A new message listener object was removed with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason" xml:space="preserve">
+    <value>The delivery of message [{2}] has failed because {3}. The message was send by {0} to {1}.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException" xml:space="preserve">
+    <value>Failed to report the message delivery failure to {0}. The message [{2}] was send to {1} and failed because {3}. The stack trace is: {4}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_PipelineStarted" xml:space="preserve">
+    <value>The message pipeline was started.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_SenderAdded" xml:space="preserve">
+    <value>A new message sender object was added with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_SenderRemoved" xml:space="preserve">
+    <value>A new message sender object was removed with name: {0}</value>
   </data>
 </root>
