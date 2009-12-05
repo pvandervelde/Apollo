@@ -104,8 +104,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -156,37 +154,37 @@
       <Entity type="Interface">
         <Name>IHoldPluginInformation</Name>
         <Access>Public</Access>
-        <Location left="169" top="106" />
+        <Location left="170" top="255" />
         <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Holds information about the different object types availabe. Also knows about the different connections etc.</Text>
-        <Location left="471" top="106" />
+        <Location left="472" top="255" />
         <Size width="167" height="78" />
       </Entity>
       <Entity type="Interface">
         <Name>IStoreConnections</Name>
         <Access>Public</Access>
-        <Location left="149" top="520" />
+        <Location left="150" top="669" />
         <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IConnection</Name>
         <Access>Public</Access>
-        <Location left="149" top="732" />
+        <Location left="150" top="881" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Stores information about the connection between a dependency and a dependent. This information exactly determines which dependency this is. </Text>
-        <Location left="444" top="725" />
+        <Location left="445" top="874" />
         <Size width="174" height="102" />
       </Entity>
       <Entity type="Comment">
         <Text>Stores information about all connections for all depents. Each connection stores enough information to uniquely identify it. Even in the face of multiple requests for the same type etc.</Text>
-        <Location left="439" top="517" />
+        <Location left="440" top="666" />
         <Size width="179" height="109" />
       </Entity>
       <Entity type="Comment">
@@ -194,13 +192,13 @@
 - If we make this mechanism available over the entire application then we can allow the higher level components to create substitutions too. That way we could allow the project to setup the resolvers for different simulation components based on the type of simulation that the user has selected. When using this system we'll get a sort of distributed, dynamic IOC container where all the reference types get filled in at the last possible minute.
 - We'll need to figure out how we are going to store all this information though. We could mabye use an actual IOC container and dynamically create builders (which we can discard when ever we want)
 - Another issue is figuring out a way to be able to load components without having the entire  object graph availabe. We might be able to create dynamic proxies that only load up their suggested component once they are needed?</Text>
-        <Location left="1183" top="58" />
+        <Location left="1184" top="207" />
         <Size width="423" height="254" />
       </Entity>
       <Entity type="Delegate">
         <Name>FindLinkDelegate</Name>
         <Access>Public</Access>
-        <Location left="853" top="134" />
+        <Location left="854" top="283" />
         <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
         <ReturnType>ILink</ReturnType>
@@ -208,21 +206,28 @@
       <Entity type="Interface">
         <Name>IMapRequestsToDependencies</Name>
         <Access>Public</Access>
-        <Location left="851" top="366" />
+        <Location left="852" top="515" />
         <Size width="187" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IStoreActiveComponents</Name>
         <Access>Public</Access>
-        <Location left="1207" top="552" />
+        <Location left="1208" top="701" />
         <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Stores links to all the active components that should be considered for plug-in use.</Text>
-        <Location left="1458" top="550" />
+        <Location left="1459" top="699" />
         <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need some kind of templating system to auto-load components based on property values.Does this need to be in the UI or in the project?
+
+Maybe also define tool sets which are collections of tools with hooks. Problem will be how to define the hooks.</Text>
+        <Location left="821" top="42" />
+        <Size width="231" height="132" />
       </Entity>
     </Entities>
     <Relationships>
@@ -231,8 +236,6 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -251,21 +254,17 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>806</X>
-          <Y>396</Y>
+          <X>807</X>
+          <Y>545</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
@@ -274,13 +273,11 @@
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1112</X>
-          <Y>391</Y>
+          <X>1113</X>
+          <Y>540</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -289,6 +286,14 @@
       <Relationship type="Comment" first="10" second="9">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="11" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1349</X>
+          <Y>182</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

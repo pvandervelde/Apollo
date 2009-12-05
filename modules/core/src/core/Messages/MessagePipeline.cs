@@ -1,8 +1,8 @@
-﻿//-----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright company="P. van der Velde">
 //     Copyright (c) P. van der Velde. All rights reserved.
 // </copyright>
-//-----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -21,38 +21,21 @@ namespace Apollo.Core.Messages
     internal sealed class MessagePipeline : KernelService, IMessagePipeline
     {
         /// <summary>
-        /// The object used to take locks out on.
-        /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
-
-        /// <summary>
         /// The collection of objects that have registered to receive messages.
         /// </summary>
         private readonly Dictionary<DnsName, IProcessMessages> m_Listeners = new Dictionary<DnsName, IProcessMessages>();
+
+        /// <summary>
+        /// The object used to take locks out on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
 
         /// <summary>
         /// The collection of objects that have registered to send messages.
         /// </summary>
         private readonly Dictionary<DnsName, ISendMessages> m_Senders = new Dictionary<DnsName, ISendMessages>();
 
-        /// <summary>
-        /// Starts the service.
-        /// </summary>
-        protected override void StartService()
-        {
-            Log(Resources.MessagePipeline_LogMessage_PipelineStarted);
-        }
-
-        /// <summary>
-        /// Sends out a log message.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        private void Log(string message)
-        { 
-            // Create a log message
-            // Send the message to the log service if it exists.
-            // throw new NotImplementedException();
-        }
+        #region IMessagePipeline Members
 
         /// <summary>
         /// Registers as listener.
@@ -78,9 +61,9 @@ namespace Apollo.Core.Messages
             }
 
             Log(string.Format(
-                CultureInfo.InvariantCulture, 
-                Resources.MessagePipeline_LogMessage_ListenerAdded, 
-                service.Name));
+                    CultureInfo.InvariantCulture,
+                    Resources.MessagePipeline_LogMessage_ListenerAdded,
+                    service.Name));
         }
 
         /// <summary>
@@ -107,9 +90,9 @@ namespace Apollo.Core.Messages
             }
 
             Log(string.Format(
-                CultureInfo.InvariantCulture,
-                Resources.MessagePipeline_LogMessage_SenderAdded,
-                service.Name));
+                    CultureInfo.InvariantCulture,
+                    Resources.MessagePipeline_LogMessage_SenderAdded,
+                    service.Name));
         }
 
         /// <summary>
@@ -139,32 +122,6 @@ namespace Apollo.Core.Messages
         }
 
         /// <summary>
-        /// Unregisters the specified service.
-        /// </summary>
-        /// <param name="service">The service.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="service"/> is <see langword="null" />.
-        /// </exception>
-        public void Unregister(object service)
-        {
-            {
-                Enforce.Argument(() => service);
-            }
-
-            var listener = service as IProcessMessages;
-            if (listener != null)
-            {
-                UnregisterAsListener(listener);
-            }
-
-            var sender = service as ISendMessages;
-            if (sender != null)
-            {
-                UnregisterAsSender(sender);
-            }
-        }
-
-        /// <summary>
         /// Unregisters as listener.
         /// </summary>
         /// <param name="service">The service.</param>
@@ -185,9 +142,9 @@ namespace Apollo.Core.Messages
             }
 
             Log(string.Format(
-                CultureInfo.InvariantCulture,
-                Resources.MessagePipeline_LogMessage_ListenerRemoved,
-                service.Name));
+                    CultureInfo.InvariantCulture,
+                    Resources.MessagePipeline_LogMessage_ListenerRemoved,
+                    service.Name));
         }
 
         /// <summary>
@@ -211,9 +168,35 @@ namespace Apollo.Core.Messages
             }
 
             Log(string.Format(
-                CultureInfo.InvariantCulture,
-                Resources.MessagePipeline_LogMessage_SenderRemoved,
-                service.Name));
+                    CultureInfo.InvariantCulture,
+                    Resources.MessagePipeline_LogMessage_SenderRemoved,
+                    service.Name));
+        }
+
+        /// <summary>
+        /// Unregisters the specified service.
+        /// </summary>
+        /// <param name="service">The service.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="service"/> is <see langword="null" />.
+        /// </exception>
+        public void Unregister(object service)
+        {
+            {
+                Enforce.Argument(() => service);
+            }
+
+            var listener = service as IProcessMessages;
+            if (listener != null)
+            {
+                UnregisterAsListener(listener);
+            }
+
+            var sender = service as ISendMessages;
+            if (sender != null)
+            {
+                UnregisterAsSender(sender);
+            }
         }
 
         /// <summary>
@@ -242,13 +225,20 @@ namespace Apollo.Core.Messages
         {
             {
                 Enforce.Argument(() => sender);
-                Enforce.With<ArgumentException>(sender.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
-                Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
-                Enforce.With<ArgumentException>(!sender.Equals(DnsName.AllServices), Resources.Exceptions_Messages_CannotSendAMessageFromAllServices);
+                Enforce.With<ArgumentException>(
+                    !sender.Equals(DnsName.Nobody),
+                    Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                Enforce.With<ArgumentException>(
+                    !sender.Equals(DnsName.AllServices),
+                    Resources.Exceptions_Messages_CannotSendAMessageFromAllServices);
 
                 Enforce.Argument(() => recipient);
-                Enforce.With<ArgumentException>(!recipient.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotSendAMessageToNoService);
-                Enforce.With<ArgumentException>(!recipient.Equals(sender), Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                Enforce.With<ArgumentException>(
+                    !recipient.Equals(DnsName.Nobody),
+                    Resources.Exceptions_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(
+                    !recipient.Equals(sender),
+                    Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
 
                 Enforce.Argument(() => information);
                 Enforce.Argument(() => inReplyTo);
@@ -277,9 +267,18 @@ namespace Apollo.Core.Messages
                 throw new UnknownDnsNameException(sender);
             }
 
-            // Find the recipient
-            IProcessMessages recipientObj = null;
-            lock (m_Lock)
+            // Find the recipients
+            var recipients = new List<IProcessMessages>();
+            if (recipient == DnsName.AllServices)
+            {
+                // If the message gets send to lots of recipients then
+                // we don't care if there are 0, 1, or many.
+                lock (m_Lock)
+                {
+                    recipients.AddRange(m_Listeners.Values);
+                }
+            }
+            else
             {
                 // See if the recipient exists. If it does then
                 // grab it.
@@ -287,60 +286,114 @@ namespace Apollo.Core.Messages
                 // for the least amount of time.
                 if (m_Listeners.ContainsKey(recipient))
                 {
-                    recipientObj = m_Listeners[recipient];
+                    IProcessMessages recipientObj;
+                    lock (m_Lock)
+                    {
+                        recipientObj = m_Listeners[recipient];
+                    }
+
+                    if (recipientObj == null)
+                    {
+                        var failureReason = new MessageRecipientUnknownReason();
+                        ReportErrorToMessageSender(senderObj, recipient, MessageId.None, information, failureReason);
+
+                        return MessageId.None;
+                    }
+
+                    recipients.Add(recipientObj);
                 }
-            }
-
-            if (recipientObj == null)
-            {
-                var failureReason = new MessageRecipientUnknownReason();
-                ReportErrorToMessageSender(senderObj, recipient, MessageId.None, information, failureReason);
-
-                return MessageId.None;
             }
 
             // Get the ID number. We don't expect this to
             // fail and if it does we're in so much trouble that
             // we would want the system to die anyway.
+            return SendMessage(senderObj, recipients, information, inReplyTo);
+        }
+
+        /// <summary>
+        /// Sends the message to the list of recipients.
+        /// </summary>
+        /// <remarks>
+        /// This method tries to send out the message to all recipients. If multiple
+        /// recipients throw an exception then the sender will get multiple error notifications.
+        /// </remarks>
+        /// <param name="senderObj">The sender.</param>
+        /// <param name="recipientObjs">The collection of recipients.</param>
+        /// <param name="information">The information that needs to be send out.</param>
+        /// <param name="inReplyTo">The ID number of the message to which this is a reply.</param>
+        /// <returns>
+        /// The ID number of the message that was send.
+        /// </returns>
+        private MessageId SendMessage(
+            ISendMessages senderObj,
+            IEnumerable<IProcessMessages> recipientObjs,
+            MessageBody information,
+            MessageId inReplyTo)
+        {
             var id = MessageId.Next();
-
-            // Create the message. Report back if it fails.
-            KernelMessage message = null;
-            try
+            foreach (var recipient in recipientObjs)
             {
-                message = new KernelMessage(
-                    new MessageHeader(
-                        id,
-                        sender,
-                        recipient,
-                        inReplyTo),
-                    information);
-            }
-            catch (Exception e)
-            {
-                var failureReason = new CouldNotCreateMessageReason(e);
-                ReportErrorToMessageSender(senderObj, recipient, id, information, failureReason);
+                // Create the message. Report back if it fails.
+                KernelMessage message;
+                try
+                {
+                    message = new KernelMessage(
+                        new MessageHeader(
+                            id,
+                            senderObj.Name,
+                            recipient.Name,
+                            inReplyTo),
+                        information);
+                }
+                catch (Exception e)
+                {
+                    var failureReason = new CouldNotCreateMessageReason(e);
+                    ReportErrorToMessageSender(senderObj, recipient.Name, id, information, failureReason);
 
-                // Do not return the ID number because the message never went out
-                return MessageId.None;
+                    // Move on to the next recipient
+                    continue;
+                }
+
+                try
+                {
+                    recipient.ProcessMessage(message);
+                }
+                catch (Exception e)
+                {
+                    var failureReason = new FailedToSendMessageReason(e);
+                    ReportErrorToMessageSender(senderObj, recipient.Name, id, information, failureReason);
+
+                    // Move on to the next recipient
+                    continue;
+                }
             }
 
-            try
-            {
-                recipientObj.ProcessMessage(message);
-            }
-            catch (Exception e)
-            {
-                senderObj.OnMessageDeliveryFailure(message.Header.Id, recipient, information, e);
-
-                // Even though the message transmittion failed, we can't tell how
-                // far we actually got, so we have to assume that the message
-                // has arrived on the other side. So we pass the ID number back
-                // just in case.
-                return id;
-            }
-
+            // Even though the message transmittion failed, we can't tell how
+            // far we actually got, so we have to assume that the message
+            // has arrived on the other side. So we pass the ID number back
+            // just in case.
             return id;
+        }
+
+        #endregion
+
+        /// <summary>
+        /// Starts the service.
+        /// </summary>
+        protected override void StartService()
+        {
+            Log(Resources.MessagePipeline_LogMessage_PipelineStarted);
+        }
+
+        /// <summary>
+        /// Sends out a log message.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        private void Log(string message)
+        {
+            // Create a log message
+            // Send the message to the log service if it exists.
+            // throw new NotImplementedException();
         }
 
         /// <summary>
@@ -353,7 +406,12 @@ namespace Apollo.Core.Messages
         /// <param name="failureReason">The failure reason.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "The message pipeline reports errors back to the caller. That way we don't destabilise the current AppDomain.")]
-        private void ReportErrorToMessageSender(ISendMessages sender, DnsName recipient, MessageId messageId, MessageBody information, IDeliveryFailureReason failureReason)
+        private void ReportErrorToMessageSender(
+            ISendMessages sender,
+            DnsName recipient,
+            MessageId messageId,
+            MessageBody information,
+            IDeliveryFailureReason failureReason)
         {
             try
             {
@@ -362,13 +420,13 @@ namespace Apollo.Core.Messages
             catch (Exception e)
             {
                 Log(string.Format(
-                    CultureInfo.InvariantCulture,
-                    Resources.MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException,
-                    sender.Name,
-                    recipient,
-                    messageId,
-                    failureReason,
-                    e));
+                        CultureInfo.InvariantCulture,
+                        Resources.MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException,
+                        sender.Name,
+                        recipient,
+                        messageId,
+                        failureReason,
+                        e));
             }
         }
     }

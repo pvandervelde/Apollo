@@ -223,6 +223,7 @@
     <Compile Include="Messages\CouldNotCreateMessageReason.cs" />
     <Compile Include="Messages\DnsName.cs" />
     <Compile Include="Messages\DuplicateDnsNameException.cs" />
+    <Compile Include="Messages\FailedToSendMessageReason.cs" />
     <Compile Include="Messages\IDeliveryFailureReason.cs" />
     <Compile Include="Messages\IDnsNameObject.cs" />
     <Compile Include="Messages\IMessagePipeline.cs" />

@@ -19,14 +19,32 @@
         <Location left="10" top="215" />
         <Size width="262" height="58" />
       </Entity>
-      <Entity type="Comment">
-        <Text>Need some kind of templating system to auto-load components based on property values.Does this need to be in the UI or in the project?
-
-Maybe also define tool sets which are collections of tools with hooks. Problem will be how to define the hooks.</Text>
-        <Location left="293" top="10" />
-        <Size width="231" height="132" />
+      <Entity type="Class">
+        <Name>UserInterfaceService</Name>
+        <Access>Public</Access>
+        <Location left="817" top="379" />
+        <Size width="162" height="96" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>KernelService</Name>
+        <Access>Public</Access>
+        <Location left="742" top="51" />
+        <Size width="302" height="153" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract void StartService()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Modifier>Abstract</Modifier>
       </Entity>
     </Entities>
-    <Relationships />
+    <Relationships>
+      <Relationship type="Generalization" first="3" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+    </Relationships>
   </ProjectItem>
 </Project>

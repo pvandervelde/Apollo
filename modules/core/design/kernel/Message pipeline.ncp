@@ -7,7 +7,7 @@
       <Entity type="Class">
         <Name>MessagePipeline</Name>
         <Access>Public</Access>
-        <Location left="429" top="873" />
+        <Location left="421" top="863" />
         <Size width="590" height="254" />
         <Collapsed>False</Collapsed>
         <Member type="Field">readonly IMessageQueue m_MessageQueue</Member>
@@ -21,18 +21,6 @@
         <Member type="Method">public MessageId Send(DnsName sender, DnsName recipient, MessageBody information)</Member>
         <Member type="Method">public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)</Member>
         <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>INameService</Name>
-        <Access>Public</Access>
-        <Location left="1259" top="932" />
-        <Size width="324" height="146" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">void AddName(DnsName name, IDnsNameObject obj)</Member>
-        <Member type="Method">void Remove(DnsName name)</Member>
-        <Member type="Method">bool HasName(DnsName name)</Member>
-        <Member type="Method">IEnumerator&lt;IDnsNameObject&gt; GetEnumerator()</Member>
-        <Member type="Property">IDnsNameObject this[DnsName name] { get; }</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
@@ -182,29 +170,32 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <Location left="1058" top="531" />
         <Size width="162" height="72" />
       </Entity>
+      <Entity type="Class">
+        <Name>KernelService</Name>
+        <Access>Public</Access>
+        <Location left="1258" top="920" />
+        <Size width="302" height="153" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract void StartService()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IMessagePipeline</Name>
+        <Access>Public</Access>
+        <Location left="789" top="1217" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Association" first="0" second="1">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1076</X>
-          <Y>997</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1215</X>
-          <Y>997</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>1</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="3">
+      <Relationship type="Comment" first="6" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="0" second="10">
+      <Relationship type="Association" first="0" second="9">
         <Label>Handles</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -213,19 +204,19 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Comment" first="8" second="11">
+      <Relationship type="Comment" first="7" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="12" second="5">
+      <Relationship type="Comment" first="11" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="12" second="10">
+      <Relationship type="Comment" first="11" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="12" second="11">
+      <Relationship type="Comment" first="11" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -237,23 +228,23 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>259</Y>
         </BendPoint>
       </Relationship>
+      <Relationship type="Comment" first="12" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>490</X>
+          <Y>838</Y>
+        </BendPoint>
+      </Relationship>
       <Relationship type="Comment" first="13" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>498</X>
-          <Y>848</Y>
+          <X>544</X>
+          <Y>1160</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="14" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>552</X>
-          <Y>1170</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="12" second="6">
+      <Relationship type="Comment" first="11" second="5">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -265,7 +256,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>91</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="12" second="3">
+      <Relationship type="Comment" first="11" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -277,7 +268,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>414</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="15" second="9">
+      <Relationship type="Comment" first="14" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -285,7 +276,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>157</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="4" second="16">
+      <Relationship type="Generalization" first="3" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -293,7 +284,7 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>410</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="2" second="16">
+      <Relationship type="Generalization" first="1" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -305,17 +296,23 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
           <Y>467</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="17" second="10">
+      <Relationship type="Comment" first="16" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="4" second="9">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="3" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="0" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="0" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

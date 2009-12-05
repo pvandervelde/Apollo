@@ -1,9 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 10
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.ProjectExplorer", "ProjectExplorer\Apollo.ProjectExplorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectExplorer.Test.Integration", "ProjectExplorer.Test.Integration\ProjectExplorer.Test.Integration.csproj", "{388FD4EC-46AF-44C8-98A7-0761837FF922}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{8E30305C-3805-4A6A-AFAF-94DAFB148B6F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Ui.Common", "..\..\common\src\common\Apollo.Ui.Common.csproj", "{ACD26D23-36BA-4035-84CA-6E462A03B033}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,8 +23,15 @@ Global
 		{388FD4EC-46AF-44C8-98A7-0761837FF922}.Debug|x86.Build.0 = Debug|x86
 		{388FD4EC-46AF-44C8-98A7-0761837FF922}.Release|x86.ActiveCfg = Release|x86
 		{388FD4EC-46AF-44C8-98A7-0761837FF922}.Release|x86.Build.0 = Release|x86
+		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Debug|x86.ActiveCfg = Debug|x86
+		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Debug|x86.Build.0 = Debug|x86
+		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|x86.ActiveCfg = Release|x86
+		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACD26D23-36BA-4035-84CA-6E462A03B033} = {8E30305C-3805-4A6A-AFAF-94DAFB148B6F}
 	EndGlobalSection
 EndGlobal

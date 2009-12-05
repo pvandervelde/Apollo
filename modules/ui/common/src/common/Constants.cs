@@ -23,7 +23,7 @@ namespace Apollo.Ui.Common
             /// <summary>
             /// The version number for Windows7.
             /// </summary>
-            public const int Windows7 = 7;
+            public const int Windows7 = 7; // Note that Win 7 is actually 6.1.x.y.
         }
 
         /// <summary>
