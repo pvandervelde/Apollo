@@ -1,0 +1,27 @@
+<Project>
+  <Name>UI - common library</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Common UI - overview</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>IMostRecentlyUsedViewModel</Name>
+        <Access>Public</Access>
+        <Location left="178" top="114" />
+        <Size width="184" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Provides a list of most recently used projects that were opened. In Win7 this also comes onto the jump list.</Text>
+        <Location left="517" top="113" />
+        <Size width="174" height="91" />
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Comment" first="1" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

@@ -37,11 +37,14 @@ properties{
 	$dirModulesUiBatchService = Join-Path $dirModules (Join-Path 'ui' 'batchservice')
 	$dirModulesUiRhino = Join-Path $dirModules (Join-Path 'ui' 'rhino')
 	$dirModulesUtils = Join-Path $dirModules 'utils'
+	
+	# Default paths
+	$pathDefaultDeploy = 'bin\release'
 
 	# projects
 	$projects = @{
 					'core'= Join-Path $dirModuleCore 'core.ps1'; 
-					'uicommon' = Join-Path $dirModulesUiCommon 'common.ps1';
+					'uicommon' = Join-Path $dirModulesUiCommon 'ui.common.ps1';
 					'projectexplorer' = Join-Path $dirModulesUiProjectExplorer 'projectexplorer.ps1';
 					'batchservice' = Join-Path $dirModulesUiBatchService 'batchservice.ps1';
 					'rhino' = Join-Path $dirModulesUiRhino 'rhino.ps1';
@@ -63,6 +66,7 @@ properties{
 	$shouldBuildApiDocs = $false
 	$shouldBuildUserDocs = $false
 	$shouldBuildInstaller = $false
+	$shouldDeployToTest = $false
 	$configuration = 'debug'
 	
 	# internal variables
@@ -106,13 +110,17 @@ task Install -action{
 	Set-Variable -Name shouldBuildInstaller -Value $true -Scope 2
 }
 
+task DeployToTest -action{
+	Set-Variable -Name shouldDeployToTest -Value $true -Scope 2
+}
+
 # Actual build tasks
 
 # Clean all the generated files
-task Clean -depends runScripts
+task Clean -depends runClean, runScripts
 
 # Run the build completely
-task Build -depends runScripts, assembleApiDocs, buildUserDoc, assembleInstaller, collectMetrics
+task Build -depends runClean, runScripts, assembleApiDocs, buildUserDoc, assembleInstaller, deployToTestDirectory, collectMetrics
 
 ###############################################################################
 # HELPER TASKS
@@ -134,6 +142,7 @@ The following build tasks are available
 	'apidoc':			Turns on the generation of the API documentation.
 	'userdoc':			Turns on the generation of the user documentation.
 	'install':			Turns on the generation of the installer package.
+	'deploytotest':		Turns on the deployment to the test directory.
 	
 	'Clean':			Cleans the output directories.
 	'Build':			Builds the binaries with the options given by the user.
@@ -146,6 +155,17 @@ In order to get a correct effect these tasks need to be the last tasks being cal
 In order to run this build script please call this script via PSAKE like:
 	Invoke-psake build.ps1 incremental,debug,unittest,verify,apidoc,userdoc,install,build -framework 4.0 -timing
 "@
+}
+
+task runClean  -precondition{ $shouldClean } -action{
+	"Cleaning..."
+
+	# Clean the bin dir
+	if (Test-Path -Path $dirBin -PathType Container)
+	{
+		"Removing the bin directory..."
+		Remove-Item $dirBin -Force -Recurse
+	}
 }
 
 task createTasks -action{
@@ -161,6 +181,7 @@ task createTasks -action{
 	if ($shouldRunUnitTests) { $tasks.Add('UnitTest') | Out-Null }
 	if ($shouldRunVerify) { $tasks.Add('Verify') | Out-Null }
 	if ($shouldBuildApiDocs) { $tasks.Add('ApiDoc') | Out-Null }
+	if ($shouldDeployToTest) { $tasks.Add('Package') | Out-Null }
 }
 
 task runScripts -depends createTasks -action{
@@ -170,6 +191,15 @@ task runScripts -depends createTasks -action{
 	#Invoke-PsakeScript $projects['projectexplorer'] $tasks
 	#Invoke-PsakeScript $projects['batchservice'] $tasks
 	#Invoke-PsakeScript $projects['rhino'] $tasks
+}
+
+task createTestDirectory -action{
+	"Creating the test directory..."
+	
+	if (!(Test-Path -Path $dirBin -PathType Container))
+	{
+		New-Item $dirBin -ItemType directory | Out-Null # Don't display the directory information
+	}
 }
 
 task assembleApiDocs -depends runScripts -precondition{ return $shouldBuildApiDocs } -action{
@@ -187,6 +217,30 @@ task assembleInstaller -depends runScripts -precondition{ return $shouldBuildIns
 	"Assembling installer..."
 	
 	# Grab all the merge modules and make them into a single installer
+	# Installers are created per UI. Each UI will have a different installer?
+	
+}
+
+task deployToTestDirectory -depends runScripts,createTestDirectory -precondition{ return $shouldDeployToTest } -action{
+	"Deploying to the test directory ..."
+	
+	# copy all the zip files to the test directory
+	$utils = Get-ChildItem -Path (Join-Path $dirModulesUtils $pathDefaultDeploy) |
+		Where-Object { ($_.Extension -match ".zip") }
+		
+	foreach ($file in $utils){
+		$newFilePath = Join-Path $dirBin $file.Name
+		Copy-Item $file.FullName -Destination $newFilePath -Force
+	}
+	
+	# copy all the zip files to the test directory
+	$core = Get-ChildItem -Path (Join-Path $dirModuleCore $pathDefaultDeploy) |
+		Where-Object { ($_.Extension -match ".zip") }
+		
+	foreach ($file in $core){
+		$newFilePath = Join-Path $dirBin $file.Name
+		Copy-Item $file.FullName -Destination $newFilePath -Force
+	}
 }
 
 task collectMetrics -depends runScripts{

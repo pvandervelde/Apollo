@@ -1,5 +1,7 @@
 ﻿// Copyright (c) P. van der Velde. All right reserved
 
+using System;
+
 namespace Apollo.Ui.Common
 {
     /// <summary>
@@ -15,15 +17,42 @@ namespace Apollo.Ui.Common
             /// <summary>
             /// The version number for Windows XP.
             /// </summary>
-            public const int XP = 5;
+            public static readonly Version XP = new Version(5, 1);
+            
             /// <summary>
             /// The version number for Windows Vista.
             /// </summary>
-            public const int Vista = 6;
+            public static readonly Version Vista = new Version(6, 0);
+            
             /// <summary>
             /// The version number for Windows7.
             /// </summary>
-            public const int Windows7 = 7; // Note that Win 7 is actually 6.1.x.y.
+            public static readonly Version Windows7 = new Version(6, 1);
+
+            /// <summary>
+            /// The version number for Windows Server 2000.
+            /// </summary>
+            public static readonly Version Server2000 = new Version(5, 0);
+
+            /// <summary>
+            /// The version number for Windows Server 2003.
+            /// </summary>
+            public static readonly Version Server2003 = new Version(5, 2);
+
+            /// <summary>
+            /// The version number for Windows Server 2003 R2.
+            /// </summary>
+            public static readonly Version Server2003R2 = new Version(5, 2);
+
+            /// <summary>
+            /// The version number for Windows Server 2008.
+            /// </summary>
+            public static readonly Version Server2008 = new Version(6, 0);
+
+            /// <summary>
+            /// The version number for Windows Server 2008 R2.
+            /// </summary>
+            public static readonly Version Server2008R2 = new Version(6, 1);
         }
 
         /// <summary>

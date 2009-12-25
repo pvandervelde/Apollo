@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="_RunStyleCop" 
+         xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         ToolsVersion="3.5">
+
+	<UsingTask AssemblyFile="$(StyleCopForMsBuild)/MSBuild.ExtensionPack.StyleCop.dll" TaskName="MSBuild.ExtensionPack.CodeQuality.StyleCop"/>
+		 
+    <!-- File paths -->
+	<!-- These are normally set from the calling build script -->
+    <PropertyGroup>
+        <!-- The directory where this build file lives. From here we can get the other file artifacts -->
+        <BaseDir>$(MSBuildProjectDirectory)</BaseDir>
+
+        <ProjectDir>$(BaseDir)</ProjectDir>
+        <SrcDir>$(BaseDir)</SrcDir>
+        <ReportsDir>$(BaseDir)\bin\reports</ReportsDir>
+    </PropertyGroup>
+    
+    <!--
+        Sets the version number in the source files
+    -->
+    <Target Name="_RunStyleCop" >
+        <!-- Create a collection of files to scan, the ** means subdirectories -->  
+        <CreateItem Include="$(SrcDir)\**\*.cs"> 
+            <Output TaskParameter="Include" ItemName="StyleCopFiles"/> 
+        </CreateItem>
+        
+        <!-- Run the StyleCop MSBuild task using the setting file in the same directory as sln file and also stored in TFS --> 
+        <MSBuild.ExtensionPack.CodeQuality.StyleCop 
+                TaskAction="Scan" 
+                SourceFiles="@(StyleCopFiles)" 
+                ShowOutput="true" 
+                ForceFullAnalysis="true" 
+                CacheResults="false" 
+                logFile="$(ReportsDir)\StyleCopLog.txt" 
+                SettingsFile="$(ProjectDir)\Settings.StyleCop"
+                ContinueOnError="false"> 
+            <Output TaskParameter="Succeeded" PropertyName="AllPassed"/> 
+            <Output TaskParameter="ViolationCount" PropertyName="Violations"/> 
+            <Output TaskParameter="FailedFiles" ItemName="Failures"/> 
+        </MSBuild.ExtensionPack.CodeQuality.StyleCop>
+        
+		<ItemGroup>
+            <WarningsFile Include="$(BaseDir)\StyleCopViolations.xml" /> 
+        </ItemGroup>
+        
+        <Copy SourceFiles="@(WarningsFile)" 
+			  DestinationFolder="$(ReportsDir)\%(RecursiveDir)"
+			  Condition="Exists('@(WarningsFile)')" />
+        <Delete Files="@(WarningsFile)" />
+
+        <!-- Log the summary of the results --> 
+        <Message Text="StyleCop Succeeded: $(AllPassed), Violations: $(Violations)"/>
+
+          <!-- FailedFile format is: 
+              <ItemGroup> 
+                  <FailedFile Include="filename"> 
+                      <CheckId>SA Rule Number</CheckId> 
+                      <RuleDescription>Rule Description</RuleDescription> 
+                      <RuleName>Rule Name</RuleName> 
+                      <LineNumber>Line the violation appears on</LineNumber> 
+                      <Message>SA violation message</Message> 
+                  </FailedFile> 
+              </ItemGroup> -->
+
+        <!-- Log the details of any violations --> 
+        <Warning Text="%(Failures.Identity) - Failed on Line %(Failures.LineNumber). %(Failures.CheckId): %(Failures.Message)"/> 
+
+        <!-- The StyleCop task does not throw an error if the analysis failed,  
+        so we need to check the return value and if we choose to treat errors as warnings  
+        we need to set the error state, if set it will cause us to jump to the failure target --> 
+        <!-- <Error Text="StyleCop analysis warnings occured" Condition="'$(AllPassed)' == 'False'"  /> -->
+    </Target>
+
+</Project>
