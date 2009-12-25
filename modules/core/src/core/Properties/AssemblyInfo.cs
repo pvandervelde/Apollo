@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
 
@@ -21,3 +22,7 @@ using System.Resources;
 
 // Indicate that the neutral language resources are in the assembly.
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
+
+// Design supress messages
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", 
+    Target = "Apollo.Utils.Fusion", MessageId = "Utils", Justification = "Utils is the known short name for utilities.")]

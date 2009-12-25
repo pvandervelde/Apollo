@@ -126,9 +126,6 @@
   <data name="Exceptions_Messages_CannotSendAMessageBackToTheSender" xml:space="preserve">
     <value>Cannot create a message where both the sender and the recipient are the same.</value>
   </data>
-  <data name="Exceptions_Messages_CannotSendAMessageFromAllServices" xml:space="preserve">
-    <value>Cannot create a message with the 'AllServices' sender name.</value>
-  </data>
   <data name="Exceptions_Messages_CannotSendAMessageToNoService" xml:space="preserve">
     <value>Cannot create a message that is send to nobody.</value>
   </data>
@@ -140,6 +137,9 @@
   </data>
   <data name="Exceptions_Messages_DuplicateDnsName_WithName" xml:space="preserve">
     <value>The specified DNS name is a duplicate of another DNS name. The name is: {0}</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectType_WithTypes" xml:space="preserve">
+    <value>Type is incorrect. Expected {0}, got {1}.</value>
   </data>
   <data name="Exceptions_Messages_KernelServiceStartupFailed" xml:space="preserve">
     <value>The startup of a service failed.</value>
@@ -155,6 +155,12 @@
   </data>
   <data name="Exceptions_Messages_MissingServiceDependency" xml:space="preserve">
     <value>The startup of the kernel service failed due to a missing a dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_PipelineObjectMissing" xml:space="preserve">
+    <value>There is no known message pipeline object.</value>
+  </data>
+  <data name="Exceptions_Messages_SenderCannotBeNobody" xml:space="preserve">
+    <value>The sender DNS name cannot be equivalent to the Nobody DNS name</value>
   </data>
   <data name="Exceptions_Messages_ServiceCannotDependOnGenericKernelService" xml:space="preserve">
     <value>A kernel service cannot have the KernelService type as dependency.</value>
@@ -180,14 +186,17 @@
   <data name="MessagePipeline_LogMessage_ListenerRemoved" xml:space="preserve">
     <value>A new message listener object was removed with name: {0}</value>
   </data>
+  <data name="MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException" xml:space="preserve">
+    <value>Failed to report the message delivery to {0}. The message [{2}] was send to {1}. The stack trace is: {3}</value>
+  </data>
   <data name="MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason" xml:space="preserve">
     <value>The delivery of message [{2}] has failed because {3}. The message was send by {0} to {1}.</value>
   </data>
-  <data name="MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException" xml:space="preserve">
-    <value>Failed to report the message delivery failure to {0}. The message [{2}] was send to {1} and failed because {3}. The stack trace is: {4}</value>
-  </data>
   <data name="MessagePipeline_LogMessage_PipelineStarted" xml:space="preserve">
     <value>The message pipeline was started.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_PipelineStopped" xml:space="preserve">
+    <value>The message pipeline was stopped.</value>
   </data>
   <data name="MessagePipeline_LogMessage_SenderAdded" xml:space="preserve">
     <value>A new message sender object was added with name: {0}</value>

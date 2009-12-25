@@ -6,23 +6,23 @@
     <Entities>
       <Entity type="Comment">
         <Text>Needs some way to display messages from other components. However these messags might need translating to normal user speak --&gt; Use tags. aka components send tag, UI looks them up and combines?</Text>
-        <Location left="10" top="10" />
+        <Location left="1453" top="1643" />
         <Size width="260" height="113" />
       </Entity>
       <Entity type="Comment">
         <Text>Need a help system. Have fun with this one.</Text>
-        <Location left="10" top="134" />
+        <Location left="1128" top="1464" />
         <Size width="262" height="70" />
       </Entity>
       <Entity type="Comment">
         <Text>Need some kind of advisory system.</Text>
-        <Location left="10" top="215" />
-        <Size width="262" height="58" />
+        <Location left="1943" top="231" />
+        <Size width="208" height="50" />
       </Entity>
       <Entity type="Class">
         <Name>UserInterfaceService</Name>
         <Access>Public</Access>
-        <Location left="817" top="379" />
+        <Location left="1276" top="524" />
         <Size width="162" height="96" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -30,7 +30,7 @@
       <Entity type="Class">
         <Name>KernelService</Name>
         <Access>Public</Access>
-        <Location left="742" top="51" />
+        <Location left="1205" top="64" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
         <Member type="Method">protected abstract void StartService()</Member>
@@ -39,11 +39,208 @@
         <Member type="Method">public StartupState GetStartupState()</Member>
         <Modifier>Abstract</Modifier>
       </Entity>
+      <Entity type="Comment">
+        <Text>Need to handle the configuration options too</Text>
+        <Location left="480" top="1447" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IApplication</Name>
+        <Access>Public</Access>
+        <Location left="743" top="1447" />
+        <Size width="294" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">bool CanShutdown { get; }</Member>
+        <Member type="Method">void Shutdown(bool shouldForce)</Member>
+        <Member type="Property">IHoldSystemInforrmation ApplicationStatus { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IInteractWithUsers</Name>
+        <Access>Public</Access>
+        <Location left="1523" top="1330" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Defines the top-level API for all the user interaction commands. Examples are help system, translation of system messages etc.</Text>
+        <Location left="1128" top="1352" />
+        <Size width="262" height="63" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IGiveAdvice</Name>
+        <Access>Public</Access>
+        <Location left="1969" top="374" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHoldSystemInformation</Name>
+        <Access>Public</Access>
+        <Location left="292" top="1146" />
+        <Size width="322" height="146" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Refresh()</Member>
+        <Member type="Property">DateTimeOffset LastUpdateTime { get; }</Member>
+        <Member type="Method">IEnumerable&lt;IServiceInformation&gt; ServiceInformation()</Member>
+        <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
+        <Member type="Property">TimeSpan Uptime { get; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ApplicationFacade</Name>
+        <Access>Public</Access>
+        <Location left="788" top="1116" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>What do we put in the advice engine? </Text>
+        <Location left="1969" top="572" />
+        <Size width="212" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Quite a lot really. We can add:
+- Plug-in selection algorithms
+- others?</Text>
+        <Location left="1963" top="1057" />
+        <Size width="288" height="112" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Note that start-up events are not fed through this system, because the UI won't be up when those events get raised. They will be fed through the bootstrapper.</Text>
+        <Location left="1592" top="537" />
+        <Size width="217" height="94" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ILinkToProjects</Name>
+        <Access>Public</Access>
+        <Location left="1946" top="1246" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>DependencyInjection</Name>
+        <Access>Public</Access>
+        <Location left="277" top="546" />
+        <Size width="162" height="110" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IBootstrapper</Name>
+        <Access>Public</Access>
+        <Location left="723" top="64" />
+        <Size width="339" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Load()</Member>
+        <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>BootStrapper</Name>
+        <Access>Public</Access>
+        <Location left="723" top="307" />
+        <Size width="339" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Load()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHoldDependencies</Name>
+        <Access>Public</Access>
+        <Location left="554" top="546" />
+        <Size width="162" height="89" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IServiceInformation</Name>
+        <Access>Public</Access>
+        <Location left="321" top="953" />
+        <Size width="224" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; }</Member>
+        <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
+        <Member type="Property">TimeSpan Uptime { get; }</Member>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Generalization" first="3" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="1" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="2" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="0" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="11" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="11" second="3">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1004</X>
+          <Y>1264</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1325</X>
+          <Y>662</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="18" second="17">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="18" second="3">
+        <Label>Links to</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>990</X>
+          <Y>247</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1330</X>
+          <Y>499</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="16" second="19">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

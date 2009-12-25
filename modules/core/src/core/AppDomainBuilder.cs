@@ -45,20 +45,22 @@ namespace Apollo.Core
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "We do really want a directory and not a file system object, therefore we shall stick with DirectoryInfo.")]
-        private AppDomain Create(string name, DirectoryInfo basePath)
+        private static AppDomain Create(string name, DirectoryInfo basePath)
         {
             {
                 Debug.Assert(basePath != null, "The base path must be defined");
                 Debug.Assert(basePath.Exists, "The base path must be a valid path");
             }
 
-            AppDomainSetup setup = new AppDomainSetup();
-            setup.ApplicationName = Assembly.GetCallingAssembly().GetName().Name;
-            setup.ApplicationBase = basePath.FullName;
+            var setup = new AppDomainSetup 
+                {
+                    ApplicationName = Assembly.GetCallingAssembly().GetName().Name, 
+                    ApplicationBase = basePath.FullName
+                };
 
             // If the basePath is not equal to the file path of the current assembly (i.e. Apollo.Core)
             // then we add the path of the current assembly as private bin path.
-            string corePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
+            var corePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             if (!string.Equals(corePath, basePath.FullName, StringComparison.OrdinalIgnoreCase))
             {
                 setup.PrivateBinPath = Path.GetDirectoryName(corePath);
@@ -75,7 +77,7 @@ namespace Apollo.Core
             // do not allow random assembly downloads
             setup.DisallowCodeDownload = true;
 
-            AppDomain result = AppDomain.CreateDomain(
+            var result = AppDomain.CreateDomain(
                 string.IsNullOrEmpty(name) ? GenerateNewAppDomainName() : name,
                 null,
                 setup);
@@ -102,6 +104,8 @@ namespace Apollo.Core
         /// </design>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
                 Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Making this method static would lead to a static class which makes testing harder.")]
         public AppDomain AssembleWithFilePaths(DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
         {   
             return AssembleWithFilePaths(string.Empty, basePath, assemblyFiles, exceptionHandler);
@@ -132,6 +136,8 @@ namespace Apollo.Core
         /// </design>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
                 Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Making this method static would lead to a static class which makes testing harder.")]
         public AppDomain AssembleWithFilePaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
         {
             return AssembleWithFileAndDirectoryPaths(friendlyName, basePath, assemblyFiles, null, exceptionHandler);
@@ -165,6 +171,8 @@ namespace Apollo.Core
         /// </design>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
                 Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "Making this method static would lead to a static class which makes testing harder.")]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public AppDomain AssembleWithFileAndDirectoryPaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
@@ -185,6 +193,8 @@ namespace Apollo.Core
                 var resolver = domain.CreateInstanceAndUnwrap(
                     typeof(FileBasedResolver).Assembly.FullName,
                     typeof(FileBasedResolver).FullName) as FileBasedResolver;
+
+                Debug.Assert(resolver != null, "Somehow we didn't create a resolver.");
                 resolver.StoreFilePaths(assemblyFiles);
                 resolver.Attach();
             }
@@ -197,13 +207,15 @@ namespace Apollo.Core
                 var resolver = domain.CreateInstanceAndUnwrap(
                     typeof(DirectoryBasedResolver).Assembly.FullName,
                     typeof(DirectoryBasedResolver).FullName) as DirectoryBasedResolver;
+
+                Debug.Assert(resolver != null, "Somehow we didn't create a resolver.");
                 resolver.StoreDirectoryPaths(assemblyDirectories);
                 resolver.Attach();
             }
 
             // Attach the exception handler
             {
-                domain.UnhandledException += new UnhandledExceptionEventHandler(exceptionHandler.OnUnhandledException);
+                domain.UnhandledException += exceptionHandler.OnUnhandledException;
             }
 
             return domain;

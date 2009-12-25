@@ -1,8 +1,8 @@
-﻿//-----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright company="P. van der Velde">
 //     Copyright (c) P. van der Velde. All rights reserved.
 // </copyright>
-//-----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
@@ -35,7 +36,7 @@ namespace Apollo.Core
     /// <serviceType>Project service</serviceType>
     /// </list>
     /// </design>
-    internal sealed partial class Kernel : MarshalByRefObject, INeedStartup
+    internal sealed partial class Kernel : MarshalByRefObject, INeedStartup, IKernel
     {
         /// <summary>
         /// The collection of services that are currently known to the kernel.
@@ -46,7 +47,7 @@ namespace Apollo.Core
         /// The collection which tracks the connections between a service and it's dependencies.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The storage requires that we link an object to a list of objects. Nested generics is an easy way to achieve this.")]
+            Justification = "The storage requires that we link an object to a list of objects. Nested generics is an easy way to achieve this.")]
         private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = new Dictionary<KernelService, List<ConnectionMap>>();
 
         /// <summary>
@@ -57,10 +58,21 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Kernel"/> class.
         /// </summary>
-        public Kernel()
+        /// <param name="processingHelp">The processing help.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="processingHelp"/> is <see langword="null" />.
+        /// </exception>
+        public Kernel(IHelpMessageProcessing processingHelp)
         {
+            {
+                Enforce.Argument(() => processingHelp);
+            }
+
             // Add our own proxy to the collection of services.
-            Install(new CoreProxy());
+            // Do that in the constructor so that this is always loaded.
+            // That means that there is no way to install another CoreProxy that
+            // we don't control.
+            Install(new CoreProxy(this, processingHelp));
         }
 
         /// <summary>
@@ -77,9 +89,9 @@ namespace Apollo.Core
             Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark mark)
         {
-            EventHandler<StartupProgressEventArgs> local = StartupProgress;
+            var local = StartupProgress;
             if (local != null)
-            { 
+            {
                 local(this, new StartupProgressEventArgs(progress, mark));
             }
         }
@@ -141,7 +153,12 @@ namespace Apollo.Core
                 // Only start the service if it hasn't already been started
                 if (service.GetStartupState() != StartupState.Started)
                 {
-                    EventHandler<StartupProgressEventArgs> progressHandler = (s, e) => ProcessServiceStartup(startupOrder.IndexOf(service), e.Progress, e.CurrentlyProcessing);
+                    // Grab the actual current service so that we can put it in the
+                    // lambda expression without having it wiped or replaced on us
+                    var currentService = service;
+                    EventHandler<StartupProgressEventArgs> progressHandler =
+                        (s, e) => ProcessServiceStartup(startupOrder.IndexOf(currentService), e.Progress, e.CurrentlyProcessing);
+
                     service.StartupProgress += progressHandler;
                     try
                     {
@@ -223,13 +240,9 @@ namespace Apollo.Core
                 }
             }
 
-            var startupOrder = new List<KernelService>();
-            foreach (var vertex in graph.TopologicalSort())
-            {
-                startupOrder.Add(vertex.Service);
-            }
-
-            return startupOrder;
+            return graph.TopologicalSort()
+                .Select(vertex => vertex.Service)
+                .ToList();
         }
 
         /// <summary>
@@ -241,7 +254,7 @@ namespace Apollo.Core
         private void ProcessServiceStartup(int serviceIndex, int progress, IProgressMark currentlyProcessing)
         {
             Debug.Assert(m_Services.Count > 0, "Cannot calculate the startup progress if there are no services.");
-            
+
             // Calculate the number of services that we have.
             var serviceCount = m_Services.Count;
 
@@ -253,10 +266,10 @@ namespace Apollo.Core
             // translates to:
             //   (percentage quantity for one service) * (progress in current service)
             //   which is: (1 / serviceCount) * progress / 100
-            var currentPercentage = progress / (100.0 * serviceCount);
+            var currentPercentage = progress / (100.0*serviceCount);
             var total = finishedPercentage + currentPercentage;
 
-            RaiseStartupProgress((int)Math.Floor(total * 100), currentlyProcessing);
+            RaiseStartupProgress((int) Math.Floor(total*100), currentlyProcessing);
         }
 
         /// <summary>
@@ -300,6 +313,13 @@ namespace Apollo.Core
                 Enforce.Argument(() => service);
             }
 
+            // We can only install when we are not started or started. No other 
+            // state is condusive to installation.
+            if ((m_State != StartupState.NotStarted) && (m_State != StartupState.Started))
+            {
+                throw new KernelNotInInstallReadyStateException();
+            }
+
             if (m_Services.ContainsKey(service.GetType()))
             {
                 // The service already exists, or an equivalent
@@ -317,8 +337,8 @@ namespace Apollo.Core
                     throw new ServiceCannotDependOnItselfException();
                 }
 
-                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof(KernelService)) ||
-                    dependencyHolder.ServicesToConnectTo().Contains(typeof(KernelService)))
+                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof (KernelService)) ||
+                    dependencyHolder.ServicesToConnectTo().Contains(typeof (KernelService)))
                 {
                     throw new ServiceCannotDependOnGenericKernelServiceException();
                 }
@@ -373,7 +393,7 @@ namespace Apollo.Core
         /// services with the same interfaces.
         /// </design>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "We need to return a mapping between a Type and a KernelService. The KeyValuePair<T,K> class is the simplest solution.")]
+            Justification = "We need to return a mapping between a Type and a KernelService. The KeyValuePair<T,K> class is the simplest solution.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetInstalledDependencies(IEnumerable<Type> demandedServices)
         {
             // Create a copy of the available service list. Then when we 
@@ -419,6 +439,8 @@ namespace Apollo.Core
         /// A collection containing a mapping between the demanded dependency and the service that would
         /// serve for this dependency.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "This internal method needs to return a collection of Type - KernelService mappings.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetDependentServices(KernelService service)
         {
             var result = new List<KeyValuePair<Type, KernelService>>();
@@ -457,6 +479,13 @@ namespace Apollo.Core
                 Enforce.Argument(() => service);
             }
 
+            // We can only install when we are not started or started. No other 
+            // state is condusive to installation.
+            if ((m_State != StartupState.NotStarted) && (m_State != StartupState.Started))
+            {
+                throw new KernelNotInInstallReadyStateException();
+            }
+
             // Check if we have the service
             if (!m_Services.ContainsKey(service.GetType()))
             {
@@ -472,19 +501,14 @@ namespace Apollo.Core
             }
 
             // Get all the services that depend on this one.
-            var connected = new List<KeyValuePair<KernelService, int>>();
-            foreach (var pair in m_Connections)
-            {
-                int index = pair.Value.FindIndex(map => map.Applied.Equals(service));
-                if (index > -1)
-                {
-                    connected.Add(new KeyValuePair<KernelService, int>(pair.Key, index));
-                }
-            }
+            var connected = (from pair in m_Connections 
+                                let index = pair.Value.FindIndex(map => map.Applied.Equals(service)) 
+                             where index > -1 
+                             select new KeyValuePair<KernelService, int>(pair.Key, index)).ToList();
 
             foreach (var map in connected)
             {
-                ((IHaveServiceDependencies)map.Key).DisconnectFrom(service);
+                ((IHaveServiceDependencies) map.Key).DisconnectFrom(service);
                 m_Connections[map.Key].RemoveAt(map.Value);
             }
 

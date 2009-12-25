@@ -5,6 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Messaging;
+using Autofac;
+using Autofac.Builder;
 using Lokad;
 
 namespace Apollo.Core
@@ -27,6 +30,23 @@ namespace Apollo.Core
         internal sealed class KernelInjector : MarshalByRefObject, IInjectKernels
         {
             /// <summary>
+            /// Builds the IOC container.
+            /// </summary>
+            /// <returns>
+            /// The DI container that is used to create the kernel.
+            /// </returns>
+            private static IContainer BuildContainer()
+            {
+                var builder = new ContainerBuilder();
+                {
+                    builder.Register(c => new MessageProcessingAssistance())
+                        .As<IHelpMessageProcessing>();
+                }
+
+                return builder.Build();
+            }
+
+            /// <summary>
             /// The kernel object.
             /// </summary>
             private Kernel m_Kernel;
@@ -36,7 +56,8 @@ namespace Apollo.Core
             /// </summary>
             public void CreateKernel()
             {
-                m_Kernel = new Kernel();
+                var container = BuildContainer();
+                m_Kernel = new Kernel(container.Resolve<IHelpMessageProcessing>());
             }
 
             /// <summary>

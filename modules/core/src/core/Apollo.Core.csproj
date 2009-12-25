@@ -158,6 +158,9 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
@@ -172,7 +175,13 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.CoreEx">
+      <HintPath>..\..\lib\taskparallel\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Threading">
+      <HintPath>..\..\lib\taskparallel\System.Threading.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\AssemblyNameElements.cs">
@@ -203,6 +212,7 @@
     <Compile Include="Bootstrapper.ServiceInjector.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
+    <Compile Include="CoreProxy.Messages.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
     <Compile Include="IApplicationConstants.cs" />
@@ -210,33 +220,41 @@
     <Compile Include="IHaveServiceDependencies.cs" />
     <Compile Include="IInjectKernels.cs" />
     <Compile Include="IInjectServices.cs" />
+    <Compile Include="IKernel.cs" />
     <Compile Include="IKernelStartInfo.cs" />
     <Compile Include="INeedStartup.cs" />
     <Compile Include="IOwnServices.cs" />
     <Compile Include="CoreProxy.cs" />
     <Compile Include="Kernel.ConnectionMap.cs" />
     <Compile Include="Kernel.cs" />
+    <Compile Include="Kernel.Services.cs" />
     <Compile Include="Kernel.ServiceVertex.cs" />
+    <Compile Include="KernelNotInInstallReadyStateException.cs" />
     <Compile Include="KernelService.cs" />
     <Compile Include="KernelServiceStartupFailedException.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
-    <Compile Include="Messages\CouldNotCreateMessageReason.cs" />
-    <Compile Include="Messages\DnsName.cs" />
-    <Compile Include="Messages\DuplicateDnsNameException.cs" />
-    <Compile Include="Messages\FailedToSendMessageReason.cs" />
-    <Compile Include="Messages\IDeliveryFailureReason.cs" />
-    <Compile Include="Messages\IDnsNameObject.cs" />
-    <Compile Include="Messages\IMessagePipeline.cs" />
-    <Compile Include="Messages\IProcessMessages.cs" />
-    <Compile Include="Messages\ISendMessages.cs" />
-    <Compile Include="Messages\KernelMessage.cs" />
-    <Compile Include="Messages\MessageBody.cs" />
-    <Compile Include="Messages\MessageHeader.cs" />
-    <Compile Include="Messages\MessageId.cs" />
-    <Compile Include="Messages\MessagePipeline.cs" />
-    <Compile Include="Messages\MessageRecipientUnknownReason.cs" />
-    <Compile Include="Messages\UnknownDnsNameException.cs" />
+    <Compile Include="Messaging\CouldNotCreateMessageReason.cs" />
+    <Compile Include="Messaging\DnsName.cs" />
+    <Compile Include="Messaging\DuplicateDnsNameException.cs" />
+    <Compile Include="Messaging\FailedToSendMessageReason.cs" />
+    <Compile Include="Messaging\IDeliveryFailureReason.cs" />
+    <Compile Include="Messaging\IDnsNameObject.cs" />
+    <Compile Include="Messaging\IHelpMessageProcessing.cs" />
+    <Compile Include="Messaging\IMessagePipeline.cs" />
+    <Compile Include="Messaging\IProcessMessages.cs" />
+    <Compile Include="Messaging\ISendMessages.cs" />
+    <Compile Include="Messaging\KernelMessage.cs" />
+    <Compile Include="Messaging\MessageBody.cs" />
+    <Compile Include="Messaging\MessageHeader.cs" />
+    <Compile Include="Messaging\MessageId.cs" />
+    <Compile Include="Messaging\MessagePipeline.cs" />
+    <Compile Include="Messaging\MessageProcessingAssistance.cs" />
+    <Compile Include="Messaging\MissingPipelineException.cs" />
+    <Compile Include="Messaging\SucceededToSendMessageReason.cs" />
+    <Compile Include="Messaging\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
+    <Compile Include="PingMessage.cs" />
+    <Compile Include="PingResponseMessage.cs" />
     <Compile Include="PrivateBinPathOption.cs" />
     <Compile Include="PrivateBinPathRequirementsAttribute.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
@@ -246,19 +264,27 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceException.cs" />
     <Compile Include="ServiceCannotDependOnItselfException.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
+    <Compile Include="ShutdownCapabilityResponseMessage.cs" />
+    <Compile Include="ShutdownRequestMessage.cs" />
+    <Compile Include="ShutdownRequestResponseMessage.cs" />
     <Compile Include="StartupProgressEventArgs.cs" />
     <Compile Include="StartupState.cs" />
     <Compile Include="UnknownKernelServiceTypeException.cs" />
+    <Compile Include="UserInterfaces\Application\IAbstractApplications.cs" />
+    <Compile Include="UserInterfaces\Application\IHoldSystemInformation.cs" />
+    <Compile Include="UserInterfaces\Application\IServiceInformation.cs" />
+    <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
     <Folder Include="Logging\" />
     <Folder Include="Plugins\" />
     <Folder Include="Projects\" />
-    <Folder Include="UserInterfaces\Application\" />
     <Folder Include="UserInterfaces\Plugins\" />
     <Folder Include="UserInterfaces\Project\" />
   </ItemGroup>

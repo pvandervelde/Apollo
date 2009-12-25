@@ -75,7 +75,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Comment">
         <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in, loading a new project etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
-        <Location left="3225" top="1548" />
+        <Location left="3154" top="1584" />
         <Size width="300" height="87" />
       </Entity>
       <Entity type="Comment">
@@ -122,7 +122,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>TimelineService</Name>
         <Access>Public</Access>
-        <Location left="3363" top="1408" />
+        <Location left="3233" top="1440" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -138,7 +138,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>LogSink</Name>
         <Access>Public</Access>
-        <Location left="1541" top="1491" />
+        <Location left="1684" top="1489" />
         <Size width="162" height="90" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -162,14 +162,16 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>Kernel</Name>
         <Access>Public</Access>
-        <Location left="866" top="535" />
-        <Size width="253" height="162" />
+        <Location left="787" top="536" />
+        <Size width="332" height="196" />
         <Collapsed>False</Collapsed>
         <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
         <Member type="Method">public void Start()</Member>
         <Member type="Method">public StartupState GetStartupState()</Member>
         <Member type="Method">public void Install(KernelService service)</Member>
         <Member type="Method">public void Uninstall(KernelService service)</Member>
+        <Member type="Method">public bool CanShutdown()</Member>
+        <Member type="Method">public void Shutdown(bool forceShutdown)</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
@@ -353,14 +355,14 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>941</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3307</X>
-          <Y>1436</Y>
+          <X>3177</X>
+          <Y>1468</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="13" second="15">
-        <Label>Uses</Label>
+        <Label>Depends on</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -368,8 +370,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>1667</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3550</X>
-          <Y>1456</Y>
+          <X>3420</X>
+          <Y>1488</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -418,8 +420,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3422</X>
-          <Y>1345</Y>
+          <X>3292</X>
+          <Y>1377</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2975</X>
@@ -447,8 +449,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3336</X>
-          <Y>1463</Y>
+          <X>3206</X>
+          <Y>1495</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2186</X>
@@ -541,8 +543,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>832</X>
-          <Y>629</Y>
+          <X>753</X>
+          <Y>630</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>823</X>
@@ -556,7 +558,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1186</X>
-          <Y>631</Y>
+          <Y>632</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1267</X>
@@ -575,8 +577,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>482</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>835</X>
-          <Y>601</Y>
+          <X>756</X>
+          <Y>602</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -589,8 +591,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>617</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>841</X>
-          <Y>618</Y>
+          <X>762</X>
+          <Y>619</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="22" second="11">

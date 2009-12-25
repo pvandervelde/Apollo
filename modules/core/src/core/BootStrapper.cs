@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
@@ -169,6 +170,10 @@ namespace Apollo.Core
                 CreateService(serviceType, coreBasePath, kernel);
             }
 
+            // Load the UI service
+            var userInterfaceService = CreateUserInterfaceService();
+            kernel.InstallService(userInterfaceService);
+
             // Mark progress to starting core
             {
                 m_Progress.Mark(new CoreStartingProgressMark());
@@ -200,12 +205,12 @@ namespace Apollo.Core
                     var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
                     return from file in totalSequence select file.FullName;
                 });
-            currentDomain.AssemblyResolve += new ResolveEventHandler(fusionHelper.LocateAssemblyOnAssemblyLoadFailure);
+            currentDomain.AssemblyResolve += fusionHelper.LocateAssemblyOnAssemblyLoadFailure;
 
             // Set the exception handler. Adding the event ensures that
             // the exceptionHandler cannot be collected until the AppDomain
             // is killed.
-            currentDomain.UnhandledException += new UnhandledExceptionEventHandler(m_ExceptionHandlerFactory().OnUnhandledException);
+            currentDomain.UnhandledException += m_ExceptionHandlerFactory().OnUnhandledException;
         }
 
         /// <summary>
@@ -220,14 +225,14 @@ namespace Apollo.Core
             // Create the kernel appdomain. 
             var kernelDomain = m_Builder.AssembleWithFilePaths(
                 coreBasePath,
-                () =>
-                    {
-                        return from file in m_StartInfo.CoreAssemblies select file.FullName;
-                    },
+                () => from file in m_StartInfo.CoreAssemblies select file.FullName,
                 m_ExceptionHandlerFactory());
-            var kernelInjector = kernelDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+
+            Debug.Assert(!string.IsNullOrEmpty(typeof(KernelInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
+            var kernelInjector = kernelDomain.CreateInstanceAndUnwrap(typeof(KernelInjector).Assembly.FullName, typeof(KernelInjector).FullName) as IInjectKernels;
 
             // And then create the kernel
+            Debug.Assert(kernelInjector != null, "The kernel injector is null, this means we couldn't find the proper assembly or type.");
             kernelInjector.CreateKernel();
             return kernelInjector;
         }
@@ -261,16 +266,19 @@ namespace Apollo.Core
             Func<IEnumerable<string>> directoryPaths;
             SelectPaths(serviceType, out filePaths, out directoryPaths);
 
-            AppDomain serviceDomain = m_Builder.AssembleWithFileAndDirectoryPaths(
+            var serviceDomain = m_Builder.AssembleWithFileAndDirectoryPaths(
                 string.Format(CultureInfo.InvariantCulture, "AppDomain for {0}", serviceType.Name),
                 coreBasePath,
                 filePaths,
                 directoryPaths,
                 m_ExceptionHandlerFactory());
-            var injector = serviceDomain.CreateInstanceAndUnwrap(Assembly.GetExecutingAssembly().FullName, typeof(ServiceInjector).FullName) as IInjectServices;
+
+            Debug.Assert(!string.IsNullOrEmpty(typeof(ServiceInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
+            var injector = serviceDomain.CreateInstanceAndUnwrap(typeof(ServiceInjector).Assembly.FullName, typeof(ServiceInjector).FullName) as IInjectServices;
 
             // Prepare the appdomain
-            KernelService service = injector.CreateService(
+            Debug.Assert(injector != null, "Could not load the ServiceInjector.");
+            var service = injector.CreateService(
                 serviceType, 
                 serviceToUninstall => kernel.UninstallService(serviceToUninstall));
             kernel.InstallService(service);
@@ -292,7 +300,7 @@ namespace Apollo.Core
             // Note that the plugins path requires a directory resolver, the others
             // require file resolvers!
             var options = from option in serviceType.GetCustomAttributes(typeof(PrivateBinPathRequirementsAttribute), true)
-                          select (option as PrivateBinPathRequirementsAttribute).Option;
+                          select ((PrivateBinPathRequirementsAttribute)option).Option;
 
             IEnumerable<FileInfo> filePaths = null;
             IEnumerable<DirectoryInfo> directoryPaths = null;
@@ -337,6 +345,14 @@ namespace Apollo.Core
         }
 
         /// <summary>
+        /// Creates the user interface service.
+        /// </summary>
+        /// <returns>
+        /// The newly created user interface service.
+        /// </returns>
+        protected abstract KernelService CreateUserInterfaceService();
+
+        /// <summary>
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
@@ -351,7 +367,7 @@ namespace Apollo.Core
             Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
-            EventHandler<StartupProgressEventArgs> local = StartupProgress;
+            var local = StartupProgress;
             if (local != null)
             { 
                 local(this, new StartupProgressEventArgs(progress, currentlyProcessing));

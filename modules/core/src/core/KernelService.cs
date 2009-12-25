@@ -25,13 +25,6 @@ namespace Apollo.Core
         private StartupState m_StartupState = StartupState.NotStarted;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="KernelService"/> class.
-        /// </summary>
-        protected KernelService()
-        { 
-        }
-
-        /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
         public event EventHandler<StartupProgressEventArgs> StartupProgress;
@@ -51,7 +44,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Starts the process.
+        /// Starts the service.
         /// </summary>
         public void Start()
         {
@@ -72,9 +65,37 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Starts the service.
+        /// Provides derivative classes with a possibility to
+        /// perform startup tasks.
         /// </summary>
         protected abstract void StartService();
+
+        /// <summary>
+        /// Stops the service.
+        /// </summary>
+        public void Stop()
+        {
+            m_StartupState = StartupState.Stopping;
+            try
+            {
+                StopService();
+
+                // If we get here then we have started successfully
+                m_StartupState = StartupState.Stopped;
+            }
+            catch (Exception)
+            {
+                m_StartupState = StartupState.Failed;
+
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Provides derivative classes with a possibility to
+        /// perform shutdown tasks.
+        /// </summary>
+        protected abstract void StopService();
 
         /// <summary>
         /// Returns a value indicating what the state of the object is regarding

@@ -1,0 +1,58 @@
+<Project>
+  <Name>License system</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>License - overview</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>ILicenseValidator</Name>
+        <Access>Public</Access>
+        <Location left="985" top="193" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>KernelService</Name>
+        <Access>Public</Access>
+        <Location left="439" top="27" />
+        <Size width="302" height="153" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract void StartService()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>LicenseService</Name>
+        <Access>Public</Access>
+        <Location left="508" top="328" />
+        <Size width="162" height="105" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Automatically check the license based on a timer. The timer will fire at random times.</Text>
+        <Location left="165" top="353" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICodeStore</Name>
+        <Access>Public</Access>
+        <Location left="1005" top="536" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="2" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="3" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

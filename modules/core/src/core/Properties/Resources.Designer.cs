@@ -88,15 +88,6 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create a message with the &apos;AllServices&apos; sender name..
-        /// </summary>
-        internal static string Exceptions_Messages_CannotSendAMessageFromAllServices {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageFromAllServices", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Cannot create a message that is send to nobody..
         /// </summary>
         internal static string Exceptions_Messages_CannotSendAMessageToNoService {
@@ -129,6 +120,15 @@ namespace Apollo.Core.Properties {
         internal static string Exceptions_Messages_DuplicateDnsName_WithName {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_DuplicateDnsName_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type is incorrect. Expected {0}, got {1}..
+        /// </summary>
+        internal static string Exceptions_Messages_IncorrectType_WithTypes {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_IncorrectType_WithTypes", resourceCulture);
             }
         }
         
@@ -174,6 +174,24 @@ namespace Apollo.Core.Properties {
         internal static string Exceptions_Messages_MissingServiceDependency {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MissingServiceDependency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no known message pipeline object..
+        /// </summary>
+        internal static string Exceptions_Messages_PipelineObjectMissing {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_PipelineObjectMissing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The sender DNS name cannot be equivalent to the Nobody DNS name.
+        /// </summary>
+        internal static string Exceptions_Messages_SenderCannotBeNobody {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_SenderCannotBeNobody", resourceCulture);
             }
         }
         
@@ -250,6 +268,16 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to report the message delivery to {0}. The message [{2}] was send to {1}. The stack trace is: {3}.
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndExceptio" +
+                        "n", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The delivery of message [{2}] has failed because {3}. The message was send by {0} to {1}..
         /// </summary>
         internal static string MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason {
@@ -259,21 +287,20 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Failed to report the message delivery failure to {0}. The message [{2}] was send to {1} and failed because {3}. The stack trace is: {4}.
-        /// </summary>
-        internal static string MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReasonAndException {
-            get {
-                return ResourceManager.GetString("MessagePipeline_LogMessage_MessageFailureDeliveryFailed_WithSenderRecipientIdReas" +
-                        "onAndException", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The message pipeline was started..
         /// </summary>
         internal static string MessagePipeline_LogMessage_PipelineStarted {
             get {
                 return ResourceManager.GetString("MessagePipeline_LogMessage_PipelineStarted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The message pipeline was stopped..
+        /// </summary>
+        internal static string MessagePipeline_LogMessage_PipelineStopped {
+            get {
+                return ResourceManager.GetString("MessagePipeline_LogMessage_PipelineStopped", resourceCulture);
             }
         }
         

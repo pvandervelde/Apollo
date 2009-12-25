@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messages;
+using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using Moq;
 using Moq.Protected;
@@ -33,12 +33,19 @@ namespace Apollo.Core.Test.Unit
             private readonly Action<KernelService> m_StartupAction;
 
             /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="KernelService1"/> class.
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
-            public KernelService1(Action<KernelService> startupAction)
+            /// <param name="stopAction">The stop action.</param>
+            public KernelService1(Action<KernelService> startupAction, Action<KernelService> stopAction)
             {
                 m_StartupAction = startupAction;
+                m_StopAction = stopAction;
             }
 
             /// <summary>
@@ -47,6 +54,15 @@ namespace Apollo.Core.Test.Unit
             protected override void StartService()
             {
                 m_StartupAction(this);
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                m_StopAction(this);
             }
 
             /// <summary>
@@ -72,7 +88,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToConnectTo()
             {
-                return new Type[] { typeof(IMessagePipeline) };
+                return new[] { typeof(IMessagePipeline) };
             }
 
             /// <summary>
@@ -123,12 +139,19 @@ namespace Apollo.Core.Test.Unit
             private readonly Action<KernelService> m_StartupAction;
 
             /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="KernelService2"/> class.
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
-            public KernelService2(Action<KernelService> startupAction)
+            /// <param name="stopAction">The stop action.</param>
+            public KernelService2(Action<KernelService> startupAction, Action<KernelService> stopAction)
             {
                 m_StartupAction = startupAction;
+                m_StopAction = stopAction;
             }
 
             /// <summary>
@@ -137,6 +160,15 @@ namespace Apollo.Core.Test.Unit
             protected override void StartService()
             {
                 m_StartupAction(this);
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                m_StopAction(this);
             }
 
             /// <summary>
@@ -149,7 +181,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToBeAvailable()
             {
-                return new Type[] { typeof(KernelService1) };
+                return new[] { typeof(KernelService1) };
             }
 
             /// <summary>
@@ -162,7 +194,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToConnectTo()
             {
-                return new Type[] { typeof(IMessagePipeline) };
+                return new[] { typeof(IMessagePipeline) };
             }
 
             /// <summary>
@@ -213,12 +245,19 @@ namespace Apollo.Core.Test.Unit
             private readonly Action<KernelService> m_StartupAction;
 
             /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="KernelService3"/> class.
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
-            public KernelService3(Action<KernelService> startupAction)
+            /// <param name="stopAction">The stop action.</param>
+            public KernelService3(Action<KernelService> startupAction, Action<KernelService> stopAction)
             {
                 m_StartupAction = startupAction;
+                m_StopAction = stopAction;
             }
 
             /// <summary>
@@ -227,6 +266,15 @@ namespace Apollo.Core.Test.Unit
             protected override void StartService()
             {
                 m_StartupAction(this);
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                m_StopAction(this);
             }
 
             /// <summary>
@@ -239,7 +287,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToBeAvailable()
             {
-                return new Type[] { typeof(KernelService2) };
+                return new[] { typeof(KernelService2) };
             }
 
             /// <summary>
@@ -252,7 +300,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToConnectTo()
             {
-                return new Type[] { typeof(IMessagePipeline) };
+                return new[] { typeof(IMessagePipeline) };
             }
 
             /// <summary>
@@ -303,12 +351,19 @@ namespace Apollo.Core.Test.Unit
             private readonly Action<KernelService> m_StartupAction;
 
             /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
             /// Initializes a new instance of the <see cref="KernelService4"/> class.
             /// </summary>
             /// <param name="startupAction">The startup action.</param>
-            public KernelService4(Action<KernelService> startupAction)
+            /// <param name="stopAction">The stop action.</param>
+            public KernelService4(Action<KernelService> startupAction, Action<KernelService> stopAction)
             {
                 m_StartupAction = startupAction;
+                m_StopAction = stopAction;
             }
 
             /// <summary>
@@ -317,6 +372,15 @@ namespace Apollo.Core.Test.Unit
             protected override void StartService()
             {
                 m_StartupAction(this);
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                m_StopAction(this);
             }
 
             /// <summary>
@@ -329,7 +393,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToBeAvailable()
             {
-                return new Type[] { typeof(KernelService3) };
+                return new[] { typeof(KernelService3) };
             }
 
             /// <summary>
@@ -342,7 +406,7 @@ namespace Apollo.Core.Test.Unit
             /// </returns>
             public IEnumerable<Type> ServicesToConnectTo()
             {
-                return new Type[] { typeof(IMessagePipeline), typeof(KernelService2) };
+                return new[] { typeof(IMessagePipeline), typeof(KernelService2) };
             }
 
             /// <summary>
@@ -384,7 +448,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be installed with a null reference.")]
         public void InstallServiceWithNullObject()
         {
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<ArgumentNullException>(() => kernel.Install(null));
         }
 
@@ -392,8 +456,8 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {
-            var kernel = new Kernel();
-            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy()));
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<IHelpMessageProcessing>().Object)));
         }
 
         [Test]
@@ -407,10 +471,10 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { testMock.Object.GetType() });
+                    .Returns(new[] { testMock.Object.GetType() });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock.Object));
         }
 
@@ -425,10 +489,10 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { typeof(KernelService) });
+                    .Returns(new[] { typeof(KernelService) });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock.Object));
         }
 
@@ -447,17 +511,17 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { typeof(IMessagePipeline) });
+                    .Returns(new[] { typeof(IMessagePipeline) });
 
                 kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
                     .Callback<KernelService>(service => { dependency = service; });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             kernel.Install(messageMock.Object);
             kernel.Install(testMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
         }
 
         [Test]
@@ -475,17 +539,17 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { typeof(IMessagePipeline) });
+                    .Returns(new[] { typeof(IMessagePipeline) });
 
                 kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
                     .Callback<KernelService>(service => { dependency = service; });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             kernel.Install(testMock.Object);
             kernel.Install(messageMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
         }
 
         [Test]
@@ -494,7 +558,7 @@ namespace Apollo.Core.Test.Unit
         {
             var messageMock = new Mock<KernelService>();
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock.Object));
         }
 
@@ -502,10 +566,9 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be uninstalled if another object of the same type is installed.")]
         public void UninstallUnknownReference()
         {
-            var proxy = new CoreProxy();
-
-            var kernel = new Kernel();
-            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(proxy));
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
+            var secondProxy = new CoreProxy(kernel, new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(secondProxy));
         }
 
         [Test]
@@ -525,7 +588,7 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { typeof(IMessagePipeline) });
+                    .Returns(new[] { typeof(IMessagePipeline) });
 
                 kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
                     .Callback<KernelService>(service => { dependency = service; });
@@ -534,15 +597,15 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { uninstalledDependency = service; });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             kernel.Install(testMock.Object);
             kernel.Install(messageMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
             kernel.Uninstall(messageMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, uninstalledDependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
         }
 
         [Test]
@@ -562,7 +625,7 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new Type[] { });
 
                 kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new Type[] { typeof(IMessagePipeline) });
+                    .Returns(new[] { typeof(IMessagePipeline) });
 
                 kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
                     .Callback<KernelService>(service => { dependency = service; });
@@ -571,15 +634,15 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { uninstalledDependency = service; });
             }
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             kernel.Install(testMock.Object);
             kernel.Install(messageMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
             kernel.Uninstall(testMock.Object);
 
-            Assert.AreSame<KernelService>((KernelService)messageKernelMock.Object, uninstalledDependency);
+            Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
         }
 
         [Test]
@@ -596,9 +659,12 @@ namespace Apollo.Core.Test.Unit
             // Service 1
             // Service 2 / 3
             // Service 4
-            List<KernelService> startupOrder = new List<KernelService>();
+            var startupOrder = new List<KernelService>();
 
+            // Define the KernelService mock
             var messageMock = new Mock<KernelService>();
+
+            // Now implement IMessagePipeline on that mock
             var messageKernelMock = messageMock.As<IMessagePipeline>();
             {
                 messageMock.Protected().Setup("StartService")
@@ -606,12 +672,12 @@ namespace Apollo.Core.Test.Unit
             }
 
             Action<KernelService> storeAction = service => startupOrder.Add(service);
-            var testMock1 = new KernelService1(storeAction);
-            var testMock2 = new KernelService2(storeAction);
-            var testMock3 = new KernelService3(storeAction);
-            var testMock4 = new KernelService4(storeAction);
+            var testMock1 = new KernelService1(storeAction, service => { return; });
+            var testMock2 = new KernelService2(storeAction, service => { return; });
+            var testMock3 = new KernelService3(storeAction, service => { return; });
+            var testMock4 = new KernelService4(storeAction, service => { return; });
 
-            var kernel = new Kernel();
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
             kernel.Install(testMock1);
             kernel.Install(messageMock.Object);
             kernel.Install(testMock2);
@@ -631,6 +697,61 @@ namespace Apollo.Core.Test.Unit
                         testMock4
                     },
                 startupOrder);
+        }
+
+        [Test]
+        [Description("Checks that the kernel can be stopped.")]
+        public void Stop()
+        {
+            // Add 4 services:
+            // - Service 1: IMessagePipeline, no dependencies
+            // - Service 2: Depends on IMessagePipeline
+            // - Service 3: Depends on IMessagePipeline
+            // - Service 4: Depends on IMessagePipeLine, Service 2 and Service 3
+            //
+            // startup order should be:
+            // Service 1
+            // Service 2 / 3
+            // Service 4
+            var stopOrder = new List<KernelService>();
+
+            // Define the KernelService mock
+            var messageMock = new Mock<KernelService>();
+
+            // Now implement IMessagePipeline on that mock
+            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            {
+                messageMock.Protected().Setup("StopService")
+                    .Callback(() => stopOrder.Add(messageMock.Object));
+            }
+
+            Action<KernelService> storeAction = service => stopOrder.Add(service);
+            var testMock1 = new KernelService1(service => { return; }, storeAction);
+            var testMock2 = new KernelService2(service => { return; }, storeAction);
+            var testMock3 = new KernelService3(service => { return; }, storeAction);
+            var testMock4 = new KernelService4(service => { return; }, storeAction);
+
+            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock1);
+            kernel.Install(messageMock.Object);
+            kernel.Install(testMock2);
+            kernel.Install(testMock3);
+            kernel.Install(testMock4);
+
+            kernel.Start();
+            kernel.Shutdown();
+
+            Assert.AreEqual(5, stopOrder.Count);
+            Assert.AreElementsEqual(
+                new List<KernelService> 
+                    { 
+                        testMock4,
+                        testMock3,
+                        testMock2,
+                        testMock1,
+                        messageMock.Object,
+                    },
+                stopOrder);
         }
     }
 }

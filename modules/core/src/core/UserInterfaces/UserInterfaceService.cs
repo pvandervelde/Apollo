@@ -1,65 +1,50 @@
-﻿//-----------------------------------------------------------------------
+﻿// -----------------------------------------------------------------------
 // <copyright company="P. van der Velde">
 //     Copyright (c) P. van der Velde. All rights reserved.
 // </copyright>
-//-----------------------------------------------------------------------
+// ----------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Messaging;
+using Autofac;
+using Autofac.Builder;
 using Lokad;
 
-namespace Apollo.Core
+namespace Apollo.Core.UserInterfaces
 {
     /// <summary>
-    /// Defines the service that is used by the <c>Kernel</c> to 
-    /// interact with the other services on an equal basis.
+    /// Defines the <see cref="KernelService"/> that handles the User Interface interaction with the kernel.
     /// </summary>
-    /// <remarks>
-    /// The <c>CoreProxy</c> is automatically loaded by the <see cref="Kernel"/>
-    /// so there is no need to request the bootstrapper to load it.
-    /// </remarks>
     [AutoLoad]
-    internal sealed partial class CoreProxy : KernelService, IHaveServiceDependencies
+    internal sealed class UserInterfaceService : KernelService, IHaveServiceDependencies, IProcessMessages, ISendMessages, IUserInterfaceService
     {
         /// <summary>
-        /// The <see cref="Kernel"/> that owns this proxy.
+        /// The action which is executed when the service is started.
         /// </summary>
-        private readonly IKernel m_Owner;
+        private readonly Action<IContainer> m_OnStartService;
 
         /// <summary>
-        /// The object that takes care of the message processing.
-        /// </summary>
-        private readonly IHelpMessageProcessing m_Processor;
-
-        /// <summary>
-        /// The service that handles message receiving and processing.
+        /// The service that handles message processing.
         /// </summary>
         private IMessagePipeline m_MessageSink;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CoreProxy"/> class.
+        /// Initializes a new instance of the <see cref="UserInterfaceService"/> class.
         /// </summary>
-        /// <param name="owner">The <see cref="Kernel"/> to which this proxy is linked.</param>
-        /// <param name="processor">The object that handles the incoming messages.</param>
+        /// <param name="onStartService">The method that provides the DI container.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
+        /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="processor"/> is <see langword="null" />.
-        /// </exception>
-        public CoreProxy(IKernel owner, IHelpMessageProcessing processor)
+        public UserInterfaceService(Action<IContainer> onStartService)
         {
             {
-                Enforce.Argument(() => owner);
-                Enforce.Argument(() => processor);
+                Enforce.Argument(() => onStartService);
             }
 
             Name = new DnsName(GetType().Name);
-
-            m_Owner = owner;
-            m_Processor = processor;
+            m_OnStartService = onStartService;
         }
 
         /// <summary>
@@ -67,22 +52,15 @@ namespace Apollo.Core
         /// </summary>
         protected override void StartService()
         {
-            if (m_MessageSink == null)
+            var builder = new ContainerBuilder();
             {
-                throw new MissingServiceDependencyException();
+                // IApplication
+                // IInteractWithUsers
+                // ILinkToProjects
+                // IGiveAdvice
             }
 
-            // Set up the message actions
-            SetupMessageActions();
-
-            // Finally register with the message pipeline
-            if (!m_MessageSink.IsRegistered(Name))
-            {
-                // always register as listener last so that the
-                // message flow starts last.
-                m_MessageSink.RegisterAsSender(this);
-                m_MessageSink.RegisterAsListener(this);
-            }
+            m_OnStartService(builder.Build());
         }
 
         /// <summary>
@@ -91,17 +69,10 @@ namespace Apollo.Core
         /// </summary>
         protected override void StopService()
         {
-            // Finally unregister from the message pipeline
-            if (m_MessageSink != null && m_MessageSink.IsRegistered(Name))
-            {
-                // Always unregister as the listener first so that the 
-                // message flow stops.
-                m_MessageSink.UnregisterAsListener(this);
-                m_MessageSink.UnregisterAsSender(this);
-            }
+            throw new NotImplementedException();
         }
 
-        #region IHaveServiceDependencies
+        #region Implementation of IHaveServiceDependencies
 
         /// <summary>
         /// Returns a set of types indicating which services need to be present
@@ -109,11 +80,14 @@ namespace Apollo.Core
         /// </summary>
         /// <returns>
         ///     An <see cref="IEnumerable{Type}"/> which contains the types of 
-        ///     services which this service requires to be functional. Currently
-        ///     there are no services which the <c>CoreProxy</c> requires.
+        ///     services which this service requires to be functional.
         /// </returns>
         public IEnumerable<Type> ServicesToBeAvailable()
         {
+            // LogSink
+            // License
+            // Project
+            // Plugins
             return new Type[] { };
         }
 
@@ -122,12 +96,14 @@ namespace Apollo.Core
         /// needs to be linked to in order to be functional.
         /// </summary>
         /// <returns>
-        /// An <see cref="IEnumerable{Type}"/> which contains the types of services
-        /// on which this service depends. Currently that is only the
-        /// <see cref="MessagePipeline"/> service.
+        ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
+        ///     on which this service depends.
         /// </returns>
         public IEnumerable<Type> ServicesToConnectTo()
         {
+            // Message
+            // Persistence
+            // History
             return new[] { typeof(IMessagePipeline) };
         }
 
@@ -140,10 +116,9 @@ namespace Apollo.Core
             var pipeline = dependency as IMessagePipeline;
             if ((pipeline != null) && (m_MessageSink == null))
             {
-                pipeline.RegisterAsSender(this);
-                m_Processor.DefinePipelineInformation(pipeline, Name);
-
                 m_MessageSink = pipeline;
+                m_MessageSink.RegisterAsSender(this);
+                m_MessageSink.RegisterAsListener(this);
             }
         }
 
@@ -156,9 +131,8 @@ namespace Apollo.Core
             var pipeline = dependency as IMessagePipeline;
             if ((pipeline != null) && ReferenceEquals(m_MessageSink, pipeline))
             {
-                m_Processor.DeletePipelineInformation();
                 m_MessageSink.UnregisterAsSender(this);
-
+                m_MessageSink.UnregisterAsListener(this);
                 m_MessageSink = null;
             }
         }
@@ -170,18 +144,18 @@ namespace Apollo.Core
         ///     <see langword="true"/> if this instance is connected to all dependencies; otherwise, <see langword="false"/>.
         /// </value>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-          Justification = "Documentation can start with a language keyword")]
+            Justification = "Documentation can start with a language keyword")]
         public bool IsConnectedToAllDependencies
         {
             get
             {
                 return m_MessageSink != null;
             }
-        } 
+        }
 
         #endregion
 
-        #region IDnsNameObject
+        #region Implementation of IDnsNameObject
 
         /// <summary>
         /// Gets the identifier of the object.
@@ -191,7 +165,32 @@ namespace Apollo.Core
         {
             get;
             private set;
-        } 
+        }
+
+        #endregion
+
+        #region Implementation of IProcessMessages
+
+        /// <summary>
+        /// Processes a single message that is directed at the current service.
+        /// </summary>
+        /// <param name="message">The message that should be processed.</param>
+        public void ProcessMessage(KernelMessage message)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Processes a set of messages which are directed at the current service.
+        /// </summary>
+        /// <param name="messages">The set of messages which should be processed.</param>
+        public void ProcessMessages(IEnumerable<KernelMessage> messages)
+        {
+            foreach (var message in messages)
+            {
+                ProcessMessage(message);
+            }
+        }
 
         #endregion
     }
