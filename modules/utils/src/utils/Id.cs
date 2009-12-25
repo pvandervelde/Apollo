@@ -40,12 +40,20 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
             {
                 return false;
             }
 
-            return first.Equals(second);
+            var nonNullObject = first;
+            var possibleNullObject = second;
+            if (ReferenceEquals(first, null))
+            {
+                nonNullObject = second;
+                possibleNullObject = first;
+            }
+
+            return nonNullObject.Equals(possibleNullObject);
         }
 
         /// <summary>
@@ -59,12 +67,20 @@ namespace Apollo.Utils
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null) || ReferenceEquals(second, null))
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
             {
                 return false;
             }
 
-            return !first.Equals(second);
+            var nonNullObject = first;
+            var possibleNullObject = second;
+            if (ReferenceEquals(first, null))
+            {
+                nonNullObject = second;
+                possibleNullObject = first;
+            }
+
+            return !nonNullObject.Equals(possibleNullObject);
         }
 
         /// <summary>
@@ -78,20 +94,7 @@ namespace Apollo.Utils
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
-            {
-                return false;
-            }
-
-            // Check if first is a null reference by using ReferenceEquals because
-            // we overload the == operator. If first isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(second, null))
-            {
-                return false;
-            }
-
-            return first.CompareTo(second) > 0;
+            return !ReferenceEquals(first, null) && first.CompareTo(second) > 0;
         }
 
         /// <summary>
@@ -105,20 +108,7 @@ namespace Apollo.Utils
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(first, null))
-            {
-                return false;
-            }
-
-            // Check if first is a null reference by using ReferenceEquals because
-            // we overload the == operator. If first isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(second, null))
-            {
-                return false;
-            }
-
-            return first.CompareTo(second) < 0;
+            return !ReferenceEquals(first, null) && first.CompareTo(second) < 0;
         }
 
         /// <summary>
@@ -194,12 +184,7 @@ namespace Apollo.Utils
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(other, null))
-            {
-                return 1;
-            }
-
-            return m_Value.CompareTo(other.m_Value);
+            return ReferenceEquals(other, null) ? 1 : m_Value.CompareTo(other.m_Value);
         }
 
         /// <summary>
@@ -238,7 +223,7 @@ namespace Apollo.Utils
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_ErrorCode_CompareArgument,
                         obj.GetType().FullName,
-                        this.GetType().FullName),
+                        GetType().FullName),
                     @"obj");
             }
 
@@ -264,12 +249,7 @@ namespace Apollo.Utils
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            if (ReferenceEquals(other, null))
-            {
-                return false;
-            }
-
-            return m_Value.Equals(other.m_Value);
+            return !ReferenceEquals(other, null) && m_Value.Equals(other.m_Value);
         }
 
         /// <summary>
@@ -291,13 +271,8 @@ namespace Apollo.Utils
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            var ConfigurationElementId = obj as TId;
-            if (ReferenceEquals(ConfigurationElementId, null))
-            {
-                return false;
-            }
-
-            return Equals(ConfigurationElementId);
+            var id = obj as TId;
+            return !ReferenceEquals(id, null) && Equals(id);
         }
 
         /// <summary>

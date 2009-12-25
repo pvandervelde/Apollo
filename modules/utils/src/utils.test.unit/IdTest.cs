@@ -104,7 +104,7 @@ namespace Apollo.Utils
             MockId first = null;
             MockId second = new MockId(10);
 
-            Assert.IsFalse(first != second);
+            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -114,7 +114,7 @@ namespace Apollo.Utils
             MockId first = new MockId(10);
             MockId second = null;
 
-            Assert.IsFalse(first != second);
+            Assert.IsTrue(first != second);
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace Apollo.Utils
             MockId first = new MockId(10);
             MockId second = null;
 
-            Assert.IsFalse(first > second);
+            Assert.IsTrue(first > second);
         }
 
         [Test]

@@ -96,12 +96,10 @@ properties{
 	
 	$dirResource = Join-Path $dirBase 'resource'
 	
-	$dirLib = Join-Path $dirBase 'lib'
-	$dirLib3rdParty = Join-Path $dirLib 'thirdparty'
-	
 	$dirTemp = Join-Path $dirBin "temp"
 	$dirLogs = Join-Path $dirBin "logs"
 	$dirReports = Join-Path $dirBin 'reports'
+	$dirDeploy = Join-Path $dirBin 'release'
 	
 	# assembly names
 	$assemblyNameUnitTest = 'Apollo.Utils.Test.Unit'
@@ -120,7 +118,6 @@ properties{
 	$slnUtils = Join-Path $dirSrc 'Apollo.Utils.sln'
 	
 	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
-	$configFxCop = Join-Path $dirBase 'Apollo.Utils.fxcop'
 	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Utils.shfbproj'
 
 	# template files
@@ -136,6 +133,7 @@ properties{
 	$logMsBuild = 'utils_msbuild.log'
 	$logFxCop = 'utils_fxcop.xml'
 	$logNCover = 'utils_ncover.xml'
+	$logNCoverHtml = 'utils_ncover.html'
 	
 	# settings
 	# Version number
@@ -186,6 +184,9 @@ task ApiDoc -depends buildApiDoc
 # Runs the verifications
 task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
 
+# Creates the zip file of the deliverables
+task Package -depends buildPackage
+
 ###############################################################################
 # HELPER TASKS
 
@@ -207,20 +208,23 @@ task getVersion -action{
 # EXECUTING TASKS
 
 # The Help task displays the available commandline arguments
+# note that the weird outlining is so that it works in the console ...
 task Help -action{
 @"
 In order to run this build script please call a specific target.
 The following build tasks are available
 	'incremental':		Turns on the incremental building of the binaries
+	'coverage':			Turns on the code coverage for the unit tests
 	'debug':			Runs the script in debug mode. Mutually exclusive with the 'release' task
 	'release':			Runs the script in release mode. Mutually exclusive with the 'debug' task
 	'clean':			Cleans the output directory
 	'build':			Cleans the output directory and builds the binaries
 	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
-	'integrationtest':	Cleans the output directory, builds the binaries and runs the integration tests
+	'integrationtest':		Cleans the output directory, builds the binaries and runs the integration tests
 	'apidoc':			Builds the API documentation from the source comments
 	'verify':			Runs the source and binary verification. Returning one or more reports
-						describing the flaws in the source / binaries.
+					describing the flaws in the source / binaries.
+	'package':			Packages the deliverables into a single zip file
 
 	./build.ps1 <TARGET>
 Multiple build tasks can be specified separated by a comma. Also build tasks can be combined 
@@ -229,7 +233,7 @@ correct order. Note that this is NOT the case for the 'incremental', 'debug' and
 In order to get a correct effect these tasks need to be the first tasks being called!
        
 In order to run this build script please call this script via PSAKE like:
-	invoke-psake utils.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing
+	invoke-psake utils.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing -noexit -showfullerror
 "@
 }
 
@@ -274,6 +278,11 @@ task runInit -depends runClean -action{
 	{
 		New-Item $dirReports -ItemType directory | Out-Null # Don't display the directory information
 	}
+	
+	if (!(Test-Path -Path $dirDeploy -PathType Container))
+	{
+		New-Item $dirDeploy -ItemType directory | Out-Null # Don't display the directory information
+	}
 }
 
 task buildBinaries -depends runInit, getVersion -action{
@@ -314,32 +323,75 @@ task runUnitTests -depends buildBinaries -action{
 	$files = ""
 	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
 	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-	$command = "& '" + "$mbunitExe" + "' " + "/hd:'" + $dirMbUnit + "' /sc /rd:'" + $dirReports + "' /rt:XHtml-Condensed /rt:Xml-inline /r:IsolatedProcess " + $files
-	
+	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
 	if ($shouldCheckCoverage)
 	{
-		#
-		# FIX THIS.... NEED COVERAGE!!!!!!!!!!
-		#
-	
-		throw "Code coverage doesn't work at the moment. Please run without coverage"
+		#throw "Code coverage doesn't work at the moment. Please run without coverage"
+		
+		$coverageFiles = ""
+		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
+			Where-Object { ((($_.Name -like "*Apollo*") -and `
+							!( $_.Name -like "*Test.*") -and `
+							!($_.Name -like "*vshost*")) -and `
+							($_.Extension -match ".dll"))}
+		$coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
+		
 		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
-		#   isolated process runner we can
-		#$logFile = Join-Path $dirReports $logNCover
-		#& $mbunitExe /hd:$dirMbUnit /wd:$dirBuild /sc /rd:$dirReports /rt:XHtml-Condensed /r:NCover /rp:'NCoverCoverageFile:$logFile' /rp:"NCoverArguments:'//a Apollo.Utils.dll'" (Join-Path $dirBuild 'Apollo.Utils.Test.Unit.dll')
+		#   isolated process runner we can.
+		# Turn on the code coverage and specify which files need coverage checked
+		$command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
+		
+		# Specify where the XML log file should be written to
+		$command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
+	
+		# Indicate which Attribute is used to exclude classes / methods from coverage
+		$command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute' "
 	}
 	else
 	{
 		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
 		#   process. This means we can't load explicit 32-bit binaries. However using the 
 		#   isolated process runner we can
-		Invoke-Expression $command	
+		$command += "/r:IsolatedProcess " 
 	}
-
+	
+	# add the files.
+	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+	
+	# run the tests
+	$command
+	Invoke-Expression $command
+	if ($shouldCheckCoverage)
+	{
+		$ncoverFile = Join-Path $dirBase 'Coverage.xml'
+		if (Test-Path -Path $ncoverFile)
+		{
+			# The directory does not exist. Create it
+			Remove-Item $ncoverFile -Force
+		}
+	}
+	
 	if ($LastExitCode -ne 0)
 	{
 		throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
+	}
+	
+	# Generate the code coverage HTML report
+	if ($shouldCheckCoverage)
+	{
+		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
+		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
+		if ($verbose)
+		{
+			$command
+		}
+		
+		Invoke-Expression $command
+		if ($LastExitCode -ne 0)
+		{
+			throw "NCoverExplorer failed on Apollo.Utils with return code: $LastExitCode"
+		}
 	}
 }
 
@@ -395,7 +447,7 @@ task runFxCop -depends buildBinaries -action{
 	Invoke-Expression $command
 	if ($LastExitCode -ne 0)
 	{
-		throw "FxCop failed on NSarrac.Framework with return code: $LastExitCode"
+		throw "FxCop failed on Apollo.Utils with return code: $LastExitCode"
 	}
 }
 
@@ -403,4 +455,55 @@ task runDuplicateFinder -depends buildBinaries -action{
 	"Running duplicate check ..."
 	
 	# FAIL THE BUILD IF THERE IS ANYTHING WRONG
+}
+
+task buildPackage -depends buildBinaries -action{
+	"Packaging the files into a zip ..."
+	
+	$dirTempZip = Join-Path $dirTemp 'zip'
+	if((Test-Path -Path $dirTempZip -PathType Container))
+	{
+		Remove-Item $dirTempZip -Force
+	}
+	
+	# The directory does not exist. Create it
+	New-Item $dirTempZip -ItemType directory | Out-Null # Don't display all the information
+	
+	# Copy the files to the temp dir
+	# match all files that:
+	# - Are DLL, EXE or config files
+	# - Have the term Sherlock in their name
+	# - Don't have the terms 'Test' or 'vshost' in their name
+	$assemblies = Get-ChildItem -path $dirBuild | 
+		Where-Object { ((($_.Name -like "*Apollo*") -and `
+						!( $_.Name -like "*SrcOnly.*") -and `
+						!( $_.Name -like "*Test.*") -and `
+						!($_.Name -like "*vshost*")) -and `
+						(($_.Extension -match ".dll") -or `
+						 ($_.Extension -match ".exe") -or `
+						 ($_.Extension -match ".config") -or `
+						 ($_.Extension -match ".pdb")))}
+
+	foreach ($file in $assemblies){
+		$newFilePath = Join-Path $dirTempZip $file.Name
+		Copy-Item $file.FullName -Destination $newFilePath -Force
+	}
+	
+	# Copy the dependencies
+	$lokadFile = 'Lokad.Shared.dll'
+	Copy-Item (Join-Path $dirBuild $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
+	
+	# zip them
+	# Name the zip: Apollo.Utils_<DATE>
+	$output = Join-Path $dirDeploy ("Apollo.Utils_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
+
+	"Compressing..."
+
+	# zip the hudson temp dir
+	$7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
+	& $7zipExe a -tzip $output (Get-ChildItem $dirTempZip | foreach { $_.FullName })
+	if ($LastExitCode -ne 0)
+	{
+		throw "Failed to compress the Apollo.Utils binaries."
+	}	
 }

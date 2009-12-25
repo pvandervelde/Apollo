@@ -175,7 +175,9 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\IConfigurationKey.cs" />
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
+    <Compile Include="Future.cs" />
     <Compile Include="Id.cs" />
+    <Compile Include="IFuture.cs" />
     <Compile Include="IIsId.cs" />
     <Compile Include="ILockObject.cs" />
     <Compile Include="IProgressMark.cs" />
