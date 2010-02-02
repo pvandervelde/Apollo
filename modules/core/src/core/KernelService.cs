@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -14,7 +15,7 @@ namespace Apollo.Core
     /// </summary>
     /// <design>
     /// Because this is a MarshalByRef object you shouldn't really use
-    /// properties. You never know where the real object is so even property calls can
+    /// public properties. You never know where the real object is so even property calls can
     /// take a long time.
     /// </design>
     public abstract class KernelService : MarshalByRefObject, INeedStartup
@@ -112,6 +113,105 @@ namespace Apollo.Core
         public StartupState GetStartupState()
         { 
             return m_StartupState; 
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this service is not started.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this service is not started; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected bool IsNotStarted
+        {
+            get
+            {
+                return m_StartupState == StartupState.NotStarted;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this service is starting.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this service is starting; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected bool IsStarting
+        {
+            get
+            {
+                return m_StartupState == StartupState.Starting;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this service is stopped.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this service is stopped; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected bool IsStopped
+        {
+            get
+            {
+                return m_StartupState == StartupState.Stopped;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this service is stopping.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this service is stopping; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected bool IsStopping
+        {
+            get
+            {
+                return m_StartupState == StartupState.Stopping;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this service is capable of performing all its functions. This
+        /// is the case if the service is not starting or stopping.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this service is capable of performing all its functions; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected virtual bool IsFullyFunctional
+        {
+            get
+            {
+                return (!IsNotStarted && !IsStarting && !IsStopping && !IsStopped);
+            }
+        }
+
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns>
+        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy 
+        /// for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new 
+        /// lifetime service object initialized to the value of the 
+        /// <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
+        /// </returns>
+        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission.
+        /// </exception>
+        /// <PermissionSet><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/></PermissionSet>
+        public override object InitializeLifetimeService()
+        {
+            // We don't really want the system to remove our services at random times ..
+            return null;
         }
     }
 }

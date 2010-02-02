@@ -4,16 +4,21 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Messaging;
+using System;
+using Apollo.Utils.Commands;
 
 namespace Apollo.Core.UserInterfaces
 {
     /// <summary>
     /// Defines the interface for the User Interface <see cref="KernelService"/>.
     /// </summary>
-    public interface IUserInterfaceService
+    public interface IUserInterfaceService : IInvokeCommands
     {
-        // Send message --> translate from UI level to kernel level
-        // void Notify(object address, Action<object> callback);
+        /// <summary>
+        /// Registers the notification.
+        /// </summary>
+        /// <param name="name">The name of the notification.</param>
+        /// <param name="callback">The callback method that is called when the notification is activated.</param>
+        void RegisterNotification(NotificationName name, Action<object> callback);
     }
 }

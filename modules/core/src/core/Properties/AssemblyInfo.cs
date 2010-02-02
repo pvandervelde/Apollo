@@ -13,9 +13,9 @@ using System.Resources;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Apollo.Core")]
-[assembly: AssemblyDescription("")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyDescription("Holds the components for the core part of Apollo")]
 [assembly: AssemblyProduct("Apollo.Core")]
+[assembly: AssemblyCulture("")]
 
 // Indicate that the assembly is CLS compliant.
 [assembly: CLSCompliant(true)]

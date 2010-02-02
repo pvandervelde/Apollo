@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Exceptions_Messages_CannotCompareUnequalTypes" xml:space="preserve">
+    <value>Cannot compare these objects: {0} and {1}</value>
+  </data>
   <data name="Exceptions_Messages_CannotCreateAMessageWithoutId" xml:space="preserve">
     <value>Cannot create a message with no or an invalid ID number.</value>
   </data>
@@ -153,8 +156,14 @@
   <data name="Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency_WithService" xml:space="preserve">
     <value>The startup of the kernel failed due to a missing service dependency. Service of type {0} missed a dependency.</value>
   </data>
+  <data name="Exceptions_Messages_MissingNotificationAction" xml:space="preserve">
+    <value>There was no notification action registered for the given notification name.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingNotificationAction_WithName" xml:space="preserve">
+    <value>There was no notification action registered for the notification with name {0}.</value>
+  </data>
   <data name="Exceptions_Messages_MissingServiceDependency" xml:space="preserve">
-    <value>The startup of the kernel service failed due to a missing a dependency.</value>
+    <value>A missing service dependency was detected. The requested action cannot be performed.</value>
   </data>
   <data name="Exceptions_Messages_PipelineObjectMissing" xml:space="preserve">
     <value>There is no known message pipeline object.</value>
@@ -179,6 +188,12 @@
   </data>
   <data name="Exceptions_Messages_UnknownKernelServiceType" xml:space="preserve">
     <value>No kernel service of the given type is installed.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownNotificationName" xml:space="preserve">
+    <value>The specified notification name is a duplicate of another notification name.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownNotificationName_WithName" xml:space="preserve">
+    <value>The specified notification name is a duplicate of another notification name. The name is {0}.</value>
   </data>
   <data name="MessagePipeline_LogMessage_ListenerAdded" xml:space="preserve">
     <value>A new message listener object was added with name: {0}</value>

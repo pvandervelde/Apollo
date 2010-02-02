@@ -61,6 +61,15 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot compare these objects: {0} and {1}.
+        /// </summary>
+        internal static string Exceptions_Messages_CannotCompareUnequalTypes {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotCompareUnequalTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create a message with no or an invalid ID number..
         /// </summary>
         internal static string Exceptions_Messages_CannotCreateAMessageWithoutId {
@@ -169,7 +178,25 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The startup of the kernel service failed due to a missing a dependency..
+        ///   Looks up a localized string similar to There was no notification action registered for the given notification name..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingNotificationAction {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingNotificationAction", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There was no notification action registered for the notification with name {0}..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingNotificationAction_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingNotificationAction_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A missing service dependency was detected. The requested action cannot be performed..
         /// </summary>
         internal static string Exceptions_Messages_MissingServiceDependency {
             get {
@@ -246,6 +273,24 @@ namespace Apollo.Core.Properties {
         internal static string Exceptions_Messages_UnknownKernelServiceType {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownKernelServiceType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified notification name is a duplicate of another notification name..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownNotificationName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownNotificationName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified notification name is a duplicate of another notification name. The name is {0}..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownNotificationName_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownNotificationName_WithName", resourceCulture);
             }
         }
         

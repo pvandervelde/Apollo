@@ -280,9 +280,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Location left="88" top="888" />
         <Size width="423" height="254" />
       </Entity>
+      <Entity type="Comment">
+        <Text>How do we handle the different generators? There are at least the simulation generator and the experimental generator.</Text>
+        <Location left="12" top="563" />
+        <Size width="282" height="76" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -297,12 +304,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -317,6 +328,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -331,12 +344,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -363,6 +380,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -381,6 +400,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -395,6 +416,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -405,6 +428,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -423,6 +448,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="15">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -449,6 +476,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -463,6 +492,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -477,6 +508,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -491,12 +524,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="15">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -511,6 +548,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="20">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -525,12 +564,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -553,6 +596,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="1" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -571,6 +616,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="21" second="24">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -589,6 +636,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="26" second="28">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -615,12 +664,16 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="19" second="32">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="32" second="26">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -651,6 +704,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="24" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -665,6 +720,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="28">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -675,6 +732,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -685,6 +744,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="34">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -711,6 +772,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="19" second="38">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">

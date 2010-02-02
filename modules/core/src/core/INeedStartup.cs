@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {

@@ -12,9 +12,13 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Apollo.Core.Messaging;
+using Apollo.Core.UserInterfaces;
 using Apollo.Utils;
+using Apollo.Utils.Commands;
 using Apollo.Utils.ExceptionHandling;
 using Apollo.Utils.Fusion;
+using Autofac.Core;
 using Lokad;
 
 namespace Apollo.Core
@@ -51,7 +55,7 @@ namespace Apollo.Core
     /// </serviceType>
     /// </list>
     /// </design>
-    public abstract partial class Bootstrapper : IBootstrapper
+    public abstract partial class Bootstrapper
     {
         /// <summary>
         /// Finds all the service types stored in the current assembly.
@@ -66,7 +70,8 @@ namespace Apollo.Core
         {
             var serviceTypes = from type in Assembly.GetExecutingAssembly().GetTypes()
                                where typeof(KernelService).IsAssignableFrom(type) &&
-                                     type.GetCustomAttributes(typeof(AutoLoadAttribute), true).Length == 0
+                                     type.GetCustomAttributes(typeof(AutoLoadAttribute), true).Length == 0 &&
+                                     !type.IsAbstract
                                select type;
 
             return serviceTypes;
@@ -95,7 +100,7 @@ namespace Apollo.Core
         /// The collection that contains the base and private path information
         /// for the <c>AppDomain</c>s that need to be created.
         /// </summary>
-        private readonly IKernelStartInfo m_StartInfo;
+        private readonly KernelStartInfo m_StartInfo;
 
         /// <summary>
         /// The factory used to create <c>IExceptionHandler</c> objects.
@@ -123,7 +128,7 @@ namespace Apollo.Core
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
         protected Bootstrapper(
-            IKernelStartInfo startInfo, 
+            KernelStartInfo startInfo, 
             Func<IExceptionHandler> exceptionHandlerFactory, 
             ITrackProgress progress)
         {
@@ -146,7 +151,7 @@ namespace Apollo.Core
             // Mark beginning of startup.
             {
                 m_Progress.Mark(new ApplicationStartingProgressMark());
-                m_Progress.StartTracking((progress, mark) => RaiseStartupProgress(progress, mark));
+                m_Progress.StartTracking();
             }
 
             // Link assembly resolver to current AppDomain
@@ -172,7 +177,7 @@ namespace Apollo.Core
 
             // Load the UI service
             var userInterfaceService = CreateUserInterfaceService();
-            kernel.InstallService(userInterfaceService);
+            kernel.InstallService(userInterfaceService, AppDomain.CurrentDomain);
 
             // Mark progress to starting core
             {
@@ -184,6 +189,7 @@ namespace Apollo.Core
 
             // Indicate core startup is done
             {
+                m_Progress.Mark(new ApplicationStartupFinishedProgressMark());
                 m_Progress.StopTracking();
             }
         }
@@ -225,7 +231,7 @@ namespace Apollo.Core
             // Create the kernel appdomain. 
             var kernelDomain = m_Builder.AssembleWithFilePaths(
                 coreBasePath,
-                () => from file in m_StartInfo.CoreAssemblies select file.FullName,
+                new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName),
                 m_ExceptionHandlerFactory());
 
             Debug.Assert(!string.IsNullOrEmpty(typeof(KernelInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
@@ -262,8 +268,8 @@ namespace Apollo.Core
                 }
             }
 
-            Func<IEnumerable<string>> filePaths;
-            Func<IEnumerable<string>> directoryPaths;
+            List<string> filePaths;
+            List<string> directoryPaths;
             SelectPaths(serviceType, out filePaths, out directoryPaths);
 
             var serviceDomain = m_Builder.AssembleWithFileAndDirectoryPaths(
@@ -278,10 +284,8 @@ namespace Apollo.Core
 
             // Prepare the appdomain
             Debug.Assert(injector != null, "Could not load the ServiceInjector.");
-            var service = injector.CreateService(
-                serviceType, 
-                serviceToUninstall => kernel.UninstallService(serviceToUninstall));
-            kernel.InstallService(service);
+            var service = injector.CreateService(serviceType);
+            kernel.InstallService(service, serviceDomain);
         }
 
         /// <summary>
@@ -294,7 +298,7 @@ namespace Apollo.Core
             Justification = "It seems overkill to define a custom type to encapsulate the return values.")]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "The use of the Type class indicates better what we want to achieve.")]
-        private void SelectPaths(Type serviceType, out Func<IEnumerable<string>> files, out Func<IEnumerable<string>> directories)
+        private void SelectPaths(Type serviceType, out List<string> files, out List<string> directories)
         {
             // Determine which log paths should be applied. 
             // Note that the plugins path requires a directory resolver, the others
@@ -334,13 +338,15 @@ namespace Apollo.Core
             files = null;
             if (filePaths != null)
             {
-                files = () => from file in filePaths select file.FullName;
+                files = new List<string>(from file in filePaths select file.FullName);
             }
 
             directories = null;
             if (directoryPaths != null)
             {
-                directories = () => from directory in directoryPaths select directory.FullName;
+                // This will only iterate over the directories in the directoryPaths collection, not all the sub-directories
+                // symbolic links etc. etc.
+                directories = new List<string>(from directory in directoryPaths select directory.FullName);
             }
         }
 
@@ -350,28 +356,22 @@ namespace Apollo.Core
         /// <returns>
         /// The newly created user interface service.
         /// </returns>
-        protected abstract KernelService CreateUserInterfaceService();
-
-        /// <summary>
-        /// Occurs when there is a change in the progress of the system
-        /// startup.
-        /// </summary>
-        public event EventHandler<StartupProgressEventArgs> StartupProgress;
-
-        /// <summary>
-        /// Raises the startup progress event with the specified values.
-        /// </summary>
-        /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
-        /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
-        private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
+        private KernelService CreateUserInterfaceService()
         {
-            var local = StartupProgress;
-            if (local != null)
-            { 
-                local(this, new StartupProgressEventArgs(progress, currentlyProcessing));
-            }
+            var userInterface = new UserInterfaceService(
+                new CommandFactory(),
+                new DnsNameConstants(), 
+                new NotificationNameConstants(), 
+                new MessageProcessingAssistance(),
+                StoreContainer);
+
+            return userInterface;
         }
+
+        /// <summary>
+        /// Stores the dependency injection container.
+        /// </summary>
+        /// <param name="container">The DI container.</param>
+        protected abstract void StoreContainer(IModule container);
     }
 }

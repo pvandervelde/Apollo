@@ -77,7 +77,7 @@ namespace Apollo.Core.Messaging
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Message ID with number: {0}", InternalValue);
+            return string.Format(CultureInfo.InvariantCulture, "Message ID with number: {0}", InternalValue.Equals(s_NoneId) ? "None" : InternalValue.ToString());
         }
     }
 }

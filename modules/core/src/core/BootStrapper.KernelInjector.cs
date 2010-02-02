@@ -6,6 +6,7 @@
 
 using System;
 using Apollo.Core.Messaging;
+using Apollo.Utils.Commands;
 using Autofac;
 using Autofac.Builder;
 using Lokad;
@@ -41,6 +42,9 @@ namespace Apollo.Core
                 {
                     builder.Register(c => new MessageProcessingAssistance())
                         .As<IHelpMessageProcessing>();
+
+                    builder.Register(c => new CommandFactory())
+                        .As<ICommandContainer>();
                 }
 
                 return builder.Build();
@@ -57,22 +61,21 @@ namespace Apollo.Core
             public void CreateKernel()
             {
                 var container = BuildContainer();
-                m_Kernel = new Kernel(container.Resolve<IHelpMessageProcessing>());
+                m_Kernel = new Kernel(container.Resolve<ICommandContainer>(), container.Resolve<IHelpMessageProcessing>());
             }
 
             /// <summary>
             /// Installs the specified service in the kernel.
             /// </summary>
-            /// <param name="serviceToInstall">
-            ///     The service which should be installed.
-            /// </param>
-            public void InstallService(KernelService serviceToInstall)
+            /// <param name="serviceToInstall">The service which should be installed.</param>
+            /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
+            public void InstallService(KernelService serviceToInstall, AppDomain serviceDomain)
             {
                 {
                     Enforce.Argument(() => serviceToInstall);
                 }
 
-                m_Kernel.Install(serviceToInstall);
+                m_Kernel.Install(serviceToInstall, serviceDomain);
             }
 
             /// <summary>

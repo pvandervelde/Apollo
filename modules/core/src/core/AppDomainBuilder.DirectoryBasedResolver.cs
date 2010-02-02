@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using Apollo.Utils.Fusion;
@@ -32,9 +31,7 @@ namespace Apollo.Core
             /// Explicitly store the directory paths in strings because DirectoryInfo objects are eventually
             /// nuked because DirectoryInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
-            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
-            private Func<IEnumerable<string>> m_Directories;
+            private IEnumerable<string> m_Directories;
 
             /// <summary>
             /// Stores the paths to the relevant directories.
@@ -45,9 +42,7 @@ namespace Apollo.Core
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="directoryPaths"/> is <see langword="null" />.
             /// </exception>
-            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
-            public void StoreDirectoryPaths(Func<IEnumerable<string>> directoryPaths)
+            public void StoreDirectoryPaths(IEnumerable<string> directoryPaths)
             {
                 {
                     Enforce.Argument(() => directoryPaths);
@@ -73,8 +68,8 @@ namespace Apollo.Core
                 var domain = AppDomain.CurrentDomain;
                 {
                     // For each path in the list get all the assembly files in that path.
-                    var helper = new FusionHelper(() => m_Directories().SelectMany((dir) => Directory.GetFiles(dir, FileExtensions.AssemblyExtension, SearchOption.AllDirectories)));
-                    domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                    var helper = new FusionHelper(() => m_Directories.SelectMany(dir => Directory.GetFiles(dir, FileExtensions.AssemblyExtension, SearchOption.AllDirectories)));
+                    domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
                 }
             }
         }

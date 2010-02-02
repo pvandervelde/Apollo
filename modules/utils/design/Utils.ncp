@@ -1,0 +1,144 @@
+<Project>
+  <Name>Utils</Name>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Commands</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>ICommand</Name>
+        <Access>Public</Access>
+        <Location left="89" top="442" />
+        <Size width="243" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">CommandName Name { get; }</Member>
+        <Member type="Method">void Invoke(ICommandContext context)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICommandContext</Name>
+        <Access>Public</Access>
+        <Location left="116" top="644" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>CommandName</Name>
+        <Access>Public</Access>
+        <Location left="663" top="120" />
+        <Size width="400" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected override TId Clone(TInternalValue value)</Member>
+        <Member type="Method">protected override int CompareValues(TInternalValue ourValue, TInternalValue theirValue)</Member>
+        <Member type="Method">public override string ToString()</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Id&lt;TId, TInternalValue&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1211" top="38" />
+        <Size width="454" height="349" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly TInternalValue m_Value</Member>
+        <Member type="Method">public static bool operator ==(Id&lt;TId, TInternalValue&gt; first, Id&lt;TId, TInternalValue&gt; second)</Member>
+        <Member type="Method">public static bool operator !=(Id&lt;TId, TInternalValue&gt; first, Id&lt;TId, TInternalValue&gt; second)</Member>
+        <Member type="Method">public static bool operator &gt;(Id&lt;TId, TInternalValue&gt; first, Id&lt;TId, TInternalValue&gt; second)</Member>
+        <Member type="Method">public static bool operator &lt;(Id&lt;TId, TInternalValue&gt; first, Id&lt;TId, TInternalValue&gt; second)</Member>
+        <Member type="Constructor">protected Id(TInternalValue value)</Member>
+        <Member type="Property">protected TInternalValue InternalValue { get; set; }</Member>
+        <Member type="Method">public TId Clone()</Member>
+        <Member type="Method">protected abstract TId Clone(TInternalValue value)</Member>
+        <Member type="Method">public int CompareTo(TId other)</Member>
+        <Member type="Method">protected virtual int CompareValues(TInternalValue ourValue, TInternalValue theirValue)</Member>
+        <Member type="Method">public int CompareTo(object obj)</Member>
+        <Member type="Method">public bool Equals(TId other)</Member>
+        <Member type="Method">public sealed override bool Equals(object obj)</Member>
+        <Member type="Method">public sealed override int GetHashCode()</Member>
+        <Member type="Method">public abstract override string ToString()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IIsId&lt;TId&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1307" top="486" />
+        <Size width="163" height="78" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">TId Clone()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IStoreCommandInformation</Name>
+        <Access>Public</Access>
+        <Location left="426" top="711" />
+        <Size width="362" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Add(CommandName name, Func&lt;ICommand&gt; activator)</Member>
+        <Member type="Method">bool Contains(CommandName name)</Member>
+        <Member type="Method">void Remove(CommandName name)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IRunCommands</Name>
+        <Access>Public</Access>
+        <Location left="862" top="711" />
+        <Size width="361" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">bool Contains(CommandName name)</Member>
+        <Member type="Method">void Invoke(CommandName name)</Member>
+        <Member type="Method">void Invoke(CommandName name, ICommandContext context)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>CommandFactory</Name>
+        <Access>Public</Access>
+        <Location left="745" top="376" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Generalization" first="2" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Dependency" first="3" second="4">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1383</X>
+          <Y>412</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1383</X>
+          <Y>458</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>800</X>
+          <Y>617</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>583</X>
+          <Y>678</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>858</X>
+          <Y>617</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="7" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+</Project>

@@ -16,8 +16,7 @@ namespace Apollo.Utils
         /// <summary>
         /// Starts the tracking of the progress.
         /// </summary>
-        /// <param name="progress">The function called each time the progress event is invoked.</param>
-        void StartTracking(Action<int, IProgressMark> progress);
+        void StartTracking();
 
         /// <summary>
         /// Marks the current time with the specified marker.
@@ -29,6 +28,12 @@ namespace Apollo.Utils
         /// Occurs when a new mark is provided to the tracker.
         /// </summary>
         event EventHandler<ProgressMarkEventArgs> MarkAdded;
+
+        /// <summary>
+        /// Occurs when there is a change in the progress of the system
+        /// startup.
+        /// </summary>
+        event EventHandler<StartupProgressEventArgs> StartupProgress;
 
         /// <summary>
         /// Stops the tracking of the progress.

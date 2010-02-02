@@ -8,8 +8,8 @@
     <ProjectGuid>{ACD26D23-36BA-4035-84CA-6E462A03B033}</ProjectGuid>
     <OutputType>library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apollo.Ui.Common</RootNamespace>
-    <AssemblyName>Apollo.Ui.Common</AssemblyName>
+    <RootNamespace>Apollo.UI.Common</RootNamespace>
+    <AssemblyName>Apollo.UI.Common</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -25,7 +25,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Debug\Apollo.Ui.Common.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\Apollo.UI.Common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -35,13 +35,13 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>bin\Release\Apollo.Ui.Common.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\Apollo.UI.Common.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <DocumentationFile>bin\Debug\Apollo.Ui.Common.XML</DocumentationFile>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>bin\Debug\Apollo.UI.Common.xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>full</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -51,8 +51,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\Apollo.Ui.Common.XML</DocumentationFile>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>bin\Release\Apollo.UI.Common.xml</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
@@ -61,7 +61,42 @@
     <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DocumentationFile>bin\Debug\Apollo.UI.Common.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>bin\x64\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <DocumentationFile>bin\Release\Apollo.UI.Common.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared">
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Composite">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Composite.Presentation">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.Presentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\lib\servicelocation\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -86,7 +121,38 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Constants.cs" />
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.Configuration.cs">
+      <Link>Properties\AssemblyInfo.Configuration.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="Bootstrapper\AutofacContainerAdapter.cs" />
+    <Compile Include="Bootstrapper\AutofacServiceLocator.cs" />
+    <Compile Include="Bootstrapper\CompositeBootstrapper.cs" />
+    <Compile Include="Bootstrapper\ContainerAdapterExtensions.cs" />
+    <Compile Include="Bootstrapper\ContainerRegistrationScope.cs" />
+    <Compile Include="Bootstrapper\ContainerRegistrationScopeExtensions.cs" />
+    <Compile Include="Bootstrapper\IContainerAdapter.cs" />
+    <Compile Include="Bootstrapper\RegionAdapterMapper.cs" />
+    <Compile Include="Bootstrapper\RegionBehaviorFactoryMapper.cs" />
+    <Compile Include="Bootstrapper\ResolveAnythingSource.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Eventing\EventListener.cs" />
+    <Compile Include="IPresenter.cs" />
+    <Compile Include="IRegionView.cs" />
+    <Compile Include="IStandardView.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Presenter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -100,6 +166,10 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="RegionExtensions.cs" />
+    <Compile Include="RegionView.cs" />
+    <Compile Include="WindowsVersionNumbers.cs" />
+    <Compile Include="WindowView.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -111,71 +181,16 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Resources\StylesAndTemplatesCommon.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\StylesAndTemplatesGlobal.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Resources\StylesAndTemplatesValidation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Converters\" />
+    <Folder Include="Resources\" />
     <Folder Include="ViewModels\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\ProgressTreeNode_Play_Icon_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pause_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pause_24x24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pause_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pause_48x48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Pause_256x256.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Play_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Play_24x24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Play_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Play_48x48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Play_256x256.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Stop_16x16.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Stop_24x24.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Stop_32x32.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Stop_48x48.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Stop_256x256.png" />
+    <ProjectReference Include="..\..\..\..\core\src\core\Apollo.Core.csproj">
+      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
+      <Name>Apollo.Core</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -6,23 +6,18 @@
     <Entities>
       <Entity type="Comment">
         <Text>Needs some way to display messages from other components. However these messags might need translating to normal user speak --&gt; Use tags. aka components send tag, UI looks them up and combines?</Text>
-        <Location left="1453" top="1643" />
+        <Location left="1704" top="2060" />
         <Size width="260" height="113" />
       </Entity>
       <Entity type="Comment">
         <Text>Need a help system. Have fun with this one.</Text>
-        <Location left="1128" top="1464" />
+        <Location left="1379" top="1881" />
         <Size width="262" height="70" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Need some kind of advisory system.</Text>
-        <Location left="1943" top="231" />
-        <Size width="208" height="50" />
       </Entity>
       <Entity type="Class">
         <Name>UserInterfaceService</Name>
         <Access>Public</Access>
-        <Location left="1276" top="524" />
+        <Location left="1754" top="749" />
         <Size width="162" height="96" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -30,7 +25,7 @@
       <Entity type="Class">
         <Name>KernelService</Name>
         <Access>Public</Access>
-        <Location left="1205" top="64" />
+        <Location left="1436" top="339" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
         <Member type="Method">protected abstract void StartService()</Member>
@@ -41,42 +36,42 @@
       </Entity>
       <Entity type="Comment">
         <Text>Need to handle the configuration options too</Text>
-        <Location left="480" top="1447" />
+        <Location left="731" top="1650" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Interface">
-        <Name>IApplication</Name>
+        <Name>IAbstractApplications</Name>
         <Access>Public</Access>
-        <Location left="743" top="1447" />
+        <Location left="994" top="1650" />
         <Size width="294" height="112" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">bool CanShutdown { get; }</Member>
+        <Member type="Method">bool CanShutdown()</Member>
         <Member type="Method">void Shutdown(bool shouldForce)</Member>
         <Member type="Property">IHoldSystemInforrmation ApplicationStatus { get; }</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IInteractWithUsers</Name>
         <Access>Public</Access>
-        <Location left="1523" top="1330" />
+        <Location left="1774" top="1747" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the top-level API for all the user interaction commands. Examples are help system, translation of system messages etc.</Text>
-        <Location left="1128" top="1352" />
+        <Location left="1379" top="1769" />
         <Size width="262" height="63" />
       </Entity>
       <Entity type="Interface">
         <Name>IGiveAdvice</Name>
         <Access>Public</Access>
-        <Location left="1969" top="374" />
+        <Location left="2217" top="1524" />
         <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IHoldSystemInformation</Name>
         <Access>Public</Access>
-        <Location left="292" top="1146" />
+        <Location left="543" top="1349" />
         <Size width="322" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Refresh()</Member>
@@ -88,39 +83,42 @@
       <Entity type="Class">
         <Name>ApplicationFacade</Name>
         <Access>Public</Access>
-        <Location left="788" top="1116" />
-        <Size width="162" height="216" />
+        <Location left="994" top="1418" />
+        <Size width="294" height="128" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">public bool CanShutdown { get; }</Member>
+        <Member type="Method">public void Shutdown(bool shouldForce)</Member>
+        <Member type="Property">public IHoldSystemInforrmation ApplicationStatus { get; }</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>What do we put in the advice engine? </Text>
-        <Location left="1969" top="572" />
+        <Location left="2553" top="1524" />
         <Size width="212" height="50" />
       </Entity>
       <Entity type="Comment">
         <Text>Quite a lot really. We can add:
 - Plug-in selection algorithms
 - others?</Text>
-        <Location left="1963" top="1057" />
+        <Location left="2527" top="1667" />
         <Size width="288" height="112" />
       </Entity>
       <Entity type="Comment">
         <Text>Note that start-up events are not fed through this system, because the UI won't be up when those events get raised. They will be fed through the bootstrapper.</Text>
-        <Location left="1592" top="537" />
+        <Location left="1993" top="454" />
         <Size width="217" height="94" />
       </Entity>
       <Entity type="Interface">
         <Name>ILinkToProjects</Name>
         <Access>Public</Access>
-        <Location left="1946" top="1246" />
+        <Location left="2637" top="694" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
         <Name>DependencyInjection</Name>
         <Access>Public</Access>
-        <Location left="277" top="546" />
+        <Location left="75" top="336" />
         <Size width="162" height="110" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -128,7 +126,7 @@
       <Entity type="Interface">
         <Name>IBootstrapper</Name>
         <Access>Public</Access>
-        <Location left="723" top="64" />
+        <Location left="724" top="74" />
         <Size width="339" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Load()</Member>
@@ -137,7 +135,7 @@
       <Entity type="Class">
         <Name>BootStrapper</Name>
         <Access>Public</Access>
-        <Location left="723" top="307" />
+        <Location left="724" top="317" />
         <Size width="339" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void Load()</Member>
@@ -147,98 +145,237 @@
       <Entity type="Interface">
         <Name>IHoldDependencies</Name>
         <Access>Public</Access>
-        <Location left="554" top="546" />
+        <Location left="352" top="336" />
         <Size width="162" height="89" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IServiceInformation</Name>
         <Access>Public</Access>
-        <Location left="321" top="953" />
+        <Location left="572" top="1156" />
         <Size width="224" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Property">string Name { get; }</Member>
         <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
         <Member type="Property">TimeSpan Uptime { get; }</Member>
       </Entity>
+      <Entity type="Comment">
+        <Text>Used by the user interface to resolve the dependencies .</Text>
+        <Location left="352" top="535" />
+        <Size width="166" height="50" />
+      </Entity>
+      <Entity type="Class">
+        <Name>UserInteractionFacade</Name>
+        <Access>Public</Access>
+        <Location left="1774" top="1449" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProjectFacade</Name>
+        <Access>Public</Access>
+        <Location left="2276" top="694" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>AdviceFacade</Name>
+        <Access>Public</Access>
+        <Location left="2217" top="1356" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>This will need to know about timelines!</Text>
+        <Location left="2637" top="486" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>This needs to be renamed. It's not so much the interaction stuff, it's more the settings / options / random stuff (e.g. plug-in system, licensing etc.)</Text>
+        <Location left="1413" top="1493" />
+        <Size width="218" height="79" />
+      </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Generalization" first="3" second="4">
+      <Relationship type="Generalization" first="2" second="3">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="5" second="6">
-        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="1" second="7">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="8" second="7">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="2" second="9">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="0" second="7">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="11" second="6">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="11" second="3">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1004</X>
-          <Y>1264</Y>
+          <X>1842</X>
+          <Y>722</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1325</X>
-          <Y>662</Y>
+          <X>1805</X>
+          <Y>417</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="4" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="1" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="7" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="0" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="10" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="10" second="2">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1122</X>
+          <Y>1342</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1725</X>
+          <Y>802</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="12" second="9">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="12" second="13">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="14" second="3">
+      <Relationship type="Comment" first="11" second="8">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2527</X>
+          <Y>1551</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2406</X>
+          <Y>1551</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="18" second="17">
+      <Relationship type="Comment" first="11" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="18" second="3">
+      <Relationship type="Comment" first="13" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1872</X>
+          <Y>702</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="17" second="16">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="17" second="2">
         <Label>Links to</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>990</X>
-          <Y>247</Y>
+          <X>882</X>
+          <Y>460</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1330</X>
-          <Y>499</Y>
+          <X>1808</X>
+          <Y>724</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="16" second="19">
+      <Relationship type="Realization" first="15" second="18">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="17" second="18">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>665</X>
+          <Y>384</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>570</X>
+          <Y>384</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="20" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="21" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="21" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1868</X>
+          <Y>1407</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Dependency" first="22" second="14">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2477</X>
+          <Y>794</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2600</X>
+          <Y>794</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="22" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2225</X>
+          <Y>810</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2040</X>
+          <Y>810</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Dependency" first="23" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2309</X>
+          <Y>1483</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2309</X>
+          <Y>1493</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="21" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="24" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="25" second="21">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>

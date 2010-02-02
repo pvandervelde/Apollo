@@ -73,6 +73,8 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Commands\CommandFactoryTest.cs" />
+    <Compile Include="Commands\CommandIdTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
     <Compile Include="IdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +91,9 @@
     <Reference Include="MbUnit35, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\mbunit\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\tools\moq\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

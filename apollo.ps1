@@ -21,12 +21,42 @@ function global:Invoke-PsakeScript([string]$script, [String[]]$targets){
 	""
 }
 
+function global:Unzip-Files([string]$file, [string]$targetDirectory){
+	"Uncompressing..."
+	
+	if (!(Test-Path -Path $targetDirectory -PathType Container))
+	{
+		New-Item $targetDirectory -ItemType directory | Out-Null # Don't display the directory information
+	}
+	
+	$currentDir = $PWD
+	try
+	{
+		sl $targetDirectory
+		
+		# zip the hudson temp dir
+		$7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
+		$command = '& $7zipExe x ' + '"' + $file + '"'
+		$command
+		Invoke-Expression $command
+		if ($LastExitCode -ne 0)
+		{
+			throw "Failed to uncompress the binaries in $file."
+		}
+	}
+	finally
+	{
+		sl $currentDir
+	}
+}
+
 # Properties
 properties{
 	$dirBase = Get-ScriptLocation
 
 	# solution directories
 	$dirBin = Join-Path $dirBase 'bin'
+	$dirDeploy = Join-Path $dirBin 'deploy'
 	$dirInstall = Join-Path $dirBase 'install'
 
 	# Modules directories
@@ -187,8 +217,8 @@ task createTasks -action{
 task runScripts -depends createTasks -action{
 	Invoke-PsakeScript $projects['utils'] $tasks
 	Invoke-PsakeScript $projects['core'] $tasks
-	#Invoke-PsakeScript $projects['uicommon'] $tasks
-	#Invoke-PsakeScript $projects['projectexplorer'] $tasks
+	Invoke-PsakeScript $projects['uicommon'] $tasks
+	Invoke-PsakeScript $projects['projectexplorer'] $tasks
 	#Invoke-PsakeScript $projects['batchservice'] $tasks
 	#Invoke-PsakeScript $projects['rhino'] $tasks
 }
@@ -225,21 +255,27 @@ task deployToTestDirectory -depends runScripts,createTestDirectory -precondition
 	"Deploying to the test directory ..."
 	
 	# copy all the zip files to the test directory
-	$utils = Get-ChildItem -Path (Join-Path $dirModulesUtils $pathDefaultDeploy) |
-		Where-Object { ($_.Extension -match ".zip") }
-		
+	$utils = Get-ChildItem -Path (Join-Path $dirModulesUtils $pathDefaultDeploy) | Where-Object { ($_.Extension -match ".zip") }
 	foreach ($file in $utils){
-		$newFilePath = Join-Path $dirBin $file.Name
-		Copy-Item $file.FullName -Destination $newFilePath -Force
+		Unzip-Files $file.FullName $dirDeploy
 	}
 	
 	# copy all the zip files to the test directory
-	$core = Get-ChildItem -Path (Join-Path $dirModuleCore $pathDefaultDeploy) |
-		Where-Object { ($_.Extension -match ".zip") }
-		
+	$core = Get-ChildItem -Path (Join-Path $dirModuleCore $pathDefaultDeploy) |	Where-Object { ($_.Extension -match ".zip") }
 	foreach ($file in $core){
-		$newFilePath = Join-Path $dirBin $file.Name
-		Copy-Item $file.FullName -Destination $newFilePath -Force
+		Unzip-Files $file.FullName $dirDeploy
+	}
+	
+	# copy all the zip files to the test directory
+	$uiCommon = Get-ChildItem -Path (Join-Path $dirModulesUiCommon $pathDefaultDeploy) | Where-Object { ($_.Extension -match ".zip") }
+	foreach ($file in $uiCommon){
+		Unzip-Files $file.FullName $dirDeploy
+	}
+	
+	# copy all the zip files to the test directory
+	$projectExplorer = Get-ChildItem -Path (Join-Path $dirModulesUiProjectExplorer $pathDefaultDeploy) | Where-Object { ($_.Extension -match ".zip") }
+	foreach ($file in $projectExplorer){
+		Unzip-Files $file.FullName $dirDeploy
 	}
 }
 

@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Apollo.Core.Test.Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Microsoft")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Apollo")]
 [assembly: AssemblyCopyright("Copyright (c) - P. van der Velde")]
 [assembly: AssemblyTrademark("")]

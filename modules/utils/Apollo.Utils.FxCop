@@ -23,7 +23,6 @@
  </ProjectOptions>
  <Targets>
   <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.SrcOnly.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -40,5 +39,5 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2009-11-15 02:35:05Z" />
+ <FxCopReport Version="1.36" LastAnalysis="2009-12-28 22:51:07Z" />
 </FxCopProject>

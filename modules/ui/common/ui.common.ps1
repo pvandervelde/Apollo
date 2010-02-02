@@ -74,6 +74,13 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 	Set-Content -Path $newPath -Value $text
 }
 
+function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@CONFIGURATION@', $config
+
+	Set-Content -Path $newPath -Value $text
+}
+
 function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
 	# only do this when we run the tests
 
@@ -116,7 +123,7 @@ properties{
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
 	
 	# solution files
-	$slnCore = Join-Path $dirSrc 'Apollo.UI.Common.sln'
+	$slnUiCommon = Join-Path $dirSrc 'Apollo.UI.Common.sln'
 	
 	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
 	$msbuildApiDoc = Join-Path $dirBase 'Apollo.UI.Common.shfbproj'
@@ -125,6 +132,9 @@ properties{
 	$versionFile = Join-Path $dirBase 'Version.xml'
 	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
+	
+	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Configuration.cs.in'
+	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Configuration.cs'
 	
 	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
 	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
@@ -240,7 +250,7 @@ task runClean -precondition{ $shouldClean } -action{
 	"Cleaning..."
 	
 	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $slnCore /t:Clean /verbosity:minimal
+	& $msbuildExe $slnUiCommon /t:Clean /verbosity:minimal
 	
 	# Clean the bin dir
 	if (Test-Path -Path $dirBin -PathType Container)
@@ -290,108 +300,119 @@ task buildBinaries -depends runInit, getVersion -action{
 	# Set the version numbers
 	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile $versionNumber
 	
+	# Set the configuration
+	Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
+	
 	# Set the InternalsVisibleTo attribute
 	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $assemblyNameUnitTest
 
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
 	$msbuildExe = Get-MsbuildExe
-	Invoke-MsBuild $slnCore $configuration $logPath 'minimal' ("platform='Any CPU'")
+	Invoke-MsBuild $slnUiCommon $configuration $logPath 'minimal' ("platform='Any CPU'")
 	if ($LastExitCode -ne 0)
 	{
 		throw "Apollo.UI.Common build failed with return code: $LastExitCode"
 	}
 	
 	# Copy the binaries
-	$dirBinCore = Join-Path (Join-Path (Join-Path $dirSrc 'core') 'bin') $configuration
-	$dirBinUnit = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.unit') 'bin') $configuration
-	$dirBinIntegration = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.integration') 'bin') $configuration
-	$dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.perf') 'bin') $configuration
+	$dirBinUiCommon = Join-Path (Join-Path (Join-Path $dirSrc 'common') 'bin') $configuration
+	$dirBinUiCommonXp = Join-Path (Join-Path (Join-Path $dirSrc 'common.windowsxp') 'bin') $configuration
+	$dirBinUiCommonVista = Join-Path (Join-Path (Join-Path $dirSrc 'common.windowsvista') 'bin') $configuration
+	$dirBinUiCommonWin7 = Join-Path (Join-Path (Join-Path $dirSrc 'common.windows7') 'bin') $configuration
+	$dirBinTestUnit = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.unit') 'bin') $configuration
+	$dirBinTestUi = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.ui') 'bin') $configuration
+
+	Copy-Item (Join-Path $dirBinUiCommon '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinUiCommonXp '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinUiCommonVista '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinUiCommonWin7 '*') $dirBuild -Force	
 	
-	Copy-Item (Join-Path $dirBinCore '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinUnit '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinIntegration '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinPerf '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinTestUnit '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinTestUi '*') $dirBuild -Force
 }
 
 task runUnitTests -depends buildBinaries -action{
 	"Running unit tests..."
-	
-	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
-	
-	$files = ""
-	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
-	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
-	if ($shouldCheckCoverage)
-	{
-		#throw "Code coverage doesn't work at the moment. Please run without coverage"
-		
-		$coverageFiles = ""
-		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
-			Where-Object { ((($_.Name -like "*Apollo*") -and `
-							!( $_.Name -like "*Test.*") -and `
-							!($_.Name -like "*vshost*")) -and `
-							($_.Extension -match ".dll"))}
-		$coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
-		
-		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-		#   process. This means we can't load explicit 32-bit binaries. However using the 
-		#   isolated process runner we can.
-		# Turn on the code coverage and specify which files need coverage checked
-		$command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
-		
-		# Specify where the XML log file should be written to
-		$command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
-	
-		# Indicate which Attribute is used to exclude classes / methods from coverage
-		$command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute' "
-	}
-	else
-	{
-		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-		#   process. This means we can't load explicit 32-bit binaries. However using the 
-		#   isolated process runner we can
-		$command += "/r:IsolatedProcess " 
-	}
-	
-	# add the files.
-	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
-	
-	# run the tests
-	$command
-	Invoke-Expression $command
-	if ($shouldCheckCoverage)
-	{
-		$ncoverFile = Join-Path $dirBase 'Coverage.xml'
-		if (Test-Path -Path $ncoverFile)
-		{
-			# The directory does not exist. Create it
-			Remove-Item $ncoverFile -Force
-		}
-	}
-	
-	if ($LastExitCode -ne 0)
-	{
-		throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
-	}
-	
-	# Generate the code coverage HTML report
-	if ($shouldCheckCoverage)
-	{
-		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
-		if ($verbose)
-		{
-			$command
-		}
-		
-		Invoke-Expression $command
-		if ($LastExitCode -ne 0)
-		{
-			throw "NCoverExplorer failed on Apollo.UI.Common with return code: $LastExitCode"
-		}
-	}
+	"There are currently no unit tests. You should make some ..."		
+#	
+#	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+#	
+#	$files = ""
+#	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
+#	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+#	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
+#	if ($shouldCheckCoverage)
+#	{
+#		#throw "Code coverage doesn't work at the moment. Please run without coverage"
+#		
+#		$coverageFiles = ""
+#		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
+#			Where-Object { ((($_.Name -like "*Apollo*") -and `
+#							!( $_.Name -like "*Utils.*") -and `
+#							!( $_.Name -like "*Core.*") -and `
+#							!( $_.Name -like "*Test.*") -and `
+#							!($_.Name -like "*vshost*")) -and `
+#							($_.Extension -match ".dll"))}
+#		$coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
+#		
+#		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+#		#   process. This means we can't load explicit 32-bit binaries. However using the 
+#		#   isolated process runner we can.
+#		# Turn on the code coverage and specify which files need coverage checked
+#		$command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
+#		
+#		# Specify where the XML log file should be written to
+#		$command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
+#	
+#		# Indicate which Attribute is used to exclude classes / methods from coverage
+#		$command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute' "
+#	}
+#	else
+#	{
+#		# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+#		#   process. This means we can't load explicit 32-bit binaries. However using the 
+#		#   isolated process runner we can
+#		$command += "/r:IsolatedProcess " 
+#	}
+#	
+#	# add the files.
+#	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+#	
+#	# run the tests
+#	$command
+#	Invoke-Expression $command
+#	if ($shouldCheckCoverage)
+#	{
+#		$ncoverFile = Join-Path $dirBase 'Coverage.xml'
+#		if (Test-Path -Path $ncoverFile)
+#		{
+#			# The directory does not exist. Create it
+#			Remove-Item $ncoverFile -Force
+#		}
+#	}
+#	
+#	if ($LastExitCode -ne 0)
+#	{
+#		throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
+#	}
+#	
+#	# Generate the code coverage HTML report
+#	if ($shouldCheckCoverage)
+#	{
+#		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
+#		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
+#		if ($verbose)
+#		{
+#			$command
+#		}
+#		
+#		Invoke-Expression $command
+#		if ($LastExitCode -ne 0)
+#		{
+#			throw "NCoverExplorer failed on Apollo.UI.Common with return code: $LastExitCode"
+#		}
+#	}
 }
 
 task runIntegrationTests -depends buildBinaries -action{
@@ -437,7 +458,11 @@ task runFxCop -depends buildBinaries -action{
 	$rulesDir = Join-Path $dirFxCop 'Rules'
 	$outFile = Join-Path $dirReports $logFxCop
 	
-	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { (($_.Name -like "*Apollo*") -and !( $_.Name -like "*Test*"))}
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | 
+		Where-Object { (($_.Name -like "*Apollo*") -and `
+						!( $_.Name -like "*Utils.*") -and `
+						!( $_.Name -like "*Core.*") -and `
+						!( $_.Name -like "*Test*"))}
 
 	$files = ""
 	$assemblies | ForEach-Object -Process { $files += "/file:" + '"' + $_.FullName + '" '}
@@ -477,6 +502,7 @@ task buildPackage -depends buildBinaries -action{
 	$assemblies = Get-ChildItem -path $dirBuild | 
 		Where-Object { ((($_.Name -like "*Apollo*") -and `
 						!( $_.Name -like "*Utils.*") -and `
+						!( $_.Name -like "*Core.*") -and `
 						!( $_.Name -like "*Test.*") -and `
 						!($_.Name -like "*vshost*")) -and `
 						(($_.Extension -match ".dll") -or `
@@ -490,21 +516,18 @@ task buildPackage -depends buildBinaries -action{
 	}
 	
 	# Copy the dependencies
-	$autofacFile = 'Autofac.dll'
-	$quickgraph = 'QuickGraph.dll'
-	$quickgraphData = 'QuickGraph.Data.dll'
-	$systemCoreEx = 'System.CoreEx.dll'
-	$systemThreading = 'System.Threading.dll'
+	$prismFile = 'Microsoft.Practices.Composite.dll'
+	Copy-Item (Join-Path $dirBuild $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
 	
-	Copy-Item (Join-Path $dirBuild $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
-	Copy-Item (Join-Path $dirBuild $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)	
-	Copy-Item (Join-Path $dirBuild $quickgraphData) -Destination (Join-Path $dirTempZip $quickgraphData)	
-	Copy-Item (Join-Path $dirBuild $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)	
-	Copy-Item (Join-Path $dirBuild $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)	
+	$prismPresentationFile = 'Microsoft.Practices.Composite.Presentation.dll'
+	Copy-Item (Join-Path $dirBuild $prismPresentationFile) -Destination (Join-Path $dirTempZip $prismPresentationFile)
+	
+	$serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
+	Copy-Item (Join-Path $dirBuild $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
 	
 	# zip them
-	# Name the zip: Apollo.Core_<DATE>
-	$output = Join-Path $dirDeploy ("Apollo.Core_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
+	# Name the zip: Apollo.Ui.Common_<DATE>
+	$output = Join-Path $dirDeploy ("Apollo.Ui.Common_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
 
 	"Compressing..."
 

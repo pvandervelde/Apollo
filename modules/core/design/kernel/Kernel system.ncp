@@ -138,7 +138,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>LogSink</Name>
         <Access>Public</Access>
-        <Location left="1684" top="1489" />
+        <Location left="1686" top="1489" />
         <Size width="162" height="90" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -146,7 +146,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>PluginRepository</Name>
         <Access>Public</Access>
-        <Location left="1448" top="978" />
+        <Location left="1450" top="978" />
         <Size width="162" height="122" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -481,7 +481,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1559</X>
+          <X>1561</X>
           <Y>1185</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -506,7 +506,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1527</X>
+          <X>1529</X>
           <Y>920</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -552,8 +552,6 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="20" second="19">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -568,8 +566,6 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -649,7 +645,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1534</X>
+          <X>1536</X>
           <Y>1182</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -725,7 +721,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>922</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1570</X>
+          <X>1572</X>
           <Y>953</Y>
         </BendPoint>
       </Relationship>
@@ -754,6 +750,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -762,6 +760,91 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+    <Name>Kernel</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>KernelService</Name>
+        <Access>Public</Access>
+        <Location left="880" top="136" />
+        <Size width="302" height="153" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">protected abstract void StartService()</Member>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>INeedStartup</Name>
+        <Access>Public</Access>
+        <Location left="256" top="136" />
+        <Size width="354" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">void Start()</Member>
+        <Member type="Method">StartupState GetStartupState()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>CoreProxy</Name>
+        <Access>Public</Access>
+        <Location left="968" top="384" />
+        <Size width="162" height="112" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Kernel</Name>
+        <Access>Public</Access>
+        <Location left="268" top="343" />
+        <Size width="332" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Event">public event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public StartupState GetStartupState()</Member>
+        <Member type="Method">public void Install(KernelService service)</Member>
+        <Member type="Method">public void Uninstall(KernelService service)</Member>
+        <Member type="Method">public bool CanShutdown()</Member>
+        <Member type="Method">public void Shutdown(bool forceShutdown)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CheckServicesCanShutdownCommand</Name>
+        <Access>Public</Access>
+        <Location left="968" top="670" />
+        <Size width="229" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="3" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="2" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="3" second="2">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="2" second="4">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>

@@ -38,11 +38,6 @@ namespace Apollo.Utils
         private readonly IStoreMarkerTimes m_MarkerTimers;
         
         /// <summary>
-        /// The function invoked each time the timer interval elapses.
-        /// </summary>
-        private Action<int, IProgressMark> m_Progress;
-
-        /// <summary>
         /// This is the synchronization point that prevents events
         /// from running concurrently, and prevents the main thread 
         /// from executing code after the Stop method until any 
@@ -98,18 +93,8 @@ namespace Apollo.Utils
         /// <summary>
         /// Starts the tracking of the progress.
         /// </summary>
-        /// <param name="progress">The function called each time the progress event is invoked.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="progress"/> is <see langword="null" />.
-        /// </exception>
-        public void StartTracking(Action<int, IProgressMark> progress)
+        public void StartTracking()
         {
-            {
-                Enforce.Argument(() => progress);
-            }
-
-            m_Progress = progress;
-
             // Capture the time at which the timer was started
             var startTime = DateTime.Now;
             m_ElapsedTime = time => time - startTime;
@@ -185,7 +170,7 @@ namespace Apollo.Utils
                             progress = (int)(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks);
                         }
 
-                        m_Progress(progress, m_CurrentMark);
+                        RaiseStartupProgress(progress, m_CurrentMark);
                     });
 
                 // Release control of syncPoint.
@@ -216,10 +201,32 @@ namespace Apollo.Utils
             Justification = "This method raises the MarkAdded event.")]
         private void RaiseMarkAdded(IProgressMark mark)
         {
-            EventHandler<ProgressMarkEventArgs> local = MarkAdded;
+            var local = MarkAdded;
             if (local != null)
             { 
                 local(this, new ProgressMarkEventArgs(mark));
+            }
+        }
+
+        /// <summary>
+        /// Occurs when there is a change in the progress of the system
+        /// startup.
+        /// </summary>
+        public event EventHandler<StartupProgressEventArgs> StartupProgress;
+
+        /// <summary>
+        /// Raises the startup progress event with the specified values.
+        /// </summary>
+        /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
+        /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to fire an event.")]
+        private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
+        {
+            var local = StartupProgress;
+            if (local != null)
+            { 
+                local(this, new StartupProgressEventArgs(progress, currentlyProcessing));
             }
         }
 
@@ -286,7 +293,6 @@ namespace Apollo.Utils
         public void Reset()
         {
             StopProgressTimer();
-            m_Progress = null;
         }
 
         /// <summary>

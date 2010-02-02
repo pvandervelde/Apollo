@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Messaging;
+using Apollo.Utils.Commands;
 using MbUnit.Framework;
 using Moq;
 using Moq.Protected;
@@ -448,16 +449,16 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be installed with a null reference.")]
         public void InstallServiceWithNullObject()
         {
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ArgumentNullException>(() => kernel.Install(null));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<ArgumentNullException>(() => kernel.Install(null, AppDomain.CurrentDomain));
         }
 
         [Test]
         [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<IHelpMessageProcessing>().Object)));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object), AppDomain.CurrentDomain));
         }
 
         [Test]
@@ -474,8 +475,8 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new[] { testMock.Object.GetType() });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock.Object));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock.Object, AppDomain.CurrentDomain));
         }
 
         [Test]
@@ -492,8 +493,8 @@ namespace Apollo.Core.Test.Unit
                     .Returns(new[] { typeof(KernelService) });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock.Object));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock.Object, AppDomain.CurrentDomain));
         }
 
         [Test]
@@ -517,9 +518,9 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { dependency = service; });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(messageMock.Object);
-            kernel.Install(testMock.Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
         }
@@ -545,9 +546,9 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { dependency = service; });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object);
-            kernel.Install(messageMock.Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
         }
@@ -558,7 +559,7 @@ namespace Apollo.Core.Test.Unit
         {
             var messageMock = new Mock<KernelService>();
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock.Object));
         }
 
@@ -566,8 +567,8 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be uninstalled if another object of the same type is installed.")]
         public void UninstallUnknownReference()
         {
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            var secondProxy = new CoreProxy(kernel, new Mock<IHelpMessageProcessing>().Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(secondProxy));
         }
 
@@ -597,9 +598,9 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { uninstalledDependency = service; });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object);
-            kernel.Install(messageMock.Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
@@ -634,9 +635,9 @@ namespace Apollo.Core.Test.Unit
                     .Callback<KernelService>(service => { uninstalledDependency = service; });
             }
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object);
-            kernel.Install(messageMock.Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
@@ -677,12 +678,12 @@ namespace Apollo.Core.Test.Unit
             var testMock3 = new KernelService3(storeAction, service => { return; });
             var testMock4 = new KernelService4(storeAction, service => { return; });
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock1);
-            kernel.Install(messageMock.Object);
-            kernel.Install(testMock2);
-            kernel.Install(testMock3);
-            kernel.Install(testMock4);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock1, AppDomain.CurrentDomain);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(testMock2, AppDomain.CurrentDomain);
+            kernel.Install(testMock3, AppDomain.CurrentDomain);
+            kernel.Install(testMock4, AppDomain.CurrentDomain);
 
             kernel.Start();
 
@@ -731,12 +732,12 @@ namespace Apollo.Core.Test.Unit
             var testMock3 = new KernelService3(service => { return; }, storeAction);
             var testMock4 = new KernelService4(service => { return; }, storeAction);
 
-            var kernel = new Kernel(new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock1);
-            kernel.Install(messageMock.Object);
-            kernel.Install(testMock2);
-            kernel.Install(testMock3);
-            kernel.Install(testMock4);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            kernel.Install(testMock1, AppDomain.CurrentDomain);
+            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(testMock2, AppDomain.CurrentDomain);
+            kernel.Install(testMock3, AppDomain.CurrentDomain);
+            kernel.Install(testMock4, AppDomain.CurrentDomain);
 
             kernel.Start();
             kernel.Shutdown();

@@ -184,7 +184,28 @@ namespace Apollo.Utils
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return ReferenceEquals(other, null) ? 1 : m_Value.CompareTo(other.m_Value);
+            return ReferenceEquals(other, null) ? 1 : CompareValues(m_Value, other.m_Value);
+        }
+
+        /// <summary>
+        /// Compares the values.
+        /// </summary>
+        /// <param name="ourValue">The value of the current object.</param>
+        /// <param name="theirValue">The value of the object with which the current object is being compared.</param>
+        /// <returns>
+        /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// Value
+        /// Meaning
+        /// Less than zero
+        /// <paramref name="ourValue"/> is less than <paramref name="theirValue"/>.
+        /// Zero
+        /// <paramref name="ourValue"/> is equal to <paramref name="theirValue"/>.
+        /// Greater than zero
+        /// <paramref name="ourValue"/> is greater than <paramref name="theirValue"/>.
+        /// </returns>
+        protected virtual int CompareValues(TInternalValue ourValue, TInternalValue theirValue)
+        {
+            return m_Value.CompareTo(theirValue);
         }
 
         /// <summary>

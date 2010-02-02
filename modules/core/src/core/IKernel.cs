@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core
@@ -16,21 +17,20 @@ namespace Apollo.Core
         /// <summary>
         /// Installs the specified service.
         /// </summary>
+        /// <param name="service">The service which should be installed.</param>
+        /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
         /// <remarks>
         /// <para>
-        ///     Only services that are 'installed' can be used by the service manager.
-        ///     Services that have not been installed are simply unknown to the service
-        ///     manager.
+        /// Only services that are 'installed' can be used by the service manager.
+        /// Services that have not been installed are simply unknown to the service
+        /// manager.
         /// </para>
         /// <para>
-        ///     Note that only one instance for each <c>Type</c> can be provided to
-        ///     the service manager.
+        /// Note that only one instance for each <c>Type</c> can be provided to
+        /// the service manager.
         /// </para>
         /// </remarks>
-        /// <param name="service">
-        ///     The service which should be installed.
-        /// </param>
-        void Install(KernelService service);
+        void Install(KernelService service, AppDomain serviceDomain);
 
         /// <summary>
         /// Uninstalls the specified service.

@@ -13,6 +13,7 @@ using System.Linq;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
 using Apollo.Utils;
+using Apollo.Utils.Commands;
 using Lokad;
 using QuickGraph;
 using QuickGraph.Algorithms;
@@ -35,20 +36,27 @@ namespace Apollo.Core
     /// <serviceType>Plug-in service</serviceType>
     /// <serviceType>Project service</serviceType>
     /// </list>
+    /// It is assumed that each service will reside in their own AppDomain and that
+    /// services do NOT share AppDomains. Upon uninstalling a service the 
+    /// service AppDomain will be removed.
     /// </design>
     internal sealed partial class Kernel : MarshalByRefObject, INeedStartup, IKernel
     {
         /// <summary>
         /// The collection of services that are currently known to the kernel.
         /// </summary>
-        private readonly Dictionary<Type, KernelService> m_Services = new Dictionary<Type, KernelService>();
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The storage requires that we link a type to a map of a service and an AppDomain. Nested generics is an easy way to achieve this.")]
+        private readonly Dictionary<Type, KeyValuePair<KernelService, AppDomain>> m_Services = 
+            new Dictionary<Type, KeyValuePair<KernelService, AppDomain>>();
 
         /// <summary>
         /// The collection which tracks the connections between a service and it's dependencies.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The storage requires that we link an object to a list of objects. Nested generics is an easy way to achieve this.")]
-        private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = new Dictionary<KernelService, List<ConnectionMap>>();
+        private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = 
+            new Dictionary<KernelService, List<ConnectionMap>>();
 
         /// <summary>
         /// The start-up state of the kernel.
@@ -58,13 +66,18 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Kernel"/> class.
         /// </summary>
+        /// <param name="commandStore">The container that stores all the commands.</param>
         /// <param name="processingHelp">The processing help.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="processingHelp"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="commandStore"/> is <see langword="null" />.
         /// </exception>
-        public Kernel(IHelpMessageProcessing processingHelp)
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="processingHelp"/> is <see langword="null"/>.
+        /// </exception>
+        public Kernel(ICommandContainer commandStore, IHelpMessageProcessing processingHelp)
         {
             {
+                Enforce.Argument(() => commandStore);
                 Enforce.Argument(() => processingHelp);
             }
 
@@ -72,7 +85,9 @@ namespace Apollo.Core
             // Do that in the constructor so that this is always loaded.
             // That means that there is no way to install another CoreProxy that
             // we don't control.
-            Install(new CoreProxy(this, processingHelp));
+            // This also means that there is only one way to uninstall this service, 
+            // and that is by getting the reference from the kernel.
+            Install(new CoreProxy(this, commandStore, processingHelp), AppDomain.CurrentDomain);
         }
 
         /// <summary>
@@ -156,10 +171,15 @@ namespace Apollo.Core
                     // Grab the actual current service so that we can put it in the
                     // lambda expression without having it wiped or replaced on us
                     var currentService = service;
-                    EventHandler<StartupProgressEventArgs> progressHandler =
-                        (s, e) => ProcessServiceStartup(startupOrder.IndexOf(currentService), e.Progress, e.CurrentlyProcessing);
+                    var progressHandler = new ServiceProgressHandler(
+                        startupOrder.Count, 
+                        startupOrder.IndexOf(currentService), 
+                        (progress, mark) =>
+                            {
+                                RaiseStartupProgress(progress, mark);
+                            });
 
-                    service.StartupProgress += progressHandler;
+                    service.StartupProgress += progressHandler.HandleProgress;
                     try
                     {
                         // Start the service
@@ -177,7 +197,7 @@ namespace Apollo.Core
                     }
                     finally
                     {
-                        service.StartupProgress -= progressHandler;
+                        service.StartupProgress -= progressHandler.HandleProgress;
                     }
                 }
             }
@@ -201,7 +221,7 @@ namespace Apollo.Core
                 var typedCollection = new Dictionary<Type, ServiceVertex>();
                 foreach (var pair in m_Services)
                 {
-                    var vertex = new ServiceVertex(pair.Value);
+                    var vertex = new ServiceVertex(pair.Value.Key);
                     graph.AddVertex(vertex);
                     typedCollection.Add(pair.Key, vertex);
                 }
@@ -246,33 +266,6 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Processes the service startup event values.
-        /// </summary>
-        /// <param name="serviceIndex">Index of the service in the list of services that need to be started.</param>
-        /// <param name="progress">The progress percentage for the startup process of the service.</param>
-        /// <param name="currentlyProcessing">The mark which indiates what the currently status of the service is.</param>
-        private void ProcessServiceStartup(int serviceIndex, int progress, IProgressMark currentlyProcessing)
-        {
-            Debug.Assert(m_Services.Count > 0, "Cannot calculate the startup progress if there are no services.");
-
-            // Calculate the number of services that we have.
-            var serviceCount = m_Services.Count;
-
-            // There are serviceIndex number of services that have finished
-            // their startup process.
-            var finishedPercentage = (double)serviceIndex / serviceCount;
-
-            // The current service is progress percentage finished. That
-            // translates to:
-            //   (percentage quantity for one service) * (progress in current service)
-            //   which is: (1 / serviceCount) * progress / 100
-            var currentPercentage = progress / (100.0*serviceCount);
-            var total = finishedPercentage + currentPercentage;
-
-            RaiseStartupProgress((int) Math.Floor(total*100), currentlyProcessing);
-        }
-
-        /// <summary>
         /// Returns a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
@@ -289,21 +282,26 @@ namespace Apollo.Core
         /// <summary>
         /// Installs the specified service.
         /// </summary>
+        /// <param name="service">The service which should be installed.</param>
+        /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
         /// <remarks>
         /// <para>
-        ///     Only services that are 'installed' can be used by the service manager.
-        ///     Services that have not been installed are simply unknown to the service
-        ///     manager.
+        /// Only services that are 'installed' can be used by the service manager.
+        /// Services that have not been installed are simply unknown to the service
+        /// manager.
         /// </para>
         /// <para>
-        ///     Note that only one instance for each <c>Type</c> can be provided to
-        ///     the service manager.
+        /// Note that only one instance for each <c>Type</c> can be provided to
+        /// the service manager.
         /// </para>
         /// </remarks>
-        /// <param name="service">
-        ///     The service which should be installed.
-        /// </param>
-        public void Install(KernelService service)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="service"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="serviceDomain"/> is <see langword="null" />.
+        /// </exception>
+        public void Install(KernelService service, AppDomain serviceDomain)
         {
             // What happens with the lifetime management of all the services
             // Effectively they should live until we lose them or until the
@@ -311,6 +309,7 @@ namespace Apollo.Core
             // or until their AppDomain gets killed.
             {
                 Enforce.Argument(() => service);
+                Enforce.Argument(() => serviceDomain);
             }
 
             // We can only install when we are not started or started. No other 
@@ -337,8 +336,8 @@ namespace Apollo.Core
                     throw new ServiceCannotDependOnItselfException();
                 }
 
-                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof (KernelService)) ||
-                    dependencyHolder.ServicesToConnectTo().Contains(typeof (KernelService)))
+                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof(KernelService)) ||
+                    dependencyHolder.ServicesToConnectTo().Contains(typeof(KernelService)))
                 {
                     throw new ServiceCannotDependOnGenericKernelServiceException();
                 }
@@ -376,8 +375,33 @@ namespace Apollo.Core
                 dependent.ConnectTo(service);
             }
 
+            // Link to the unload event of the appdomain
+            serviceDomain.DomainUnload += HandleServiceDomainUnloading;
+
             // Finally add the service
-            m_Services.Add(service.GetType(), service);
+            m_Services.Add(service.GetType(), new KeyValuePair<KernelService, AppDomain>(service, serviceDomain));
+        }
+
+        /// <summary>
+        /// Handles the <see cref="AppDomain.DomainUnload"/> event for service AppDomains.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
+        private void HandleServiceDomainUnloading(object sender, EventArgs e)
+        {
+            var domain = sender as AppDomain;
+            if (domain != null)
+            {
+                // Go find the service(s) that reside in this appdomain.
+                var services = (from serviceMap in m_Services
+                                where serviceMap.Value.Value.Equals(domain)
+                                select serviceMap.Value.Key).ToList();
+
+                foreach (var service in services)
+                {
+                    Uninstall(service);
+                }
+            }
         }
 
         /// <summary>
@@ -398,7 +422,7 @@ namespace Apollo.Core
         {
             // Create a copy of the available service list. Then when we 
             // select a service we'll remove it from this list.
-            var available = new List<KernelService>(from service in m_Services select service.Value);
+            var available = new List<KernelService>(from service in m_Services select service.Value.Key);
 
             // Dependencies have just gotten a whole lot more complex
             // We want to be able to match up interfaces & abstract classes too
@@ -446,14 +470,14 @@ namespace Apollo.Core
             var result = new List<KeyValuePair<Type, KernelService>>();
             foreach (var map in m_Services)
             {
-                var dependencyHolder = map.Value as IHaveServiceDependencies;
+                var dependencyHolder = map.Value.Key as IHaveServiceDependencies;
                 if (dependencyHolder != null)
                 {
                     foreach (var dependency in dependencyHolder.ServicesToConnectTo())
                     {
                         if (dependency.IsAssignableFrom(service.GetType()))
                         {
-                            result.Add(new KeyValuePair<Type, KernelService>(dependency, map.Value));
+                            result.Add(new KeyValuePair<Type, KernelService>(dependency, map.Value.Key));
                             break;
                         }
                     }
@@ -473,17 +497,14 @@ namespace Apollo.Core
         /// <param name="service">
         ///     The service that needs to be uninstalled.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Once we started uninstalling it must finish.")]
         public void Uninstall(KernelService service)
         {
+            // Unlike installation, we can pretty much always uninstall.
+            // It may get ugly but we can remove the references.
             {
                 Enforce.Argument(() => service);
-            }
-
-            // We can only install when we are not started or started. No other 
-            // state is condusive to installation.
-            if ((m_State != StartupState.NotStarted) && (m_State != StartupState.Started))
-            {
-                throw new KernelNotInInstallReadyStateException();
             }
 
             // Check if we have the service
@@ -494,8 +515,8 @@ namespace Apollo.Core
 
             // Can only uninstall the service if we have the same
             // reference as the object that was installed
-            var installedService = m_Services[service.GetType()];
-            if (!ReferenceEquals(service, installedService))
+            var installedServiceMap = m_Services[service.GetType()];
+            if (!ReferenceEquals(service, installedServiceMap.Key))
             {
                 throw new CannotUninstallNonequivalentServiceException();
             }
@@ -513,20 +534,67 @@ namespace Apollo.Core
             }
 
             // Disconnect the service from all it's dependencies
+            // Note that we need to check that the service still exists because
+            // we might be halfway through a shutdown.
             var dependencyHolder = service as IHaveServiceDependencies;
-            if (dependencyHolder != null)
+            if ((dependencyHolder != null) && m_Connections.ContainsKey(service))
             {
                 var connections = m_Connections[service];
                 foreach (var map in connections)
                 {
-                    dependencyHolder.DisconnectFrom(map.Applied);
+                    try
+                    {
+                        dependencyHolder.DisconnectFrom(map.Applied);
+                    }
+                    catch (Exception)
+                    {
+                        // For now do nothing. Later on we'll log here ...
+                    }
                 }
 
                 m_Connections.Remove(service);
             }
 
-            // Finally remove the service from the collection
+            // Remove the service. Now that it doesn't have any of the connections anymore.
             m_Services.Remove(service.GetType());
+
+            // Disconnect from the AppDomain unload event
+            installedServiceMap.Value.DomainUnload -= HandleServiceDomainUnloading;
+            
+            // Unload the appdomain. It shouldn't be needed anymore, but only if it's 
+            // not our own appdomain (that would be bad).
+            var serviceDomain = installedServiceMap.Value;
+            if (!serviceDomain.Equals(AppDomain.CurrentDomain))
+            {
+                try
+                {
+                    // This can go wrong if there are still threads executing in this
+                    // AppDomain ...
+                    AppDomain.Unload(serviceDomain);
+                }
+                catch (Exception)
+                {
+                    // For now do nothing. Later on we should log the problem here.
+                }
+            }
+        }
+
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns>
+        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
+        /// </returns>
+        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. 
+        /// </exception>
+        /// <filterpriority>2</filterpriority>
+        /// <PermissionSet>
+        ///     <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
+        /// </PermissionSet>
+        public override object InitializeLifetimeService()
+        {
+            // We don't really want the system to GC our kernel at random times...
+            return null;
         }
     }
 }

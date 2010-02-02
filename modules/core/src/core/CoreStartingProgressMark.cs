@@ -11,7 +11,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines an <see cref="IProgressMark"/> which indicates that the application core is starting.
     /// </summary>
-    internal sealed class CoreStartingProgressMark : IProgressMark
+    public sealed class CoreStartingProgressMark : IProgressMark
     {
     }
 }

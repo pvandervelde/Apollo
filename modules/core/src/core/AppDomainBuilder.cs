@@ -63,6 +63,8 @@ namespace Apollo.Core
             var corePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
             if (!string.Equals(corePath, basePath.FullName, StringComparison.OrdinalIgnoreCase))
             {
+                // Note that this could be a security risk. If we always have the core bin path, then 
+                // we can always load the core ... Doesn't seem right.
                 setup.PrivateBinPath = Path.GetDirectoryName(corePath);
             }
 
@@ -102,11 +104,9 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
             Justification = "Making this method static would lead to a static class which makes testing harder.")]
-        public AppDomain AssembleWithFilePaths(DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithFilePaths(DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IExceptionHandler exceptionHandler)
         {   
             return AssembleWithFilePaths(string.Empty, basePath, assemblyFiles, exceptionHandler);
         }
@@ -134,11 +134,9 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
             Justification = "Making this method static would lead to a static class which makes testing harder.")]
-        public AppDomain AssembleWithFilePaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithFilePaths(string friendlyName, DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IExceptionHandler exceptionHandler)
         {
             return AssembleWithFileAndDirectoryPaths(friendlyName, basePath, assemblyFiles, null, exceptionHandler);
         }
@@ -169,12 +167,10 @@ namespace Apollo.Core
         ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
         ///     new <c>AppDomain</c>.
         /// </design>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
             Justification = "Making this method static would lead to a static class which makes testing harder.")]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-        public AppDomain AssembleWithFileAndDirectoryPaths(string friendlyName, DirectoryInfo basePath, Func<IEnumerable<string>> assemblyFiles, Func<IEnumerable<string>> assemblyDirectories, IExceptionHandler exceptionHandler)
+        public AppDomain AssembleWithFileAndDirectoryPaths(string friendlyName, DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IEnumerable<string> assemblyDirectories, IExceptionHandler exceptionHandler)
         {
             {
                 Enforce.Argument(() => basePath);

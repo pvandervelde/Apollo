@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -30,9 +29,7 @@ namespace Apollo.Core
             /// Explicitly store the file paths in strings because FileInfo objects are eventually
             /// nuked because FileInfo is a MarshalByRefObject and can thus go out of scope.
             /// </design>
-            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
-            private Func<IEnumerable<string>> m_Files;
+            private IEnumerable<string> m_Files;
 
             /// <summary>
             /// Stores the paths to the relevant assemblies.
@@ -43,9 +40,7 @@ namespace Apollo.Core
             /// <exception cref="ArgumentNullException">
             /// Thrown when <paramref name="filePaths"/> is <see langword="null" />.
             /// </exception>
-            [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "The use of a Func<T> allows delay loading of the enumeration.")]
-            public void StoreFilePaths(Func<IEnumerable<string>> filePaths)
+            public void StoreFilePaths(IEnumerable<string> filePaths)
             {
                 {
                     Enforce.Argument(() => filePaths); 
@@ -70,8 +65,8 @@ namespace Apollo.Core
 
                 var domain = AppDomain.CurrentDomain;
                 {
-                    var helper = new FusionHelper(m_Files);
-                    domain.AssemblyResolve += new ResolveEventHandler(helper.LocateAssemblyOnAssemblyLoadFailure);
+                    var helper = new FusionHelper(() => m_Files);
+                    domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
                 }
             }
         }

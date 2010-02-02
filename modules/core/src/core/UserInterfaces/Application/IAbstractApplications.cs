@@ -18,15 +18,12 @@ namespace Apollo.Core.UserInterfaces.Application
         /// <summary>
         /// Gets a value indicating whether the application can shutdown.
         /// </summary>
-        /// <value>
+        /// <returns>
         ///     <see langword="true"/> if the application can shutdown; otherwise, <see langword="false"/>.
-        /// </value>
+        /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        bool CanShutdown
-        {
-            get;
-        }
+        bool CanShutdown();
 
         /// <summary>
         /// Shuts the application down, forcibly if asked.
@@ -43,5 +40,12 @@ namespace Apollo.Core.UserInterfaces.Application
         {
             get;
         }
+
+        /// <summary>
+        /// Registers the notification.
+        /// </summary>
+        /// <param name="name">The name of the notification.</param>
+        /// <param name="callback">The callback method that is called when the notification is activated.</param>
+        void RegisterNotification(NotificationName name, Action<object> callback);
     }
 }

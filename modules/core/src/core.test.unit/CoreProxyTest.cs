@@ -7,6 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Messaging;
+using Apollo.Utils.Commands;
 using MbUnit.Framework;
 using Moq;
 
@@ -22,7 +23,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object returns the correct names for services that should be available.")]
         public void ServicesToBeAvailable()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             Assert.AreEqual(0, service.ServicesToBeAvailable().Count());
         }
 
@@ -30,7 +31,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object returns the correct names for services to which it should be connected.")]
         public void ServicesToConnectTo()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             Assert.AreElementsEqual(new[] { typeof(IMessagePipeline) }, service.ServicesToConnectTo());
         }
 
@@ -38,7 +39,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object can be connected to the dependencies.")]
         public void ConnectTo()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
 
             var pipeline = new MessagePipeline();
@@ -50,7 +51,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object cannot be disconnected from an unknown dependency.")]
         public void DisconnectFromWithNonMatchingServiceType()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             var pipeline = new MessagePipeline();
             service.ConnectTo(pipeline);
 
@@ -62,7 +63,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object cannot be disconnected from a non-matching reference.")]
         public void DisconnectFromWithNonMatchingObjectReference()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             var pipeline = new MessagePipeline();
             service.ConnectTo(pipeline);
 
@@ -74,7 +75,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that the object can be disconnected from the dependencies.")]
         public void DisconnectFrom()
         {
-            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var service = new CoreProxy(new Mock<IKernel>().Object, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             var pipeline = new MessagePipeline();
             service.ConnectTo(pipeline);
             Assert.IsTrue(service.IsConnectedToAllDependencies);

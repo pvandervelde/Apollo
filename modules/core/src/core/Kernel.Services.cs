@@ -7,6 +7,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Messaging;
 
 namespace Apollo.Core
 {
@@ -38,15 +39,18 @@ namespace Apollo.Core
         public bool CanShutdown()
         {
             // Check all services
-            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
+            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var servicesToCheck = from pair in m_Services
-                                  let service = pair.Value
-                                  where !ReferenceEquals(service, coreProxy)
-                                  select service;
+                                  select pair.Value.Key as ISendMessages into nameObject 
+                                  where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy)) 
+                                  select nameObject.Name;
+            var context = new CheckServicesCanShutdownCommand.CheckCanServicesShutdownContext(servicesToCheck);
 
-            return coreProxy.CanShutdownService(servicesToCheck);
+            Debug.Assert(coreProxy.Contains(CheckServicesCanShutdownCommand.CommandId), "A command has gone missing.");
+            coreProxy.Invoke(CheckServicesCanShutdownCommand.CommandId, context);
+            return context.Result;
         }
 
         /// <summary>
@@ -56,7 +60,7 @@ namespace Apollo.Core
             Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
         public void Shutdown()
         {
-            // Indicate that the kernel is booting.
+            // Indicate that the kernel is stopping.
             m_State = StartupState.Stopping;
 
             // In order to keep this flexible we will need to sort the services
@@ -85,30 +89,17 @@ namespace Apollo.Core
                     // we're about to destroy the appdomain the service lives in.
                 }
 
-                // Remove the connections
-                if (m_Connections.ContainsKey(service))
-                {
-                    var dependencyHolder = service as IHaveServiceDependencies;
-                    Debug.Assert(dependencyHolder != null, "Found dependencies for non-dependent service.");
-
-                    var dependencies = m_Connections[service];
-                    foreach (var map in dependencies)
-                    {
-                        try
-                        {
-                            dependencyHolder.DisconnectFrom(map.Applied);
-                        }
-                        catch
-                        {
-                            // An exception occured. Ignore it. Try to
-                            // disconnect the next service.
-                        }
-                    }
-
-                    m_Connections.Remove(service);
-                }
-
-                m_Services.Remove(service.GetType());
+                // Cannot remove the services, because the only reason the individual
+                // AppDomains exist is that the kernel is holding on to a reference to the
+                // services. If we remove the service then the AppDomain unloads. That would
+                // normally be fine except that the callstack will very likely have some
+                // code that runs through all these services (e.g. the CoreProxy and the 
+                // MessagePipeline, which are essential in calling the Kernel.Shutdown method)
+                // In that case we'll unload the AppDomain while there is a thread active in
+                // that AppDomain. This is not appreciated.
+                // 
+                // Remove the service
+                // Uninstall(service);
             }
 
             // If we get here then we have to have finished the

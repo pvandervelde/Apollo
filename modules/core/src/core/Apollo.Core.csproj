@@ -158,7 +158,8 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Autofac">
+    <Reference Include="Autofac, Version=1.4.5.676, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
@@ -168,9 +169,6 @@
     <Reference Include="QuickGraph">
       <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph.Data">
-      <HintPath>..\..\lib\quickgraph\QuickGraph.Data.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -178,7 +176,6 @@
     <Reference Include="System.CoreEx">
       <HintPath>..\..\lib\taskparallel\System.CoreEx.dll</HintPath>
     </Reference>
-    <Reference Include="System.Data" />
     <Reference Include="System.Threading">
       <HintPath>..\..\lib\taskparallel\System.Threading.dll</HintPath>
     </Reference>
@@ -196,6 +193,9 @@
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
+    <Compile Include="..\AssemblyInfo.Configuration.cs">
+      <Link>Properties\AssemblyInfo.Configuration.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
@@ -205,39 +205,45 @@
     <Compile Include="AppDomainBuilder.cs" />
     <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
+    <Compile Include="AppDomainBuilder.Permissions.cs" />
+    <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
+    <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
+    <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Bootstrapper.KernelInjector.cs" />
     <Compile Include="Bootstrapper.ServiceInjector.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
+    <Compile Include="CheckApplicationCanShutdownCommand.cs" />
+    <Compile Include="CheckServicesCanShutdownCommand.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
     <Compile Include="CoreProxy.Messages.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
+    <Compile Include="DnsNameConstants.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
     <Compile Include="IApplicationConstants.cs" />
-    <Compile Include="IBootstrapper.cs" />
+    <Compile Include="IDnsNameConstants.cs" />
     <Compile Include="IHaveServiceDependencies.cs" />
     <Compile Include="IInjectKernels.cs" />
     <Compile Include="IInjectServices.cs" />
     <Compile Include="IKernel.cs" />
-    <Compile Include="IKernelStartInfo.cs" />
     <Compile Include="INeedStartup.cs" />
     <Compile Include="IOwnServices.cs" />
     <Compile Include="CoreProxy.cs" />
     <Compile Include="Kernel.ConnectionMap.cs" />
     <Compile Include="Kernel.cs" />
+    <Compile Include="Kernel.ServiceProgressHandler.cs" />
     <Compile Include="Kernel.Services.cs" />
     <Compile Include="Kernel.ServiceVertex.cs" />
     <Compile Include="KernelNotInInstallReadyStateException.cs" />
     <Compile Include="KernelService.cs" />
     <Compile Include="KernelServiceStartupFailedException.cs" />
+    <Compile Include="KernelStartInfo.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
-    <Compile Include="Messaging\CouldNotCreateMessageReason.cs" />
+    <Compile Include="MessageEnabledKernelService.cs" />
     <Compile Include="Messaging\DnsName.cs" />
     <Compile Include="Messaging\DuplicateDnsNameException.cs" />
-    <Compile Include="Messaging\FailedToSendMessageReason.cs" />
-    <Compile Include="Messaging\IDeliveryFailureReason.cs" />
     <Compile Include="Messaging\IDnsNameObject.cs" />
     <Compile Include="Messaging\IHelpMessageProcessing.cs" />
     <Compile Include="Messaging\IMessagePipeline.cs" />
@@ -250,9 +256,9 @@
     <Compile Include="Messaging\MessagePipeline.cs" />
     <Compile Include="Messaging\MessageProcessingAssistance.cs" />
     <Compile Include="Messaging\MissingPipelineException.cs" />
-    <Compile Include="Messaging\SucceededToSendMessageReason.cs" />
     <Compile Include="Messaging\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
+    <Compile Include="NotificationNameConstants.cs" />
     <Compile Include="PingMessage.cs" />
     <Compile Include="PingResponseMessage.cs" />
     <Compile Include="PrivateBinPathOption.cs" />
@@ -264,21 +270,31 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="ShutdownCapabilityRequestMessage.cs" />
+    <Compile Include="SecurityLevel.cs" />
+    <Compile Include="SendMessageWithoutResponseDelegate.cs" />
+    <Compile Include="SendMessageWithResponseDelegate.cs" />
+    <Compile Include="ServiceShutdownCapabilityRequestMessage.cs" />
+    <Compile Include="ServiceShutdownCapabilityResponseMessage.cs" />
+    <Compile Include="ShutdownApplicationCommand.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceException.cs" />
     <Compile Include="ServiceCannotDependOnItselfException.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
-    <Compile Include="ShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ShutdownRequestMessage.cs" />
-    <Compile Include="ShutdownRequestResponseMessage.cs" />
-    <Compile Include="StartupProgressEventArgs.cs" />
+    <Compile Include="ShutdownResponseMessage.cs" />
     <Compile Include="StartupState.cs" />
     <Compile Include="UnknownKernelServiceTypeException.cs" />
+    <Compile Include="UserInterfaces\Application\ApplicationFacade.cs" />
     <Compile Include="UserInterfaces\Application\IAbstractApplications.cs" />
     <Compile Include="UserInterfaces\Application\IHoldSystemInformation.cs" />
     <Compile Include="UserInterfaces\Application\IServiceInformation.cs" />
+    <Compile Include="UserInterfaces\DuplicateNotificationException.cs" />
+    <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
+    <Compile Include="NotificationName.cs" />
+    <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceService.Messages.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />

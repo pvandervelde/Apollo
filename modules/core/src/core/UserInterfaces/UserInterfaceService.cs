@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Messaging;
-using Autofac;
-using Autofac.Builder;
+using Apollo.Utils.Commands;
+using Autofac.Core;
 using Lokad;
 
 namespace Apollo.Core.UserInterfaces
@@ -18,59 +18,147 @@ namespace Apollo.Core.UserInterfaces
     /// Defines the <see cref="KernelService"/> that handles the User Interface interaction with the kernel.
     /// </summary>
     [AutoLoad]
-    internal sealed class UserInterfaceService : KernelService, IHaveServiceDependencies, IProcessMessages, ISendMessages, IUserInterfaceService
+    internal sealed partial class UserInterfaceService : MessageEnabledKernelService, IHaveServiceDependencies, IUserInterfaceService
     {
+        /// <summary>
+        /// The collection of notifications that must be passed on to the user interface.
+        /// </summary>
+        private readonly Dictionary<NotificationName, Action<object>> m_Notifications = new Dictionary<NotificationName, Action<object>>();
+
+        /// <summary>
+        /// The container that stores all the commands for this service.
+        /// </summary>
+        private readonly ICommandContainer m_Commands;
+
+        /// <summary>
+        /// The collection of DnsNames.
+        /// </summary>
+        private readonly IDnsNameConstants m_DnsNames;
+
+        /// <summary>
+        /// The collection of NotificationNames.
+        /// </summary>
+        private readonly INotificationNameConstants m_NotificationNames;
+
         /// <summary>
         /// The action which is executed when the service is started.
         /// </summary>
-        private readonly Action<IContainer> m_OnStartService;
-
-        /// <summary>
-        /// The service that handles message processing.
-        /// </summary>
-        private IMessagePipeline m_MessageSink;
+        private readonly Action<IModule> m_OnStartService;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInterfaceService"/> class.
         /// </summary>
-        /// <param name="onStartService">The method that provides the DI container.</param>
+        /// <param name="commands">The container that stores all the commands.</param>
+        /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
+        /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
+        /// <param name="processor">The object that handles the incoming messages.</param>
+        /// <param name="onStartService">The method that provides the DI module.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="dnsNames"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="notificationNames"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
-        public UserInterfaceService(Action<IContainer> onStartService)
+        public UserInterfaceService(ICommandContainer commands, IDnsNameConstants dnsNames, INotificationNameConstants notificationNames, IHelpMessageProcessing processor, Action<IModule> onStartService)
+            : base(processor)
         {
             {
+                Enforce.Argument(() => commands);
+                Enforce.Argument(() => dnsNames);
+                Enforce.Argument(() => notificationNames);
                 Enforce.Argument(() => onStartService);
             }
 
-            Name = new DnsName(GetType().Name);
+            Name = dnsNames.AddressOfUserInterface;
+
+            m_DnsNames = dnsNames;
+            m_NotificationNames = notificationNames;
             m_OnStartService = onStartService;
+
+            m_Commands = commands;
+            {
+                m_Commands.Add(
+                    CheckApplicationCanShutdownCommand.CommandId, 
+                    () => new CheckApplicationCanShutdownCommand(m_DnsNames.AddressOfKernel, SendMessageWithResponse));
+
+                m_Commands.Add(
+                    ShutdownApplicationCommand.CommandId,
+                    () => new ShutdownApplicationCommand(m_DnsNames.AddressOfKernel, SendMessageWithResponse));
+            }
         }
 
         /// <summary>
-        /// Starts the service.
+        /// Performs initialization prior to setting up the message handling.
         /// </summary>
-        protected override void StartService()
+        protected override void PreMessageInitializeStartup()
         {
-            var builder = new ContainerBuilder();
+            InitializeDependencyInjectionContainer();
+        }
+
+        private void InitializeDependencyInjectionContainer()
+        {
+            m_OnStartService(new UserInterfaceModule(this));
+        }
+
+        #region Implementation of IHaveCommands
+
+        /// <summary>
+        /// Determines whether a command with the specified Id is stored.
+        /// </summary>
+        /// <param name="id">The ID of the command.</param>
+        /// <returns>
+        ///     <see langword="true"/> if a command with the specified ID is stored; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool Contains(CommandId id)
+        {
+            return m_Commands.Contains(id);
+        }
+
+        #endregion
+
+        #region Implementation of IInvokeCommands
+
+        /// <summary>
+        /// Invokes the command with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the command.</param>
+        public void Invoke(CommandId id)
+        {
+            if (!IsFullyFunctional)
             {
-                // IApplication
-                // IInteractWithUsers
-                // ILinkToProjects
-                // IGiveAdvice
+                return;
             }
 
-            m_OnStartService(builder.Build());
+            m_Commands.Invoke(id);
         }
 
         /// <summary>
-        /// Provides derivative classes with a possibility to
-        /// perform shutdown tasks.
+        /// Invokes the command with the specified ID.
         /// </summary>
-        protected override void StopService()
+        /// <param name="id">The ID of the command.</param>
+        /// <param name="context">The context that will be passed to the command as it is invoked.</param>
+        public void Invoke(CommandId id, ICommandContext context)
         {
-            throw new NotImplementedException();
+            if (!IsFullyFunctional)
+            {
+                return;
+            }
+
+            m_Commands.Invoke(id, context);
         }
+
+        #endregion
 
         #region Implementation of IHaveServiceDependencies
 
@@ -101,7 +189,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToConnectTo()
         {
-            // Message
             // Persistence
             // History
             return new[] { typeof(IMessagePipeline) };
@@ -114,11 +201,9 @@ namespace Apollo.Core.UserInterfaces
         public void ConnectTo(KernelService dependency)
         {
             var pipeline = dependency as IMessagePipeline;
-            if ((pipeline != null) && (m_MessageSink == null))
+            if (pipeline != null)
             {
-                m_MessageSink = pipeline;
-                m_MessageSink.RegisterAsSender(this);
-                m_MessageSink.RegisterAsListener(this);
+                ConnectToMessageSink(pipeline);
             }
         }
 
@@ -129,11 +214,9 @@ namespace Apollo.Core.UserInterfaces
         public void DisconnectFrom(KernelService dependency)
         {
             var pipeline = dependency as IMessagePipeline;
-            if ((pipeline != null) && ReferenceEquals(m_MessageSink, pipeline))
+            if (pipeline != null)
             {
-                m_MessageSink.UnregisterAsSender(this);
-                m_MessageSink.UnregisterAsListener(this);
-                m_MessageSink = null;
+                DisconnectFromMessageSink(pipeline);
             }
         }
 
@@ -149,46 +232,63 @@ namespace Apollo.Core.UserInterfaces
         {
             get
             {
-                return m_MessageSink != null;
+                return IsConnectedToPipeline;
             }
         }
 
         #endregion
 
-        #region Implementation of IDnsNameObject
+        #region Implementation of IUserInterfaceService
 
         /// <summary>
-        /// Gets the identifier of the object.
+        /// Registers the notification.
         /// </summary>
-        /// <value>The identifier.</value>
-        public DnsName Name
+        /// <param name="name">The name of the notification.</param>
+        /// <param name="callback">The callback method that is called when the notification is activated.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="callback"/> is <see langword="null" />.
+        /// </exception>
+        public void RegisterNotification(NotificationName name, Action<object> callback)
         {
-            get;
-            private set;
+            {
+                Enforce.Argument(() => name);
+                Enforce.Argument(() => callback);
+            }
+
+            if (m_Notifications.ContainsKey(name))
+            {
+                throw new DuplicateNotificationException(name);
+            }
+
+            m_Notifications.Add(name, callback);
         }
 
         #endregion
 
-        #region Implementation of IProcessMessages
+        #region Overrides
 
         /// <summary>
-        /// Processes a single message that is directed at the current service.
+        /// Performs un-initialization prior to unregistering from the message handling.
         /// </summary>
-        /// <param name="message">The message that should be processed.</param>
-        public void ProcessMessage(KernelMessage message)
+        protected override void PreMessageUnregisterStopAction()
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Processes a set of messages which are directed at the current service.
-        /// </summary>
-        /// <param name="messages">The set of messages which should be processed.</param>
-        public void ProcessMessages(IEnumerable<KernelMessage> messages)
-        {
-            foreach (var message in messages)
+            if (!m_Notifications.ContainsKey(m_NotificationNames.Shutdown))
             {
-                ProcessMessage(message);
+                throw new MissingNotificationActionException(m_NotificationNames.Shutdown);
+            }
+
+            var action = m_Notifications[m_NotificationNames.Shutdown];
+            try
+            {
+                action(null);
+            }
+            catch (Exception)
+            {
+                // Log something here?
+                throw;
             }
         }
 

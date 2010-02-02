@@ -30,16 +30,11 @@ namespace Apollo.Core
             /// Creates the kernel service and returns a proxy to the service.
             /// </summary>
             /// <param name="typeToLoad">The type of the kernel service which must be created.</param>
-            /// <param name="unloadAction">The action which should be invoked when the service <c>AppDomain</c> is unloaded.</param>
             /// <returns>A proxy to the kernel service.</returns>
-            public KernelService CreateService(Type typeToLoad, Action<KernelService> unloadAction)
+            public KernelService CreateService(Type typeToLoad)
             {
                 Debug.Assert(typeof(KernelService).IsAssignableFrom(typeToLoad), "The service type does not derive from KernelService.");
                 var service = Activator.CreateInstance(typeToLoad) as KernelService;
-                {
-                    // Setup the appdomain so that when it unloads, it uninstalls the service
-                    AppDomain.CurrentDomain.DomainUnload += (s, e) => unloadAction(service);
-                }
 
                 return service;
             }

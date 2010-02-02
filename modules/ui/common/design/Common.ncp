@@ -7,18 +7,34 @@
       <Entity type="Interface">
         <Name>IMostRecentlyUsedViewModel</Name>
         <Access>Public</Access>
-        <Location left="178" top="114" />
+        <Location left="875" top="76" />
         <Size width="184" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Provides a list of most recently used projects that were opened. In Win7 this also comes onto the jump list.</Text>
-        <Location left="517" top="113" />
+        <Location left="1214" top="75" />
         <Size width="174" height="91" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IApplicationProgress</Name>
+        <Access>Public</Access>
+        <Location left="875" top="295" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Provides access to the application wide progress (e.g. plug-in search, simulations etc.). For Win7 this can go to the taskbar progress thing.</Text>
+        <Location left="1214" top="295" />
+        <Size width="200" height="80" />
       </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="1" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="3" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>

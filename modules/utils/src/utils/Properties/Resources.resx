@@ -117,7 +117,40 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Exceptions_Messages_CannotReturnAResult" xml:space="preserve">
+    <value>This command context does not allow a result to be returned.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateCommand" xml:space="preserve">
+    <value>A command with the specified name has already been defined.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateCommand_WithName" xml:space="preserve">
+    <value>A command with the name [{0}] has already been defined.</value>
+  </data>
   <data name="Exceptions_Messages_ErrorCode_CompareArgument" xml:space="preserve">
     <value>Cannot compare these two objects, their types do not match [this: {0}; other: {1}]</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectResultType" xml:space="preserve">
+    <value>Unexpected result type.</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectResultType_WithTypes" xml:space="preserve">
+    <value>Unexpected result type. Got {0} but expected {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_ProgressToLarge" xml:space="preserve">
+    <value>Progress needs to be {0}% or smaller.</value>
+  </data>
+  <data name="Exceptions_Messages_ProgressToSmall" xml:space="preserve">
+    <value>Progress needs to be {0}% or larger.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownCommand" xml:space="preserve">
+    <value>No command with the specified name could be found.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownCommandParameter" xml:space="preserve">
+    <value>No parameter with the specified name could be found.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownCommandParameter_WithName" xml:space="preserve">
+    <value>No parameter with the name [{0}] could be found.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownCommand_WithName" xml:space="preserve">
+    <value>No command with the name [{0}] could be found.</value>
   </data>
 </root>

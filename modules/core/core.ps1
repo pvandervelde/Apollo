@@ -74,6 +74,13 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 	Set-Content -Path $newPath -Value $text
 }
 
+function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@CONFIGURATION@', $config
+
+	Set-Content -Path $newPath -Value $text
+}
+
 function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
 	# only do this when we run the tests
 
@@ -125,6 +132,9 @@ properties{
 	$versionFile = Join-Path $dirBase 'Version.xml'
 	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
+	
+	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Configuration.cs.in'
+	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Configuration.cs'
 	
 	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
 	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
@@ -290,6 +300,9 @@ task buildBinaries -depends runInit, getVersion -action{
 	# Set the version numbers
 	Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile $versionNumber
 	
+	# Set the configuration
+	Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
+	
 	# Set the InternalsVisibleTo attribute
 	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $assemblyNameUnitTest
 
@@ -330,6 +343,7 @@ task runUnitTests -depends buildBinaries -action{
 		$coverageFiles = ""
 		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
 			Where-Object { ((($_.Name -like "*Apollo*") -and `
+							!( $_.Name -like "*Utils.*") -and `
 							!( $_.Name -like "*Test.*") -and `
 							!($_.Name -like "*vshost*")) -and `
 							($_.Extension -match ".dll"))}
@@ -437,7 +451,10 @@ task runFxCop -depends buildBinaries -action{
 	$rulesDir = Join-Path $dirFxCop 'Rules'
 	$outFile = Join-Path $dirReports $logFxCop
 	
-	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { (($_.Name -like "*Apollo*") -and !( $_.Name -like "*Test*"))}
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | 
+		Where-Object { (($_.Name -like "*Apollo*") -and `
+						!( $_.Name -like "*Utils*") -and `
+						!( $_.Name -like "*Test*"))}
 
 	$files = ""
 	$assemblies | ForEach-Object -Process { $files += "/file:" + '"' + $_.FullName + '" '}
@@ -492,13 +509,11 @@ task buildPackage -depends buildBinaries -action{
 	# Copy the dependencies
 	$autofacFile = 'Autofac.dll'
 	$quickgraph = 'QuickGraph.dll'
-	$quickgraphData = 'QuickGraph.Data.dll'
 	$systemCoreEx = 'System.CoreEx.dll'
 	$systemThreading = 'System.Threading.dll'
 	
 	Copy-Item (Join-Path $dirBuild $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
 	Copy-Item (Join-Path $dirBuild $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)	
-	Copy-Item (Join-Path $dirBuild $quickgraphData) -Destination (Join-Path $dirTempZip $quickgraphData)	
 	Copy-Item (Join-Path $dirBuild $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)	
 	Copy-Item (Join-Path $dirBuild $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)	
 	

@@ -61,11 +61,110 @@ namespace Apollo.Utils.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to This command context does not allow a result to be returned..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotReturnAResult {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotReturnAResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A command with the specified name has already been defined..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateCommand {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A command with the name [{0}] has already been defined..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateCommand_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateCommand_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot compare these two objects, their types do not match [this: {0}; other: {1}].
         /// </summary>
         internal static string Exceptions_Messages_ErrorCode_CompareArgument {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_ErrorCode_CompareArgument", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected result type..
+        /// </summary>
+        internal static string Exceptions_Messages_IncorrectResultType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_IncorrectResultType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unexpected result type. Got {0} but expected {1}..
+        /// </summary>
+        internal static string Exceptions_Messages_IncorrectResultType_WithTypes {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_IncorrectResultType_WithTypes", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress needs to be {0}% or smaller..
+        /// </summary>
+        internal static string Exceptions_Messages_ProgressToLarge {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ProgressToLarge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Progress needs to be {0}% or larger..
+        /// </summary>
+        internal static string Exceptions_Messages_ProgressToSmall {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ProgressToSmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No command with the specified name could be found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownCommand {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No command with the name [{0}] could be found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownCommand_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownCommand_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No parameter with the specified name could be found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownCommandParameter {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownCommandParameter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No parameter with the name [{0}] could be found..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownCommandParameter_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownCommandParameter_WithName", resourceCulture);
             }
         }
     }

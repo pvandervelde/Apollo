@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Core
 {
     /// <summary>
@@ -21,10 +23,9 @@ namespace Apollo.Core
         /// <summary>
         /// Installs the specified service in the kernel.
         /// </summary>
-        /// <param name="serviceToInstall">
-        ///     The service which should be installed.
-        /// </param>
-        void InstallService(KernelService serviceToInstall);
+        /// <param name="serviceToInstall">The service which should be installed.</param>
+        /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
+        void InstallService(KernelService serviceToInstall, AppDomain serviceDomain);
 
         /// <summary>
         /// Uninstalls the service.

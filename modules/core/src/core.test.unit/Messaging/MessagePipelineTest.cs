@@ -331,7 +331,6 @@ namespace Apollo.Core.Test.Unit.Messaging
             MessageId storedId = null;
             DnsName storedName = null;
             MessageBody storedBody = null;
-            IDeliveryFailureReason storedReason = null;
 
             var senderMock = new Mock<ISendMessages>();
             {
@@ -361,7 +360,6 @@ namespace Apollo.Core.Test.Unit.Messaging
             Assert.AreSame(returnedId, storedId);
             Assert.AreSame(listener.Name, storedName);
             Assert.AreSame(bodyMock.Object, storedBody);
-            Assert.IsInstanceOfType(typeof(FailedToSendMessageReason), storedReason);
         }
     }
 }

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Messaging;
+using Apollo.Utils.Commands;
 using Lokad;
 
 namespace Apollo.Core
@@ -21,7 +22,7 @@ namespace Apollo.Core
     /// so there is no need to request the bootstrapper to load it.
     /// </remarks>
     [AutoLoad]
-    internal sealed partial class CoreProxy : KernelService, IHaveServiceDependencies
+    internal sealed partial class CoreProxy : MessageEnabledKernelService, IInvokeCommands, IHaveServiceDependencies
     {
         /// <summary>
         /// The <see cref="Kernel"/> that owns this proxy.
@@ -29,77 +30,92 @@ namespace Apollo.Core
         private readonly IKernel m_Owner;
 
         /// <summary>
-        /// The object that takes care of the message processing.
+        /// The container that stores all the commands for this service.
         /// </summary>
-        private readonly IHelpMessageProcessing m_Processor;
-
-        /// <summary>
-        /// The service that handles message receiving and processing.
-        /// </summary>
-        private IMessagePipeline m_MessageSink;
+        private readonly ICommandContainer m_Commands;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CoreProxy"/> class.
         /// </summary>
         /// <param name="owner">The <see cref="Kernel"/> to which this proxy is linked.</param>
+        /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="processor">The object that handles the incoming messages.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
+        /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="processor"/> is <see langword="null" />.
+        /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
         /// </exception>
-        public CoreProxy(IKernel owner, IHelpMessageProcessing processor)
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
+        /// </exception>
+        public CoreProxy(IKernel owner, ICommandContainer commands, IHelpMessageProcessing processor)
+            : base(processor)
         {
             {
                 Enforce.Argument(() => owner);
-                Enforce.Argument(() => processor);
+                Enforce.Argument(() => commands);
             }
 
-            Name = new DnsName(GetType().Name);
-
+            Name = new DnsName(GetType().FullName);
             m_Owner = owner;
-            m_Processor = processor;
+            
+            m_Commands = commands;
+            {
+                m_Commands.Add(CheckServicesCanShutdownCommand.CommandId, () => new CheckServicesCanShutdownCommand(SendMessageWithResponse));
+            }
+        }
+
+        #region Implementation of IHaveCommands
+
+        /// <summary>
+        /// Determines whether a command with the specified Id is stored.
+        /// </summary>
+        /// <param name="id">The ID of the command.</param>
+        /// <returns>
+        ///     <see langword="true"/> if a command with the specified ID is stored; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool Contains(CommandId id)
+        {
+            return m_Commands.Contains(id);
+        }
+
+        #endregion
+
+        #region Implementation of IInvokeCommands
+
+        /// <summary>
+        /// Invokes the command with the specified ID.
+        /// </summary>
+        /// <param name="id">The ID of the command.</param>
+        public void Invoke(CommandId id)
+        {
+            if (!IsFullyFunctional)
+            {
+                return;
+            }
+
+            m_Commands.Invoke(id);
         }
 
         /// <summary>
-        /// Starts the service.
+        /// Invokes the command with the specified ID.
         /// </summary>
-        protected override void StartService()
+        /// <param name="id">The ID of the command.</param>
+        /// <param name="context">The context that will be passed to the command as it is invoked.</param>
+        public void Invoke(CommandId id, ICommandContext context)
         {
-            if (m_MessageSink == null)
+            if (!IsFullyFunctional)
             {
-                throw new MissingServiceDependencyException();
+                return;
             }
 
-            // Set up the message actions
-            SetupMessageActions();
-
-            // Finally register with the message pipeline
-            if (!m_MessageSink.IsRegistered(Name))
-            {
-                // always register as listener last so that the
-                // message flow starts last.
-                m_MessageSink.RegisterAsSender(this);
-                m_MessageSink.RegisterAsListener(this);
-            }
+            m_Commands.Invoke(id, context);
         }
 
-        /// <summary>
-        /// Provides derivative classes with a possibility to
-        /// perform shutdown tasks.
-        /// </summary>
-        protected override void StopService()
-        {
-            // Finally unregister from the message pipeline
-            if (m_MessageSink != null && m_MessageSink.IsRegistered(Name))
-            {
-                // Always unregister as the listener first so that the 
-                // message flow stops.
-                m_MessageSink.UnregisterAsListener(this);
-                m_MessageSink.UnregisterAsSender(this);
-            }
-        }
+        #endregion
 
         #region IHaveServiceDependencies
 
@@ -138,12 +154,9 @@ namespace Apollo.Core
         public void ConnectTo(KernelService dependency)
         {
             var pipeline = dependency as IMessagePipeline;
-            if ((pipeline != null) && (m_MessageSink == null))
+            if (pipeline != null)
             {
-                pipeline.RegisterAsSender(this);
-                m_Processor.DefinePipelineInformation(pipeline, Name);
-
-                m_MessageSink = pipeline;
+                ConnectToMessageSink(pipeline);
             }
         }
 
@@ -154,12 +167,9 @@ namespace Apollo.Core
         public void DisconnectFrom(KernelService dependency)
         {
             var pipeline = dependency as IMessagePipeline;
-            if ((pipeline != null) && ReferenceEquals(m_MessageSink, pipeline))
+            if (pipeline != null)
             {
-                m_Processor.DeletePipelineInformation();
-                m_MessageSink.UnregisterAsSender(this);
-
-                m_MessageSink = null;
+                DisconnectFromMessageSink(pipeline);
             }
         }
 
@@ -175,22 +185,8 @@ namespace Apollo.Core
         {
             get
             {
-                return m_MessageSink != null;
+                return IsConnectedToPipeline;
             }
-        } 
-
-        #endregion
-
-        #region IDnsNameObject
-
-        /// <summary>
-        /// Gets the identifier of the object.
-        /// </summary>
-        /// <value>The identifier.</value>
-        public DnsName Name
-        {
-            get;
-            private set;
         } 
 
         #endregion
