@@ -206,7 +206,7 @@ task createTasks -action{
 
 	if (!$shouldClean) { $tasks.Add('Incremental') | Out-Null }
 	$tasks.Add('Clean') | Out-Null
-	$tasks.Add('Build') | Out-Null
+	#$tasks.Add('Build') | Out-Null
 	
 	if ($shouldRunUnitTests) { $tasks.Add('UnitTest') | Out-Null }
 	if ($shouldRunVerify) { $tasks.Add('Verify') | Out-Null }

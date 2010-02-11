@@ -5,21 +5,22 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.Linq;
 using System.Reflection;
 using System.Security.Permissions;
+using Apollo.Utils;
 using Apollo.Utils.ExceptionHandling;
 using Lokad;
+using Lokad.Quality;
 
 namespace Apollo.Core
 {
     /// <summary>
     /// Builds AppDomains with unhandled exception handlers and fusion loading events.
     /// </summary>
-    internal sealed partial class AppDomainBuilder
+    internal static partial class AppDomainBuilder
     {
         /// <summary>
         /// The default friendly name.
@@ -39,34 +40,30 @@ namespace Apollo.Core
         /// Creates a new <see cref="AppDomain"/>.
         /// </summary>
         /// <param name="name">The friendly name of the new <c>AppDomain</c>.</param>
-        /// <param name="basePath">The base path for the new <c>AppDomain</c>.</param>
-        /// <returns>
-        ///     The newly created <c>AppDomain</c>.
-        /// </returns>
+        /// <param name="sandboxData">The sandbox information for the <c>AppDomain</c>.</param>
+        /// <param name="resolutionPaths">The assembly resolution paths for the new <c>AppDomain</c>.</param>
+        /// <returns>The newly created <c>AppDomain</c>.</returns>
+        [NotNull]
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "We do really want a directory and not a file system object, therefore we shall stick with DirectoryInfo.")]
-        private static AppDomain Create(string name, DirectoryInfo basePath)
+        private static AppDomain Create(
+            string name,
+            AppDomainSandboxData sandboxData,
+            AppDomainResolutionPaths resolutionPaths)
         {
             {
-                Debug.Assert(basePath != null, "The base path must be defined");
-                Debug.Assert(basePath.Exists, "The base path must be a valid path");
+                Debug.Assert(resolutionPaths != null, "The base path must be defined");
             }
 
+            // If the basePath is not equal to the file path of the current assembly (i.e. Apollo.Core)
+            // then we explicitly do NOT add it. The plug-in domains for instance will not add the
+            // core directory because that prevents them from loading any files from there.
+            // The kernel assembly will be loaded by calling LoadFrom when we load the assembly resolver.
             var setup = new AppDomainSetup 
                 {
                     ApplicationName = Assembly.GetCallingAssembly().GetName().Name, 
-                    ApplicationBase = basePath.FullName
+                    ApplicationBase = resolutionPaths.BasePath
                 };
-
-            // If the basePath is not equal to the file path of the current assembly (i.e. Apollo.Core)
-            // then we add the path of the current assembly as private bin path.
-            var corePath = new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath;
-            if (!string.Equals(corePath, basePath.FullName, StringComparison.OrdinalIgnoreCase))
-            {
-                // Note that this could be a security risk. If we always have the core bin path, then 
-                // we can always load the core ... Doesn't seem right.
-                setup.PrivateBinPath = Path.GetDirectoryName(corePath);
-            }
 
             // Do not shadow copy files. We don't want people able to move / change assemblies 
             // if we are using them. Also shadow copying only affects files on the 
@@ -79,133 +76,103 @@ namespace Apollo.Core
             // do not allow random assembly downloads
             setup.DisallowCodeDownload = true;
 
+            // Get the permissions
+            Debug.Assert(s_SecurityLevels.ContainsKey(sandboxData.Level), "Unknown SecurityLevel found.");
+            var permissions = s_SecurityLevels[sandboxData.Level]();
+
+            // Add the permission to scan the base path
+            var ioPermission = new FileIOPermission(PermissionState.Unrestricted);
+            ioPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
+
+            // Add the file permissions
+            if ((resolutionPaths.Files != null) && (resolutionPaths.Files.Exists()) ||
+                ((resolutionPaths.Directories != null) && resolutionPaths.Directories.Exists()))
+            {
+                // Add permissions for all the assembly files
+                if (resolutionPaths.Files != null)
+                {
+                    foreach (var file in resolutionPaths.Files)
+                    {
+                        ioPermission.AddPathList(FileIOPermissionAccess.Read, file);
+                    }
+                }
+
+                // Add permissions for all the directories
+                if (resolutionPaths.Directories != null)
+                {
+                    foreach (var directory in resolutionPaths.Directories)
+                    {
+                        ioPermission.AddPathList(FileIOPermissionAccess.Read, directory);
+                    }
+                }
+
+                permissions.AddPermission(ioPermission);
+            }
+
+            // Create the AppDomain as a sandboxed AppDomain. None of the assemblies
+            // will have full trust
             var result = AppDomain.CreateDomain(
                 string.IsNullOrEmpty(name) ? GenerateNewAppDomainName() : name,
                 null,
-                setup);
+                setup,
+                permissions,
+                sandboxData.FullTrustAssemblies.ToArray());
             return result;
         }
 
         /// <summary>
         /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
         /// </summary>
-        /// <param name="basePath">The base path for the new <c>AppDomain</c>.</param>
-        /// <param name="assemblyFiles">
-        ///     The assembly files which are allowed to be loaded into the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="exceptionHandler">
-        ///     The exception handler which will take care of all unhandled exceptions in the
-        ///     <c>AppDomain</c>.
-        /// </param>
+        /// <param name="friendlyName">The friendly name of the new <c>AppDomain</c>.</param>
+        /// <param name="sandboxData">The sandbox information for the <c>AppDomain</c>.</param>
+        /// <param name="resolutionPaths">The assembly resolution paths for the new <c>AppDomain</c>.</param>
+        /// <param name="exceptionHandler">The exception handler which will take care of all unhandled exceptions in the
+        ///     <c>AppDomain</c>.</param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
-        /// <design>
-        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
-        ///     then a private path to the current assembly will be added to ensure that we can always load
-        ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
-        ///     new <c>AppDomain</c>.
-        /// </design>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-            Justification = "Making this method static would lead to a static class which makes testing harder.")]
-        public AppDomain AssembleWithFilePaths(DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IExceptionHandler exceptionHandler)
-        {   
-            return AssembleWithFilePaths(string.Empty, basePath, assemblyFiles, exceptionHandler);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
-        /// </summary>
-        /// <param name="friendlyName">
-        ///     The friendly name of the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="basePath">
-        ///     The base path for the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="assemblyFiles">
-        ///     The assembly files which are allowed to be loaded into the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="exceptionHandler">
-        ///     The exception handler which will take care of all unhandled exceptions in the
-        ///     <c>AppDomain</c>.
-        /// </param>
-        /// <returns>The newly created <c>AppDomain</c>.</returns>
-        /// <design>
-        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
-        ///     then a private path to the current assembly will be added to ensure that we can always load
-        ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
-        ///     new <c>AppDomain</c>.
-        /// </design>
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-            Justification = "Making this method static would lead to a static class which makes testing harder.")]
-        public AppDomain AssembleWithFilePaths(string friendlyName, DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IExceptionHandler exceptionHandler)
-        {
-            return AssembleWithFileAndDirectoryPaths(friendlyName, basePath, assemblyFiles, null, exceptionHandler);
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
-        /// </summary>
-        /// <param name="friendlyName">
-        ///     The friendly name of the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="basePath">
-        ///     The base path for the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="assemblyFiles">
-        ///     The assembly files which are allowed to be loaded into the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="assemblyDirectories">
-        ///     The directories from which assemblies are allowed to be loaded into the new <c>AppDomain</c>.
-        /// </param>
-        /// <param name="exceptionHandler">
-        ///     The exception handler which will take care of all unhandled exceptions in the
-        ///     <c>AppDomain</c>.
-        /// </param>
-        /// <returns>The newly created <c>AppDomain</c>.</returns>
-        /// <design>
-        ///     If the <paramref name="basePath"/> is not the path of the current (i.e. Apollo.Core) assembly
-        ///     then a private path to the current assembly will be added to ensure that we can always load
-        ///     this assembly. This is necessary so that the assembly resolvers etc. can be loaded into the
-        ///     new <c>AppDomain</c>.
-        /// </design>
+        [NotNull]
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
             Justification = "Making this method static would lead to a static class which makes testing harder.")]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
-        public AppDomain AssembleWithFileAndDirectoryPaths(string friendlyName, DirectoryInfo basePath, IEnumerable<string> assemblyFiles, IEnumerable<string> assemblyDirectories, IExceptionHandler exceptionHandler)
+        public static AppDomain Assemble(
+            string friendlyName, 
+            AppDomainSandboxData sandboxData, 
+            AppDomainResolutionPaths resolutionPaths, 
+            IExceptionHandler exceptionHandler)
         {
             {
-                Enforce.Argument(() => basePath);
-                Enforce.That(() => basePath.Exists);
-
+                Enforce.Argument(() => resolutionPaths);
                 Enforce.Argument(() => exceptionHandler);
             }
 
-            var domain = Create(friendlyName, basePath);
+            var domain = Create(friendlyName, sandboxData, resolutionPaths);
 
             // Attach to the assembly file resolve event
             // We check for a null reference but not for an empty one,
             // there is after all no reason why the collection wouldn't fill up later.
-            if (assemblyFiles != null)
+            if (resolutionPaths.Files != null)
             {
-                var resolver = domain.CreateInstanceAndUnwrap(
-                    typeof(FileBasedResolver).Assembly.FullName,
-                    typeof(FileBasedResolver).FullName) as FileBasedResolver;
+                var resolver = Activator.CreateInstanceFrom(
+                    domain,
+                    typeof(FileBasedResolver).Assembly.LocalFilePath(),
+                    typeof(FileBasedResolver).FullName).Unwrap() as FileBasedResolver;
 
                 Debug.Assert(resolver != null, "Somehow we didn't create a resolver.");
-                resolver.StoreFilePaths(assemblyFiles);
+                resolver.StoreFilePaths(resolutionPaths.Files);
                 resolver.Attach();
             }
 
             // Attach to the assembly directory resolve event
             // We check for a null reference but not for an empty one,
             // there is after all no reason why the collection wouldn't fill up later.
-            if (assemblyDirectories != null)
+            if (resolutionPaths.Directories != null)
             {
-                var resolver = domain.CreateInstanceAndUnwrap(
-                    typeof(DirectoryBasedResolver).Assembly.FullName,
-                    typeof(DirectoryBasedResolver).FullName) as DirectoryBasedResolver;
+                var resolver = Activator.CreateInstanceFrom(
+                    domain,
+                    typeof(DirectoryBasedResolver).Assembly.LocalFilePath(),
+                    typeof(DirectoryBasedResolver).FullName).Unwrap() as DirectoryBasedResolver;
 
                 Debug.Assert(resolver != null, "Somehow we didn't create a resolver.");
-                resolver.StoreDirectoryPaths(assemblyDirectories);
+                resolver.StoreDirectoryPaths(resolutionPaths.Directories);
                 resolver.Attach();
             }
 

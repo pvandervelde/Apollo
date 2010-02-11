@@ -110,7 +110,12 @@ properties{
 	$dirDeploy = Join-Path $dirBin 'release'
 	
 	# assembly names
-	$assemblyNameUnitTest = 'Apollo.Core.Test.Unit'
+	$assemblyNameUnitTest = 'Apollo.Core.Test.Unit, PublicKey=' + `
+	'0024000004800000940000000602000000240000525341310004000001000100d96eb02586d5c8' + `
+	'b5a14bb49369028b23a3a87ea1d655e5df1f2196398d218e65a6c974cb2630c84ce5069e3dff64' + `
+	'6fd7971215303d930628115c928c160a943743cd0afa72e9da8131f278880c226be62447557373' + `
+	'a90602b982adbefd4d5b1f6519f67a2f9e6e433442f4dd4aa1b9d50f2374dd821a5b0ff2597ed4' + `
+	'6f5dd6c9'
 	
 	# templates dirs
 	$dirTemplates = Join-Path $dirBase 'templates'

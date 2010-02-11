@@ -10,7 +10,7 @@ namespace Apollo.Core
     /// Defines the different security levels that are
     /// recognized by the system.
     /// </summary>
-    internal enum SecurityLevel
+    public enum SecurityLevel
     {
         /// <summary>
         /// Defines the minimum security rights.

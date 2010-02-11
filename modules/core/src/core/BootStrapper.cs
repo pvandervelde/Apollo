@@ -12,6 +12,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Security.Policy;
 using Apollo.Core.Messaging;
 using Apollo.Core.UserInterfaces;
 using Apollo.Utils;
@@ -88,13 +89,32 @@ namespace Apollo.Core
         /// </returns>
         private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
         {
-            return (existingSequence != null) ? existingSequence.Concat(newSequence) : newSequence;
+            return (existingSequence != null) ? existingSequence.Union(newSequence) : newSequence;
         }
 
         /// <summary>
-        /// The <c>AppDomain</c> builder that is used to create the application domains.
+        /// Determines the relevant security level.
         /// </summary>
-        private readonly AppDomainBuilder m_Builder = new AppDomainBuilder();
+        /// <param name="serviceType">Type of the service.</param>
+        /// <returns>
+        /// The <see cref="SecurityLevel"/> specified by the <see cref="ServiceSecurityLevelAttribute"/> or
+        /// <see cref="SecurityLevel.Minimum"/> if nothing is specified.
+        /// </returns>
+        private static SecurityLevel DetermineRelevantSecurityLevel(Type serviceType)
+        {
+            Debug.Assert(typeof(KernelService).IsAssignableFrom(serviceType), "The input type is not a derivative of KernelService.");
+
+            // Get the marker
+            var attributes = serviceType.GetCustomAttributes(typeof(ServiceSecurityLevelAttribute), false);
+            if (attributes.Length == 1)
+            {
+                // Create the marker
+                var level = ((ServiceSecurityLevelAttribute)attributes[0]).SecurityLevel;
+                return level;
+            }
+
+            return SecurityLevel.Minimum;
+        }
 
         /// <summary>
         /// The collection that contains the base and private path information
@@ -229,13 +249,20 @@ namespace Apollo.Core
         private IInjectKernels CreateKernel(DirectoryInfo coreBasePath)
         {
             // Create the kernel appdomain. 
-            var kernelDomain = m_Builder.AssembleWithFilePaths(
-                coreBasePath,
-                new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName),
+            var kernelDomain = AppDomainBuilder.Assemble(
+                "Kernel AppDomain",
+                new AppDomainSandboxData(SecurityLevel.Kernel, m_StartInfo.FullTrustAssemblies), 
+                AppDomainResolutionPaths.WithFiles(
+                    coreBasePath.FullName,
+                    new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName)),
                 m_ExceptionHandlerFactory());
 
             Debug.Assert(!string.IsNullOrEmpty(typeof(KernelInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
-            var kernelInjector = kernelDomain.CreateInstanceAndUnwrap(typeof(KernelInjector).Assembly.FullName, typeof(KernelInjector).FullName) as IInjectKernels;
+            var kernelInjector = Activator.CreateInstanceFrom(
+                    kernelDomain,
+                    typeof(KernelInjector).Assembly.LocalFilePath(),
+                    typeof(KernelInjector).FullName)
+                .Unwrap() as KernelInjector;
 
             // And then create the kernel
             Debug.Assert(kernelInjector != null, "The kernel injector is null, this means we couldn't find the proper assembly or type.");
@@ -268,19 +295,27 @@ namespace Apollo.Core
                 }
             }
 
+            var securityLevel = DetermineRelevantSecurityLevel(serviceType);
+
             List<string> filePaths;
             List<string> directoryPaths;
             SelectPaths(serviceType, out filePaths, out directoryPaths);
 
-            var serviceDomain = m_Builder.AssembleWithFileAndDirectoryPaths(
+            var serviceDomain = AppDomainBuilder.Assemble(
                 string.Format(CultureInfo.InvariantCulture, "AppDomain for {0}", serviceType.Name),
-                coreBasePath,
-                filePaths,
-                directoryPaths,
+                new AppDomainSandboxData(securityLevel, m_StartInfo.FullTrustAssemblies), 
+                AppDomainResolutionPaths.WithFilesAndDirectories(
+                    coreBasePath.FullName, 
+                    filePaths, 
+                    directoryPaths),
                 m_ExceptionHandlerFactory());
 
             Debug.Assert(!string.IsNullOrEmpty(typeof(ServiceInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
-            var injector = serviceDomain.CreateInstanceAndUnwrap(typeof(ServiceInjector).Assembly.FullName, typeof(ServiceInjector).FullName) as IInjectServices;
+            var injector = Activator.CreateInstanceFrom(
+                    serviceDomain,
+                    typeof(ServiceInjector).Assembly.LocalFilePath(), 
+                    typeof(ServiceInjector).FullName)
+                .Unwrap() as IInjectServices;
 
             // Prepare the appdomain
             Debug.Assert(injector != null, "Could not load the ServiceInjector.");

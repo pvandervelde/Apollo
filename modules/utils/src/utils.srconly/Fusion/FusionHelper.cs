@@ -125,7 +125,7 @@ namespace Apollo.Utils.Fusion
         private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
             Debug.Assert(!string.IsNullOrEmpty(filePath), "The assembly file path should not be empty.");
-            if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase))
+            if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase)) // ASSERT?
             {
                 return false;
             }
@@ -138,7 +138,7 @@ namespace Apollo.Utils.Fusion
                 try
                 {
                     // Load the assembly name but without loading the assembly file into the AppDomain.
-                    assemblyName = AssemblyName.GetAssemblyName(filePath);
+                    assemblyName = AssemblyName.GetAssemblyName(filePath); // ASSERT?
                 }
                 catch (ArgumentException)
                 {
@@ -194,19 +194,13 @@ namespace Apollo.Utils.Fusion
                 if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
-                    var str = new System.Text.ASCIIEncoding().GetString(actualPublicKeyToken);
+                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x"));
                     return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }
 
             return true;
         }
-
-        /// <summary>
-        /// The collection that holds all the directories that should be searched
-        /// for the 'missing' assemblies.
-        /// </summary>
-        private string m_Directory;
 
         /// <summary>
         /// The delegate which is used to return a file enumerator based on a specific directory.
@@ -238,32 +232,6 @@ namespace Apollo.Utils.Fusion
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
-        /// </summary>
-        /// <param name="baseDirectory">The base directory.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public FusionHelper(DirectoryInfo baseDirectory) : this(baseDirectory.FullName)
-        { 
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FusionHelper"/> class.
-        /// </summary>
-        /// <param name="baseDirectory">The base directory.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
-        public FusionHelper(string baseDirectory)
-        {
-            {
-                Enforce.That(!string.IsNullOrEmpty(baseDirectory));
-                Enforce.That(Directory.Exists(baseDirectory));
-            }
-
-            m_Directory = baseDirectory;
-        }
-
-        /// <summary>
         /// Gets the file enumerator which is used to enumerate the files in a specific directory. 
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
@@ -274,12 +242,6 @@ namespace Apollo.Utils.Fusion
         {
             get 
             {
-                if (m_FileEnumerator == null)
-                {
-                    Debug.Assert(!string.IsNullOrEmpty(m_Directory), "The directory must be specified!");
-                    m_FileEnumerator = () => Directory.GetFiles(m_Directory, FileExtensions.AssemblyExtension, SearchOption.AllDirectories);
-                }
-
                 return m_FileEnumerator;
             }
         }

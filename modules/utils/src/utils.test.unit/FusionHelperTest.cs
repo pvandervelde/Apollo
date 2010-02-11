@@ -23,7 +23,7 @@ namespace Apollo.Utils
     {
         private readonly Dictionary<string, Assembly> m_Assemblies = new Dictionary<string, Assembly>();
 
-        private string GetAssemblyPath(Assembly assembly)
+        private static string GetAssemblyPath(Assembly assembly)
         {
             var codebase = assembly.CodeBase;
             var uri = new Uri(codebase);
@@ -73,7 +73,7 @@ namespace Apollo.Utils
             var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().Name;
             var result = ExecuteLoadAssembly(helper, name);
-            Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
+            Assert.AreSame(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Apollo.Utils
             var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().Name + ".dll";
             var result = ExecuteLoadAssembly(helper, name);
-            Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
+            Assert.AreSame(Assembly.GetExecutingAssembly(), result);
         }
 
         [Test]
@@ -113,7 +113,7 @@ namespace Apollo.Utils
             var helper = InitializeFusionHelper();
             var name = Assembly.GetExecutingAssembly().GetName().FullName;
             var result = ExecuteLoadAssembly(helper, name);
-            Assert.AreSame<Assembly>(Assembly.GetExecutingAssembly(), result);
+            Assert.AreSame(Assembly.GetExecutingAssembly(), result, "Expected assembly with name {0} but got {1}", name, result);
         }
 
         [Test]

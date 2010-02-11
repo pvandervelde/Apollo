@@ -14,7 +14,7 @@ namespace Apollo.Core
     /// <content>
     /// Holds the methods providing the permissions capabilities.
     /// </content>
-    internal sealed partial class AppDomainBuilder
+    internal static partial class AppDomainBuilder
     {
         /// <summary>
         /// The collection that holds all the security level methods.
@@ -43,7 +43,17 @@ namespace Apollo.Core
         private static PermissionSet DefineMinimumPermissions()
         {
             var set = new PermissionSet(PermissionState.None);
+            
+            // At least allow code to execute
             set.AddPermission(new SecurityPermission(SecurityPermissionFlag.Execution));
+
+            // Allow serialization to happen. This might be more troublesome, although we're
+            // assuming that any AppDomain that reads the serialized data doesn't always know
+            // how to restore the data if the assemblies can't be loaded.
+            set.AddPermission(new SecurityPermission(SecurityPermissionFlag.SerializationFormatter));
+            
+            // Allow code to write to isolated storage. There shouldn't be much that code
+            // can do from there to cause trouble.
             set.AddPermission(new IsolatedStorageFilePermission(PermissionState.Unrestricted));
 
             return set;
@@ -71,7 +81,8 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefineServicePermissions()
         {
-            throw new NotImplementedException();
+            var set = DefineMinimumPermissions();
+            return set;
         }
 
         /// <summary>
@@ -82,7 +93,10 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefineDiscoveryPermissions()
         {
-            throw new NotImplementedException();
+            var set = DefineMinimumPermissions();
+            set.AddPermission(new ReflectionPermission(ReflectionPermissionFlag.MemberAccess));
+
+            return set;
         }
 
         /// <summary>
@@ -93,7 +107,10 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefinePersistencePermissions()
         {
-            throw new NotImplementedException();
+            var set = DefineMinimumPermissions();
+            set.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
+
+            return set;
         }
 
         /// <summary>
@@ -104,7 +121,11 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefineLicensePermissions()
         {
-            throw new NotImplementedException();
+            // File IO
+            // Reflection
+            // Strong name ? Cryptography?
+            var set = DefineMinimumPermissions();
+            return set;
         }
 
         /// <summary>
@@ -115,7 +136,10 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefineUserInterfacePermissions()
         {
-            throw new NotImplementedException();
+            var set = DefineMinimumPermissions();
+            set.AddPermission(new UIPermission(PermissionState.Unrestricted));
+
+            return set;
         }
 
         /// <summary>
@@ -126,7 +150,7 @@ namespace Apollo.Core
         /// </returns>
         private static PermissionSet DefinePlugInPermissions()
         {
-            throw new NotImplementedException();
+            return DefineMinimumPermissions();
         }
 
         #endregion

@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
+using System.Security;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -22,6 +23,15 @@ using System.Resources;
 
 // Indicate that the neutral language resources are in the assembly.
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
+
+// Security permissions
+// Indicate that partially trusted assemblies can call into this assembly. Note that we should
+// never give these partially trusted callers reflection permissions!
+[assembly: AllowPartiallyTrustedCallers]
+
+// Indicate that this assembly has security critical elements, but most of it
+// should be transparent to security demands (i.e. security demands pass through).
+[assembly: SecurityCritical]
 
 // Design supress messages
 [module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", 

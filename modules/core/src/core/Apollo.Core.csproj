@@ -13,6 +13,9 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PlatformTarget>x86</PlatformTarget>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -206,6 +209,8 @@
     <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
     <Compile Include="AppDomainBuilder.Permissions.cs" />
+    <Compile Include="AppDomainResolutionPaths.cs" />
+    <Compile Include="AppDomainSandboxData.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
@@ -273,6 +278,7 @@
     <Compile Include="SecurityLevel.cs" />
     <Compile Include="SendMessageWithoutResponseDelegate.cs" />
     <Compile Include="SendMessageWithResponseDelegate.cs" />
+    <Compile Include="ServiceSecurityLevelAttribute.cs" />
     <Compile Include="ServiceShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ServiceShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ShutdownApplicationCommand.cs" />
@@ -315,6 +321,11 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

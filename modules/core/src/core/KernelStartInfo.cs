@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Security.Policy;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -31,15 +33,7 @@ namespace Apollo.Core
         /// </returns>
         protected static FileInfo DetermineAssemblyPath(Assembly assembly)
         {
-            // Get the location of the assembly before it was shadow-copied
-            // Note that Assembly.Codebase gets the path to the manifest-containing
-            // file, not necessarily the path to the file that contains a
-            // specific type.
-            var uncPath = assembly.CodeBase;
-
-            // Get the local path. This may not work if the assembly isn't
-            // local. For now we assume it is.
-            var localPath = new Uri(uncPath).LocalPath;
+            var localPath = assembly.LocalFilePath();
             return new FileInfo(localPath);
         }
 
@@ -66,6 +60,11 @@ namespace Apollo.Core
         /// for the project capabilities to function.
         /// </summary>
         private readonly List<FileInfo> m_ProjectAssemblies;
+
+        /// <summary>
+        /// The list of full trust assemblies.
+        /// </summary>
+        private readonly List<StrongName> m_FullTrustAssemblies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
@@ -101,6 +100,15 @@ namespace Apollo.Core
             m_PersistenceAssemblies = new List<FileInfo>();
 
             m_ProjectAssemblies = new List<FileInfo>();
+
+            m_FullTrustAssemblies = new List<StrongName>
+                {
+                    // Apollo.Core
+                    typeof(KernelStartInfo).Assembly.GetStrongName(),
+
+                    // Apollo.Utils
+                    typeof(Utils.ILockObject).Assembly.GetStrongName(),
+                };
         }
 
         /// <summary>
@@ -173,6 +181,18 @@ namespace Apollo.Core
         public abstract IEnumerable<DirectoryInfo> PlugInDirectories
         {
             get;
+        }
+
+        /// <summary>
+        /// Gets the full trust assemblies.
+        /// </summary>
+        /// <value>The full trust assemblies.</value>
+        public IEnumerable<StrongName> FullTrustAssemblies
+        {
+            get
+            {
+                return m_FullTrustAssemblies.AsReadOnly();
+            }
         }
     }
 }
