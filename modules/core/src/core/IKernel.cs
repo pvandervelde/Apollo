@@ -12,7 +12,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines the interface for objects that provide kernel services.
     /// </summary>
-    public interface IKernel
+    internal interface IKernel
     {
         /// <summary>
         /// Installs the specified service.
@@ -42,7 +42,10 @@ namespace Apollo.Core
         /// <param name="service">
         ///     The service that needs to be uninstalled.
         /// </param>
-        void Uninstall(KernelService service);
+        /// <param name="shouldUnloadDomain">
+        /// Indicates if the <c>AppDomain</c> that held the service should be unloaded or not.
+        /// </param>
+        void Uninstall(KernelService service, bool shouldUnloadDomain);
 
         /// <summary>
         /// Determines whether the application can shutdown cleanly.

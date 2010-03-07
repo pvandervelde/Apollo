@@ -6,6 +6,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Security;
+using System.Security.Permissions;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -24,35 +27,71 @@ namespace Apollo.Core
             /// <summary>
             /// The total number of services available.
             /// </summary>
-            private readonly int m_ServiceCount;
+            private int m_ServiceCount;
             
             /// <summary>
             /// The index of the service that is currently starting.
             /// </summary>
-            private readonly int m_CurrentServiceIndex;
+            private int m_CurrentServiceIndex;
 
             /// <summary>
-            /// The action that is invoked to report on the startup progress.
+            /// The kernel that processes the event information.
             /// </summary>
-            private readonly Action<int, IProgressMark> m_EventAction;
+            private Kernel m_Owner;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="Apollo.Core.Kernel.ServiceProgressHandler"/> class.
+            /// The kernel service which produces the progress event.
             /// </summary>
-            /// <param name="serviceCount">The service count.</param>
+            private INeedStartup m_Service;
+
+            /// <summary>
+            /// Attaches to the <see cref="INeedStartup.StartupProgress"/> event.
+            /// </summary>
+            /// <param name="owner">The owner to which progress information is provided.</param>
+            /// <param name="service">The service which publishes progress information.</param>
+            /// <param name="serviceCount">The total number of services that need to be started.</param>
             /// <param name="currentServiceIndex">Index of the current service.</param>
-            /// <param name="eventAction">The event action.</param>
-            public ServiceProgressHandler(int serviceCount, int currentServiceIndex, Action<int, IProgressMark> eventAction)
+            public void Attach(Kernel owner, INeedStartup service, int serviceCount, int currentServiceIndex)
             {
                 {
+                    Debug.Assert(owner != null, "The owner should not be a null reference.");
+                    Debug.Assert(service != null, "The service should not be a null reference.");
+
                     Debug.Assert(serviceCount > 0, "Unable to generate progress for less than 1 service.");
                     Debug.Assert(currentServiceIndex > -1, "Index must be larger than -1.");
                     Debug.Assert(currentServiceIndex < serviceCount, "Index must be smaller than total number of services.");
                 }
 
+                m_Owner = owner;
+                m_Service = service;
                 m_ServiceCount = serviceCount;
                 m_CurrentServiceIndex = currentServiceIndex;
-                m_EventAction = eventAction;
+                
+                //var set = new PermissionSet(PermissionState.Unrestricted);
+                //SecurityHelpers.Elevate(
+                //    set,
+                //    () =>
+                //    {
+                //        service.StartupProgress += HandleProgress;
+                //    });
+
+                service.StartupProgress += HandleProgress;
+            }
+
+            /// <summary>
+            /// Detaches from the <see cref="INeedStartup.StartupProgress"/> event.
+            /// </summary>
+            public void Detach()
+            {
+                //var set = new PermissionSet(PermissionState.Unrestricted);
+                //SecurityHelpers.Elevate(
+                //    set,
+                //    () =>
+                //    {
+                //        m_Service.StartupProgress -= HandleProgress;
+                //    });
+
+                m_Service.StartupProgress -= HandleProgress;
             }
 
             /// <summary>
@@ -60,7 +99,7 @@ namespace Apollo.Core
             /// </summary>
             /// <param name="sender">The sender.</param>
             /// <param name="e">The <see cref="Apollo.Utils.StartupProgressEventArgs"/> instance containing the event data.</param>
-            public void HandleProgress(object sender, StartupProgressEventArgs e)
+            private void HandleProgress(object sender, StartupProgressEventArgs e)
             {
                 // There are serviceIndex number of services that have finished
                 // their startup process.
@@ -73,7 +112,7 @@ namespace Apollo.Core
                 var currentPercentage = e.Progress / (100.0 * m_ServiceCount);
                 var total = finishedPercentage + currentPercentage;
 
-                m_EventAction((int)Math.Floor(total * 100), e.CurrentlyProcessing);
+                m_Owner.RaiseStartupProgress((int)Math.Floor(total * 100), e.CurrentlyProcessing);
             }
 
             /// <summary>

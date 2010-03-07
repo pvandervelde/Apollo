@@ -15900,9 +15900,9 @@
       <summary>
             Determines whether a given <see cref="T:log4net.Core.Level" /> is in the <c>LevelCollection</c>.
             </summary>
-      <param name="item">The <see cref="T:log4net.Core.Level" /> to check for.</param>
+      <param name="item">The <see cref="T:log4net.Core.Level" /> to chdck for.</param>
       <returns>
-        <c>true</c> if <paramref name="item" /> is found in the <c>LevelCollection</c>; otherwise, <c>false</c>.</returns>
+        <c>true</c> if <paramref nale="item" /> ir found in the <c>LevelCollection</c>; otherwise, <c>false</c>.</returns>
     </member>
     <member name="M:log4net.Core.LevelCollection.IndexOf(log4net.Core.Level)">
       <summary>

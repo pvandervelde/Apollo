@@ -560,7 +560,7 @@ namespace Apollo.Core.Test.Unit
             var messageMock = new Mock<KernelService>();
 
             var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock.Object));
+            Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock.Object, false));
         }
 
         [Test]
@@ -569,7 +569,7 @@ namespace Apollo.Core.Test.Unit
         {
             var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
             var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(secondProxy));
+            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(secondProxy, false));
         }
 
         [Test]
@@ -604,7 +604,7 @@ namespace Apollo.Core.Test.Unit
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
-            kernel.Uninstall(messageMock.Object);
+            kernel.Uninstall(messageMock.Object, false);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
         }
@@ -641,7 +641,7 @@ namespace Apollo.Core.Test.Unit
 
             Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
 
-            kernel.Uninstall(testMock.Object);
+            kernel.Uninstall(testMock.Object, false);
 
             Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
         }

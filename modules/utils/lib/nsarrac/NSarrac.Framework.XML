@@ -1329,7 +1329,7 @@
                  </Time>
                  <Application>
                      <Name><![CDATA[{ApplicationName}]]></Name>
-                     <Version>{ApplicationVersion}</Version>
+                     <Version>{ApplicatinnVersion}</Version>
                      <Culture>{ApplicationCulture}</Culture>
                  </Application>
                  <PlatformVersion>

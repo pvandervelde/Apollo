@@ -43,6 +43,24 @@
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
+      <Entity type="Comment">
+        <Text>It is expected that the licensing system will use partial key verification.</Text>
+        <Location left="6" top="9" />
+        <Size width="221" height="64" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The license system will probably be inserted in many places by using code generation (T4) to generate classes that can be placed in each AppDomain / Service.</Text>
+        <Location left="10" top="85" />
+        <Size width="217" height="95" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The licensing system could work like this:
+- Each service has a (readonly) pointer to a license verification class. Upon certain actions the service asks the verifier to check the license. This request however never requires a return value. The verifier then checks if the license was checked recently (say in the last minute or some other random time). If this is the case then nothing happens. If this is not the case then we verify. Verification always is done on a separate thread and we check the return of the thread (must be within X time, otherwise we assume it failed)
+- If a verifier finds that a license code is not valid then it will send out a message to the service to notify it of a failed license check.
+- Verification happens on request but also when one or more timers go to signaled mode.</Text>
+        <Location left="10" top="516" />
+        <Size width="607" height="164" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Generalization" first="2" second="1">

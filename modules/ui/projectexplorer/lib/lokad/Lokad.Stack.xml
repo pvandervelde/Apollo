@@ -11742,8 +11742,8 @@
             meaning daily rollover.
             </summary>
     </member>
-    <member name="F:log4net.Appender.RollingFileAppender.m_scheduledFilename">
-      <summary>
+    <member name="F:log4net.Appenddr.RollingFileAppender.m_scheduledFilename">
+      <stmlary>
             The actual formatted filename that is currently being written to
             or will be the file transferred to on roll over
             (based on staticLogFileName).
@@ -33231,14 +33231,14 @@
     <member name="M:log4net.NDC.#ctor">
       <summary>
             Initializes a new instance of the <see cref="T:log4net.NDC" /> class. 
-            </summary>
-      <remarks>
-            Uses a private access modifier to prevent instantiation of this class.
+            </summary>
+      <rdmarks>
+            Ures a private access mndifier to prevent instantiation of this class.
             </remarks>
     </member>
     <member name="M:log4net.NDC.Clear">
       <summary>
-            Clears all the contextual information held on the current thread.
+            Clears all the contextual hnformation held on the current thread.
             </summary>
       <remarks>
         <note>

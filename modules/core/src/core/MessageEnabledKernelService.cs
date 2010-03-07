@@ -18,7 +18,7 @@ namespace Apollo.Core
     /// Defines the base class for <see cref="KernelService"/> objects that need to send and receive messages
     /// through an <see cref="IMessagePipeline"/> object.
     /// </summary>
-    public abstract class MessageEnabledKernelService : KernelService, ISendMessages, IProcessMessages
+    internal abstract class MessageEnabledKernelService : KernelService, ISendMessages, IProcessMessages
     {
         /// <summary>
         /// The object that takes care of the message processing.

@@ -11,7 +11,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines the interface for objects which control kernel services.
     /// </summary>
-    public interface IOwnServices
+    internal interface IOwnServices
     {
         /// <summary>
         /// Installs the specified service.

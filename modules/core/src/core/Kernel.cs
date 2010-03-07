@@ -10,8 +10,11 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Lokad;
@@ -24,18 +27,8 @@ namespace Apollo.Core
     /// Defines the core class that controls the kernel of the Apollo application.
     /// </summary>
     /// <design>
-    /// The kernel will start the services in the following order:
-    /// <list type="bullet">
-    /// <serviceType>Message service</serviceType>
-    /// <serviceType>Core</serviceType>
-    /// <serviceType>User interface service</serviceType>
-    /// <serviceType>License service</serviceType>
-    /// <serviceType>Persistence service</serviceType>
-    /// <serviceType>Log sink</serviceType>
-    /// <serviceType>Timeline service</serviceType>
-    /// <serviceType>Plug-in service</serviceType>
-    /// <serviceType>Project service</serviceType>
-    /// </list>
+    /// The kernel will determine the order in which the services must be 
+    /// started based on their dependencies. 
     /// It is assumed that each service will reside in their own AppDomain and that
     /// services do NOT share AppDomains. Upon uninstalling a service the 
     /// service AppDomain will be removed.
@@ -139,11 +132,16 @@ namespace Apollo.Core
             // so that the startup order guarantuees that each service will have 
             // its dependencies and requirements running before it does.
             // Obviously this is prone to cyclic loops ...
-            var startupOrder = DetermineServiceStartupOrder();
+            // Using full trust permissions here because Quick-Graph needs them.
+            var startupOrder = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => DetermineServiceStartupOrder());
             foreach (var service in startupOrder)
             {
+                // Grab the actual current service so that we can put it in the
+                // lambda expression without having it wiped or replaced on us
+                var currentService = service;
+
                 // See if the service is complete
-                var dependencyHolder = service as IHaveServiceDependencies;
+                var dependencyHolder = currentService as IHaveServiceDependencies;
                 if (dependencyHolder != null)
                 {
                     // See if all the dependencies are there.
@@ -153,7 +151,7 @@ namespace Apollo.Core
                             string.Format(
                                 CultureInfo.InvariantCulture,
                                 Resources.Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency_WithService,
-                                service.GetType()));
+                                currentService.GetType()));
                     }
 
                     // There is no need to check that all the dependencies are up and
@@ -166,38 +164,46 @@ namespace Apollo.Core
                 }
 
                 // Only start the service if it hasn't already been started
-                if (service.GetStartupState() != StartupState.Started)
+                if (currentService.GetStartupState() != StartupState.Started)
                 {
-                    // Grab the actual current service so that we can put it in the
-                    // lambda expression without having it wiped or replaced on us
-                    var currentService = service;
-                    var progressHandler = new ServiceProgressHandler(
-                        startupOrder.Count, 
-                        startupOrder.IndexOf(currentService), 
-                        (progress, mark) =>
-                            {
-                                RaiseStartupProgress(progress, mark);
-                            });
+                    var map = m_Services[service.GetType()];
+                    var serviceDomain = map.Value;
 
-                    service.StartupProgress += progressHandler.HandleProgress;
+                    // Assert full trust. This can be done safely
+                    // because we will attach to the DomainUnload event but we'll only 
+                    // run secure code in the unload event.
+                    var set = new PermissionSet(PermissionState.Unrestricted);
+
+                    var progressHandler = SecurityHelpers.Elevate(
+                        set,
+                        () => Activator.CreateInstanceFrom(
+                                    serviceDomain,
+                                    typeof(ServiceProgressHandler).Assembly.LocalFilePath(),
+                                    typeof(ServiceProgressHandler).FullName)
+                                .Unwrap() as ServiceProgressHandler);
+                    Debug.Assert(progressHandler != null, "Failed to create the UnloadHandler.");
+                    
+                    // This doesn't work because we're applying the security permission
+                    // in the wrong appdomain ...
+                    progressHandler.Attach(this, currentService, startupOrder.Count, startupOrder.IndexOf(currentService));
                     try
                     {
                         // Start the service
-                        service.Start();
+                        currentService.Start();
 
                         // Check that that start was successful
-                        if (service.GetStartupState() != StartupState.Started)
+                        if (currentService.GetStartupState() != StartupState.Started)
                         {
                             throw new KernelServiceStartupFailedException(
                                 string.Format(
                                     CultureInfo.InvariantCulture,
                                     Resources.Exceptions_Messages_KernelServiceStartupFailed_WithService,
-                                    service.GetType()));
+                                    currentService.GetType()));
                         }
                     }
                     finally
                     {
-                        service.StartupProgress -= progressHandler.HandleProgress;
+                        progressHandler.Detach();
                     }
                 }
             }
@@ -215,6 +221,7 @@ namespace Apollo.Core
         /// </returns>
         private List<KernelService> DetermineServiceStartupOrder()
         {
+            // Define the result collection
             var graph = new AdjacencyGraph<ServiceVertex, Edge<ServiceVertex>>();
             {
                 // create the vertices
@@ -374,9 +381,28 @@ namespace Apollo.Core
 
                 dependent.ConnectTo(service);
             }
+            
+            // Only add an unload event if we're not attaching to the domain that 
+            // holds the kernel.
+            if (!ReferenceEquals(serviceDomain, AppDomain.CurrentDomain))
+            {
 
-            // Link to the unload event of the appdomain
-            serviceDomain.DomainUnload += HandleServiceDomainUnloading;
+                // Assert full trust. This can be done safely
+                // because we will attach to the DomainUnload event but we'll only 
+                // run secure code in the unload event.
+                var set = new PermissionSet(PermissionState.Unrestricted);
+
+                var unloadHandler = SecurityHelpers.Elevate(
+                    set, 
+                    () => Activator.CreateInstanceFrom(
+                                serviceDomain,
+                                typeof(AppDomainUnloadHandler).Assembly.LocalFilePath(),
+                                typeof(AppDomainUnloadHandler).FullName)
+                            .Unwrap() as AppDomainUnloadHandler);
+
+                Debug.Assert(unloadHandler != null, "Failed to create the UnloadHandler.");
+                unloadHandler.AttachToUnloadEvent(this);
+            }
 
             // Finally add the service
             m_Services.Add(service.GetType(), new KeyValuePair<KernelService, AppDomain>(service, serviceDomain));
@@ -385,21 +411,20 @@ namespace Apollo.Core
         /// <summary>
         /// Handles the <see cref="AppDomain.DomainUnload"/> event for service AppDomains.
         /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.EventArgs"/> instance containing the event data.</param>
-        private void HandleServiceDomainUnloading(object sender, EventArgs e)
+        /// <param name="domainToUnload">The <c>AppDomain</c> that is about to be unloaded.</param>
+        private void HandleServiceDomainUnloading(AppDomain domainToUnload)
         {
-            var domain = sender as AppDomain;
-            if (domain != null)
+            if (domainToUnload != null)
             {
                 // Go find the service(s) that reside in this appdomain.
                 var services = (from serviceMap in m_Services
-                                where serviceMap.Value.Value.Equals(domain)
+                                where serviceMap.Value.Value.Equals(domainToUnload)
                                 select serviceMap.Value.Key).ToList();
 
                 foreach (var service in services)
                 {
-                    Uninstall(service);
+                    // No need to explicitly unload the domain because that's already happening.
+                    Uninstall(service, false);
                 }
             }
         }
@@ -490,16 +515,15 @@ namespace Apollo.Core
         /// <summary>
         /// Uninstalls the specified service.
         /// </summary>
+        /// <param name="service">The service that needs to be uninstalled.</param>
+        /// <param name="shouldUnloadDomain">Indicates if the <c>AppDomain</c> that held the service should be unloaded or not.</param>
         /// <remarks>
-        ///     Once a service is uninstalled it can no longer be started. It is effectively
-        ///     removed from the list of known services.
+        /// Once a service is uninstalled it can no longer be started. It is effectively
+        /// removed from the list of known services.
         /// </remarks>
-        /// <param name="service">
-        ///     The service that needs to be uninstalled.
-        /// </param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Once we started uninstalling it must finish.")]
-        public void Uninstall(KernelService service)
+        public void Uninstall(KernelService service, bool shouldUnloadDomain)
         {
             // Unlike installation, we can pretty much always uninstall.
             // It may get ugly but we can remove the references.
@@ -557,24 +581,31 @@ namespace Apollo.Core
 
             // Remove the service. Now that it doesn't have any of the connections anymore.
             m_Services.Remove(service.GetType());
-
-            // Disconnect from the AppDomain unload event
-            installedServiceMap.Value.DomainUnload -= HandleServiceDomainUnloading;
             
-            // Unload the appdomain. It shouldn't be needed anymore, but only if it's 
-            // not our own appdomain (that would be bad).
+            // Unload the appdomain. It shouldn't be needed anymore.
+            // We don't need to disconnect from the DomainUnload event, the code
+            // that handles that lives inside the AppDomain so it'll be removed
+            // automatically
+            // only unload if it's not our own appdomain (that would be bad).
             var serviceDomain = installedServiceMap.Value;
-            if (!serviceDomain.Equals(AppDomain.CurrentDomain))
+            if (shouldUnloadDomain && !serviceDomain.Equals(AppDomain.CurrentDomain))
             {
                 try
                 {
+                    // Assert permission to control the AppDomain. This can be done safely
+                    // because we will attach to the AssemblyResolve event but we'll only 
+                    // resolve assemblies from a known set of paths or files.
+                    var set = new PermissionSet(PermissionState.None);
+                    set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
+
                     // This can go wrong if there are still threads executing in this
-                    // AppDomain ...
-                    AppDomain.Unload(serviceDomain);
+                    // AppDomain. If it does go wrong we'll bail out semi-gracefully
+                    SecurityHelpers.Elevate(set, () => AppDomain.Unload(serviceDomain));
                 }
                 catch (Exception)
                 {
                     // For now do nothing. Later on we should log the problem here.
+                    // @Note should this do something nasty to the application?
                 }
             }
         }

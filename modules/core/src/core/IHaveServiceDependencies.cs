@@ -19,7 +19,7 @@ namespace Apollo.Core
     /// anymore. In order to disconnect a service both services need to be stopped 
     /// and the depending service object needs to be destroyed.
     /// </design>
-    public interface IHaveServiceDependencies
+    internal interface IHaveServiceDependencies
     {
         /// <summary>
         /// Returns a set of types indicating which services need to be present

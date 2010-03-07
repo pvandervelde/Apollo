@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security;
 using System.Security.Permissions;
+using System.Security.AccessControl;
 
 namespace Apollo.Core
 {
@@ -25,9 +27,9 @@ namespace Apollo.Core
                     { SecurityLevel.Minimum, DefineMinimumPermissions },
                     { SecurityLevel.Kernel, DefineKernelPermissions },
                     { SecurityLevel.Service, DefineServicePermissions },
+                    { SecurityLevel.Logger, DefineLoggerPermissions },
                     { SecurityLevel.Discovery, DefineDiscoveryPermissions },
                     { SecurityLevel.Persistence, DefinePersistencePermissions },
-                    { SecurityLevel.License, DefineLicensePermissions },
                     { SecurityLevel.UserInterface, DefineUserInterfacePermissions },
                     { SecurityLevel.Plugins, DefinePlugInPermissions },
                 };
@@ -86,6 +88,25 @@ namespace Apollo.Core
         }
 
         /// <summary>
+        /// Defines the license permissions.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PermissionSet"/> that defines the license rights.
+        /// </returns>
+        private static PermissionSet DefineLoggerPermissions()
+        {
+            var set = DefineMinimumPermissions();
+
+            //var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            //var logDirectory = Path.Combine(appDataDir, "");
+
+            // File IO for a specific Log directory ..
+            //set.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, logDirectory));
+
+            return set;
+        }
+
+        /// <summary>
         /// Defines the plug-in discovery permissions.
         /// </summary>
         /// <returns>
@@ -110,21 +131,6 @@ namespace Apollo.Core
             var set = DefineMinimumPermissions();
             set.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
 
-            return set;
-        }
-
-        /// <summary>
-        /// Defines the license permissions.
-        /// </summary>
-        /// <returns>
-        /// A <see cref="PermissionSet"/> that defines the license rights.
-        /// </returns>
-        private static PermissionSet DefineLicensePermissions()
-        {
-            // File IO
-            // Reflection
-            // Strong name ? Cryptography?
-            var set = DefineMinimumPermissions();
             return set;
         }
 

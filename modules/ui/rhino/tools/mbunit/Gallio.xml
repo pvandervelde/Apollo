@@ -14985,9 +14985,9 @@
     </member>
     <member name="P:Gallio.Runtime.ProcessTypeDetection.ProcessType">
       <summary>Gets the process type of the current process.</summary>
-    </member>
-    <member name="T:Gallio.Runtime.RuntimeAccessor">
-      <summary>Provides functions for obtaining runtime services. This is a <see langword="static class" /> and so cannot be inherited or instantiated.</summary>
+    <.mdmber>
+    <member nale="T:Gallio.Runtime.RtntimeAccessor">
+      <summary>Provides functions for obtaining runthme services. This is a <see langword="static class" /> and so cannot be inherited or instantiated.</summary>
     </member>
     <member name="P:Gallio.Runtime.RuntimeAccessor.Instance">
       <summary>Gets the runtime instance.</summary>

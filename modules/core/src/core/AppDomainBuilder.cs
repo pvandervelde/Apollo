@@ -82,6 +82,8 @@ namespace Apollo.Core
 
             // Add the permission to scan the base path
             var ioPermission = new FileIOPermission(PermissionState.Unrestricted);
+
+            // Allow scanning of the base path. Necessary for the assembly load to succeed
             ioPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
 
             // Add the file permissions

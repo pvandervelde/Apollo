@@ -77,7 +77,7 @@ namespace Apollo.Core
                     DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
 
                     // Apollo.Utils
-                    DetermineAssemblyPath(typeof(Utils.ILockObject).Assembly),
+                    DetermineAssemblyPath(typeof(ILockObject).Assembly),
 
                     // Autofac
                     DetermineAssemblyPath(typeof(Autofac.IContainer).Assembly),
@@ -107,7 +107,13 @@ namespace Apollo.Core
                     typeof(KernelStartInfo).Assembly.GetStrongName(),
 
                     // Apollo.Utils
-                    typeof(Utils.ILockObject).Assembly.GetStrongName(),
+                    typeof(ILockObject).Assembly.GetStrongName(),
+
+                    // QuickGraph
+                    typeof(QuickGraph.GraphExtensions).Assembly.GetStrongName(),
+
+                    // System.Threading: Required because it asks for SkipVerification
+                    typeof(System.Threading.Tasks.Task).Assembly.GetStrongName(),
                 };
         }
 

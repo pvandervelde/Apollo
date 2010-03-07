@@ -9,8 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security;
+using System.Security.Permissions;
 using System.Threading.Tasks;
 using Apollo.Core.Properties;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 
@@ -395,7 +398,14 @@ namespace Apollo.Core.Messaging
             }
 
             var id = MessageId.Next();
-            Parallel.Invoke(() => SendMessage(senderObj.Name, recipientObj, information, id, inReplyTo));
+
+            // Elevate to full trust. This is required because System.Threading.Parallel.Invoke() is in a
+            // full-trust assembly. In order to invoke it we'll need to run it in that environment (full trust).
+            // @Todo: Does this elevation drop off the stack before or after we finish with the thread, i.e. is the thread running full-trust?
+            SecurityHelpers.Elevate(
+                new PermissionSet(
+                    PermissionState.Unrestricted),
+                    () => Parallel.Invoke(() => SendMessage(senderObj.Name, recipientObj, information, id, inReplyTo)));
 
             return id;
         }

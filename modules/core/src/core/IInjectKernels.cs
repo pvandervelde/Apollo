@@ -28,12 +28,6 @@ namespace Apollo.Core
         void InstallService(KernelService serviceToInstall, AppDomain serviceDomain);
 
         /// <summary>
-        /// Uninstalls the service.
-        /// </summary>
-        /// <param name="serviceToUninstall">The service which should be to uninstalled.</param>
-        void UninstallService(KernelService serviceToUninstall);
-
-        /// <summary>
         /// Starts the kernel.
         /// </summary>
         void Start();

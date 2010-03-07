@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
+using Apollo.Core.Utils;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -59,8 +60,6 @@ namespace Apollo.Core
             /// Thrown when <see cref="FileBasedResolver.StoreFilePaths"/> has not been called prior to
             /// attaching the directory resolver to an <see cref="AppDomain"/>.
             /// </exception>
-            [SecurityCritical]
-            [SecurityTreatAsSafe]
             public void Attach()
             {
                 {
@@ -71,19 +70,16 @@ namespace Apollo.Core
                 {
                     var helper = new FusionHelper(() => m_Files);
 
-                    // Asset permission to control the AppDomain. This can be done safely
+                    // Assert permission to control the AppDomain. This can be done safely
                     // because we will attach to the AssemblyResolve event but we'll only 
                     // resolve assemblies from a known set of paths or files.
                     var set = new PermissionSet(PermissionState.None);
                     set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
 
-                    // Request the permission to connect to the AppDomain.
-                    // No need for a try..finally because the assert is removed as soon as we reach
-                    // the CodeAccessPermission.RevertAssert() or until the stack unwinds, which
-                    // ever comes first
-                    set.Assert();
-                    domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
-                    CodeAccessPermission.RevertAssert();
+                    SecurityHelpers.Elevate(set, () =>
+                                                 {
+                                                     domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
+                                                 });
                 }
             }
         }

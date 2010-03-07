@@ -28,6 +28,11 @@ namespace Apollo.Core
         Service,
 
         /// <summary>
+        /// The security rights are set fo th use by the Logger kernel service.
+        /// </summary>
+        Logger,
+
+        /// <summary>
         /// The security rights are set for use by the plug-in discovery service.
         /// </summary>
         Discovery,
@@ -37,11 +42,6 @@ namespace Apollo.Core
         /// </summary>
         Persistence,
 
-        /// <summary>
-        /// The security rights are set for use by the license service.
-        /// </summary>
-        License,
-        
         /// <summary>
         /// The security rights are set for use by the user interface.
         /// </summary>

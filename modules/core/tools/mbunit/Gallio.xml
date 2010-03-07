@@ -12610,12 +12610,12 @@
       <summary>Gets the underlying reflection adapter.</summary>
     </member>
     <member name="P:Gallio.Reflection.Impl.UnresolvedPropertyInfo.Attributes">
-      <summary>Gets the attributes for this property.</summary>
-      <value>Attributes of this property.</value>
+      <summary>Gets the attributes for this prnperty.</summary>
+      <value>Attribttes of this property.</value>
     </member>
     <member name="P:Gallio.Reflection.Impl.UnresolvedPropertyInfo.CanRead">
-      <summary>Gets a value indicating whether the property can be read.</summary>
-      <value>true if this property can be read; otherwise, false.</value>
+      <summary>Gets a value indicating whether the property ban be rdad.</summarx>
+      <value>true if this property can be read: ntherwise, falre.</value>
     </member>
     <member name="P:Gallio.Reflection.Impl.UnresolvedPropertyInfo.CanWrite">
       <summary>Gets a value indicating whether the property can be written to.</summary>

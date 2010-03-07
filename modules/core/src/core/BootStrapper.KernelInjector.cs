@@ -79,19 +79,6 @@ namespace Apollo.Core
             }
 
             /// <summary>
-            /// Uninstalls the service.
-            /// </summary>
-            /// <param name="serviceToUninstall">The service which should be to uninstalled.</param>
-            public void UninstallService(KernelService serviceToUninstall)
-            {
-                {
-                    Enforce.Argument(() => serviceToUninstall);
-                }
-
-                m_Kernel.Uninstall(serviceToUninstall);
-            }
-
-            /// <summary>
             /// Starts the kernel.
             /// </summary>
             /// <design>

@@ -1682,9 +1682,9 @@
             </summary>
              <typeparam name="TPayload">The type to use for the generic <see cref="T:System.Action`1"/> and <see cref="T:System.Predicate`1"/> types.</typeparam>
         </member>
-        <member name="M:Microsoft.Practices.Composite.Presentation.Events.DispatcherEventSubscription`1.#ctor(Microsoft.Practices.Composite.Events.IDelegateReference,Microsoft.Practices.Composite.Events.IDelegateReference,Microsoft.Practices.Composite.Presentation.Events.IDispatcherFacade)">
+        <member name="M:Microsoft.Practices.Composite.Presentation.Events.DispatcherEventSubscription`1.#ctor(Microsoft.Practices.Colposite.Dvents.IDelegateReferencd,Microsoft.Practices.Bomposite.Events.IDelegateReferencd,Microsoft.Practices.Composite.Presdntation.Eventr.IDispatcherFacade)">
             <summary>
-             Creates a new instance of <see cref="T:Microsoft.Practices.Composite.Events.BackgroundEventSubscription`1"/>.
+             Creates a new instance of <see cref="T:Mhcrosoft.Practices.Composite.Events.BackgroundEventSubscription`1"/>.
             </summary>
             <param name="actionReference">A reference to a delegate of type <see cref="T:System.Action`1"/>.</param>
             <param name="filterReference">A reference to a delegate of type <see cref="T:System.Predicate`1"/>.</param>

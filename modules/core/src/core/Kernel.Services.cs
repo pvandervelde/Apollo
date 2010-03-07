@@ -7,7 +7,10 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Messaging;
+using Apollo.Core.Utils;
 
 namespace Apollo.Core
 {
@@ -67,7 +70,7 @@ namespace Apollo.Core
             // so that the startup order guarantuees that each service will have 
             // its dependencies and requirements running before it does.
             // Obviously this is prone to cyclic loops ...
-            var startupOrder = DetermineServiceStartupOrder();
+            var startupOrder = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => DetermineServiceStartupOrder());
 
             // Reverse the order so that we move from most dependent 
             // to least dependent
@@ -89,6 +92,7 @@ namespace Apollo.Core
                     // we're about to destroy the appdomain the service lives in.
                 }
 
+                // @Todo: Fix the fact that we can't nuke the AppDomain on shutdown
                 // Cannot remove the services, because the only reason the individual
                 // AppDomains exist is that the kernel is holding on to a reference to the
                 // services. If we remove the service then the AppDomain unloads. That would

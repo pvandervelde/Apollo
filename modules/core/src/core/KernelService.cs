@@ -18,7 +18,7 @@ namespace Apollo.Core
     /// public properties. You never know where the real object is so even property calls can
     /// take a long time.
     /// </design>
-    public abstract class KernelService : MarshalByRefObject, INeedStartup
+    internal abstract class KernelService : MarshalByRefObject, INeedStartup
     {
         /// <summary>
         /// Stores the current startup state.

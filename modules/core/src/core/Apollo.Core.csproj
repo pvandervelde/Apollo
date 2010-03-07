@@ -236,6 +236,7 @@
     <Compile Include="INeedStartup.cs" />
     <Compile Include="IOwnServices.cs" />
     <Compile Include="CoreProxy.cs" />
+    <Compile Include="Kernel.AppDomains.cs" />
     <Compile Include="Kernel.ConnectionMap.cs" />
     <Compile Include="Kernel.cs" />
     <Compile Include="Kernel.ServiceProgressHandler.cs" />
@@ -301,6 +302,8 @@
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.Messages.cs" />
+    <Compile Include="Utils\IApplicationConstants.cs" />
+    <Compile Include="Utils\SecurityHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
