@@ -21,7 +21,7 @@ namespace Apollo.Core.Messaging
         /// Initializes a new instance of the <see cref="MissingPipelineException"/> class.
         /// </summary>
         public MissingPipelineException()
-            : this(Resources.Exceptions_Messages_PipelineObjectMissing)
+            : this(Resources_NonTranslatable.Exceptions_Messages_PipelineObjectMissing)
         {
         }
 

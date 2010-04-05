@@ -16,7 +16,7 @@
       </Entity>
       <Entity type="Class">
         <Name>UserInterfaceService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1754" top="749" />
         <Size width="162" height="96" />
         <Collapsed>False</Collapsed>
@@ -24,7 +24,7 @@
       </Entity>
       <Entity type="Class">
         <Name>KernelService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1436" top="339" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
@@ -82,7 +82,7 @@
       </Entity>
       <Entity type="Class">
         <Name>ApplicationFacade</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="994" top="1418" />
         <Size width="294" height="128" />
         <Collapsed>False</Collapsed>
@@ -166,7 +166,7 @@
       </Entity>
       <Entity type="Class">
         <Name>UserInteractionFacade</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1774" top="1449" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
@@ -174,7 +174,7 @@
       </Entity>
       <Entity type="Class">
         <Name>ProjectFacade</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2276" top="694" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
@@ -182,7 +182,7 @@
       </Entity>
       <Entity type="Class">
         <Name>AdviceFacade</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2217" top="1356" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
@@ -233,8 +233,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -296,6 +294,8 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="17" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -318,6 +318,8 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="21" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -328,6 +330,8 @@
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="22" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -340,6 +344,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="22" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -354,6 +360,8 @@
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="23" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -366,6 +374,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="21" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

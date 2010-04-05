@@ -112,7 +112,7 @@ namespace Apollo.Core.Messaging
                 Enforce.Argument(() => pipeline);
                 
                 Enforce.Argument(() => sender);
-                Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources.Exceptions_Messages_SenderCannotBeNobody);
+                Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_SenderCannotBeNobody);
             }
 
             lock(m_Lock)
@@ -147,7 +147,7 @@ namespace Apollo.Core.Messaging
                 Enforce.Argument(() => messageType);
                 Enforce.With<ArgumentException>(
                     typeof(MessageBody).IsAssignableFrom(messageType), 
-                    Resources.Exceptions_Messages_IncorrectType_WithTypes, 
+                    Resources_NonTranslatable.Exceptions_Messages_IncorrectType_WithTypes, 
                     typeof(MessageBody), 
                     messageType);
 
@@ -265,7 +265,7 @@ namespace Apollo.Core.Messaging
         {
             {
                 Enforce.Argument(() => recipient);
-                Enforce.With<ArgumentException>(recipient != DnsName.Nobody, Resources.Exceptions_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(recipient != DnsName.Nobody, Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
 
                 Enforce.Argument(() => body);
                 Enforce.Argument(() => originalMessage);
@@ -291,7 +291,7 @@ namespace Apollo.Core.Messaging
 
             if (name == recipient)
             {
-                throw new ArgumentException(Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                throw new ArgumentException(Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
             }
 
             return pipeline.Send(name, recipient, body, originalMessage);

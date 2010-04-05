@@ -93,22 +93,6 @@ namespace Apollo.Utils.Fusion
         }
 
         /// <summary>
-        /// Turns the module name into a qualified file name by adding the default assembly extension.
-        /// </summary>
-        /// <param name="moduleName">Name of the module.</param>
-        /// <returns>
-        /// The expected name of the assembly file that contains the module.
-        /// </returns>
-        private static string MakeModuleNameQualifiedFileName(string moduleName)
-        {
-            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
-
-            return (moduleName.IndexOf(FileExtensions.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
-                string.Format(CultureInfo.InvariantCulture, "{0}{1}", moduleName, FileExtensions.AssemblyExtension) :
-                moduleName;
-        }
-
-        /// <summary>
         /// Determines if the file at the specified <paramref name="filePath"/> is the assembly that the loader is
         /// looking for.
         /// </summary>
@@ -125,7 +109,7 @@ namespace Apollo.Utils.Fusion
         private static bool IsFileTheDesiredAssembly(string filePath, string fileName, string version, string culture, string publicKey)
         {
             Debug.Assert(!string.IsNullOrEmpty(filePath), "The assembly file path should not be empty.");
-            if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase)) // ASSERT?
+            if (!Path.GetFileName(filePath).Equals(fileName, StringComparison.CurrentCultureIgnoreCase))
             {
                 return false;
             }
@@ -134,7 +118,7 @@ namespace Apollo.Utils.Fusion
             // an assembly.
             if ((!string.IsNullOrEmpty(version)) || (!string.IsNullOrEmpty(culture)) || (!string.IsNullOrEmpty(publicKey)))
             {
-                AssemblyName assemblyName = null;
+                AssemblyName assemblyName;
                 try
                 {
                     // Load the assembly name but without loading the assembly file into the AppDomain.
@@ -168,7 +152,7 @@ namespace Apollo.Utils.Fusion
 
                 if (!string.IsNullOrEmpty(version))
                 {
-                    Version expectedVersion = new Version(version);
+                    var expectedVersion = new Version(version);
                     if (!expectedVersion.Equals(assemblyName.Version))
                     {
                         return false;
@@ -184,7 +168,7 @@ namespace Apollo.Utils.Fusion
                         culture = string.Empty;
                     }
 
-                    CultureInfo expectedCulture = new CultureInfo(culture);
+                    var expectedCulture = new CultureInfo(culture);
                     if (!expectedCulture.Equals(assemblyName.CultureInfo))
                     {
                         return false;
@@ -207,7 +191,12 @@ namespace Apollo.Utils.Fusion
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Use of nested generic signatures is ok for core internal use.")]
-        private Func<IEnumerable<string>> m_FileEnumerator;
+        private readonly Func<IEnumerable<string>> m_FileEnumerator;
+
+        /// <summary>
+        /// The object that holds constant value describing files and file paths.
+        /// </summary>
+        private readonly IFileConstants m_FileConstants;
 
         /// <summary>
         /// The delegate which is used to load an assembly from a specific file path.
@@ -218,17 +207,26 @@ namespace Apollo.Utils.Fusion
         /// Initializes a new instance of the <see cref="FusionHelper"/> class.
         /// </summary>
         /// <param name="fileEnumerator">The enumerator which returns all the files that are potentially of interest.</param>
+        /// <param name="fileConstants">The object that stores the constant values describing files and file paths.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileEnumerator"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
+        /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The use of the Func<> delegate is the most efficient way to pass a lazy evaluation of the enumerable.")]
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
-        public FusionHelper(Func<IEnumerable<string>> fileEnumerator)
+        public FusionHelper(Func<IEnumerable<string>> fileEnumerator, IFileConstants fileConstants)
         {
             {
                 Enforce.Argument(() => fileEnumerator);
+                Enforce.Argument(() => fileConstants);
             }
 
             m_FileEnumerator = fileEnumerator;
+            m_FileConstants = fileConstants;
         }
 
         /// <summary>
@@ -257,14 +255,9 @@ namespace Apollo.Utils.Fusion
             Justification = "Source will be linked from other projects and thus be used.")]
         internal Func<string, Assembly> AssemblyLoader 
         {
-            private get 
+            private get
             {
-                if (m_AssemblyLoader == null)
-                {
-                    m_AssemblyLoader = (path) => Assembly.LoadFrom(path);
-                }
-
-                return m_AssemblyLoader;
+                return m_AssemblyLoader ?? (m_AssemblyLoader = path => Assembly.LoadFrom(path));
             }
 
             set 
@@ -360,6 +353,22 @@ namespace Apollo.Utils.Fusion
 
             // Did not find the assembly.
             return null;
+        }
+
+        /// <summary>
+        /// Turns the module name into a qualified file name by adding the default assembly extension.
+        /// </summary>
+        /// <param name="moduleName">Name of the module.</param>
+        /// <returns>
+        /// The expected name of the assembly file that contains the module.
+        /// </returns>
+        private string MakeModuleNameQualifiedFileName(string moduleName)
+        {
+            Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
+
+            return (moduleName.IndexOf(m_FileConstants.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
+                string.Format(CultureInfo.InvariantCulture, "{0}{1}", moduleName, m_FileConstants.AssemblyExtension) :
+                moduleName;
         }
     }
 }

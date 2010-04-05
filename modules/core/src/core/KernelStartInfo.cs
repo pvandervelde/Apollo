@@ -39,25 +39,29 @@ namespace Apollo.Core
 
         /// <summary>
         /// The collection that holds all the assemblies which are required
-        /// for the core to function.
+        /// for the core to function. These assemblies are the ones that
+        /// the fusion loader should be able to find.
         /// </summary>
         private readonly List<FileInfo> m_CoreAssemblies;
 
         /// <summary>
         /// The collection that holds all the assemblies which are required
-        /// for the log capabilities to function.
+        /// for the log capabilities to function. These assemblies are the ones that
+        /// the fusion loader should be able to find.
         /// </summary>
         private readonly List<FileInfo> m_LogAssemblies;
 
         /// <summary>
         /// The collection that holds all the assemblies which are required
-        /// for the persistence capabilities to function.
+        /// for the persistence capabilities to function. These assemblies are the ones that
+        /// the fusion loader should be able to find.
         /// </summary>
         private readonly List<FileInfo> m_PersistenceAssemblies;
 
         /// <summary>
         /// The collection that holds all the assemblies which are required
-        /// for the project capabilities to function.
+        /// for the project capabilities to function. These assemblies are the ones that
+        /// the fusion loader should be able to find.
         /// </summary>
         private readonly List<FileInfo> m_ProjectAssemblies;
 
@@ -71,6 +75,7 @@ namespace Apollo.Core
         /// </summary>
         protected KernelStartInfo()
         {
+
             m_CoreAssemblies = new List<FileInfo>
                 {
                     // Apollo.Core
@@ -95,7 +100,20 @@ namespace Apollo.Core
                     DetermineAssemblyPath(typeof(System.Threading.Tasks.Task).Assembly),
                 };
 
-            m_LogAssemblies = new List<FileInfo>();
+            m_LogAssemblies = new List<FileInfo>
+                {
+                    // NLog
+                    DetermineAssemblyPath(typeof(NLog.Logger).Assembly),
+
+                    // Apollo.Core
+                    DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
+
+                    // Apollo.Utils
+                    DetermineAssemblyPath(typeof(ILockObject).Assembly),
+
+                    // Autofac
+                    DetermineAssemblyPath(typeof(Autofac.IContainer).Assembly),
+                };
 
             m_PersistenceAssemblies = new List<FileInfo>();
 

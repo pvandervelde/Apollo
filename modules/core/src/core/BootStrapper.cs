@@ -12,9 +12,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Security.Policy;
 using Apollo.Core.Messaging;
 using Apollo.Core.UserInterfaces;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Apollo.Utils.ExceptionHandling;
@@ -230,7 +230,8 @@ namespace Apollo.Core
                     // string representation of the file fullname
                     var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
                     return from file in totalSequence select file.FullName;
-                });
+                },
+                new FileConstants(new ApplicationConstants()));
             currentDomain.AssemblyResolve += fusionHelper.LocateAssemblyOnAssemblyLoadFailure;
 
             // Set the exception handler. Adding the event ensures that
@@ -255,7 +256,8 @@ namespace Apollo.Core
                 AppDomainResolutionPaths.WithFiles(
                     coreBasePath.FullName,
                     new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName)),
-                m_ExceptionHandlerFactory());
+                m_ExceptionHandlerFactory(),
+                new FileConstants(new ApplicationConstants()));
 
             Debug.Assert(!string.IsNullOrEmpty(typeof(KernelInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
             var kernelInjector = Activator.CreateInstanceFrom(
@@ -308,7 +310,8 @@ namespace Apollo.Core
                     coreBasePath.FullName, 
                     filePaths, 
                     directoryPaths),
-                m_ExceptionHandlerFactory());
+                m_ExceptionHandlerFactory(),
+                new FileConstants(new ApplicationConstants()));
 
             Debug.Assert(!string.IsNullOrEmpty(typeof(ServiceInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
             var injector = Activator.CreateInstanceFrom(

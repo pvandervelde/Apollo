@@ -6,14 +6,14 @@
     <Entities>
       <Entity type="Interface">
         <Name>ILicenseValidator</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="985" top="193" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
         <Name>KernelService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="439" top="27" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
@@ -25,7 +25,7 @@
       </Entity>
       <Entity type="Class">
         <Name>LicenseService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="508" top="328" />
         <Size width="162" height="105" />
         <Collapsed>False</Collapsed>
@@ -34,12 +34,12 @@
       <Entity type="Comment">
         <Text>Automatically check the license based on a timer. The timer will fire at random times.</Text>
         <Location left="165" top="353" />
-        <Size width="160" height="75" />
+        <Size width="160" height="94" />
       </Entity>
       <Entity type="Interface">
         <Name>ICodeStore</Name>
-        <Access>Public</Access>
-        <Location left="1005" top="536" />
+        <Access>Internal</Access>
+        <Location left="1006" top="536" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -51,15 +51,16 @@
       <Entity type="Comment">
         <Text>The license system will probably be inserted in many places by using code generation (T4) to generate classes that can be placed in each AppDomain / Service.</Text>
         <Location left="10" top="85" />
-        <Size width="217" height="95" />
+        <Size width="217" height="135" />
       </Entity>
       <Entity type="Comment">
         <Text>The licensing system could work like this:
 - Each service has a (readonly) pointer to a license verification class. Upon certain actions the service asks the verifier to check the license. This request however never requires a return value. The verifier then checks if the license was checked recently (say in the last minute or some other random time). If this is the case then nothing happens. If this is not the case then we verify. Verification always is done on a separate thread and we check the return of the thread (must be within X time, otherwise we assume it failed)
 - If a verifier finds that a license code is not valid then it will send out a message to the service to notify it of a failed license check.
-- Verification happens on request but also when one or more timers go to signaled mode.</Text>
+- Verification happens on request but also when one or more timers go to signaled mode.
+- We also need to check that the verification code actually runs once every so much time, otherwise people could just comment out the calls.</Text>
         <Location left="10" top="516" />
-        <Size width="607" height="164" />
+        <Size width="607" height="215" />
       </Entity>
     </Entities>
     <Relationships>

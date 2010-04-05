@@ -169,6 +169,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="NLog">
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
     </Reference>
@@ -186,9 +189,6 @@
   <ItemGroup>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\AssemblyNameElements.cs">
       <Link>Utils\AssemblyNameElements.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\FileExtensions.cs">
-      <Link>Utils\FileExtensions.cs</Link>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\FusionHelper.cs">
       <Link>Utils\FusionHelper.cs</Link>
@@ -227,7 +227,6 @@
     <Compile Include="CoreStartingProgressMark.cs" />
     <Compile Include="DnsNameConstants.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
-    <Compile Include="IApplicationConstants.cs" />
     <Compile Include="IDnsNameConstants.cs" />
     <Compile Include="IHaveServiceDependencies.cs" />
     <Compile Include="IInjectKernels.cs" />
@@ -242,11 +241,30 @@
     <Compile Include="Kernel.ServiceProgressHandler.cs" />
     <Compile Include="Kernel.Services.cs" />
     <Compile Include="Kernel.ServiceVertex.cs" />
+    <Compile Include="KernelModule.cs" />
     <Compile Include="KernelNotInInstallReadyStateException.cs" />
     <Compile Include="KernelService.cs" />
     <Compile Include="KernelServiceStartupFailedException.cs" />
     <Compile Include="KernelStartInfo.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
+    <Compile Include="Logging\CommandLogTemplate.cs" />
+    <Compile Include="Logging\DebugLogTemplate.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILoggerConfiguration.cs" />
+    <Compile Include="Logging\ILogMessage.cs" />
+    <Compile Include="Logging\ILogSink.cs" />
+    <Compile Include="Logging\ILogTemplate.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerConfiguration.cs" />
+    <Compile Include="Logging\LoggerModule.cs" />
+    <Compile Include="Logging\LogLevel.cs" />
+    <Compile Include="Logging\LogEntryRequestMessage.cs" />
+    <Compile Include="Logging\LogLevelChangeRequestMessage.cs" />
+    <Compile Include="Logging\LogMessage.cs" />
+    <Compile Include="Logging\LogSink.cs" />
+    <Compile Include="Logging\LogSink.Logging.cs" />
+    <Compile Include="Logging\LogSink.Messages.cs" />
+    <Compile Include="Logging\LogType.cs" />
     <Compile Include="MessageEnabledKernelService.cs" />
     <Compile Include="Messaging\DnsName.cs" />
     <Compile Include="Messaging\DuplicateDnsNameException.cs" />
@@ -276,6 +294,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Properties\Resources.NonTranslatable.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
+    </Compile>
     <Compile Include="SecurityLevel.cs" />
     <Compile Include="SendMessageWithoutResponseDelegate.cs" />
     <Compile Include="SendMessageWithResponseDelegate.cs" />
@@ -302,12 +325,13 @@
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.Messages.cs" />
-    <Compile Include="Utils\IApplicationConstants.cs" />
+    <Compile Include="Utils\ApplicationConstants.cs" />
+    <Compile Include="Utils\FileConstants.cs" />
     <Compile Include="Utils\SecurityHelpers.cs" />
+    <Compile Include="Utils\UtilsModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Logging\" />
     <Folder Include="Plugins\" />
     <Folder Include="Projects\" />
     <Folder Include="UserInterfaces\Plugins\" />
@@ -324,11 +348,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.NonTranslatable.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.NonTranslatable.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

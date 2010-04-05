@@ -11,6 +11,7 @@ using System.Linq;
 using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Utils;
+using Apollo.Utils;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -28,6 +29,11 @@ namespace Apollo.Core
         private sealed class DirectoryBasedResolver : MarshalByRefObject, IAppDomainAssemblyResolver
         {
             /// <summary>
+            /// Stores the file extensions and other constants related to file paths.
+            /// </summary>
+            private IFileConstants m_FileConstants;
+
+            /// <summary>
             /// Stores the directories as a collection of directory paths.
             /// </summary>
             /// <design>
@@ -39,18 +45,22 @@ namespace Apollo.Core
             /// <summary>
             /// Stores the paths to the relevant directories.
             /// </summary>
-            /// <param name="directoryPaths">
-            ///     The paths to the relevant directories.
-            /// </param>
+            /// <param name="fileConstants">The file constants.</param>
+            /// <param name="directoryPaths">The paths to the relevant directories.</param>
             /// <exception cref="ArgumentNullException">
-            /// Thrown when <paramref name="directoryPaths"/> is <see langword="null" />.
+            ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
             /// </exception>
-            public void StoreDirectoryPaths(IEnumerable<string> directoryPaths)
+            /// <exception cref="ArgumentNullException">
+            /// Thrown when <paramref name="directoryPaths"/> is <see langword="null"/>.
+            /// </exception>
+            public void StoreDirectoryPaths(IFileConstants fileConstants, IEnumerable<string> directoryPaths)
             {
                 {
+                    Enforce.Argument(() => fileConstants);
                     Enforce.Argument(() => directoryPaths);
                 }
 
+                m_FileConstants = fileConstants;
                 m_Directories = directoryPaths;
             }
 
@@ -71,7 +81,9 @@ namespace Apollo.Core
                 var domain = AppDomain.CurrentDomain;
                 {
                     // For each path in the list get all the assembly files in that path.
-                    var helper = new FusionHelper(() => m_Directories.SelectMany(dir => Directory.GetFiles(dir, FileExtensions.AssemblyExtension, SearchOption.AllDirectories)));
+                    var helper = new FusionHelper(
+                        () => m_Directories.SelectMany(dir => Directory.GetFiles(dir, m_FileConstants.AssemblyExtension, SearchOption.AllDirectories)),
+                        m_FileConstants);
 
                     // Assert permission to control the AppDomain. This can be done safely
                     // because we will attach to the AssemblyResolve event but we'll only 

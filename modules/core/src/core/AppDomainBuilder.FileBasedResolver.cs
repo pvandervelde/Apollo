@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Utils;
+using Apollo.Utils;
 using Apollo.Utils.Fusion;
 using Lokad;
 
@@ -26,6 +27,11 @@ namespace Apollo.Core
         private sealed class FileBasedResolver : MarshalByRefObject, IAppDomainAssemblyResolver
         {
             /// <summary>
+            /// Stores the file extensions and other constants related to file paths.
+            /// </summary>
+            private IFileConstants m_FileConstants;
+
+            /// <summary>
             /// Stores the files as a collection of file paths.
             /// </summary>
             /// <design>
@@ -37,18 +43,22 @@ namespace Apollo.Core
             /// <summary>
             /// Stores the paths to the relevant assemblies.
             /// </summary>
-            /// <param name="filePaths">
-            ///     The paths to the relevant assemblies.
-            /// </param>
+            /// <param name="fileConstants">The file constants.</param>
+            /// <param name="filePaths">The paths to the relevant assemblies.</param>
             /// <exception cref="ArgumentNullException">
-            /// Thrown when <paramref name="filePaths"/> is <see langword="null" />.
+            ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
             /// </exception>
-            public void StoreFilePaths(IEnumerable<string> filePaths)
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown when <paramref name="filePaths"/> is <see langword="null" />.
+            /// </exception>
+            public void StoreFilePaths(IFileConstants fileConstants, IEnumerable<string> filePaths)
             {
                 {
+                    Enforce.Argument(() => fileConstants);
                     Enforce.Argument(() => filePaths); 
                 }
 
+                m_FileConstants = fileConstants;
                 m_Files = filePaths;
             }
 
@@ -68,7 +78,9 @@ namespace Apollo.Core
 
                 var domain = AppDomain.CurrentDomain;
                 {
-                    var helper = new FusionHelper(() => m_Files);
+                    var helper = new FusionHelper(
+                        () => m_Files,
+                        m_FileConstants);
 
                     // Assert permission to control the AppDomain. This can be done safely
                     // because we will attach to the AssemblyResolve event but we'll only 

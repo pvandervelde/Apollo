@@ -8,7 +8,6 @@ using System;
 using Apollo.Core.Messaging;
 using Apollo.Utils.Commands;
 using Autofac;
-using Autofac.Builder;
 using Lokad;
 
 namespace Apollo.Core
@@ -28,7 +27,7 @@ namespace Apollo.Core
         ///     class comes. This means that it is safe to work with types and not
         ///     strings.
         /// </design>
-        internal sealed class KernelInjector : MarshalByRefObject, IInjectKernels
+        private sealed class KernelInjector : MarshalByRefObject, IInjectKernels
         {
             /// <summary>
             /// Builds the IOC container.
@@ -40,11 +39,7 @@ namespace Apollo.Core
             {
                 var builder = new ContainerBuilder();
                 {
-                    builder.Register(c => new MessageProcessingAssistance())
-                        .As<IHelpMessageProcessing>();
-
-                    builder.Register(c => new CommandFactory())
-                        .As<ICommandContainer>();
+                    builder.RegisterModule(new KernelModule());
                 }
 
                 return builder.Build();

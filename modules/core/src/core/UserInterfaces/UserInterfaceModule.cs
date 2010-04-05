@@ -12,7 +12,7 @@ namespace Apollo.Core.UserInterfaces
 {
     /// <summary>
     /// Handles the component registrations for the User Interface part 
-    /// of the kernel.
+    /// of the core.
     /// </summary>
     internal sealed class UserInterfaceModule : Module
     {

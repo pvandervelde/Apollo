@@ -168,7 +168,7 @@ namespace Apollo.Core
         protected abstract void StoreMessageActions(IHelpMessageProcessing processor);
 
         /// <summary>
-        /// Performs initialization prior to setting up the message handling.
+        /// Performs service startup actions prior to setting up the message handling.
         /// </summary>
         protected virtual void PreMessageInitializeStartup()
         {
@@ -190,7 +190,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Performs initialization after setting up the message handling.
+        /// Performs service startup actions after setting up the message handling.
         /// </summary>
         protected virtual void PostMessageInitializeStartup()
         {
@@ -209,7 +209,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Performs un-initialization prior to unregistering from the message handling.
+        /// Performs service shutdown actions prior to unregistering from the message handling.
         /// </summary>
         protected virtual void PreMessageUnregisterStopAction()
         {
@@ -231,7 +231,7 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Performs un-initialization after unregistering from the message handling.
+        /// Performs service shutdown actions after unregistering from the message handling.
         /// </summary>
         protected virtual void PostMessageUnregisterStopAction()
         {

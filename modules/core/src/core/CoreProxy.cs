@@ -49,7 +49,10 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
         /// </exception>
-        public CoreProxy(IKernel owner, ICommandContainer commands, IHelpMessageProcessing processor)
+        public CoreProxy(
+            IKernel owner, 
+            ICommandContainer commands, 
+            IHelpMessageProcessing processor)
             : base(processor)
         {
             {

@@ -49,7 +49,7 @@ namespace Apollo.Core
 
         /// <summary>
         /// Disconnects from one of the services on which the current service depends.
-        /// </summary>
+        /// </summary> 
         /// <param name="dependency">The dependency service.</param>
         void DisconnectFrom(KernelService dependency);
 

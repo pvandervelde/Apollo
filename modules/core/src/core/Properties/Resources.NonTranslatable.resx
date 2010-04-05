@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Exceptions_Messages_CannotCompareUnequalTypes" xml:space="preserve">
+    <value>Cannot compare these objects: {0} and {1}</value>
+  </data>
+  <data name="Exceptions_Messages_CannotCreateAMessageWithoutId" xml:space="preserve">
+    <value>Cannot create a message with no or an invalid ID number.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotCreateAMessageWithoutSender" xml:space="preserve">
+    <value>Cannot create a message with no or an invalid sender name.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone" xml:space="preserve">
+    <value>It is not possible to log a message if the LogLevel is set to None.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotSendAMessageBackToTheSender" xml:space="preserve">
+    <value>Cannot create a message where both the sender and the recipient are the same.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotSendAMessageToNoService" xml:space="preserve">
+    <value>Cannot create a message that is send to nobody.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotUninstallNonEquivalentService" xml:space="preserve">
+    <value>Cannot uninstall the service. The provided service is not the service which is installed. Please use the original service when uninstalling.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateDnsName" xml:space="preserve">
+    <value>The specified DNS name is a duplicate of another DNS name.</value>
+  </data>
+  <data name="Exceptions_Messages_DuplicateDnsName_WithName" xml:space="preserve">
+    <value>The specified DNS name is a duplicate of another DNS name. The name is: {0}</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectLogType" xml:space="preserve">
+    <value>Cannot write a log entry for log type: {0}</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectType_WithTypes" xml:space="preserve">
+    <value>Type is incorrect. Expected {0}, got {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_KernelServiceStartupFailed" xml:space="preserve">
+    <value>The startup of a service failed.</value>
+  </data>
+  <data name="Exceptions_Messages_KernelServiceStartupFailed_WithService" xml:space="preserve">
+    <value>The startup of a service of type {0} failed.</value>
+  </data>
+  <data name="Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency" xml:space="preserve">
+    <value>The startup of the kernel failed due to a missing service dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency_WithService" xml:space="preserve">
+    <value>The startup of the kernel failed due to a missing service dependency. Service of type {0} missed a dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_LogTypeHasNoLogger" xml:space="preserve">
+    <value>The specified log type has no logger registered.</value>
+  </data>
+  <data name="Exceptions_Messages_LogTypeHasNoLogger_WithLogType" xml:space="preserve">
+    <value>The log type {0} has no logger registered.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingNotificationAction" xml:space="preserve">
+    <value>There was no notification action registered for the given notification name.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingNotificationAction_WithName" xml:space="preserve">
+    <value>There was no notification action registered for the notification with name {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingServiceDependency" xml:space="preserve">
+    <value>A missing service dependency was detected. The requested action cannot be performed.</value>
+  </data>
+  <data name="Exceptions_Messages_MustBufferMoreThanZeroMessages" xml:space="preserve">
+    <value>The buffer size must be at least size of 1.</value>
+  </data>
+  <data name="Exceptions_Messages_MustBufferMoreThanZeroMessages_WithCount" xml:space="preserve">
+    <value>The buffer size must be at least size of 1. The specified size was {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_MustFlushAfterPositiveTimestep_WithTimestep" xml:space="preserve">
+    <value>The time step for buffer flushing must be a positive number larger than zero. The specified time step was {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_PipelineObjectMissing" xml:space="preserve">
+    <value>There is no known message pipeline object.</value>
+  </data>
+  <data name="Exceptions_Messages_SenderCannotBeNobody" xml:space="preserve">
+    <value>The sender DNS name cannot be equivalent to the Nobody DNS name</value>
+  </data>
+  <data name="Exceptions_Messages_ServiceCannotDependOnGenericKernelService" xml:space="preserve">
+    <value>A kernel service cannot have the KernelService type as dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_ServiceCannotDependOnItself" xml:space="preserve">
+    <value>A kernel service cannot have its own type as dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_ServiceTypeAlreadyInstalled" xml:space="preserve">
+    <value>A service object of the given type is already installed.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownDnsName" xml:space="preserve">
+    <value>The specified DNS name is unknown.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownDnsName_WithName" xml:space="preserve">
+    <value>The specified DNS name is unknown. The name is: {0}</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownKernelServiceType" xml:space="preserve">
+    <value>No kernel service of the given type is installed.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownNotificationName" xml:space="preserve">
+    <value>The specified notification name is a duplicate of another notification name.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownNotificationName_WithName" xml:space="preserve">
+    <value>The specified notification name is a duplicate of another notification name. The name is {0}.</value>
+  </data>
+  <data name="LogSink_LogMessage_LoggersStarted" xml:space="preserve">
+    <value>The log sink was started.</value>
+  </data>
+  <data name="LogSink_LogMessage_LoggersStopped" xml:space="preserve">
+    <value>The log sink was stopped.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_ListenerAdded" xml:space="preserve">
+    <value>A new message listener object was added with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_ListenerRemoved" xml:space="preserve">
+    <value>A new message listener object was removed with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException" xml:space="preserve">
+    <value>Failed to report the message delivery to {0}. The message [{2}] was send to {1}. The stack trace is: {3}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndReason" xml:space="preserve">
+    <value>The delivery of message [{2}] has failed because {3}. The message was send by {0} to {1}.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_PipelineStarted" xml:space="preserve">
+    <value>The message pipeline was started.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_PipelineStopped" xml:space="preserve">
+    <value>The message pipeline was stopped.</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_SenderAdded" xml:space="preserve">
+    <value>A new message sender object was added with name: {0}</value>
+  </data>
+  <data name="MessagePipeline_LogMessage_SenderRemoved" xml:space="preserve">
+    <value>A new message sender object was removed with name: {0}</value>
+  </data>
+</root>

@@ -194,7 +194,10 @@
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="ExcludeFromCoverageAttribute.cs" />
     <Compile Include="Future.cs" />
+    <Compile Include="IApplicationConstants.cs" />
+    <Compile Include="ICompanyConstants.cs" />
     <Compile Include="Id.cs" />
+    <Compile Include="IFileConstants.cs" />
     <Compile Include="IFuture.cs" />
     <Compile Include="IIsId.cs" />
     <Compile Include="ILockObject.cs" />

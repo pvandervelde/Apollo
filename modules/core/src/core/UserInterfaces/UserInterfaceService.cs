@@ -68,7 +68,12 @@ namespace Apollo.Core.UserInterfaces
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
-        public UserInterfaceService(ICommandContainer commands, IDnsNameConstants dnsNames, INotificationNameConstants notificationNames, IHelpMessageProcessing processor, Action<IModule> onStartService)
+        public UserInterfaceService(
+            ICommandContainer commands, 
+            IDnsNameConstants dnsNames, 
+            INotificationNameConstants notificationNames, 
+            IHelpMessageProcessing processor, 
+            Action<IModule> onStartService)
             : base(processor)
         {
             {
@@ -94,19 +99,6 @@ namespace Apollo.Core.UserInterfaces
                     ShutdownApplicationCommand.CommandId,
                     () => new ShutdownApplicationCommand(m_DnsNames.AddressOfKernel, SendMessageWithResponse));
             }
-        }
-
-        /// <summary>
-        /// Performs initialization prior to setting up the message handling.
-        /// </summary>
-        protected override void PreMessageInitializeStartup()
-        {
-            InitializeDependencyInjectionContainer();
-        }
-
-        private void InitializeDependencyInjectionContainer()
-        {
-            m_OnStartService(new UserInterfaceModule(this));
         }
 
         #region Implementation of IHaveCommands
@@ -269,6 +261,19 @@ namespace Apollo.Core.UserInterfaces
         #endregion
 
         #region Overrides
+
+        /// <summary>
+        /// Performs initialization prior to setting up the message handling.
+        /// </summary>
+        protected override void PreMessageInitializeStartup()
+        {
+            InitializeDependencyInjectionContainer();
+        }
+
+        private void InitializeDependencyInjectionContainer()
+        {
+            m_OnStartService(new UserInterfaceModule(this));
+        }
 
         /// <summary>
         /// Performs un-initialization prior to unregistering from the message handling.

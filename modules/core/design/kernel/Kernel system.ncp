@@ -16,7 +16,7 @@
       </Entity>
       <Entity type="Interface">
         <Name>IAppDomainBuilder</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1036" top="143" />
         <Size width="487" height="129" />
         <Collapsed>False</Collapsed>
@@ -39,7 +39,7 @@ Note that most system services are always loaded in a specific order / time. e.g
       </Entity>
       <Entity type="Interface">
         <Name>INeedStartup</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="865" top="1260" />
         <Size width="354" height="112" />
         <Collapsed>False</Collapsed>
@@ -85,7 +85,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>KernelService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1930" top="1230" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
@@ -105,7 +105,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>UserInterfaceService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="3598" top="1639" />
         <Size width="162" height="96" />
         <Collapsed>False</Collapsed>
@@ -113,7 +113,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>ProjectService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2788" top="885" />
         <Size width="162" height="92" />
         <Collapsed>False</Collapsed>
@@ -121,7 +121,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>TimelineService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="3233" top="1440" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -129,7 +129,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>MessagePipeline</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2788" top="631" />
         <Size width="162" height="84" />
         <Collapsed>False</Collapsed>
@@ -137,7 +137,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>LogSink</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1686" top="1489" />
         <Size width="162" height="90" />
         <Collapsed>False</Collapsed>
@@ -145,7 +145,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>PluginRepository</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1450" top="978" />
         <Size width="162" height="122" />
         <Collapsed>False</Collapsed>
@@ -153,7 +153,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>CoreProxy</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1301" top="601" />
         <Size width="162" height="112" />
         <Collapsed>False</Collapsed>
@@ -161,7 +161,7 @@ Some services will be started on application start up.</Text>
       </Entity>
       <Entity type="Class">
         <Name>Kernel</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="787" top="536" />
         <Size width="332" height="196" />
         <Collapsed>False</Collapsed>
@@ -183,7 +183,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       </Entity>
       <Entity type="Class">
         <Name>PersistenceService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2953" top="1753" />
         <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
@@ -191,7 +191,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       </Entity>
       <Entity type="Interface">
         <Name>IProcessMessages</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1644" top="215" />
         <Size width="338" height="112" />
         <Collapsed>False</Collapsed>
@@ -201,7 +201,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       </Entity>
       <Entity type="Interface">
         <Name>IHaveServiceDependencies</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1644" top="60" />
         <Size width="286" height="146" />
         <Collapsed>False</Collapsed>
@@ -213,7 +213,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       </Entity>
       <Entity type="Class">
         <Name>LicenseService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2315" top="1076" />
         <Size width="162" height="105" />
         <Collapsed>False</Collapsed>
@@ -242,7 +242,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Interface">
         <Name>ISendMessages</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1644" top="342" />
         <Size width="390" height="95" />
         <Collapsed>False</Collapsed>
@@ -260,7 +260,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Enum">
         <Name>StartupState</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="526" top="1231" />
         <Size width="163" height="180" />
         <Collapsed>False</Collapsed>
@@ -769,7 +769,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
     <Entities>
       <Entity type="Class">
         <Name>KernelService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="880" top="136" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
@@ -781,7 +781,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Interface">
         <Name>INeedStartup</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="256" top="136" />
         <Size width="354" height="112" />
         <Collapsed>False</Collapsed>
@@ -791,7 +791,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Class">
         <Name>CoreProxy</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="968" top="384" />
         <Size width="162" height="112" />
         <Collapsed>False</Collapsed>
@@ -799,7 +799,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Class">
         <Name>Kernel</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="268" top="343" />
         <Size width="332" height="196" />
         <Collapsed>False</Collapsed>
@@ -814,8 +814,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Entity>
       <Entity type="Class">
         <Name>CheckServicesCanShutdownCommand</Name>
-        <Access>Public</Access>
-        <Location left="968" top="670" />
+        <Access>Internal</Access>
+        <Location left="913" top="665" />
         <Size width="229" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>

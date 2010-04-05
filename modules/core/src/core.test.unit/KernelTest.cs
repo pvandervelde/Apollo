@@ -666,7 +666,7 @@ namespace Apollo.Core.Test.Unit
             var messageMock = new Mock<KernelService>();
 
             // Now implement IMessagePipeline on that mock
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            messageMock.As<IMessagePipeline>();
             {
                 messageMock.Protected().Setup("StartService")
                     .Callback(() => startupOrder.Add(messageMock.Object));
@@ -720,7 +720,7 @@ namespace Apollo.Core.Test.Unit
             var messageMock = new Mock<KernelService>();
 
             // Now implement IMessagePipeline on that mock
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            messageMock.As<IMessagePipeline>();
             {
                 messageMock.Protected().Setup("StopService")
                     .Callback(() => stopOrder.Add(messageMock.Object));

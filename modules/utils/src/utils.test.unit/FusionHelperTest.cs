@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using Apollo.Utils.Fusion;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Utils
 {
@@ -30,6 +31,17 @@ namespace Apollo.Utils
             return uri.LocalPath;
         }
 
+        private static string CreateFullAssemblyName(string assemblyName, Version version, CultureInfo culture, string publicToken)
+        {
+            return string.Format("{0}, Version={1}, Culture={2}, PublicKeyToken={3}", assemblyName, version, culture, publicToken);
+        }
+
+        // Private method used to run the FusionHelper.LoadAssembly method
+        private static Assembly ExecuteLoadAssembly(FusionHelper helper, string assemblyName)
+        {
+            return helper.LocateAssemblyOnAssemblyLoadFailure(null, new ResolveEventArgs(assemblyName));
+        }
+
         [FixtureSetUp]
         public void FixtureSetUp()
         {
@@ -45,25 +57,18 @@ namespace Apollo.Utils
 
         private FusionHelper InitializeFusionHelper()
         {
+            var mockFileConstants = new Mock<IFileConstants>();
+            mockFileConstants.Setup(constants => constants.AssemblyExtension)
+                .Returns(".dll");
+
             // Can effectively just return the current assembly / gallio assemblies / system
-            var helper = new FusionHelper(() => { return m_Assemblies.Keys.ToArray<string>(); });
+            var helper = new FusionHelper(() => m_Assemblies.Keys.ToArray<string>(), mockFileConstants.Object);
             helper.AssemblyLoader = (assemblyPath) =>
             {
                 return m_Assemblies[assemblyPath];
             };
 
             return helper;
-        }
-
-        private string CreateFullAssemblyName(string assemblyName, Version version, CultureInfo culture, string publicToken)
-        {
-            return string.Format("{0}, Version={1}, Culture={2}, PublicKeyToken={3}", assemblyName, version, culture, publicToken);
-        }
-
-        // Private method used to run the FusionHelper.LoadAssembly method
-        private Assembly ExecuteLoadAssembly(FusionHelper helper, string assemblyName)
-        {
-            return helper.LocateAssemblyOnAssemblyLoadFailure(null, new ResolveEventArgs(assemblyName));
         }
 
         [Test]

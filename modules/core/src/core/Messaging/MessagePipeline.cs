@@ -23,6 +23,7 @@ namespace Apollo.Core.Messaging
     /// Provides message forwarding capabilities to the kernel of the Apollo application.
     /// </summary>
     [PrivateBinPathRequirements(PrivateBinPathOption.Core)]
+    [ServiceSecurityLevel(SecurityLevel.Minimum)]
     internal sealed class MessagePipeline : KernelService, IMessagePipeline
     {
         /// <summary>
@@ -118,7 +119,7 @@ namespace Apollo.Core.Messaging
 
             Log(string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.MessagePipeline_LogMessage_ListenerAdded,
+                    Resources_NonTranslatable.MessagePipeline_LogMessage_ListenerAdded,
                     service.Name));
         }
 
@@ -147,7 +148,7 @@ namespace Apollo.Core.Messaging
 
             Log(string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.MessagePipeline_LogMessage_SenderAdded,
+                    Resources_NonTranslatable.MessagePipeline_LogMessage_SenderAdded,
                     service.Name));
         }
 
@@ -199,7 +200,7 @@ namespace Apollo.Core.Messaging
 
             Log(string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.MessagePipeline_LogMessage_ListenerRemoved,
+                    Resources_NonTranslatable.MessagePipeline_LogMessage_ListenerRemoved,
                     service.Name));
         }
 
@@ -225,7 +226,7 @@ namespace Apollo.Core.Messaging
 
             Log(string.Format(
                     CultureInfo.InvariantCulture,
-                    Resources.MessagePipeline_LogMessage_SenderRemoved,
+                    Resources_NonTranslatable.MessagePipeline_LogMessage_SenderRemoved,
                     service.Name));
         }
 
@@ -340,15 +341,15 @@ namespace Apollo.Core.Messaging
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(
                     !sender.Equals(DnsName.Nobody),
-                    Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipient);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(DnsName.Nobody),
-                    Resources.Exceptions_Messages_CannotSendAMessageToNoService);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(sender),
-                    Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
 
                 Enforce.Argument(() => information);
                 Enforce.Argument(() => inReplyTo);
@@ -462,11 +463,13 @@ namespace Apollo.Core.Messaging
             {
                 Log(string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException,
+                        Resources_NonTranslatable.MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException,
                         sender,
                         recipient,
                         id,
                         e));
+
+                // @Todo: we should really send back a message fail now ..
             }
         }
 
@@ -477,7 +480,7 @@ namespace Apollo.Core.Messaging
         /// </summary>
         protected override void StartService()
         {
-            Log(Resources.MessagePipeline_LogMessage_PipelineStarted);
+            Log(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStarted);
         }
 
         /// <summary>
@@ -486,7 +489,7 @@ namespace Apollo.Core.Messaging
         /// </summary>
         protected override void StopService()
         {
-            Log(Resources.MessagePipeline_LogMessage_PipelineStopped);
+            Log(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStopped);
         }
 
         /// <summary>

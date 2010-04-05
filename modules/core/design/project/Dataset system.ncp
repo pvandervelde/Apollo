@@ -6,7 +6,7 @@
     <Entities>
       <Entity type="Class">
         <Name>Variables</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1239" top="78" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -14,7 +14,7 @@
       </Entity>
       <Entity type="Class">
         <Name>Expressions</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1425" top="78" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -22,7 +22,7 @@
       </Entity>
       <Entity type="Interface">
         <Name>IDataSet</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="483" top="554" />
         <Size width="376" height="112" />
         <Collapsed>False</Collapsed>
@@ -32,28 +32,28 @@
       </Entity>
       <Entity type="Interface">
         <Name>IGenerator</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="454" top="332" />
         <Size width="162" height="74" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IVisualizer</Name>
-        <Access>Public</Access>
-        <Location left="787" top="330" />
+        <Access>Internal</Access>
+        <Location left="787" top="332" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IDataStorage</Name>
-        <Access>Public</Access>
-        <Location left="1093" top="330" />
+        <Access>Internal</Access>
+        <Location left="1093" top="332" />
         <Size width="162" height="93" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IProcessSchedule</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="565" top="35" />
         <Size width="228" height="121" />
         <Collapsed>False</Collapsed>
@@ -63,35 +63,35 @@
       </Entity>
       <Entity type="Interface">
         <Name>IHistory</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1380" top="478" />
         <Size width="162" height="99" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IComponentService</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="697" top="764" />
         <Size width="162" height="103" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>ILinkedComponentStore</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="1048" top="764" />
         <Size width="198" height="113" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IComponentBuilder</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="439" top="882" />
         <Size width="162" height="119" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IObjectLoader</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="439" top="1097" />
         <Size width="162" height="116" />
         <Collapsed>False</Collapsed>
@@ -137,8 +137,6 @@ Note that data sets only store differential component information. i.e. the pare
     </Entities>
     <Relationships>
       <Relationship type="Association" first="8" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -149,16 +147,12 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -173,8 +167,6 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -189,16 +181,12 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -209,8 +197,6 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -221,8 +207,6 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -233,36 +217,30 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1341</X>
-          <Y>378</Y>
+          <Y>380</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>864</X>
-          <Y>277</Y>
+          <Y>279</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1135</X>
-          <Y>305</Y>
+          <Y>307</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -271,19 +249,17 @@ Note that data sets only store differential component information. i.e. the pare
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1154</X>
-          <Y>305</Y>
+          <Y>307</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>839</X>
-          <Y>305</Y>
+          <Y>307</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>818</X>
@@ -293,8 +269,6 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -309,8 +283,6 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -321,13 +293,11 @@ Note that data sets only store differential component information. i.e. the pare
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1213</X>
-          <Y>305</Y>
+          <Y>307</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>

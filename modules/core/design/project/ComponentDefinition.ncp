@@ -14,23 +14,23 @@
       </Entity>
       <Entity type="Class">
         <Name>Categories</Name>
-        <Access>Public</Access>
-        <Location left="805" top="3" />
+        <Access>Internal</Access>
+        <Location left="805" top="10" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>Tags</Name>
-        <Access>Public</Access>
-        <Location left="805" top="96" />
+        <Access>Internal</Access>
+        <Location left="805" top="108" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>Capabilies</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="582" top="393" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -38,7 +38,7 @@
       </Entity>
       <Entity type="Class">
         <Name>Constraints</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="805" top="393" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -46,7 +46,7 @@
       </Entity>
       <Entity type="Class">
         <Name>SubObjects</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="708" top="716" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -54,7 +54,7 @@
       </Entity>
       <Entity type="Class">
         <Name>ExternalInterfaces</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="708" top="577" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -62,7 +62,7 @@
       </Entity>
       <Entity type="Class">
         <Name>State</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="10" top="312" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
@@ -89,8 +89,8 @@ Note that some elements are manditory but others are not. Some components may ha
       </Entity>
       <Entity type="Class">
         <Name>InstructionSets</Name>
-        <Access>Public</Access>
-        <Location left="805" top="198" />
+        <Access>Internal</Access>
+        <Location left="805" top="210" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -157,6 +157,8 @@ e.g. a action could be defined by a set of coworker methods (on different object
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -171,6 +173,8 @@ e.g. a action could be defined by a set of coworker methods (on different object
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -185,6 +189,8 @@ e.g. a action could be defined by a set of coworker methods (on different object
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="6" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -231,7 +237,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>992</X>
-          <Y>39</Y>
+          <Y>46</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="13" second="2">
@@ -243,7 +249,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>992</X>
-          <Y>130</Y>
+          <Y>142</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="14" second="11">
@@ -255,7 +261,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>992</X>
-          <Y>241</Y>
+          <Y>253</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="17" second="6">
@@ -303,7 +309,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>780</X>
-          <Y>42</Y>
+          <Y>49</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="20" second="2">
@@ -315,7 +321,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>780</X>
-          <Y>136</Y>
+          <Y>148</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="15" second="11">
@@ -327,7 +333,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>780</X>
-          <Y>240</Y>
+          <Y>252</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="21" second="6">

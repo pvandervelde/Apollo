@@ -6,10 +6,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Security;
 using System.Security.Permissions;
-using System.Security.AccessControl;
+using Apollo.Core.Utils;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -97,13 +97,19 @@ namespace Apollo.Core
         {
             var set = DefineMinimumPermissions();
 
-            //var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            //var logDirectory = Path.Combine(appDataDir, "");
-
-            // File IO for a specific Log directory ..
-            //set.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, logDirectory));
-
+            // File IO for a specific Log directory
+            set.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, LogPath()));
             return set;
+        }
+
+        /// <summary>
+        /// Determines the location of the directory in which the log files are written to.
+        /// </summary>
+        /// <returns></returns>
+        private static string LogPath()
+        {
+            IFileConstants fileConstants = new FileConstants(new ApplicationConstants());
+            return fileConstants.LogPath();
         }
 
         /// <summary>
@@ -129,8 +135,10 @@ namespace Apollo.Core
         private static PermissionSet DefinePersistencePermissions()
         {
             var set = DefineMinimumPermissions();
-            set.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
 
+            // Define file permissions for all file system parts. Note that
+            // the operating system can still restrict access to the user.
+            set.AddPermission(new FileIOPermission(PermissionState.Unrestricted));
             return set;
         }
 

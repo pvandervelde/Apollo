@@ -83,14 +83,14 @@ namespace Apollo.Core.Messaging
         {
             {
                 Enforce.Argument(() => messageId);
-                Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources.Exceptions_Messages_CannotCreateAMessageWithoutId);
+                Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutId);
 
                 Enforce.Argument(() => senderDns);
-                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipientDns);
-                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources.Exceptions_Messages_CannotSendAMessageToNoService);
-                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
 
                 Enforce.Argument(() => replyToId);
             }

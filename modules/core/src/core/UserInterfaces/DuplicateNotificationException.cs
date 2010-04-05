@@ -22,7 +22,7 @@ namespace Apollo.Core.UserInterfaces
         /// Initializes a new instance of the <see cref="DuplicateNotificationException"/> class.
         /// </summary>
         public DuplicateNotificationException()
-            : this(Resources.Exceptions_Messages_UnknownNotificationName)
+            : this(Resources_NonTranslatable.Exceptions_Messages_UnknownNotificationName)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         /// <param name="name">The <c>DnsName</c> which was a duplicate.</param>
         public DuplicateNotificationException(NotificationName name)
-            : this(string.Format(CultureInfo.InvariantCulture, Resources.Exceptions_Messages_UnknownNotificationName_WithName, name))
+            : this(string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.Exceptions_Messages_UnknownNotificationName_WithName, name))
         {
         }
 

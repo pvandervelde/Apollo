@@ -6,6 +6,9 @@
 
 using System;
 using System.Diagnostics;
+using Apollo.Core.Logging;
+using Apollo.Core.Utils;
+using Autofac;
 
 namespace Apollo.Core
 {
@@ -24,8 +27,28 @@ namespace Apollo.Core
         ///     class comes. This means that it is safe to work with types and not
         ///     strings.
         /// </design>
-        internal sealed class ServiceInjector : MarshalByRefObject, IInjectServices
+        private sealed class ServiceInjector : MarshalByRefObject, IInjectServices
         {
+            /// <summary>
+            /// Builds the IOC container.
+            /// </summary>
+            /// <returns>
+            /// The DI container that is used to create the service.
+            /// </returns>
+            private static IContainer BuildContainer(Type serviceType)
+            {
+                var builder = new ContainerBuilder();
+                {
+                    builder.RegisterModule(new UtilsModule());
+                    builder.RegisterModule(new KernelModule());
+                    builder.RegisterModule(new LoggerModule());
+
+                    builder.RegisterType(serviceType);
+                }
+
+                return builder.Build();
+            }
+
             /// <summary>
             /// Creates the kernel service and returns a proxy to the service.
             /// </summary>
@@ -34,7 +57,9 @@ namespace Apollo.Core
             public KernelService CreateService(Type typeToLoad)
             {
                 Debug.Assert(typeof(KernelService).IsAssignableFrom(typeToLoad), "The service type does not derive from KernelService.");
-                var service = Activator.CreateInstance(typeToLoad) as KernelService;
+
+                var container = BuildContainer(typeToLoad);
+                var service = container.Resolve(typeToLoad) as KernelService;
 
                 return service;
             }
