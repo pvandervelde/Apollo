@@ -16,7 +16,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines a command that checks if the application can be shut down.
     /// </summary>
-    public sealed class CheckApplicationCanShutdownCommand : ICommand
+    internal sealed class CheckApplicationCanShutdownCommand : ICommand
     {
         #region internal class - CheckApplicationCanShutdownContext
 
@@ -45,7 +45,7 @@ namespace Apollo.Core
         /// <summary>
         /// Defines the Id for the <c>CheckApplicationCanShutdownCommand</c>.
         /// </summary>
-        public static readonly CommandId CommandId = new CommandId(@"CheckApplicationCanShutdown");
+        internal static readonly CommandId CommandId = new CommandId(@"CheckApplicationCanShutdown");
 
         #endregion
 

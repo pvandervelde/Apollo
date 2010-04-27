@@ -25,7 +25,7 @@ namespace Apollo.Core.Logging
         /// Gets the desired log level for this message.
         /// </summary>
         /// <value>The desired level.</value>
-        LogLevel Level
+        LevelToLog Level
         {
             get;
         }

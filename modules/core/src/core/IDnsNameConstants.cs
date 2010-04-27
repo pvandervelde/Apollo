@@ -11,8 +11,18 @@ namespace Apollo.Core
     /// <summary>
     /// Provides the <see cref="DnsName"/> objects of all the different parts of the system.
     /// </summary>
-    public interface IDnsNameConstants
+    internal interface IDnsNameConstants
     {
+        /// <summary>
+        /// Gets the <see cref="DnsName"/> used by the message pipeline. Note that the pipeline may not
+        /// be listening for messages.
+        /// </summary>
+        /// <value>The requested <c>DnsName</c>.</value>
+        DnsName AddressOfMessagePipeline
+        {
+            get;
+        }
+
         /// <summary>
         /// Gets the <see cref="DnsName"/> used to send messages to the kernel.
         /// </summary>
@@ -27,6 +37,15 @@ namespace Apollo.Core
         /// </summary>
         /// <value>The requested <c>DnsName</c>.</value>
         DnsName AddressOfUserInterface
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="DnsName"/> used to send messages to the logsink.
+        /// </summary>
+        /// <value>The requested <c>DnsName</c>.</value>
+        DnsName AddressOfLogger
         {
             get;
         }

@@ -5,11 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Logging
 {
+    /// <summary>
+    /// A <see cref="MessageBody"/> that holds a request to change the cut-off level of the
+    /// <see cref="LogSink"/>.
+    /// </summary>
     [Serializable]
     internal sealed class LogLevelChangeRequestMessage : MessageBody
     {
@@ -17,7 +22,7 @@ namespace Apollo.Core.Logging
         /// Initializes a new instance of the <see cref="LogLevelChangeRequestMessage"/> class.
         /// </summary>
         /// <param name="newLevel">The new log level.</param>
-        public LogLevelChangeRequestMessage(LogLevel newLevel)
+        public LogLevelChangeRequestMessage(LevelToLog newLevel)
             : base(false)
         {
             Level = newLevel;
@@ -27,7 +32,7 @@ namespace Apollo.Core.Logging
         /// Gets the new log level.
         /// </summary>
         /// <value>The new log level.</value>
-        public LogLevel Level
+        public LevelToLog Level
         {
             get;
             private set;
@@ -53,6 +58,8 @@ namespace Apollo.Core.Logging
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="MessageBody"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(MessageBody other)
         {
             if (ReferenceEquals(this, other))

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
@@ -78,6 +79,8 @@ namespace Apollo.Core.Logging
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="MessageBody"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(MessageBody other)
         {
             if (ReferenceEquals(this, other))
@@ -86,7 +89,7 @@ namespace Apollo.Core.Logging
             }
 
             var message = other as LogEntryRequestMessage;
-            return message != null && Message.Equals(message.Message);
+            return message != null && (LogType == message.LogType) && Message.Equals(message.Message);
         }
 
         /// <summary>
@@ -97,7 +100,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() ^ Message.GetHashCode();
+            return GetType().GetHashCode() ^ LogType.GetHashCode() ^ Message.GetHashCode();
         }
 
         /// <summary>
@@ -108,7 +111,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Log entry request with text: {0}", Message);
+            return string.Format(CultureInfo.InvariantCulture, "Log entry request for {0} with text: {1}", LogType, Message);
         }
 
         #endregion

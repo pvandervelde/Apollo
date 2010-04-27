@@ -7,7 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Properties;
 using Apollo.Utils.Commands;
 using Autofac.Core;
 using Lokad;
@@ -164,7 +167,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToBeAvailable()
         {
-            // LogSink
             // License
             // Project
             // Plugins
@@ -183,7 +185,10 @@ namespace Apollo.Core.UserInterfaces
         {
             // Persistence
             // History
-            return new[] { typeof(IMessagePipeline) };
+            return new[] 
+                { 
+                    typeof(IMessagePipeline),
+                };
         }
 
         /// <summary>
@@ -290,11 +295,40 @@ namespace Apollo.Core.UserInterfaces
             {
                 action(null);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Log something here?
+                // Log the fact that we failed
+                SendMessage(
+                    m_DnsNames.AddressOfLogger, 
+                    new LogEntryRequestMessage(
+                        new LogMessage(
+                            Name.ToString(),
+                            LevelToLog.Error,
+                            string.Format(Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e)),
+                        LogType.Debug), 
+                    MessageId.None);
+
+                // Now get the hell out of here.
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Logs the error messages coming from the <see cref="MessageProcessingAssistance"/>.
+        /// </summary>
+        /// <param name="e">The exception that should be logged.</param>
+        protected override void LogErrorMessage(Exception e)
+        {
+            var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterface_LogMessage_MessageSendExceptionOccurred, e);
+            SendMessage(
+                m_DnsNames.AddressOfLogger,
+                new LogEntryRequestMessage(
+                    new LogMessage(
+                        Name.ToString(),
+                        LevelToLog.Info,
+                        message),
+                    LogType.Debug),
+                MessageId.None);
         }
 
         #endregion

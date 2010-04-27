@@ -56,7 +56,7 @@ namespace Apollo.Core
             public void CreateKernel()
             {
                 var container = BuildContainer();
-                m_Kernel = new Kernel(container.Resolve<ICommandContainer>(), container.Resolve<IHelpMessageProcessing>());
+                m_Kernel = new Kernel(container.Resolve<ICommandContainer>(), container.Resolve<IHelpMessageProcessing>(), container.Resolve<IDnsNameConstants>());
             }
 
             /// <summary>

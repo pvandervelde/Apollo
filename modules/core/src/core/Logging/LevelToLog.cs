@@ -10,7 +10,7 @@ namespace Apollo.Core.Logging
     /// Defines the level of a log message. Messages with a level lower than the 
     /// current level of the logger will be ignored.
     /// </summary>
-    internal enum LogLevel
+    internal enum LevelToLog
     {
         /// <summary>
         /// The message describes trace information.

@@ -358,6 +358,33 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to unload a domain. The name of the domain is: {0}.
+        /// </summary>
+        internal static string Kernel_LogMessage_DomainUnloadFailed {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_DomainUnloadFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while sending a message. Exception information is: {0}.
+        /// </summary>
+        internal static string Kernel_LogMessage_MessageSendExceptionOccurred {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_MessageSendExceptionOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The service of type {0} failed to disconnect from dependent {1}..
+        /// </summary>
+        internal static string Kernel_LogMessage_ServiceDisconnectionFailed {
+            get {
+                return ResourceManager.GetString("Kernel_LogMessage_ServiceDisconnectionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The log sink was started..
         /// </summary>
         internal static string LogSink_LogMessage_LoggersStarted {
@@ -372,6 +399,15 @@ namespace Apollo.Core.Properties {
         internal static string LogSink_LogMessage_LoggersStopped {
             get {
                 return ResourceManager.GetString("LogSink_LogMessage_LoggersStopped", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while sending a message. Exception information is: {0}.
+        /// </summary>
+        internal static string LogSink_LogMessage_MessageSendExceptionOccurred {
+            get {
+                return ResourceManager.GetString("LogSink_LogMessage_MessageSendExceptionOccurred", resourceCulture);
             }
         }
         
@@ -445,6 +481,24 @@ namespace Apollo.Core.Properties {
         internal static string MessagePipeline_LogMessage_SenderRemoved {
             get {
                 return ResourceManager.GetString("MessagePipeline_LogMessage_SenderRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An exception occurred while sending a message. Exception information is: {0}.
+        /// </summary>
+        internal static string UserInterface_LogMessage_MessageSendExceptionOccurred {
+            get {
+                return ResourceManager.GetString("UserInterface_LogMessage_MessageSendExceptionOccurred", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The pre-disconnection action failed with an exception. Error information: {0}.
+        /// </summary>
+        internal static string UserInterrface_LogMessage_DisconnectPreActionFailed {
+            get {
+                return ResourceManager.GetString("UserInterrface_LogMessage_DisconnectPreActionFailed", resourceCulture);
             }
         }
     }

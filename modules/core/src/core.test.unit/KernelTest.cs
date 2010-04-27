@@ -13,7 +13,7 @@ using MbUnit.Framework;
 using Moq;
 using Moq.Protected;
 
-namespace Apollo.Core.Test.Unit
+namespace Apollo.Core
 {
     [TestFixture]
     [Description("Tests the Kernel class.")]
@@ -21,6 +21,307 @@ namespace Apollo.Core.Test.Unit
             Justification = "Unit tests do not need documentation.")]
     public sealed class KernelTest
     {
+        #region Internal class - MockPipeline
+
+        /// <summary>
+        /// A mock implementation of <see cref="KernelService"/> and <see cref="IMessagePipeline"/>.
+        /// </summary>
+        private sealed class MockPipeline : KernelService, IMessagePipeline
+        {
+            /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StartupAction;
+
+            /// <summary>
+            /// The action executed on startup.
+            /// </summary>
+            private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MockPipeline"/> class.
+            /// </summary>
+            public MockPipeline() : this(null, null)
+            {
+            }
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="MockPipeline"/> class.
+            /// </summary>
+            /// <param name="startupAction">The startup action.</param>
+            /// <param name="stopAction">The stop action.</param>
+            public MockPipeline(Action<KernelService> startupAction, Action<KernelService> stopAction)
+            {
+                m_StartupAction = startupAction;
+                m_StopAction = stopAction;
+            }
+
+            #region Overrides of KernelService
+
+            /// <summary>
+            /// Starts the service.
+            /// </summary>
+            protected override void StartService()
+            {
+                if (m_StartupAction != null)
+                {
+                    m_StartupAction(this);
+                }
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                if (m_StopAction != null)
+                {
+                    m_StopAction(this);
+                }
+            }
+
+            #endregion
+
+            #region Implementation of IMessagePipeline
+
+            /// <summary>
+            /// Determines whether a service with the specified name is registered.
+            /// </summary>
+            /// <param name="name">The name of the service.</param>
+            /// <returns>
+            ///     <see langword="true"/> if a service with the specified name is registered; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool IsRegistered(DnsName name)
+            {
+                return false;
+            }
+
+            /// <summary>
+            /// Determines whether the specified service is registered.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified service is registered; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool IsRegistered(IProcessMessages service)
+            {
+                return false;
+            }
+
+            /// <summary>
+            /// Determines whether the specified service is registered.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified service is registered; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool IsRegistered(ISendMessages service)
+            {
+                return false;
+            }
+
+            /// <summary>
+            /// Registers as listener.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void RegisterAsListener(IProcessMessages service)
+            {
+            }
+
+            /// <summary>
+            /// Registers as sender.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void RegisterAsSender(ISendMessages service)
+            {
+            }
+
+            /// <summary>
+            /// Registers the specified service.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void Register(object service)
+            {
+            }
+
+            /// <summary>
+            /// Unregisters the specified service.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void Unregister(object service)
+            {
+            }
+
+            /// <summary>
+            /// Unregisters as listener.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void UnregisterAsListener(IProcessMessages service)
+            {
+            }
+
+            /// <summary>
+            /// Unregisters as sender.
+            /// </summary>
+            /// <param name="service">The service.</param>
+            public void UnregisterAsSender(ISendMessages service)
+            {
+            }
+
+            /// <summary>
+            /// Sends the specified sender.
+            /// </summary>
+            /// <param name="sender">The sender.</param>
+            /// <param name="recipient">The recipient.</param>
+            /// <param name="information">The information.</param>
+            /// <returns>The ID number of the newly send message.</returns>
+            public MessageId Send(DnsName sender, DnsName recipient, MessageBody information)
+            {
+                return MessageId.Next();
+            }
+
+            /// <summary>
+            /// Sends the specified sender.
+            /// </summary>
+            /// <param name="sender">The sender.</param>
+            /// <param name="recipient">The recipient.</param>
+            /// <param name="information">The information.</param>
+            /// <param name="inReplyTo">The in reply to.</param>
+            /// <returns>The ID number of the newly send message.</returns>
+            public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
+            {
+                return MessageId.Next();
+            }
+
+            #endregion
+        }
+
+        #endregion
+
+        #region Internal class - AdaptableKernelService
+
+        /// <summary>
+        /// A mock implementation of <see cref="KernelService"/>.
+        /// </summary>
+        private sealed class AdaptableKernelService : KernelService, IHaveServiceDependencies
+        {
+            /// <summary>
+            /// Stores the types of the services that should be available.
+            /// </summary>
+            private readonly Type[] m_AvailableServices;
+
+            /// <summary>
+            /// Stores the types of the services to which this service should be connected.
+            /// </summary>
+            private readonly Type[] m_ConnectingServices;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="AdaptableKernelService"/> class.
+            /// </summary>
+            /// <param name="availableServices">The available services.</param>
+            /// <param name="connectingServices">The connecting services.</param>
+            public AdaptableKernelService(Type[] availableServices, Type[] connectingServices)
+            {
+                m_AvailableServices = availableServices;
+                m_ConnectingServices = connectingServices;
+            }
+
+            #region Overrides of KernelService
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform startup tasks.
+            /// </summary>
+            protected override void StartService()
+            {
+                // Do nothing
+            }
+
+            /// <summary>
+            /// Provides derivative classes with a possibility to
+            /// perform shutdown tasks.
+            /// </summary>
+            protected override void StopService()
+            {
+                // Do nothing
+            }
+
+            #endregion
+
+            #region Implementation of IHaveServiceDependencies
+
+            /// <summary>
+            /// Returns a set of types indicating which services need to be present
+            /// for the current service to be functional.
+            /// </summary>
+            /// <returns>
+            ///     An <see cref="IEnumerable{Type}"/> which contains the types of 
+            ///     services which this service requires to be functional.
+            /// </returns>
+            public IEnumerable<Type> ServicesToBeAvailable()
+            {
+                return m_AvailableServices;
+            }
+
+            /// <summary>
+            /// Returns a set of types indicating which services the current service
+            /// needs to be linked to in order to be functional.
+            /// </summary>
+            /// <returns>
+            ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
+            ///     on which this service depends.
+            /// </returns>
+            public IEnumerable<Type> ServicesToConnectTo()
+            {
+                return m_ConnectingServices;
+            }
+
+            /// <summary>
+            /// Provides one of the services on which the current service depends.
+            /// </summary>
+            /// <param name="dependency">The dependency service.</param>
+            public void ConnectTo(KernelService dependency)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Disconnects from one of the services on which the current service depends.
+            /// </summary> 
+            /// <param name="dependency">The dependency service.</param>
+            public void DisconnectFrom(KernelService dependency)
+            {
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether this instance is connected to all dependencies.
+            /// </summary>
+            /// <value>
+            ///     <see langword="true"/> if this instance is connected to all dependencies; otherwise, <see langword="false"/>.
+            /// </value>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool IsConnectedToAllDependencies
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            #endregion
+        }
+
+        #endregion
+
         #region Internal class - KernelService1
 
         /// <summary>
@@ -37,6 +338,11 @@ namespace Apollo.Core.Test.Unit
             /// The action executed on startup.
             /// </summary>
             private readonly Action<KernelService> m_StopAction;
+
+            /// <summary>
+            /// The service to which a connection was made.
+            /// </summary>
+            private KernelService m_Connection;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="KernelService1"/> class.
@@ -98,6 +404,7 @@ namespace Apollo.Core.Test.Unit
             /// <param name="dependency">The dependency service.</param>
             public void ConnectTo(KernelService dependency)
             {
+                m_Connection = dependency;
             }
 
             /// <summary>
@@ -106,6 +413,7 @@ namespace Apollo.Core.Test.Unit
             /// <param name="dependency">The dependency service.</param>
             public void DisconnectFrom(KernelService dependency)
             {
+                m_Connection = dependency;
             }
 
             /// <summary>
@@ -122,6 +430,26 @@ namespace Apollo.Core.Test.Unit
                 {
                     return true;
                 }
+            }
+
+            /// <summary>
+            /// Gets the connection.
+            /// </summary>
+            /// <value>The connection.</value>
+            public KernelService Connection
+            {
+                get
+                {
+                    return m_Connection;
+                }
+            }
+
+            /// <summary>
+            /// Resets this instance.
+            /// </summary>
+            internal void Reset()
+            {
+                m_Connection = null;
             }
         } 
 
@@ -449,7 +777,7 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be installed with a null reference.")]
         public void InstallServiceWithNullObject()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => kernel.Install(null, AppDomain.CurrentDomain));
         }
 
@@ -457,193 +785,180 @@ namespace Apollo.Core.Test.Unit
         [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object), AppDomain.CurrentDomain));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants()), AppDomain.CurrentDomain));
         }
 
         [Test]
         [Description("Checks that a service cannot depend on itself")]
         public void InstallServiceThatDependsOnItself()
         {
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var testMock = new AdaptableKernelService(
+                new Type[0], 
+                new Type[] { typeof(AdaptableKernelService) });
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { testMock.Object.GetType() });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock.Object, AppDomain.CurrentDomain));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock, AppDomain.CurrentDomain));
         }
 
         [Test]
         [Description("Checks that a service cannot depend on the generic KernelService class")]
         public void InstallServiceThatDependsOnKernelService()
         {
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var testMock = new AdaptableKernelService(
+                new Type[0], 
+                new Type[] { typeof(KernelService) });
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { typeof(KernelService) });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock.Object, AppDomain.CurrentDomain));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock, AppDomain.CurrentDomain));
         }
 
         [Test]
         [Description("Checks that a service is installed properly if dependent services are installed last.")]
         public void InstallServiceAsDependentFirst()
         {
-            var messageMock = new Mock<KernelService>();
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            var messageKernelMock = new MockPipeline();
 
-            KernelService dependency = null;
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var kernelTestMock = new KernelService1(
+                service =>
+                    {
+                        return;
+                    },
+                service =>
+                    {
+                       return;
+                    });
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { typeof(IMessagePipeline) });
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            kernel.Install(messageKernelMock, AppDomain.CurrentDomain);
+            kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
 
-                kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { dependency = service; });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
-            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame(messageKernelMock, kernelTestMock.Connection);
         }
 
         [Test]
         [Description("Checks that a service is installed properly if dependent services are installed first.")]
         public void InstallServiceAsDependentLast()
         {
-            var messageMock = new Mock<KernelService>();
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            var messageKernelMock = new MockPipeline();
 
-            KernelService dependency = null;
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var kernelTestMock = new KernelService1(
+                service =>
+                    {
+                        return;
+                    },
+                service =>
+                    {
+                       return;
+                    });
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { typeof(IMessagePipeline) });
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
+            kernel.Install(messageKernelMock, AppDomain.CurrentDomain);
 
-                kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { dependency = service; });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
+            Assert.AreSame(messageKernelMock, kernelTestMock.Connection);
         }
 
         [Test]
         [Description("Checks that a service cannot be uninstalled if it is not installed.")]
         public void UninstallUnknownServiceType()
         {
-            var messageMock = new Mock<KernelService>();
+            var messageMock = new MockPipeline();
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock.Object, false));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock, false));
         }
 
         [Test]
         [Description("Checks that a service cannot be uninstalled if another object of the same type is installed.")]
         public void UninstallUnknownReference()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(secondProxy, false));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            var service1 = new KernelService1(
+                s =>
+                    {
+                    }, 
+                s =>
+                    {
+                    });
+
+            kernel.Install(service1, AppDomain.CurrentDomain);
+
+            var service2 = new KernelService1(
+                s =>
+                    {
+                    }, 
+                s =>
+                    {
+                    });
+
+            Assert.Throws<CannotUninstallNonequivalentServiceException>(() => kernel.Uninstall(service2, false));
+        }
+
+        [Test]
+        [Description("Checks that the CoreProxy service cannot be uninstalled.")]
+        public void UninstallCoreProxy()
+        {
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            kernel.Uninstall(secondProxy, false);
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(secondProxy, AppDomain.CurrentDomain));
         }
 
         [Test]
         [Description("Checks that a service is uninstalled properly if other services depend on it.")]
         public void UninstallServiceAsDependent()
         {
-            var messageMock = new Mock<KernelService>();
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            var messageMock = new MockPipeline();
 
-            KernelService dependency = null;
-            KernelService uninstalledDependency = null;
+            var kernelTestMock = new KernelService1(
+                service =>
+                    {
+                        return;
+                    },
+                service =>
+                    {
+                       return;
+                    });
 
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
+            kernel.Install(messageMock, AppDomain.CurrentDomain);
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { typeof(IMessagePipeline) });
+            Assert.AreSame(messageMock, kernelTestMock.Connection);
+            kernelTestMock.Reset();
 
-                kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { dependency = service; });
+            kernel.Uninstall(messageMock, false);
 
-                kernelTestMock.Setup(test => test.DisconnectFrom(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { uninstalledDependency = service; });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
-
-            kernel.Uninstall(messageMock.Object, false);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
+            Assert.AreSame(messageMock, kernelTestMock.Connection);
         }
 
         [Test]
         [Description("Checks that a service is uninstalled properly if it depends on other services.")]
         public void UninstallServiceAsDependency()
         {
-            var messageMock = new Mock<KernelService>();
-            var messageKernelMock = messageMock.As<IMessagePipeline>();
+            var messageMock = new MockPipeline();
 
-            KernelService dependency = null;
-            KernelService uninstalledDependency = null;
+            var kernelTestMock = new KernelService1(
+                service =>
+                    {
+                        return;
+                    },
+                service =>
+                    {
+                       return;
+                    });
 
-            var testMock = new Mock<KernelService>();
-            var kernelTestMock = testMock.As<IHaveServiceDependencies>();
-            {
-                kernelTestMock.Setup(test => test.ServicesToBeAvailable())
-                    .Returns(new Type[] { });
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
+            kernel.Install(messageMock, AppDomain.CurrentDomain);
 
-                kernelTestMock.Setup(test => test.ServicesToConnectTo())
-                    .Returns(new[] { typeof(IMessagePipeline) });
+            Assert.AreSame(messageMock, kernelTestMock.Connection);
+            kernelTestMock.Reset();
 
-                kernelTestMock.Setup(test => test.ConnectTo(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { dependency = service; });
+            kernel.Uninstall(kernelTestMock, false);
 
-                kernelTestMock.Setup(test => test.DisconnectFrom(It.IsAny<KernelService>()))
-                    .Callback<KernelService>(service => { uninstalledDependency = service; });
-            }
-
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
-            kernel.Install(testMock.Object, AppDomain.CurrentDomain);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, dependency);
-
-            kernel.Uninstall(testMock.Object, false);
-
-            Assert.AreSame((KernelService)messageKernelMock.Object, uninstalledDependency);
+            Assert.AreSame(messageMock, kernelTestMock.Connection);
         }
 
         [Test]
@@ -662,25 +977,16 @@ namespace Apollo.Core.Test.Unit
             // Service 4
             var startupOrder = new List<KernelService>();
 
-            // Define the KernelService mock
-            var messageMock = new Mock<KernelService>();
-
-            // Now implement IMessagePipeline on that mock
-            messageMock.As<IMessagePipeline>();
-            {
-                messageMock.Protected().Setup("StartService")
-                    .Callback(() => startupOrder.Add(messageMock.Object));
-            }
-
             Action<KernelService> storeAction = service => startupOrder.Add(service);
+            var messageMock = new MockPipeline(storeAction, service => { return; });
             var testMock1 = new KernelService1(storeAction, service => { return; });
             var testMock2 = new KernelService2(storeAction, service => { return; });
             var testMock3 = new KernelService3(storeAction, service => { return; });
             var testMock4 = new KernelService4(storeAction, service => { return; });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(testMock1, AppDomain.CurrentDomain);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(messageMock, AppDomain.CurrentDomain);
             kernel.Install(testMock2, AppDomain.CurrentDomain);
             kernel.Install(testMock3, AppDomain.CurrentDomain);
             kernel.Install(testMock4, AppDomain.CurrentDomain);
@@ -691,7 +997,7 @@ namespace Apollo.Core.Test.Unit
             Assert.AreElementsEqual(
                 new List<KernelService> 
                     { 
-                        messageMock.Object,
+                        messageMock,
                         testMock1,
                         testMock2,
                         testMock3,
@@ -716,25 +1022,16 @@ namespace Apollo.Core.Test.Unit
             // Service 4
             var stopOrder = new List<KernelService>();
 
-            // Define the KernelService mock
-            var messageMock = new Mock<KernelService>();
-
-            // Now implement IMessagePipeline on that mock
-            messageMock.As<IMessagePipeline>();
-            {
-                messageMock.Protected().Setup("StopService")
-                    .Callback(() => stopOrder.Add(messageMock.Object));
-            }
-
             Action<KernelService> storeAction = service => stopOrder.Add(service);
+            var messageMock = new MockPipeline(service => { return; }, storeAction);
             var testMock1 = new KernelService1(service => { return; }, storeAction);
             var testMock2 = new KernelService2(service => { return; }, storeAction);
             var testMock3 = new KernelService3(service => { return; }, storeAction);
             var testMock4 = new KernelService4(service => { return; }, storeAction);
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object);
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(testMock1, AppDomain.CurrentDomain);
-            kernel.Install(messageMock.Object, AppDomain.CurrentDomain);
+            kernel.Install(messageMock, AppDomain.CurrentDomain);
             kernel.Install(testMock2, AppDomain.CurrentDomain);
             kernel.Install(testMock3, AppDomain.CurrentDomain);
             kernel.Install(testMock4, AppDomain.CurrentDomain);
@@ -750,7 +1047,7 @@ namespace Apollo.Core.Test.Unit
                         testMock3,
                         testMock2,
                         testMock1,
-                        messageMock.Object,
+                        messageMock,
                     },
                 stopOrder);
         }

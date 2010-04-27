@@ -192,7 +192,7 @@ namespace Apollo.Core
         {
             get
             {
-                return (!IsNotStarted && !IsStarting && !IsStopping && !IsStopped);
+                return !IsNotStarted && !IsStarting && !IsStopping && !IsStopped;
             }
         }
 

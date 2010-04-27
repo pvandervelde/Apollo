@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Test.Unit
+namespace Apollo.Core
 {
     [TestFixture]
     [Description("Tests the ShutdownResponseMessage class.")]

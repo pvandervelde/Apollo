@@ -14,10 +14,10 @@ namespace Apollo.Core.Logging
     internal interface ILogger
     {
         /// <summary>
-        /// Gets the current <see cref="LogLevel"/>.
+        /// Gets the current <see cref="LevelToLog"/>.
         /// </summary>
         /// <value>The current level.</value>
-        LogLevel Level 
+        LevelToLog Level 
         {
             get; 
         }
@@ -26,7 +26,7 @@ namespace Apollo.Core.Logging
         /// Changes the current log level to the specified level.
         /// </summary>
         /// <param name="newLevel">The new level.</param>
-        void ChangeLevel(LogLevel newLevel);
+        void ChangeLevel(LevelToLog newLevel);
 
         /// <summary>
         /// Indicates if a message will be written to the log file based on the

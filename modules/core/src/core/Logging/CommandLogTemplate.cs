@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Lokad;
 
@@ -88,12 +89,12 @@ namespace Apollo.Core.Logging
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
+        /// <param name="other">An object to compare with this object.</param>
         /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// <see langword="true" /> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <see langword="false" />.
         /// </returns>
-        /// <param name="other">
-        ///     An object to compare with this object.
-        /// </param>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(CommandLogTemplate other)
         {
             // All CommandLogTemplate objects are created equal, except for the null objects.
@@ -107,11 +108,14 @@ namespace Apollo.Core.Logging
         /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
+        /// <param name="other">
+        /// An object to compare with this object.
+        /// </param>
         /// <returns>
-        /// true if the current object is equal to the <paramref name="other"/> parameter; otherwise, false.
+        /// <see langword="true" /> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <see langword="false" />.
         /// </returns>
-        /// <param name="other">An object to compare with this object.
-        ///                 </param>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(ILogTemplate other)
         {
             if (ReferenceEquals(this, other))
@@ -128,12 +132,12 @@ namespace Apollo.Core.Logging
         /// <summary>
         /// Determines whether the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>.
         /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        /// true if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, false.
+        ///     <see langword="true"/> if the specified <see cref="T:System.Object"/> is equal to the current <see cref="T:System.Object"/>; otherwise, <see langword="false"/>.
         /// </returns>
-        /// <param name="obj">
-        /// The <see cref="T:System.Object"/> to compare with the current <see cref="T:System.Object"/>. 
-        /// </param>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))

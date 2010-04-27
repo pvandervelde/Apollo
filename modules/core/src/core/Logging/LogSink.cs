@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
 using Apollo.Utils;
@@ -147,7 +148,7 @@ namespace Apollo.Core.Logging
         /// </summary>
         protected override void PreMessageInitializeStartup()
         {
-            Log(LogType.Debug, new LogMessage(GetType().FullName, LogLevel.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStarted));
+            Log(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStarted));
         }
 
         /// <summary>
@@ -155,9 +156,19 @@ namespace Apollo.Core.Logging
         /// </summary>
         protected override void PostMessageUnregisterStopAction()
         {
-            Log(LogType.Debug, new LogMessage(GetType().FullName, LogLevel.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStopped));
+            Log(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStopped));
         }
 
-        #endregion    
+        /// <summary>
+        /// Logs the error messages coming from the <see cref="MessageProcessingAssistance"/>.
+        /// </summary>
+        /// <param name="e">The exception that should be logged.</param>
+        protected override void LogErrorMessage(Exception e)
+        {
+            var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.LogSink_LogMessage_MessageSendExceptionOccurred, e);
+            Log(LogType.Debug, new LogMessage(Name.ToString(), LevelToLog.Info,message));
+        }
+
+        #endregion
     }
 }

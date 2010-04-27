@@ -29,6 +29,9 @@ namespace Apollo.Core
         {
             base.Load(moduleBuilder);
 
+            moduleBuilder.Register(c => new DnsNameConstants())
+                .As<IDnsNameConstants>();
+
             moduleBuilder.Register(c => new MessageProcessingAssistance())
                 .As<IHelpMessageProcessing>();
 

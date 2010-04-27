@@ -7,7 +7,7 @@
 namespace Apollo.Core.Logging
 {
     /// <summary>
-    /// Defines the configuration for 
+    /// Defines the configuration for a logger.
     /// </summary>
     internal interface ILoggerConfiguration
     {

@@ -66,6 +66,12 @@ This serializer should be serializable itself (to cross the AppDomain boundaries
         <Location left="1084" top="405" />
         <Size width="382" height="168" />
       </Entity>
+      <Entity type="Comment">
+        <Text>Think about how we handle versioning. For some file types that will not be a problem. For others it will. Solutions could be:
+- Have a different serializer for each version. Each version of the system updates all writers + adds new ones.</Text>
+        <Location left="126" top="593" />
+        <Size width="242" height="151" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Generalization" first="1" second="2">
@@ -75,6 +81,10 @@ This serializer should be serializable itself (to cross the AppDomain boundaries
       <Relationship type="Comment" first="0" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>779</X>
+          <Y>525</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="5" second="4">
         <StartOrientation>Horizontal</StartOrientation>
@@ -99,6 +109,22 @@ This serializer should be serializable itself (to cross the AppDomain boundaries
       <Relationship type="Comment" first="8" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="9" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="9" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>429</X>
+          <Y>672</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>759</X>
+          <Y>507</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

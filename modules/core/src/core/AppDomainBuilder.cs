@@ -85,7 +85,7 @@ namespace Apollo.Core
             ioPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
 
             // Add the file permissions
-            if ((resolutionPaths.Files != null) && (resolutionPaths.Files.Exists()) ||
+            if (((resolutionPaths.Files != null) && resolutionPaths.Files.Exists()) ||
                 ((resolutionPaths.Directories != null) && resolutionPaths.Directories.Exists()))
             {
                 // Add permissions for all the assembly files

@@ -91,10 +91,12 @@ namespace Apollo.Core
                     var set = new PermissionSet(PermissionState.None);
                     set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
 
-                    SecurityHelpers.Elevate(set, () =>
-                                                 {
-                                                     domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
-                                                 });
+                    SecurityHelpers.Elevate(
+                        set, 
+                        () =>
+                            {
+                                domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
+                            });
                 }
             }
         }

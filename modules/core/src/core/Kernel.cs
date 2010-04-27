@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security;
 using System.Security.Permissions;
+using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
 using Apollo.Core.Utils;
@@ -61,17 +62,22 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="commandStore">The container that stores all the commands.</param>
         /// <param name="processingHelp">The processing help.</param>
+        /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandStore"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="processingHelp"/> is <see langword="null"/>.
         /// </exception>
-        public Kernel(ICommandContainer commandStore, IHelpMessageProcessing processingHelp)
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="dnsNames"/> is <see langword="null"/>.
+        /// </exception>
+        public Kernel(ICommandContainer commandStore, IHelpMessageProcessing processingHelp, IDnsNameConstants dnsNames)
         {
             {
                 Enforce.Argument(() => commandStore);
                 Enforce.Argument(() => processingHelp);
+                Enforce.Argument(() => dnsNames);
             }
 
             // Add our own proxy to the collection of services.
@@ -80,7 +86,7 @@ namespace Apollo.Core
             // we don't control.
             // This also means that there is only one way to uninstall this service, 
             // and that is by getting the reference from the kernel.
-            Install(new CoreProxy(this, commandStore, processingHelp), AppDomain.CurrentDomain);
+            Install(new CoreProxy(this, commandStore, processingHelp, dnsNames), AppDomain.CurrentDomain);
         }
 
         /// <summary>
@@ -386,7 +392,6 @@ namespace Apollo.Core
             // holds the kernel.
             if (!ReferenceEquals(serviceDomain, AppDomain.CurrentDomain))
             {
-
                 // Assert full trust. This can be done safely
                 // because we will attach to the DomainUnload event but we'll only 
                 // run secure code in the unload event.
@@ -531,6 +536,14 @@ namespace Apollo.Core
                 Enforce.Argument(() => service);
             }
 
+            // Check if we're trying to unload the CoreProxy. If so then 
+            // just ignore it. We don't allow unloading that because then
+            // the kernel will lose the connection to the other systems.
+            if (service.GetType().Equals(typeof(CoreProxy)))
+            {
+                return;
+            }
+
             // Check if we have the service
             if (!m_Services.ContainsKey(service.GetType()))
             {
@@ -572,7 +585,12 @@ namespace Apollo.Core
                     }
                     catch (Exception)
                     {
-                        // For now do nothing. Later on we'll log here ...
+                        LogMessage(
+                            LevelToLog.Error,
+                            string.Format(
+                                Resources_NonTranslatable.Kernel_LogMessage_ServiceDisconnectionFailed, 
+                                service.GetType(), 
+                                dependencyHolder.GetType()));
                     }
                 }
 
@@ -590,6 +608,7 @@ namespace Apollo.Core
             var serviceDomain = installedServiceMap.Value;
             if (shouldUnloadDomain && !serviceDomain.Equals(AppDomain.CurrentDomain))
             {
+                var domainName = serviceDomain.FriendlyName;
                 try
                 {
                     // Assert permission to control the AppDomain. This can be done safely
@@ -604,10 +623,30 @@ namespace Apollo.Core
                 }
                 catch (Exception)
                 {
-                    // For now do nothing. Later on we should log the problem here.
                     // @Note should this do something nasty to the application?
+                    LogMessage(
+                            LevelToLog.Error,
+                            string.Format(
+                                Resources_NonTranslatable.Kernel_LogMessage_DomainUnloadFailed, 
+                                domainName));
                 }
             }
+        }
+
+        /// <summary>
+        /// Logs a debug message with the given text at the given level.
+        /// </summary>
+        /// <param name="level">The level.</param>
+        /// <param name="message">The message.</param>
+        private void LogMessage(LevelToLog level, string message)
+        {
+            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
+
+            var context = new LogMessageForKernelCommand.LogMessageForKernelContext(level, message);
+
+            Debug.Assert(coreProxy.Contains(LogMessageForKernelCommand.CommandId), "A command has gone missing.");
+            coreProxy.Invoke(LogMessageForKernelCommand.CommandId, context);
         }
 
         /// <summary>

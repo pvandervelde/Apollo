@@ -224,13 +224,14 @@ namespace Apollo.Core
 
             // Set the assembly resolver. Because we are inside the
             // UI appdomain it doesn't matter how we set this up.
-            var fusionHelper = new FusionHelper(() =>
-                {
-                    // Concatenate the two sequences and then turn the FileInfo objects into the
-                    // string representation of the file fullname
-                    var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
-                    return from file in totalSequence select file.FullName;
-                },
+            var fusionHelper = new FusionHelper(
+                () =>
+                    {
+                        // Concatenate the two sequences and then turn the FileInfo objects into the
+                        // string representation of the file fullname
+                        var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
+                        return from file in totalSequence select file.FullName;
+                    },
                 new FileConstants(new ApplicationConstants()));
             currentDomain.AssemblyResolve += fusionHelper.LocateAssemblyOnAssemblyLoadFailure;
 

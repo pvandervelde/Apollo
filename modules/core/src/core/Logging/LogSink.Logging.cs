@@ -6,8 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using Lokad;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Properties;
+using Lokad;
 
 namespace Apollo.Core.Logging
 {
@@ -33,7 +34,7 @@ namespace Apollo.Core.Logging
         /// <exception cref="ArgumentException">
         /// Thrown when there is no registered logger for the given <paramref name="logType"/>.
         /// </exception>
-        public LogLevel Level(LogType logType)
+        public LevelToLog Level(LogType logType)
         {
             {
                 Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exceptions_Messages_LogTypeHasNoLogger_WithLogType, logType);
@@ -51,6 +52,8 @@ namespace Apollo.Core.Logging
         /// <returns>
         ///     <see langword="true" /> if the message will be placed in the log; otherwise, <see langword="false" />.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool ShouldLogMessage(LogType logType, ILogMessage message)
         {
             return m_Loggers.ContainsKey(logType) && m_Loggers[logType].ShouldLog(message);

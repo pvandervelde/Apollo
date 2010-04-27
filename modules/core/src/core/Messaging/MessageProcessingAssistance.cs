@@ -87,38 +87,48 @@ namespace Apollo.Core.Messaging
         /// </summary>
         private DnsName m_Name = DnsName.Nobody;
 
+        /// <summary>
+        /// The delegate used to send an error log message.
+        /// </summary>
+        private Action<Exception> m_SendErrorLogMessage;
+
         #region Implementation of IHelpMessageProcessing
 
         /// <summary>
         /// Defines the information necessary for the sending and receiving
         /// of messages.
         /// </summary>
-        /// <param name="pipeline">
-        /// The pipeline which takes care of the actual message sending.
-        /// </param>
+        /// <param name="pipeline">The pipeline which takes care of the actual message sending.</param>
         /// <param name="sender">The <see cref="DnsName"/> of the sender.</param>
+        /// <param name="errorLogSender">The function that is used to log error messages.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="pipeline"/> is <see langword="null" />.
+        /// Thrown if <paramref name="pipeline"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="sender"/> is <see langword="null" />.
+        /// Thrown if <paramref name="sender"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="sender"/> is <see cref="DnsName.Nobody"/>
+        /// Thrown if <paramref name="sender"/> is <see cref="DnsName.Nobody"/>
         /// </exception>
-        public void DefinePipelineInformation(IMessagePipeline pipeline, DnsName sender)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="errorLogSender"/> is <see langword="null" />.
+        /// </exception>
+        public void DefinePipelineInformation(IMessagePipeline pipeline, DnsName sender, Action<Exception> errorLogSender)
         {
             {
                 Enforce.Argument(() => pipeline);
                 
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_SenderCannotBeNobody);
+
+                Enforce.Argument(() => errorLogSender);
             }
 
             lock(m_Lock)
             {
                 m_Pipeline = pipeline;
                 m_Name = sender;
+                m_SendErrorLogMessage = errorLogSender;
             }
         }
 
@@ -367,6 +377,12 @@ namespace Apollo.Core.Messaging
             Justification = "The message sender should stay alive at all times. So we catch and log.")]
         private void ProcessMessageByType(KernelMessage message)
         {
+            Action<Exception> logMessage;
+            lock (m_Lock)
+            {
+                logMessage = m_SendErrorLogMessage;
+            }
+
             Action<KernelMessage> action = null;
             var messageType = message.Body.GetType();
             lock (m_Lock)
@@ -385,12 +401,12 @@ namespace Apollo.Core.Messaging
                 {
                     action(message);
                 }
-                catch // (Exception e)
+                catch (Exception e)
                 {
-                    // Something blew up. We should probably log a message
-                    // but that is difficult, so .. eh eh
-                    // SendMessage();
-                    // @todo: Fix this ...
+                    if (logMessage != null)
+                    {
+                        logMessage(e);
+                    }
                 }
             }
         }

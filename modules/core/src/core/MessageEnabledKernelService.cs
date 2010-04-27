@@ -69,11 +69,17 @@ namespace Apollo.Core
             }
 
             // Register the new pipeline
-            m_Processor.DefinePipelineInformation(pipeline, Name);
+            m_Processor.DefinePipelineInformation(pipeline, Name, LogErrorMessage);
 
             m_MessageSink = pipeline;
             RegisterWithMessagePipeline();
         }
+
+        /// <summary>
+        /// Logs the error messages coming from the <see cref="MessageProcessingAssistance"/>.
+        /// </summary>
+        /// <param name="e">The exception that should be logged.</param>
+        protected abstract void LogErrorMessage(Exception e);
 
         /// <summary>
         /// Disconnects from message sink.
@@ -245,6 +251,8 @@ namespace Apollo.Core
         /// <value>
         ///     <see langword="true"/> if this service is capable of performing all its functions; otherwise, <see langword="false"/>.
         /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         protected override bool IsFullyFunctional
         {
             get

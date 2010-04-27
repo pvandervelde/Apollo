@@ -20,7 +20,7 @@ namespace Apollo.Core.Logging
         /// <returns>
         /// The log level for the specified log type.
         /// </returns>
-        LogLevel Level(LogType logType);
+        LevelToLog Level(LogType logType);
 
         /// <summary>
         /// Indicates if the log message will be logged, depending on the 

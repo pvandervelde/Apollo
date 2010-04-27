@@ -23,7 +23,8 @@ namespace Apollo.Core.Messaging
         /// The pipeline which takes care of the actual message sending.
         /// </param>
         /// <param name="sender">The <see cref="DnsName"/> of the sender.</param>
-        void DefinePipelineInformation(IMessagePipeline pipeline, DnsName sender);
+        /// <param name="errorLogSender">The function that is used to log error messages.</param>
+        void DefinePipelineInformation(IMessagePipeline pipeline, DnsName sender, Action<Exception> errorLogSender);
 
         /// <summary>
         /// Invalidates the information about the pipeline that is currently

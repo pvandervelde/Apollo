@@ -216,11 +216,23 @@
   <data name="Exceptions_Messages_UnknownNotificationName_WithName" xml:space="preserve">
     <value>The specified notification name is a duplicate of another notification name. The name is {0}.</value>
   </data>
+  <data name="Kernel_LogMessage_DomainUnloadFailed" xml:space="preserve">
+    <value>Failed to unload a domain. The name of the domain is: {0}</value>
+  </data>
+  <data name="Kernel_LogMessage_MessageSendExceptionOccurred" xml:space="preserve">
+    <value>An exception occurred while sending a message. Exception information is: {0}</value>
+  </data>
+  <data name="Kernel_LogMessage_ServiceDisconnectionFailed" xml:space="preserve">
+    <value>The service of type {0} failed to disconnect from dependent {1}.</value>
+  </data>
   <data name="LogSink_LogMessage_LoggersStarted" xml:space="preserve">
     <value>The log sink was started.</value>
   </data>
   <data name="LogSink_LogMessage_LoggersStopped" xml:space="preserve">
     <value>The log sink was stopped.</value>
+  </data>
+  <data name="LogSink_LogMessage_MessageSendExceptionOccurred" xml:space="preserve">
+    <value>An exception occurred while sending a message. Exception information is: {0}</value>
   </data>
   <data name="MessagePipeline_LogMessage_ListenerAdded" xml:space="preserve">
     <value>A new message listener object was added with name: {0}</value>
@@ -245,5 +257,11 @@
   </data>
   <data name="MessagePipeline_LogMessage_SenderRemoved" xml:space="preserve">
     <value>A new message sender object was removed with name: {0}</value>
+  </data>
+  <data name="UserInterface_LogMessage_MessageSendExceptionOccurred" xml:space="preserve">
+    <value>An exception occurred while sending a message. Exception information is: {0}</value>
+  </data>
+  <data name="UserInterrface_LogMessage_DisconnectPreActionFailed" xml:space="preserve">
+    <value>The pre-disconnection action failed with an exception. Error information: {0}</value>
   </data>
 </root>

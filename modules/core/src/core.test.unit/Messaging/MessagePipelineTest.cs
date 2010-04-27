@@ -6,11 +6,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Test.Unit.Messaging
+namespace Apollo.Core.Messaging
 {
     [TestFixture]
     [Description("Tests the MessagePipeline class.")]
@@ -22,7 +21,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a listener cannot be registered with a null object.")]
         public void RegisterAsListenerWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.RegisterAsListener(null));
         }
 
@@ -36,7 +35,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsListener(listenerMock.Object);
 
             Assert.Throws<DuplicateDnsNameException>(() => pipeline.RegisterAsListener(listenerMock.Object));
@@ -46,7 +45,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a sender cannot be registered with a null object.")]
         public void RegisterAsSenderWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.RegisterAsSender(null));
         }
 
@@ -60,7 +59,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsSender(senderMock.Object);
 
             Assert.Throws<DuplicateDnsNameException>(() => pipeline.RegisterAsSender(senderMock.Object));
@@ -70,7 +69,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that an object cannot be registered with a null object.")]
         public void RegisterWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.Register(null));
         }
 
@@ -78,7 +77,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a listener cannot be unregistered with a null object.")]
         public void UnregisterAsListenerWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.UnregisterAsListener(null));
         }
 
@@ -92,7 +91,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<UnknownDnsNameException>(() => pipeline.UnregisterAsListener(listenerMock.Object));
         }
 
@@ -100,7 +99,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a sender cannot be unregistered with a null object.")]
         public void UnregisterAsSenderWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.UnregisterAsSender(null));
         }
 
@@ -114,7 +113,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<UnknownDnsNameException>(() => pipeline.UnregisterAsSender(senderMock.Object));
         }
 
@@ -122,7 +121,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that an object cannot be unregistered with a null object.")]
         public void UnregisterWithNullObject()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.Unregister(null));
         }
 
@@ -130,7 +129,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a null name is never registered.")]
         public void IsRegisteredWithNullName()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.IsFalse(pipeline.IsRegistered((DnsName)null));
         }
 
@@ -144,7 +143,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsListener(listenerMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(listenerMock.Object.Name));
         }
@@ -159,7 +158,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsSender(senderMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(senderMock.Object.Name));
         }
@@ -168,7 +167,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a null listener is never registered.")]
         public void IsRegisteredWithNullListener()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.IsFalse(pipeline.IsRegistered((IProcessMessages)null));
         }
 
@@ -182,7 +181,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsListener(listenerMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(listenerMock.Object));
         }
@@ -191,7 +190,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         [Description("Checks that a null sender is never registered.")]
         public void IsRegisteredWithNullSender()
         {
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.IsFalse(pipeline.IsRegistered((ISendMessages)null));
         }
 
@@ -205,7 +204,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(new DnsName("name"));
             }
 
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             pipeline.RegisterAsSender(senderMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(senderMock.Object));
         }
@@ -215,7 +214,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendWithNullSender()
         {
             var listener = new DnsName("listener");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>(false);
             Assert.Throws<ArgumentNullException>(() => pipeline.Send(null, listener, bodyMock.Object));
@@ -226,7 +225,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendWithNobodySender()
         {
             var listener = new DnsName("listener");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(DnsName.Nobody, listener, bodyMock.Object));
@@ -237,7 +236,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendWithNullRecipient()
         {
             var sender = new DnsName("sender");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>(false);
             Assert.Throws<ArgumentNullException>(() => pipeline.Send(sender, null, bodyMock.Object));
@@ -248,7 +247,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendWithNobodyRecipient()
         {
             var sender = new DnsName("sender");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, DnsName.Nobody, bodyMock.Object));
@@ -259,7 +258,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendWithSenderAndRecipientEqual()
         {
             var sender = new DnsName("sender");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, sender, bodyMock.Object));
@@ -271,7 +270,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         {
             var sender = new DnsName("sender");
             var listener = new DnsName("listener");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, listener, null));
         }
@@ -282,7 +281,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         {
             var sender = new DnsName("sender");
             var listener = new DnsName("listener");
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, listener, bodyMock.Object, null));
@@ -310,7 +309,7 @@ namespace Apollo.Core.Test.Unit.Messaging
 
             var listener = listenerMock.Object;
             var sender = senderMock.Object;
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
             
             pipeline.RegisterAsSender(sender);
             pipeline.RegisterAsListener(listener);
@@ -349,7 +348,7 @@ namespace Apollo.Core.Test.Unit.Messaging
 
             var listener = listenerMock.Object;
             var sender = senderMock.Object;
-            var pipeline = new MessagePipeline();
+            var pipeline = new MessagePipeline(new DnsNameConstants());
 
             pipeline.RegisterAsSender(sender);
             pipeline.RegisterAsListener(listener);

@@ -105,7 +105,9 @@ namespace Apollo.Core
         /// <summary>
         /// Determines the location of the directory in which the log files are written to.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// The path that is used to write the log files.
+        /// </returns>
         private static string LogPath()
         {
             IFileConstants fileConstants = new FileConstants(new ApplicationConstants());

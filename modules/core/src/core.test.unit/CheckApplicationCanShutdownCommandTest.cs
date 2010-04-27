@@ -9,7 +9,7 @@ using Apollo.Core.Messaging;
 using Apollo.Utils;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Test.Unit
+namespace Apollo.Core
 {
     [TestFixture]
     [Description("Tests the CheckApplicationCanShutdownCommand class.")]

@@ -8,7 +8,7 @@
     <ProjectGuid>{29E1985A-7DF2-4400-AA03-544722E11848}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Apollo.Core.Test.Unit</RootNamespace>
+    <RootNamespace>Apollo.Core</RootNamespace>
     <AssemblyName>Apollo.Core.Test.Unit</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -16,7 +16,7 @@
     <StartupObject />
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
-    <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>	
+    <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -156,6 +156,14 @@
     <Compile Include="CoreProxyTest.cs" />
     <Compile Include="KernelTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessageTest.cs" />
+    <Compile Include="Logging\CommandLogTemplateTest.cs" />
+    <Compile Include="Logging\DebugLogTemplateTest.cs" />
+    <Compile Include="Logging\LogEntryRequestMessageTest.cs" />
+    <Compile Include="Logging\LoggerConfigurationTest.cs" />
+    <Compile Include="Logging\LoggerTest.cs" />
+    <Compile Include="Logging\LogLevelChangeRequestMessageTest.cs" />
+    <Compile Include="Logging\LogMessageTest.cs" />
+    <Compile Include="Logging\LogSinkTest.cs" />
     <Compile Include="Messaging\DnsNameTest.cs" />
     <Compile Include="Messaging\KernelMessageTest.cs" />
     <Compile Include="Messaging\MessageHeaderTest.cs" />
@@ -175,6 +183,7 @@
       <Link>Properties\App.snk</Link>
     </None>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

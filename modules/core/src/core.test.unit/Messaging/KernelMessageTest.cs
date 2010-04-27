@@ -6,11 +6,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Test.Unit.Messaging
+namespace Apollo.Core.Messaging
 {
     [TestFixture]
     [Description("Tests the KernelMessage class.")]

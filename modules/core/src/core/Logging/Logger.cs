@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.Utils;
 using Lokad;
@@ -27,62 +28,62 @@ namespace Apollo.Core.Logging
         /// </summary>
         /// <param name="logger">The logger.</param>
         /// <returns>
-        /// The <see cref="LogLevel"/>.
+        /// The <see cref="LevelToLog"/>.
         /// </returns>
-        private static LogLevel TranslateFromNlogLevel(NLog.Logger logger)
+        private static LevelToLog TranslateFromNlogLevel(NLog.Logger logger)
         {
-            if (logger.IsFatalEnabled)
+            if (logger.IsTraceEnabled)
             {
-                return LogLevel.Fatal;
-            }
-
-            if (logger.IsErrorEnabled)
-            {
-                return LogLevel.Error;
-            }
-
-            if (logger.IsWarnEnabled)
-            {
-                return LogLevel.Warn;
-            }
-
-            if (logger.IsInfoEnabled)
-            {
-                return LogLevel.Info;
+                return LevelToLog.Trace;
             }
 
             if (logger.IsDebugEnabled)
             {
-                return LogLevel.Debug;
+                return LevelToLog.Debug;
             }
 
-            return logger.IsTraceEnabled ? LogLevel.Trace : LogLevel.None;
+            if (logger.IsInfoEnabled)
+            {
+                return LevelToLog.Info;
+            }
+
+            if (logger.IsWarnEnabled)
+            {
+                return LevelToLog.Warn;
+            }
+
+            if (logger.IsErrorEnabled)
+            {
+                return LevelToLog.Error;
+            }
+
+            return logger.IsFatalEnabled ? LevelToLog.Fatal : LevelToLog.None;
         }
 
         /// <summary>
         /// Translates from apollo log level to nlog level.
         /// </summary>
-        /// <param name="logLevel">The log level.</param>
+        /// <param name="levelToLog">The log level.</param>
         /// <returns>
         /// The <see cref="NLog.LogLevel"/>.
         /// </returns>
-        private static NLog.LogLevel TranslateToNlogLevel(LogLevel logLevel)
+        private static NLog.LogLevel TranslateToNlogLevel(LevelToLog levelToLog)
         {
-            switch(logLevel)
+            switch(levelToLog)
             {
-                case LogLevel.Trace:
+                case LevelToLog.Trace:
                     return NLog.LogLevel.Trace;
-                case LogLevel.Debug:
+                case LevelToLog.Debug:
                     return NLog.LogLevel.Debug;
-                case LogLevel.Info:
+                case LevelToLog.Info:
                     return NLog.LogLevel.Info;
-                case LogLevel.Warn:
+                case LevelToLog.Warn:
                     return NLog.LogLevel.Warn;
-                case LogLevel.Error:
+                case LevelToLog.Error:
                     return NLog.LogLevel.Error;
-                case LogLevel.Fatal:
+                case LevelToLog.Fatal:
                     return NLog.LogLevel.Fatal;
-                case LogLevel.None:
+                case LevelToLog.None:
                     return NLog.LogLevel.Off;
                 default:
                     throw new NotImplementedException();
@@ -186,16 +187,21 @@ namespace Apollo.Core.Logging
 
             m_Template = template;
             m_Factory = new LogFactory(BuildNLogConfiguration(configuration, template, fileConstants));
+            {
+                // Default setting is to log errors and fatals only.
+                m_Factory.GlobalThreshold = NLog.LogLevel.Error;
+            }
+
             m_Logger = m_Factory.GetLogger(template.Name);
         }
 
         #region Implementation of ILogger
 
         /// <summary>
-        /// Gets the current <see cref="LogLevel"/>.
+        /// Gets the current <see cref="LevelToLog"/>.
         /// </summary>
         /// <value>The current level.</value>
-        public LogLevel Level
+        public LevelToLog Level
         {
             get
             {
@@ -207,7 +213,7 @@ namespace Apollo.Core.Logging
         /// Changes the current log level to the specified level.
         /// </summary>
         /// <param name="newLevel">The new level.</param>
-        public void ChangeLevel(LogLevel newLevel)
+        public void ChangeLevel(LevelToLog newLevel)
         {
             var nlogLevel = TranslateToNlogLevel(newLevel);
             m_Factory.GlobalThreshold = nlogLevel;
@@ -221,6 +227,8 @@ namespace Apollo.Core.Logging
         /// <returns>
         /// <see langword="true" /> if the message will be logged; otherwise, <see langword="false" />.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool ShouldLog(ILogMessage message)
         {
             if (message == null)

@@ -254,10 +254,10 @@
     <Compile Include="Logging\ILogMessage.cs" />
     <Compile Include="Logging\ILogSink.cs" />
     <Compile Include="Logging\ILogTemplate.cs" />
+    <Compile Include="Logging\LevelToLog.cs" />
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerConfiguration.cs" />
     <Compile Include="Logging\LoggerModule.cs" />
-    <Compile Include="Logging\LogLevel.cs" />
     <Compile Include="Logging\LogEntryRequestMessage.cs" />
     <Compile Include="Logging\LogLevelChangeRequestMessage.cs" />
     <Compile Include="Logging\LogMessage.cs" />
@@ -265,6 +265,7 @@
     <Compile Include="Logging\LogSink.Logging.cs" />
     <Compile Include="Logging\LogSink.Messages.cs" />
     <Compile Include="Logging\LogType.cs" />
+    <Compile Include="LogMessageForKernelCommand.cs" />
     <Compile Include="MessageEnabledKernelService.cs" />
     <Compile Include="Messaging\DnsName.cs" />
     <Compile Include="Messaging\DuplicateDnsNameException.cs" />

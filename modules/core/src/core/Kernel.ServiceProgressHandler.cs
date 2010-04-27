@@ -67,14 +67,13 @@ namespace Apollo.Core
                 m_ServiceCount = serviceCount;
                 m_CurrentServiceIndex = currentServiceIndex;
                 
-                //var set = new PermissionSet(PermissionState.Unrestricted);
-                //SecurityHelpers.Elevate(
-                //    set,
-                //    () =>
-                //    {
-                //        service.StartupProgress += HandleProgress;
-                //    });
-
+                // var set = new PermissionSet(PermissionState.Unrestricted);
+                // SecurityHelpers.Elevate(
+                //     set,
+                //     () =>
+                //     {
+                //         service.StartupProgress += HandleProgress;
+                //     });
                 service.StartupProgress += HandleProgress;
             }
 
@@ -83,14 +82,13 @@ namespace Apollo.Core
             /// </summary>
             public void Detach()
             {
-                //var set = new PermissionSet(PermissionState.Unrestricted);
-                //SecurityHelpers.Elevate(
-                //    set,
-                //    () =>
-                //    {
-                //        m_Service.StartupProgress -= HandleProgress;
-                //    });
-
+                // var set = new PermissionSet(PermissionState.Unrestricted);
+                // SecurityHelpers.Elevate(
+                //     set,
+                //     () =>
+                //     {
+                //         m_Service.StartupProgress -= HandleProgress;
+                //     });
                 m_Service.StartupProgress -= HandleProgress;
             }
 

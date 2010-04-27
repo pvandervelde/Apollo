@@ -32,6 +32,7 @@ namespace Apollo.Core
             /// <summary>
             /// Builds the IOC container.
             /// </summary>
+            /// <param name="serviceType">Type of the service.</param>
             /// <returns>
             /// The DI container that is used to create the service.
             /// </returns>

@@ -9,6 +9,10 @@ using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Logging
 {
+    /// <content>
+    /// Defines the methods for the <c>LogSink</c> relating to the
+    /// handling of messages from the message pipeline.
+    /// </content>
     internal sealed partial class LogSink
     {
         /// <summary>
@@ -51,7 +55,7 @@ namespace Apollo.Core.Logging
                     });
         }
 
-        private void HandleLogLevelChangeRequest(LogLevel newLevel)
+        private void HandleLogLevelChangeRequest(LevelToLog newLevel)
         {
             foreach (var pair in m_Loggers)
             {

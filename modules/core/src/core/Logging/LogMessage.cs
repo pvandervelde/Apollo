@@ -11,6 +11,9 @@ using Lokad.Rules;
 
 namespace Apollo.Core.Logging
 {
+    /// <summary>
+    /// Defines a message that should be logged by the <see cref="LogSink"/>.
+    /// </summary>
     [Serializable]
     internal sealed class LogMessage : ILogMessage
     {
@@ -32,18 +35,18 @@ namespace Apollo.Core.Logging
         ///     Thrown if <paramref name="origin"/> is an empty string.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="level"/> is <see cref="LogLevel.None"/>.
+        ///     Thrown if <paramref name="level"/> is <see cref="LevelToLog.None"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="text"/> is <see langword="null" />.
         /// </exception>
-        public LogMessage(string origin, LogLevel level, string text)
+        public LogMessage(string origin, LevelToLog level, string text)
         {
             {
                 Enforce.Argument(() => origin);
                 Enforce.Argument(() => origin, StringIs.NotEmpty);
 
-                Enforce.With<ArgumentException>(level != LogLevel.None, Resources_NonTranslatable.Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone);
+                Enforce.With<ArgumentException>(level != LevelToLog.None, Resources_NonTranslatable.Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone);
 
                 Enforce.Argument(() => text);
             }
@@ -70,7 +73,7 @@ namespace Apollo.Core.Logging
         /// Gets the desired log level for this message.
         /// </summary>
         /// <value>The desired level.</value>
-        public LogLevel Level
+        public LevelToLog Level
         {
             get;
             private set;

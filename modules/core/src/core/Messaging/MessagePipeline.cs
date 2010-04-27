@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Security;
 using System.Security.Permissions;
 using System.Threading.Tasks;
+using Apollo.Core.Logging;
 using Apollo.Core.Properties;
 using Apollo.Core.Utils;
 using Apollo.Utils;
@@ -41,6 +42,38 @@ namespace Apollo.Core.Messaging
         /// </summary>
         private readonly Dictionary<DnsName, ISendMessages> m_Senders = new Dictionary<DnsName, ISendMessages>();
 
+        /// <summary>
+        /// The collection of DnsNames.
+        /// </summary>
+        private readonly IDnsNameConstants m_DnsNames;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessagePipeline"/> class.
+        /// </summary>
+        /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="dnsNames"/> is <see langword="null"/>.
+        /// </exception>
+        public MessagePipeline(IDnsNameConstants dnsNames)
+        {
+            {
+                Enforce.Argument(() => dnsNames);
+            }
+
+            Name = dnsNames.AddressOfMessagePipeline;
+            m_DnsNames = dnsNames;
+        }
+
+        /// <summary>
+        /// Gets or sets the identifier of the object.
+        /// </summary>
+        /// <value>The identifier.</value>
+        private DnsName Name
+        {
+            get;
+            set;
+        }
+
         #region IMessagePipeline Members
 
         /// <summary>
@@ -56,7 +89,7 @@ namespace Apollo.Core.Messaging
         {
             lock(m_Lock)
             {
-                return name != null && (m_Senders.ContainsKey(name) || m_Listeners.ContainsKey(name)); 
+                return name != null && (m_Senders.ContainsKey(name) || m_Listeners.ContainsKey(name) || name.Equals(Name)); 
             }
         }
 
@@ -90,7 +123,7 @@ namespace Apollo.Core.Messaging
         {
             lock (m_Lock)
             {
-                return service != null && m_Senders.ContainsKey(service.Name);
+                return service != null && (m_Senders.ContainsKey(service.Name) || service.Name.Equals(Name));
             }
         }
 
@@ -107,6 +140,12 @@ namespace Apollo.Core.Messaging
                 Enforce.Argument(() => service);
             }
 
+            // It is not possible to register a service with the same name as the pipeline.
+            if (service.Name.Equals(Name))
+            {
+                throw new DuplicateDnsNameException(service.Name);
+            }
+
             lock (m_Lock)
             {
                 if (m_Listeners.ContainsKey(service.Name))
@@ -117,7 +156,7 @@ namespace Apollo.Core.Messaging
                 m_Listeners.Add(service.Name, service);
             }
 
-            Log(string.Format(
+            LogInfo(string.Format(
                     CultureInfo.InvariantCulture,
                     Resources_NonTranslatable.MessagePipeline_LogMessage_ListenerAdded,
                     service.Name));
@@ -136,6 +175,12 @@ namespace Apollo.Core.Messaging
                 Enforce.Argument(() => service);
             }
 
+            // It is not possible to register a service with the same name as the pipeline.
+            if (service.Name.Equals(Name))
+            {
+                throw new DuplicateDnsNameException(service.Name);
+            }
+
             lock (m_Lock)
             {
                 if (m_Senders.ContainsKey(service.Name))
@@ -146,7 +191,7 @@ namespace Apollo.Core.Messaging
                 m_Senders.Add(service.Name, service);
             }
 
-            Log(string.Format(
+            LogInfo(string.Format(
                     CultureInfo.InvariantCulture,
                     Resources_NonTranslatable.MessagePipeline_LogMessage_SenderAdded,
                     service.Name));
@@ -198,7 +243,7 @@ namespace Apollo.Core.Messaging
                 m_Listeners.Remove(service.Name);
             }
 
-            Log(string.Format(
+            LogInfo(string.Format(
                     CultureInfo.InvariantCulture,
                     Resources_NonTranslatable.MessagePipeline_LogMessage_ListenerRemoved,
                     service.Name));
@@ -224,7 +269,7 @@ namespace Apollo.Core.Messaging
                 m_Senders.Remove(service.Name);
             }
 
-            Log(string.Format(
+            LogInfo(string.Format(
                     CultureInfo.InvariantCulture,
                     Resources_NonTranslatable.MessagePipeline_LogMessage_SenderRemoved,
                     service.Name));
@@ -356,26 +401,18 @@ namespace Apollo.Core.Messaging
             }
 
             // Check that the sender is known
-            ISendMessages senderObj = null;
             lock (m_Lock)
             {
-                // See if the sender exists. If it does then
-                // grab it.
+                // If we can't find the sender, then we'll have to throw an exception
+                // because we can't report the error back
+                // Note that this could be a security problem because nefarious code could then just
+                // call the Send method with an incorrect name, and thus kill the system.
                 // Do not do anything else here so that we block
                 // for the least amount of time.
-                if (m_Senders.ContainsKey(sender))
+                if ((!m_Senders.ContainsKey(sender)) && (!sender.Equals(Name)))
                 {
-                    senderObj = m_Senders[sender];
+                    throw new UnknownDnsNameException(sender);
                 }
-            }
-
-            // If we can't find the sender, then we'll have to throw an exception
-            // because we can't report the error back
-            // Note that this could be a security problem because nefarious code could then just
-            // call the Send method with an incorrect name, and thus kill the system.
-            if (senderObj == null)
-            {
-                throw new UnknownDnsNameException(sender);
             }
 
             // Find the recipients
@@ -406,7 +443,7 @@ namespace Apollo.Core.Messaging
             SecurityHelpers.Elevate(
                 new PermissionSet(
                     PermissionState.Unrestricted),
-                    () => Parallel.Invoke(() => SendMessage(senderObj.Name, recipientObj, information, id, inReplyTo)));
+                    () => Parallel.Invoke(() => SendMessage(sender, recipientObj, information, id, inReplyTo)));
 
             return id;
         }
@@ -461,7 +498,7 @@ namespace Apollo.Core.Messaging
             }
             catch (Exception e)
             {
-                Log(string.Format(
+                LogInfo(string.Format(
                         CultureInfo.InvariantCulture,
                         Resources_NonTranslatable.MessagePipeline_LogMessage_MessageDeliveryFailed_WithSenderRecipientIdAndException,
                         sender,
@@ -480,7 +517,7 @@ namespace Apollo.Core.Messaging
         /// </summary>
         protected override void StartService()
         {
-            Log(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStarted);
+            LogInfo(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStarted);
         }
 
         /// <summary>
@@ -489,17 +526,27 @@ namespace Apollo.Core.Messaging
         /// </summary>
         protected override void StopService()
         {
-            Log(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStopped);
+            LogInfo(Resources_NonTranslatable.MessagePipeline_LogMessage_PipelineStopped);
         }
 
         /// <summary>
         /// Sends out a log message.
         /// </summary>
         /// <param name="message">The message.</param>
-        private void Log(string message)
+        private void LogInfo(string message)
         {
-            // Create a log message
-            // Send the message to the log service if it exists.
+            if (m_Listeners.ContainsKey(m_DnsNames.AddressOfLogger))
+            {
+                Send(
+                    Name,
+                    m_DnsNames.AddressOfLogger,
+                    new LogEntryRequestMessage(
+                        new LogMessage(
+                            Name.ToString(),
+                            LevelToLog.Info,
+                            message),
+                        LogType.Debug));
+            }
         }
     }
 }

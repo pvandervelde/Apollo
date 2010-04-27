@@ -75,7 +75,6 @@ namespace Apollo.Core
         /// </summary>
         protected KernelStartInfo()
         {
-
             m_CoreAssemblies = new List<FileInfo>
                 {
                     // Apollo.Core

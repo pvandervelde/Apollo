@@ -10,7 +10,7 @@ using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Test.Unit
+namespace Apollo.Core
 {
     [TestFixture]
     [Description("Tests the StartupProgressEventArgs class.")]

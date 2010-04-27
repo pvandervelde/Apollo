@@ -7,7 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Properties;
 using Apollo.Utils.Commands;
 using Lokad;
 
@@ -30,6 +33,11 @@ namespace Apollo.Core
         private readonly IKernel m_Owner;
 
         /// <summary>
+        /// The collection of DnsNames.
+        /// </summary>
+        private readonly IDnsNameConstants m_DnsNames;
+
+        /// <summary>
         /// The container that stores all the commands for this service.
         /// </summary>
         private readonly ICommandContainer m_Commands;
@@ -40,6 +48,7 @@ namespace Apollo.Core
         /// <param name="owner">The <see cref="Kernel"/> to which this proxy is linked.</param>
         /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="processor">The object that handles the incoming messages.</param>
+        /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
@@ -49,23 +58,30 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="dnsNames"/> is <see langword="null"/>.
+        /// </exception>
         public CoreProxy(
             IKernel owner, 
             ICommandContainer commands, 
-            IHelpMessageProcessing processor)
+            IHelpMessageProcessing processor,
+            IDnsNameConstants dnsNames)
             : base(processor)
         {
             {
                 Enforce.Argument(() => owner);
                 Enforce.Argument(() => commands);
+                Enforce.Argument(() => dnsNames);
             }
 
-            Name = new DnsName(GetType().FullName);
+            Name = dnsNames.AddressOfKernel;
             m_Owner = owner;
-            
+            m_DnsNames = dnsNames;
+
             m_Commands = commands;
             {
                 m_Commands.Add(CheckServicesCanShutdownCommand.CommandId, () => new CheckServicesCanShutdownCommand(SendMessageWithResponse));
+                m_Commands.Add(LogMessageForKernelCommand.CommandId, () => new LogMessageForKernelCommand(m_DnsNames.AddressOfLogger, SendMessage));
             }
         }
 
@@ -191,6 +207,28 @@ namespace Apollo.Core
                 return IsConnectedToPipeline;
             }
         } 
+
+        #endregion
+
+        #region Overrides of MessageEnabledKernelService
+
+        /// <summary>
+        /// Logs the error messages coming from the <see cref="MessageProcessingAssistance"/>.
+        /// </summary>
+        /// <param name="e">The exception that should be logged.</param>
+        protected override void LogErrorMessage(Exception e)
+        {
+            var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.Kernel_LogMessage_MessageSendExceptionOccurred, e);
+            SendMessage(
+                m_DnsNames.AddressOfLogger,
+                new LogEntryRequestMessage(
+                    new LogMessage(
+                        Name.ToString(),
+                        LevelToLog.Info,
+                        message),
+                    LogType.Debug),
+                MessageId.None);
+        }
 
         #endregion
     }

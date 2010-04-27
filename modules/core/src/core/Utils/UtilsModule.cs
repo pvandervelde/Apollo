@@ -9,6 +9,10 @@ using Autofac;
 
 namespace Apollo.Core.Utils
 {
+    /// <summary>
+    /// Handles the component registrations for the utilities part 
+    /// of the core.
+    /// </summary>
     internal sealed class UtilsModule : Module
     {
         /// <summary>

@@ -17,15 +17,17 @@ namespace Apollo.Core
     internal sealed class AppDomainResolutionPaths
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class.
+        /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class based on the
+        /// specified set of files.
         /// </summary>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="files">The files.</param>
+        /// <param name="basePath">The base path for the <c>AppDomain</c> path resolution.</param>
+        /// <param name="files">The files that can be resolved.</param>
+        /// <returns>A new instance of the <see cref="AppDomainResolutionPaths"/> class.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="basePath"/> is <see langword="null" />.
+        /// Thrown if <paramref name="basePath"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="basePath"/> is an empty string.
+        /// Thrown if <paramref name="basePath"/> is an empty string.
         /// </exception>
         public static AppDomainResolutionPaths WithFiles(string basePath, IEnumerable<string> files)
         {
@@ -33,11 +35,13 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class.
+        /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class based on the
+        /// specified set of files and directories.
         /// </summary>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="files">The files.</param>
-        /// <param name="directories">The directories.</param>
+        /// <param name="basePath">The base path for the <c>AppDomain</c> path resolution.</param>
+        /// <param name="files">The files that can be resolved.</param>
+        /// <param name="directories">The directories in which files can be resolved.</param>
+        /// <returns>A new instance of the <see cref="AppDomainResolutionPaths"/> class.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="basePath"/> is <see langword="null" />.
         /// </exception>
@@ -52,9 +56,9 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="AppDomainResolutionPaths"/> class.
         /// </summary>
-        /// <param name="basePath">The base path.</param>
-        /// <param name="files">The files.</param>
-        /// <param name="directories">The directories.</param>
+        /// <param name="basePath">The base path for the <c>AppDomain</c> path resolution.</param>
+        /// <param name="files">The files that can be resolved.</param>
+        /// <param name="directories">The directories in which files can be resolved.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="basePath"/> is <see langword="null" />.
         /// </exception>

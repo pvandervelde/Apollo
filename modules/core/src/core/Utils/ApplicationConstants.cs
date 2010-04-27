@@ -85,7 +85,7 @@ namespace Apollo.Core.Utils
         {
             get
             {
-                var fullVersion =  ApplicationVersion;
+                var fullVersion = ApplicationVersion;
                 return new Version(fullVersion.Major, fullVersion.Minor);
             }
         }

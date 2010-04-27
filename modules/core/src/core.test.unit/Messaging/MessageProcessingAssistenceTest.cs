@@ -6,11 +6,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Test.Unit.Messaging
+namespace Apollo.Core.Messaging
 {
     [TestFixture]
     [Description("Tests the MessageProcessingAssistence class.")]
@@ -23,7 +22,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void DefinePipelineInformationWithNullPipeline()
         {
             var assistence = new MessageProcessingAssistance();
-            Assert.Throws<ArgumentNullException>(() => assistence.DefinePipelineInformation(null, new DnsName("name")));
+            Assert.Throws<ArgumentNullException>(() => assistence.DefinePipelineInformation(null, new DnsName("name"), e => { }));
         }
 
         [Test]
@@ -31,7 +30,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void DefinePipelineInformationWithNullSender()
         {
             var assistence = new MessageProcessingAssistance();
-            Assert.Throws<ArgumentNullException>(() => assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, null));
+            Assert.Throws<ArgumentNullException>(() => assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, null, e => { }));
         }
 
         [Test]
@@ -39,7 +38,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void DefinePipelineInformationWithNobodySender()
         {
             var assistence = new MessageProcessingAssistance();
-            Assert.Throws<ArgumentException>(() => assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, DnsName.Nobody));
+            Assert.Throws<ArgumentException>(() => assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, DnsName.Nobody, e => { }));
         }
 
         [Test]
@@ -79,7 +78,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendMessageWithNullRecipient()
         {
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"));
+            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
             Assert.Throws<ArgumentNullException>(() => assistence.SendMessage(null, new PingMessage(), MessageId.None));
         }
 
@@ -88,7 +87,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendMessageWithRecipientEqualToSender()
         {
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"));
+            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
             Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("name"), new PingMessage(), MessageId.None));
         }
 
@@ -97,7 +96,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendMessageWithNobodyRecipient()
         {
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"));
+            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
             Assert.Throws<ArgumentException>(() => assistence.SendMessage(DnsName.Nobody, new PingMessage(), MessageId.None));
         }
 
@@ -106,7 +105,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendMessageWithNullBody()
         {
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"));
+            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
             Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("otherName"), null, MessageId.None));
         }
 
@@ -115,7 +114,7 @@ namespace Apollo.Core.Test.Unit.Messaging
         public void SendMessageWithNullOriginalId()
         {
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"));
+            assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
             Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("otherName"), new PingMessage(), null));
         }
 
@@ -140,7 +139,7 @@ namespace Apollo.Core.Test.Unit.Messaging
                     .Returns(() => id);
             }
 
-            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns);
+            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
             var messageBody = new PingMessage();
             var future = assistence.SendMessageWithResponse(recipientDns, messageBody, MessageId.None);
@@ -171,7 +170,7 @@ namespace Apollo.Core.Test.Unit.Messaging
             }
 
             var assistence = new MessageProcessingAssistance();
-            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns);
+            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
             var messageBody = new PingMessage();
             var future = assistence.SendMessageWithResponse(recipientDns, messageBody, MessageId.None);
@@ -192,7 +191,7 @@ namespace Apollo.Core.Test.Unit.Messaging
 
             var assistence = new MessageProcessingAssistance();
             assistence.RegisterAction(typeof(PingMessage), msg => { receivedMessage = msg; });
-            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns);
+            assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
             var messageBody = new PingMessage();
             var kernelMessage = new KernelMessage(
