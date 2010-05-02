@@ -11,8 +11,8 @@ function global:Invoke-PsakeScript([string]$script, [String[]]$targets){
 
 	Print-PrettyPrintHeader "Starting $script"
 	""
-	& invoke-psake $script $targets -noexit -showfullerror -timing -framework 4.0
-	if (!$psake_buildSucceeded)
+	& invoke-psake $script $targets 4.0
+	if (!$psake.build_success)
 	{
 		throw "$scriptName failed with return code: $LastExitCode"
 	}
@@ -36,7 +36,7 @@ function global:Unzip-Files([string]$file, [string]$targetDirectory){
 		
 		# zip the hudson temp dir
 		$7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
-		$command = '& $7zipExe x ' + '"' + $file + '"'
+		$command = '& $7zipExe x ' + '"' + $file + '" -y'
 		$command
 		Invoke-Expression $command
 		if ($LastExitCode -ne 0)
@@ -90,6 +90,7 @@ properties{
 	$versionFile = Join-Path $dirBase 'Version.xml'	
 	
 	# script-wide variables
+	$shouldCheckCoverage = $false
 	$shouldClean = $true
 	$shouldRunUnitTests = $false
 	$shouldRunVerify = $false
@@ -110,6 +111,10 @@ task default -depends Help
 # Configuration tasks
 task Incremental -action{
 	Set-Variable -Name shouldClean -Value $false -Scope 2
+}
+
+task Coverage -action{
+	Set-Variable -Name shouldCheckCoverage -Value $true -Scope 2
 }
 
 task Debug -action{
@@ -165,6 +170,7 @@ task Help -action{
 In order to run this build script please call a specific target.
 The following build tasks are available
 	'incremental':		Turns on the incremental building of the binaries
+	'coverage':         Turns on code coverage for the unit tests
 	'debug':			Switches the script to debug mode. Mutually exclusive with the 'release' task
 	'release':			Switches the script to release mode. Mutually exclusive with the 'debug' task
 	'unittest':			Turns on the unit testing of the binaries.
@@ -205,6 +211,7 @@ task createTasks -action{
 	if ($configuration -eq 'release') { $tasks.Add('Release') | Out-Null }
 
 	if (!$shouldClean) { $tasks.Add('Incremental') | Out-Null }
+	if ($shouldCheckCoverage) { $tasks.Add('Coverage') | Out-Null }
 	$tasks.Add('Clean') | Out-Null
 	#$tasks.Add('Build') | Out-Null
 	

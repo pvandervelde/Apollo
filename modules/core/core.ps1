@@ -126,6 +126,7 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
+	$dirNCoverExplorer = Join-Path (Join-Path $dirMbUnit 'NCover') 'NCoverExplorer'
 	
 	# solution files
 	$slnCore = Join-Path $dirSrc 'Apollo.Core.sln'
@@ -150,6 +151,9 @@ properties{
 	$logFxCop = 'core_fxcop.xml'
 	$logNCover = 'core_ncover.xml'
 	$logNCoverHtml = 'core_ncover.html'
+	
+	# settings
+	$levelMinCoverage = 85
 	
 	# Version number
 	$versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
@@ -335,7 +339,7 @@ task buildBinaries -depends runInit, getVersion -action{
 task runUnitTests -depends buildBinaries -action{
 	"Running unit tests..."
 	
-	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
 	
 	$files = ""
 	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
@@ -346,7 +350,7 @@ task runUnitTests -depends buildBinaries -action{
 		#throw "Code coverage doesn't work at the moment. Please run without coverage"
 		
 		$coverageFiles = ""
-		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
+		$coverageAssemblies = Get-ChildItem -path $dirBuild |
 			Where-Object { ((($_.Name -like "*Apollo*") -and `
 							!( $_.Name -like "*Utils.*") -and `
 							!( $_.Name -like "*Test.*") -and `
@@ -382,12 +386,14 @@ task runUnitTests -depends buildBinaries -action{
 	Invoke-Expression $command
 	if ($shouldCheckCoverage)
 	{
-		$ncoverFile = Join-Path $dirBase 'Coverage.xml'
+		$ncoverFile = Join-Path $dirBase 'Coverage.log'
 		if (Test-Path -Path $ncoverFile)
 		{
 			# The directory does not exist. Create it
 			Remove-Item $ncoverFile -Force
 		}
+		
+		Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
 	}
 	
 	if ($LastExitCode -ne 0)
@@ -399,7 +405,7 @@ task runUnitTests -depends buildBinaries -action{
 	if ($shouldCheckCoverage)
 	{
 		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
+		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
 		if ($verbose)
 		{
 			$command
@@ -516,11 +522,13 @@ task buildPackage -depends buildBinaries -action{
 	$quickgraph = 'QuickGraph.dll'
 	$systemCoreEx = 'System.CoreEx.dll'
 	$systemThreading = 'System.Threading.dll'
+	$nlog = 'NLog.dll'
 	
 	Copy-Item (Join-Path $dirBuild $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
 	Copy-Item (Join-Path $dirBuild $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)	
 	Copy-Item (Join-Path $dirBuild $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)	
 	Copy-Item (Join-Path $dirBuild $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)	
+	Copy-Item (Join-Path $dirBuild $nlog) -Destination (Join-Path $dirTempZip $nlog)	
 	
 	# zip them
 	# Name the zip: Apollo.Core_<DATE>

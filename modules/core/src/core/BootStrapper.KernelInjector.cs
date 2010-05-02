@@ -40,6 +40,7 @@ namespace Apollo.Core
                 var builder = new ContainerBuilder();
                 {
                     builder.RegisterModule(new KernelModule());
+                    builder.RegisterModule(new MessagingModule());
                 }
 
                 return builder.Build();

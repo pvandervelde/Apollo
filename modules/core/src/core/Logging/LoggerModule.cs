@@ -7,6 +7,7 @@
 using System;
 using Apollo.Utils;
 using Autofac;
+using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Logging
 {
@@ -34,8 +35,11 @@ namespace Apollo.Core.Logging
                 .As<Func<DateTimeOffset>>();
 
             // Log templates
-            moduleBuilder.Register(c => new DebugLogTemplate(c.Resolve<Func<DateTimeOffset>>()));
-            moduleBuilder.Register(c => new CommandLogTemplate(c.Resolve<Func<DateTimeOffset>>()));
+            moduleBuilder.Register(c => new DebugLogTemplate(c.Resolve<Func<DateTimeOffset>>()))
+                .As<DebugLogTemplate>();
+
+            moduleBuilder.Register(c => new CommandLogTemplate(c.Resolve<Func<DateTimeOffset>>()))
+                .As<CommandLogTemplate>();
 
             // Logger configuration
             moduleBuilder.Register(c => new LoggerConfiguration(
@@ -43,6 +47,15 @@ namespace Apollo.Core.Logging
                     10,
                     500))
                 .As<ILoggerConfiguration>();
+
+            // LogSink
+            moduleBuilder.Register(c => new LogSink(
+                    c.Resolve<IHelpMessageProcessing>(),
+                    c.Resolve<ILoggerConfiguration>(),
+                    c.Resolve<DebugLogTemplate>(),
+                    c.Resolve<CommandLogTemplate>(),
+                    c.Resolve<IFileConstants>()))
+                .As<LogSink>();
         }
     }
 }

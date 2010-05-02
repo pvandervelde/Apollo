@@ -64,6 +64,24 @@ namespace Apollo.Core.Logging
         }
 
         /// <summary>
+        /// Returns the default log level which is used if no changes in 
+        /// log level are requested after the system starts.
+        /// </summary>
+        /// <returns>
+        /// The default log level.
+        /// </returns>
+        public LevelToLog DefaultLogLevel()
+        {
+            #if DEBUG
+                // Default debug setting is to log errors and fatals only.
+                return LevelToLog.Trace;
+#else
+                // Default release setting is to log errors and fatals only.
+                return LevelToLog.Trace;
+#endif
+        }
+
+        /// <summary>
         /// Translates the specified message.
         /// </summary>
         /// <param name="message">The message that must be translated.</param>

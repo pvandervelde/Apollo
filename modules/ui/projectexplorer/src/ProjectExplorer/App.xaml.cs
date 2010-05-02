@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Windows;
 using System.Windows.Threading;
-using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.Utils;
 using Autofac;
 using Autofac.Core;
@@ -21,12 +19,25 @@ namespace Apollo.ProjectExplorer
     internal partial class App
     {
         /// <summary>
+        /// Initializes the environment for use. Currently sets Environment Variables and 
+        /// creates directories.
+        /// </summary>
+        private static void InitializeEnvironment()
+        {
+            // Set the internal logging for NLog
+            //Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_FILE", @"d:\temp\nloginternal.log");
+            //Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_LEVEL", "Debug");
+        }
+
+        /// <summary>
         /// Called when the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="System.Windows.StartupEventArgs"/> instance containing the event data.</param>
         private void HandleApplicationStartup(object sender, StartupEventArgs e)
         {
+            InitializeEnvironment();
+
             var userInterfaceModule = LoadKernel();
             LoadUserInterface(userInterfaceModule);
         }

@@ -45,5 +45,11 @@ namespace Apollo.Core.Logging
         /// </summary>
         /// <param name="message">The message.</param>
         void Log(ILogMessage message);
+
+        /// <summary>
+        /// Stops the logger and ensures that all log messages have been 
+        /// saved to the log.
+        /// </summary>
+        void Stop();
     }
 }

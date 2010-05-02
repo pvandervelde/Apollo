@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using Apollo.Core.Logging;
+using Apollo.Core.Messaging;
 using Apollo.Core.Utils;
 using Autofac;
 
@@ -32,19 +33,17 @@ namespace Apollo.Core
             /// <summary>
             /// Builds the IOC container.
             /// </summary>
-            /// <param name="serviceType">Type of the service.</param>
             /// <returns>
             /// The DI container that is used to create the service.
             /// </returns>
-            private static IContainer BuildContainer(Type serviceType)
+            private static IContainer BuildContainer()
             {
                 var builder = new ContainerBuilder();
                 {
                     builder.RegisterModule(new UtilsModule());
                     builder.RegisterModule(new KernelModule());
+                    builder.RegisterModule(new MessagingModule());
                     builder.RegisterModule(new LoggerModule());
-
-                    builder.RegisterType(serviceType);
                 }
 
                 return builder.Build();
@@ -59,7 +58,7 @@ namespace Apollo.Core
             {
                 Debug.Assert(typeof(KernelService).IsAssignableFrom(typeToLoad), "The service type does not derive from KernelService.");
 
-                var container = BuildContainer(typeToLoad);
+                var container = BuildContainer();
                 var service = container.Resolve(typeToLoad) as KernelService;
 
                 return service;

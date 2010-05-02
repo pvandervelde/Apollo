@@ -280,6 +280,7 @@
     <Compile Include="Messaging\MessageId.cs" />
     <Compile Include="Messaging\MessagePipeline.cs" />
     <Compile Include="Messaging\MessageProcessingAssistance.cs" />
+    <Compile Include="Messaging\MessagingModule.cs" />
     <Compile Include="Messaging\MissingPipelineException.cs" />
     <Compile Include="Messaging\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />

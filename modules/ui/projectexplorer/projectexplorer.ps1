@@ -321,7 +321,7 @@ task runUnitTests -depends buildBinaries -action{
 	"Running unit tests..."
 	"There are currently no unit tests. You should make some ..."	
 #	
-#	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+#	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
 #	
 #	$files = ""
 #	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}

@@ -31,29 +31,29 @@ namespace Apollo.Core
     /// The bootstrapper will load the kernel objects and provide them with starting
     /// data. The loading takes place in the following order:
     /// <list type="number">
-    /// <serviceType>
+    /// <item>
     ///   Link the assembly resolver into the current AppDomain. This AppDomain will later 
     ///   be used for the User Interface (UI) because it is possible that the Apollo system
     ///   gets started as plug-in to another application, which means that there is no
     ///   control over where and how the first AppDomain is created. Furthermore the
     ///   hosting application will expect that all action takes place in the first AppDomain.
-    /// </serviceType>
-    /// <serviceType>
+    /// </item>
+    /// <item>
     ///   Create a new AppDomain in which the kernel objects will reside. When creating this
     ///   AppDomain it is also necessary to initialize the security levels, set the search
     ///   paths, attach the assembly loaders and deal with the exception handlers
-    /// </serviceType>
-    /// <serviceType>
+    /// </item>
+    /// <item>
     ///   Inject a remote object loader into the new AppDomain. This object loader is used
     ///   to create the kernel objects and initialize them.
-    /// </serviceType>
-    /// <serviceType>
+    /// </item>
+    /// <item>
     ///   Load the kernel object and start it
-    /// </serviceType>
-    /// <serviceType>
+    /// </item>
+    /// <item>
     ///   Once the kernel is up and running the bootstrapper can be discarded since it is no
     ///   longer useful.
-    /// </serviceType>
+    /// </item>
     /// </list>
     /// </design>
     public abstract partial class Bootstrapper

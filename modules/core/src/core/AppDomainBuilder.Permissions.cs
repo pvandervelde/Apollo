@@ -99,6 +99,7 @@ namespace Apollo.Core
 
             // File IO for a specific Log directory
             set.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, LogPath()));
+
             return set;
         }
 

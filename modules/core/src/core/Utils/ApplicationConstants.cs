@@ -14,6 +14,7 @@ namespace Apollo.Core.Utils
     /// <summary>
     /// Holds a set of constants that apply to the application.
     /// </summary>
+    [Serializable]
     internal sealed class ApplicationConstants : IApplicationConstants, ICompanyConstants
     {
         /// <summary>
@@ -68,8 +69,8 @@ namespace Apollo.Core.Utils
         {
             get
             {
-                var applicationVersion = GetAttributeFromCurrentAssembly<AssemblyVersionAttribute>();
-                return new Version(applicationVersion.Version);
+                var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                return applicationVersion;
             }
         }
 

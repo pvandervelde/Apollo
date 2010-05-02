@@ -14,6 +14,7 @@ namespace Apollo.Core.Utils
     /// <summary>
     /// Defines a set of values related to files and file paths.
     /// </summary>
+    [Serializable]
     internal sealed class FileConstants : IFileConstants
     {
         /// <summary>

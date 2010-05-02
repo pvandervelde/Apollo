@@ -33,6 +33,15 @@ namespace Apollo.Core.Logging
         }
 
         /// <summary>
+        /// Returns the default log level which is used if no changes in 
+        /// log level are requested after the system starts.
+        /// </summary>
+        /// <returns>
+        /// The default log level.
+        /// </returns>
+        LevelToLog DefaultLogLevel();
+
+        /// <summary>
         /// Translates the specified message.
         /// </summary>
         /// <param name="message">The message that must be translated.</param>

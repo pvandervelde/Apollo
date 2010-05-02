@@ -131,6 +131,9 @@ namespace Apollo.Core
 
                     // System.Threading: Required because it asks for SkipVerification
                     typeof(System.Threading.Tasks.Task).Assembly.GetStrongName(),
+
+                    // NLog: Required because it is retarded and has LinkDemands
+                    typeof(NLog.Logger).Assembly.GetStrongName(),
                 };
         }
 

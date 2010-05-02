@@ -162,28 +162,30 @@ namespace Apollo.Core.Logging
         [Description("Checks that the log level for the debug logger can be obtained.")]
         public void LogLevelForTheDebugLogger()
         {
+            var template = new DebugLogTemplate(() => DateTime.Now);
             var service = new LogSink(
                 new Mock<IHelpMessageProcessing>().Object, 
                 new LoggerConfiguration("someDir", 1, 1),
-                new DebugLogTemplate(() => DateTime.Now),
+                template,
                 new CommandLogTemplate(() => DateTime.Now),
                 new FileConstants(new ApplicationConstants()));
 
-            Assert.AreEqual(LevelToLog.Error, service.Level(LogType.Debug));
+            Assert.AreEqual(template.DefaultLogLevel(), service.Level(LogType.Debug));
         }
 
         [Test]
         [Description("Checks that the log level for the command logger can be obtained.")]
         public void LogLevelForTheCommandLogger()
         {
+            var template = new CommandLogTemplate(() => DateTime.Now);
             var service = new LogSink(
                 new Mock<IHelpMessageProcessing>().Object, 
                 new LoggerConfiguration("someDir", 1, 1),
                 new DebugLogTemplate(() => DateTime.Now),
-                new CommandLogTemplate(() => DateTime.Now),
+                template,
                 new FileConstants(new ApplicationConstants()));
 
-            Assert.AreEqual(LevelToLog.Error, service.Level(LogType.Command));
+            Assert.AreEqual(template.DefaultLogLevel(), service.Level(LogType.Command));
         }
 
         [Test]

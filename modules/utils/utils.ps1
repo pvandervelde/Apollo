@@ -125,12 +125,15 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
+	$dirNCoverExplorer = Join-Path (Join-Path $dirMbUnit 'NCover') 'NCoverExplorer'
+	$dirSandcastle = Join-Path $dirTools 'sandcastle'
 	
 	# solution files
 	$slnUtils = Join-Path $dirSrc 'Apollo.Utils.sln'
 	
 	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
 	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Utils.shfbproj'
+	$msbuildSandcastleReferenceData = Join-Path $dirSandcastle 'fxReflection.proj'
 	
 	# template files
 	$versionFile = Join-Path $dirBase 'Version.xml'
@@ -154,6 +157,8 @@ properties{
 	$logNCoverHtml = 'utils_ncover.html'
 	
 	# settings
+	$levelMinCoverage = 85
+	
 	# Version number
 	$versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
 	
@@ -339,7 +344,7 @@ task buildBinaries -depends runInit, getVersion -action{
 task runUnitTests -depends buildBinaries -action{
 	"Running unit tests..."
 	
-	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
 	
 	$files = ""
 	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
@@ -347,10 +352,8 @@ task runUnitTests -depends buildBinaries -action{
 	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
 	if ($shouldCheckCoverage)
 	{
-		#throw "Code coverage doesn't work at the moment. Please run without coverage"
-		
 		$coverageFiles = ""
-		$coverageAssemblies = Get-ChildItem -path $dirBuildBin |
+		$coverageAssemblies = Get-ChildItem -path $dirBuild |
 			Where-Object { ((($_.Name -like "*Apollo*") -and `
 							!( $_.Name -like "*Test.*") -and `
 							!($_.Name -like "*vshost*")) -and `
@@ -385,12 +388,14 @@ task runUnitTests -depends buildBinaries -action{
 	Invoke-Expression $command
 	if ($shouldCheckCoverage)
 	{
-		$ncoverFile = Join-Path $dirBase 'Coverage.xml'
+		$ncoverFile = Join-Path $dirBase 'Coverage.log'
 		if (Test-Path -Path $ncoverFile)
 		{
 			# The directory does not exist. Create it
 			Remove-Item $ncoverFile -Force
 		}
+		
+		Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
 	}
 	
 	if ($LastExitCode -ne 0)
@@ -402,11 +407,8 @@ task runUnitTests -depends buildBinaries -action{
 	if ($shouldCheckCoverage)
 	{
 		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
-		if ($verbose)
-		{
-			$command
-		}
+		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
+		$command
 		
 		Invoke-Expression $command
 		if ($LastExitCode -ne 0)

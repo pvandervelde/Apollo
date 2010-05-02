@@ -47,12 +47,13 @@ namespace Apollo.Core.Logging
         public void ChangeLevel()
         {
             var assemblyDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().LocalFilePath());
+            var template = new DebugLogTemplate(() => DateTime.Now);
             var logger = new Logger(
                 new LoggerConfiguration(assemblyDirectory, 1, 1),
-                new DebugLogTemplate(() => DateTime.Now),
+                template,
                 new FileConstants(new ApplicationConstants()));
 
-            Assert.AreEqual(LevelToLog.Error, logger.Level);
+            Assert.AreEqual(template.DefaultLogLevel(), logger.Level);
 
             logger.ChangeLevel(LevelToLog.Trace);
             Assert.AreEqual(LevelToLog.Trace, logger.Level);

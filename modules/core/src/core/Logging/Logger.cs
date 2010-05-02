@@ -8,6 +8,9 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Security;
+using System.Security.Permissions;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 using NLog;
@@ -21,6 +24,10 @@ namespace Apollo.Core.Logging
     /// Defines a logging object that translates <see cref="ILogMessage"/> objects and
     /// writes them to a log.
     /// </summary>
+    /// <design>
+    /// NLog 1.0 is not able to run in a medium trust environment. This means that we need
+    /// to elevate before each call to the logger.
+    /// </design>
     internal sealed class Logger : ILogger
     {
         /// <summary>
@@ -91,6 +98,25 @@ namespace Apollo.Core.Logging
         }
 
         /// <summary>
+        /// Builds the log factory.
+        /// </summary>
+        /// <param name="configuration">The configuration.</param>
+        /// <param name="template">The template.</param>
+        /// <param name="constants">The constants that describe file and file path values.</param>
+        /// <returns>A new instance of the log factory.</returns>
+        private static LogFactory BuildFactory(ILoggerConfiguration configuration, ILogTemplate template, IFileConstants constants)
+        {
+            var config = BuildNLogConfiguration(configuration, template, constants);
+            var result = new LogFactory(config);
+            {
+                // Default debug setting is to log errors and fatals only.
+                result.GlobalThreshold = TranslateToNlogLevel(template.DefaultLogLevel());
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// Builds the Nlog configuration from the <see cref="ILoggerConfiguration"/>.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
@@ -109,13 +135,16 @@ namespace Apollo.Core.Logging
             {
                 // Define where the log is written to
                 var fileTarget = new FileTarget();
-                {
+                {   
                     // Only write the message. The message should contain all the important 
                     // information anyway.
                     fileTarget.Layout = "${message}";
 
                     // Get the file path for the log file.
                     fileTarget.FileName = Path.Combine(configuration.TargetDirectory, template.Name + constants.LogExtension);
+
+                    // Create the directories if needed
+                    fileTarget.CreateDirs = true;
 
                     // Automatically flush each message to the file
                     fileTarget.AutoFlush = true;
@@ -126,6 +155,9 @@ namespace Apollo.Core.Logging
 
                     // Always append to the file
                     fileTarget.ReplaceFileContentsOnEachWrite = false;
+
+                    // Do not concurrently write to the logger (at least for now)
+                    fileTarget.ConcurrentWrites = false;
                 }
 
                 var logTarget = new BufferingTargetWrapper(fileTarget);
@@ -186,13 +218,8 @@ namespace Apollo.Core.Logging
             }
 
             m_Template = template;
-            m_Factory = new LogFactory(BuildNLogConfiguration(configuration, template, fileConstants));
-            {
-                // Default setting is to log errors and fatals only.
-                m_Factory.GlobalThreshold = NLog.LogLevel.Error;
-            }
-
-            m_Logger = m_Factory.GetLogger(template.Name);
+            m_Factory = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => BuildFactory(configuration, template, fileConstants));
+            m_Logger = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => m_Factory.GetLogger(template.Name));
         }
 
         #region Implementation of ILogger
@@ -205,7 +232,8 @@ namespace Apollo.Core.Logging
         {
             get
             {
-                return TranslateFromNlogLevel(m_Logger);
+                // Elevate to allow the call to the logger to work.
+                return SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => TranslateFromNlogLevel(m_Logger));
             }
         }
 
@@ -215,8 +243,15 @@ namespace Apollo.Core.Logging
         /// <param name="newLevel">The new level.</param>
         public void ChangeLevel(LevelToLog newLevel)
         {
-            var nlogLevel = TranslateToNlogLevel(newLevel);
-            m_Factory.GlobalThreshold = nlogLevel;
+            // Elevate to allow the call to the logger to work.
+            SecurityHelpers.Elevate(
+                new PermissionSet(PermissionState.Unrestricted), 
+                () => 
+                    {
+                        var nlogLevel = TranslateToNlogLevel(newLevel);
+                        m_Factory.GlobalThreshold = nlogLevel;
+                    }
+                );
         }
 
         /// <summary>
@@ -250,8 +285,30 @@ namespace Apollo.Core.Logging
                 return;
             }
 
-            var level = TranslateToNlogLevel(message.Level);
-            m_Logger.Log(level, m_Template.Translate(message));
+            // Elevate to allow the call to the logger to work.
+            SecurityHelpers.Elevate(
+                new PermissionSet(PermissionState.Unrestricted), 
+                () => 
+                    {
+                        var level = TranslateToNlogLevel(message.Level);
+                        m_Logger.Log(level, m_Template.Translate(message));
+                    }
+                );
+        }
+
+        /// <summary>
+        /// Stops the logger and ensures that all log messages have been 
+        /// saved to the log.
+        /// </summary>
+        public void Stop()
+        {
+            SecurityHelpers.Elevate(
+                new PermissionSet(PermissionState.Unrestricted), 
+                () => 
+                    {
+                        m_Logger.Factory.Flush();
+                    }
+                );
         }
 
         #endregion
