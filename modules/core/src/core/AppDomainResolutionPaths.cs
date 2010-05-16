@@ -31,7 +31,7 @@ namespace Apollo.Core
         /// </exception>
         public static AppDomainResolutionPaths WithFiles(string basePath, IEnumerable<string> files)
         {
-            return WithFilesAndDirectories(basePath, files, null);
+            return WithFilesAndDirectories(basePath, files, new List<string>());
         }
 
         /// <summary>

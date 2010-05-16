@@ -58,6 +58,16 @@ namespace Apollo.Utils
         #endregion
 
         [Test]
+        [Description("Checks that the == operator returns false if both objects are null.")]
+        public void EqualsOperatorWithBothObjectsNull()
+        {
+            MockId first = null;
+            MockId second = null;
+
+            Assert.IsTrue(first == second);
+        }
+
+        [Test]
         [Description("Checks that the == operator returns false if the first object is null.")]
         public void EqualsOperatorWithFirstObjectNull()
         {
@@ -95,6 +105,16 @@ namespace Apollo.Utils
             MockId second = new MockId(10);
 
             Assert.IsFalse(first == second);
+        }
+
+        [Test]
+        [Description("Checks that the != operator returns false if both objects are null.")]
+        public void NotEqualsOperatorWithBothObjectsNull()
+        {
+            MockId first = null;
+            MockId second = null;
+
+            Assert.IsFalse(first != second);
         }
 
         [Test]
@@ -283,6 +303,16 @@ namespace Apollo.Utils
         {
             MockId first = new MockId(10);
             object second = new MockId(10);
+
+            Assert.IsTrue(first.Equals(second));
+        }
+
+        [Test]
+        [Description("Checks that the Equals method returns true if the second object is the same as the first.")]
+        public void EqualsWithSameObjects()
+        {
+            MockId first = new MockId(10);
+            object second = first;
 
             Assert.IsTrue(first.Equals(second));
         }

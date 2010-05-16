@@ -17,6 +17,11 @@ namespace Apollo.Core.Logging
     internal sealed class CommandLogTemplate : ILogTemplate, IEquatable<CommandLogTemplate>
     {
         /// <summary>
+        /// The format string used to format a command log entry.
+        /// </summary>
+        public const string CommandLogFormat = @"{0}\tCommand - {1}: {2}";
+
+        /// <summary>
         /// A function that returns the current time.
         /// </summary>
         private readonly Func<DateTimeOffset> m_GetCurrentTime;
@@ -97,7 +102,7 @@ namespace Apollo.Core.Logging
                 Enforce.Argument(() => message);
             }
 
-            return string.Format(CultureInfo.CurrentCulture, "{0}\tCommand - {1}: {2}", m_GetCurrentTime(), message.Origin, message.Text());
+            return string.Format(CultureInfo.CurrentCulture, CommandLogFormat, m_GetCurrentTime(), message.Origin, message.Text());
         }
 
         #endregion

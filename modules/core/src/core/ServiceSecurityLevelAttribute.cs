@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -12,16 +13,17 @@ namespace Apollo.Core
     /// An attribute which is placed on <see cref="KernelService"/> classes to indicate
     /// which security permissions they require.
     /// </summary>
+    [ExcludeFromCoverage("Attributes do not need to be tested")]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class ServiceSecurityLevelAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ServiceSecurityLevelAttribute"/> class.
         /// </summary>
-        /// <param name="level">The requested security level.</param>
-        public ServiceSecurityLevelAttribute(SecurityLevel level)
+        /// <param name="securityLevel">The requested security level.</param>
+        public ServiceSecurityLevelAttribute(SecurityLevel securityLevel)
         {
-            SecurityLevel = level;
+            SecurityLevel = securityLevel;
         }
 
         /// <summary>

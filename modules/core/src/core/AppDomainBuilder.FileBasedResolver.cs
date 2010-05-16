@@ -24,6 +24,7 @@ namespace Apollo.Core
         /// Attaches a method to the <see cref="AppDomain.AssemblyResolve"/> event and
         /// provides assembly resolution based on a set of predefined files.
         /// </summary>
+        [ExcludeFromCoverage("This class is used to handle AppDomain construction for Apollo. Integration testing is more suitable.")]
         private sealed class FileBasedResolver : MarshalByRefObject, IAppDomainAssemblyResolver
         {
             /// <summary>

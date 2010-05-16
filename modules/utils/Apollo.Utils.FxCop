@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<FxCopProject Version="1.36" Name="Apollo.Core">
+<FxCopProject Version="1.36" Name="Apollo.Utils">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
   <Stylesheet Apply="False" />
@@ -39,5 +39,5 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-02-06 12:09:44Z" />
+ <FxCopReport Version="1.36" LastAnalysis="2010-05-16 02:04:55Z" />
 </FxCopProject>

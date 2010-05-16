@@ -18,5 +18,5 @@ namespace Apollo.Core
     /// <returns>
     /// An <see cref="IFuture{T}"/> object which will eventually hold the message response.
     /// </returns>
-    internal delegate IFuture<MessageBody> SendMessageWithResponseDelegate(DnsName recipient, MessageBody message, MessageId inResponseTo);
+    internal delegate IFuture<MessageBody> SendMessageWithResponse(DnsName recipient, MessageBody message, MessageId inResponseTo);
 }

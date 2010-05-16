@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Logging
@@ -18,7 +19,27 @@ namespace Apollo.Core.Logging
     {
         private static DateTimeOffset GetDefaultDateTime()
         {
-            return new DateTimeOffset(1, 0, 0, 0, 0, 0, new TimeSpan(0));
+            return new DateTimeOffset(2000, 1, 1, 1, 1, 1, new TimeSpan(0));
+        }
+
+        [Test]
+        [Description("Checks that a null message cannot be translated.")]
+        public void TranslateWithNullMessage()
+        {
+            var template = new CommandLogTemplate(GetDefaultDateTime);
+            Assert.Throws<ArgumentNullException>(() => template.Translate(null));
+        }
+
+        [Test]
+        [Description("Checks that a message is translated correctly.")]
+        public void Translate()
+        {
+            var template = new CommandLogTemplate(GetDefaultDateTime);
+            var msg = new LogMessage("bla", LevelToLog.Info, "blabla");
+            var text = template.Translate(msg);
+
+            var expectedText = string.Format(CultureInfo.CurrentCulture, CommandLogTemplate.CommandLogFormat, GetDefaultDateTime(), msg.Origin, msg.Text());
+            Assert.AreEqual(expectedText, text);
         }
 
         [Test]
@@ -62,6 +83,14 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
+        [Description("Checks that an equal object is considered equal to itself.")]
+        public void EqualsWithSameObject()
+        {
+            var template = new CommandLogTemplate(GetDefaultDateTime);
+            Assert.IsTrue(template.Equals((object)template));
+        }
+
+        [Test]
         [Description("Checks that a null ILogTemplate is not equal to a given template.")]
         public void EqualsWithNullILogTemplate()
         {
@@ -86,8 +115,16 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
+        [Description("Checks that an equal IlogTemplate is considered equal to itself.")]
+        public void EqualsWithSameILogTemplate()
+        {
+            var template = new CommandLogTemplate(GetDefaultDateTime);
+            Assert.IsTrue(template.Equals((ILogTemplate)template));
+        }
+
+        [Test]
         [Description("Checks that a null CommandLogTemplate is not equal to a given template.")]
-        public void EqualsWithNullDebugLogTemplate()
+        public void EqualsWithNullCommandLogTemplate()
         {
             var template = new CommandLogTemplate(GetDefaultDateTime);
             Assert.IsFalse(template.Equals(null));

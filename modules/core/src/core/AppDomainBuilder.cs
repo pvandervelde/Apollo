@@ -20,6 +20,7 @@ namespace Apollo.Core
     /// <summary>
     /// Builds AppDomains with unhandled exception handlers and fusion loading events.
     /// </summary>
+    [ExcludeFromCoverage("This class is used to handle AppDomain construction for Apollo. Integration testing is more suitable.")]
     internal static partial class AppDomainBuilder
     {
         /// <summary>
@@ -59,30 +60,32 @@ namespace Apollo.Core
             // then we explicitly do NOT add it. The plug-in domains for instance will not add the
             // core directory because that prevents them from loading any files from there.
             // The kernel assembly will be loaded by calling LoadFrom when we load the assembly resolver.
-            var setup = new AppDomainSetup
-                {
-                    ApplicationName = Assembly.GetCallingAssembly().GetName().Name,
-                    ApplicationBase = resolutionPaths.BasePath, ShadowCopyFiles = "false", DisallowCodeDownload = true
-                };
-
+            //
             // Do not shadow copy files. We don't want people able to move / change assemblies 
             // if we are using them. Also shadow copying only affects files on the 
             // base path and the private bin path, so the files found through
             // the assembly resolver will not be shadow copied. Because we will use the
             // assembly resolver extensively there will be many files that can't be shadow
             // copied. So in order to be consistent we will not shadow copy any files.
-
+            //
             // do not allow random assembly downloads
+            var setup = new AppDomainSetup
+                {
+                    ApplicationName = Assembly.GetCallingAssembly().GetName().Name,
+                    ApplicationBase = resolutionPaths.BasePath, 
+                    ShadowCopyFiles = "false", 
+                    DisallowCodeDownload = true
+                };
 
             // Get the permissions
             Debug.Assert(s_SecurityLevels.ContainsKey(sandboxData.Level), "Unknown SecurityLevel found.");
             var permissions = s_SecurityLevels[sandboxData.Level]();
 
             // Add the permission to scan the base path
-            var ioPermission = new FileIOPermission(PermissionState.Unrestricted);
+            var fileIOPermission = new FileIOPermission(PermissionState.Unrestricted);
 
             // Allow scanning of the base path. Necessary for the assembly load to succeed
-            ioPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
+            fileIOPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
 
             // Add the file permissions
             if (((resolutionPaths.Files != null) && resolutionPaths.Files.Exists()) ||
@@ -93,7 +96,7 @@ namespace Apollo.Core
                 {
                     foreach (var file in resolutionPaths.Files)
                     {
-                        ioPermission.AddPathList(FileIOPermissionAccess.Read, file);
+                        fileIOPermission.AddPathList(FileIOPermissionAccess.Read, file);
                     }
                 }
 
@@ -102,11 +105,11 @@ namespace Apollo.Core
                 {
                     foreach (var directory in resolutionPaths.Directories)
                     {
-                        ioPermission.AddPathList(FileIOPermissionAccess.Read, directory);
+                        fileIOPermission.AddPathList(FileIOPermissionAccess.Read, directory);
                     }
                 }
 
-                permissions.AddPermission(ioPermission);
+                permissions.AddPermission(fileIOPermission);
             }
 
             // Create the AppDomain as a sandboxed AppDomain. None of the assemblies

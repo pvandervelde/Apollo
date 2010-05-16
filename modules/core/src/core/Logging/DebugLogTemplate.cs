@@ -17,6 +17,11 @@ namespace Apollo.Core.Logging
     internal sealed class DebugLogTemplate : ILogTemplate, IEquatable<DebugLogTemplate>
     {
         /// <summary>
+        /// The format string used to format a debug log entry.
+        /// </summary>
+        public const string DebugLogFormat = @"{0} - {1}: {2}";
+
+        /// <summary>
         /// A function that returns the current time.
         /// </summary>
         private readonly Func<DateTimeOffset> m_GetCurrentTime;
@@ -90,7 +95,11 @@ namespace Apollo.Core.Logging
         /// </returns>
         public string Translate(ILogMessage message)
         {
-            return string.Format(CultureInfo.CurrentCulture, "{0} - {1}: {2}", m_GetCurrentTime(), message.Origin, message.Text());
+            {
+                Enforce.Argument(() => message);
+            }
+
+            return string.Format(CultureInfo.CurrentCulture, DebugLogFormat, m_GetCurrentTime(), message.Origin, message.Text());
         }
 
         #endregion

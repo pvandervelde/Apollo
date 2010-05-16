@@ -514,6 +514,9 @@ task buildPackage -depends buildBinaries -action{
 	
 	# Copy the dependencies
 	$lokadFile = 'Lokad.Shared.dll'
+	$systemThreading = 'System.Threading.dll'
+
+	Copy-Item (Join-Path $dirBuild $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)	
 	Copy-Item (Join-Path $dirBuild $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
 	
 	# zip them

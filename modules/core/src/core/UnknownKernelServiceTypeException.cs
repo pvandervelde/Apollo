@@ -7,6 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -14,6 +15,7 @@ namespace Apollo.Core
     /// An exception thrown when the <see cref="Kernel"/> is asked to uninstall a
     /// <see cref="KernelService"/> that has not been installed.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class UnknownKernelServiceTypeException : Exception
     {

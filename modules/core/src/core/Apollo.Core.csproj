@@ -221,7 +221,9 @@
     <Compile Include="Bootstrapper.ServiceInjector.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
     <Compile Include="CheckApplicationCanShutdownCommand.cs" />
+    <Compile Include="CheckApplicationCanShutdownContext.cs" />
     <Compile Include="CheckServicesCanShutdownCommand.cs" />
+    <Compile Include="CheckServicesCanShutdownContext.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
     <Compile Include="CoreProxy.Messages.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
@@ -266,6 +268,7 @@
     <Compile Include="Logging\LogSink.Messages.cs" />
     <Compile Include="Logging\LogType.cs" />
     <Compile Include="LogMessageForKernelCommand.cs" />
+    <Compile Include="LogMessageForKernelContext.cs" />
     <Compile Include="MessageEnabledKernelService.cs" />
     <Compile Include="Messaging\DnsName.cs" />
     <Compile Include="Messaging\DuplicateDnsNameException.cs" />
@@ -302,8 +305,8 @@
       <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
     </Compile>
     <Compile Include="SecurityLevel.cs" />
-    <Compile Include="SendMessageWithoutResponseDelegate.cs" />
-    <Compile Include="SendMessageWithResponseDelegate.cs" />
+    <Compile Include="SendMessageWithoutResponse.cs" />
+    <Compile Include="SendMessageWithResponse.cs" />
     <Compile Include="ServiceSecurityLevelAttribute.cs" />
     <Compile Include="ServiceShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ServiceShutdownCapabilityResponseMessage.cs" />
@@ -311,6 +314,7 @@
     <Compile Include="ServiceCannotDependOnGenericKernelServiceException.cs" />
     <Compile Include="ServiceCannotDependOnItselfException.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
+    <Compile Include="ShutdownApplicationContext.cs" />
     <Compile Include="ShutdownRequestMessage.cs" />
     <Compile Include="ShutdownResponseMessage.cs" />
     <Compile Include="StartupState.cs" />

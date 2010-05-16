@@ -162,6 +162,16 @@ namespace Apollo.Core.Messaging
             Justification = "Documentation can start with a language keyword")]
         public bool Equals(MessageHeader other)
         {
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            if (ReferenceEquals(other, null))
+            {
+                return false;
+            }
+
             return other.Id.Equals(Id);
         }
 

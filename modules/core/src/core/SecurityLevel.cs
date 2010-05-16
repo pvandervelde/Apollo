@@ -48,8 +48,8 @@ namespace Apollo.Core
         UserInterface,
         
         /// <summary>
-        /// The security rights are given for the plugins.
+        /// The security rights are given for the plug-ins.
         /// </summary>
-        Plugins,
+        PlugIns,
     }
 }

@@ -56,6 +56,7 @@ namespace Apollo.Core
     /// </item>
     /// </list>
     /// </design>
+    [ExcludeFromCoverage("This class is used to handle startup for Apollo. Integration testing is more suitable.")]
     public abstract partial class Bootstrapper
     {
         /// <summary>
@@ -248,6 +249,8 @@ namespace Apollo.Core
         /// <returns>
         /// The proxy to the injector.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "The coreBasePath cannot be a file, it must be a directory.")]
         private IInjectKernels CreateKernel(DirectoryInfo coreBasePath)
         {
             // Create the kernel appdomain. 
@@ -284,6 +287,8 @@ namespace Apollo.Core
         /// We're currently passing a function that returns the IEnumerable. Maybe we should push that idea
         /// all the way up?
         /// </todo>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "The coreBasePath cannot be a file, it must be a directory.")]
         private void CreateService(Type serviceType, DirectoryInfo coreBasePath, IInjectKernels kernel)
         {
             // Mark progress for service 'serviceType'

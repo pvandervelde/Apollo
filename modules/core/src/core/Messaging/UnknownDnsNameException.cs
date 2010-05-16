@@ -8,12 +8,14 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core.Messaging
 {
     /// <summary>
     /// An exception thrown when a <see cref="DnsName"/> is unknown.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class UnknownDnsNameException : Exception
     {

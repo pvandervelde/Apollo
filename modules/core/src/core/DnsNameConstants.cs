@@ -7,12 +7,14 @@
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.UserInterfaces;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
     /// <summary>
     /// Stores the <see cref="DnsName"/> objects of the different parts of the core.
     /// </summary>
+    [ExcludeFromCoverage("This class only holds constant values. Will be tested through the integration testing.")]
     internal sealed class DnsNameConstants : IDnsNameConstants
     {
         /// <summary>

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Messaging;
 using Apollo.Utils;
@@ -21,59 +22,13 @@ namespace Apollo.Core
     /// </summary>
     public class CheckServicesCanShutdownCommand : ICommand
     {
-        #region internal class - CheckCanServicesShutdownContext
-
-        /// <summary>
-        /// Defines an <see cref="ICommandContext"/> for the <see cref="CheckServicesCanShutdownCommand"/>.
-        /// </summary>
-        public sealed class CheckCanServicesShutdownContext : ICommandContext
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="CheckCanServicesShutdownContext"/> class.
-            /// </summary>
-            /// <param name="input">The input.</param>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown if <paramref name="input"/> is <see langword="null" />.
-            /// </exception>
-            public CheckCanServicesShutdownContext(IEnumerable<DnsName> input)
-            {
-                {
-                    Enforce.Argument(() => input);
-                }
-
-                Input = input;
-            }
-
-            /// <summary>
-            /// Gets the input for the command.
-            /// </summary>
-            /// <value>The input for the command.</value>
-            public IEnumerable<DnsName> Input
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether the services can be shut down.
-            /// </summary>
-            /// <value>
-            /// The command result.
-            /// </value>
-            public bool Result
-            {
-                get;
-                set;
-            }
-        }
-
-        #endregion
-
         #region Static members
 
         /// <summary>
         /// Defines the Id for the <c>CheckServicesCanShutdownCommand</c>.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"CheckServicesCanShutdown");
 
         #endregion
@@ -81,7 +36,7 @@ namespace Apollo.Core
         /// <summary>
         /// The delegate used to send a message for which a response is expected.
         /// </summary>
-        private readonly SendMessageWithResponseDelegate m_MessageSender;
+        private readonly SendMessageWithResponse m_MessageSender;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CheckServicesCanShutdownCommand"/> class.
@@ -90,7 +45,7 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal CheckServicesCanShutdownCommand(SendMessageWithResponseDelegate messageSender)
+        internal CheckServicesCanShutdownCommand(SendMessageWithResponse messageSender)
         {
             {
                 Enforce.Argument(() => messageSender);

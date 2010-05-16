@@ -26,6 +26,8 @@ namespace Apollo.Core.UserInterfaces
         /// <summary>
         /// The collection of notifications that must be passed on to the user interface.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "We need to store the action somehow ...")]
         private readonly Dictionary<NotificationName, Action<object>> m_Notifications = new Dictionary<NotificationName, Action<object>>();
 
         /// <summary>
@@ -170,7 +172,10 @@ namespace Apollo.Core.UserInterfaces
             // License
             // Project
             // Plugins
-            return new Type[] { };
+            return new Type[] 
+                { 
+                    typeof(LogSink),
+                };
         }
 
         /// <summary>
@@ -304,7 +309,7 @@ namespace Apollo.Core.UserInterfaces
                         new LogMessage(
                             Name.ToString(),
                             LevelToLog.Error,
-                            string.Format(Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e)),
+                            string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e)),
                         LogType.Debug), 
                     MessageId.None);
 

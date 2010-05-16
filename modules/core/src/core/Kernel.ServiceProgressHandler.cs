@@ -6,9 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Security;
-using System.Security.Permissions;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -22,6 +19,7 @@ namespace Apollo.Core
         /// An internal class used to handle the progress events raised by a
         /// <see cref="KernelService"/>.
         /// </summary>
+        [ExcludeFromCoverage("This class is used internally only. Integration testing is more suitable.")]
         private sealed class ServiceProgressHandler : MarshalByRefObject
         {
             /// <summary>

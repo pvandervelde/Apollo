@@ -15,6 +15,7 @@ namespace Apollo.Utils.Commands
     /// An exception thrown when the user tries to store a <see cref="ICommand"/> 
     /// with a <see cref="CommandId"/> that is identical to an already stored command.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested.")]
     [Serializable]
     public sealed class DuplicateCommandException : Exception
     {

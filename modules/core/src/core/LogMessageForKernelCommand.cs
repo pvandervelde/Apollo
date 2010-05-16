@@ -20,58 +20,6 @@ namespace Apollo.Core
     /// </summary>
     internal sealed class LogMessageForKernelCommand : ICommand
     {
-        #region internal class - LogMessageForKernelContext
-
-        /// <summary>
-        /// Defines and <see cref="ICommandContext"/> for the <see cref="LogMessageForKernelCommand"/>.
-        /// </summary>
-        internal sealed class LogMessageForKernelContext : ICommandContext
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="LogMessageForKernelContext"/> class.
-            /// </summary>
-            /// <param name="level">The log level.</param>
-            /// <param name="message">The log message.</param>
-            /// <exception cref="ArgumentNullException">
-            ///     Thrown if <paramref name="message"/> is <see langword="null" />.
-            /// </exception>
-            /// <exception cref="ArgumentException">
-            ///     Thrown if <paramref name="message"/> is an empty string.
-            /// </exception>
-            public LogMessageForKernelContext(LevelToLog level, string message)
-            {
-                {
-                    Enforce.Argument(() => message);
-                    Enforce.Argument(() => message, StringIs.NotEmpty);
-                }
-
-                Level = level;
-                Message = message;
-            }
-
-            /// <summary>
-            /// Gets the log level.
-            /// </summary>
-            /// <value>The log level.</value>
-            public LevelToLog Level
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Gets the message.
-            /// </summary>
-            /// <value>The message.</value>
-            public string Message
-            {
-                get;
-                private set;
-            }
-        }
-
-        #endregion
-        
         #region Static members
 
         /// <summary>
@@ -84,7 +32,7 @@ namespace Apollo.Core
         /// <summary>
         /// The delegate used to send a message for which a response is not expected.
         /// </summary>
-        private readonly SendMessageWithoutResponseDelegate m_MessageSender;
+        private readonly SendMessageWithoutResponse m_MessageSender;
 
         /// <summary>
         /// The name of the logsink.
@@ -102,7 +50,7 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal LogMessageForKernelCommand(DnsName logSinkName, SendMessageWithoutResponseDelegate messageSender)
+        internal LogMessageForKernelCommand(DnsName logSinkName, SendMessageWithoutResponse messageSender)
         {
             {
                 Enforce.Argument(() => logSinkName);

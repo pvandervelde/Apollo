@@ -15,6 +15,7 @@ namespace Apollo.Utils.Commands
     /// An exception thrown when the user requests a <see cref="ICommand" /> 
     /// with a specific <see cref="CommandId" /> which is not stored.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested.")]
     [Serializable]
     public sealed class UnknownCommandException : Exception
     {

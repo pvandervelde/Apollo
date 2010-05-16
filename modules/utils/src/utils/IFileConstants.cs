@@ -30,6 +30,16 @@ namespace Apollo.Utils
         }
 
         /// <summary>
+        /// Returns the path for the directory where the global 
+        /// settings for the product are written to.
+        /// </summary>
+        /// <returns>
+        /// The full path for the directory where the global settings
+        /// for the product are written to.
+        /// </returns>
+        string ProductSettingsPath();
+
+        /// <summary>
         /// Returns the path for the directory where the log files are
         /// written to.
         /// </summary>

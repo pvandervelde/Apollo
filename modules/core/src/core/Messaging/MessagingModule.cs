@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utils.Commands;
+using Apollo.Utils;
 using Autofac;
 
 namespace Apollo.Core.Messaging
@@ -13,6 +13,7 @@ namespace Apollo.Core.Messaging
     /// Handles the component registrations for the messaging part 
     /// of the core.
     /// </summary>
+    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
     internal sealed class MessagingModule : Module
     {
         /// <summary>

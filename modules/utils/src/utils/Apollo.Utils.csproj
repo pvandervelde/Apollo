@@ -203,6 +203,7 @@
     <Compile Include="ILockObject.cs" />
     <Compile Include="IProgressMark.cs" />
     <Compile Include="IStoreMarkerTimes.cs" />
+    <Compile Include="IProgressTimer.cs" />
     <Compile Include="ITrackProgress.cs" />
     <Compile Include="LockObject.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
@@ -214,12 +215,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="ProgressTimer.cs" />
+    <Compile Include="TimerElapsedEventArgs.cs" />
+    <Compile Include="WaitPair.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Threading">
+      <HintPath>..\..\lib\taskparallel\System.Threading.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="History\" />

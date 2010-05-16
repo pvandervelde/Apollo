@@ -51,7 +51,7 @@ namespace Apollo.Core.UserInterfaces.Application
             Justification = "Documentation can start with a language keyword")]
         public bool CanShutdown()
         {
-            var context = new CheckApplicationCanShutdownCommand.CheckApplicationCanShutdownContext();
+            var context = new CheckApplicationCanShutdownContext();
 
             Debug.Assert(m_Service.Contains(CheckApplicationCanShutdownCommand.CommandId), "A command has gone missing.");
             m_Service.Invoke(CheckApplicationCanShutdownCommand.CommandId, context);
@@ -65,7 +65,7 @@ namespace Apollo.Core.UserInterfaces.Application
         /// <param name="onShutdownRefuse">The <see cref="Action"/> that will be performed if the shutdown is refused.</param>
         public void Shutdown(bool shouldBeForced, Action onShutdownRefuse)
         {
-            var context = new ShutdownApplicationCommand.ShutdownApplicationContext(shouldBeForced);
+            var context = new ShutdownApplicationContext(shouldBeForced);
 
             Debug.Assert(m_Service.Contains(ShutdownApplicationCommand.CommandId), "A command has gone missing.");
             m_Service.Invoke(ShutdownApplicationCommand.CommandId, context);

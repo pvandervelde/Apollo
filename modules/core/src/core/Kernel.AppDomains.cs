@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Utils;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -24,6 +26,7 @@ namespace Apollo.Core
         /// The use of this class ensures that we can assert the correct permissions
         /// (ReflectionPermission and DomainControl) when attaching to the event.
         /// </remarks>
+        [ExcludeFromCoverage("This class is used internally only. Integration testing is more suitable.")]
         private sealed class AppDomainUnloadHandler : MarshalByRefObject
         {
             /// <summary>
@@ -33,6 +36,8 @@ namespace Apollo.Core
             /// The <c>Kernel</c> that owns the mapping between <see cref="KernelService"/> objects
             /// and <see cref="AppDomain"/> objects.
             /// </param>
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+                Justification = "It is (currently) uncertain how static methods would work combined with MarshalByRef objects.")]
             public void AttachToUnloadEvent(Kernel owner)
             {
                 var domain = AppDomain.CurrentDomain;

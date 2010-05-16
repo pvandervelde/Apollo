@@ -23,15 +23,15 @@ namespace Apollo.Core
         {
             var sender = new DnsName("sender");
 
-            SendMessageWithResponseDelegate function = (recipient, body, id) =>
+            SendMessageWithResponse function = (recipient, body, id) =>
             {
                 Assert.AreSame(sender, recipient);
                 Assert.IsInstanceOfType(typeof(ApplicationShutdownCapabilityRequestMessage), body);
-                return new Future<MessageBody>(() => new ApplicationShutdownCapabilityResponseMessage(true));
+                return new Future<MessageBody>(new WaitPair<MessageBody>(new ApplicationShutdownCapabilityResponseMessage(true)));
             };
             var command = new CheckApplicationCanShutdownCommand(sender, function);
 
-            var context = new CheckApplicationCanShutdownCommand.CheckApplicationCanShutdownContext();
+            var context = new CheckApplicationCanShutdownContext();
             command.Invoke(context);
             Assert.IsTrue(context.Result);
         }

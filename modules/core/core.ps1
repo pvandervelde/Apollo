@@ -521,13 +521,11 @@ task buildPackage -depends buildBinaries -action{
 	$autofacFile = 'Autofac.dll'
 	$quickgraph = 'QuickGraph.dll'
 	$systemCoreEx = 'System.CoreEx.dll'
-	$systemThreading = 'System.Threading.dll'
 	$nlog = 'NLog.dll'
 	
 	Copy-Item (Join-Path $dirBuild $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
 	Copy-Item (Join-Path $dirBuild $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)	
 	Copy-Item (Join-Path $dirBuild $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)	
-	Copy-Item (Join-Path $dirBuild $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)	
 	Copy-Item (Join-Path $dirBuild $nlog) -Destination (Join-Path $dirTempZip $nlog)	
 	
 	# zip them

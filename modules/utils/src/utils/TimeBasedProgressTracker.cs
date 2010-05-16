@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+using Apollo.Utils.Properties;
 using Lokad;
 
 namespace Apollo.Utils
@@ -20,17 +21,12 @@ namespace Apollo.Utils
         /// <summary>
         /// The timer which is used to fire the progress event.
         /// </summary>
-        private readonly System.Timers.Timer m_ProgressTimer = new System.Timers.Timer();
+        private readonly IProgressTimer m_ProgressTimer;
 
         /// <summary>
         /// The value used to indicate an unknown progress level.
         /// </summary>
         private readonly int m_UnknownProgressValue;
-
-        /// <summary>
-        /// The time delay between two successive timer updates.
-        /// </summary>
-        private readonly TimeSpan m_TimerUpdateInterval;
 
         /// <summary>
         /// The object which stores the progress timing for each of the known markers.
@@ -62,31 +58,31 @@ namespace Apollo.Utils
         /// <summary>
         /// Initializes a new instance of the <see cref="TimeBasedProgressTracker"/> class.
         /// </summary>
+        /// <param name="timer">The timer which is used to keep track of progress.</param>
         /// <param name="unknownProgressValue">The value used to indicate an unknown progress level.</param>
-        /// <param name="timerUpdateInterval">The time delay between two succesive timer updates.</param>
         /// <param name="markerTimes">The marker times.</param>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when <paramref name="unknownProgressValue"/> is between 0 and 100.
+        /// <exception cref="ArgumentNullException">
+        /// Thrown when <paramref name="timer"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when <paramref name="timerUpdateInterval"/> is smaller or equal to <see cref="TimeSpan.Zero"/>.
+        /// <exception cref="ArgumentOutOfRangeException">
+        /// Thrown when <paramref name="unknownProgressValue"/> is between 0 and 100.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="markerTimes"/> is <see langword="null"/>.
         /// </exception>
         public TimeBasedProgressTracker(
+            IProgressTimer timer,
             int unknownProgressValue,
-            TimeSpan timerUpdateInterval,
             IStoreMarkerTimes markerTimes)
         {
             {
-                Enforce.That((unknownProgressValue < 0) || (unknownProgressValue > 100));
-                Enforce.That(timerUpdateInterval > TimeSpan.Zero);
+                Enforce.Argument(() => timer);
+                Enforce.With<ArgumentOutOfRangeException>((unknownProgressValue < 0) || (unknownProgressValue > 100), Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument, unknownProgressValue);
                 Enforce.Argument(() => markerTimes);
             }
 
+            m_ProgressTimer = timer;
             m_UnknownProgressValue = unknownProgressValue;
-            m_TimerUpdateInterval = timerUpdateInterval;
             m_MarkerTimers = markerTimes;
         }
 
@@ -100,10 +96,7 @@ namespace Apollo.Utils
             m_ElapsedTime = time => time - startTime;
 
             // Initialize the timer
-            m_ProgressTimer.AutoReset = true;
-            m_ProgressTimer.Enabled = true;
-            m_ProgressTimer.Interval = m_TimerUpdateInterval.TotalMilliseconds;
-            m_ProgressTimer.Elapsed += (s, e) => ProcessProgressTimerElapsed(e.SignalTime);
+            m_ProgressTimer.Elapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
 
             // Start the timer
             m_ProgressTimer.Start();
@@ -165,9 +158,9 @@ namespace Apollo.Utils
                         // If there is no known time then we return
                         // a special progress count.
                         int progress = m_UnknownProgressValue;
-                        if (m_MarkerTimers.TotalTime != TimeSpan.Zero)
+                        if (estimatedTime != TimeSpan.Zero)
                         {
-                            progress = (int)(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks);
+                            progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
                         }
 
                         RaiseStartupProgress(progress, m_CurrentMark);
@@ -300,9 +293,10 @@ namespace Apollo.Utils
         /// </summary>
         public void Dispose()
         {
-            if (m_ProgressTimer != null)
+            IDisposable disposable = m_ProgressTimer as IDisposable;
+            if (disposable != null)
             {
-                m_ProgressTimer.Dispose();
+                disposable.Dispose();
             }
         }
     }

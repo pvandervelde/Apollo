@@ -42,7 +42,7 @@ namespace Apollo.Utils
             // we get an infinite loop where we're constantly trying to compare to null.
             if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
             {
-                return false;
+                return true;
             }
 
             var nonNullObject = first;

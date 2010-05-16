@@ -6,12 +6,14 @@
 
 using System;
 using System.Security;
+using Apollo.Utils;
 
 namespace Apollo.Core.Utils
 {
     /// <summary>
     /// An internal class with helper methods for security elevation.
     /// </summary>
+    [ExcludeFromCoverage("These methods are used as helper methods for security handling. They will be tested in the integration testing.")]
     internal static class SecurityHelpers
     {
         /// <summary>

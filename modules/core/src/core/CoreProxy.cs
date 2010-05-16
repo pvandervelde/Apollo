@@ -149,7 +149,10 @@ namespace Apollo.Core
         /// </returns>
         public IEnumerable<Type> ServicesToBeAvailable()
         {
-            return new Type[] { };
+            return new Type[] 
+                { 
+                    typeof(LogSink),
+                };
         }
 
         /// <summary>
@@ -163,7 +166,10 @@ namespace Apollo.Core
         /// </returns>
         public IEnumerable<Type> ServicesToConnectTo()
         {
-            return new[] { typeof(IMessagePipeline) };
+            return new[] 
+                { 
+                    typeof(IMessagePipeline) 
+                };
         }
 
         /// <summary>

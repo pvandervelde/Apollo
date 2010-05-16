@@ -380,6 +380,8 @@ namespace Apollo.Core.Messaging
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "The message pipeline reports errors back to the caller. That way we don't destabilise the current AppDomain.")]
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "The SendMessage method is under our control and only transmits data to the other side of the pipeline. It doesn't invoke external code.")]
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {

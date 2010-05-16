@@ -18,28 +18,6 @@ namespace Apollo.Core
     /// </summary>
     internal sealed class CheckApplicationCanShutdownCommand : ICommand
     {
-        #region internal class - CheckApplicationCanShutdownContext
-
-        /// <summary>
-        /// Defines an <see cref="ICommandContext"/> for the <see cref="CheckApplicationCanShutdownCommand"/>.
-        /// </summary>
-        public sealed class CheckApplicationCanShutdownContext : ICommandContext
-        {
-            /// <summary>
-            /// Gets or sets a value indicating whether the application can be shutdown or not.
-            /// </summary>
-            /// <value>
-            /// The command result.
-            /// </value>
-            public bool Result
-            {
-                get;
-                set;
-            }
-        }
-
-        #endregion
-
         #region Static members
 
         /// <summary>
@@ -52,7 +30,7 @@ namespace Apollo.Core
         /// <summary>
         /// The delegate used to send a message for which a response is expected.
         /// </summary>
-        private readonly SendMessageWithResponseDelegate m_MessageSender;
+        private readonly SendMessageWithResponse m_MessageSender;
 
         /// <summary>
         /// The name of the kernel.
@@ -70,7 +48,7 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal CheckApplicationCanShutdownCommand(DnsName kernelName, SendMessageWithResponseDelegate messageSender)
+        internal CheckApplicationCanShutdownCommand(DnsName kernelName, SendMessageWithResponse messageSender)
         {
             {
                 Enforce.Argument(() => kernelName);

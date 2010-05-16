@@ -79,6 +79,8 @@ namespace Apollo.Core
         /// Logs the error messages coming from the <see cref="MessageProcessingAssistance"/>.
         /// </summary>
         /// <param name="e">The exception that should be logged.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "e",
+            Justification = "The default name for exceptions is e.")]
         protected abstract void LogErrorMessage(Exception e);
 
         /// <summary>

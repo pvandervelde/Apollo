@@ -13,7 +13,7 @@ namespace Apollo.Core.Messaging
     /// Defines the interface for object that assist in the message
     /// sending and receiving process.
     /// </summary>
-    public interface IHelpMessageProcessing
+    internal interface IHelpMessageProcessing
     {
         /// <summary>
         /// Defines the information necessary for the sending and receiving

@@ -80,8 +80,10 @@
     <Compile Include="Commands\CommandFactoryTest.cs" />
     <Compile Include="Commands\CommandIdTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
+    <Compile Include="FutureTest.cs" />
     <Compile Include="IdTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TimeBasedProgressTrackerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Gallio, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">

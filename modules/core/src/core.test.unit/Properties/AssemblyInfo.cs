@@ -13,7 +13,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("Apollo.Core.Test.Unit")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("P. van der Velde")]
 [assembly: AssemblyProduct("Apollo")]
 [assembly: AssemblyCopyright("Copyright (c) - P. van der Velde")]
 [assembly: AssemblyTrademark("")]

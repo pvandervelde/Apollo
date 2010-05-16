@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Core.UserInterfaces.Application;
+using Apollo.Utils;
 using Autofac;
 using Lokad;
 
@@ -14,6 +15,7 @@ namespace Apollo.Core.UserInterfaces
     /// Handles the component registrations for the User Interface part 
     /// of the core.
     /// </summary>
+    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
     internal sealed class UserInterfaceModule : Module
     {
         /// <summary>
@@ -38,22 +40,22 @@ namespace Apollo.Core.UserInterfaces
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
-        /// <param name="builder">The builder.</param>
-        protected override void Load(ContainerBuilder builder)
+        /// <param name="moduleBuilder">The builder.</param>
+        protected override void Load(ContainerBuilder moduleBuilder)
         {
-            base.Load(builder);
+            base.Load(moduleBuilder);
 
-            builder.Register(c => new NotificationNameConstants())
+            moduleBuilder.Register(c => new NotificationNameConstants())
                 .As<INotificationNameConstants>();
 
-            builder.Register(c => new DnsNameConstants())
+            moduleBuilder.Register(c => new DnsNameConstants())
                 .As<IDnsNameConstants>();
 
-            builder.Register(c => m_Owner)
+            moduleBuilder.Register(c => m_Owner)
                 .As<IUserInterfaceService>()
                 .ExternallyOwned();
 
-            builder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
+            moduleBuilder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
                 .As<IAbstractApplications>();
 
             // IInteractWithUsers

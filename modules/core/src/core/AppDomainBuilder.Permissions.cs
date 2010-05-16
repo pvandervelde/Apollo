@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Utils;
@@ -21,6 +22,8 @@ namespace Apollo.Core
         /// <summary>
         /// The collection that holds all the security level methods.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "We need to store the function in order to get new permission sets each time we ask for them.")]
         private static readonly Dictionary<SecurityLevel, Func<PermissionSet>> s_SecurityLevels 
             = new Dictionary<SecurityLevel, Func<PermissionSet>>
                 {
@@ -31,7 +34,7 @@ namespace Apollo.Core
                     { SecurityLevel.Discovery, DefineDiscoveryPermissions },
                     { SecurityLevel.Persistence, DefinePersistencePermissions },
                     { SecurityLevel.UserInterface, DefineUserInterfacePermissions },
-                    { SecurityLevel.Plugins, DefinePlugInPermissions },
+                    { SecurityLevel.PlugIns, DefinePlugInPermissions },
                 };
 
         #region Permission set methods
@@ -93,6 +96,8 @@ namespace Apollo.Core
         /// <returns>
         /// A <see cref="PermissionSet"/> that defines the license rights.
         /// </returns>
+        [SuppressMessage("Microsoft.Security", "CA2103:ReviewImperativeSecurity",
+            Justification = "The path passed to the FileIOPermission object is the log path which is hard-coded.")]
         private static PermissionSet DefineLoggerPermissions()
         {
             var set = DefineMinimumPermissions();

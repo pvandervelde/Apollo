@@ -7,6 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -14,6 +15,7 @@ namespace Apollo.Core
     /// An exception thrown when the user tries to uninstall a service of a specific type but the matching service
     /// is a different object.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class CannotUninstallNonequivalentServiceException : Exception
     {

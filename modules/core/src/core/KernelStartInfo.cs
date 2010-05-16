@@ -22,6 +22,7 @@ namespace Apollo.Core
     /// The reason is that there is no guarantuee that other collections
     /// will be used to provide assembly references.
     /// </design>
+    [ExcludeFromCoverage("This class is ment to be used by the bootstrapper. Thus it can only be integration tested.")]
     public abstract class KernelStartInfo
     {
         /// <summary>

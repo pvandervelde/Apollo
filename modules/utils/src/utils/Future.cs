@@ -14,8 +14,13 @@ namespace Apollo.Utils
     /// Defines a class that promises to return a value at a certain point in time.
     /// </summary>
     /// <typeparam name="T">The type of the promissed return value.</typeparam>
-    public sealed class Future<T> : IFuture<T>
+    public sealed class Future<T> : IFuture<T>, IDisposable
     {
+        /// <summary>
+        /// The object that handles the synchronisation for the value.
+        /// </summary>
+        private readonly WaitPair<T> m_Pair;
+
         /// <summary>
         /// The action that eventually returns the result.
         /// </summary>
@@ -39,17 +44,18 @@ namespace Apollo.Utils
         /// <summary>
         /// Initializes a new instance of the <see cref="Future&lt;T&gt;"/> class.
         /// </summary>
-        /// <param name="action">The action that will return the result.</param>
+        /// <param name="pair">The action that will return the result.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="action"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="pair"/> is <see langword="null" />.
         /// </exception>
-        public Future(Func<T> action)
+        public Future(WaitPair<T> pair)
         {
             {
-                Enforce.Argument(() => action);
+                Enforce.Argument(() => pair);
             }
 
-            m_Action = action;
+            m_Pair = pair;
+            m_Action = () => { return pair.Value(); };
             m_Result = m_Action.BeginInvoke(null, null);
         }
 
@@ -97,5 +103,13 @@ namespace Apollo.Utils
         }
 
         #endregion
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            m_Pair.Dispose();
+        }
     }
 }

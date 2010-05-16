@@ -23,6 +23,7 @@ namespace Apollo.Utils
        AttributeTargets.Property,
        AllowMultiple = false,
        Inherited = false)]
+    [ExcludeFromCoverage("There is no need to test the attribute that we use to exclude classes from test coverage.")]
     public sealed class ExcludeFromCoverageAttribute : Attribute
     {
         /// <summary>

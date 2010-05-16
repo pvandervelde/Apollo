@@ -4,11 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Apollo.Utils;
+
 namespace Apollo.Core
 {
     /// <summary>
     /// Stores the <see cref="NotificationName"/> objects in use by the core.
     /// </summary>
+    [ExcludeFromCoverage("This class only holds constant values. No need for unit testing.")]
     internal sealed class NotificationNameConstants : INotificationNameConstants
     {
         /// <summary>

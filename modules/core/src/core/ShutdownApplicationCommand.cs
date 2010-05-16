@@ -19,56 +19,13 @@ namespace Apollo.Core
     /// </summary>
     public sealed class ShutdownApplicationCommand : ICommand
     {
-        #region internal class - ShutdownApplicationContext
-
-        /// <summary>
-        /// Defines an <see cref="ICommandContext"/> for the <see cref="ShutdownApplicationCommand"/>.
-        /// </summary>
-        public sealed class ShutdownApplicationContext : ICommandContext
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ShutdownApplicationContext"/> class.
-            /// </summary>
-            /// <param name="isForced">If set to <see langword="true"/> then a forced shutdown is requested.</param>
-            public ShutdownApplicationContext(bool isForced)
-            {
-                IsShutdownForced = isForced;
-            }
-
-            /// <summary>
-            /// Gets a value indicating whether this shutdown is forced.
-            /// </summary>
-            /// <value>
-            ///     <see langword="true"/> if this shutdown is forced; otherwise, <see langword="false"/>.
-            /// </value>
-            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-                Justification = "Documentation can start with a language keyword")]
-            public bool IsShutdownForced
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether the application is shutting down or not.
-            /// </summary>
-            /// <value>
-            /// The command result.
-            /// </value>
-            public bool Result
-            {
-                get;
-                set;
-            }
-        }
-
-        #endregion
-
         #region Static members
 
         /// <summary>
         /// Defines the Id for the <c>CheckApplicationCanShutdownCommand</c>.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"ShutdownApplication");
 
         #endregion
@@ -76,7 +33,7 @@ namespace Apollo.Core
         /// <summary>
         /// The delegate used to send a message for which a response is expected.
         /// </summary>
-        private readonly SendMessageWithResponseDelegate m_MessageSender;
+        private readonly SendMessageWithResponse m_MessageSender;
 
         /// <summary>
         /// The name of the kernel.
@@ -94,7 +51,7 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal ShutdownApplicationCommand(DnsName kernelName, SendMessageWithResponseDelegate messageSender)
+        internal ShutdownApplicationCommand(DnsName kernelName, SendMessageWithResponse messageSender)
         {
             {
                 Enforce.Argument(() => kernelName);

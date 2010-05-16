@@ -8,6 +8,7 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core.UserInterfaces
 {
@@ -15,6 +16,7 @@ namespace Apollo.Core.UserInterfaces
     /// An exception thrown if a user tries to register a notification with a
     /// <see cref="NotificationName"/> that is already registered.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class DuplicateNotificationException : Exception
     {

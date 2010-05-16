@@ -20,11 +20,6 @@ namespace Apollo.Core
     /// </content>
     internal sealed partial class Kernel
     {
-        // Send ping messages and check the responses
-        // System information
-        // Create appdomain
-        // Restart service
-
         /// <summary>
         /// Determines whether this instance can shutdown.
         /// </summary>
@@ -49,7 +44,7 @@ namespace Apollo.Core
                                   select pair.Value.Key as ISendMessages into nameObject 
                                   where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy)) 
                                   select nameObject.Name;
-            var context = new CheckServicesCanShutdownCommand.CheckCanServicesShutdownContext(servicesToCheck);
+            var context = new CheckCanServicesShutdownContext(servicesToCheck);
 
             Debug.Assert(coreProxy.Contains(CheckServicesCanShutdownCommand.CommandId), "A command has gone missing.");
             coreProxy.Invoke(CheckServicesCanShutdownCommand.CommandId, context);

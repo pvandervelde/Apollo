@@ -173,7 +173,7 @@ namespace Apollo.Core.Logging
         protected override void LogErrorMessage(Exception e)
         {
             var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.LogSink_LogMessage_MessageSendExceptionOccurred, e);
-            Log(LogType.Debug, new LogMessage(Name.ToString(), LevelToLog.Info,message));
+            Log(LogType.Debug, new LogMessage(Name.ToString(), LevelToLog.Info, message));
         }
 
         #endregion

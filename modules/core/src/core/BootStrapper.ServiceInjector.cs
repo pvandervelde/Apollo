@@ -9,6 +9,7 @@ using System.Diagnostics;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Utils;
+using Apollo.Utils;
 using Autofac;
 
 namespace Apollo.Core
@@ -28,6 +29,7 @@ namespace Apollo.Core
         ///     class comes. This means that it is safe to work with types and not
         ///     strings.
         /// </design>
+        [ExcludeFromCoverage("This class is used to handle startup for Apollo. Integration testing is more suitable.")]
         private sealed class ServiceInjector : MarshalByRefObject, IInjectServices
         {
             /// <summary>

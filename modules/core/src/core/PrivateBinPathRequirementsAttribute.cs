@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -12,6 +13,7 @@ namespace Apollo.Core
     /// Defines an attribute that is placed on <c>KernelService</c> classes to indicate
     /// which private bin path should be provided for the service.
     /// </summary>
+    [ExcludeFromCoverage("Attributes do not need to be tested")]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
     internal sealed class PrivateBinPathRequirementsAttribute : Attribute
     {

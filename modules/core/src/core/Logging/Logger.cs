@@ -37,6 +37,8 @@ namespace Apollo.Core.Logging
         /// <returns>
         /// The <see cref="LevelToLog"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "This method merely translates between the two log levels. No write code is invoked.")]
         private static LevelToLog TranslateFromNlogLevel(NLog.Logger logger)
         {
             if (logger.IsTraceEnabled)
@@ -104,6 +106,8 @@ namespace Apollo.Core.Logging
         /// <param name="template">The template.</param>
         /// <param name="constants">The constants that describe file and file path values.</param>
         /// <returns>A new instance of the log factory.</returns>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "Can only be reached from the constructor which is only invoked from the kernel bootstrapping process.")]
         private static LogFactory BuildFactory(ILoggerConfiguration configuration, ILogTemplate template, IFileConstants constants)
         {
             var config = BuildNLogConfiguration(configuration, template, constants);
@@ -123,6 +127,8 @@ namespace Apollo.Core.Logging
         /// <param name="template">The template.</param>
         /// <param name="constants">The constants that describe file and file path values.</param>
         /// <returns>A new NLog logger configuration.</returns>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "Can only be reached from the constructor which is only invoked from the kernel bootstrapping process.")]
         private static LoggingConfiguration BuildNLogConfiguration(ILoggerConfiguration configuration, ILogTemplate template, IFileConstants constants)
         {
             {
@@ -209,6 +215,8 @@ namespace Apollo.Core.Logging
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "Can only be reached from the constructor which is only invoked from the kernel bootstrapping process.")]
         public Logger(ILoggerConfiguration configuration, ILogTemplate template, IFileConstants fileConstants)
         {
             {
@@ -250,8 +258,7 @@ namespace Apollo.Core.Logging
                     {
                         var nlogLevel = TranslateToNlogLevel(newLevel);
                         m_Factory.GlobalThreshold = nlogLevel;
-                    }
-                );
+                    });
         }
 
         /// <summary>
@@ -266,7 +273,17 @@ namespace Apollo.Core.Logging
             Justification = "Documentation can start with a language keyword")]
         public bool ShouldLog(ILogMessage message)
         {
+            if (Level == LevelToLog.None)
+            {
+                return false;
+            }
+            
             if (message == null)
+            {
+                return false;
+            }
+
+            if (message.Level == LevelToLog.None)
             {
                 return false;
             }
@@ -278,6 +295,9 @@ namespace Apollo.Core.Logging
         /// Logs the specified message.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "This method tells the loggers to write text to their buffer. Not much use to malicious code.")]
+        [ExcludeFromCoverage("Depends on NLog which makes it only suitable for integration testing.")]
         public void Log(ILogMessage message)
         {
             if (!ShouldLog(message))
@@ -292,14 +312,16 @@ namespace Apollo.Core.Logging
                     {
                         var level = TranslateToNlogLevel(message.Level);
                         m_Logger.Log(level, m_Template.Translate(message));
-                    }
-                );
+                    });
         }
 
         /// <summary>
         /// Stops the logger and ensures that all log messages have been 
         /// saved to the log.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "This method tells the loggers to flush their buffer. Not much use to malicious code.")]
+        [ExcludeFromCoverage("Depends on NLog which makes it only suitable for integration testing.")]
         public void Stop()
         {
             SecurityHelpers.Elevate(
@@ -307,8 +329,7 @@ namespace Apollo.Core.Logging
                 () => 
                     {
                         m_Logger.Factory.Flush();
-                    }
-                );
+                    });
         }
 
         #endregion

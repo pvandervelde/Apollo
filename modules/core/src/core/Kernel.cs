@@ -85,7 +85,10 @@ namespace Apollo.Core
             // That means that there is no way to install another CoreProxy that
             // we don't control.
             // This also means that there is only one way to uninstall this service, 
-            // and that is by getting the reference from the kernel.
+            // and that is by getting the reference from the kernel which is only 
+            // possible if we start poking around in the data structures of the kernel.
+            // In other words there shouldn't be any (legal) way of removing the
+            // coreproxy object.
             Install(new CoreProxy(this, commandStore, processingHelp, dnsNames), AppDomain.CurrentDomain);
         }
 
@@ -111,7 +114,8 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Starts the startup process.
+        /// Initialized the kernel by allowing all the kernel services to 
+        /// go through their initialization processes.
         /// </summary>
         /// <design>
         /// <para>
@@ -176,8 +180,12 @@ namespace Apollo.Core
                     var serviceDomain = map.Value;
 
                     // Assert full trust. This can be done safely
-                    // because we will attach to the DomainUnload event but we'll only 
-                    // run secure code in the unload event.
+                    // because we will load the ServiceProgressHandler which 
+                    // has an default (empty) constructor. It will not actually do 
+                    // any work. Once the constructor has finished
+                    // the full trust elevation will also finish. Any following
+                    // Progress events will be taken care of in the normal, low trust,
+                    // setting.
                     var set = new PermissionSet(PermissionState.Unrestricted);
 
                     var progressHandler = SecurityHelpers.Elevate(
@@ -188,9 +196,6 @@ namespace Apollo.Core
                                     typeof(ServiceProgressHandler).FullName)
                                 .Unwrap() as ServiceProgressHandler);
                     Debug.Assert(progressHandler != null, "Failed to create the UnloadHandler.");
-                    
-                    // This doesn't work because we're applying the security permission
-                    // in the wrong appdomain ...
                     progressHandler.Attach(this, currentService, startupOrder.Count, startupOrder.IndexOf(currentService));
                     try
                     {
@@ -225,6 +230,10 @@ namespace Apollo.Core
         /// <returns>
         /// An ordered collection of services. Where the order indicates the ideal startup order.
         /// </returns>
+        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
+            Justification = "One could use static constructors to inject malicious code when loading the dependent types. " + 
+                            "However the KernelService base class is internal and cannot be used from outside the current assembly." +
+                            "The same goes for all the install methods of the kernel.")]
         private List<KernelService> DetermineServiceStartupOrder()
         {
             // Define the result collection
@@ -588,6 +597,7 @@ namespace Apollo.Core
                         LogMessage(
                             LevelToLog.Error,
                             string.Format(
+                                CultureInfo.InvariantCulture,
                                 Resources_NonTranslatable.Kernel_LogMessage_ServiceDisconnectionFailed, 
                                 service.GetType(), 
                                 dependencyHolder.GetType()));
@@ -627,6 +637,7 @@ namespace Apollo.Core
                     LogMessage(
                             LevelToLog.Error,
                             string.Format(
+                                CultureInfo.InvariantCulture,
                                 Resources_NonTranslatable.Kernel_LogMessage_DomainUnloadFailed, 
                                 domainName));
                 }
@@ -643,7 +654,7 @@ namespace Apollo.Core
             var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
-            var context = new LogMessageForKernelCommand.LogMessageForKernelContext(level, message);
+            var context = new LogMessageForKernelContext(level, message);
 
             Debug.Assert(coreProxy.Contains(LogMessageForKernelCommand.CommandId), "A command has gone missing.");
             coreProxy.Invoke(LogMessageForKernelCommand.CommandId, context);

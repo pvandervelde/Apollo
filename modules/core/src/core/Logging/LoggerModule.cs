@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Messaging;
 using Apollo.Utils;
 using Autofac;
-using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Logging
 {
@@ -15,6 +15,7 @@ namespace Apollo.Core.Logging
     /// Handles the component registrations for the logger part 
     /// of the core.
     /// </summary>
+    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
     internal sealed class LoggerModule : Module
     {
         /// <summary>

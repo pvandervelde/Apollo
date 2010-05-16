@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Apollo.Utils;
 
@@ -18,15 +19,30 @@ namespace Apollo.Core.Utils
     internal sealed class ApplicationConstants : IApplicationConstants, ICompanyConstants
     {
         /// <summary>
-        /// Gets the attribute from the current assembly.
+        /// Gets the assembly that called into this assembly.
+        /// </summary>
+        /// <returns>
+        /// The calling assembly.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "This member is potentially expensive to invoke and should thus be a method, not a property.")]
+        private static Assembly GetAssembly()
+        {
+            return Assembly.GetExecutingAssembly();
+        }
+
+        /// <summary>
+        /// Gets the attribute from the calling assembly.
         /// </summary>
         /// <typeparam name="T">The type of attribute that should be gotten from the assembly.</typeparam>
         /// <returns>
         /// The requested attribute.
         /// </returns>
-        private static T GetAttributeFromCurrentAssembly<T>() where T : Attribute
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+            Justification = "The type parameter indicates which attribute we're looking for.")]
+        private static T GetAttributeFromAssembly<T>() where T : Attribute
         {
-            var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false);
+            var attributes = GetAssembly().GetCustomAttributes(typeof(T), false);
             Debug.Assert(attributes.Length == 1, "There should only be one attribute.");
 
             var requestedAttribute = attributes[0] as T;
@@ -43,7 +59,7 @@ namespace Apollo.Core.Utils
         {
             get
             {
-                var assemblyCompany = GetAttributeFromCurrentAssembly<AssemblyCompanyAttribute>();
+                var assemblyCompany = GetAttributeFromAssembly<AssemblyCompanyAttribute>();
                 return assemblyCompany.Company;
             }
         }
@@ -56,7 +72,7 @@ namespace Apollo.Core.Utils
         {
             get
             {
-                var assemblyName = GetAttributeFromCurrentAssembly<AssemblyProductAttribute>();
+                var assemblyName = GetAttributeFromAssembly<AssemblyProductAttribute>();
                 return assemblyName.Product;
             }
         }
@@ -69,7 +85,7 @@ namespace Apollo.Core.Utils
         {
             get
             {
-                var applicationVersion = Assembly.GetExecutingAssembly().GetName().Version;
+                var applicationVersion = GetAssembly().GetName().Version;
                 return applicationVersion;
             }
         }

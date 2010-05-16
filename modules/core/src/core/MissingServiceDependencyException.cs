@@ -7,6 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -14,6 +15,7 @@ namespace Apollo.Core
     /// An exception thrown when a <see cref="KernelService"/> fails to start due to 
     /// missing service dependencies.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class MissingServiceDependencyException : Exception
     {

@@ -36,5 +36,16 @@ namespace Apollo.Utils
             Assert.AreEqual(GetAssemblyPath(typeof(FixtureSetUpAttribute).Assembly), typeof(FixtureSetUpAttribute).Assembly.LocalFilePath());
             Assert.AreEqual(GetAssemblyPath(Assembly.GetExecutingAssembly()), Assembly.GetExecutingAssembly().LocalFilePath());
         }
+
+        [Test]
+        [Description("Checks that AssemblyExtensions.GetStrongName correctly determines the strong name of an assembly.")]
+        public void GetStrongName()
+        {
+            var assembly = typeof(string).Assembly;
+            var strongName = assembly.GetStrongName();
+
+            Assert.AreEqual(assembly.GetName().Name, strongName.Name);
+            Assert.AreEqual(assembly.GetName().Version, strongName.Version);
+        }
     }
 }

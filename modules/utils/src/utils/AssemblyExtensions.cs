@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Security.Permissions;
 using System.Security.Policy;
@@ -62,7 +63,7 @@ namespace Apollo.Utils
             byte[] publicKey = assemblyName.GetPublicKey();
             if (publicKey == null || publicKey.Length == 0)
             {
-                throw new InvalidOperationException(String.Format("{0} is not strongly named", assembly));
+                throw new InvalidOperationException(String.Format(CultureInfo.InvariantCulture ,"{0} is not strongly named", assembly));
             }
 
             var keyBlob = new StrongNamePublicKeyBlob(publicKey);

@@ -178,7 +178,7 @@ namespace Apollo.Utils.Fusion
                 if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
-                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x"));
+                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x", CultureInfo.InvariantCulture));
                     return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }
@@ -253,6 +253,8 @@ namespace Apollo.Utils.Fusion
         /// </todo>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "Source will be linked from other projects and thus be used.")]
+        [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly",
+            Justification = "The getter method is only called from the inside of the class. Properties 'feel' better here.")]
         internal Func<string, Assembly> AssemblyLoader 
         {
             private get

@@ -10,42 +10,46 @@ namespace Apollo.Core.Logging
     /// Defines the level of a log message. Messages with a level lower than the 
     /// current level of the logger will be ignored.
     /// </summary>
+    /// <design>
+    /// Note that the enum values are not powers of two because it is not
+    /// possible to combine different levels as a bit mask.
+    /// </design>
     internal enum LevelToLog
     {
         /// <summary>
         /// The message describes trace information.
         /// </summary>
-        Trace = 1,
+        Trace = 0,
 
         /// <summary>
         /// The message describes debug information.
         /// </summary>
-        Debug = 2,
+        Debug = 1,
 
         /// <summary>
         /// The message describes some information.
         /// </summary>
-        Info = 3,
+        Info = 2,
 
         /// <summary>
         /// The message describes a situation that can potentially 
         /// lead to errors.
         /// </summary>
-        Warn = 4,
+        Warn = 3,
 
         /// <summary>
         /// The message describes an (non-fatal) error condition.
         /// </summary>
-        Error = 5,
+        Error = 4,
 
         /// <summary>
         /// The message describes a fatal error condition.
         /// </summary>
-        Fatal = 6,
+        Fatal = 5,
 
         /// <summary>
         /// The message has no level.
         /// </summary>
-        None = 7,
+        None = 6,
     }
 }

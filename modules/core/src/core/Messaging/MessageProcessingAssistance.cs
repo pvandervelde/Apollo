@@ -20,35 +20,6 @@ namespace Apollo.Core.Messaging
     internal sealed class MessageProcessingAssistance : IHelpMessageProcessing
     {
         /// <summary>
-        /// Creates the getter and setter functions.
-        /// </summary>
-        /// <param name="setter">The setter.</param>
-        /// <param name="getter">The getter.</param>
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters",
-            Justification = "This is an internal method which needs to return 2 objects. Out parameters are the simplest solution.")]
-        private static void CreateWaitPair(out Action<MessageBody> setter, out Func<MessageBody> getter)
-        {
-            // Create an event to wait on. Note that 
-            // we can't really dispose of the event because we don't know
-            // where and when the last reference will disappear. So we leave
-            // this one for the system.
-            var resetEvent = new ManualResetEventSlim();
-            MessageBody value = null;
-
-            setter = body =>
-            {
-                value = body;
-                resetEvent.Set();
-            };
-
-            getter = () =>
-            {
-                resetEvent.Wait();
-                return value;
-            };
-        }
-
-        /// <summary>
         /// The object used to take out locks on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
@@ -67,8 +38,8 @@ namespace Apollo.Core.Messaging
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "This collection holds the setter of the get-set pair that works with the IFuture return values.")]
-        private readonly Dictionary<MessageId, Action<MessageBody>> m_UnansweredMessages = 
-            new Dictionary<MessageId, Action<MessageBody>>();
+        private readonly Dictionary<MessageId, WaitPair<MessageBody>> m_UnansweredMessages = 
+            new Dictionary<MessageId, WaitPair<MessageBody>>();
 
         /// <summary>
         /// The collection that contains the message responses that have been answered before the message has been
@@ -229,7 +200,10 @@ namespace Apollo.Core.Messaging
                     var responseBody = m_PreAnsweredMessages[id];
                     m_PreAnsweredMessages.Remove(id);
 
-                    return new Future<MessageBody>(() => responseBody);
+                    var pair = new WaitPair<MessageBody>();
+                    pair.Value(responseBody);
+
+                    return new Future<MessageBody>(pair);
                 }
 
                 // The response wasn't available yet. While it
@@ -240,12 +214,10 @@ namespace Apollo.Core.Messaging
                 // it is not possible that the message sneaks into
                 // the back door.
                 {
-                    Action<MessageBody> action;
-                    Func<MessageBody> futureFunc;
-                    CreateWaitPair(out action, out futureFunc);
+                    var pair = new WaitPair<MessageBody>();
+                    m_UnansweredMessages.Add(id, pair);
 
-                    m_UnansweredMessages.Add(id, action);
-                    return new Future<MessageBody>(futureFunc);
+                    return new Future<MessageBody>(pair);
                 }
             }
         }
@@ -340,7 +312,7 @@ namespace Apollo.Core.Messaging
         /// <param name="message">The reply message.</param>
         private void ProcessMessageReply(KernelMessage message)
         {
-            Action<MessageBody> setter = null;
+            WaitPair<MessageBody> setter = null;
             var replyTo = message.Header.InReplyTo;
             lock (m_Lock)
             {
@@ -365,7 +337,7 @@ namespace Apollo.Core.Messaging
             // variables it is unlikley that we get race conditions.
             if (setter != null)
             {
-                setter(message.Body);
+                setter.Value(message.Body);
             }
         }
 

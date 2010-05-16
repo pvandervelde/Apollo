@@ -43,6 +43,7 @@ namespace Apollo.Core.Utils
         /// <value>The extension for an assembly file.</value>
         public string AssemblyExtension
         {
+            [ExcludeFromCoverage("Simple property getters do not need to be tested")]
             get
             {
                 return ".dll";
@@ -55,10 +56,29 @@ namespace Apollo.Core.Utils
         /// <value>The extension for a log file.</value>
         public string LogExtension
         {
+            [ExcludeFromCoverage("Simple property getters do not need to be tested")]
             get
             {
                 return ".log";
             }
+        }
+
+        /// <summary>
+        /// Returns the path for the directory where the global 
+        /// settings for the product are written to.
+        /// </summary>
+        /// <returns>
+        /// The full path for the directory where the global settings
+        /// for the product are written to.
+        /// </returns>
+        public string ProductSettingsPath()
+        {
+            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
+            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+
+            return versionDirectory;
         }
 
         /// <summary>
@@ -70,10 +90,7 @@ namespace Apollo.Core.Utils
         /// </returns>
         public string LogPath()
         {
-            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
-            var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
-            var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
+            var versionDirectory = ProductSettingsPath();
             var logDirectory = Path.Combine(versionDirectory, "logs");
 
             return logDirectory;

@@ -26,6 +26,21 @@ namespace Apollo.Core.Messaging
         }
 
         [Test]
+        [Description("Checks that a listener cannot be registered with the same DnsName as the pipeline.")]
+        public void RegisterAsListenerWithSameNameAsPipeline()
+        {
+            var dnsNames = new DnsNameConstants();
+            var listenerMock = new Mock<IProcessMessages>();
+            {
+                listenerMock.Setup(listener => listener.Name)
+                    .Returns(dnsNames.AddressOfMessagePipeline);
+            }
+
+            var pipeline = new MessagePipeline(dnsNames);
+            Assert.Throws<DuplicateDnsNameException>(() => pipeline.RegisterAsListener(listenerMock.Object));
+        }
+
+        [Test]
         [Description("Checks that a listener cannot be registered with a name that is already registered.")]
         public void RegisterAsListenerWithDuplicateName()
         {
@@ -47,6 +62,21 @@ namespace Apollo.Core.Messaging
         {
             var pipeline = new MessagePipeline(new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => pipeline.RegisterAsSender(null));
+        }
+
+        [Test]
+        [Description("Checks that a sender cannot be registered with the same DnsName as the pipeline.")]
+        public void RegisterAsSenderWithSameNameAsPipeline()
+        {
+            var dnsNames = new DnsNameConstants();
+            var senderMock = new Mock<ISendMessages>();
+            {
+                senderMock.Setup(listener => listener.Name)
+                    .Returns(dnsNames.AddressOfMessagePipeline);
+            }
+
+            var pipeline = new MessagePipeline(dnsNames);
+            Assert.Throws<DuplicateDnsNameException>(() => pipeline.RegisterAsSender(senderMock.Object));
         }
 
         [Test]
@@ -78,7 +108,7 @@ namespace Apollo.Core.Messaging
         public void UnregisterAsListenerWithNullObject()
         {
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            Assert.Throws<ArgumentNullException>(() => pipeline.UnregisterAsListener(null));
+            Assert.Throws<ArgumentNullException>(() => pipeline.Unregister(null));
         }
 
         [Test]
@@ -92,7 +122,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            Assert.Throws<UnknownDnsNameException>(() => pipeline.UnregisterAsListener(listenerMock.Object));
+            Assert.Throws<UnknownDnsNameException>(() => pipeline.Unregister(listenerMock.Object));
         }
 
         [Test]
@@ -100,7 +130,7 @@ namespace Apollo.Core.Messaging
         public void UnregisterAsSenderWithNullObject()
         {
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            Assert.Throws<ArgumentNullException>(() => pipeline.UnregisterAsSender(null));
+            Assert.Throws<ArgumentNullException>(() => pipeline.Unregister(null));
         }
 
         [Test]
@@ -114,7 +144,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            Assert.Throws<UnknownDnsNameException>(() => pipeline.UnregisterAsSender(senderMock.Object));
+            Assert.Throws<UnknownDnsNameException>(() => pipeline.Unregister(senderMock.Object));
         }
 
         [Test]
@@ -144,7 +174,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            pipeline.RegisterAsListener(listenerMock.Object);
+            pipeline.Register(listenerMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(listenerMock.Object.Name));
         }
 
@@ -159,7 +189,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            pipeline.RegisterAsSender(senderMock.Object);
+            pipeline.Register(senderMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(senderMock.Object.Name));
         }
 
@@ -182,7 +212,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            pipeline.RegisterAsListener(listenerMock.Object);
+            pipeline.Register(listenerMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(listenerMock.Object));
         }
 
@@ -205,7 +235,7 @@ namespace Apollo.Core.Messaging
             }
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
-            pipeline.RegisterAsSender(senderMock.Object);
+            pipeline.Register(senderMock.Object);
             Assert.IsTrue(pipeline.IsRegistered(senderMock.Object));
         }
 

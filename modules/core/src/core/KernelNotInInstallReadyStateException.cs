@@ -7,6 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -15,6 +16,7 @@ namespace Apollo.Core
     /// <see cref="Kernel"/> is not in the <see cref="StartupState.NotStarted"/> or the
     /// <see cref="StartupState.Started"/>.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class KernelNotInInstallReadyStateException : Exception
     {

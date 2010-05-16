@@ -7,12 +7,14 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 
 namespace Apollo.Core
 {
     /// <summary>
     /// An exception thrown when a <see cref="KernelService"/> is installed while depending on itself.
     /// </summary>
+    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class ServiceCannotDependOnItselfException : Exception
     {
