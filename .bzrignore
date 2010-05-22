@@ -19,3 +19,5 @@ AssemblyInfo.VersionNumber.cs
 AssemblyInfo.InternalsVisibleTo.cs
 *.resharper
 _ReSharper*
+./modules/core/src/AssemblyInfo.Configuration.cs
+AssemblyInfo.Configuration.cs
