@@ -338,6 +338,11 @@ task buildBinaries -depends runInit, getVersion -action{
 	Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
 	
 	# Set the InternalsVisibleTo attribute
+	"SOFTWARE_SIGNING_KEY_PATH is: "	
+	$env:SOFTWARE_SIGNING_KEY_PATH
+	""
+	""
+	
 	$publicKeyToken = Get-PublicKeySignature $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
 	$friendAssemblyName = $assemblyNameUnitTest + $publicKeyToken
 	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $friendAssemblyName
