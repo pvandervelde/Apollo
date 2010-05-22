@@ -132,8 +132,6 @@ properties{
 	$slnUtils = Join-Path $dirSrc 'Apollo.Utils.sln'
 	
 	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
-	$msbuildApiDoc = Join-Path $dirBase 'Apollo.Utils.shfbproj'
-	$msbuildSandcastleReferenceData = Join-Path $dirSandcastle 'fxReflection.proj'
 	
 	# template files
 	$versionFile = Join-Path $dirBase 'Version.xml'
@@ -153,6 +151,7 @@ properties{
 	$logMsiBuild = 'utils_msi.log'
 	$logMsBuild = 'utils_msbuild.log'
 	$logFxCop = 'utils_fxcop.xml'
+	$logStyleCop = 'utils_stylecop.xml'
 	$logNCover = 'utils_ncover.xml'
 	$logNCoverHtml = 'utils_ncover.html'
 	
@@ -201,9 +200,6 @@ task UnitTest -depends runUnitTests
 # Runs the integration tests
 task IntegrationTest -depends runIntegrationTests
 
-# Builds the API documentation
-task ApiDoc -depends buildApiDoc
-
 # Runs the verifications
 task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
 
@@ -244,7 +240,6 @@ The following build tasks are available
 	'build':			Cleans the output directory and builds the binaries
 	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
 	'integrationtest':		Cleans the output directory, builds the binaries and runs the integration tests
-	'apidoc':			Builds the API documentation from the source comments
 	'verify':			Runs the source and binary verification. Returning one or more reports
 					describing the flaws in the source / binaries.
 	'package':			Packages the deliverables into a single zip file
@@ -370,7 +365,7 @@ task runUnitTests -depends buildBinaries -action{
 		$command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
 	
 		# Indicate which Attribute is used to exclude classes / methods from coverage
-		$command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute' "
+		$command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute;System.Runtime.CompilerServices.CompilerGeneratedAttribute' "
 	}
 	else
 	{
@@ -423,22 +418,6 @@ task runIntegrationTests -depends buildBinaries -action{
 	"There are no integration tests."
 }
 
-task buildApiDoc -depends buildBinaries -action{
-	"Build the API docs..."
-	
-	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $msbuildApiDoc
-	if ($LastExitCode -ne 0)
-	{
-		throw "Sandcastle help file builder failed on Apollo.Utils with return code: $LastExitCode"
-	}
-	
-	if( $configuration -eq 'release')
-	{
-		# Should fail are release build if there's anything missing?
-	}
-}
-
 task runStyleCop -depends buildBinaries -action{
 	$msbuildExe = Get-MsbuildExe
 	
@@ -448,7 +427,8 @@ task runStyleCop -depends buildBinaries -action{
 		throw "Stylecop failed on Apollo.Utils with return code: $LastExitCode"
 	}
 	
-	# Check the MsBuild file (in the templates directory) for failure conditions	
+	# Rename the output file
+	Move-Item -Path (Join-Path $dirReports 'StyleCopViolations.xml') -Destination (Join-Path $dirReports $logStyleCop)
 }
 
 task runFxCop -depends buildBinaries -action{

@@ -20,7 +20,7 @@ function Build-DebugDev{
 
 	'Running debug developer build'
 	"Running script from: $script"
-	& invoke-psake $script Debug,UnitTests,Verify,DeveloperBuild 4.0
+	& invoke-psake $script debug,unittest,verify,deploytotest,build 4.0x86
 }
 
 function Build-ReleaseDev{
@@ -29,7 +29,7 @@ function Build-ReleaseDev{
 
 	'Running release developer build'
 	'Running script from: $script'
-	& invoke-psake $script Release,UnitTests,Verify,DeveloperBuild 4.0
+	& invoke-psake $script release,unittest,verify,deploytotest,build 4.0x86
 }
 
 function Build-DebugFull{
@@ -38,7 +38,7 @@ function Build-DebugFull{
 
 	'Running debug full build'
 	'Running script from: $script'
-	& invoke-psake $script Debug,UnitTests,Verify,ApiDocs,UserDocs,Installer,FullBuild 4.0
+	& invoke-psake $script coverage,debug,unittest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
 }
 
 function Build-ReleaseFull{
@@ -47,7 +47,7 @@ function Build-ReleaseFull{
 
 	'Running release full build'
 	'Running script from: $script'
-	& invoke-psake $script Release,UnitTests,Verify,ApiDocs,UserDocs,Installer,FullBuild 4.0
+	& invoke-psake $script coverage,release,unittest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
 }
 
 function Import-Psake([string] $psakeDirectory){

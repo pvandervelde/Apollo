@@ -57,6 +57,8 @@ properties{
 	# solution directories
 	$dirBin = Join-Path $dirBase 'bin'
 	$dirDeploy = Join-Path $dirBin 'deploy'
+	$dirReports = Join-Path $dirBin 'reports'
+	$dirTemp = Join-Path $dirBin 'temp'
 	$dirInstall = Join-Path $dirBase 'install'
 
 	# Modules directories
@@ -67,6 +69,13 @@ properties{
 	$dirModulesUiBatchService = Join-Path $dirModules (Join-Path 'ui' 'batchservice')
 	$dirModulesUiRhino = Join-Path $dirModules (Join-Path 'ui' 'rhino')
 	$dirModulesUtils = Join-Path $dirModules 'utils'
+	
+	# tools directories
+	$dirTools = Join-Path $dirBase 'tools'
+	$dirBabel = Join-Path $dirTools 'babel'
+	$dirMbunit = Join-Path $dirTools 'mbunit'
+	$dirNCoverExplorer = Join-Path $dirTools 'ncoverexplorer'
+	$dirSandcastle = Join-Path $dirTools 'sandcastle'
 	
 	# Default paths
 	$pathDefaultDeploy = 'bin\release'
@@ -81,10 +90,20 @@ properties{
 					'utils' = Join-Path $dirModulesUtils 'utils.ps1';
 				 }
 	
+	# solutions
+	$msbuildApiDoc = Join-Path $dirBase 'Apollo.shfbproj'
+	$msbuildSandcastleReferenceData = Join-Path $dirSandcastle 'fxReflection.proj'
+	
 	# output files
 	$logMsiBuild = 'msi.log'
+	$logMsBuild = 'msbuild.log'
+	$logFxCop = 'fxcop.xml'
+	$logNCover = 'ncover.xml'
+	$logNCoverHtml = 'ncover.html'
 	
 	# settings
+	$levelMinCoverage = 85
+	
 	# Version number
 	$versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
 	$versionFile = Join-Path $dirBase 'Version.xml'	
@@ -152,10 +171,10 @@ task DeployToTest -action{
 # Actual build tasks
 
 # Clean all the generated files
-task Clean -depends runClean, runScripts
+task Clean -depends runClean, runInit, runScripts
 
 # Run the build completely
-task Build -depends runClean, runScripts, assembleApiDocs, buildUserDoc, assembleInstaller, deployToTestDirectory, collectMetrics
+task Build -depends runClean, runInit, runScripts, assembleApiDocs, buildUserDoc, assembleInstaller, deployToTestDirectory, collectMetrics
 
 ###############################################################################
 # HELPER TASKS
@@ -204,6 +223,30 @@ task runClean  -precondition{ $shouldClean } -action{
 	}
 }
 
+task runInit -depends runClean -action{
+	"Initializing build..."
+	
+	if (!(Test-Path -Path $dirBin -PathType Container))
+	{
+		New-Item $dirBin -ItemType directory | Out-Null # Don't display the directory information
+	}
+	
+	if (!(Test-Path -Path $dirDeploy -PathType Container))
+	{
+		New-Item $dirDeploy -ItemType directory | Out-Null # Don't display the directory information
+	}
+	
+	if (!(Test-Path -Path $dirReports -PathType Container))
+	{
+		New-Item $dirReports -ItemType directory | Out-Null # Don't display the directory information
+	}
+	
+	if (!(Test-Path -Path $dirTemp -PathType Container))
+	{
+		New-Item $dirTemp -ItemType directory | Out-Null # Don't display the directory information
+	}
+}
+
 task createTasks -action{
 	$tasks.Clear()
 
@@ -217,7 +260,6 @@ task createTasks -action{
 	
 	if ($shouldRunUnitTests) { $tasks.Add('UnitTest') | Out-Null }
 	if ($shouldRunVerify) { $tasks.Add('Verify') | Out-Null }
-	if ($shouldBuildApiDocs) { $tasks.Add('ApiDoc') | Out-Null }
 	if ($shouldDeployToTest) { $tasks.Add('Package') | Out-Null }
 }
 
@@ -240,9 +282,35 @@ task createTestDirectory -action{
 }
 
 task assembleApiDocs -depends runScripts -precondition{ return $shouldBuildApiDocs } -action{
-	"Assembling API docs..."
+	"Build the API docs..."
 	
-	# Collect API docs from different folders and assemble them
+	# Set the DXROOT Environment variable
+	$Env:DXROOT = $dirSandcastle
+	
+	$msbuildExe = Get-MsbuildExe
+	
+	# See if we need to create the reference data.
+	$dirSandcastleReference = Join-Path $dirSandcastle 'Data'
+	if (!(Test-Path -Path $dirSandcastleReference -PathType Container))
+	{
+		"Building the Sandcastle reference data. This may take a while ... "
+		& $msbuildExe $msbuildSandcastleReferenceData
+		if ($LastExitCode -ne 0)
+		{
+			throw "Could not generate the Sandcastle reference data. Return code from MsBuild: $LastExitCode"
+		}
+	}
+	
+	& $msbuildExe $msbuildApiDoc
+	if ($LastExitCode -ne 0)
+	{
+		throw "Sandcastle help file builder failed on Apollo with return code: $LastExitCode"
+	}
+	
+	if( $configuration -eq 'release')
+	{
+		# Should fail are release build if there's anything missing?
+	}
 }
 
 task buildUserDoc -precondition{ return $shouldBuildUserDocs } -action{
@@ -289,5 +357,73 @@ task deployToTestDirectory -depends runScripts,createTestDirectory -precondition
 task collectMetrics -depends runScripts{
 	"Collecting statistics..."
 	
-	# collect metrics and so something with them ...
+	# gallio
+	foreach ($key in $projects.Keys)
+	{
+		$proj = $projects[$key]
+		$path = Split-Path $proj -Parent
+		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+		
+		"Checking $reportsPath for files ..."
+		if (Test-Path -Path $reportsPath -PathType Container)
+		{
+			Get-ChildItem -path $reportsPath | 
+				Where-Object { (($_.Name -like "*test-report*") -and ($_.Extension -match ".xml"))} |
+				Copy-Item -Destination (Join-Path $dirReports "$key-gallio.xml") -Force
+		}
+	}
+	
+	# ncover
+	foreach ($proj in $projects.Values)
+	{
+		$path = Split-Path $proj -Parent
+		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+		
+		"Checking $reportsPath for files ..."
+		if (Test-Path -Path $reportsPath -PathType Container)
+		{
+			Get-ChildItem -path $reportsPath | 
+				Where-Object { (($_.Name -like "*ncover*") -and ($_.Extension -match ".xml"))} |
+				Copy-Item -Destination (Join-Path $dirTemp $_.Name) -Force
+		}
+	}
+	
+	$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
+	$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirTemp '*ncover.xml')  + '" ' + ' /s:"' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
+	$command
+	Invoke-Expression $command
+	if ($LastExitCode -ne 0)
+	{
+		throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
+	}
+	
+	# fxcop
+	foreach ($proj in $projects.Values)
+	{
+		$path = Split-Path $proj -Parent
+		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+		
+		"Checking $reportsPath for files ..."
+		if (Test-Path -Path $reportsPath -PathType Container)
+		{
+			Get-ChildItem -path $reportsPath | 
+				Where-Object { (($_.Name -like "*fxcop*") -and ($_.Extension -match ".xml"))} |
+				Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
+		}
+	}
+	
+	# stylecop
+	foreach ($proj in $projects.Values)
+	{
+		$path = Split-Path $proj -Parent
+		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+		
+		"Checking $reportsPath for files ..."
+		if (Test-Path -Path $reportsPath -PathType Container)
+		{
+			Get-ChildItem -path $reportsPath | 
+				Where-Object { (($_.Name -like "*stylecop*") -and ($_.Extension -match ".xml"))} |
+				Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
+		}
+	}	
 }

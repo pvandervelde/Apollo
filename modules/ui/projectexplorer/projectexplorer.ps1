@@ -121,9 +121,7 @@ properties{
 	
 	# solution files
 	$slnProjectExplorer = Join-Path $dirSrc 'Apollo.ProjectExplorer.sln'
-	
 	$msbuildStyleCop = Join-Path $dirTemplates 'StyleCop.msbuild'
-	$msbuildApiDoc = Join-Path $dirBase 'Apollo.ProjectExplorer.shfbproj'
 
 	# file templates
 	$versionFile = Join-Path $dirBase 'Version.xml'
@@ -140,6 +138,7 @@ properties{
 	$logMsiBuild = 'projectexplorer_msi.log'
 	$logMsBuild = 'projectexplorer_msbuild.log'
 	$logFxCop = 'projectexplorer_fxcop.xml'
+	$logStyleCop = 'projectexplorer_stylecop.xml'
 	$logNCover = 'projectexplorer_ncover.xml'
 	$logNCoverHtml = 'projectexplorer_ncover.html'
 	
@@ -185,9 +184,6 @@ task UnitTest -depends runUnitTests
 # Runs the integration tests
 task IntegrationTest -depends runIntegrationTests
 
-# Builds the API documentation
-task ApiDoc -depends buildApiDoc
-
 # Runs the verifications
 task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
 
@@ -227,7 +223,6 @@ The following build tasks are available
 	'build':			Cleans the output directory and builds the binaries
 	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
 	'integrationtest':	Cleans the output directory, builds the binaries and runs the integration tests
-	'apidoc':			Builds the API documentation from the source comments
 	'verify':			Runs the source and binary verification. Returning one or more reports
 						describing the flaws in the source / binaries.
 	'package':			Packages the deliverables into a single zip file
@@ -407,22 +402,6 @@ task runIntegrationTests -depends buildBinaries -action{
 	# ???
 }
 
-task buildApiDoc -depends buildBinaries -action{
-	"Build the API docs..."
-	
-	$msbuildExe = Get-MsbuildExe
-	& $msbuildExe $msbuildApiDoc
-	if ($LastExitCode -ne 0)
-	{
-		throw "Sandcastle help file builder failed on Apollo.ProjectExplorer with return code: $LastExitCode"
-	}
-	
-	if( $configuration -eq 'release')
-	{
-		# Should fail are release build if there's anything missing?
-	}
-}
-
 task runStyleCop -depends buildBinaries -action{
 	$msbuildExe = Get-MsbuildExe
 	
@@ -432,7 +411,8 @@ task runStyleCop -depends buildBinaries -action{
 		throw "Stylecop failed on Apollo.ProjectExplorer with return code: $LastExitCode"
 	}
 	
-	# Check the MsBuild file (in the templates directory) for failure conditions	
+	# Rename the output file
+	Move-Item -Path (Join-Path $dirReports 'StyleCopViolations.xml') -Destination (Join-Path $dirReports $logStyleCop)	
 }
 
 task runFxCop -depends buildBinaries -action{

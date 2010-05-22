@@ -57,8 +57,8 @@ namespace Apollo.ProjectExplorer
             // At a later stage we need to clean this up.
             // there are two constants and a DI reference.
             var progressTracker = new TimeBasedProgressTracker(
+                new ProgressTimer(new TimeSpan(0, 0, 0, 0, 500)),
                 -1, 
-                new TimeSpan(0, 0, 0, 0, 500),
                 new StartupTimeStorage());
 
             var bootstrapper = new KernelBootstrapper(

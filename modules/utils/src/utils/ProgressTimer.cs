@@ -16,7 +16,7 @@ namespace Apollo.Utils
     /// Defines the default <see cref="IProgressTimer"/> object.
     /// </summary>
     [ExcludeFromCoverage("ProgressTimer relies on a System.Timers.Timer which is hard to test.")]
-    internal sealed class ProgressTimer : IProgressTimer, IDisposable
+    public sealed class ProgressTimer : IProgressTimer, IDisposable
     {
         /// <summary>
         /// The timer which is used to fire the progress event.
