@@ -20,6 +20,8 @@ namespace Apollo.UI.Common.Bootstrapper
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Autofac",
+        Justification = "The correct spelling is 'Autofac'.")]
     public class AutofacServiceLocator : IServiceLocator
     {
         private readonly IContainer m_AutofacContainer;
@@ -28,6 +30,8 @@ namespace Apollo.UI.Common.Bootstrapper
         /// Initializes a new instance of the <see cref="AutofacServiceLocator"/> class.
         /// </summary>
         /// <param name="autofacContainer">The autofac container.</param>
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="autofac",
+            Justification = "The correct spelling is 'Autofac'.")]
         public AutofacServiceLocator(IContainer autofacContainer)
         {
             m_AutofacContainer = autofacContainer;

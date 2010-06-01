@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// <summary>
     /// The model for the shell.
     /// </summary>
-    public sealed class ShellModel : Model
+    internal sealed class ShellModel : Model
     {
     }
 }

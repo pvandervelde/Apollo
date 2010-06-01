@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.About
     /// <summary>
     /// A parameter for the about view.
     /// </summary>
-    public sealed class AboutParameter : Parameter
+    internal sealed class AboutParameter : Parameter
     {
     }
 }

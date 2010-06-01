@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// <summary>
     /// The presenter for the shell.
     /// </summary>
-    public class ShellPresenter : Presenter<IShellView, ShellModel, ShellParameter>
+    internal class ShellPresenter : Presenter<IShellView, ShellModel, ShellParameter>
     {
     }
 }

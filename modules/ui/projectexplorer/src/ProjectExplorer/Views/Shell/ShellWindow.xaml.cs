@@ -58,6 +58,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
             {
                 return (ShellModel)DataContext;
             }
+            
             set
             {
                 DataContext = value;

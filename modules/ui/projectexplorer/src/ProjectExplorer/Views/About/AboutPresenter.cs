@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.About
     /// <summary>
     /// The presenter for the <see cref="AboutModel"/>.
     /// </summary>
-    public sealed class AboutPresenter : Presenter<IAboutView, AboutModel, AboutParameter>
+    internal sealed class AboutPresenter : Presenter<IAboutView, AboutModel, AboutParameter>
     {
         /// <summary>
         /// Allows the presenter to set up the view and model.

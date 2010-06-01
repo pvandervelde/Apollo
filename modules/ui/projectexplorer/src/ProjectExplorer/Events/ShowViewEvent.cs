@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Events
     /// <summary>
     /// Manages publication and subscription of the showing of a view event.
     /// </summary>
-    public class ShowViewEvent : CompositePresentationEvent<ShowViewRequest>
+    internal class ShowViewEvent : CompositePresentationEvent<ShowViewRequest>
     {
     }
 }

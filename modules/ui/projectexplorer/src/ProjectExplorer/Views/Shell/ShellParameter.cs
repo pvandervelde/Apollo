@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// <summary>
     /// A <see cref="Parameter"/> used by the shell.
     /// </summary>
-    public sealed class ShellParameter : Parameter
+    internal sealed class ShellParameter : Parameter
     {
     }
 }

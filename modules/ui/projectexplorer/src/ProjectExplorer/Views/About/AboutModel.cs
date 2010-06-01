@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.About
     /// <summary>
     /// The model for the about window.
     /// </summary>
-    public sealed class AboutModel : Model
+    internal sealed class AboutModel : Model
     {
         // Link to the app information
     }

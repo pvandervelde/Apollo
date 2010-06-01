@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Eventing;
@@ -17,7 +18,7 @@ namespace Apollo.ProjectExplorer.Events.Listeners
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for showing views.
     /// </summary>
-    public class ShowViewEventListener : EventListener
+    internal class ShowViewEventListener : EventListener
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowViewEventListener"/> class.
@@ -63,15 +64,16 @@ namespace Apollo.ProjectExplorer.Events.Listeners
             RegionManager.SetRegionManager((DependencyObject) view, regionManager);
 
             // Show the view
-            if (view is Window)
+            var viewWindow = view as Window;
+            if (viewWindow != null)
             {
-                ((Window)view).Show();
+                viewWindow.Show();
             }
             else
             {
                 if (region == null)
                 {
-                    throw new InvalidOperationException(string.Format("The region '{0}' does not exist.", request.RegionName));
+                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "The region '{0}' does not exist.", request.RegionName));
                 }
 
                 region.AddAndActivateWithParameter(view, request.Parameter);
@@ -79,5 +81,3 @@ namespace Apollo.ProjectExplorer.Events.Listeners
         }
     }
 }
-
-

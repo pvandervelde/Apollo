@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// <summary>
     /// A parameter for the <see cref="MenuPresenter"/>.
     /// </summary>
-    public class MenuParameter : Parameter
+    internal class MenuParameter : Parameter
     {
     }
 }

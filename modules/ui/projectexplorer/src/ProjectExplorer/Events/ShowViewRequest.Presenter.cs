@@ -12,7 +12,7 @@ namespace Apollo.ProjectExplorer.Events
     /// Handles requests to show a view.
     /// </summary>
     /// <typeparam name="TPresenter">The type of the presenter.</typeparam>
-    public class ShowViewRequest<TPresenter> : ShowViewRequest
+    internal class ShowViewRequest<TPresenter> : ShowViewRequest
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowViewRequest&lt;TPresenter&gt;"/> class.

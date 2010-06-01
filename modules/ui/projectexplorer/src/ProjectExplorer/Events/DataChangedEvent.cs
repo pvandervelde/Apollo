@@ -12,7 +12,7 @@ namespace Apollo.ProjectExplorer.Events
     /// Manages publication and subscription of data changed events.
     /// </summary>
     /// <typeparam name="TData">The type of the data.</typeparam>
-    public class DataChangedEvent<TData> : CompositePresentationEvent<TData>
+    internal class DataChangedEvent<TData> : CompositePresentationEvent<TData>
     {
     }
 }

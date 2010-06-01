@@ -13,6 +13,9 @@ namespace Apollo.ProjectExplorer
     /// A fake exception handler. This will later be removed and replaced
     /// by a proper one.
     /// </summary>
+    /// <design>
+    /// This class must be public because we use it in the AppDomainBuilder.
+    /// </design>
     [Serializable]
     public sealed class MockExceptionHandler : IExceptionHandler
     {

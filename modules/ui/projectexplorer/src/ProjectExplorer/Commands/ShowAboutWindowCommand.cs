@@ -14,7 +14,7 @@ namespace Apollo.ProjectExplorer.Commands
     /// <summary>
     /// Handles the showing of the About window.
     /// </summary>
-    public sealed class ShowAboutWindowCommand : DelegateCommand<object>
+    internal sealed class ShowAboutWindowCommand : DelegateCommand<object>
     {
         /// <summary>
         /// Called when the command is executed.

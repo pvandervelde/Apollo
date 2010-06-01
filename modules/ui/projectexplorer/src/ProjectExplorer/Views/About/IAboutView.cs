@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.About
     /// <summary>
     /// The view for the <see cref="AboutModel"/>.
     /// </summary>
-    public interface IAboutView : IView<AboutModel>
+    internal interface IAboutView : IView<AboutModel>
     {
     }
 }

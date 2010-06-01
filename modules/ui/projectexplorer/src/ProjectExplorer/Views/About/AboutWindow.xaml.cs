@@ -20,7 +20,7 @@ using System.Windows.Shapes;
 namespace Apollo.ProjectExplorer.Views.About
 {
     /// <summary>
-    /// Interaction logic for AboutWindow.xaml
+    /// Interaction logic for AboutWindow.xaml.
     /// </summary>
     internal partial class AboutWindow : IAboutView
     {
@@ -44,6 +44,7 @@ namespace Apollo.ProjectExplorer.Views.About
             {
                 return (AboutModel)DataContext;
             }
+
             set
             {
                 DataContext = value;

@@ -25,21 +25,8 @@ namespace Apollo.ProjectExplorer
         private static void InitializeEnvironment()
         {
             // Set the internal logging for NLog
-            //Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_FILE", @"d:\temp\nloginternal.log");
-            //Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_LEVEL", "Debug");
-        }
-
-        /// <summary>
-        /// Called when the application starts.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.StartupEventArgs"/> instance containing the event data.</param>
-        private void HandleApplicationStartup(object sender, StartupEventArgs e)
-        {
-            InitializeEnvironment();
-
-            var userInterfaceModule = LoadKernel();
-            LoadUserInterface(userInterfaceModule);
+            // Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_FILE", @"d:\temp\nloginternal.log");
+            // Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_LEVEL", "Debug");
         }
 
         /// <summary>
@@ -50,7 +37,7 @@ namespace Apollo.ProjectExplorer
         /// registrations for the user interface connection to the
         /// kernel.
         /// </returns>
-        private IModule LoadKernel()
+        private static IModule LoadKernel()
         {
             IModule userInterfaceModule = null;
 
@@ -76,6 +63,19 @@ namespace Apollo.ProjectExplorer
         }
 
         /// <summary>
+        /// Called when the application starts.
+        /// </summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="System.Windows.StartupEventArgs"/> instance containing the event data.</param>
+        private void HandleApplicationStartup(object sender, StartupEventArgs e)
+        {
+            InitializeEnvironment();
+
+            var userInterfaceModule = LoadKernel();
+            LoadUserInterface(userInterfaceModule);
+        }
+
+        /// <summary>
         /// Loads the user interface.
         /// </summary>
         /// <param name="userInterfaceModule">The user interface module.</param>
@@ -91,23 +91,6 @@ namespace Apollo.ProjectExplorer
             var container = builder.Build();
             var bootstrapper = new UserInterfaceBootstrapper(container);
             bootstrapper.Run();
-
-            // Start the user interface
-            //var mainView = container.Resolve<IShellView>();
-            //mainView.ShowView();
-
-            // Set the main window and the shutdown method
-            // In theory the main window should already be set
-            // correctly, however should we ever change the
-            // order in which windows are created / loaded
-            // then we still have the correct main window.
-            //var mainWindow = mainView as Window;
-            //{
-                //Debug.Assert(mainWindow != null, "The shell should also be a window.");
-            //}
-
-            //MainWindow = mainWindow;
-
         }
 
         /// <summary>
@@ -147,7 +130,7 @@ namespace Apollo.ProjectExplorer
         {
             // Check if there is unsaved data
             // Check if anything is running
-            //throw new NotImplementedException();
+            // throw new NotImplementedException();
         }
     }
 }

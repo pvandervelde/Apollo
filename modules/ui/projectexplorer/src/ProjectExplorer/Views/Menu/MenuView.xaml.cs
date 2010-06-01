@@ -11,17 +11,17 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// <summary>
     /// A view for a top level menu.
     /// </summary>
-    public partial class MenuView : IMenuView
+    internal partial class MenuView : IMenuView
     {
         /// <summary>
         /// The routed command used to exit the application.
         /// </summary>
-        private readonly static RoutedCommand s_ExitCommand = new RoutedCommand();
+        private static readonly RoutedCommand s_ExitCommand = new RoutedCommand();
 
         /// <summary>
         /// The routed command used to display the about box.
         /// </summary>
-        private readonly static RoutedCommand s_AboutCommand = new RoutedCommand();
+        private static readonly RoutedCommand s_AboutCommand = new RoutedCommand();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MenuView"/> class.
@@ -61,6 +61,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
             { 
                 return (MenuModel) DataContext; 
             }
+
             set 
             { 
                 DataContext = value; 

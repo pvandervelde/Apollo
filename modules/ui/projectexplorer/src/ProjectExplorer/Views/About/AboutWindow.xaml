@@ -28,8 +28,12 @@
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
+            <!-- IMAGE GOES HERE ... -->
+            
+            <!-- Store the version information -->
             <ContentControl Grid.Row="1" Regions:RegionManager.RegionName="VersionInformation" />
             
+            <!-- Store the product information -->
             <ContentControl Grid.Row="2" Regions:RegionManager.RegionName="ProductInformation" />
         </Grid>
         
@@ -41,7 +45,7 @@
             MinHeight="23"
             MinWidth="75"
             Click="OnCloseButtonClick"
-            >
+            Margin="0, 10, 10, 10">
             <TextBlock Text="{lex:LocText Key=AboutWindow_Close, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Button_Close}" />
         </Button>
     </Grid>

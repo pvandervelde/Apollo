@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// <summary>
     /// Defines the interface for objects that act as the shell.
     /// </summary>
-    public interface IShellView : IView<ShellModel>
+    internal interface IShellView : IView<ShellModel>
     {
     }
 }

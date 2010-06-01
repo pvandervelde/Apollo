@@ -13,7 +13,7 @@ namespace Apollo.ProjectExplorer.Events
     /// <summary>
     /// Handles requests to show a view.
     /// </summary>
-    public class ShowViewRequest
+    internal class ShowViewRequest
     {
         /// <summary>
         /// The type of the <see cref="IPresenter"/>.

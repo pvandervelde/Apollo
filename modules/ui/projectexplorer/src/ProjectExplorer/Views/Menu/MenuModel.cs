@@ -12,7 +12,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// <summary>
     /// The <see cref="Model"/> for the menu.
     /// </summary>
-    public class MenuModel : Model
+    internal class MenuModel : Model
     {
         /// <summary>
         /// Gets or sets the exit command.

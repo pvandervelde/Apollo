@@ -354,76 +354,86 @@ task deployToTestDirectory -depends runScripts,createTestDirectory -precondition
 	}
 }
 
-task collectMetrics -depends runScripts{
+task collectMetrics -depends runScripts -precondition{ return $shouldCheckCoverage -or $shouldRunVerify } -action{
 	"Collecting statistics..."
 	
 	# gallio
-	foreach ($key in $projects.Keys)
+	if ($shouldRunUnitTests)
 	{
-		$proj = $projects[$key]
-		$path = Split-Path $proj -Parent
-		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
-		
-		"Checking $reportsPath for files ..."
-		if (Test-Path -Path $reportsPath -PathType Container)
+		foreach ($key in $projects.Keys)
 		{
-			Get-ChildItem -path $reportsPath | 
-				Where-Object { (($_.Name -like "*test-report*") -and ($_.Extension -match ".xml"))} |
-				Copy-Item -Destination (Join-Path $dirReports "$key-gallio.xml") -Force
+			$proj = $projects[$key]
+			$path = Split-Path $proj -Parent
+			$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+			
+			"Checking $reportsPath for files ..."
+			if (Test-Path -Path $reportsPath -PathType Container)
+			{
+				Get-ChildItem -path $reportsPath | 
+					Where-Object { (($_.Name -like "*test-report*") -and ($_.Extension -match ".xml"))} |
+					Copy-Item -Destination (Join-Path $dirReports "$key-gallio.xml") -Force
+			}
 		}
 	}
 	
 	# ncover
-	foreach ($proj in $projects.Values)
+	if ($shouldCheckCoverage)
 	{
-		$path = Split-Path $proj -Parent
-		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
-		
-		"Checking $reportsPath for files ..."
-		if (Test-Path -Path $reportsPath -PathType Container)
+		foreach ($proj in $projects.Values)
 		{
-			Get-ChildItem -path $reportsPath | 
-				Where-Object { (($_.Name -like "*ncover*") -and ($_.Extension -match ".xml"))} |
-				Copy-Item -Destination (Join-Path $dirTemp $_.Name) -Force
+			$path = Split-Path $proj -Parent
+			$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+			
+			"Checking $reportsPath for files ..."
+			if (Test-Path -Path $reportsPath -PathType Container)
+			{
+				Get-ChildItem -path $reportsPath | 
+					Where-Object { (($_.Name -like "*ncover*") -and ($_.Extension -match ".xml"))} |
+					Copy-Item -Destination (Join-Path $dirTemp $_.Name) -Force
+			}
+		}
+		
+		$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
+		$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirTemp '*ncover.xml')  + '" ' + ' /s:"' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
+		$command
+		Invoke-Expression $command
+		if ($LastExitCode -ne 0)
+		{
+			throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
 		}
 	}
 	
-	$ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-	$command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirTemp '*ncover.xml')  + '" ' + ' /s:"' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
-	$command
-	Invoke-Expression $command
-	if ($LastExitCode -ne 0)
+	# verification
+	if ($shouldRunVerify)
 	{
-		throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
-	}
-	
-	# fxcop
-	foreach ($proj in $projects.Values)
-	{
-		$path = Split-Path $proj -Parent
-		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
-		
-		"Checking $reportsPath for files ..."
-		if (Test-Path -Path $reportsPath -PathType Container)
+		# fxcop
+		foreach ($proj in $projects.Values)
 		{
-			Get-ChildItem -path $reportsPath | 
-				Where-Object { (($_.Name -like "*fxcop*") -and ($_.Extension -match ".xml"))} |
-				Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
+			$path = Split-Path $proj -Parent
+			$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+			
+			"Checking $reportsPath for files ..."
+			if (Test-Path -Path $reportsPath -PathType Container)
+			{
+				Get-ChildItem -path $reportsPath | 
+					Where-Object { (($_.Name -like "*fxcop*") -and ($_.Extension -match ".xml"))} |
+					Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
+			}
+		}
+		
+		# stylecop
+		foreach ($proj in $projects.Values)
+		{
+			$path = Split-Path $proj -Parent
+			$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
+			
+			"Checking $reportsPath for files ..."
+			if (Test-Path -Path $reportsPath -PathType Container)
+			{
+				Get-ChildItem -path $reportsPath | 
+					Where-Object { (($_.Name -like "*stylecop*") -and ($_.Extension -match ".xml"))} |
+					Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
+			}
 		}
 	}
-	
-	# stylecop
-	foreach ($proj in $projects.Values)
-	{
-		$path = Split-Path $proj -Parent
-		$reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
-		
-		"Checking $reportsPath for files ..."
-		if (Test-Path -Path $reportsPath -PathType Container)
-		{
-			Get-ChildItem -path $reportsPath | 
-				Where-Object { (($_.Name -like "*stylecop*") -and ($_.Extension -match ".xml"))} |
-				Copy-Item -Destination (Join-Path $dirReports $_.Name) -Force
-		}
-	}	
 }

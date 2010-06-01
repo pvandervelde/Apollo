@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
 using System.Windows;
@@ -36,3 +37,6 @@ using System.Windows;
     // (used if a resource is not found in the page, 
     // app, or any theme specific resource dictionaries)
     ResourceDictionaryLocation.SourceAssembly)]
+
+// Suppress messages
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope="namespace", Target="Apollo.UI.Common.Eventing", MessageId="Eventing")]

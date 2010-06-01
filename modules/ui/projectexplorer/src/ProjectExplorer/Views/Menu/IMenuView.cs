@@ -11,7 +11,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// <summary>
     /// Defines the interface for the menu.
     /// </summary>
-    public interface IMenuView : IView<MenuModel>
+    internal interface IMenuView : IView<MenuModel>
     {
     }
 }

@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using Autofac;
@@ -23,6 +24,8 @@ namespace Apollo.UI.Common.Bootstrapper
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Autofac",
+        Justification = "The correct spelling is 'Autofac'.")]
     public class AutofacContainerAdapter : IContainerAdapter
     {
         /// <summary>
@@ -182,7 +185,7 @@ namespace Apollo.UI.Common.Bootstrapper
         {
             if (Container.IsRegistered<TFrom>())
             {
-                Logger.Log(string.Format("Type is already registered: {0}", typeof(TFrom).Name), Category.Warn, Priority.Medium);
+                Logger.Log(string.Format(CultureInfo.InvariantCulture, "Type is already registered: {0}", typeof(TFrom).Name), Category.Warn, Priority.Medium);
                 ContainerAdapterExtensions.TypeMappingAlreadyRegistered<TFrom>(Logger);
             }
             else

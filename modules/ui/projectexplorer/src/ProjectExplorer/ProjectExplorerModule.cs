@@ -55,23 +55,23 @@ namespace Apollo.ProjectExplorer
             // Get all the registrations from Apollo.UI.Common
             var commonUiAssembly = typeof(Observable).Assembly;
             m_Container.Configure(c => c.RegisterAssemblyTypes(commonUiAssembly)
-                                           .Where(t => t.FullName.EndsWith("Command") && t.IsClass && !t.IsAbstract)
+                                           .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                                            .InstancePerDependency());
 
             var localAssembly = GetType().Assembly;
             m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("Presenter") && t.IsClass && !t.IsAbstract)
+                                           .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                                            .InstancePerDependency()
                                            .PropertiesAutowired());
             m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => (t.FullName.EndsWith("View") || t.FullName.EndsWith("Window")) && t.IsClass && !t.IsAbstract)
+                                           .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
                                            .InstancePerDependency()
                                            .AsImplementedInterfaces());
             m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("EventListener") && t.IsClass && !t.IsAbstract)
+                                           .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                                            .SingleInstance());
             m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("Command") && t.IsClass && !t.IsAbstract)
+                                           .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                                            .InstancePerDependency());
 
             // Register the regions
