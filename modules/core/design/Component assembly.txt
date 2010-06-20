@@ -17,4 +17,9 @@ For Apollo we should improve this. Here's a thought:
   an actual IOC container and dynamically create builders (which we can discard when ever we want)
 - Another issue is figuring out a way to be able to load components without having the entire 
   object graph availabe. We might be able to create dynamic proxies that only load up their
-  suggested component once they are needed?
+  suggested component once they are needed? 
+  --> Func<> and Action<> could work really well for this because you can delay loading
+      the object until you know what it is that you want. This way you can also make the
+	  selection depend on the run-time state of the system and you can move the selection
+	  decision away from one location, e.g. the owner component can do the selection or
+	  the system or ....

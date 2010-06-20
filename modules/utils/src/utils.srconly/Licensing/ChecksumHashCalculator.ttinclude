@@ -1,0 +1,162 @@
+﻿<#@ import namespace="System" #>
+<#+
+    string successText = "\"ValidationSuccess\"";
+    string failureText = "\"ValidationFailure\"";
+#>
+<#+
+private void WriteUsingStatementsForChecksumCalculation()
+{
+#>
+using System;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
+<#+
+}
+#>
+<#+
+private void WriteChecksumCalculation(string resultVariable, string generationVariable, string expirationVariable, string storeInto)
+{
+#>
+            // Add the validation result and the two date/time objects together. We'll specify
+            // a round-tripable date/time string format to get all the information that is in
+            // the date/time object.
+            var mashedText = <#= resultVariable #> + 
+                             <#= generationVariable #>.ToString("o", CultureInfo.InvariantCulture) + 
+                             <#= expirationVariable #>.ToString("o", CultureInfo.InvariantCulture);
+
+            // Calculate the hash value
+            var data = Encoding.Unicode.GetBytes(mashedText);
+            var hash = new SHA512Managed().ComputeHash(data);
+
+            // Translate the resulting data back to a hash string
+            <#= storeInto #> Convert.ToBase64String(hash, Base64FormattingOptions.None);
+<#+
+}
+#>
+<#+
+private void WriteChecksumCalculationMethod()
+{
+    string resultVariable = "validationResult";
+    string generationVariable = "generationTime";
+    string expirationVariable = "expirationTime";
+    string storeInto = "return ";
+#>
+        /// <summary>
+        /// Computes the hash value for the given validation result by combining it with
+        /// the generation and expiration time..
+        /// </summary>
+        /// <param name="validationResult">The validation result.</param>
+        /// <param name="generationTime">The time the validation result was computed.</param>
+        /// <param name="expirationTime">The time the validation result expires.</param>
+        /// <returns>
+        ///     A base-64 encoded string version of the hash code of the validation result,
+        ///     the generation time and the expiration time.
+        /// </returns>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("TextTemplatingFileGenerator", "10.0.0.0")]
+        [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
+        private static string ComputeHash(string <#= resultVariable #>, DateTimeOffset <#= generationVariable #>, DateTimeOffset <#= expirationVariable #>)
+        {
+<#+ 
+    WriteChecksumCalculation(resultVariable, generationVariable, expirationVariable, storeInto); 
+#>
+        }
+<#+
+}
+#>
+<#+
+private void WriteSuccessChecksumCalculation(string generationVariable, string expirationVariable, string storeInto)
+{
+    WriteChecksumCalculation(successText, generationVariable, expirationVariable, storeInto); 
+}
+#>
+<#+
+private void WriteFailureChecksumCalculation(string generationVariable, string expirationVariable, string storeInto)
+{
+    WriteChecksumCalculation(failureText, generationVariable, expirationVariable, storeInto); 
+}
+#>
+<#+
+private void WriteChecksumCompareForLicenseCheckResult()
+{
+    string resultVariable = "result";
+    string calculatedVariable = "calculatedChecksum";
+
+    // We should probably get the success string from some kind of database / file or other
+    // storage method. That way we can alternate between different success strings in different
+    // versions of the product.
+    string generationVariable = "result.Generated";
+    string expirationVariable = "result.Expires";
+    string storeInto = "var " + calculatedVariable + " = ";
+#>
+        private static bool IsLicenseValid(LicenseCheckResult <#= resultVariable #>)
+        {
+            // Calculate the checksum value from the result.
+<#+
+    WriteSuccessChecksumCalculation(generationVariable, expirationVariable, storeInto); 
+#>
+            return string.Equals(<#= calculatedVariable #>, <#= resultVariable #>.Checksum.ValidationHash, StringComparison.Ordinal);
+        }
+<#+
+}
+#>
+<#+
+public enum ElementType
+{
+    @class,
+    sealedClass,
+    @struct,
+}
+
+private string ElementSignature(ElementType elementType)
+{
+    switch (elementType)
+    {
+        case ElementType.@class :
+            return "partial class";
+        case ElementType.sealedClass :
+            return "sealed partial class";
+        case ElementType.@struct :
+            return "partial struct";
+        default:
+            throw new NotImplementedException();
+    }
+}
+
+private void WritePartialElementWithHashCalculation(string nameSpace, string modifier, ElementType elementType, string name)
+{
+#>
+//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+//-----------------------------------------------------------------------
+// <auto-generated>
+//     This code was generated by a tool.
+//
+//     Changes to this file may cause incorrect behavior and will be lost
+//     if the code is regenerated.
+// </auto-generated>
+//-----------------------------------------------------------------------
+
+<#+ 
+    WriteUsingStatementsForChecksumCalculation(); 
+#>
+
+namespace <#= nameSpace #>
+{
+    /// <summary>
+    /// Stores information about a checksum that is used by the verification system.
+    /// </summary>
+    <#= modifier #> <#= ElementSignature(elementType) #> <#= name #>
+    {
+<#+ 
+    WriteChecksumCalculationMethod(); 
+#>
+    }
+}
+<#+
+}
+#>

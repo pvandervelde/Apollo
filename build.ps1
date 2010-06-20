@@ -23,7 +23,7 @@ function Build-DebugDev{
 	& invoke-psake $script debug,unittest,verify,deploytotest,build 4.0x86
 	if (!$psake.build_success)
 	{
-		throw "Sherlock build failed with return code: $LastExitCode"
+		throw "Apollo build failed with return code: $LastExitCode"
 	}
 }
 
@@ -36,7 +36,7 @@ function Build-ReleaseDev{
 	& invoke-psake $script release,unittest,verify,deploytotest,build 4.0x86
 	if (!$psake.build_success)
 	{
-		throw "Sherlock build failed with return code: $LastExitCode"
+		throw "Apollo build failed with return code: $LastExitCode"
 	}
 }
 
@@ -49,7 +49,7 @@ function Build-DebugFull{
 	& invoke-psake $script coverage,debug,unittest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
 	if (!$psake.build_success)
 	{
-		throw "Sherlock build failed with return code: $LastExitCode"
+		throw "Apollo build failed with return code: $LastExitCode"
 	}
 }
 
@@ -62,7 +62,7 @@ function Build-ReleaseFull{
 	& invoke-psake $script coverage,release,unittest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
 	if (!$psake.build_success)
 	{
-		throw "Sherlock build failed with return code: $LastExitCode"
+		throw "Apollo build failed with return code: $LastExitCode"
 	}
 }
 

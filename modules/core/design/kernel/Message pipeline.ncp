@@ -138,7 +138,7 @@ The other DNS names (which are not related to a specific service) are:
       <Entity type="Comment">
         <Text>Must be serializable</Text>
         <Location left="606" top="383" />
-        <Size width="124" height="50" />
+        <Size width="133" height="50" />
       </Entity>
       <Entity type="Comment">
         <Text>The message pipeline is not expected to handle extremely large volumes of messages. The largest amount of messages will probably be generated between the project and the UI for visualizations and progress updates.</Text>
@@ -301,6 +301,8 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>

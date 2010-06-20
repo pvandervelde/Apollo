@@ -84,18 +84,23 @@
       </Entity>
       <Entity type="Comment">
         <Text>Plug-in (assembly) information needs to be stored with a version number so that we can always determine the version numbers. Also we'll probably need culture information. So somehow we'll need to match up to the full assembly name.</Text>
-        <Location left="10" top="141" />
-        <Size width="254" height="113" />
+        <Location left="10" top="143" />
+        <Size width="254" height="122" />
       </Entity>
       <Entity type="Comment">
         <Text>There are two parts in the plug-in stystem. The first is detection. The second is linking. We should be able to provide both independently from each other. For instance the kernel could really use a proper linking system, but it has no use for detection because all plug-ins are known at startup time.</Text>
-        <Location left="10" top="267" />
-        <Size width="254" height="134" />
+        <Location left="10" top="282" />
+        <Size width="254" height="151" />
       </Entity>
       <Entity type="Comment">
         <Text>Links to a in-memory database.</Text>
         <Location left="1226" top="809" />
         <Size width="126" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we want to use the CCI (Common Compiler Infrastructure) for this? The use of CCI would provide us with a non-reflection way of reading assembly files. This may be faster and should prevent ever loading the assembly at all.</Text>
+        <Location left="10" top="448" />
+        <Size width="254" height="123" />
       </Entity>
     </Entities>
     <Relationships>
@@ -104,8 +109,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -238,8 +241,6 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -258,16 +259,12 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -286,8 +283,6 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>

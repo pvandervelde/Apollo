@@ -442,6 +442,11 @@ namespace Apollo.Core.Messaging
             // Elevate to full trust. This is required because System.Threading.Parallel.Invoke() is in a
             // full-trust assembly. In order to invoke it we'll need to run it in that environment (full trust).
             // @Todo: Does this elevation drop off the stack before or after we finish with the thread, i.e. is the thread running full-trust?
+            //
+            // Really what you want here is send the message asynchronously but if possible not on a new thread. Putting up a new thread
+            // for each message may well lead to problems like race-conditions / deadlocks & maybe even worse thread pool exhaustion (there
+            // are after all only 25-ish threads in the pool).
+            // @Todo: Would the use of a new thread for each message cause a problem with a) race-conditions / deadlocks & b) thread pool exhaustion?
             SecurityHelpers.Elevate(
                 new PermissionSet(
                     PermissionState.Unrestricted),
