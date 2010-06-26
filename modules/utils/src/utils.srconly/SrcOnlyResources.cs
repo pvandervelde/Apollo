@@ -20,7 +20,7 @@ namespace Apollo.Utils
     internal static class SrcOnlyResources
     {
         /// <summary>
-        /// Returns the string resource for an <see cref="ArgumentOutOfRangeException"/>.
+        /// Gets the string resource for an <see cref="ArgumentOutOfRangeException"/>.
         /// </summary>
         /// <value>The string resource.</value>
         public static string Exception_Messages_ArgumentOutOfRange
@@ -32,7 +32,7 @@ namespace Apollo.Utils
         }
 
         /// <summary>
-        /// Returns the string resource for an <see cref="ArgumentOutOfRangeException"/> with an argument formatter.
+        /// Gets the string resource for an <see cref="ArgumentOutOfRangeException"/> with an argument formatter.
         /// </summary>
         /// <value>The string resource.</value>
         public static string Exception_Messages_ArgumentOutOfRange_WithArgument

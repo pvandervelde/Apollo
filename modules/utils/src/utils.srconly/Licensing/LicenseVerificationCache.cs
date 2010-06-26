@@ -12,44 +12,35 @@
 //     if the code is regenerated.
 // </auto-generated>
 //-----------------------------------------------------------------------
-<#@ include file="ChecksumHashCalculator.ttinclude" #>
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-<#
-var apolloLicensingNamespace = "Apollo.Utils.Licensing";
-if (!string.Equals(Namespace, apolloLicensingNamespace))
-{
-#>
-using Apollo.Utils.Licensing;
-<#
-}
-#>
 using Lokad;
 
-namespace <#= Namespace #>
+namespace Apollo.Utils.Licensing
 {
     /// <summary>
     /// Implements the <see cref="ILicenseVerificationCache" /> interface.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("TextTemplatingFileGenerator", "10.0.0.0")]
-    internal sealed class <#= this.ClassName #> : ILicenseVerificationCache, ICacheProxyHolder
+    internal sealed class LicenseVerificationCache : ILicenseVerificationCache, ICacheProxyHolder
     {
         /// <summary>
-        /// A <see cref="ILicenseVerificationCacheProxy"/> for the <see cref="<#= this.ClassName #>"/>.
+        /// A <see cref="ILicenseVerificationCacheProxy"/> for the <see cref="LicenseVerificationCache"/>.
         /// </summary>
         private sealed class Proxy : ILicenseVerificationCacheProxy
         {
             /// <summary>
             /// The owner object.
             /// </summary>
-            private readonly <#= this.ClassName #> m_Owner;
+            private readonly LicenseVerificationCache m_Owner;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="Proxy"/> class.
             /// </summary>
             /// <param name="owner">The owner.</param>
-            public Proxy(<#= this.ClassName #> owner)
+            public Proxy(LicenseVerificationCache owner)
             {
                 {
                     Debug.Assert(owner != null, "The owner should not be null.");
@@ -93,13 +84,10 @@ namespace <#= Namespace #>
         /// </summary>
         private readonly Func<double> m_Random;
 
-<#
-    string lastResultField = "m_LastResult";
-#>
         /// <summary>
         /// The latest license validation result.
         /// </summary>
-        private LicenseCheckResult <#= lastResultField #>;
+        private LicenseCheckResult m_LastResult;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LicenseVerificationCache"/> class.
@@ -128,20 +116,13 @@ namespace <#= Namespace #>
             m_Now = now;
             m_Random = randomizer;
 
-<#
-    string generationVariable = "generationTime";
-    string expirationVariable = "expirationTime";
-#>
             // Store the generation time and the expiration time. At the moment we'll assume
             // a 5 minute expiration time. Later on we should probably generate this arbitrairily.
-            var <#= generationVariable #> = m_Now();
-            var <#= expirationVariable #> = <#= generationVariable #>.Add(new TimeSpan(0, 5, 0));
+            var generationTime = m_Now();
+            var expirationTime = generationTime.Add(new TimeSpan(0, 5, 0));
 
-<#
-    var checksumVariable = "checksum";
-#>
-            var <#= checksumVariable #> = new Checksum(<#= successText #>, <#= generationVariable #>, <#= expirationVariable #>);
-            <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+            var checksum = new Checksum("ValidationSuccess", generationTime, expirationTime);
+            m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
 
 			// Store our own proxy so that we don't completely rely on other proxies for their results
 			Store(CreateNewProxy());
@@ -195,11 +176,11 @@ namespace <#= Namespace #>
 			// verification
             if (m_Proxies.Count <= 1)
             {
-                var <#= generationVariable #> = m_Now();
-                var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                var generationTime = m_Now();
+                var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                var checksum = new Checksum("ValidationFailure", generationTime, expirationTime);
+                m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
 
                 // We're done here ...
                 return;
@@ -229,14 +210,14 @@ namespace <#= Namespace #>
                 }
 
                 // if one of the proxies has failed then we fail too --> DONE
-                var failureChecksum = new Checksum(<#= failureText #>, proxyResult.Generated, proxyResult.Expires);
+                var failureChecksum = new Checksum("ValidationFailure", proxyResult.Generated, proxyResult.Expires);
                 if (failureChecksum.Equals(proxyResult.Checksum))
                 {
-                    var <#= generationVariable #> = m_Now();
-                    var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                    var generationTime = m_Now();
+                    var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                    var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                    <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                    var checksum = new Checksum("ValidationFailure", generationTime, expirationTime);
+                    m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
 
                     // We're done here ...
                     return;
@@ -269,11 +250,11 @@ namespace <#= Namespace #>
 				}
 				catch(Exception)
 				{
-                    var <#= generationVariable #> = m_Now();
-                    var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                    var generationTime = m_Now();
+                    var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                    var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                    <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                    var checksum = new Checksum("ValidationFailure", generationTime, expirationTime);
+                    m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
 					return;
 				}
 
@@ -282,32 +263,32 @@ namespace <#= Namespace #>
                 {
                     // If we do not validate then grab the success result and 
                     // build our own checksum
-                    var <#= generationVariable #> = m_Now();
-                    var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                    var generationTime = m_Now();
+                    var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                    var <#= checksumVariable #> = new Checksum(<#= successText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                    <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                    var checksum = new Checksum("ValidationSuccess", generationTime, expirationTime);
+                    m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
                 }
                 else
                 {
                     // If we do not validate then grab the success result and 
                     // build our own checksum
-                    var <#= generationVariable #> = m_Now();
-                    var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                    var generationTime = m_Now();
+                    var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                    var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                    <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                    var checksum = new Checksum("ValidationFailure", generationTime, expirationTime);
+                    m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
                 }
             }
             else
             {
                 // If we do not validate then grab the success result and 
                 // build our own checksum
-                var <#= generationVariable #> = m_Now();
-                var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
+                var generationTime = m_Now();
+                var expirationTime = generationTime + nextExpiration.RepeatAfter(generationTime);
 
-                var <#= checksumVariable #> = new Checksum(<#= successText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
+                var checksum = new Checksum("ValidationSuccess", generationTime, expirationTime);
+                m_LastResult = new LicenseCheckResult(generationTime, expirationTime, checksum);
             }
         }
 

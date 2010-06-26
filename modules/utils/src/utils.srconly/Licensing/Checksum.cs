@@ -75,10 +75,19 @@ namespace Apollo.Utils.Licensing
 
                 Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
                 Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(generationTime > expirationTime, SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
             }
 
             m_Base64Hash = ComputeHash(validationResult, generationTime, expirationTime);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Checksum"/> struct.
+        /// </summary>
+        /// <param name="checksumToCopy">The checksum that should be copied.</param>
+        public Checksum(Checksum checksumToCopy)
+        {
+            m_Base64Hash = checksumToCopy.m_Base64Hash;
         }
 
         /// <summary>

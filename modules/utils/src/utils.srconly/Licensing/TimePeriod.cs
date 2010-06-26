@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Lokad;
 
@@ -19,31 +20,15 @@ namespace Apollo.Utils.Licensing
     internal struct TimePeriod : IEquatable<TimePeriod>
     {
         /// <summary>
-        /// Define the number of days in the Gregorian year (i.e. the calender year)
-        /// </summary>
-        private const double s_NumberOfDaysPerYear = 365.2425;
-
-        /// <summary>
-        /// Define the number of days in an (average) month based on the
-        /// Gregorian calender.
-        /// </summary>
-        private const double s_NumberOfDaysPerMonth = 30.436875;
-
-        /// <summary>
         /// The number of days in a week.
         /// </summary>
         private const int s_NumberOfDaysPerWeek = 7;
 
         /// <summary>
-        /// The number of hours per day.
-        /// </summary>
-        private const int s_NumberOfHoursPerDay = 24;
-
-        /// <summary>
         /// Maps a <c>RepeatPeriod</c> to a function that can be used to calculate the next validation time.
         /// </summary>
         private static readonly Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>> s_NextDateTimeMap =
-            new Dictionary<RepeatPeriod,Func<sbyte, DateTimeOffset,DateTimeOffset>>
+            new Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>>
             {
                 { RepeatPeriod.Hourly, CalculateNextValidationTimePerHour },
                 { RepeatPeriod.Daily, CalculateNextValidationTimePerDay },
@@ -193,83 +178,6 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
-        /// </summary>
-        /// <remarks>
-        /// Note that the conversion from a <c>TimePeriod</c> to an expiration time
-        /// is a lossy conversion. This means that going backwards introduces potential
-        /// uncertainties.
-        /// </remarks>
-        /// <param name="generationTime">The generation time.</param>
-        /// <param name="expirationTime">The expiration time.</param>
-        public TimePeriod(DateTimeOffset generationTime, DateTimeOffset expirationTime)
-        {
-            // Calculate the expiry time
-            var expiryTime = expirationTime - generationTime;
-
-            // if the time is (n * years +- 2 days) then we'll assume 
-            // the time is years.
-            var totalYears = Math.Round(expiryTime.TotalDays / s_NumberOfDaysPerYear);
-            var daysLeft = expiryTime.TotalDays - totalYears * s_NumberOfDaysPerYear;
-            if (Math.Abs(daysLeft) <= 2)
-            {
-                m_Period = RepeatPeriod.Yearly;
-                m_Modifier = (sbyte)totalYears;
-                return;
-            }
-
-            // if the time is (n * months +- 3 days) then we'll assume
-            // the time is months. we'l be using 3 days to capture
-            // leap years
-            var totalMonths = Math.Round(expiryTime.TotalDays / s_NumberOfDaysPerMonth);
-            daysLeft = expiryTime.TotalDays - totalMonths * s_NumberOfDaysPerMonth;
-            if (Math.Abs(daysLeft) <= 3)
-            {
-                m_Period = RepeatPeriod.Monthly;
-                m_Modifier = (sbyte)totalMonths;
-                return;
-            }
-
-            // If the time is (n * weeks +- 1 day) then we assume
-            // the time is weeks. If n is even then we'll assume
-            // fortnights
-            var totalWeeks = Math.Round(expiryTime.TotalDays / s_NumberOfDaysPerWeek);
-            daysLeft = expiryTime.TotalDays - totalWeeks * s_NumberOfDaysPerWeek;
-            if (Math.Abs(daysLeft) <= 1)
-            {
-                if (((int)totalWeeks) % 2 == 0)
-                {
-                    m_Period = RepeatPeriod.Fortnightly;
-                    m_Modifier = (sbyte)(totalWeeks / 2.0);
-                }
-                else
-                {
-                    m_Period = RepeatPeriod.Weekly;
-                    m_Modifier = (sbyte)totalWeeks;
-                }
-
-                return;
-            }
-
-            // if the time is (n * days +- 2 hours) then we 
-            // assume the time is in days. we'll be using
-            // 2 hours to capture daylight savings changes
-            var totalDays = Math.Round(expiryTime.TotalHours / s_NumberOfHoursPerDay);
-            var hoursLeft = expiryTime.TotalHours - totalDays * s_NumberOfHoursPerDay;
-            if (Math.Abs(hoursLeft) <= 2)
-            {
-                m_Period = RepeatPeriod.Daily;
-                m_Modifier = (sbyte)totalDays;
-                return;
-            }
-
-            // if the time is 'obviously' less than one day then 
-            // the period is hours
-            m_Period = RepeatPeriod.Hourly;
-            m_Modifier = (sbyte)Math.Round(expiryTime.TotalHours);
-        }
-
-        /// <summary>
         /// Gets the period after which the license check should be repeated.
         /// </summary>
         /// <value>The period.</value>
@@ -318,6 +226,8 @@ namespace Apollo.Utils.Licensing
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="TimePeriod"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public bool Equals(TimePeriod other)
         {
             return m_Period.Equals(other.m_Period) && m_Modifier.Equals(other.m_Modifier);
@@ -330,6 +240,8 @@ namespace Apollo.Utils.Licensing
         /// <returns>
         ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(obj, null))

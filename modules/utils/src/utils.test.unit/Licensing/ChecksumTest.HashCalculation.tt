@@ -1,0 +1,4 @@
+﻿<#@ template debug="false" hostspecific="true" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ include file="..\..\utils.srconly\Licensing\ChecksumHashCalculator.ttinclude" #>
+<# WritePartialElementWithHashCalculation("Apollo.Utils.Licensing", "public", ElementType.@class, "ChecksumTest"); #>

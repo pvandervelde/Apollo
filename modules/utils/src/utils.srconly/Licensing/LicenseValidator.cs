@@ -12,36 +12,25 @@
 //     if the code is regenerated.
 // </auto-generated>
 //-----------------------------------------------------------------------
-<#@ include file="ChecksumHashCalculator.ttinclude" #>
-<#
-WriteUsingStatementsForChecksumCalculation();
-#>
-<#
-var apolloLicensingNamespace = "Apollo.Utils.Licensing";
-if (!string.Equals(Namespace, apolloLicensingNamespace))
-{
-#>
-using Apollo.Utils.Licensing;
-<#
-}
-#>
+
+using System;
+using System.Globalization;
+using System.Security.Cryptography;
+using System.Text;
 using Lokad;
 
-namespace <#= Namespace #>
+namespace Apollo.Utils.Licensing
 {
     /// <summary>
     /// Implements the <see cref="ILicenseValidator" /> interface.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("TextTemplatingFileGenerator", "10.0.0.0")]
-    internal sealed class <#= this.ClassName #> : ILicenseValidator
+    internal sealed class LicenseValidator : ILicenseValidator
     {
-<#
-    string standardExpirationTimeVariable = "s_StandardExpirationTime";
-#>
         /// <summary> 
         /// The default time period used before a next license check is required.
         /// </summary>
-        private static readonly TimePeriod <#= standardExpirationTimeVariable #> = new TimePeriod(RepeatPeriod.Hourly);
+        private static readonly TimePeriod s_StandardExpirationTime = new TimePeriod(RepeatPeriod.Hourly);
 
         /// <summary>
         /// The cache that holds the latest license verification results.
@@ -59,7 +48,7 @@ namespace <#= Namespace #>
         private readonly Func<DateTimeOffset> m_Now;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="<#= this.ClassName #>"/> class.
+        /// Initializes a new instance of the <see cref="LicenseValidator"/> class.
         /// </summary>
         /// <param name="cache">The cache that holds the latest verification results.</param>
         /// <param name="onValidationResult">The delegate that will be invoked each time there is a new validation result.</param>
@@ -73,7 +62,7 @@ namespace <#= Namespace #>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="now"/> is <see langword="null"/>.
         /// </exception>
-        public <#= this.ClassName #>(
+        public LicenseValidator(
             ILicenseVerificationCache cache,
             LicenseResultUpdated onValidationResult,
             Func<DateTimeOffset> now)
@@ -95,49 +84,20 @@ namespace <#= Namespace #>
         /// </summary>
         public void Verify()
         {
-<#
-    WriteVerificationText(standardExpirationTimeVariable);
-#>
-        }
-
-<#
-    string nextExpiration = "nextExpiration";
-#>
-        /// <summary>
-        /// Verifies the license and stores a value based on the
-        /// license validity and the checksum.
-        /// </summary>
-        /// <param name="nextExpiration">
-        /// The <see cref="TimePeriod"/> that must occur before the validated
-        /// license check expires.
-        /// </param>
-        public void Verify(TimePeriod <#= nextExpiration #>)
-        {
-<#
-    WriteVerificationText(nextExpiration);
-#>
-        }
-    }
-}
-<#+
-private void WriteVerificationText(string nextExpiration)
-{
-    string lastResultVariable = "lastResult";
-#>
             // Check if the cache has a valid result
-            var <#= lastResultVariable #> = m_Cache.LatestResult;
+            var lastResult = m_Cache.LatestResult;
 
             // Define the maximum amount of time that we allow the generation time to be
             // over the current time (due to differences in timing etc.)
             var maxFutureTime = new TimeSpan(0, 0, 1);
 
             // if the verification is more than x seconds into the future we fail it
-            if (<#= lastResultVariable #>.Generated > m_Now().Add(maxFutureTime))
+            if (lastResult.Generated > m_Now().Add(maxFutureTime))
             {
                 // Invalidate the cache
                 try
                 {
-                    m_Cache.Invalidate(<#= nextExpiration #>);
+                    m_Cache.Invalidate(s_StandardExpirationTime);
                 }
                 catch (Exception)
                 {
@@ -153,8 +113,8 @@ private void WriteVerificationText(string nextExpiration)
 
                 // fail the verification
                 var generated = m_Now();
-                var expires = generated + <#= nextExpiration #>.RepeatAfter(generated);
-                var failChecksum = new Checksum(<#= failureText #>, generated, expires);
+                var expires = generated + s_StandardExpirationTime.RepeatAfter(generated);
+                var failChecksum = new Checksum("ValidationFailure", generated, expires);
                 m_OnValidationResult(failChecksum, expires);
 
                 return;
@@ -162,12 +122,12 @@ private void WriteVerificationText(string nextExpiration)
 
             // The last verification time is not (too far) in the future so now we check if the result
             // has expired.
-            if (<#= lastResultVariable #>.Expires < m_Now())
+            if (lastResult.Expires < m_Now())
             {
                 // Verification has expired. Request a new one
                 try
                 {
-                    m_Cache.Invalidate(<#= nextExpiration #>);
+                    m_Cache.Invalidate(s_StandardExpirationTime);
                 }
                 catch (Exception)
                 {
@@ -181,17 +141,98 @@ private void WriteVerificationText(string nextExpiration)
                     // soon as we pass outside the catch block (i.e. ThreadAbortException)
                     // fail the verification
                     var generated = m_Now();
-                    var expires = generated + <#= nextExpiration #>.RepeatAfter(generated);
-                    var failChecksum = new Checksum(<#= failureText #>, generated, expires);
+                    var expires = generated + s_StandardExpirationTime.RepeatAfter(generated);
+                    var failChecksum = new Checksum("ValidationFailure", generated, expires);
                     m_OnValidationResult(failChecksum, expires);
 
                     return;
                 }
             }
             
-            <#= lastResultVariable #> = m_Cache.LatestResult;
-            var checksum = new Checksum(<#= lastResultVariable#>.Checksum);
-            m_OnValidationResult(checksum, <#= lastResultVariable #>.Expires);
-<#+
+            lastResult = m_Cache.LatestResult;
+            var checksum = new Checksum(lastResult.Checksum);
+            m_OnValidationResult(checksum, lastResult.Expires);
+        }
+
+        /// <summary>
+        /// Verifies the license and stores a value based on the
+        /// license validity and the checksum.
+        /// </summary>
+        /// <param name="nextExpiration">
+        /// The <see cref="TimePeriod"/> that must occur before the validated
+        /// license check expires.
+        /// </param>
+        public void Verify(TimePeriod nextExpiration)
+        {
+            // Check if the cache has a valid result
+            var lastResult = m_Cache.LatestResult;
+
+            // Define the maximum amount of time that we allow the generation time to be
+            // over the current time (due to differences in timing etc.)
+            var maxFutureTime = new TimeSpan(0, 0, 1);
+
+            // if the verification is more than x seconds into the future we fail it
+            if (lastResult.Generated > m_Now().Add(maxFutureTime))
+            {
+                // Invalidate the cache
+                try
+                {
+                    m_Cache.Invalidate(nextExpiration);
+                }
+                catch (Exception)
+                {
+                    // An exception occurred here. This indicates some kind
+                    // of failure in the licensing system. Really we want out now ..
+                    // We could call Environment.FailFast() but that makes this
+                    // really hard to test, so for now we do nothing
+                    // 
+                    // Note that certain classes of exceptions (e.g. OutOfMemoryException)
+                    // cannot be caught, or get caught but will simply be rethrown as
+                    // soon as we pass outside the catch block (i.e. ThreadAbortException)
+                }
+
+                // fail the verification
+                var generated = m_Now();
+                var expires = generated + nextExpiration.RepeatAfter(generated);
+                var failChecksum = new Checksum("ValidationFailure", generated, expires);
+                m_OnValidationResult(failChecksum, expires);
+
+                return;
+            }
+
+            // The last verification time is not (too far) in the future so now we check if the result
+            // has expired.
+            if (lastResult.Expires < m_Now())
+            {
+                // Verification has expired. Request a new one
+                try
+                {
+                    m_Cache.Invalidate(nextExpiration);
+                }
+                catch (Exception)
+                {
+                    // An exception occurred here. This indicates some kind
+                    // of failure in the licensing system. Really we want out now ..
+                    // We could call Environment.FailFast() but that makes this
+                    // really hard to test, so for now we do nothing
+                    // 
+                    // Note that certain classes of exceptions (e.g. OutOfMemoryException)
+                    // cannot be caught, or get caught but will simply be rethrown as
+                    // soon as we pass outside the catch block (i.e. ThreadAbortException)
+                    // fail the verification
+                    var generated = m_Now();
+                    var expires = generated + nextExpiration.RepeatAfter(generated);
+                    var failChecksum = new Checksum("ValidationFailure", generated, expires);
+                    m_OnValidationResult(failChecksum, expires);
+
+                    return;
+                }
+            }
+            
+            lastResult = m_Cache.LatestResult;
+            var checksum = new Checksum(lastResult.Checksum);
+            m_OnValidationResult(checksum, lastResult.Expires);
+        }
+    }
 }
-#>
+

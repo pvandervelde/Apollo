@@ -22,7 +22,7 @@ namespace Apollo.Utils
         /// <summary>
         /// Stops the timer.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId="Stop",
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Stop",
             Justification = "Stop is the most logical name for the method that stops the timer.")]
         void Stop();
 
