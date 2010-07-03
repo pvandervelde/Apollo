@@ -123,43 +123,6 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x86'">
-    <OutputPath>bin\x86\Deploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
-    <OutputPath>bin\Deploy\</OutputPath>
-    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
-    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x64'">
-    <OutputPath>bin\x64\Deploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
-    <Optimize>true</Optimize>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=1.4.5.676, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -187,11 +150,62 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\..\utils\src\utils.srconly\ErrorCodes.cs">
+      <Link>Utils\ErrorCodes.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\AssemblyNameElements.cs">
-      <Link>Utils\AssemblyNameElements.cs</Link>
+      <Link>Utils\Fusion\AssemblyNameElements.cs</Link>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Fusion\FusionHelper.cs">
-      <Link>Utils\FusionHelper.cs</Link>
+      <Link>Utils\Fusion\FusionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\Checksum.cs">
+      <Link>Utils\Licensing\Checksum.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\Checksum.HashCalculation.cs">
+      <Link>Utils\Licensing\Checksum.HashCalculation.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Checksum.HashCalculation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ICacheProxyHolder.cs">
+      <Link>Utils\Licensing\ICacheProxyHolder.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidator.cs">
+      <Link>Utils\Licensing\ILicenseValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseVerificationCache.cs">
+      <Link>Utils\Licensing\ILicenseVerificationCache.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseVerificationCacheProxy.cs">
+      <Link>Utils\Licensing\ILicenseVerificationCacheProxy.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ITimeBasedValidator.cs">
+      <Link>Utils\Licensing\ITimeBasedValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\IValidationService.cs">
+      <Link>Utils\Licensing\IValidationService.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\IValidator.cs">
+      <Link>Utils\Licensing\IValidator.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseCheckResult.cs">
+      <Link>Utils\Licensing\LicenseCheckResult.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseResultUpdated.cs">
+      <Link>Utils\Licensing\LicenseResultUpdated.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseVerificationFailedException.cs">
+      <Link>Utils\Licensing\LicenseVerificationFailedException.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\RepeatPeriod.cs">
+      <Link>Utils\Licensing\RepeatPeriod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\TimePeriod.cs">
+      <Link>Utils\Licensing\TimePeriod.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ValidationService.cs">
+      <Link>Utils\Licensing\ValidationService.cs</Link>
     </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
@@ -215,6 +229,7 @@
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
+    <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Bootstrapper.KernelInjector.cs" />
@@ -334,6 +349,7 @@
     <Compile Include="Utils\ApplicationConstants.cs" />
     <Compile Include="Utils\FileConstants.cs" />
     <Compile Include="Utils\SecurityHelpers.cs" />
+    <Compile Include="Utils\SrcOnlyResources.cs" />
     <Compile Include="Utils\UtilsModule.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -364,7 +380,24 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="..\..\..\utils\src\utils.srconly\Licensing\Checksum.HashCalculation.tt">
+      <Link>Utils\Licensing\Checksum.HashCalculation.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Checksum.HashCalculation.cs</LastGenOutput>
+    </None>
+    <None Include="..\..\..\utils\src\utils.srconly\Licensing\ChecksumHashCalculator.ttinclude">
+      <Link>Utils\Licensing\ChecksumHashCalculator.ttinclude</Link>
+    </None>
+    <None Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseValidator.ttinclude">
+      <Link>Utils\Licensing\LicenseValidator.ttinclude</Link>
+    </None>
+    <None Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseVerificationCache.ttinclude">
+      <Link>Utils\Licensing\LicenseVerificationCache.ttinclude</Link>
+    </None>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

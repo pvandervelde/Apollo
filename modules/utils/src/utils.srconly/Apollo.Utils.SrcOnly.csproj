@@ -95,6 +95,7 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
+    <Compile Include="ErrorCodes.cs" />
     <Compile Include="Fusion\AssemblyNameElements.cs" />
     <Compile Include="Fusion\FusionHelper.cs" />
     <Compile Include="Licensing\Checksum.cs" />
@@ -108,6 +109,7 @@
     <Compile Include="Licensing\ILicenseVerificationCache.cs" />
     <Compile Include="Licensing\ILicenseVerificationCacheProxy.cs" />
     <Compile Include="Licensing\ITimeBasedValidator.cs" />
+    <Compile Include="Licensing\IValidationService.cs" />
     <Compile Include="Licensing\IValidator.cs" />
     <Compile Include="Licensing\LicenseCheckResult.cs" />
     <Compile Include="Licensing\LicenseResultUpdated.cs" />
@@ -121,8 +123,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LicenseValidator.tt</DependentUpon>
     </Compile>
+    <Compile Include="Licensing\LicenseVerificationFailedException.cs" />
     <Compile Include="Licensing\RepeatPeriod.cs" />
     <Compile Include="Licensing\TimePeriod.cs" />
+    <Compile Include="Licensing\ValidationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

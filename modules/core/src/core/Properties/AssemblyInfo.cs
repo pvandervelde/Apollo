@@ -32,10 +32,3 @@ using System.Security;
 // Indicate that this assembly has security critical elements, but most of it
 // should be transparent to security demands (i.e. security demands pass through).
 [assembly: SecurityCritical]
-
-// Design supress messages
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Apollo.Core.Utils", MessageId = "Utils")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Apollo.Utils.Fusion", MessageId = "Utils", Justification = "Utils is the known short name for utilities.")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "type", Target = "Apollo.Core.Utils.UtilsModule", MessageId = "Utils")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Apollo.Core.Logging.Logger.#TranslateToNlogLevel(Apollo.Core.Logging.LevelToLog)", MessageId = "Nlog")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Apollo.Core.Logging.Logger.#TranslateFromNlogLevel(NLog.Logger)", MessageId = "Nlog")]

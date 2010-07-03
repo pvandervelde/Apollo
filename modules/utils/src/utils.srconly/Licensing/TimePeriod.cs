@@ -27,6 +27,8 @@ namespace Apollo.Utils.Licensing
         /// <summary>
         /// Maps a <c>RepeatPeriod</c> to a function that can be used to calculate the next validation time.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "This maps between a period and a function used to calculate the next date & time for that period. Nesting is a nessecary evil.")]
         private static readonly Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>> s_NextDateTimeMap =
             new Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>>
             {
@@ -74,7 +76,8 @@ namespace Apollo.Utils.Licensing
         /// </returns>
         private static DateTimeOffset CalculateNextValidationTimePerWeek(sbyte weeks, DateTimeOffset last)
         {
-            return last.AddDays(weeks * s_NumberOfDaysPerWeek);
+            int weeksAsInteger = weeks;
+            return last.AddDays(weeksAsInteger * s_NumberOfDaysPerWeek);
         }
 
         /// <summary>
@@ -87,7 +90,8 @@ namespace Apollo.Utils.Licensing
         /// </returns>
         private static DateTimeOffset CalculateNextValidationTimePerFortnight(sbyte fortnights, DateTimeOffset last)
         {
-            return last.AddDays(fortnights * 2 * s_NumberOfDaysPerWeek);
+            int fortnightsAsInteger = fortnights;
+            return last.AddDays(2 * s_NumberOfDaysPerWeek * fortnightsAsInteger);
         }
 
         /// <summary>
@@ -170,7 +174,7 @@ namespace Apollo.Utils.Licensing
         public TimePeriod(RepeatPeriod period, sbyte modifier)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(modifier > 0, SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, modifier);
+                Enforce.With<ArgumentOutOfRangeException>(modifier > 0, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, modifier);
             }
 
             m_Period = period;

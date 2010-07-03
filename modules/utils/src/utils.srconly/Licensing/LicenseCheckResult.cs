@@ -18,6 +18,28 @@ namespace Apollo.Utils.Licensing
     internal struct LicenseCheckResult : IEquatable<LicenseCheckResult>
     {
         /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(LicenseCheckResult first, LicenseCheckResult second)
+        {
+            return first.Equals(second);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(LicenseCheckResult first, LicenseCheckResult second)
+        {
+            return !first.Equals(second);
+        }
+
+        /// <summary>
         /// The time on which this verification result was generated.
         /// </summary>
         private readonly DateTimeOffset m_GenerationTime;
@@ -56,12 +78,12 @@ namespace Apollo.Utils.Licensing
         public LicenseCheckResult(DateTimeOffset generationTime, DateTimeOffset expirationTime, Checksum checksum)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, generationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
 
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
             }
 
             m_GenerationTime = generationTime;

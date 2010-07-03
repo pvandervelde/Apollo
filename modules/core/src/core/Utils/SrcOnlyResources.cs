@@ -5,7 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Utils.Properties;
+using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Properties;
 
 namespace Apollo.Utils
 {
@@ -17,6 +18,8 @@ namespace Apollo.Utils
     /// this class should NOT be copied to the host project. Define a NEW class called
     /// <c>Apollo.Utils.SrcOnlyResources</c> that mimicks the current class.
     /// </design>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Src",
+        Justification = "This class is only used internally.")]
     internal static class SrcOnlyResources
     {
         /// <summary>
@@ -27,7 +30,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources.Exception_Messages_ArgumentOutOfRange;
+                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange;
             }
         }
 
@@ -39,7 +42,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources.Exception_Messages_ArgumentOutOfRange_WithArgument;
+                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange_WithArgument;
             }
         }
 
@@ -51,9 +54,9 @@ namespace Apollo.Utils
         /// </value>
         public static string ExceptionMessagesInternalErrorWithCode
         {
-            get 
+            get
             {
-                return Resources.Exception_Messages_InternalError_WithCode;
+                return Resources_NonTranslatable.Exception_Messages_InternalError_WithCode;
             }
         }
 
@@ -65,9 +68,9 @@ namespace Apollo.Utils
         /// </value>
         public static string ExceptionsMessagesVerificationFailure
         {
-            get 
+            get
             {
-                return Resources.Exceptions_Messages_VerificationFailure;
+                return Resources_NonTranslatable.Exceptions_Messages_VerificationFailure;
             }
         }
     }

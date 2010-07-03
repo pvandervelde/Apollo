@@ -32,23 +32,15 @@ namespace Apollo.Utils.Fusion
     /// is attached to the <c>AppDomain.AssemblyResolve</c> event. 
     /// </para>
     /// <para>
-    /// The <c>FusionHelper</c> searches through a set of directories for assembly files.
+    /// The <c>FusionHelper</c> searches through a set of directories or files for assembly files.
     /// The assembly files that are found are checked to see if they match with the requested
     /// assembly file.
     /// </para>
     /// <para>
-    /// The choice was made to search through a set of directories, and not for instance
-    /// a list of known assemblies, because:
-    /// <list type="Bullet">
-    /// <serviceType>
-    /// It is not possible to know which dependencies exist in the assemblies we have to load
-    /// </serviceType>
-    /// <serviceType>
-    /// We do not know which assemblies can safely be loaded in the AppDomain prior to setting up
-    /// the loader. On the other hand it is easier to make the load / not-load decision based on
-    /// the directory that the assemblies have to come from.
-    /// </serviceType>
-    /// </list>
+    /// Note that this class is not threadsafe. This should however not be a problem because we
+    /// provide the collections of directories and files before attaching the <c>FusionHelper</c>
+    /// object to the <c>AppDomain.AssemblyResolve</c> event. Once attached the event will only
+    /// be called from one thread.
     /// </para>
     /// </design>
     [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", 
@@ -304,7 +296,7 @@ namespace Apollo.Utils.Fusion
             // It is not possible to use the AssemblyName class because that attempts to load the 
             // assembly. Obviously we're are currently trying to find the assembly.
             // So parse the actual assembly name from the name string
-            
+            //
             // First check if we have been passed a fully qualified name or only a module name
             string fileName = assemblyFullName;
             string version = string.Empty;

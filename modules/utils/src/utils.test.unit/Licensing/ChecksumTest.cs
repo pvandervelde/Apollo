@@ -19,6 +19,62 @@ namespace Apollo.Utils.Licensing
     public sealed partial class ChecksumTest
     {
         [Test]
+        [Description("Checks that the == operator returns true if both objects are equal.")]
+        public void EqualsOperatorWithEqualObject()
+        {
+            var generationTime = DateTimeOffset.Now;
+            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
+
+            // Create the Checksums and compare them
+            var checksum1 = new Checksum("a", generationTime, expirationTime);
+            var checksum2 = new Checksum("a", generationTime, expirationTime);
+
+            Assert.IsTrue(checksum1 == checksum2);
+        }
+
+        [Test]
+        [Description("Checks that the == operator returns false if both objects are not equal.")]
+        public void EqualsOperatorWithNonequalObjects()
+        {
+            var generationTime = DateTimeOffset.Now;
+            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
+
+            // Create the Checksums and compare them
+            var checksum1 = new Checksum("a", generationTime, expirationTime);
+            var checksum2 = new Checksum("b", generationTime, expirationTime);
+
+            Assert.IsFalse(checksum1 == checksum2);
+        }
+
+        [Test]
+        [Description("Checks that the != operator returns false if both objects are equal.")]
+        public void NotEqualsOperatorWithEqualObject()
+        {
+            var generationTime = DateTimeOffset.Now;
+            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
+
+            // Create the Checksums and compare them
+            var checksum1 = new Checksum("a", generationTime, expirationTime);
+            var checksum2 = new Checksum("a", generationTime, expirationTime);
+
+            Assert.IsFalse(checksum1 != checksum2);
+        }
+
+        [Test]
+        [Description("Checks that the != operator returns true if both objects are not equal.")]
+        public void NotEqualsOperatorWithNonequalObjects()
+        {
+            var generationTime = DateTimeOffset.Now;
+            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
+
+            // Create the Checksums and compare them
+            var checksum1 = new Checksum("a", generationTime, expirationTime);
+            var checksum2 = new Checksum("b", generationTime, expirationTime);
+
+            Assert.IsTrue(checksum1 != checksum2);
+        }
+
+        [Test]
         [Description("Checks that a Checksum cannot be created with a null validation result.")]
         public void CreateWithNullValidationResult()
         {

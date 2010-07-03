@@ -7,18 +7,13 @@
 namespace Apollo.Utils.Licensing
 {
     /// <summary>
-    /// Defines the interface for objects that form a proxy between two
-    /// <see cref="ILicenseVerificationCache"/> objects.
+    /// Defines the interface for objects that run.
     /// </summary>
-    internal interface ILicenseVerificationCacheProxy
+    internal interface IValidationService
     {
         /// <summary>
-        /// Gets the latest verification result.
+        /// Starts the validation service.
         /// </summary>
-        /// <value>The latest result.</value>
-        LicenseCheckResult LatestResult
-        {
-            get;
-        }
+        void StartValidation();
     }
 }

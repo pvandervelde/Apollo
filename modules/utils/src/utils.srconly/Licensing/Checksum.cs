@@ -20,6 +20,28 @@ namespace Apollo.Utils.Licensing
     internal partial struct Checksum : IEquatable<Checksum>
     {
         /// <summary>
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(Checksum first, Checksum second)
+        {
+            return first.Equals(second);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(Checksum first, Checksum second)
+        {
+            return !first.Equals(second);
+        }
+
+        /// <summary>
         /// Stores the hash (as base-64 string) of the validation, the generation
         /// time and the expiration time.
         /// </summary>
@@ -70,12 +92,12 @@ namespace Apollo.Utils.Licensing
                 Enforce.Argument(() => validationResult);
                 Enforce.Argument(() => validationResult, StringIs.NotEmpty);
 
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, generationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
 
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.Exception_Messages_ArgumentOutOfRange_WithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
             }
 
             m_Base64Hash = ComputeHash(validationResult, generationTime, expirationTime);

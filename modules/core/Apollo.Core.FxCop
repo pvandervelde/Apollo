@@ -23,7 +23,6 @@
  </ProjectOptions>
  <Targets>
   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -40,7 +39,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-05-16 08:03:58Z">
+ <FxCopReport Version="1.36" LastAnalysis="2010-07-03 08:56:28Z">
   <Namespaces>
    <Namespace Name="Apollo.Core.UserInterfaces">
     <Messages>
@@ -60,11 +59,11 @@
      </Message>
     </Messages>
    </Namespace>
-   <Namespace Name="Apollo.Utils.ExceptionHandling">
+   <Namespace Name="Apollo.Utils.Licensing">
     <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2009-11-29 09:24:44Z">
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2010-07-03 08:10:20Z">
       <Issue>
-       <Item>Apollo.Utils.ExceptionHandling</Item>
+       <Item>Apollo.Utils.Licensing</Item>
       </Issue>
      </Message>
     </Messages>
@@ -131,84 +130,13 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/bin/build/Apollo.Utils.dll">
-    <Modules>
-     <Module Name="apollo.utils.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Utils">
-        <Types>
-         <Type Name="ILockObject">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-06-26 14:40:34Z">
-            <Issue>
-             <Item>'ILockObject'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="IProgressMark">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-11-29 09:24:44Z">
-            <Issue>
-             <Item>'IProgressMark'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="ProgressTimer">
-          <Messages>
-           <Message TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812" Created="2010-05-15 14:38:49Z">
-            <Issue>
-             <Item>'ProgressTimer'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Utils.Commands">
-        <Types>
-         <Type Name="ICommandContext">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2010-05-15 14:38:49Z">
-            <Issue>
-             <Item>'ICommandContext'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Utils.Configuration">
-        <Types>
-         <Type Name="IConfigurationKey">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2009-11-29 09:24:44Z">
-            <Issue>
-             <Item>'IConfigurationKey'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
   </Targets>
   <Rules>
    <Rule TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116">
     <Resolution Name="Default">The method {0} is defined in an assembly that has AllowPartiallyTrustedCallersAttribute and calls {1}, which is defined in an assembly ({2}) that does not. Review the called methods to ensure they cannot be used in a destructive manner if called by malicious code.</Resolution>
    </Rule>
-   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
-    <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
-   </Rule>
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
     <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUninstantiatedInternalClasses" Category="Microsoft.Performance" CheckId="CA1812">
-    <Resolution Name="Default">{0} is an internal class that is apparently never instantiated. If so, remove the code from the assembly. If this class is intended to contain only static methods, consider adding a private constructor to prevent the compiler from generating a default constructor.</Resolution>
    </Rule>
    <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
     <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>

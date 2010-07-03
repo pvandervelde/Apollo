@@ -17,6 +17,62 @@ namespace Apollo.Utils.Licensing
     public sealed class LicenseCheckResultTest
     {
         [Test]
+        [Description("Checks that the == operator returns true if both objects are equal.")]
+        public void EqualsOperatorWithEqualObject()
+        {
+            var generated = DateTimeOffset.Now;
+            var expires = generated.AddDays(1);
+            var checksum = new Checksum("text", generated, expires);
+
+            var result1 = new LicenseCheckResult(generated, expires, checksum);
+            var result2 = new LicenseCheckResult(generated, expires, checksum);
+
+            Assert.IsTrue(result1 == result2);
+        }
+
+        [Test]
+        [Description("Checks that the == operator returns false if both objects are not equal.")]
+        public void EqualsOperatorWithNonequalObjects()
+        {
+            var generated = DateTimeOffset.Now;
+            var expires = generated.AddDays(1);
+            var checksum = new Checksum("text", generated, expires);
+
+            var result1 = new LicenseCheckResult(generated, expires, checksum);
+            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
+
+            Assert.IsFalse(result1 == result2);
+        }
+
+        [Test]
+        [Description("Checks that the != operator returns false if both objects are equal.")]
+        public void NotEqualsOperatorWithEqualObject()
+        {
+            var generated = DateTimeOffset.Now;
+            var expires = generated.AddDays(1);
+            var checksum = new Checksum("text", generated, expires);
+
+            var result1 = new LicenseCheckResult(generated, expires, checksum);
+            var result2 = new LicenseCheckResult(generated, expires, checksum);
+
+            Assert.IsFalse(result1 != result2);
+        }
+
+        [Test]
+        [Description("Checks that the != operator returns true if both objects are not equal.")]
+        public void NotEqualsOperatorWithNonequalObjects()
+        {
+            var generated = DateTimeOffset.Now;
+            var expires = generated.AddDays(1);
+            var checksum = new Checksum("text", generated, expires);
+
+            var result1 = new LicenseCheckResult(generated, expires, checksum);
+            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
+
+            Assert.IsTrue(result1 != result2);
+        }
+
+        [Test]
         [Description("Checks that a LicenseCheckResult cannot be created a generation time equal to DateTimeOffset.MinValue.")]
         public void CreateWithGenerationTimeAtMinimum()
         {

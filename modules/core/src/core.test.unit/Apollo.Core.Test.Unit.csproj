@@ -94,33 +94,6 @@
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x86'">
-    <OutputPath>bin\x86\Deploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x86</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
-    <OutputPath>bin\Deploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisIgnoreBuiltInRuleSets>true</CodeAnalysisIgnoreBuiltInRuleSets>
-    <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x64'">
-    <OutputPath>bin\x64\Deploy\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <Optimize>true</Optimize>
-    <DebugType>pdbonly</DebugType>
-    <PlatformTarget>x64</PlatformTarget>
-    <ErrorReport>prompt</ErrorReport>
-  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.7.720, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -155,7 +128,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\..\utils\src\utils.test.unit\FusionHelperTest.cs">
-      <Link>Utils\FusionHelperTest.cs</Link>
+      <Link>Utils\Fusion\FusionHelperTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ChecksumTest.cs">
+      <Link>Utils\Licensing\ChecksumTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ChecksumTest.HashCalculation.cs">
+      <Link>Utils\Licensing\ChecksumTest.HashCalculation.cs</Link>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ChecksumTest.HashCalculation.tt</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseCheckResultTest.cs">
+      <Link>Utils\Licensing\LicenseCheckResultTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\TimePeriodTest.cs">
+      <Link>Utils\Licensing\TimePeriodTest.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ValidationServiceTest.cs">
+      <Link>Utils\Licensing\ValidationServiceTest.cs</Link>
     </Compile>
     <Compile Include="AppDomainResolutionPathsTest.cs" />
     <Compile Include="AppDomainSandboxDataTest.cs" />
@@ -199,8 +190,21 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="..\..\..\utils\src\utils.test.unit\Licensing\ChecksumTest.HashCalculation.tt">
+      <Link>Utils\Licensing\ChecksumTest.HashCalculation.tt</Link>
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ChecksumTest.HashCalculation1.cs</LastGenOutput>
+    </None>
+    <None Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseValidatorTest.ttinclude">
+      <Link>Utils\Licensing\LicenseValidatorTest.ttinclude</Link>
+    </None>
+    <None Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseVerificationCacheTest.ttinclude">
+      <Link>Utils\Licensing\LicenseVerificationCacheTest.ttinclude</Link>
+    </None>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

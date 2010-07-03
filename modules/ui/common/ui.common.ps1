@@ -426,6 +426,10 @@ task runUnitTests -depends buildBinaries -action{
 #		{
 #			Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
 #		}
+#		else
+#		{
+#			Remove-Item -Path (Join-Path $dirBase 'Coverage.xml')
+#		}
 #	}
 #	
 #	if ($LastExitCode -ne 0)
