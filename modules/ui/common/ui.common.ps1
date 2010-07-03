@@ -151,7 +151,7 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
-	$dirNCoverExplorer = Join-Path (Join-Path $dirMbUnit 'NCover') 'NCoverExplorer'
+	$dirNCoverExplorer = Join-Path (Join-Path (Join-Path $dirMbUnit 'NCover') 'libs') 'NCoverExplorer'
 	
 	# solution files
 	$slnUiCommon = Join-Path $dirSrc 'Apollo.UI.Common.sln'
@@ -420,6 +420,11 @@ task runUnitTests -depends buildBinaries -action{
 #		{
 #			# The directory does not exist. Create it
 #			Remove-Item $ncoverFile -Force
+#		}
+#
+#		if (!(Test-Path -Path (Join-Path $dirReports $logNCover)))
+#		{
+#			Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
 #		}
 #	}
 #	
