@@ -53,26 +53,31 @@ namespace Apollo.ProjectExplorer
         public void Initialize()
         {
             // Get all the registrations from Apollo.UI.Common
-            var commonUiAssembly = typeof(Observable).Assembly;
-            m_Container.Configure(c => c.RegisterAssemblyTypes(commonUiAssembly)
-                                           .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                                           .InstancePerDependency());
+            var builder = new ContainerBuilder();
+            {
+                var commonUiAssembly = typeof(Observable).Assembly;
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency();
 
-            var localAssembly = GetType().Assembly;
-            m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                                           .InstancePerDependency()
-                                           .PropertiesAutowired());
-            m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
-                                           .InstancePerDependency()
-                                           .AsImplementedInterfaces());
-            m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                                           .SingleInstance());
-            m_Container.Configure(c => c.RegisterAssemblyTypes(localAssembly)
-                                           .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                                           .InstancePerDependency());
+                var localAssembly = GetType().Assembly;
+                builder.RegisterAssemblyTypes(localAssembly)
+                    .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency()
+                    .PropertiesAutowired();
+                builder.RegisterAssemblyTypes(localAssembly)
+                    .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency()
+                    .AsImplementedInterfaces();
+                builder.RegisterAssemblyTypes(localAssembly)
+                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .SingleInstance();
+                builder.RegisterAssemblyTypes(localAssembly)
+                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency();
+            }
+
+            builder.Update(m_Container);
 
             // Register the regions
             m_Container.Resolve<ShowViewEventListener>().Start();
@@ -84,19 +89,19 @@ namespace Apollo.ProjectExplorer
             var applicationFacade = m_Container.Resolve<IAbstractApplications>();
             {
                 applicationFacade.RegisterNotification(
-                    notificationNames.Shutdown, 
-                    obj => 
+                    notificationNames.Shutdown,
+                    obj =>
+                    {
+                        var app = Application.Current;
+                        if (app.Dispatcher.CheckAccess())
                         {
-                            var app = Application.Current;
-                            if (app.Dispatcher.CheckAccess())
-                            {
-                                app.Shutdown();
-                            }
-                            else
-                            {
-                                app.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(app.Shutdown));
-                            }
-                        });
+                            app.Shutdown();
+                        }
+                        else
+                        {
+                            app.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(app.Shutdown));
+                        }
+                    });
             }
         }
 

@@ -87,6 +87,9 @@ namespace Apollo.Core
                     // Autofac
                     DetermineAssemblyPath(typeof(Autofac.IContainer).Assembly),
 
+                    // AutofacContrib.Startable
+                    DetermineAssemblyPath(typeof(AutofacContrib.Startable.IStarter).Assembly),
+
                     // Lokad.Shared
                     DetermineAssemblyPath(typeof(Lokad.Enforce).Assembly),
 

@@ -107,6 +107,9 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
 	$text = $text -replace '@CONFIGURATION@', $config
+	
+	$now = [DateTimeOffset]::Now
+	$text = $text -replace '@BUILDTIME@', $now.ToString("o")
 
 	Set-Content -Path $newPath -Value $text
 }
@@ -162,8 +165,8 @@ properties{
 	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
 	
-	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Configuration.cs.in'
-	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Configuration.cs'
+	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.BuildInformation.cs.in'
+	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.BuildInformation.cs'
 	
 	$signTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Signing.cs.in'
 	$signAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Signing.cs'
@@ -225,7 +228,7 @@ task UnitTest -depends runUnitTests
 task IntegrationTest -depends runIntegrationTests
 
 # Runs the verifications
-task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
+task Verify -depends runFxCop, runDuplicateFinder
 
 # Creates the zip file of the deliverables
 task Package -depends buildPackage
@@ -449,19 +452,6 @@ task runUnitTests -depends buildBinaries -action{
 task runIntegrationTests -depends buildBinaries -action{
 	"Running integration tests..."
 	"There are no integration tests."
-}
-
-task runStyleCop -depends buildBinaries -action{
-	$msbuildExe = Get-MsbuildExe
-	
-	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
-	if ($LastExitCode -ne 0)
-	{
-		throw "Stylecop failed on Apollo.Utils with return code: $LastExitCode"
-	}
-	
-	# Rename the output file
-	Move-Item -Path (Join-Path $dirReports 'StyleCopViolations.xml') -Destination (Join-Path $dirReports $logStyleCop)
 }
 
 task runFxCop -depends buildBinaries -action{

@@ -164,8 +164,8 @@
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
-    <Compile Include="..\AssemblyInfo.Configuration.cs">
-      <Link>Properties\AssemblyInfo.Configuration.cs</Link>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
     </Compile>
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>

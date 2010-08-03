@@ -87,7 +87,17 @@
       <Link>Properties\App.snk</Link>
     </None>
   </ItemGroup>
+  <PropertyGroup>
+    <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
+    <BasePath>$(ProjectPath)\..\..</BasePath>
+    <ToolsPath>$(BasePath)\Tools</ToolsPath>
+    <StyleCopToolsPath>$(ToolsPath)\StyleCop</StyleCopToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(StyleCopToolsPath)\Microsoft.StyleCop.targets" />
+  <PropertyGroup>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

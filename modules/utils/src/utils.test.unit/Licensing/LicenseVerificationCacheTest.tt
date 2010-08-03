@@ -1,8 +1,0 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
-<#@ output extension=".cs" #>
-<#@ include file="LicenseVerificationCacheTest.ttinclude" #>
-<#+
-    string Namespace = "Apollo.Utils.Licensing";
-    string ClassName = "LicenseVerificationCacheTest";
-	string ClassUnderTest = "LicenseVerificationCache";
-#>

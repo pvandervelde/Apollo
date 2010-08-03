@@ -9,8 +9,11 @@ using System.Diagnostics;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Utils;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
+using Apollo.Utils.Licensing;
 using Autofac;
+using Autofac.Core;
 
 namespace Apollo.Core
 {
@@ -35,10 +38,12 @@ namespace Apollo.Core
             /// <summary>
             /// Builds the IOC container.
             /// </summary>
+            /// <param name="channel">The channel that is used to connect the <see cref="ILicenseValidationCache"/> objects.</param>
+            /// <param name="additionalModules">The collection of additional modules that should be loaded.</param>
             /// <returns>
             /// The DI container that is used to create the service.
             /// </returns>
-            private static IContainer BuildContainer()
+            private static IContainer BuildContainer(ICacheConnectorChannel channel, IModule[] additionalModules)
             {
                 var builder = new ContainerBuilder();
                 {
@@ -46,6 +51,11 @@ namespace Apollo.Core
                     builder.RegisterModule(new KernelModule());
                     builder.RegisterModule(new MessagingModule());
                     builder.RegisterModule(new LoggerModule());
+
+                    // Register the proxy to the cache channel
+                    builder.Register(c => channel)
+                        .As<ICacheConnectorChannel>()
+                        .ExternallyOwned();
                 }
 
                 return builder.Build();
@@ -55,12 +65,19 @@ namespace Apollo.Core
             /// Creates the kernel service and returns a proxy to the service.
             /// </summary>
             /// <param name="typeToLoad">The type of the kernel service which must be created.</param>
+            /// <param name="channel">The channel that is used to connect the <see cref="ILicenseValidationCache"/> objects.</param>
             /// <returns>A proxy to the kernel service.</returns>
-            public KernelService CreateService(Type typeToLoad)
+            public KernelService CreateService(Type typeToLoad, ICacheConnectorChannel channel)
             {
                 Debug.Assert(typeof(KernelService).IsAssignableFrom(typeToLoad), "The service type does not derive from KernelService.");
 
-                var container = BuildContainer();
+                // Check if we need the licensing components
+                var attributes = typeToLoad.GetCustomAttributes(typeof(IncludeLicensingAttribute), false);
+                IModule[] modules = (attributes.Length == 1) ? 
+                    new IModule[] { new LicensingModule() } : 
+                    new IModule[0];
+
+                var container = BuildContainer(channel, modules);
                 var service = container.Resolve(typeToLoad) as KernelService;
 
                 return service;

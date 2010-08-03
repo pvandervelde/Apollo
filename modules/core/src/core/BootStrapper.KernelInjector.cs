@@ -6,8 +6,11 @@
 
 using System;
 using Apollo.Core.Messaging;
+using Apollo.Core.Utils;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
+using Apollo.Utils.Licensing;
 using Autofac;
 using Lokad;
 
@@ -41,8 +44,21 @@ namespace Apollo.Core
             {
                 var builder = new ContainerBuilder();
                 {
+                    builder.RegisterModule(new UtilsModule());
                     builder.RegisterModule(new KernelModule());
                     builder.RegisterModule(new MessagingModule());
+
+                    // Register the cache channel. Should live in the kernel appdomain because:
+                    // - It has to live somewhere and the kernel appdomain is the least likely to die while the app survies
+                    //   (if the kernel domain dies then everything pretty much falls over)
+                    // - The kernel domain has pretty tight security so we can easily control what gets loaded and what doesn't
+                    //
+                    // Register the channel separately because that doesn't get
+                    // registered with the other licensing components to prevent
+                    // the creation of multiple components.
+                    builder.Register(c => new CacheConnectorChannel())
+                        .As<ICacheConnectorChannel>()
+                        .SingleInstance();
                 }
 
                 return builder.Build();
@@ -54,12 +70,32 @@ namespace Apollo.Core
             private Kernel m_Kernel;
 
             /// <summary>
+            /// The channel that is used to connect the license validation caches.
+            /// </summary>
+            private ICacheConnectorChannel m_CacheChannel;
+
+            /// <summary>
+            /// Gets the channel that is used to connect the <see cref="ILicenseValidationCache"/> objects.
+            /// </summary>
+            public ICacheConnectorChannel CacheConnectionChannel
+            {
+                get
+                {
+                    return m_CacheChannel;
+                }
+            }
+
+            /// <summary>
             /// Creates the kernel.
             /// </summary>
             public void CreateKernel()
             {
                 var container = BuildContainer();
-                m_Kernel = new Kernel(container.Resolve<ICommandContainer>(), container.Resolve<IHelpMessageProcessing>(), container.Resolve<IDnsNameConstants>());
+                m_Kernel = new Kernel(
+                    container.Resolve<ICommandContainer>(), 
+                    container.Resolve<IHelpMessageProcessing>(), 
+                    container.Resolve<IDnsNameConstants>());
+                m_CacheChannel = container.Resolve<ICacheConnectorChannel>();
             }
 
             /// <summary>

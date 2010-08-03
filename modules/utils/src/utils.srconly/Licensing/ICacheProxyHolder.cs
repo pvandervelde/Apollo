@@ -8,7 +8,7 @@ namespace Apollo.Utils.Licensing
 {
     /// <summary>
     /// Defines the interface for objects that store one or more
-    /// <see cref="ILicenseVerificationCacheProxy"/> objects.
+    /// <see cref="ILicenseValidationCacheProxy"/> objects.
     /// </summary>
     internal interface ICacheProxyHolder
     {
@@ -16,6 +16,12 @@ namespace Apollo.Utils.Licensing
         /// Stores the specified proxy.
         /// </summary>
         /// <param name="proxy">The proxy.</param>
-        void Store(ILicenseVerificationCacheProxy proxy);
+        void Store(ILicenseValidationCacheProxy proxy);
+
+        /// <summary>
+        /// Releases the specified proxy from storage.
+        /// </summary>
+        /// <param name="proxy">The proxy.</param>
+        void Release(ILicenseValidationCacheProxy proxy);
     }
 }

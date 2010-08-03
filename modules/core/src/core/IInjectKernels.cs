@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Utils.Licensing;
+using Apollo.Utils.Licensing;
 
 namespace Apollo.Core
 {
@@ -15,6 +17,14 @@ namespace Apollo.Core
     /// </summary>
     internal interface IInjectKernels
     {
+        /// <summary>
+        /// Gets the channel that is used to connect the <see cref="ILicenseValidationCache"/> objects.
+        /// </summary>
+        ICacheConnectorChannel CacheConnectionChannel
+        {
+            get;
+        }
+
         /// <summary>
         /// Creates the kernel.
         /// </summary>

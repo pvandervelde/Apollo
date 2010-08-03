@@ -56,3 +56,8 @@ namespace Apollo.Utils.Licensing
         }
     }
 }
+
+
+namespace Apollo.Core.Utils.Licensing
+{
+}

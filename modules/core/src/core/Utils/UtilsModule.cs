@@ -4,8 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
+using Apollo.Utils.Licensing;
 using Autofac;
+using AutofacContrib.Startable;
 
 namespace Apollo.Core.Utils
 {
@@ -14,7 +18,7 @@ namespace Apollo.Core.Utils
     /// of the core.
     /// </summary>
     [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
-    internal sealed class UtilsModule : Module
+    internal sealed partial class UtilsModule : Module
     {
         /// <summary>
         /// Override to add registrations to the container.
@@ -29,12 +33,20 @@ namespace Apollo.Core.Utils
         {
             base.Load(moduleBuilder);
 
-            moduleBuilder.Register(c => new ApplicationConstants())
-                .As<IApplicationConstants>()
-                .As<ICompanyConstants>();
+            // Register the global application objects
+            {
+                moduleBuilder.Register(c => new ApplicationConstants())
+                    .As<IApplicationConstants>()
+                    .As<ICompanyConstants>();
 
-            moduleBuilder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
-                .As<IFileConstants>();
+                moduleBuilder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
+                    .As<IFileConstants>();
+
+                moduleBuilder.Register((c, p) => new ProgressTimer(
+                        p.TypedAs<TimeSpan>()))
+                    .As<IProgressTimer>()
+                    .InstancePerDependency();
+            }
         }
     }
 }

@@ -21,3 +21,5 @@ AssemblyInfo.InternalsVisibleTo.cs
 _ReSharper*
 ./modules/core/src/AssemblyInfo.Configuration.cs
 AssemblyInfo.Configuration.cs
+./tools/sandcastle/Data
+StyleCop.Cache

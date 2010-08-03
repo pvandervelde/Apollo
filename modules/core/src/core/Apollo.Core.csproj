@@ -128,6 +128,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="AutofacContrib.Startable">
+      <HintPath>..\..\lib\autofac\AutofacContrib.Startable.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
@@ -161,63 +164,87 @@
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\Checksum.cs">
       <Link>Utils\Licensing\Checksum.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\Checksum.HashCalculation.cs">
       <Link>Utils\Licensing\Checksum.HashCalculation.cs</Link>
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
       <DependentUpon>Checksum.HashCalculation.tt</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ICacheProxyHolder.cs">
       <Link>Utils\Licensing\ICacheProxyHolder.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidationCache.cs">
+      <Link>Utils\Licensing\ILicenseValidationCache.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidationCacheProxy.cs">
+      <Link>Utils\Licensing\ILicenseValidationCacheProxy.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidator.cs">
       <Link>Utils\Licensing\ILicenseValidator.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseVerificationCache.cs">
-      <Link>Utils\Licensing\ILicenseVerificationCache.cs</Link>
-    </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseVerificationCacheProxy.cs">
-      <Link>Utils\Licensing\ILicenseVerificationCacheProxy.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ITimeBasedValidator.cs">
       <Link>Utils\Licensing\ITimeBasedValidator.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\IValidationService.cs">
       <Link>Utils\Licensing\IValidationService.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\IValidator.cs">
       <Link>Utils\Licensing\IValidator.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseCheckResult.cs">
       <Link>Utils\Licensing\LicenseCheckResult.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseResultUpdated.cs">
       <Link>Utils\Licensing\LicenseResultUpdated.cs</Link>
     </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseVerificationFailedException.cs">
-      <Link>Utils\Licensing\LicenseVerificationFailedException.cs</Link>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseValidationFailedException.cs">
+      <Link>Utils\Licensing\LicenseValidationFailedException.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\LicensingConstants.cs">
+      <Link>Utils\Licensing\LicensingConstants.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\RepeatPeriod.cs">
       <Link>Utils\Licensing\RepeatPeriod.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\TimePeriod.cs">
       <Link>Utils\Licensing\TimePeriod.cs</Link>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ValidationSequence.cs">
+      <Link>Utils\Licensing\ValidationSequence.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ValidationService.cs">
       <Link>Utils\Licensing\ValidationService.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
-    <Compile Include="..\AssemblyInfo.Configuration.cs">
-      <Link>Properties\AssemblyInfo.Configuration.cs</Link>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
     </Compile>
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\ValidationSequenceGenerator.cs">
+      <Link>Utils\Licensing\ValidationSequenceGenerator.cs</Link>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppDomainBuilder.cs" />
     <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
@@ -342,12 +369,69 @@
     <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />
+    <Compile Include="Utils\Licensing\LicenseValidationResultStorage.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.Messages.cs" />
     <Compile Include="Utils\ApplicationConstants.cs" />
     <Compile Include="Utils\FileConstants.cs" />
+    <Compile Include="Utils\ILoadOnApplicationStartup.cs" />
+    <Compile Include="Utils\Licensing\CacheConnectorChannel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\CacheConnectorChannelEndPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\CoreLicenseValidationCache.cs">
+      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\CoreLicenseValidator.cs">
+      <DependentUpon>LicenseValidator.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\ICacheConnectorChannel.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\ICacheConnectorChannelEndPoint.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\IncludeLicensingAttribute.cs" />
+    <Compile Include="Utils\Licensing\IValidationResultStorage.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\IValidationSequenceGenerator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\LicensingModule.cs" />
+    <Compile Include="Utils\Licensing\RegistryKeyValidator.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidationCache.cs">
+      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidator.cs">
+      <DependentUpon>LicenseValidator.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\ValidationServiceLicenseValidationCache.cs">
+      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\ValidationServiceLicenseValidator.cs">
+      <DependentUpon>LicenseValidator.tt</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\ValidationServiceRunner.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Utils\Licensing\LicensingModule.VerifyLicenseServiceIsAlive.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LicensingModule.VerifyLicenseServiceIsAlive.tt</DependentUpon>
+    </Compile>
     <Compile Include="Utils\SecurityHelpers.cs" />
     <Compile Include="Utils\SrcOnlyResources.cs" />
     <Compile Include="Utils\UtilsModule.cs" />
@@ -388,18 +472,54 @@
     <None Include="..\..\..\utils\src\utils.srconly\Licensing\ChecksumHashCalculator.ttinclude">
       <Link>Utils\Licensing\ChecksumHashCalculator.ttinclude</Link>
     </None>
+    <None Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseValidationCache.ttinclude">
+      <Link>Utils\Licensing\LicenseValidationCache.ttinclude</Link>
+    </None>
     <None Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseValidator.ttinclude">
       <Link>Utils\Licensing\LicenseValidator.ttinclude</Link>
     </None>
-    <None Include="..\..\..\utils\src\utils.srconly\Licensing\LicenseVerificationCache.ttinclude">
-      <Link>Utils\Licensing\LicenseVerificationCache.ttinclude</Link>
-    </None>
     <None Include="App.config" />
+    <None Include="Utils\Licensing\LicenseValidationCache.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LicenseValidationCache.txt</LastGenOutput>
+    </None>
+    <None Include="Utils\Licensing\LicenseValidator.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LicenseValidator.txt</LastGenOutput>
+    </None>
+    <None Include="Utils\Licensing\Manager.ttinclude" />
+    <None Include="Utils\Licensing\VerifyLicenseServiceIsAlive.ttinclude" />
+    <None Include="Utils\Licensing\LicensingModule.VerifyLicenseServiceIsAlive.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LicensingModule.VerifyLicenseServiceIsAlive.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Utils\Licensing\LicenseValidationCache.txt">
+      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </None>
+    <None Include="Utils\Licensing\LicenseValidator.txt">
+      <DependentUpon>LicenseValidator.tt</DependentUpon>
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+    </None>
+  </ItemGroup>
+    <PropertyGroup>
+    <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
+    <BasePath>$(ProjectPath)\..\..</BasePath>
+    <ToolsPath>$(BasePath)\Tools</ToolsPath>
+    <StyleCopToolsPath>$(ToolsPath)\StyleCop</StyleCopToolsPath>
+  </PropertyGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(StyleCopToolsPath)\Microsoft.StyleCop.targets" />
+  <PropertyGroup>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

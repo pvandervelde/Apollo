@@ -1,11 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.ProjectExplorer", "ProjectExplorer\Apollo.ProjectExplorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ProjectExplorer.Test.Integration", "ProjectExplorer.Test.Integration\ProjectExplorer.Test.Integration.csproj", "{388FD4EC-46AF-44C8-98A7-0761837FF922}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Externals", "Externals", "{8E30305C-3805-4A6A-AFAF-94DAFB148B6F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core", "..\..\..\core\src\core\Apollo.Core.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
@@ -114,13 +112,5 @@ Global
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|x64.Build.0 = Release|x64
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|x86.ActiveCfg = Release|x86
 		{ACD26D23-36BA-4035-84CA-6E462A03B033}.Release|x86.Build.0 = Release|x86
-	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD} = {8E30305C-3805-4A6A-AFAF-94DAFB148B6F}
-		{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF} = {8E30305C-3805-4A6A-AFAF-94DAFB148B6F}
-		{ACD26D23-36BA-4035-84CA-6E462A03B033} = {8E30305C-3805-4A6A-AFAF-94DAFB148B6F}
 	EndGlobalSection
 EndGlobal

@@ -107,6 +107,9 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
 	$text = $text -replace '@CONFIGURATION@', $config
+	
+	$now = [DateTimeOffset]::Now
+	$text = $text -replace '@BUILDTIME@', $now.ToString("o")
 
 	Set-Content -Path $newPath -Value $text
 }
@@ -116,6 +119,56 @@ function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [
 
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
 	$text = $text -replace '@ASSEMBLYNAME@', $assemblyName
+	
+	Set-Content $newPath $text
+}
+
+function global:Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
+	$yieldText = [string]::Join([Environment]::NewLine, (Get-Content -Path $yieldTemplate))
+	
+	# generate the sequences
+	# Check each hour after build
+	$sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetBuildTime()'
+	$sequenceText += [Environment]::NewLine
+	$sequenceText += [Environment]::NewLine
+	
+	# Check each hour after install
+	$sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetInstallTime()'
+	$sequenceText += [Environment]::NewLine
+	$sequenceText += [Environment]::NewLine
+	
+	# Check each hour after start
+	$sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetProcessStartTime()'
+	$sequenceText += [Environment]::NewLine
+	$sequenceText += [Environment]::NewLine
+	
+	# Check each hour after some time
+	$time = [DateTimeOffset]::Now.AddMinutes(10)
+	$timeText = 'new DateTimeOffset(' + $time.Year + `
+		', ' + $time.Month + `
+		', ' + $time.Day + `
+		', ' + $time.Hour + `
+		', ' + $time.Minute + `
+		', ' + $time.Second + `
+		', ' + $time.Millisecond + `
+		', new TimeSpan(' + $time.Offset.Ticks + '))'
+	$sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+	$sequenceText = $sequenceText -replace '@START_TIME@', $timeText
+	
+	# Write the sequences to the file
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $generatorTemplate))
+	$text = $text -replace '@YIELD_STATEMENTS@', $sequenceText
 	
 	Set-Content $newPath $text
 }
@@ -145,6 +198,9 @@ properties{
 	# templates dirs
 	$dirTemplates = Join-Path $dirBase 'templates'
 	
+	# configuration dir
+	$dirConfiguration = Join-Path $dirBase 'config'
+	
 	# tools dirs
 	$dirTools = Join-Path $dirBase 'tools'
 	$dirStyleCop = Join-Path $dirTools 'StyleCop'
@@ -162,11 +218,15 @@ properties{
 	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
 	
-	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Configuration.cs.in'
-	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Configuration.cs'
+	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.BuildInformation.cs.in'
+	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.BuildInformation.cs'
 	
 	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
 	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
+	
+	$licenseVerificationSequencesTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.cs.in'
+	$licenseVerificationSequencesYieldTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
+	$licenseVerificationSequencesFile = Join-Path $dirSrc 'ValidationSequenceGenerator.cs'
 	
 	# output files
 	$logMsiBuild = 'core_msi.log'
@@ -222,7 +282,7 @@ task UnitTest -depends runUnitTests
 task IntegrationTest -depends runIntegrationTests
 
 # Runs the verifications
-task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
+task Verify -depends runFxCop, runDuplicateFinder
 
 # Creates the zip file of the deliverables
 task Package -depends buildPackage
@@ -271,7 +331,7 @@ correct order. Note that this is NOT the case for the 'incremental', 'debug' and
 In order to get a correct effect these tasks need to be the first tasks being called!
        
 In order to run this build script please call this script via PSAKE like:
-	invoke-psake core.ps1 incremental,debug,clean,build,unittest,verify -framework 4.0 -timing -noexit -showfullerror
+	invoke-psake core.ps1 incremental,debug,clean,build,unittest,verify 4.0
 "@
 }
 
@@ -336,6 +396,9 @@ task buildBinaries -depends runInit, getVersion -action{
 	$publicKeyToken = Get-PublicKeySignature $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
 	$friendAssemblyName = $assemblyNameUnitTest + $publicKeyToken
 	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $friendAssemblyName
+	
+	# Create the license verification sequence file
+	Create-LicenseVerificationSequencesFile $licenseVerificationSequencesTemplateFile $licenseVerificationSequencesYieldTemplateFile $licenseVerificationSequencesFile
 
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
@@ -454,19 +517,6 @@ task runIntegrationTests -depends buildBinaries -action{
 	# ???
 }
 
-task runStyleCop -depends buildBinaries -action{
-	$msbuildExe = Get-MsbuildExe
-	
-	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
-	if ($LastExitCode -ne 0)
-	{
-		throw "Stylecop failed on Apollo.Core with return code: $LastExitCode"
-	}
-	
-	# Rename the output file
-	Move-Item -Path (Join-Path $dirReports 'StyleCopViolations.xml') -Destination (Join-Path $dirReports $logStyleCop)
-}
-
 task runFxCop -depends buildBinaries -action{
 	# could set different targets depending on configuration:
 	# - skip some rules if in debug mode
@@ -533,11 +583,13 @@ task buildPackage -depends buildBinaries -action{
 	
 	# Copy the dependencies
 	$autofacFile = 'Autofac.dll'
+	$autofacStartableFile = 'AutofacContrib.Startable.dll'
 	$quickgraph = 'QuickGraph.dll'
 	$systemCoreEx = 'System.CoreEx.dll'
 	$nlog = 'NLog.dll'
 	
 	Copy-Item (Join-Path $dirBuild $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
+	Copy-Item (Join-Path $dirBuild $autofacStartableFile) -Destination (Join-Path $dirTempZip $autofacStartableFile)
 	Copy-Item (Join-Path $dirBuild $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)	
 	Copy-Item (Join-Path $dirBuild $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)	
 	Copy-Item (Join-Path $dirBuild $nlog) -Destination (Join-Path $dirTempZip $nlog)	

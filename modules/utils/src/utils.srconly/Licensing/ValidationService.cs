@@ -17,28 +17,15 @@ namespace Apollo.Utils.Licensing
     internal sealed partial class ValidationService : IValidationService, IDisposable
     {
         /// <summary>
-        /// The interval, in milliseconds, between is-alive events.
+        /// The collection of all the time sequences over which the license should be checked.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Milli",
-            Justification = "It seems FxCop can't spell.")]
-        private const int s_UpdateIntervalInMilliseconds = 10 * 1000;
-
-        /// <summary>
-        /// The maximum number of sequential failures that we allow to happen 
-        /// while trying to verify the license.
-        /// </summary>
-        private const int s_MaximumSequentialFailures = 3;
-
-        /// <summary>
-        /// The collection of all the time periods over which the license should be checked.
-        /// </summary>
-        private readonly List<TimePeriod> m_Periods = new List<TimePeriod>();
+        private readonly List<ValidationSequence> m_Sequences = new List<ValidationSequence>();
 
         /// <summary>
         /// The collection of times on which the verification should take place.
         /// </summary>
-        private readonly SortedList<DateTimeOffset, TimePeriod> m_VerificationOrder
-            = new SortedList<DateTimeOffset, TimePeriod>();
+        private readonly SortedList<DateTimeOffset, ValidationSequence> m_VerificationOrder
+            = new SortedList<DateTimeOffset, ValidationSequence>();
 
         /// <summary>
         /// The delegate that returns the current time.
@@ -67,7 +54,7 @@ namespace Apollo.Utils.Licensing
         /// <param name="onIsAlive">The action that is invoked to indicate that the service is still alive.</param>
         /// <param name="timer">The timer that is used to trigger the verification at the right time interval.</param>
         /// <param name="validator">The object that handles the validation.</param>
-        /// <param name="periods">The collection of periods over which the license should be validated.</param>
+        /// <param name="sequences">The collection of sequences over which the license should be validated.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="now"/> is <see langword="null" />.
         /// </exception>
@@ -81,23 +68,23 @@ namespace Apollo.Utils.Licensing
         ///     Thrown if <paramref name="validator"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="periods"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="sequences"/> is <see langword="null" />.
         /// </exception>
-        public ValidationService(Func<DateTimeOffset> now, Action<DateTimeOffset> onIsAlive, IProgressTimer timer, ILicenseValidator validator, IEnumerable<TimePeriod> periods)
+        public ValidationService(Func<DateTimeOffset> now, Action<DateTimeOffset> onIsAlive, IProgressTimer timer, ILicenseValidator validator, IEnumerable<ValidationSequence> sequences)
         {
             {
                 Enforce.Argument(() => now);
                 Enforce.Argument(() => onIsAlive);
                 Enforce.Argument(() => timer);
                 Enforce.Argument(() => validator);
-                Enforce.Argument(() => periods);
+                Enforce.Argument(() => sequences);
             }
 
             m_Now = now;
             m_OnIsAlive = onIsAlive;
             m_ValidationTimer = timer;
             m_Validator = validator;
-            m_Periods.AddRange(periods);
+            m_Sequences.AddRange(sequences);
 
             // Intialize the timer but do not start it. That will be done
             // once we start the validation process.
@@ -119,10 +106,10 @@ namespace Apollo.Utils.Licensing
         /// </summary>
         public void StartValidation()
         {
-            if (m_Periods.Count == 0)
+            if (m_Sequences.Count == 0)
             {
 #if !DEPLOY
-                throw new LicenseVerificationFailedException();
+                throw new LicenseValidationFailedException();
 #else
                 // If there is an exception with setting the 
                 // watchdog flag then we should immediately fail
@@ -137,35 +124,34 @@ namespace Apollo.Utils.Licensing
 #endif
             }
 
-            // Store all the periods in a sorted order
-            var now = m_Now();
-            foreach (var period in m_Periods)
+            // Store all the sequences in a sorted order
+            foreach (var sequence in m_Sequences)
             {
-                ScheduleVerification(now, period);
+                ScheduleVerification(sequence.StartDate, sequence);
             }
 
             // Start the validation
             m_ValidationTimer.Start();
         }
 
-        private void ScheduleVerification(DateTimeOffset now, TimePeriod period)
+        private void ScheduleVerification(DateTimeOffset startDate, ValidationSequence sequence)
         {
-            var nextVerification = now + period.RepeatAfter(now);
+            var nextVerification = startDate + sequence.Period.RepeatAfter(startDate);
 
             // If the time already exists in the collection then we 
             // postpone the verification by 1 tick. It is expected that
-            // there will not be many periods which are the same because
+            // there will not be many sequences which are the same because
             // that would defeat the purpose of periodic checking.
             while (m_VerificationOrder.ContainsKey(nextVerification))
             {
-                nextVerification.AddTicks(1);
+                nextVerification = nextVerification.AddTicks(1);
             }
 
-            m_VerificationOrder.Add(nextVerification, period);
+            m_VerificationOrder.Add(nextVerification, sequence);
         }
 
         /// <summary>
-        /// Run the validation based on the currently expired time periods.
+        /// Run the validation based on the currently expired time sequences.
         /// </summary>
         /// <param name="sequentialFailedValidationCount">
         ///     The number of validations that have failed in sequence since the last
@@ -185,7 +171,7 @@ namespace Apollo.Utils.Licensing
             catch (Exception)
             {
 #if !DEPLOY
-                throw new LicenseVerificationFailedException();
+                throw new LicenseValidationFailedException();
 #else
                 // If there is an exception with setting the 
                 // watchdog flag then we should immediately fail
@@ -209,8 +195,8 @@ namespace Apollo.Utils.Licensing
             {
                 try
                 {
-                    var period = m_VerificationOrder.Values[index];
-                    m_Validator.Verify(period);
+                    var sequence = m_VerificationOrder.Values[index];
+                    m_Validator.Verify(sequence.Period);
 
                     // Remove the current element. Do this first
                     // so that we are certain that we remove the 
@@ -218,7 +204,7 @@ namespace Apollo.Utils.Licensing
                     m_VerificationOrder.RemoveAt(index);
 
                     // Reschedule the verification
-                    ScheduleVerification(now, period);
+                    ScheduleVerification(now, sequence);
 
                     // Reset the failed verification count
                     sequentialFailedValidationCount = 0;
@@ -228,13 +214,13 @@ namespace Apollo.Utils.Licensing
                     // If more than x fail in a row (within a certain amount of time)
                     // then FailFast
                     sequentialFailedValidationCount++;
-                    if (sequentialFailedValidationCount > s_MaximumSequentialFailures)
+                    if (sequentialFailedValidationCount > LicensingConstants.MaximumNumberOfSequentialValidationFailures)
                     {
                         // If we aren't in deploy mode then we simply throw an exception. 
                         // Chances are that it'll be unhandled and take the app down. In
                         // deploy mode we take the app down ourselves.
 #if !DEPLOY
-                        throw new LicenseVerificationFailedException();
+                        throw new LicenseValidationFailedException();
 #else
                         Environment.FailFast(
                             string.Format(
@@ -249,7 +235,7 @@ namespace Apollo.Utils.Licensing
                 }
 
                 // If we have handled all verifications then we simply wait for the next 
-                // validation period.
+                // validation sequence.
                 if (index >= m_VerificationOrder.Count)
                 {
                     break;

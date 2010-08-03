@@ -93,7 +93,7 @@ namespace Apollo.Utils.Licensing
         [Ignore("Not sure how to find daylight savings time in a independent way.")]
         public void RepeatAfterWithHoursPassingEntryOfDaylightSaving()
         { 
-            // For now there is no test here
+            // For sequenceStart there is no test here
         }
 
         [Test]
@@ -101,7 +101,7 @@ namespace Apollo.Utils.Licensing
         [Ignore("Not sure how to find daylight savings time in a independent way.")]
         public void RepeatAfterWithHoursPassingExitOfDaylightSaving()
         {
-            // For now there is no test here
+            // For sequenceStart there is no test here
         }
 
         [Test]

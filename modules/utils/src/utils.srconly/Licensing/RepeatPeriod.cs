@@ -7,7 +7,7 @@
 namespace Apollo.Utils.Licensing
 {
     /// <summary>
-    /// Defines the period over which a license verification check
+    /// Defines the sequence over which a license verification check
     /// should be repeated.
     /// </summary>
     internal enum RepeatPeriod

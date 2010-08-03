@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Utils.Licensing;
+using Apollo.Utils.Licensing;
 
 namespace Apollo.Core
 {
@@ -19,7 +21,8 @@ namespace Apollo.Core
         /// Creates the kernel service and returns a proxy to the service.
         /// </summary>
         /// <param name="typeToLoad">The type of the kernel service which must be created.</param>
+        /// <param name="channel">The channel that is used to connect the <see cref="ILicenseValidationCache"/> objects.</param>
         /// <returns>A proxy to the kernel service.</returns>
-        KernelService CreateService(Type typeToLoad);
+        KernelService CreateService(Type typeToLoad, ICacheConnectorChannel channel);
     }
 }

@@ -24,7 +24,7 @@ namespace Apollo.UI.Common.Bootstrapper
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId="Autofac",
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Autofac",
         Justification = "The correct spelling is 'Autofac'.")]
     public class AutofacContainerAdapter : IContainerAdapter
     {
@@ -118,7 +118,12 @@ namespace Apollo.UI.Common.Bootstrapper
         /// </Remarks>
         public IContainerAdapter RegisterInstance<T>(T instance) where T : class
         {
-            Container.Configure(c => c.RegisterInstance(instance));
+            var builder = new ContainerBuilder();
+            {
+                builder.RegisterInstance(instance);
+            }
+
+            builder.Update(Container);
             return this;
         }
 
@@ -135,15 +140,19 @@ namespace Apollo.UI.Common.Bootstrapper
             Justification = "Registration of types is based on both the input and output types.")]
         public IContainerAdapter RegisterType<TFrom, TTo>(ContainerRegistrationScope scope) where TTo : TFrom
         {
-            if (scope.IsSingleton())
+            var builder = new ContainerBuilder();
             {
-                Container.Configure(c => c.RegisterType<TTo>().As<TFrom>().SingleInstance());
-            }
-            else
-            {
-                Container.Configure(c => c.RegisterType<TTo>().As<TFrom>().InstancePerDependency());
+                if (scope.IsSingleton())
+                {
+                    builder.RegisterType<TTo>().As<TFrom>().SingleInstance();
+                }
+                else
+                {
+                    builder.RegisterType<TTo>().As<TFrom>().InstancePerDependency();
+                }
             }
 
+            builder.Update(Container);
             return this;
         }
 
@@ -158,15 +167,19 @@ namespace Apollo.UI.Common.Bootstrapper
         /// </returns>
         public IContainerAdapter RegisterType(Type fromType, Type toType, ContainerRegistrationScope scope)
         {
-            if (scope.IsSingleton())
+            var builder = new ContainerBuilder();
             {
-                Container.Configure(c => c.RegisterType(toType).As(fromType).SingleInstance());
-            }
-            else
-            {
-                Container.Configure(c => c.RegisterType(toType).As(fromType).InstancePerDependency());
+                if (scope.IsSingleton())
+                {
+                    builder.RegisterType(toType).As(fromType).SingleInstance();
+                }
+                else
+                {
+                    builder.RegisterType(toType).As(fromType).InstancePerDependency();
+                }
             }
 
+            builder.Update(Container);
             return this;
         }
 
@@ -312,18 +325,23 @@ namespace Apollo.UI.Common.Bootstrapper
                     (typeof(IRegionAdapter).IsAssignableFrom(type) || typeof(IRegionBehavior).IsAssignableFrom(type))
                 select type;
 
-            foreach (var each in desiredTypes)
+            var builder = new ContainerBuilder();
             {
-                var localObj = each;
-                Container.Configure(c => c.RegisterType(localObj)
-                    .InstancePerDependency()
-                    .ExternallyOwned());
+                foreach (var each in desiredTypes)
+                {
+                    var localObj = each;
+                    builder.RegisterType(localObj)
+                        .InstancePerDependency()
+                        .ExternallyOwned();
+                }
+
+                // Other known types missed above
+                builder.RegisterType<DelayedRegionCreationBehavior>()
+                        .InstancePerDependency()
+                        .ExternallyOwned();
             }
 
-            // Other known types missed above
-            Container.Configure(c => c.RegisterType<DelayedRegionCreationBehavior>()
-                    .InstancePerDependency()
-                    .ExternallyOwned());
+            builder.Update(Container);
         }
 
         #endregion

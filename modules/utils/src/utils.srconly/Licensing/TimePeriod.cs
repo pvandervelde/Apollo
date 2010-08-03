@@ -14,7 +14,7 @@ using Lokad;
 namespace Apollo.Utils.Licensing
 {
     /// <summary>
-    /// Stores a time period which indicates how much time should elapse between
+    /// Stores a time sequence which indicates how much time should elapse between
     /// license verifications.
     /// </summary>
     internal struct TimePeriod : IEquatable<TimePeriod>
@@ -41,9 +41,9 @@ namespace Apollo.Utils.Licensing
             };
 
         /// <summary>
-        /// Calculates the next validation time based on an hourly repeat period.
+        /// Calculates the next validation time based on an hourly repeat sequence.
         /// </summary>
-        /// <param name="hours">The number of hours in the period.</param>
+        /// <param name="hours">The number of hours in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -54,9 +54,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Calculates the next validation time based on an daily repeat period.
+        /// Calculates the next validation time based on an daily repeat sequence.
         /// </summary>
-        /// <param name="days">The number of days in the period.</param>
+        /// <param name="days">The number of days in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -67,9 +67,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Calculates the next validation time based on an weekly repeat period.
+        /// Calculates the next validation time based on an weekly repeat sequence.
         /// </summary>
-        /// <param name="weeks">The number of weeks in the period.</param>
+        /// <param name="weeks">The number of weeks in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -81,9 +81,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Calculates the next validation time based on an fortnightly repeat period.
+        /// Calculates the next validation time based on an fortnightly repeat sequence.
         /// </summary>
-        /// <param name="fortnights">The number of fortnights in the period.</param>
+        /// <param name="fortnights">The number of fortnights in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -95,9 +95,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Calculates the next validation time based on an monthly repeat period.
+        /// Calculates the next validation time based on an monthly repeat sequence.
         /// </summary>
-        /// <param name="months">The number of months in the period.</param>
+        /// <param name="months">The number of months in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -108,9 +108,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Calculates the next validation time based on an yearly repeat period.
+        /// Calculates the next validation time based on an yearly repeat sequence.
         /// </summary>
-        /// <param name="years">The number of years in the period.</param>
+        /// <param name="years">The number of years in the sequence.</param>
         /// <param name="last">The last validation time.</param>
         /// <returns>
         ///     The next validation time.
@@ -143,12 +143,12 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// The period after which the license verification check should be repeated.
+        /// The sequence after which the license verification check should be repeated.
         /// </summary>
         private readonly RepeatPeriod m_Period;
 
         /// <summary>
-        /// The period multiplier. This combined with the <c>m_Period</c> indicates
+        /// The sequence multiplier. This combined with the <c>m_Period</c> indicates
         /// exactly how long the time between two license checks should be. Note that this
         /// number should never be negative.
         /// </summary>
@@ -167,7 +167,7 @@ namespace Apollo.Utils.Licensing
         /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
         /// </summary>
         /// <param name="period">The period after which the license check should be repeated.</param>
-        /// <param name="modifier">The period multiplier.</param>
+        /// <param name="modifier">The sequence multiplier.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Thrown when <paramref name="modifier"/> is smaller than 1.
         /// </exception>
@@ -182,9 +182,9 @@ namespace Apollo.Utils.Licensing
         }
 
         /// <summary>
-        /// Gets the period after which the license check should be repeated.
+        /// Gets the sequence after which the license check should be repeated.
         /// </summary>
-        /// <value>The period.</value>
+        /// <value>The sequence.</value>
         public RepeatPeriod Period
         {
             get

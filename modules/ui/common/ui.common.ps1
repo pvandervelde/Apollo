@@ -107,6 +107,9 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
 	$text = $text -replace '@CONFIGURATION@', $config
+	
+	$now = [DateTimeOffset]::Now
+	$text = $text -replace '@BUILDTIME@', $now.ToString("o")
 
 	Set-Content -Path $newPath -Value $text
 }
@@ -162,8 +165,8 @@ properties{
 	$versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
 	$versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
 	
-	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.Configuration.cs.in'
-	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.Configuration.cs'
+	$configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.BuildInformation.cs.in'
+	$configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.BuildInformation.cs'
 	
 	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
 	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'

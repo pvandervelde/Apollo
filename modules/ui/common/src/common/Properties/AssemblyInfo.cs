@@ -39,4 +39,4 @@ using System.Windows;
     ResourceDictionaryLocation.SourceAssembly)]
 
 // Suppress messages
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope="namespace", Target="Apollo.UI.Common.Eventing", MessageId="Eventing")]
+[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Apollo.UI.Common.Eventing", MessageId = "Eventing")]

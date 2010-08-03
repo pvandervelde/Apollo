@@ -76,7 +76,12 @@ namespace Apollo.ProjectExplorer
         /// </summary>
         protected override void CreateAndConfigureShell()
         {
-            m_IocContainer.Configure(builder => builder.RegisterType<ProjectExplorerModule>());
+            var builder = new ContainerBuilder();
+            {
+                builder.RegisterType<ProjectExplorerModule>();
+            }
+            
+            builder.Update(m_IocContainer);
         }
 
         #endregion

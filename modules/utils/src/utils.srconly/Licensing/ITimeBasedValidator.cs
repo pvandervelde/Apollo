@@ -8,7 +8,7 @@ namespace Apollo.Utils.Licensing
 {
     /// <summary>
     /// Defines the interface for objects that run validations of the license
-    /// over a period of time.
+    /// over a sequence of time.
     /// </summary>
     internal interface ITimeBasedValidator
     {

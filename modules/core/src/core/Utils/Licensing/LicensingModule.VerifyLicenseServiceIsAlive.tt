@@ -1,0 +1,4 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<#@ include file="VerifyLicenseServiceIsAlive.ttinclude" #>
+<# WritePartialElementWithOnValidationResult("Apollo.Core.Utils.Licensing", "internal", ElementType.@sealedClass, "LicensingModule"); #>

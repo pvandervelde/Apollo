@@ -328,7 +328,7 @@ namespace Apollo.Core
 
             // Prepare the appdomain
             Debug.Assert(injector != null, "Could not load the ServiceInjector.");
-            var service = injector.CreateService(serviceType);
+            var service = injector.CreateService(serviceType, kernel.CacheConnectionChannel);
             kernel.InstallService(service, serviceDomain);
         }
 
