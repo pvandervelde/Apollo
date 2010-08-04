@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Lokad;
 using Lokad.Rules;
@@ -14,31 +15,30 @@ namespace Apollo.Utils
     /// <summary>
     /// An attribute used to indicate at which date and time an assembly was build.
     /// </summary>
-    [AttributeUsage(
-       AttributeTargets.Assembly,
-       AllowMultiple = false,
-       Inherited = false)]
+    [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
+    [SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments",
+        Justification = "There is an accessor, it just changes the type to a DateTimeOffset.")]
     [ExcludeFromCoverage("There is no need to test the attribute that we use to exclude classes from test coverage.")]
     public sealed class AssemblyBuildTimeAttribute : Attribute
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AssemblyBuildTimeAttribute"/> class.
         /// </summary>
-        /// <param name="dateTime">The date and time the assembly was build.</param>
+        /// <param name="buildTime">The date and time the assembly was build.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="dateTime"/> is an <see langword="null" /> reference.
+        /// Thrown if <paramref name="buildTime"/> is an <see langword="null" /> reference.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if <paramref name="dateTime"/> is an empty string.
+        /// Thrown if <paramref name="buildTime"/> is an empty string.
         /// </exception>
-        public AssemblyBuildTimeAttribute(string dateTime)
+        public AssemblyBuildTimeAttribute(string buildTime)
         {
             {
-                Enforce.Argument(() => dateTime);
-                Enforce.Argument(() => dateTime, StringIs.NotEmpty);
+                Enforce.Argument(() => buildTime);
+                Enforce.Argument(() => buildTime, StringIs.NotEmpty);
             }
 
-            BuildTime = DateTimeOffset.ParseExact(dateTime, "o", CultureInfo.InvariantCulture);
+            BuildTime = DateTimeOffset.ParseExact(buildTime, "o", CultureInfo.InvariantCulture);
         }
 
         /// <summary>

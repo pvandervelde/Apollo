@@ -62,14 +62,14 @@ namespace Apollo.Core.Utils.Licensing
         [Description("Checks that an EndPoint cannot be created with a null factory reference.")]
         public void CreateWithNullProxyFactory()
         { 
-            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndPoint(null, new MockCacheProxyHolder()));
+            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(null, new MockCacheProxyHolder()));
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot be created with a null proxy holder.")]
         public void CreateWithNullCache()
         {
-            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndPoint(() => new MockLicenseValidationCacheProxy(), null));
+            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(() => new MockLicenseValidationCacheProxy(), null));
         }
 
         [Test]
@@ -77,7 +77,7 @@ namespace Apollo.Core.Utils.Licensing
         public void LocalProxy()
         {
             var proxy = new MockLicenseValidationCacheProxy();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, new MockCacheProxyHolder());
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, new MockCacheProxyHolder());
 
             Assert.AreSame(proxy, endPoint.LocalProxy());
         }
@@ -88,7 +88,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             Assert.Throws<ArgumentNullException>(() => endPoint.Connect(null, new MockLicenseValidationCacheProxy()));
         }
@@ -99,7 +99,7 @@ namespace Apollo.Core.Utils.Licensing
         { 
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             Assert.Throws<ArgumentNullException>(() => endPoint.Connect(AppDomain.CurrentDomain, null));
         }
@@ -110,7 +110,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             endPoint.Connect(AppDomain.CurrentDomain, proxy);
             endPoint.Connect(AppDomain.CurrentDomain, new MockLicenseValidationCacheProxy());
@@ -124,7 +124,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             endPoint.Connect(AppDomain.CurrentDomain, proxy);
             Assert.AreSame(proxy, holder.Proxy);
@@ -136,7 +136,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             Assert.Throws<ArgumentNullException>(() => endPoint.Disconnect(null));
         }
@@ -147,7 +147,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             holder.Proxy = proxy;
             endPoint.Disconnect(AppDomain.CurrentDomain);
@@ -160,7 +160,7 @@ namespace Apollo.Core.Utils.Licensing
         {
             var proxy = new MockLicenseValidationCacheProxy();
             var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndPoint(() => proxy, holder);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
 
             endPoint.Connect(AppDomain.CurrentDomain, proxy);
             Assert.AreSame(proxy, holder.Proxy);

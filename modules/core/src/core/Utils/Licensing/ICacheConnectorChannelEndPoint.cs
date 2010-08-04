@@ -13,7 +13,7 @@ namespace Apollo.Core.Utils.Licensing
     /// Defines the interface for objects that connect different <see cref="ILicenseValidationCache"/> object
     /// through their proxies.
     /// </summary>
-    internal interface ICacheConnectorChannelEndPoint
+    internal interface ICacheConnectorChannelEndpoint
     {
         /// <summary>
         /// Returns the <see cref="ILicenseValidationCacheProxy"/> for the <see cref="ILicenseValidationCache"/> that

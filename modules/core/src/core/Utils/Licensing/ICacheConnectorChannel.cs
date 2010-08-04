@@ -18,14 +18,14 @@ namespace Apollo.Core.Utils.Licensing
         /// <summary>
         /// Connects the channel to the given endpoint.
         /// </summary>
-        /// <param name="appDomainForEndPoint">The <see cref="AppDomain"/> for the endpoint that should be added.</param>
-        /// <param name="endPoint">The endpoint to which the channel is connected.</param>
-        void ConnectTo(AppDomain appDomainForEndPoint, ICacheConnectorChannelEndPoint endPoint);
+        /// <param name="appDomainForEndpoint">The <see cref="AppDomain"/> for the endpoint that should be added.</param>
+        /// <param name="endpoint">The endpoint to which the channel is connected.</param>
+        void ConnectTo(AppDomain appDomainForEndpoint, ICacheConnectorChannelEndpoint endpoint);
 
         /// <summary>
         /// Disconnects the channel from the given endpoint.
         /// </summary>
-        /// <param name="appDomainForEndPoint">The <see cref="AppDomain"/> for the endpoint that should be removed.</param>
-        void DisconnectFrom(AppDomain appDomainForEndPoint);
+        /// <param name="appDomainForEndpoint">The <see cref="AppDomain"/> for the endpoint that should be removed.</param>
+        void DisconnectFrom(AppDomain appDomainForEndpoint);
     }
 }

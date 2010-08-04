@@ -20,20 +20,19 @@ namespace Apollo.Core
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
-        /// <param name="moduleBuilder">The builder through which components can be
-        /// registered.</param>
+        /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
         /// that the module is being registered by (i.e. it can have its own defaults.)
         /// </remarks>
-        protected override void Load(ContainerBuilder moduleBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
-            base.Load(moduleBuilder);
+            base.Load(builder);
 
-            moduleBuilder.Register(c => new DnsNameConstants())
+            builder.Register(c => new DnsNameConstants())
                 .As<IDnsNameConstants>();
 
-            moduleBuilder.Register(c => new CommandFactory())
+            builder.Register(c => new CommandFactory())
                 .As<ICommandContainer>();
         }
     }

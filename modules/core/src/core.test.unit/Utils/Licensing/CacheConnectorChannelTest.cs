@@ -34,7 +34,7 @@ namespace Apollo.Core.Utils.Licensing
 
         #region internal class - MockCacheConnectorChannelEndPoint
 
-        private sealed class MockCacheConnectorChannelEndPoint : ICacheConnectorChannelEndPoint
+        private sealed class MockCacheConnectorChannelEndPoint : ICacheConnectorChannelEndpoint
         {
             private ILicenseValidationCacheProxy m_Proxy;
 

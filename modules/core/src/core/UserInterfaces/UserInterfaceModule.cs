@@ -41,25 +41,25 @@ namespace Apollo.Core.UserInterfaces
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
-        /// <param name="moduleBuilder">The builder.</param>
-        protected override void Load(ContainerBuilder moduleBuilder)
+        /// <param name="builder">The builder through which components can be registered.</param>
+        protected override void Load(ContainerBuilder builder)
         {
-            base.Load(moduleBuilder);
+            base.Load(builder);
 
-            moduleBuilder.Register(c => new NotificationNameConstants())
+            builder.Register(c => new NotificationNameConstants())
                 .As<INotificationNameConstants>();
 
-            moduleBuilder.Register(c => new DnsNameConstants())
+            builder.Register(c => new DnsNameConstants())
                 .As<IDnsNameConstants>();
 
-            moduleBuilder.Register(c => m_Owner)
+            builder.Register(c => m_Owner)
                 .As<IUserInterfaceService>()
                 .ExternallyOwned();
 
-            moduleBuilder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
+            builder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
                 .As<IAbstractApplications>();
 
-            moduleBuilder.Register(c => new LicenseValidationResultStorage())
+            builder.Register(c => new LicenseValidationResultStorage())
                 .As<IValidationResultStorage>();
 
             // IInteractWithUsers

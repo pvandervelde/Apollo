@@ -23,26 +23,25 @@ namespace Apollo.Core.Utils
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
-        /// <param name="moduleBuilder">The builder through which components can be
-        /// registered.</param>
+        /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
         /// that the module is being registered by (i.e. it can have its own defaults.)
         /// </remarks>
-        protected override void Load(ContainerBuilder moduleBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
-            base.Load(moduleBuilder);
+            base.Load(builder);
 
             // Register the global application objects
             {
-                moduleBuilder.Register(c => new ApplicationConstants())
+                builder.Register(c => new ApplicationConstants())
                     .As<IApplicationConstants>()
                     .As<ICompanyConstants>();
 
-                moduleBuilder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
+                builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
-                moduleBuilder.Register((c, p) => new ProgressTimer(
+                builder.Register((c, p) => new ProgressTimer(
                         p.TypedAs<TimeSpan>()))
                     .As<IProgressTimer>()
                     .InstancePerDependency();
