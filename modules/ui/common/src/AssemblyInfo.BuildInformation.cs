@@ -12,4 +12,4 @@ using Apollo.Utils;
  * CHANGES WILL BE UNDONE THE NEXT TIME THE FILE IS GENERATED! 
  */
 [assembly: AssemblyConfiguration("debug")]
-[assembly: AssemblyBuildTime("2010-08-03T20:01:15.4671797+12:00")]
+[assembly: AssemblyBuildTime("2010-08-05T08:20:58.6251574+12:00")]

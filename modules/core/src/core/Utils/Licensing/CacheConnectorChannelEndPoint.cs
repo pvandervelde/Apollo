@@ -15,7 +15,7 @@ namespace Apollo.Core.Utils.Licensing
     /// Used by the <see cref="Bootstrapper"/> to connect the different implementations of
     /// the <see cref="ICacheProxyHolder"/>.
     /// </summary>
-    internal sealed class CacheConnectorChannelEndPoint : MarshalByRefObject, ICacheConnectorChannelEndPoint
+    internal sealed class CacheConnectorChannelEndpoint : MarshalByRefObject, ICacheConnectorChannelEndpoint
     {
         /// <summary>
         /// The collection that maps proxies to their <see cref="AppDomain"/>s.
@@ -35,7 +35,7 @@ namespace Apollo.Core.Utils.Licensing
         private readonly ICacheProxyHolder m_LocalCache;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CacheConnectorChannelEndPoint"/> class.
+        /// Initializes a new instance of the <see cref="CacheConnectorChannelEndpoint"/> class.
         /// </summary>
         /// <param name="proxyFactory">The function that is used to get the proxy that belongs to the local cache.</param>
         /// <param name="localCache">
@@ -44,7 +44,7 @@ namespace Apollo.Core.Utils.Licensing
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localCache"/> is <see langword="null" />.
         /// </exception>
-        public CacheConnectorChannelEndPoint(Func<ILicenseValidationCacheProxy> proxyFactory, ICacheProxyHolder localCache)
+        public CacheConnectorChannelEndpoint(Func<ILicenseValidationCacheProxy> proxyFactory, ICacheProxyHolder localCache)
         {
             {
                 Enforce.Argument(() => proxyFactory);

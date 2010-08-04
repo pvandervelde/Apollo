@@ -39,7 +39,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-07-03 08:56:28Z">
+ <FxCopReport Version="1.36" LastAnalysis="2010-08-03 20:36:04Z">
   <Namespaces>
    <Namespace Name="Apollo.Core.UserInterfaces">
     <Messages>
@@ -76,12 +76,26 @@
       <Namespaces>
        <Namespace Name="Apollo.Core">
         <Types>
+         <Type Name="Bootstrapper+ServiceInjector">
+          <Members>
+           <Member Name="#BuildContainer(Apollo.Core.Utils.Licensing.ICacheConnectorChannel,Autofac.Core.IModule[])">
+            <Messages>
+             <Message Id="additionalModules" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-08-03 20:36:04Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>'additionalModules'</Item>
+               <Item>'Bootstrapper.ServiceInjector.BuildContainer(ICacheConnectorChannel, IModule[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
          <Type Name="CoreProxy">
           <Members>
            <Member Name="#HandleShutdownRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId,Apollo.Core.ShutdownRequestMessage)">
             <Messages>
              <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-05-15 14:38:49Z">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\code\unstable\prealpha\modules\core\src\core" File="CoreProxy.Messages.cs" Line="79">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\modules\core\src\core" File="CoreProxy.Messages.cs" Line="79">
                <Item>'CoreProxy.HandleShutdownRequest(DnsName, MessageId, ShutdownRequestMessage)'</Item>
                <Item>'Parallel.Invoke(params Action[])'</Item>
                <Item>'System.Threading.dll'</Item>
@@ -114,7 +128,7 @@
            <Member Name="#ChangeLevel(Apollo.Core.Logging.LevelToLog)">
             <Messages>
              <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-05-15 14:38:49Z">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\code\unstable\prealpha\modules\core\src\core\Logging" File="Logger.cs" Line="260">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\modules\core\src\core\Logging" File="Logger.cs" Line="260">
                <Item>'Logger.ChangeLevel(LevelToLog)'</Item>
                <Item>'LogFactory.GlobalThreshold.set(LogLevel)'</Item>
                <Item>'NLog.dll'</Item>
@@ -140,6 +154,9 @@
    </Rule>
    <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
     <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
+   </Rule>
+   <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
+    <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

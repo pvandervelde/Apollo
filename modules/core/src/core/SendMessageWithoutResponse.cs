@@ -14,5 +14,5 @@ namespace Apollo.Core
     /// <param name="recipient">The <see cref="DnsName"/> of the service to which the message should be send.</param>
     /// <param name="message">The message that should be passed on.</param>
     /// <param name="inResponseTo">The <see cref="MessageId"/> of the message to which this message is a response.</param>
-    public delegate void SendMessageWithoutResponse(DnsName recipient, MessageBody message, MessageId inResponseTo);
+    internal delegate void SendMessageWithoutResponse(DnsName recipient, MessageBody message, MessageId inResponseTo);
 }

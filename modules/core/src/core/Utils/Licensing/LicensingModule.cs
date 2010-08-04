@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 using Apollo.Utils.Licensing;
 using Autofac;
@@ -16,26 +17,27 @@ namespace Apollo.Core.Utils.Licensing
     /// Handles the component registrations for the licensing part 
     /// of the core.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
+        Justification = "This class never goes out of scope so there's no real need to dispose of it.")]
     [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
     internal sealed partial class LicensingModule : Module
     {
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
-        /// <param name="moduleBuilder">The builder through which components can be
-        /// registered.</param>
+        /// <param name="builder">The builder through which components can be registered.</param>
         /// <remarks>
         /// Note that the ContainerBuilder parameter is not the same one
         /// that the module is being registered by (i.e. it can have its own defaults.)
         /// </remarks>
-        protected override void Load(ContainerBuilder moduleBuilder)
+        protected override void Load(ContainerBuilder builder)
         {
-            base.Load(moduleBuilder);
+            base.Load(builder);
 
             // Load up the licensing system
             {
                 // Register a 'Startable' object that handles the start of the licensing system
-                moduleBuilder.RegisterModule(
+                builder.RegisterModule(
                     new StartableModule<ILoadOnApplicationStartup>(
                         s =>
                         {
@@ -47,7 +49,7 @@ namespace Apollo.Core.Utils.Licensing
                         }));
 
                 // Register the service runner as a 'startable' module
-                moduleBuilder.Register(c => new ValidationServiceRunner(
+                builder.Register(c => new ValidationServiceRunner(
                         c.Resolve<IValidationService>()))
                     .As<ILoadOnApplicationStartup>()
                     .OwnedByLifetimeScope()
@@ -57,7 +59,7 @@ namespace Apollo.Core.Utils.Licensing
                 // from the licensing system.
                 var watchdogPeriod = new TimeSpan(0, 0, 0, 0, LicensingConstants.LicenseWatchdogIntervalInMilliseconds);
 
-                moduleBuilder.Register(c => new ValidationService(
+                builder.Register(c => new ValidationService(
                         () => DateTimeOffset.Now,
                         VerifyLicenseValidationServiceIsAlive,
                         c.Resolve<IProgressTimer>(
@@ -72,25 +74,25 @@ namespace Apollo.Core.Utils.Licensing
                 // work. For now we just make the storage a singleton because it's the easiest way to 
                 // get this system to work. If at some point we need to start separating
                 // the different versions of the validation results we can reconsider other methods.
-                moduleBuilder.Register(c => new LicenseValidationResultStorage())
+                builder.Register(c => new LicenseValidationResultStorage())
                     .As<IValidationResultStorage>()
                     .SingleInstance();
 
-                moduleBuilder.Register(c => new ValidationServiceLicenseValidator(
+                builder.Register(c => new ValidationServiceLicenseValidator(
                         c.Resolve<ValidationServiceLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
                     .As<ILicenseValidator>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new CoreLicenseValidator(
+                builder.Register(c => new CoreLicenseValidator(
                         c.Resolve<CoreLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
                     .As<ILicenseValidator>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new UserInterfaceLicenseValidator(
+                builder.Register(c => new UserInterfaceLicenseValidator(
                         c.Resolve<UserInterfaceLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
@@ -106,7 +108,7 @@ namespace Apollo.Core.Utils.Licensing
                 // - System uptime
                 // - Date & time
                 var random = new Random();
-                moduleBuilder.Register(c => new ValidationServiceLicenseValidationCache(
+                builder.Register(c => new ValidationServiceLicenseValidationCache(
                         c.Resolve<IValidator>(),
                         () => DateTimeOffset.Now,
                         () => random.NextDouble()))
@@ -115,7 +117,7 @@ namespace Apollo.Core.Utils.Licensing
                         // Create an endpoint and register that with the 
                         // global channel.
                         var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndPoint>(
+                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
                             new TypedParameter(typeof(ILicenseValidationCache), cache),
                             new TypedParameter(typeof(ICacheProxyHolder), cache));
 
@@ -125,7 +127,7 @@ namespace Apollo.Core.Utils.Licensing
                     .As<ILicenseValidationCache>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new CoreLicenseValidationCache(
+                builder.Register(c => new CoreLicenseValidationCache(
                         c.Resolve<IValidator>(),
                         () => DateTimeOffset.Now,
                         () => random.NextDouble()))
@@ -134,7 +136,7 @@ namespace Apollo.Core.Utils.Licensing
                         // Create an endpoint and register that with the 
                         // global channel.
                         var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndPoint>(
+                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
                             new TypedParameter(typeof(ILicenseValidationCache), cache),
                             new TypedParameter(typeof(ICacheProxyHolder), cache));
 
@@ -144,7 +146,7 @@ namespace Apollo.Core.Utils.Licensing
                     .As<ILicenseValidationCache>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new UserInterfaceLicenseValidationCache(
+                builder.Register(c => new UserInterfaceLicenseValidationCache(
                         c.Resolve<IValidator>(),
                         () => DateTimeOffset.Now,
                         () => random.NextDouble()))
@@ -153,7 +155,7 @@ namespace Apollo.Core.Utils.Licensing
                         // Create an endpoint and register that with the 
                         // global channel.
                         var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndPoint>(
+                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
                             new TypedParameter(typeof(ILicenseValidationCache), cache),
                             new TypedParameter(typeof(ICacheProxyHolder), cache));
 
@@ -163,17 +165,17 @@ namespace Apollo.Core.Utils.Licensing
                     .As<ILicenseValidationCache>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register((c, p) => new CacheConnectorChannelEndPoint(
+                builder.Register((c, p) => new CacheConnectorChannelEndpoint(
                         () => p.TypedAs<ILicenseValidationCache>().CreateNewProxy(),
                         p.TypedAs<ICacheProxyHolder>()))
-                    .As<ICacheConnectorChannelEndPoint>()
+                    .As<ICacheConnectorChannelEndpoint>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new ValidationSequenceGenerator())
+                builder.Register(c => new ValidationSequenceGenerator())
                     .As<IValidationSequenceGenerator>()
                     .InstancePerDependency();
 
-                moduleBuilder.Register(c => new RegistryKeyValidator())
+                builder.Register(c => new RegistryKeyValidator())
                     .As<IValidator>()
                     .InstancePerDependency();
             }

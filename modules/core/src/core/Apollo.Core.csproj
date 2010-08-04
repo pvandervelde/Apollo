@@ -369,6 +369,8 @@
     <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />
+    <Compile Include="Utils\Licensing\CacheConnectorChannelEndpoint.cs" />
+    <Compile Include="Utils\Licensing\ICacheConnectorChannelEndpoint.cs" />
     <Compile Include="Utils\Licensing\LicenseValidationResultStorage.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
@@ -380,9 +382,6 @@
     <Compile Include="Utils\Licensing\CacheConnectorChannel.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Utils\Licensing\CacheConnectorChannelEndPoint.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Utils\Licensing\CoreLicenseValidationCache.cs">
       <DependentUpon>LicenseValidationCache.tt</DependentUpon>
       <SubType>Code</SubType>
@@ -392,9 +391,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Licensing\ICacheConnectorChannel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\ICacheConnectorChannelEndPoint.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Licensing\IncludeLicensingAttribute.cs" />
@@ -509,7 +505,7 @@
       <AutoGen>True</AutoGen>
     </None>
   </ItemGroup>
-    <PropertyGroup>
+  <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>
     <ToolsPath>$(BasePath)\Tools</ToolsPath>

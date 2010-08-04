@@ -16,6 +16,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using Apollo.Utils;
 using Apollo.Utils.Licensing;
@@ -35,6 +36,8 @@ namespace Apollo.Core.Utils.Licensing
         /// <returns>
         ///     A collection of <see cref="ValidationSequence"/> instances.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "The return value is an IEnumerable, generating this may take time thus a method is more suitable.")]
         public IEnumerable<ValidationSequence> GetLicenseValidationSequences()
         {
             yield return new ValidationSequence(
@@ -51,7 +54,7 @@ namespace Apollo.Core.Utils.Licensing
 
             yield return new ValidationSequence(
                 new TimePeriod(RepeatPeriod.Hourly, 1),
-                new DateTimeOffset(2010, 8, 3, 20, 10, 51, 41, new TimeSpan(432000000000)));
+                new DateTimeOffset(2010, 8, 5, 8, 30, 34, 590, new TimeSpan(432000000000)));
         }
 
         /// <summary>
