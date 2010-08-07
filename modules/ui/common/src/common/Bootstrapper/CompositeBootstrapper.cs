@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Microsoft.Practices.Composite;
@@ -186,11 +187,13 @@ namespace Apollo.UI.Common.Bootstrapper
         /// <summary>
         /// Registers the type as a singleton.
         /// </summary>
-        /// <typeparam name="T1">The original type.</typeparam>
-        /// <typeparam name="T2">The type as which the objects should be resolved.</typeparam>
-        private void RegisterSingletonType<T1, T2>()
+        /// <typeparam name="TOriginal">The original type.</typeparam>
+        /// <typeparam name="TResolveAs">The type as which the objects should be resolved.</typeparam>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+            Justification = "Using a generic T results in cleaner code, that is worth dealing with slightly more difficult usage.")]
+        private void RegisterSingletonType<TOriginal, TResolveAs>()
         {
-            Container.RegisterType(typeof(T1), typeof(T2), ContainerRegistrationScope.Singleton);
+            Container.RegisterType(typeof(TOriginal), typeof(TResolveAs), ContainerRegistrationScope.Singleton);
         }
 
         /// <summary>

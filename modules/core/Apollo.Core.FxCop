@@ -18,7 +18,7 @@
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
   <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
-  <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
   <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
@@ -39,7 +39,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-08-03 20:36:04Z">
+ <FxCopReport Version="1.36" LastAnalysis="2010-08-07 02:03:42Z">
   <Namespaces>
    <Namespace Name="Apollo.Core.UserInterfaces">
     <Messages>

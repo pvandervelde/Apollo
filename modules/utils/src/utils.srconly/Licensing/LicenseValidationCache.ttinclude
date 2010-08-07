@@ -19,6 +19,7 @@ private void WriteLicenseValidationCache(string nameSpace, string className)
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 <#+
     var apolloUtilsNamespace = "Apollo.Utils";
     if (!string.Equals(nameSpace, apolloUtilsNamespace))
@@ -223,8 +224,11 @@ namespace <#= nameSpace #>
         /// <summary>
         /// Invalidates the cache and gets a new <see cref="LicenseCheckResult"/> with the specified expiration time.
         /// </summary>
-        /// <param name="nextExpiration">The <see cref="TimePeriod"/> that must occur before the validated
-        /// license check expires.</param>
+        /// <param name="nextExpiration">
+        /// The <see cref="TimePeriod"/> that must occur before the validated license check expires.
+        /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Invalidate(TimePeriod nextExpiration)
         {
             // We don't expect the list to grow very large (no more than say 10) so copying 

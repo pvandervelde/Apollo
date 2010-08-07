@@ -24,6 +24,8 @@ namespace Apollo.UI.Common.Bootstrapper
         Justification = "The correct spelling is 'Autofac'.")]
     public class AutofacServiceLocator : IServiceLocator
     {
+        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Autofac",
+            Justification = "Autofac is the correct spelling for the Autofac IOC library.")]
         private readonly IContainer m_AutofacContainer;
 
         /// <summary>

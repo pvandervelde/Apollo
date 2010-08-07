@@ -131,7 +131,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetBuildTime()'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'BuildTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
 	
@@ -139,7 +139,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetInstallTime()'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'InstallTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
 	
@@ -147,7 +147,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-	$sequenceText = $sequenceText -replace '@START_TIME@', 'GetProcessStartTime()'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'ProcessStartTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
 	

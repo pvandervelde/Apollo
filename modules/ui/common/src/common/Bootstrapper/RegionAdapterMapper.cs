@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Composite.Presentation.Regions;
 using Microsoft.Practices.Composite.Regions;
 
@@ -61,6 +62,8 @@ namespace Apollo.UI.Common.Bootstrapper
         /// <returns>
         /// A mapper which maps the control to the adapter.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
+            Justification = "Using a generic T results in cleaner code, that is worth dealing with slightly more difficult usage.")]
         public RegionAdapterMapper Map<TControl, TAdapter>()
             where TAdapter : class, IRegionAdapter
         {

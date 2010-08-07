@@ -18,7 +18,7 @@
   <CustomDictionaries SearchFxCopDir="True" SearchUserProfile="True" SearchProjectDir="True" />
   <SearchGlobalAssemblyCache>True</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
-  <IgnoreGeneratedCode>True</IgnoreGeneratedCode>
+  <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
   <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
@@ -39,5 +39,5 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-08-03 08:54:08Z" />
+ <FxCopReport Version="1.36" LastAnalysis="2010-08-07 02:04:36Z" />
 </FxCopProject>

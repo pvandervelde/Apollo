@@ -32,7 +32,7 @@ namespace Apollo.UI.Common.Bootstrapper
         /// Gets the main PRISM assembly.
         /// </summary>
         /// <returns>The requested assembly.</returns>
-        private static Assembly GetMainPrismAssembly()
+        private static Assembly MainPrismAssembly()
         {
             // Get by way of this known type
             return typeof(AutoPopulateRegionBehavior).Assembly;
@@ -315,7 +315,7 @@ namespace Apollo.UI.Common.Bootstrapper
         /// </remarks>
         private void RegisterKnownConcreteClasses()
         {
-            var prismTypes = GetMainPrismAssembly().GetTypes();
+            var prismTypes = MainPrismAssembly().GetTypes();
 
             var desiredTypes =
                 from type in prismTypes

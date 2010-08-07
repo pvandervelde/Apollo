@@ -18,6 +18,8 @@ namespace Apollo.UI.Common
         /// <summary>
         /// The collection of properties for the current parameter.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The variable needs to hold a collection of functions. Unfortunately nested generics is unavoidable.")]
         private readonly List<Func<object>> m_Properties = new List<Func<object>>();
 
         /// <summary>
