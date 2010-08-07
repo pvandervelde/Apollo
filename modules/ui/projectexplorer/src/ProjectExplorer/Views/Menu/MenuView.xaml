@@ -36,6 +36,7 @@
             <Separator />
             <MenuItem 
                     x:Name="miFileExit"
+                    x:FieldModifier="private"
                     Header="{lex:LocText Key=MainWindow_Menu_File_Exit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Exit}"
                 />
         </MenuItem>
@@ -74,6 +75,7 @@
             <Separator />
             <MenuItem 
                 x:Name="miHelpAbout"
+                x:FieldModifier="private"
                 Header="{lex:LocText Key=MainWindow_Menu_Help_About, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_About}" 
                 />
         </MenuItem>

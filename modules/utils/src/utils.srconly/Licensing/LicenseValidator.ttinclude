@@ -17,6 +17,7 @@ private void WriteLicenseValidator(string nameSpace, string className)
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 <#+
     var apolloLicensingNamespace = "Apollo.Utils.Licensing";
     if (!string.Equals(nameSpace, apolloLicensingNamespace))
@@ -94,6 +95,8 @@ namespace <#= nameSpace #>
         /// Validates the license and stores a value based on the
         /// license validity and the checksum.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Verify()
         {
 <#+
@@ -112,6 +115,8 @@ namespace <#= nameSpace #>
         /// The <see cref="TimePeriod"/> that must occur before the validated
         /// license check expires.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Verify(TimePeriod <#= nextExpiration #>)
         {
 <#+

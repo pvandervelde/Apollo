@@ -31,39 +31,12 @@ namespace Apollo.Core.Utils.Licensing
     internal sealed class ValidationSequenceGenerator : IValidationSequenceGenerator
     {
         /// <summary>
-        /// Generates a set of validation sequences.
-        /// </summary>
-        /// <returns>
-        ///     A collection of <see cref="ValidationSequence"/> instances.
-        /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "The return value is an IEnumerable, generating this may take time thus a method is more suitable.")]
-        public IEnumerable<ValidationSequence> GetLicenseValidationSequences()
-        {
-            yield return new ValidationSequence(
-                new TimePeriod(RepeatPeriod.Hourly, 1),
-                GetBuildTime());
-
-            yield return new ValidationSequence(
-                new TimePeriod(RepeatPeriod.Hourly, 1),
-                GetInstallTime());
-
-            yield return new ValidationSequence(
-                new TimePeriod(RepeatPeriod.Hourly, 1),
-                GetProcessStartTime());
-
-            yield return new ValidationSequence(
-                new TimePeriod(RepeatPeriod.Hourly, 1),
-                new DateTimeOffset(2010, 8, 5, 8, 30, 34, 590, new TimeSpan(432000000000)));
-        }
-
-        /// <summary>
         /// Returns the date and time on which the current <see cref="Assembly"/> was build.
         /// </summary>
         /// <returns>
         ///     The build time for the current <see cref="Assembly"/>.
         /// </returns>
-        private DateTimeOffset GetBuildTime()
+        private static DateTimeOffset BuildTime()
         {
             DateTimeOffset result = DateTimeOffset.Now;
             var buildTimeAttributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyBuildTimeAttribute), false);
@@ -81,7 +54,7 @@ namespace Apollo.Core.Utils.Licensing
         /// <returns>
         ///     The install time for the current application.
         /// </returns>
-        private DateTimeOffset GetInstallTime()
+        private static DateTimeOffset InstallTime()
         {
             return DateTimeOffset.Now;
         }
@@ -92,10 +65,37 @@ namespace Apollo.Core.Utils.Licensing
         /// <returns>
         ///     The started time for the current application.
         /// </returns>
-        private DateTimeOffset GetProcessStartTime()
+        private static DateTimeOffset ProcessStartTime()
         {
             var ourProcess = Process.GetCurrentProcess();
             return new DateTimeOffset(ourProcess.StartTime);
+        }
+
+        /// <summary>
+        /// Generates a set of validation sequences.
+        /// </summary>
+        /// <returns>
+        ///     A collection of <see cref="ValidationSequence"/> instances.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "The return value is an IEnumerable, generating this may take time thus a method is more suitable.")]
+        public IEnumerable<ValidationSequence> GetLicenseValidationSequences()
+        {
+            yield return new ValidationSequence(
+                new TimePeriod(RepeatPeriod.Hourly, 1),
+                BuildTime());
+
+            yield return new ValidationSequence(
+                new TimePeriod(RepeatPeriod.Hourly, 1),
+                InstallTime());
+
+            yield return new ValidationSequence(
+                new TimePeriod(RepeatPeriod.Hourly, 1),
+                ProcessStartTime());
+
+            yield return new ValidationSequence(
+                new TimePeriod(RepeatPeriod.Hourly, 1),
+                new DateTimeOffset(2010, 8, 7, 14, 42, 54, 570, new TimeSpan(432000000000)));
         }
     }
 }
