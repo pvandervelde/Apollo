@@ -23,7 +23,7 @@
 
 </Text>
         <Location left="10" top="18" />
-        <Size width="282" height="147" />
+        <Size width="362" height="147" />
       </Entity>
       <Entity type="Interface">
         <Name>IDataSetTree</Name>
@@ -54,7 +54,7 @@ The generator, visualization and actual data sets can be linked to the 'data-uni
 
 By separating the actual generated data from the 'description' data we can allow modification (copy/clone/modify/edit etc.) of a 'data-unit' without having to digg through all the generated data. This also forces components / users to indicate what data should be considered in the tree and what data doesn't need to be considered.</Text>
         <Location left="10" top="188" />
-        <Size width="282" height="261" />
+        <Size width="362" height="261" />
       </Entity>
       <Entity type="Interface">
         <Name>IDataSetGraphNode</Name>
@@ -73,7 +73,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>ICommand</Name>
         <Access>Internal</Access>
-        <Location left="1779" top="370" />
+        <Location left="1814" top="370" />
         <Size width="162" height="64" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -101,31 +101,31 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IHistory</Name>
         <Access>Internal</Access>
-        <Location left="941" top="1130" />
+        <Location left="720" top="1130" />
         <Size width="162" height="76" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>There's no need to create a pooling system for these as we expect that nodes will not be created often, given that each node contains a complete data set.</Text>
         <Location left="1750" top="1050" />
-        <Size width="231" height="89" />
+        <Size width="231" height="104" />
       </Entity>
       <Entity type="Interface">
         <Name>ITimeLineProxy</Name>
         <Access>Internal</Access>
-        <Location left="941" top="958" />
+        <Location left="720" top="958" />
         <Size width="162" height="66" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>The project data is also stored in the project graph as the root node. So a project doesn't have any data itself.</Text>
-        <Location left="1136" top="958" />
+        <Location left="1158" top="626" />
         <Size width="214" height="80" />
       </Entity>
       <Entity type="Comment">
         <Text>Holds the commands that are accessable to the different project extensions</Text>
         <Location left="1591" top="578" />
-        <Size width="162" height="72" />
+        <Size width="168" height="80" />
       </Entity>
       <Entity type="Interface">
         <Name>IProjectBuilder</Name>
@@ -144,7 +144,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IMessageCentralProxy</Name>
         <Access>Internal</Access>
-        <Location left="682" top="648" />
+        <Location left="431" top="648" />
         <Size width="162" height="83" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -158,8 +158,8 @@ By separating the actual generated data from the 'description' data we can allow
       </Entity>
       <Entity type="Comment">
         <Text>Only the data is stored in the individual data set files. All component related information is stored in the project file.</Text>
-        <Location left="1888" top="1257" />
-        <Size width="206" height="83" />
+        <Location left="1889" top="1257" />
+        <Size width="206" height="100" />
       </Entity>
       <Entity type="Comment">
         <Text>E.g. for simulations there is the Run command.</Text>
@@ -198,7 +198,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Comment">
         <Text>Allow saving a new project from any specific node downwards. This means we'll need to copy in all the parent information into the new top level node.</Text>
         <Location left="10" top="470" />
-        <Size width="284" height="80" />
+        <Size width="362" height="80" />
       </Entity>
       <Entity type="Interface">
         <Name>IProcessSchedule</Name>
@@ -215,7 +215,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Comment">
         <Text>The executor handles all the processing of schedules. It should be  able to run locally and on a remote machine. Dito it should be able to push the schedule to another executor (local and on an other machine).</Text>
         <Location left="466" top="30" />
-        <Size width="286" height="82" />
+        <Size width="286" height="108" />
       </Entity>
       <Entity type="Comment">
         <Text>Allow:
@@ -223,8 +223,8 @@ By separating the actual generated data from the 'description' data we can allow
 - Run remote
 - Hand off (to other executor)
 - Schedule</Text>
-        <Location left="532" top="292" />
-        <Size width="209" height="97" />
+        <Location left="521" top="292" />
+        <Size width="209" height="114" />
       </Entity>
       <Entity type="Interface">
         <Name>IScheduleController</Name>
@@ -238,13 +238,13 @@ By separating the actual generated data from the 'description' data we can allow
 - Start / Continue
 - Stop / Cancel
 - Pause</Text>
-        <Location left="606" top="158" />
-        <Size width="133" height="77" />
+        <Location left="777" top="171" />
+        <Size width="138" height="91" />
       </Entity>
       <Entity type="Interface">
         <Name>IPersistenceProxy</Name>
         <Access>Internal</Access>
-        <Location left="682" top="829" />
+        <Location left="431" top="829" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -252,23 +252,23 @@ By separating the actual generated data from the 'description' data we can allow
         <Text>The generation reason for a dataset might need to be more specific. There might be a difference between generation by the system (global) or a component. 
 
 Also we may need comments. e.g. the user might want to add a comment on why the data set was copied / cloned.</Text>
-        <Location left="1096" top="1614" />
-        <Size width="286" height="124" />
+        <Location left="1097" top="1614" />
+        <Size width="286" height="162" />
       </Entity>
       <Entity type="Comment">
         <Text>What about meta-data on a data-set? e.g. the UI might want to hide data-sets from the user?</Text>
-        <Location left="732" top="1256" />
+        <Location left="897" top="1239" />
         <Size width="198" height="90" />
       </Entity>
       <Entity type="Comment">
         <Text>How can we let data-sets get data from sub-data-sets? e.g. a parent data-set should be able to extract data from child-data sets IF those children were created by request of the parent data-set</Text>
         <Location left="2430" top="1168" />
-        <Size width="254" height="94" />
+        <Size width="297" height="94" />
       </Entity>
       <Entity type="Interface">
         <Name>IComponentResolver</Name>
         <Access>Internal</Access>
-        <Location left="682" top="986" />
+        <Location left="468" top="986" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -277,13 +277,18 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
 - If we make this mechanism available over the entire application then we can allow the higher level components to create substitutions too. That way we could allow the project to setup the resolvers for different simulation components based on the type of simulation that the user has selected. When using this system we'll get a sort of distributed, dynamic IOC container where all the reference types get filled in at the last possible minute.
 - We'll need to figure out how we are going to store all this information though. We could mabye use an actual IOC container and dynamically create builders (which we can discard when ever we want)
 - Another issue is figuring out a way to be able to load components without having the entire  object graph availabe. We might be able to create dynamic proxies that only load up their suggested component once they are needed?</Text>
-        <Location left="88" top="888" />
-        <Size width="423" height="254" />
+        <Location left="10" top="960" />
+        <Size width="423" height="363" />
       </Entity>
       <Entity type="Comment">
         <Text>How do we handle the different generators? There are at least the simulation generator and the experimental generator.</Text>
         <Location left="12" top="563" />
-        <Size width="282" height="76" />
+        <Size width="360" height="76" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>We may want to load datasets into their own application (hidden, commandline ones). This would enable easy reclaiming of resources etc.</Text>
+        <Location left="1105" top="932" />
+        <Size width="160" height="136" />
       </Entity>
     </Entities>
     <Relationships>
@@ -359,11 +364,11 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1874</X>
+          <X>1902</X>
           <Y>495</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1867</X>
+          <X>1902</X>
           <Y>460</Y>
         </BendPoint>
       </Relationship>
@@ -393,7 +398,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>400</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1728</X>
+          <X>1763</X>
           <Y>400</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -435,7 +440,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>877</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1070</X>
+          <X>849</X>
           <Y>927</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -445,8 +450,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1311</X>
-          <Y>919</Y>
+          <X>1328</X>
+          <Y>799</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="17" second="12">
@@ -471,11 +476,11 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1016</X>
+          <X>795</X>
           <Y>1071</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1016</X>
+          <X>795</X>
           <Y>1105</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -523,7 +528,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>676</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>874</X>
+          <X>623</X>
           <Y>676</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -635,7 +640,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>789</X>
+          <X>778</X>
           <Y>335</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -647,8 +652,8 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>781</X>
-          <Y>206</Y>
+          <X>957</X>
+          <Y>219</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>971</X>
@@ -723,15 +728,31 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>796</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>890</X>
-          <Y>896</Y>
+          <X>678</X>
+          <Y>818</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="39" second="38">
         <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>458</X>
+          <Y>1204</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>548</X>
+          <Y>1072</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="41" second="21">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="41" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

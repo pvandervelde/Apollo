@@ -14,12 +14,12 @@ Mark variables as stored / calculated to indicate how the value is determined.
 Provide variable value collections that can store values for the variables. These collections can be global or local. 
 Either store the cached value of the equation or just their value. Need to have some update mechanism that allows indication of cache invalidity.</Text>
         <Location left="5" top="5" />
-        <Size width="357" height="240" />
+        <Size width="394" height="240" />
       </Entity>
       <Entity type="Class">
         <Name>Alias</Name>
         <Access>Public</Access>
-        <Location left="558" top="138" />
+        <Location left="800" top="646" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -27,7 +27,7 @@ Either store the cached value of the equation or just their value. Need to have 
       <Entity type="Class">
         <Name>VariableId</Name>
         <Access>Public</Access>
-        <Location left="5" top="258" />
+        <Location left="1172" top="10" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -35,7 +35,7 @@ Either store the cached value of the equation or just their value. Need to have 
       <Entity type="Class">
         <Name>Calculator</Name>
         <Access>Public</Access>
-        <Location left="827" top="899" />
+        <Location left="1192" top="918" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -43,39 +43,41 @@ Either store the cached value of the equation or just their value. Need to have 
       <Entity type="Class">
         <Name>Complemental</Name>
         <Access>Public</Access>
-        <Location left="716" top="693" />
+        <Location left="1082" top="646" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines zero or more complemental variables + an equation or calculator that can transfer between the two variables</Text>
-        <Location left="1051" top="693" />
-        <Size width="183" height="85" />
+        <Location left="1483" top="646" />
+        <Size width="206" height="85" />
       </Entity>
       <Entity type="Comment">
         <Text>Defines zero or more calculators that are used to provide values for the variable based on the presence of other variables</Text>
-        <Location left="1051" top="899" />
-        <Size width="183" height="85" />
+        <Location left="1482" top="918" />
+        <Size width="194" height="85" />
       </Entity>
       <Entity type="Comment">
         <Text>Indicates which other variables are equivalent to this variable. 
 
-Equivalent variables can share information?</Text>
-        <Location left="800" top="138" />
-        <Size width="235" height="85" />
+Equivalent variables can share information?
+
+Note that equivalent variables can be done through a transform x = y</Text>
+        <Location left="334" top="605" />
+        <Size width="325" height="136" />
       </Entity>
       <Entity type="Class">
         <Name>ValueOrigin</Name>
         <Access>Public</Access>
-        <Location left="592" top="899" />
+        <Location left="957" top="918" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the way the variable value is obtained. this could be a calculation, a schedule or a sub-dataset</Text>
-        <Location left="316" top="899" />
+        <Location left="643" top="918" />
         <Size width="208" height="85" />
       </Entity>
       <Entity type="Class">
@@ -102,7 +104,7 @@ Equivalent variables can share information?</Text>
 - Set of values (e.g. all odd numbers between 4 and 21)
 - Expression</Text>
         <Location left="800" top="5" />
-        <Size width="235" height="122" />
+        <Size width="325" height="118" />
       </Entity>
       <Entity type="Class">
         <Name>Location</Name>
@@ -117,43 +119,43 @@ Equivalent variables can share information?</Text>
 
 Calculated variables can provide a use-caching equation which will be used to determine if caching the value is useful.</Text>
         <Location left="800" top="238" />
-        <Size width="261" height="113" />
+        <Size width="325" height="113" />
       </Entity>
       <Entity type="Comment">
         <Text>How about:
 - Transformation between different variables?
 - Should all variables store all information, or do we have 1 master variable (which stores all the info) and then slave variables (that are just aliases)</Text>
-        <Location left="230" top="668" />
-        <Size width="253" height="107" />
+        <Location left="1453" top="453" />
+        <Size width="253" height="141" />
       </Entity>
       <Entity type="Comment">
         <Text>Stores unit</Text>
-        <Location left="1047" top="526" />
+        <Location left="1082" top="521" />
         <Size width="99" height="50" />
       </Entity>
       <Entity type="Comment">
         <Text>Provide directed variables as well --&gt; variables that are linked to a tensor system (e.g. a coordinate system). Provide information about which part of the tensor the variables is linked to</Text>
-        <Location left="10" top="668" />
-        <Size width="207" height="107" />
+        <Location left="10" top="258" />
+        <Size width="253" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>Define variables to be tensors. Define size (scalar, vector, tensor + size). Allow definition of sub-variables which define the individual tensor elements</Text>
-        <Location left="10" top="785" />
-        <Size width="207" height="93" />
+        <Location left="1405" top="262" />
+        <Size width="207" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>Provide caching decision mechanisms. Need a way to determine if we should cache.
 
 Also indicate dependencies?</Text>
-        <Location left="230" top="785" />
-        <Size width="253" height="93" />
+        <Location left="10" top="372" />
+        <Size width="253" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>How do we deal with error information. We should be able to set a tolerance on each variable.
 
 Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</Text>
-        <Location left="10" top="899" />
-        <Size width="207" height="122" />
+        <Location left="10" top="489" />
+        <Size width="253" height="123" />
       </Entity>
       <Entity type="Class">
         <Name>Type</Name>
@@ -168,30 +170,73 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         <Location left="850" top="385" />
         <Size width="162" height="72" />
       </Entity>
+      <Entity type="Class">
+        <Name>TensorType</Name>
+        <Access>Public</Access>
+        <Location left="1172" top="120" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Defines the type of the variable: scalar, vector, matrix. Also defines how to get access to it.</Text>
+        <Location left="1425" top="122" />
+        <Size width="177" height="90" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Default value?</Text>
+        <Location left="661" top="799" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Free variable or not? A free variable is not controlled by an expression of some sorts. This allows the user to select a value for it.</Text>
+        <Location left="1803" top="727" />
+        <Size width="169" height="108" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Allow components to register a variable. Only variables that are registered can be used by the system.</Text>
+        <Location left="10" top="623" />
+        <Size width="253" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Aliasing variables shuld also allow for linking of variables. This allows for instance the creation of periodic boundary conditions by linking both sides of the domain</Text>
+        <Location left="334" top="810" />
+        <Size width="223" height="105" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Variables should have a level number which indicates e.g. solve order. e.g.:
+- lvl 1: time
+- lvl 2: x, y, z
+This means the iteration will run over x,y,z in each time step.</Text>
+        <Location left="10" top="708" />
+        <Size width="253" height="120" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="5" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1026</X>
-          <Y>728</Y>
+          <X>1458</X>
+          <Y>681</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>903</X>
-          <Y>728</Y>
+          <X>1269</X>
+          <Y>681</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="4" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>903</X>
-          <Y>758</Y>
+          <X>1269</X>
+          <Y>711</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>933</X>
-          <Y>874</Y>
+          <X>1298</X>
+          <Y>893</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -200,36 +245,38 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1026</X>
-          <Y>944</Y>
+          <X>1457</X>
+          <Y>963</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1014</X>
-          <Y>944</Y>
+          <X>1379</X>
+          <Y>963</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="7" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>775</X>
-          <Y>180</Y>
+          <X>684</X>
+          <Y>690</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>745</X>
-          <Y>180</Y>
+          <X>775</X>
+          <Y>690</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="4" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>691</X>
-          <Y>758</Y>
+          <X>1057</X>
+          <Y>711</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>658</X>
-          <Y>874</Y>
+          <X>1023</X>
+          <Y>893</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -238,24 +285,26 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>549</X>
-          <Y>943</Y>
+          <X>876</X>
+          <Y>962</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>567</X>
-          <Y>943</Y>
+          <X>932</X>
+          <Y>962</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>779</X>
-          <Y>943</Y>
+          <X>1144</X>
+          <Y>962</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>802</X>
-          <Y>943</Y>
+          <X>1167</X>
+          <Y>962</Y>
         </BendPoint>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -288,15 +337,17 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1022</X>
-          <Y>564</Y>
+          <X>1056</X>
+          <Y>552</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1014</X>
-          <Y>530</Y>
+          <Y>552</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="21" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -317,6 +368,62 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
           <X>745</X>
           <Y>425</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="24" second="23">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="24" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="15" second="5">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="25" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>745</X>
+          <Y>893</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="26">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1717</X>
+          <Y>686</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1899</X>
+          <Y>702</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="26" second="6">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1900</X>
+          <Y>860</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1701</X>
+          <Y>968</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="4" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="7" second="28">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>

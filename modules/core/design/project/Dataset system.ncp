@@ -7,7 +7,7 @@
       <Entity type="Class">
         <Name>Variables</Name>
         <Access>Internal</Access>
-        <Location left="1239" top="78" />
+        <Location left="1241" top="78" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -15,7 +15,7 @@
       <Entity type="Class">
         <Name>Expressions</Name>
         <Access>Internal</Access>
-        <Location left="1425" top="78" />
+        <Location left="1005" top="78" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -64,7 +64,7 @@
       <Entity type="Interface">
         <Name>IHistory</Name>
         <Access>Internal</Access>
-        <Location left="1380" top="478" />
+        <Location left="1289" top="571" />
         <Size width="162" height="99" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -99,40 +99,45 @@
       <Entity type="Comment">
         <Text>Load types asynchronuously. The idea is to load the assemblies in an async way so that we're not waiting for them for too long.</Text>
         <Location left="88" top="899" />
-        <Size width="192" height="95" />
+        <Size width="211" height="102" />
       </Entity>
       <Entity type="Comment">
         <Text>Provides the entry point for all the capabilities of a data set. Users only talk to the IDataSet object, not to the individual parts behind it.
 
 Schedule information is passed through a IScheduleInformation object. Schedules can't be edited directly.</Text>
-        <Location left="65" top="541" />
-        <Size width="244" height="129" />
+        <Location left="49" top="542" />
+        <Size width="250" height="161" />
       </Entity>
       <Entity type="Comment">
         <Text>The component service is responsible for component loading and also tracking which components exist in a data set.
 Note that data sets only store differential component information. i.e. the parent data set defines the base components. The individual data sets then override these definitions.</Text>
         <Location left="665" top="1037" />
-        <Size width="258" height="139" />
+        <Size width="273" height="151" />
       </Entity>
       <Entity type="Comment">
         <Text>Need some kind of graph describing the relations between the variables. That is needed so that we can determine how to get the values for a variable.</Text>
-        <Location left="924" top="55" />
-        <Size width="185" height="102" />
+        <Location left="1465" top="78" />
+        <Size width="197" height="108" />
       </Entity>
       <Entity type="Comment">
-        <Text>The process schedule only describes which variables need to be determined and how this can be achieved. In order to calculate the values for the variables it is necessary to check with the individual variables how their value can be found.</Text>
-        <Location left="140" top="137" />
-        <Size width="226" height="115" />
+        <Text>The process schedule describes both  which variables need to be determined and how this can be achieved. In order to calculate the values for the variables it is necessary to check with the individual variables how their value can be found.</Text>
+        <Location left="141" top="137" />
+        <Size width="248" height="121" />
       </Entity>
       <Entity type="Comment">
         <Text>The object loader should also keep track of the loaded assemblies so that we can quickly determine if we need to load the assembly or not.</Text>
         <Location left="413" top="1341" />
-        <Size width="206" height="81" />
+        <Size width="217" height="93" />
       </Entity>
       <Entity type="Comment">
         <Text>The builder links to a resolution system which is controlled from the top level project system (or from another service?). </Text>
         <Location left="85" top="1079" />
-        <Size width="195" height="77" />
+        <Size width="202" height="97" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Note that the value for a variable may be obtained from a data store (i.e. a constant), a simple calculation (through a 'calculator'), a more complex calculation (through a generator which may have it's own schedule) or a sub-dataset. </Text>
+        <Location left="1356" top="298" />
+        <Size width="224" height="151" />
       </Entity>
     </Entities>
     <Relationships>
@@ -216,16 +221,6 @@ Note that data sets only store differential component information. i.e. the pare
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="5" second="7">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1341</X>
-          <Y>380</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
       <Relationship type="Association" first="4" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -258,8 +253,8 @@ Note that data sets only store differential component information. i.e. the pare
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>839</X>
-          <Y>307</Y>
+          <X>846</X>
+          <Y>305</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>818</X>
@@ -267,6 +262,8 @@ Note that data sets only store differential component information. i.e. the pare
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="3" second="6">
         <StartOrientation>Vertical</StartOrientation>
@@ -281,12 +278,14 @@ Note that data sets only store differential component information. i.e. the pare
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="5" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1197</X>
+          <X>1199</X>
           <Y>123</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -296,7 +295,7 @@ Note that data sets only store differential component information. i.e. the pare
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1213</X>
+          <X>1174</X>
           <Y>307</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
@@ -306,7 +305,7 @@ Note that data sets only store differential component information. i.e. the pare
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>312</X>
+          <X>331</X>
           <Y>948</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -315,8 +314,16 @@ Note that data sets only store differential component information. i.e. the pare
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="13" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>341</X>
+          <Y>616</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>439</X>
+          <Y>616</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="14" second="8">
         <StartOrientation>Vertical</StartOrientation>
@@ -326,7 +333,7 @@ Note that data sets only store differential component information. i.e. the pare
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1318</X>
+          <X>1320</X>
           <Y>42</Y>
         </BendPoint>
       </Relationship>
@@ -349,6 +356,18 @@ Note that data sets only store differential component information. i.e. the pare
           <X>470</X>
           <Y>1026</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="2" second="7">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="19" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
