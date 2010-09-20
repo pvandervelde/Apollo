@@ -95,7 +95,7 @@ namespace Apollo.Core.Utils.Licensing
 
             yield return new ValidationSequence(
                 new TimePeriod(RepeatPeriod.Hourly, 1),
-                new DateTimeOffset(2010, 8, 7, 14, 42, 54, 570, new TimeSpan(432000000000)));
+                new DateTimeOffset(2010, 9, 20, 23, 29, 6, 42, new TimeSpan(432000000000)));
         }
     }
 }

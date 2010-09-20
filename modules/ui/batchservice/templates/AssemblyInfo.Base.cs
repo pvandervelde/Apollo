@@ -11,7 +11,6 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyCompany("P. van der Velde")]
-[assembly: AssemblyCopyright("Copyright © P. van der Velde 2009")]
 [assembly: AssemblyTrademark("")]
 
 // Setting ComVisible to false makes the types in this assembly not visible 

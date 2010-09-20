@@ -11,5 +11,12 @@ using Apollo.Utils;
  * THIS IS A GENERATED FILE. DO NOT MAKE CHANGES IN THIS FILE BECAUSE ANY
  * CHANGES WILL BE UNDONE THE NEXT TIME THE FILE IS GENERATED! 
  */
+
+// The copyright
+[assembly: AssemblyCopyright("Copyright © P. van der Velde 2009 - @COPYRIGHTYEAR@")]
+ 
+// The build configuration (e.g. debug/release)
 [assembly: AssemblyConfiguration("@CONFIGURATION@")]
+
+// The time the assembly was build
 [assembly: AssemblyBuildTime("@BUILDTIME@")]

@@ -26,3 +26,7 @@ using System.Reflection;
 // we can track changes.
 [assembly: AssemblyVersion("@MAJOR@.@MINOR@.@BUILD@.0")]
 [assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@BUILD@.@REVISION@")]
+
+// The AssemblyInformationalVersion stores the version that will be displayed in
+// Windows explorer.
+[assembly: AssemblyInformationalVersion("@MAJOR@.@MINOR@.@BUILD@.@REVISION@")]
