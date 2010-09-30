@@ -23,3 +23,5 @@ _ReSharper*
 AssemblyInfo.Configuration.cs
 ./tools/sandcastle/Data
 StyleCop.Cache
+./AssemblyInfo.BuildInformation.cs
+AssemblyInfo.BuildInformation.cs

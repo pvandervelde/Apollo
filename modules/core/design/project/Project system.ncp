@@ -1,6 +1,6 @@
 <Project>
   <Name>Project system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Projects - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -155,11 +155,6 @@ By separating the actual generated data from the 'description' data we can allow
         <Size width="221" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">IProjectDataSet ProjectData { get; }</Member>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Only the data is stored in the individual data set files. All component related information is stored in the project file.</Text>
-        <Location left="1889" top="1257" />
-        <Size width="206" height="100" />
       </Entity>
       <Entity type="Comment">
         <Text>E.g. for simulations there is the Run command.</Text>
@@ -554,21 +549,13 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="22" second="5">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>2013</X>
-          <Y>1180</Y>
-        </BendPoint>
-      </Relationship>
       <Relationship type="Association" first="1" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="23" second="1">
+      <Relationship type="Comment" first="22" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -580,7 +567,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>865</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="21" second="24">
+      <Relationship type="Association" first="21" second="23">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -594,11 +581,11 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="29" second="28">
+      <Relationship type="Comment" first="28" second="27">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="26" second="28">
+      <Relationship type="Association" first="25" second="27">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -612,7 +599,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="30" second="26">
+      <Relationship type="Comment" first="29" second="25">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -624,19 +611,19 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>99</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="19" second="32">
+      <Relationship type="Association" first="19" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="32" second="26">
+      <Relationship type="Association" first="31" second="25">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="31" second="32">
+      <Relationship type="Comment" first="30" second="31">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -648,7 +635,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>335</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="33" second="26">
+      <Relationship type="Comment" first="32" second="25">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -660,7 +647,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>175</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="24" second="3">
+      <Relationship type="Association" first="23" second="3">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -674,7 +661,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="5" second="28">
+      <Relationship type="Association" first="5" second="27">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -694,7 +681,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="19" second="34">
+      <Relationship type="Association" first="19" second="33">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -704,15 +691,15 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="35" second="25">
+      <Relationship type="Comment" first="34" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="36" second="24">
+      <Relationship type="Comment" first="35" second="23">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="37" second="5">
+      <Relationship type="Comment" first="36" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -720,7 +707,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1287</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="19" second="38">
+      <Relationship type="Association" first="19" second="37">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -734,7 +721,7 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="39" second="38">
+      <Relationship type="Comment" first="38" second="37">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -746,11 +733,11 @@ Also we may need comments. e.g. the user might want to add a comment on why the 
           <Y>1072</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="41" second="21">
+      <Relationship type="Comment" first="40" second="21">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="41" second="24">
+      <Relationship type="Comment" first="40" second="23">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
