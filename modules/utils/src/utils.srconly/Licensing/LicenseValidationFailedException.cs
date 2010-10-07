@@ -10,6 +10,7 @@ using System.Runtime.Serialization;
 namespace Apollo.Utils.Licensing
 {
 #if !DEPLOY
+
     /// <summary>
     /// An exception thrown when the the verification of the license fails.
     /// </summary>
@@ -19,7 +20,6 @@ namespace Apollo.Utils.Licensing
     /// license. However for testing purposes we want to throw an exception
     /// and not do random shutdowns.
     /// </design>
-    [ExcludeFromCoverage("Exceptions do not need to be tested.")]
     [Serializable]
     public sealed class LicenseValidationFailedException : Exception
     {
