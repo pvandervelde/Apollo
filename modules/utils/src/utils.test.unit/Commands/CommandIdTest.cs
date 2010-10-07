@@ -7,94 +7,27 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Utils.Commands
 {
     [TestFixture]
-    [Description("Tests the CommandName class.")]
+    [Description("Tests the CommandId class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class CommandNameTest
+    public sealed class CommandIdTest
     {
-        [Test]
-        [Description("Checks that the == operator returns false if the first object is null.")]
-        public void EqualsOperatorWithFirstObjectNull()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<CommandId>
         {
-            CommandId first = null;
-            var second = new CommandId("name");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if the second object is null.")]
-        public void EqualsOperatorWithSecondObjectNull()
-        {
-            var first = new CommandId("name");
-            CommandId second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = new CommandId("name");
-            var second = new CommandId("name");
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = new CommandId("name");
-            var second = new CommandId("otherName");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the first object is null.")]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            CommandId first = null;
-            var second = new CommandId("name");
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the second object is null.")]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new CommandId("name");
-            CommandId second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = new CommandId("name");
-            var second = new CommandId("name");
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new CommandId("name");
-            var second = new CommandId("otherName");
-
-            Assert.IsTrue(first != second);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<CommandId> 
+                { 
+                    new CommandId(1.ToString()),
+                    new CommandId(2.ToString()),
+                },
+        };
 
         [Test]
         [Description("Checks that the > operator returns false if the first object is null.")]
@@ -224,46 +157,6 @@ namespace Apollo.Utils.Commands
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is null.")]
-        public void EqualsWithNullObject()
-        {
-            var first = new CommandId("name");
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns true if the second object is equal to the first.")]
-        public void EqualsWithEqualObjects()
-        {
-            var first = new CommandId("name");
-            object second = new CommandId("name");
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is not equal to the first.")]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = new CommandId("name");
-            object second = new CommandId("otherName");
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects type is not equal to the first.")]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = new CommandId("name");
-            object second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
 
         [Test]

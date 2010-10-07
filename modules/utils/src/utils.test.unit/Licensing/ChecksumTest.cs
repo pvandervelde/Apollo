@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Utils.Licensing
 {
@@ -18,61 +19,18 @@ namespace Apollo.Utils.Licensing
         Justification = "Unit tests do not need documentation")]
     public sealed partial class ChecksumTest
     {
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<Checksum>
         {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsTrue(checksum1 == checksum2);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("b", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum1 == checksum2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum1 != checksum2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("b", generationTime, expirationTime);
-
-            Assert.IsTrue(checksum1 != checksum2);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<Checksum> 
+                { 
+                    new Checksum("a", DateTimeOffset.Now, DateTimeOffset.Now + new TimeSpan(1, 2, 3)),
+                    new Checksum("b", DateTimeOffset.Now, DateTimeOffset.Now + new TimeSpan(1, 2, 3)),
+                    new Checksum("b", DateTimeOffset.Now, DateTimeOffset.Now + new TimeSpan(4, 5, 6)),
+                },
+        };
 
         [Test]
         [Description("Checks that a Checksum cannot be created with a null validation result.")]
@@ -152,84 +110,6 @@ namespace Apollo.Utils.Licensing
             var copiedChecksum = new Checksum(originalChecksum);
 
             Assert.IsTrue(copiedChecksum.Equals(originalChecksum));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is not considered equal to a Checksum with a different hash.")]
-        public void EqualsWithNonEqualChecksum()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("b", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum1.Equals(checksum2));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is considered equal to a Checksum with an equal hash.")]
-        public void EqualsWithEqualChecksum()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsTrue(checksum1.Equals(checksum2));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is not considered equal to a null reference.")]
-        public void EqualsWithNullObject()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-            var checksum = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum.Equals(null));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is not considered equal to instance of a different type.")]
-        public void EqualsWithNonEqualObjectType()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-            var checksum = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum.Equals(new object()));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is not considered equal to a object with a different hash.")]
-        public void EqualsWithNonEqualObject()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("b", generationTime, expirationTime);
-
-            Assert.IsFalse(checksum1.Equals((object)checksum2));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum is considered equal to a object with an equal hash.")]
-        public void EqualsWithEqualObject()
-        {
-            var generationTime = DateTimeOffset.Now;
-            var expirationTime = generationTime + new TimeSpan(1, 2, 3);
-
-            // Create the Checksums and compare them
-            var checksum1 = new Checksum("a", generationTime, expirationTime);
-            var checksum2 = new Checksum("a", generationTime, expirationTime);
-
-            Assert.IsTrue(checksum1.Equals((object)checksum2));
         }
     }
 }
