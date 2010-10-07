@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
@@ -17,6 +19,30 @@ namespace Apollo.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class TimePeriodTest
     {
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TimePeriod>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Join(
+                    new List<RepeatPeriod> 
+                        {
+                            RepeatPeriod.Hourly,
+                            RepeatPeriod.Daily,
+                            RepeatPeriod.Weekly,
+                            RepeatPeriod.Fortnightly,
+                            RepeatPeriod.Monthly,
+                            RepeatPeriod.Yearly,
+                        },
+                    DataGenerators.Sequential.Numbers(1, 127))
+                .Select(o => new TimePeriod(o.First, (sbyte)o.Second)),
+        };
+
         [VerifyContract]
         [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<TimePeriod>
