@@ -136,6 +136,9 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseCheckResultTest.cs">
       <Link>Utils\Licensing\LicenseCheckResultTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseValidationFailedExceptionTest.cs">
+      <Link>Utils\Licensing\LicenseValidationFailedExceptionTest.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\TimePeriodTest.cs">
       <Link>Utils\Licensing\TimePeriodTest.cs</Link>
     </Compile>
@@ -244,7 +247,7 @@
       <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
     </None>
   </ItemGroup>
-    <PropertyGroup>
+  <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>
     <ToolsPath>$(BasePath)\Tools</ToolsPath>

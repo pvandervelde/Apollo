@@ -11,6 +11,7 @@ using System.Threading;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
+using System.Globalization;
 
 namespace Apollo.Core.Messaging
 {
@@ -273,7 +274,11 @@ namespace Apollo.Core.Messaging
 
             if (name == recipient)
             {
-                throw new ArgumentException(Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName);
+                throw new ArgumentException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                        name));
             }
 
             return pipeline.Send(name, recipient, body, originalMessage);

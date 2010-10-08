@@ -396,7 +396,8 @@ namespace Apollo.Core.Messaging
                     Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(sender),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                    sender);
 
                 Enforce.Argument(() => information);
                 Enforce.Argument(() => inReplyTo);
