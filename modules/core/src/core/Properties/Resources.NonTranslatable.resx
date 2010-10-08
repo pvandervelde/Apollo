@@ -129,8 +129,8 @@
   <data name="Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone" xml:space="preserve">
     <value>It is not possible to log a message if the LogLevel is set to None.</value>
   </data>
-  <data name="Exceptions_Messages_CannotSendAMessageBackToTheSender" xml:space="preserve">
-    <value>Cannot create a message where both the sender and the recipient are the same.</value>
+  <data name="Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName" xml:space="preserve">
+    <value>Cannot create a message where both the sender and the recipient are the same. The provided name was {0}.</value>
   </data>
   <data name="Exceptions_Messages_CannotSendAMessageToNoService" xml:space="preserve">
     <value>Cannot create a message that is send to nobody.</value>

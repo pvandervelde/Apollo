@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core.Messaging
 {
@@ -16,6 +19,29 @@ namespace Apollo.Core.Messaging
             Justification = "Unit tests do not need documentation.")]
     public sealed class MessageHeaderTest
     {
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MessageHeader>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Join(
+                    DataGenerators.Sequential.Numbers(0, 1000),
+                    new List<DnsName>
+                        {
+                            new DnsName("a"),
+                        },
+                    new List<DnsName> 
+                        { 
+                            new DnsName("aa"),
+                        })
+                .Select(o => new MessageHeader(MessageId.Next(), o.Second, o.Third)),
+        };
+
         [Test]
         [Description("Checks that a header can be created with a sender, an ID and a recipient.")]
         public void CreateWithSenderMessageIdAndRecipient()

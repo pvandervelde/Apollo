@@ -6,16 +6,31 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core
 {
     [TestFixture]
-    [Description("Tests the ServiceShutdownCapabilityRequestMessage class.")]
+    [Description("Tests the NotificationName class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class NotificationNameTest
     {
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<NotificationName>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Random.Strings(100, RandomStringStock.EnUSMaleNames).Select(o => new NotificationName(o)),
+        };
+
         [Test]
         [Description("Checks that the == operator returns false if the first object is null.")]
         public void EqualsOperatorWithFirstObjectNull()

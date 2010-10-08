@@ -273,7 +273,7 @@ namespace Apollo.Core.Messaging
 
             if (name == recipient)
             {
-                throw new ArgumentException(Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                throw new ArgumentException(Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName);
             }
 
             return pipeline.Send(name, recipient, body, originalMessage);

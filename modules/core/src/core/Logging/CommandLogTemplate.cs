@@ -77,7 +77,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         public LevelToLog DefaultLogLevel()
         {
-            #if DEBUG
+#if DEBUG
                 // Default debug setting is to log errors and fatals only.
                 return LevelToLog.Trace;
 #else
@@ -180,7 +180,21 @@ namespace Apollo.Core.Logging
         /// </returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() ^ Name.GetHashCode();
+            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
+            //
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                // Pick a random prime number
+                int hash = 17;
+
+                // Mash the hash together with yet another random prime number
+                hash = (hash * 23) ^ GetType().GetHashCode();
+                hash = (hash * 23) ^ Name.GetHashCode();
+
+                return hash;
+            }
         }
 
         /// <summary>

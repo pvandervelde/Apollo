@@ -124,11 +124,11 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create a message where both the sender and the recipient are the same..
+        ///   Looks up a localized string similar to Cannot create a message where both the sender and the recipient are the same. The provided name was {0}..
         /// </summary>
-        internal static string Exceptions_Messages_CannotSendAMessageBackToTheSender {
+        internal static string Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageBackToTheSender", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName", resourceCulture);
             }
         }
         

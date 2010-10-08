@@ -90,7 +90,7 @@ namespace Apollo.Core.Messaging
 
                 Enforce.Argument(() => recipientDns);
                 Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
-                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName, senderDns);
 
                 Enforce.Argument(() => replyToId);
             }

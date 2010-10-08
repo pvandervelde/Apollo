@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core.Logging
 {
@@ -65,6 +68,33 @@ namespace Apollo.Core.Logging
         }
 
         #endregion
+
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<LogEntryRequestMessage>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Join(
+                    new List<ILogMessage> 
+                        {
+                            new MockMessage(),
+                            new MockMessage(),
+                            new MockMessage(),
+                            new MockMessage(),
+                            new MockMessage(),
+                        },
+                    new List<LogType> 
+                        {
+                            LogType.Command,
+                            LogType.Debug,
+                        })
+                .Select(o => new LogEntryRequestMessage(o.First, o.Second)),
+        };
 
         [Test]
         [Description("Checks that the log type is properly stored.")]

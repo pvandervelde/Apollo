@@ -100,7 +100,22 @@ namespace Apollo.Core.Logging
         /// </returns>
         public override int GetHashCode()
         {
-            return GetType().GetHashCode() ^ LogType.GetHashCode() ^ Message.GetHashCode();
+            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
+            //
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                // Pick a random prime number
+                int hash = 17;
+
+                // Mash the hash together with yet another random prime number
+                hash = (hash * 23) ^ GetType().GetHashCode();
+                hash = (hash * 23) ^ LogType.GetHashCode();
+                hash = (hash * 23) ^ Message.GetHashCode();
+
+                return hash;
+            }
         }
 
         /// <summary>
@@ -117,3 +132,4 @@ namespace Apollo.Core.Logging
         #endregion
     }
 }
+
