@@ -7,6 +7,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
@@ -44,6 +45,22 @@ namespace Apollo.Core.Logging
             DistinctInstances = LogLevelEnumerator().Select(o => new LogLevelChangeRequestMessage(o)),
         };
 
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<MessageBody>
+        {
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<MessageBody> 
+                { 
+                    new LogLevelChangeRequestMessage(LevelToLog.Trace),
+                    new LogLevelChangeRequestMessage(LevelToLog.Debug),
+                    new LogLevelChangeRequestMessage(LevelToLog.Info),
+                    new LogLevelChangeRequestMessage(LevelToLog.Warn),
+                    new LogLevelChangeRequestMessage(LevelToLog.Error),
+                    new LogLevelChangeRequestMessage(LevelToLog.Fatal),
+                },
+        };
+
         [Test]
         [Description("Checks that the new log level is properly stored.")]
         public void Level()
@@ -53,103 +70,15 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
-        [Description("Checks that a message is not equal to a null reference.")]
-        public void EqualsWithNullObject()
+        [Description("Checks that the message serialises and deserialises correctly.")]
+        public void RoundTripSerialise()
         {
-            var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            object nullReference = null;
+            var msg = new LogLevelChangeRequestMessage(LevelToLog.Info);
+            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
-            Assert.IsFalse(message.Equals(nullReference));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to an object of a different type.")]
-        public void EqualsWithDifferentType()
-        {
-            var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var obj = new object();
-
-            Assert.IsFalse(message.Equals(obj));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a non-equal object of equal type.")]
-        public void EqualsWithNonEqualObjects()
-        {
-            var message1 = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var message2 = new LogLevelChangeRequestMessage(LevelToLog.Warn);
-
-            Assert.IsFalse(message1.Equals((object)message2));
-            Assert.IsFalse(message2.Equals((object)message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to an equal object of equal type.")]
-        public void EqualsWithEqualObjects()
-        {
-            var message1 = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var message2 = (LogLevelChangeRequestMessage)message1.Copy();
-
-            Assert.IsTrue(message1.Equals((object)message2));
-            Assert.IsTrue(message2.Equals((object)message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to itself.")]
-        public void EqualsWithSameObject()
-        {
-            var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            Assert.IsTrue(message.Equals((object)message));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a null reference.")]
-        public void EqualsWithNullMessage()
-        {
-            var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            LogLevelChangeRequestMessage nullReference = null;
-
-            Assert.IsFalse(message.Equals(nullReference));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to an message of a different type.")]
-        public void EqualsWithDifferentMessageType()
-        {
-            var message1 = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var message2 = new LogEntryRequestMessage(new LogMessage("bla", LevelToLog.Fatal, "Something bad happened"), LogType.Debug);
-
-            Assert.IsFalse(message1.Equals(message2));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a non-equal message of equal type.")]
-        public void EqualsWithNonEqualMessages()
-        {
-            var message1 = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var message2 = new LogLevelChangeRequestMessage(LevelToLog.Warn);
-
-            Assert.IsFalse(message1.Equals(message2));
-            Assert.IsFalse(message2.Equals(message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to an equal message of equal type.")]
-        public void EqualsWithEqualMessages()
-        {
-            var message1 = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var message2 = (LogLevelChangeRequestMessage)message1.Copy();
-
-            Assert.IsTrue(message1.Equals(message2));
-            Assert.IsTrue(message2.Equals(message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to itself.")]
-        public void EqualsWithSameMessage()
-        {
-            var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            Assert.IsTrue(message.Equals(message));
+            AssertEx.That(
+               () => msg.IsResponseRequired == otherMsg.IsResponseRequired
+                  && msg.Level == otherMsg.Level);
         }
     }
 }

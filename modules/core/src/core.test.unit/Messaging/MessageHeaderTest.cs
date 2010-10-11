@@ -42,6 +42,19 @@ namespace Apollo.Core.Messaging
                 .Select(o => new MessageHeader(MessageId.Next(), o.Second, o.Third)),
         };
 
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<MessageHeader>
+        {
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<MessageHeader> 
+                { 
+                    new MessageHeader(MessageId.Next(), new DnsName("a"), new DnsName("b")),
+                    new MessageHeader(MessageId.Next(), new DnsName("a"), new DnsName("c")),
+                    new MessageHeader(MessageId.Next(), new DnsName("d"), new DnsName("b")),
+                },
+        };
+
         [Test]
         [Description("Checks that a header can be created with a sender, an ID and a recipient.")]
         public void CreateWithSenderMessageIdAndRecipient()
@@ -133,111 +146,16 @@ namespace Apollo.Core.Messaging
         }
 
         [Test]
-        [Description("Checks that a MessageHeader is not equal to a null object.")]
-        public void EqualsWithNullObject()
+        [Description("Checks that the message serialises and deserialises correctly.")]
+        public void RoundTripSerialise()
         {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
+            var msg = new MessageHeader(MessageId.Next(), new DnsName("a"), new DnsName("b"));
+            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsFalse(header.Equals((object)null));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is not equal to an object of a different type.")]
-        public void EqualsWithNonEqualObjectType()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsFalse(header.Equals(new object()));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is not equal to a different MessageHeader.")]
-        public void EqualsWithNonEqualObject()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsFalse(header.Equals((object)new MessageHeader(MessageId.Next(), sender, recipient)));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is equal to an identical MessageHeader.")]
-        public void EqualsWithEqualObject()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsTrue(header.Equals((object)new MessageHeader(header)));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is equal to itself.")]
-        public void EqualsWithSameObject()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsTrue(header.Equals((object)header));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is not equal to a null object.")]
-        public void EqualsWithNullHeader()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsFalse(header.Equals(null));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is not equal to a different MessageHeader.")]
-        public void EqualsWithNonEqualHeader()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsFalse(header.Equals(new MessageHeader(MessageId.Next(), sender, recipient)));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is equal to an identical MessageHeader.")]
-        public void EqualsWithEqualHeader()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsTrue(header.Equals(new MessageHeader(header)));
-        }
-
-        [Test]
-        [Description("Checks that a MessageHeader is equal to itself.")]
-        public void EqualsWithSameHeader()
-        {
-            var id = MessageId.Next();
-            var sender = new DnsName("name");
-            var recipient = new DnsName("otherName");
-
-            var header = new MessageHeader(id, sender, recipient);
-            Assert.IsTrue(header.Equals(header));
+            AssertEx.That(
+               () => msg.Id == otherMsg.Id
+                  && msg.Recipient == otherMsg.Recipient
+                  && msg.Sender == otherMsg.Sender);
         }
     }
 }

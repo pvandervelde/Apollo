@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
@@ -24,8 +25,22 @@ namespace Apollo.Core.Logging
         /// <summary>
         /// A mock implementation of <see cref="ILogMessage"/>.
         /// </summary>
+        [Serializable]
         private sealed class MockMessage : ILogMessage
         {
+            private readonly string m_Text;
+
+            public MockMessage()
+            { 
+            }
+
+            public MockMessage(string origin, LevelToLog level, string text)
+            {
+                Origin = origin;
+                Level = level;
+                m_Text = text;
+            }
+
             #region Implementation of ILogMessage
 
             /// <summary>
@@ -35,10 +50,8 @@ namespace Apollo.Core.Logging
             /// <value>The type of the owner.</value>
             public string Origin
             {
-                get
-                {
-                    throw new NotImplementedException();
-                }
+                get;
+                private set;
             }
 
             /// <summary>
@@ -47,10 +60,8 @@ namespace Apollo.Core.Logging
             /// <value>The desired level.</value>
             public LevelToLog Level
             {
-                get
-                {
-                    throw new NotImplementedException();
-                }
+                get;
+                private set;
             }
 
             /// <summary>
@@ -61,10 +72,21 @@ namespace Apollo.Core.Logging
             /// </returns>
             public string Text()
             {
-                throw new NotImplementedException();
+                return m_Text;
             }
 
             #endregion
+
+            public override bool Equals(object obj)
+            {
+                var other = obj as MockMessage;
+                return (other != null) && (other.Text() == Text()) && (other.Level == Level) && (other.Origin == Origin);
+            }
+
+            public override int GetHashCode()
+            {
+                return base.GetHashCode();
+            }
         }
 
         #endregion
@@ -96,6 +118,19 @@ namespace Apollo.Core.Logging
                 .Select(o => new LogEntryRequestMessage(o.First, o.Second)),
         };
 
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<MessageBody>
+        {
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<MessageBody> 
+                { 
+                    new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Debug),
+                    new LogEntryRequestMessage(new MockMessage("c", LevelToLog.Warn, "d"), LogType.Debug),
+                    new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Command),
+                },
+        };
+
         [Test]
         [Description("Checks that the log type is properly stored.")]
         public void CheckLogType()
@@ -114,115 +149,16 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
-        [Description("Checks that a message is not equal to a null reference.")]
-        public void EqualsWithNullObject()
+        [Description("Checks that the message serialises and deserialises correctly.")]
+        public void RoundTripSerialise()
         {
-            var message = new LogEntryRequestMessage(new MockMessage(), LogType.Command);
-            object nullReference = null;
+            var msg = new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Command);
+            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
-            Assert.IsFalse(message.Equals(nullReference));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to an object of a different type.")]
-        public void EqualsWithDifferentType()
-        {
-            var message = new LogEntryRequestMessage(new MockMessage(), LogType.Command);
-            var obj = new object();
-
-            Assert.IsFalse(message.Equals(obj));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a non-equal object of equal type.")]
-        public void EqualsWithNonEqualObjects()
-        {
-            var logMessage = new MockMessage();
-
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-            var message2 = new LogEntryRequestMessage(logMessage, LogType.Debug);
-
-            Assert.IsFalse(message1.Equals((object)message2));
-            Assert.IsFalse(message2.Equals((object)message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to an equal object of equal type.")]
-        public void EqualsWithEqualObjects()
-        {
-            var logMessage = new MockMessage();
-
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-            var message2 = (LogEntryRequestMessage)message1.Copy();
-
-            Assert.IsTrue(message1.Equals((object)message2));
-            Assert.IsTrue(message2.Equals((object)message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to itself.")]
-        public void EqualsWithSameObjects()
-        {
-            var logMessage = new MockMessage();
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-
-            Assert.IsTrue(message1.Equals((object)message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a null reference.")]
-        public void EqualsWithNullMessage()
-        {
-            var message = new LogEntryRequestMessage(new MockMessage(), LogType.Command);
-            LogEntryRequestMessage nullReference = null;
-
-            Assert.IsFalse(message.Equals(nullReference));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to an message of a different type.")]
-        public void EqualsWithDifferentMessageType()
-        {
-            var message = new LogEntryRequestMessage(new MockMessage(), LogType.Command);
-            var msg = new LogLevelChangeRequestMessage(LevelToLog.Fatal);
-
-            Assert.IsFalse(message.Equals(msg));
-        }
-
-        [Test]
-        [Description("Checks that a message is not equal to a non-equal message of equal type.")]
-        public void EqualsWithNonEqualMessages()
-        {
-            var logMessage = new MockMessage();
-
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-            var message2 = new LogEntryRequestMessage(logMessage, LogType.Debug);
-
-            Assert.IsFalse(message1.Equals(message2));
-            Assert.IsFalse(message2.Equals(message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to an equal message of equal type.")]
-        public void EqualsWithEqualMessages()
-        {
-            var logMessage = new MockMessage();
-
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-            var message2 = (LogEntryRequestMessage)message1.Copy();
-
-            Assert.IsTrue(message1.Equals(message2));
-            Assert.IsTrue(message2.Equals(message1));
-        }
-
-        [Test]
-        [Description("Checks that a message is equal to itself.")]
-        public void EqualsWithSameMessage()
-        {
-            var logMessage = new MockMessage();
-            var message1 = new LogEntryRequestMessage(logMessage, LogType.Command);
-
-            Assert.IsTrue(message1.Equals(message1));
+            AssertEx.That(
+               () => msg.IsResponseRequired == otherMsg.IsResponseRequired
+                  && msg.LogType == otherMsg.LogType
+                  && msg.Message.Equals(otherMsg.Message));
         }
     }
 }
