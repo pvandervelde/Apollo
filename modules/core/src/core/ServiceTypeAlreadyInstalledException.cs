@@ -15,7 +15,6 @@ namespace Apollo.Core
     /// An exception thrown by the <see cref="Kernel"/> when the user tries to install a 
     /// <see cref="KernelService"/> of a type that is already installed.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class ServiceTypeAlreadyInstalledException : Exception
     {

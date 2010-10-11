@@ -15,7 +15,6 @@ namespace Apollo.Core.UserInterfaces
     /// <summary>
     /// An exception thrown when there is no notification action registered for a given notification.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class MissingNotificationActionException : Exception
     {

@@ -7,11 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+using System.Globalization;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
-using System.Globalization;
 
 namespace Apollo.Core.Messaging
 {
