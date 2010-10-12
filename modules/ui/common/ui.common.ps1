@@ -106,6 +106,8 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 
 function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+    $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
+    
 	$text = $text -replace '@CONFIGURATION@', $config
 	
 	$now = [DateTimeOffset]::Now

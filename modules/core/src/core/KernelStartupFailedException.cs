@@ -14,7 +14,6 @@ namespace Apollo.Core
     /// <summary>
     /// An exception which is thrown when the startup of the kernel failed for some reason.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class KernelStartupFailedException : Exception
     {

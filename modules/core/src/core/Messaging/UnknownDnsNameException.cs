@@ -15,7 +15,6 @@ namespace Apollo.Core.Messaging
     /// <summary>
     /// An exception thrown when a <see cref="DnsName"/> is unknown.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class UnknownDnsNameException : Exception
     {

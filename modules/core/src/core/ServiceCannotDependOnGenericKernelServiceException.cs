@@ -15,7 +15,6 @@ namespace Apollo.Core
     /// An exception thrown when a <see cref="KernelService"/> is installed that depends on the generic
     /// <c>KernelService</c> class.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class ServiceCannotDependOnGenericKernelServiceException : Exception
     {

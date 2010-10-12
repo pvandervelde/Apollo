@@ -5,8 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Utils.Licensing
 {
@@ -16,49 +20,54 @@ namespace Apollo.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class ValidationSequenceTest
     {
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ValidationSequence>
         {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Join(
+                    new List<TimePeriod> 
+                        {
+                            new TimePeriod(RepeatPeriod.Hourly),
+                            new TimePeriod(RepeatPeriod.Daily),
+                            new TimePeriod(RepeatPeriod.Weekly),
+                            new TimePeriod(RepeatPeriod.Fortnightly),
+                            new TimePeriod(RepeatPeriod.Monthly),
+                            new TimePeriod(RepeatPeriod.Yearly),
+                        },
+                    new List<DateTimeOffset> 
+                        {
+                            new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(2, 2, 3, 4, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 3, 3, 4, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 4, 4, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 5, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 4, 6, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 4, 5, 7, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 4, 5, 6, 8, CultureInfo.CurrentCulture.Calendar, new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, new JapaneseCalendar(), new TimeSpan()),
+                            new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, CultureInfo.CurrentCulture.Calendar, new TimeSpan(12, 0, 0)),
+                        })
+                .Select(o => new ValidationSequence(o.First, o.Second)),
+        };
 
-            Assert.IsTrue(sequence1 == sequence2);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<ValidationSequence>
         {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now);
-
-            Assert.IsFalse(sequence1 == sequence2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-
-            Assert.IsFalse(sequence1 != sequence2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now);
-
-            Assert.IsTrue(sequence1 != sequence2);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<ValidationSequence> 
+                { 
+                    new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), DateTimeOffset.Now),
+                    new ValidationSequence(new TimePeriod(RepeatPeriod.Weekly), DateTimeOffset.Now),
+                    new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), DateTimeOffset.Now.AddMinutes(1)),
+                },
+        };
 
         [Test]
         [Description("Checks that a ValidationSequence cannot be created with a start date that is equal to DateTimeOffset.MaxValue.")]
@@ -72,66 +81,6 @@ namespace Apollo.Utils.Licensing
         public void CreateWithStartDateTooSmall()
         {
             Assert.Throws<ArgumentOutOfRangeException>(() => new ValidationSequence(new TimePeriod(), DateTimeOffset.MinValue));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is not considered equal to another ValidationSequence with a different period.")]
-        public void EqualsWithNonEqualValidationSequence()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Yearly), now);
-
-            Assert.IsFalse(sequence1.Equals(sequence2));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is considered equal to another ValidationSequence with an equal period.")]
-        public void EqualsWithEqualTimePeriod()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-
-            Assert.IsTrue(sequence1.Equals(sequence2));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is not considered equal to a null reference.")]
-        public void EqualsWithNullObject()
-        {
-            var sequence = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily));
-            Assert.IsFalse(sequence.Equals(null));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is not considered equal to an object of a different type.")]
-        public void EqualsWithNonEqualType()
-        {
-            var sequence = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily));
-            Assert.IsFalse(sequence.Equals(new object()));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is not considered equal to an object with a different period.")]
-        public void EqualsWithNonEqualObject()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now.AddSeconds(1));
-
-            Assert.IsFalse(sequence1.Equals((object)sequence2));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence is not considered equal to an object with an equal period.")]
-        public void EqualsWithEqualObject()
-        {
-            var now = DateTimeOffset.Now;
-            var sequence1 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-            var sequence2 = new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), now);
-
-            Assert.IsTrue(sequence1.Equals((object)sequence2));
         }
     }
 }

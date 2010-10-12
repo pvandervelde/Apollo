@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Utils.Licensing
 {
@@ -16,61 +17,24 @@ namespace Apollo.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class LicenseCheckResultTest
     {
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
+        private static LicenseCheckResult CreateLicenseCheckResultWithDates(DateTimeOffset generated, DateTimeOffset expires)
         {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
             var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, expires, checksum);
-
-            Assert.IsTrue(result1 == result2);
+            return new LicenseCheckResult(generated, expires, checksum);
         }
 
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<LicenseCheckResult>
         {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
-
-            Assert.IsFalse(result1 == result2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, expires, checksum);
-
-            Assert.IsFalse(result1 != result2);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
-
-            Assert.IsTrue(result1 != result2);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<LicenseCheckResult> 
+               { 
+                  CreateLicenseCheckResultWithDates(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1)),
+                  CreateLicenseCheckResultWithDates(DateTimeOffset.Now.AddSeconds(1), DateTimeOffset.Now.AddSeconds(1).AddDays(1)),
+                  CreateLicenseCheckResultWithDates(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(2)),
+               },
+        };
 
         [Test]
         [Description("Checks that a LicenseCheckResult cannot be created a generation time equal to DateTimeOffset.MinValue.")]
@@ -110,86 +74,6 @@ namespace Apollo.Utils.Licensing
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
             Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(-1), checksum));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is not equal to an unequal LicenseCheckResult.")]
-        public void EqualsWithNonEqualLicenseCheckResult()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
-
-            Assert.IsFalse(result1.Equals(result2));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is equal to an equal LicenseCheckResult.")]
-        public void EqualsWithEqualLicenseCheckResult()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, expires, checksum);
-
-            Assert.IsTrue(result1.Equals(result2));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is not equal to a null reference.")]
-        public void EqualsWithNullObject()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result = new LicenseCheckResult(generated, expires, checksum);
-            Assert.IsFalse(result.Equals(null));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is not equal to an object of a different type.")]
-        public void EqualsWithNonEqualType()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result = new LicenseCheckResult(generated, expires, checksum);
-            Assert.IsFalse(result.Equals(new object()));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is not equal to an unequal object.")]
-        public void EqualsWithNonEqualObject()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, generated.AddDays(2), checksum);
-
-            Assert.IsFalse(result1.Equals((object)result2));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult is equal to an equal object.")]
-        public void EqualsWithEqualObject()
-        {
-            var generated = DateTimeOffset.Now;
-            var expires = generated.AddDays(1);
-            var checksum = new Checksum("text", generated, expires);
-
-            var result1 = new LicenseCheckResult(generated, expires, checksum);
-            var result2 = new LicenseCheckResult(generated, expires, checksum);
-
-            Assert.IsTrue(result1.Equals((object)result2));
         }
     }
 }

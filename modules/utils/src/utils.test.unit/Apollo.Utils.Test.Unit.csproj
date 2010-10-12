@@ -79,6 +79,8 @@
     <Compile Include="AssemblyExtensionsTest.cs" />
     <Compile Include="Commands\CommandFactoryTest.cs" />
     <Compile Include="Commands\CommandIdTest.cs" />
+    <Compile Include="Commands\DuplicateCommandExceptionTest.cs" />
+    <Compile Include="Commands\UnknownCommandExceptionTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
     <Compile Include="FutureTest.cs" />
     <Compile Include="IdTest.cs" />
@@ -89,6 +91,7 @@
       <DependentUpon>ChecksumTest.HashCalculation.tt</DependentUpon>
     </Compile>
     <Compile Include="Licensing\LicenseCheckResultTest.cs" />
+    <Compile Include="Licensing\LicenseValidationFailedExceptionTest.cs" />
     <Compile Include="Licensing\LicenseValidatorTest.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

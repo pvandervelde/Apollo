@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Threading;
+using System.Globalization;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
@@ -273,7 +273,11 @@ namespace Apollo.Core.Messaging
 
             if (name == recipient)
             {
-                throw new ArgumentException(Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender);
+                throw new ArgumentException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                        name));
             }
 
             return pipeline.Send(name, recipient, body, originalMessage);
