@@ -1,0 +1,47 @@
+﻿<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <head>
+        <meta name="author"
+              content="P. van der Velde" />
+        <meta name="copyright"
+              content="P. van der Velde" />
+        
+        <link href="concordion.css"
+              rel="stylesheet"
+              type="text/css" />
+
+        <title>Regression tests for the Apollo API</title>
+    </head>
+    <body>
+        <h2>Overview</h2>
+        <p>
+            The following pages provide access to the different regression tests for the Apollo API. These tests will load the 
+            Apollo application and manipulate this application through the same API that the User Interface (UI) uses. The goal for
+            these tests is to verify that the integration of the UI business layer with the Apollo framework has been done correctly.
+        </p>
+        <p>
+            Note that these tests are regression tests only, not UI tests. At no point will UI controls be manipulated.
+        </p>
+        
+        <h2>Starting and stopping Apollo.</h2>
+        <p>
+            The first tests will test the behavior of the system for start-up and shutdown.
+        </p>
+        <!--
+            Suggested tests:
+            - When starting the system ??
+            - When the system is done loading, then a message is send
+            - When the user asks for a shutdown then the system checks if we can shutdown
+            - Given that we can shutdown, when the user asks for a shutdown, then the system terminates
+        -->
+        <list>
+            <li>
+                <a href="System/Startup.html">The next page</a>
+            </li>
+        </list>
+
+        <!-- 
+            Other things we can test:
+            - 
+        -->
+    </body>
+</html>

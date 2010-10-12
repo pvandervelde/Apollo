@@ -6,6 +6,7 @@
 
 using System.Reflection;
 using System.Runtime.InteropServices;
+using Concordion.Integration;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
@@ -18,6 +19,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCopyright("Copyright (c) - P. van der Velde")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+
+// Mark the assembly as a Concordion assembly
+[assembly: ConcordionAssembly]
 
 // Setting ComVisible to false makes the types in this assembly not visible 
 // to COM components.  If you need to access a type in this assembly from 

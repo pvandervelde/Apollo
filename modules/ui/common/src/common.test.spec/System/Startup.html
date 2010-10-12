@@ -1,0 +1,21 @@
+﻿<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <head>
+        <meta name="author"
+              content="P. van der Velde" />
+        <meta name="copyright"
+              content="P. van der Velde" />
+
+        <link href="concordion.css"
+              rel="stylesheet"
+              type="text/css" />
+
+        <title>Testing the start-up of Apollo</title>
+    </head>
+    <body>
+        <h1>Startup</h1>
+        <p>
+            The result of <b concordion:set="#FirstOperand">2</b> * <b concordion:set="#SecondOperand">2</b>. The result
+            will be: <b concordion:assertEquals="Multiplication(#FirstOperand, #SecondOperand)">4</b>
+        </p>
+    </body>
+</html>

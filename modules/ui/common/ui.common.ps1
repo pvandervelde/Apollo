@@ -123,6 +123,15 @@ function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [
 	Set-Content $newPath $text
 }
 
+function global:Create-ConcordionConfigFile([string]$path, [string]$newPath, [string]$concordionOutputPath){
+	# only do this when we run the tests
+
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@OUTPUT_DIR@', $concordionOutputPath
+	
+	Set-Content $newPath $text
+}
+
 # Properties
 properties{
 	"Setting properties.."
@@ -154,6 +163,7 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
+	$dirConcordion = Join-Path $dirTools 'Concordion'
 	$dirNCoverExplorer = Join-Path (Join-Path (Join-Path $dirMbUnit 'NCover') 'libs') 'NCoverExplorer'
 	
 	# solution files
@@ -170,6 +180,8 @@ properties{
 	
 	$internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
 	$internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
+	
+	$concordionConfigTemplateFile = Join-Path $dirTemplates 'concordion.config.in'
 	
 	# output files
 	$logMsiBuild = 'commonui_msi.log'
@@ -355,7 +367,7 @@ task buildBinaries -depends runInit, getVersion -action{
 	$dirBinUiCommonVista = Join-Path (Join-Path (Join-Path $dirSrc 'common.windowsvista') 'bin') $configuration
 	$dirBinUiCommonWin7 = Join-Path (Join-Path (Join-Path $dirSrc 'common.windows7') 'bin') $configuration
 	$dirBinTestUnit = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.unit') 'bin') $configuration
-	$dirBinTestUi = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.ui') 'bin') $configuration
+	$dirBinTestSpec = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.spec') 'bin') $configuration
 
 	Copy-Item (Join-Path $dirBinUiCommon '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinUiCommonXp '*') $dirBuild -Force
@@ -363,7 +375,7 @@ task buildBinaries -depends runInit, getVersion -action{
 	Copy-Item (Join-Path $dirBinUiCommonWin7 '*') $dirBuild -Force	
 	
 	Copy-Item (Join-Path $dirBinTestUnit '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinTestUi '*') $dirBuild -Force
+	Copy-Item (Join-Path $dirBinTestSpec '*') $dirBuild -Force
 }
 
 task runUnitTests -depends buildBinaries -action{
@@ -460,21 +472,35 @@ task runUnitTests -depends buildBinaries -action{
 
 task runIntegrationTests -depends buildBinaries -action{
 	"Running integration tests..."
-	"There are currently no integration tests. You should make some ..."
-	# ???
-}
 
-task runStyleCop -depends buildBinaries -action{
-	$msbuildExe = Get-MsbuildExe
+	# Create the concordion config file and copy it
+	$configFile = Join-Path $dirBuild 'apollo.ui.common.test.spec.config'
+	Create-ConcordionConfigFile $concordionConfigTemplateFile $configFile $dirReports
+		
+	# Start the integration tests. First setup the commandline for
+	# Concordion
+	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
 	
-	& $msbuildExe $msbuildStyleCop /p:StyleCopForMsBuild=$dirStyleCop /p:ProjectDir=$dirBase /p:SrcDir=$dirSrc /p:ReportsDir=$dirReports /verbosity:normal /clp:NoSummary
+	$files = ""
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
+	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc /pd:"' + $dirConcordion + '" '
+	
+	# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+	#   process. This means we can't load explicit 32-bit binaries. However using the 
+	#   isolated process runner we can
+	$command += "/r:Local " 
+	
+	# add the files.
+	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+	
+	# run the tests
+	$command
+	Invoke-Expression $command
 	if ($LastExitCode -ne 0)
 	{
-		throw "Stylecop failed on Apollo.UI.Common with return code: $LastExitCode"
+		throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
 	}
-	
-	# Rename the output file
-	Move-Item -Path (Join-Path $dirReports 'StyleCopViolations.xml') -Destination (Join-Path $dirReports $logStyleCop)
 }
 
 task runFxCop -depends buildBinaries -action{
