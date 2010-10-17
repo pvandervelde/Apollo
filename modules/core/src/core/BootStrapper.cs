@@ -12,14 +12,18 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.UserInterfaces;
 using Apollo.Core.Utils;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Apollo.Utils.ExceptionHandling;
 using Apollo.Utils.Fusion;
+using Autofac;
 using Autofac.Core;
+using AutofacContrib.Startable;
 using Lokad;
 
 namespace Apollo.Core
@@ -197,7 +201,7 @@ namespace Apollo.Core
             }
 
             // Load the UI service
-            var userInterfaceService = CreateUserInterfaceService();
+            var userInterfaceService = CreateUserInterfaceService(kernel.CacheConnectionChannel);
             kernel.InstallService(userInterfaceService, AppDomain.CurrentDomain);
 
             // Mark progress to starting core
@@ -397,16 +401,38 @@ namespace Apollo.Core
         /// <summary>
         /// Creates the user interface service.
         /// </summary>
+        /// <param name="channel">The channel that is used by the licensing system to pass information between the service AppDomains.</param>
         /// <returns>
         /// The newly created user interface service.
         /// </returns>
-        private KernelService CreateUserInterfaceService()
+        private KernelService CreateUserInterfaceService(ICacheConnectorChannel channel)
         {
+            var builder = new ContainerBuilder();
+            {
+                builder.RegisterModule(new UtilsModule());
+                builder.RegisterModule(new KernelModule());
+                builder.RegisterModule(new MessagingModule());
+                builder.RegisterModule(new LoggerModule());
+                builder.RegisterModule(new LicensingModule());
+
+                // Register the proxy to the cache channel
+                builder.Register(c => channel)
+                    .As<ICacheConnectorChannel>()
+                    .ExternallyOwned();
+            }
+
+            var container = builder.Build();
+            if (container.IsRegistered<IStarter>())
+            {
+                container.Resolve<IStarter>().Start();
+            }
+
             var userInterface = new UserInterfaceService(
-                new CommandFactory(),
-                new DnsNameConstants(), 
-                new NotificationNameConstants(), 
-                new MessageProcessingAssistance(),
+                container.Resolve<ICommandContainer>(),
+                container.Resolve<IDnsNameConstants>(), 
+                container.Resolve<INotificationNameConstants>(), 
+                container.Resolve<IHelpMessageProcessing>(),
+                container.Resolve<IValidationResultStorage>(),
                 StoreContainer);
 
             return userInterface;

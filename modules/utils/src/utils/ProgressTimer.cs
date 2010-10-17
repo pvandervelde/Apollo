@@ -37,7 +37,6 @@ namespace Apollo.Utils
             }
 
             m_ProgressTimer.AutoReset = true;
-            m_ProgressTimer.Enabled = true;
             m_ProgressTimer.Interval = updateInterval.TotalMilliseconds;
             m_ProgressTimer.Elapsed += (s, e) => RaiseElapsed(e.SignalTime);
         }

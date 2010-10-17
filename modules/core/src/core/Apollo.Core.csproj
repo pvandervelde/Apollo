@@ -433,7 +433,6 @@
     <Compile Include="Utils\UtilsModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\" />
     <Folder Include="Plugins\" />
     <Folder Include="Projects\" />
     <Folder Include="UserInterfaces\Plugins\" />

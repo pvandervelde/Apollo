@@ -11,6 +11,7 @@ using System.Globalization;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
 using Lokad;
@@ -46,6 +47,11 @@ namespace Apollo.Core.UserInterfaces
         private readonly INotificationNameConstants m_NotificationNames;
 
         /// <summary>
+        /// The object that stores the validity of the license.
+        /// </summary>
+        private readonly IValidationResultStorage m_LicenseValidationStorage;
+
+        /// <summary>
         /// The action which is executed when the service is started.
         /// </summary>
         private readonly Action<IModule> m_OnStartService;
@@ -57,6 +63,7 @@ namespace Apollo.Core.UserInterfaces
         /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
         /// <param name="processor">The object that handles the incoming messages.</param>
+        /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
         /// <param name="onStartService">The method that provides the DI module.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
@@ -71,6 +78,9 @@ namespace Apollo.Core.UserInterfaces
         /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
         public UserInterfaceService(
@@ -78,6 +88,7 @@ namespace Apollo.Core.UserInterfaces
             IDnsNameConstants dnsNames, 
             INotificationNameConstants notificationNames, 
             IHelpMessageProcessing processor, 
+            IValidationResultStorage licenseValidationStorage,
             Action<IModule> onStartService)
             : base(processor)
         {
@@ -85,6 +96,7 @@ namespace Apollo.Core.UserInterfaces
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => dnsNames);
                 Enforce.Argument(() => notificationNames);
+                Enforce.Argument(() => licenseValidationStorage);
                 Enforce.Argument(() => onStartService);
             }
 
@@ -92,6 +104,7 @@ namespace Apollo.Core.UserInterfaces
 
             m_DnsNames = dnsNames;
             m_NotificationNames = notificationNames;
+            m_LicenseValidationStorage = licenseValidationStorage;
             m_OnStartService = onStartService;
 
             m_Commands = commands;

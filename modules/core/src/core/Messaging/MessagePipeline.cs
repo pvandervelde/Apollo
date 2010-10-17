@@ -449,9 +449,8 @@ namespace Apollo.Core.Messaging
             // are after all only 25-ish threads in the pool).
             // @Todo: Would the use of a new thread for each message cause a problem with a) race-conditions / deadlocks & b) thread pool exhaustion?
             SecurityHelpers.Elevate(
-                new PermissionSet(
-                    PermissionState.Unrestricted),
-                    () => Parallel.Invoke(() => SendMessage(sender, recipientObj, information, id, inReplyTo)));
+                new PermissionSet(PermissionState.Unrestricted),
+                () => Parallel.Invoke(() => SendMessage(sender, recipientObj, information, id, inReplyTo)));
 
             return id;
         }

@@ -24,3 +24,4 @@ AssemblyInfo.Configuration.cs
 ./tools/sandcastle/Data
 StyleCop.Cache
 AssemblyInfo.BuildInformation.cs
+ValidationSequenceGenerator.cs

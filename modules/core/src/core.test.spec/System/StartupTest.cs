@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Concordion.Integration;
 
-namespace Apollo.UI.Common.Spec.System
+namespace Apollo.Core.Test.Spec.System
 {
     [ConcordionTest]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -16,15 +16,18 @@ namespace Apollo.UI.Common.Spec.System
     {
         [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate",
             Justification = "For Concordion the fields must be public.")]
-        public long FirstOperand;
+        [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter",
+            Justification = "For Concordion variables must be in camelCasing.")]
+        public string isLicenseValid = "invalid";
 
         [SuppressMessage("Microsoft.StyleCop.CSharp.MaintainabilityRules", "SA1401:FieldsMustBePrivate",
             Justification = "For Concordion the fields must be public.")]
-        public long SecondOperand;
+        [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1307:AccessibleFieldsMustBeginWithUpperCaseLetter",
+            Justification = "For Concordion variables must be in camelCasing.")]
+        public string hasStartupCompleted = "not finished";
 
-        public long Multiplication(long first, long second)
-        {
-            return -1;
+        public void StartApollo()
+        { 
         }
     }
 }

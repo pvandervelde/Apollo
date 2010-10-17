@@ -18,6 +18,8 @@ namespace Apollo.ProjectExplorer
     /// </summary>
     internal partial class App
     {
+        // WHERE IN THE HELL DOES ALL OF THIS COME FROM? PRISM?
+
         /// <summary>
         /// Initializes the environment for use. Currently sets Environment Variables and 
         /// creates directories.

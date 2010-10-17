@@ -15,10 +15,10 @@ pre, pre *, code, code *, kbd {
 h1, h1 * {
   font-size: 24pt;	
 }
-p, td, th, li, .breadcrumbs {
+p, td, th, li, dl, .breadcrumbs {
   font-size: 10pt;
 }
-p, li {
+p, li, dl {
   line-height: 140%;
 }
 table {
@@ -37,7 +37,7 @@ td {
 th {
   background-color: #C3D9FF;
 }
-li {
+li, dl {
   margin-top: 6px;
   margin-bottom: 6px; 
 }

@@ -235,11 +235,14 @@ task Build -depends buildBinaries
 # Runs the unit tests
 task UnitTest -depends runUnitTests
 
+# Runs the Specification tests
+task SpecTest -depends runSpecificationTests
+
 # Runs the integration tests
 task IntegrationTest -depends runIntegrationTests
 
 # Runs the verifications
-task Verify -depends runStyleCop, runFxCop, runDuplicateFinder
+task Verify -depends runFxCop, runDuplicateFinder
 
 # Creates the zip file of the deliverables
 task Package -depends buildPackage
@@ -274,9 +277,10 @@ The following build tasks are available
 	'debug':			Runs the script in debug mode. Mutually exclusive with the 'release' task
 	'release':			Runs the script in release mode. Mutually exclusive with the 'debug' task
 	'clean':			Cleans the output directory
-	'build':			Cleans the output directory and builds the binaries
-	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
-	'integrationtest':	Cleans the output directory, builds the binaries and runs the integration tests
+	'build':            Builds the binaries
+    'unittest':         Runs the unit tests
+    'spectest':         Runs the specification tests
+    'integrationtest':  Runs the integration tests
 	'verify':			Runs the source and binary verification. Returning one or more reports
 						describing the flaws in the source / binaries.
 	'package':			Packages the deliverables into a single zip file
@@ -369,7 +373,6 @@ task buildBinaries -depends runInit, getVersion -action{
 	$dirBinUiCommonVista = Join-Path (Join-Path (Join-Path $dirSrc 'common.windowsvista') 'bin') $configuration
 	$dirBinUiCommonWin7 = Join-Path (Join-Path (Join-Path $dirSrc 'common.windows7') 'bin') $configuration
 	$dirBinTestUnit = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.unit') 'bin') $configuration
-	$dirBinTestSpec = Join-Path (Join-Path (Join-Path $dirSrc 'common.test.spec') 'bin') $configuration
 
 	Copy-Item (Join-Path $dirBinUiCommon '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinUiCommonXp '*') $dirBuild -Force
@@ -377,7 +380,6 @@ task buildBinaries -depends runInit, getVersion -action{
 	Copy-Item (Join-Path $dirBinUiCommonWin7 '*') $dirBuild -Force	
 	
 	Copy-Item (Join-Path $dirBinTestUnit '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinTestSpec '*') $dirBuild -Force
 }
 
 task runUnitTests -depends buildBinaries -action{
@@ -472,37 +474,42 @@ task runUnitTests -depends buildBinaries -action{
 #	}
 }
 
-task runIntegrationTests -depends buildBinaries -action{
-	"Running integration tests..."
+task runSpecificationTests -depends buildBinaries -action{
+    "Running specification tests ..."
+    
+#    # Create the concordion config file and copy it
+#	$configFile = Join-Path $dirBuild 'apollo.ui.common.test.spec.config'
+#	Create-ConcordionConfigFile $concordionConfigTemplateFile $configFile $dirReports
+#		
+#	# Start the integration tests. First setup the commandline for
+#	# Concordion
+#	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+#	
+#	$files = ""
+#	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
+#	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+#	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc /pd:"' + $dirConcordion + '" '
+#	
+#	# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+#	#   process. This means we can't load explicit 32-bit binaries. However using the 
+#	#   isolated process runner we can
+#	$command += "/r:Local " 
+#	
+#	# add the files.
+#	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+#	
+#	# run the tests
+#	$command
+#	Invoke-Expression $command
+#	if ($LastExitCode -ne 0)
+#	{
+#		throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
+#	}
+}
 
-	# Create the concordion config file and copy it
-	$configFile = Join-Path $dirBuild 'apollo.ui.common.test.spec.config'
-	Create-ConcordionConfigFile $concordionConfigTemplateFile $configFile $dirReports
-		
-	# Start the integration tests. First setup the commandline for
-	# Concordion
-	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
-	
-	$files = ""
-	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
-	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc /pd:"' + $dirConcordion + '" '
-	
-	# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-	#   process. This means we can't load explicit 32-bit binaries. However using the 
-	#   isolated process runner we can
-	$command += "/r:Local " 
-	
-	# add the files.
-	$command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
-	
-	# run the tests
-	$command
-	Invoke-Expression $command
-	if ($LastExitCode -ne 0)
-	{
-		throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
-	}
+task runIntegrationTests -depends buildBinaries -action{
+    "Running integration tests..."
+    "There are no integration tests."
 }
 
 task runFxCop -depends buildBinaries -action{

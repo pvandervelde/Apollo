@@ -32,6 +32,7 @@ namespace Apollo.Utils.Licensing
             DistinctInstances = DataGenerators.Join(
                     new List<RepeatPeriod> 
                         {
+                            RepeatPeriod.Minutely,
                             RepeatPeriod.Hourly,
                             RepeatPeriod.Daily,
                             RepeatPeriod.Weekly,
@@ -39,8 +40,13 @@ namespace Apollo.Utils.Licensing
                             RepeatPeriod.Monthly,
                             RepeatPeriod.Yearly,
                         },
-                    DataGenerators.Sequential.Numbers(1, 127))
-                .Select(o => new TimePeriod(o.First, (sbyte)o.Second)),
+                    DataGenerators.Sequential.Numbers(1, 127),
+                    new List<bool> 
+                        { 
+                            true,
+                            false,
+                        })
+                .Select(o => new TimePeriod(o.First, (sbyte)o.Second, o.Third)),
         };
 
         [VerifyContract]
@@ -50,12 +56,27 @@ namespace Apollo.Utils.Licensing
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection<TimePeriod> 
                 { 
-                    new TimePeriod(RepeatPeriod.Hourly),
-                    new TimePeriod(RepeatPeriod.Daily),
-                    new TimePeriod(RepeatPeriod.Weekly),
-                    new TimePeriod(RepeatPeriod.Fortnightly),
-                    new TimePeriod(RepeatPeriod.Monthly),
-                    new TimePeriod(RepeatPeriod.Yearly),
+                    new TimePeriod(RepeatPeriod.Minutely, 1, true),
+                    new TimePeriod(RepeatPeriod.Minutely, 2, true),
+                    new TimePeriod(RepeatPeriod.Minutely, 1, false),
+                    new TimePeriod(RepeatPeriod.Hourly, 1, true),
+                    new TimePeriod(RepeatPeriod.Hourly, 2, true),
+                    new TimePeriod(RepeatPeriod.Hourly, 1, false),
+                    new TimePeriod(RepeatPeriod.Daily, 1, true),
+                    new TimePeriod(RepeatPeriod.Daily, 2, true),
+                    new TimePeriod(RepeatPeriod.Daily, 1, false),
+                    new TimePeriod(RepeatPeriod.Weekly, 1, true),
+                    new TimePeriod(RepeatPeriod.Weekly, 2, true),
+                    new TimePeriod(RepeatPeriod.Weekly, 1, false),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 1, true),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 2, true),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 1, false),
+                    new TimePeriod(RepeatPeriod.Monthly, 1, true),
+                    new TimePeriod(RepeatPeriod.Monthly, 2, true),
+                    new TimePeriod(RepeatPeriod.Monthly, 1, false),
+                    new TimePeriod(RepeatPeriod.Yearly, 1, true),
+                    new TimePeriod(RepeatPeriod.Yearly, 2, true),
+                    new TimePeriod(RepeatPeriod.Yearly, 1, false),
                 },
         };
 
@@ -66,6 +87,7 @@ namespace Apollo.Utils.Licensing
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily);
             Assert.AreEqual(RepeatPeriod.Daily, period.Period);
             Assert.AreEqual(1, period.Modifier);
+            Assert.IsTrue(period.IsPeriodic);
         }
 
         [Test]
@@ -89,6 +111,48 @@ namespace Apollo.Utils.Licensing
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily, 10);
             Assert.AreEqual(RepeatPeriod.Daily, period.Period);
             Assert.AreEqual(10, period.Modifier);
+        }
+
+        [Test]
+        [Description("Checks that the TimePeriod struct can be created as a periodic time period.")]
+        public void CreateWithIsPeriodic()
+        {
+            TimePeriod period = new TimePeriod(RepeatPeriod.Daily, false);
+            Assert.AreEqual(RepeatPeriod.Daily, period.Period);
+            Assert.IsFalse(period.IsPeriodic);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesEnteringLeapDay()
+        {
+            var start = new DateTimeOffset(2004, 2, 28, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesExitingLeapDay()
+        {
+            var start = new DateTimeOffset(2004, 2, 29, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesPassingNewYear()
+        {
+            var start = new DateTimeOffset(2004, 12, 31, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
         }
 
         [Test]

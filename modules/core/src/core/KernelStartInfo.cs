@@ -138,6 +138,9 @@ namespace Apollo.Core
 
                     // NLog: Required because it is retarded and has LinkDemands
                     typeof(NLog.Logger).Assembly.GetStrongName(),
+
+                    // Autofac: Required because it requires reflection permissions?
+                    typeof(Autofac.IContainer).Assembly.GetStrongName(),
                 };
         }
 

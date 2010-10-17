@@ -6,6 +6,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Utils;
@@ -14,6 +16,7 @@ using Apollo.Utils;
 using Apollo.Utils.Licensing;
 using Autofac;
 using Autofac.Core;
+using AutofacContrib.Startable;
 
 namespace Apollo.Core
 {
@@ -52,6 +55,11 @@ namespace Apollo.Core
                     builder.RegisterModule(new MessagingModule());
                     builder.RegisterModule(new LoggerModule());
 
+                    foreach (var module in additionalModules)
+                    {
+                        builder.RegisterModule(module);
+                    }
+
                     // Register the proxy to the cache channel
                     builder.Register(c => channel)
                         .As<ICacheConnectorChannel>()
@@ -78,8 +86,19 @@ namespace Apollo.Core
                     new IModule[0];
 
                 var container = BuildContainer(channel, modules);
-                var service = container.Resolve(typeToLoad) as KernelService;
+                if (container.IsRegistered<IStarter>())
+                {
+                    SecurityHelpers.Elevate(
+                        new PermissionSet(
+                            PermissionState.Unrestricted),
+                            () =>
+                                {
+                                    var startable = container.Resolve<IStarter>();
+                                    startable.Start();
+                                });
+                }
 
+                var service = container.Resolve(typeToLoad) as KernelService;
                 return service;
             }
         }

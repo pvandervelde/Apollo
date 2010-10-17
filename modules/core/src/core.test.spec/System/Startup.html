@@ -1,0 +1,38 @@
+﻿<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <head>
+        <meta name="author"
+              content="P. van der Velde" />
+        <meta name="copyright"
+              content="P. van der Velde" />
+
+        <link href="../concordion.css"
+              rel="stylesheet"
+              type="text/css" />
+
+        <title>Starting Apollo</title>
+    </head>
+    <body>
+
+        <h2>Starting Apollo</h2>
+        <p concordion:execute="StartApollo()">
+            During startup Apollo loads all the core services, verifies that the license is <b concordion:assertEquals="#isLicenseValid">valid</b> 
+            and then sends a message to the user interface indicating that the startup process is <b concordion:assertEquals="#hasStartupCompleted">finished</b>.
+        </p>
+
+        <h2>Further details</h2>
+        <ul>
+            <li>
+                <a href="StartupWithProgessIndication.html">How can the user Interface show progress?</a>
+            </li>
+            <li>
+                <a href="StartupWithMissingLicense.html">What if the license is missing?</a>
+            </li>
+            <li>
+                <a href="StartupWithExpiredLicense.html">What if the license is expired?</a>
+            </li>
+            <li>
+                <a href="StartupWithInvalidLicense.html">What if the license is invalid?</a>
+            </li>
+        </ul>
+    </body>
+</html>

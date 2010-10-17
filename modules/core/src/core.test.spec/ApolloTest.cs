@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using Concordion.Integration;
 
-namespace Apollo.UI.Common.Spec
+namespace Apollo.Core.Test.Spec
 {
     [ConcordionTest]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

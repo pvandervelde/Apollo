@@ -14,6 +14,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 #if DEPLOY
 using System.Globalization;
 #endif
@@ -62,6 +63,7 @@ namespace Apollo.Core.Utils.Licensing
             var lastHeartbeat = DateTimeOffset.MinValue;
             lock (m_Lock)
             {
+                Debug.Assert(!m_TimeOfLastHeartbeat.Equals(DateTimeOffset.MinValue), "Failure to update the licence watch dog.");
                 lastHeartbeat = m_TimeOfLastHeartbeat;
             }
 
