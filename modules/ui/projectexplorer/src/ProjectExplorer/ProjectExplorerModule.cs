@@ -89,7 +89,7 @@ namespace Apollo.ProjectExplorer
             var applicationFacade = m_Container.Resolve<IAbstractApplications>();
             {
                 applicationFacade.RegisterNotification(
-                    notificationNames.Shutdown,
+                    notificationNames.SystemShuttingDown,
                     obj =>
                     {
                         var app = Application.Current;

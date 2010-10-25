@@ -12,11 +12,21 @@ namespace Apollo.Core
     public interface INotificationNameConstants
     {
         /// <summary>
+        /// Gets the <see cref="NotificationName"/> that is used
+        /// for the notification upon the completion of startup.
+        /// </summary>
+        /// <value>The start-up complete notification.</value>
+        NotificationName StartupComplete
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the <see cref="NotificationName"/> that is used for
         /// shut down notifications.
         /// </summary>
         /// <value>The shutdown notification.</value>
-        NotificationName Shutdown
+        NotificationName SystemShuttingDown
         {
             get;
         }

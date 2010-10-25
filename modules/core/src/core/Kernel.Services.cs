@@ -21,6 +21,28 @@ namespace Apollo.Core
     internal sealed partial class Kernel
     {
         /// <summary>
+        /// Sends a message to all services to indicate that the start-up process has completed.
+        /// </summary>
+        private void SendStartupCompleteMessage()
+        {
+            // Check all services
+            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
+
+            var servicesToNotify = from pair in m_Services
+                                   select pair.Value.Key as ISendMessages into nameObject
+                                   where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
+                                   select nameObject.Name;
+
+            Debug.Assert(coreProxy.Contains(SendMessageForKernelCommand.CommandId), "A command has gone missing.");
+            foreach (var service in servicesToNotify)
+            {
+                var context = new SendMessageForKernelContext(service, new ApplicationStartupCompleteMessage());
+                coreProxy.Invoke(SendMessageForKernelCommand.CommandId, context);
+            }
+        }
+
+        /// <summary>
         /// Determines whether this instance can shutdown.
         /// </summary>
         /// <returns>
@@ -41,8 +63,8 @@ namespace Apollo.Core
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var servicesToCheck = from pair in m_Services
-                                  select pair.Value.Key as ISendMessages into nameObject 
-                                  where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy)) 
+                                  select pair.Value.Key as ISendMessages into nameObject
+                                  where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
                                   select nameObject.Name;
             var context = new CheckCanServicesShutdownContext(servicesToCheck);
 

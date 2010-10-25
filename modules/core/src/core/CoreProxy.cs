@@ -82,6 +82,7 @@ namespace Apollo.Core
             {
                 m_Commands.Add(CheckServicesCanShutdownCommand.CommandId, () => new CheckServicesCanShutdownCommand(SendMessageWithResponse));
                 m_Commands.Add(LogMessageForKernelCommand.CommandId, () => new LogMessageForKernelCommand(m_DnsNames.AddressOfLogger, SendMessage));
+                m_Commands.Add(SendMessageForKernelCommand.CommandId, () => new SendMessageForKernelCommand(SendMessage));
             }
         }
 

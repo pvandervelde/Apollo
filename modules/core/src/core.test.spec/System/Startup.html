@@ -12,11 +12,14 @@
         <title>Starting Apollo</title>
     </head>
     <body>
-
         <h2>Starting Apollo</h2>
+        <p>
+            The user interface needs to know when Apollo has loaded all the kernel services so that it can enable the different user interface controls
+            which allow the user to interact with Apollo.
+        </p>
         <p concordion:execute="StartApollo()">
-            During startup Apollo loads all the core services, verifies that the license is <b concordion:assertEquals="#isLicenseValid">valid</b> 
-            and then sends a message to the user interface indicating that the startup process is <b concordion:assertEquals="#hasStartupCompleted">finished</b>.
+            During startup Apollo loads all the core services and then sends a message to the user interface indicating that 
+            the startup process is <b concordion:assertEquals="HasStartupCompleted()">finished</b>.
         </p>
 
         <h2>Further details</h2>

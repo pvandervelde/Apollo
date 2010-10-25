@@ -537,5 +537,14 @@ namespace Apollo.Core.Properties {
                 return ResourceManager.GetString("UserInterrface_LogMessage_DisconnectPreActionFailed", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to send a notification of the application start-up completion. Error information: {0}.
+        /// </summary>
+        internal static string UserInterrface_LogMessage_StartupCompleteNotificationFailed {
+            get {
+                return ResourceManager.GetString("UserInterrface_LogMessage_StartupCompleteNotificationFailed", resourceCulture);
+            }
+        }
     }
 }

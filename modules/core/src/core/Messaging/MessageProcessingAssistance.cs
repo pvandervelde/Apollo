@@ -15,7 +15,7 @@ using Lokad;
 namespace Apollo.Core.Messaging
 {
     /// <summary>
-    /// Defines methods for processing messages.
+    /// Defines helper methods for processing messages for use by <see cref="KernelService"/> objects.
     /// </summary>
     internal sealed class MessageProcessingAssistance : IHelpMessageProcessing
     {

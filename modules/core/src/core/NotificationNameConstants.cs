@@ -15,22 +15,40 @@ namespace Apollo.Core
     internal sealed class NotificationNameConstants : INotificationNameConstants
     {
         /// <summary>
+        /// The <see cref="NotificationName"/> used for start-up complete notifications.
+        /// </summary>
+        private readonly NotificationName m_StartupComplete = new NotificationName("StartupComplete");
+
+        /// <summary>
         /// The <see cref="NotificationName"/> used for shut down notifications.
         /// </summary>
-        private readonly NotificationName m_Shutdown = new NotificationName("Shutdown");
+        private readonly NotificationName m_SystemShuttingDown = new NotificationName("SystemShuttingDown");
 
         #region Implementation of INotificationNameConstants
+
+        /// <summary>
+        /// Gets the <see cref="NotificationName"/> that is used
+        /// for the notification upon the completion of startup.
+        /// </summary>
+        /// <value>The start-up complete notification.</value>
+        public NotificationName StartupComplete
+        {
+            get
+            {
+                return m_StartupComplete;
+            }
+        }
 
         /// <summary>
         /// Gets the <see cref="NotificationName"/> that is used for
         /// shut down notifications.
         /// </summary>
         /// <value>The shutdown notification.</value>
-        public NotificationName Shutdown
+        public NotificationName SystemShuttingDown
         {
             get
             {
-                return m_Shutdown;
+                return m_SystemShuttingDown;
             }
         }
 

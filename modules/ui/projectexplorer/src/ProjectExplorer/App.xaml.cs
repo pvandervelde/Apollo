@@ -32,39 +32,6 @@ namespace Apollo.ProjectExplorer
         }
 
         /// <summary>
-        /// Loads the kernel.
-        /// </summary>
-        /// <returns>
-        /// The module which contains the Dependency Injection 
-        /// registrations for the user interface connection to the
-        /// kernel.
-        /// </returns>
-        private static IModule LoadKernel()
-        {
-            IModule userInterfaceModule = null;
-
-            // At a later stage we need to clean this up.
-            // there are two constants and a DI reference.
-            var progressTracker = new TimeBasedProgressTracker(
-                new ProgressTimer(new TimeSpan(0, 0, 0, 0, 500)),
-                -1, 
-                new StartupTimeStorage());
-
-            var bootstrapper = new KernelBootstrapper(
-                new BootstrapperStartInfo(),
-                () => new MockExceptionHandler(),
-                progressTracker,
-                module => { userInterfaceModule = module; });
-
-            // Load the kernel
-            bootstrapper.Load();
-
-            // Return the DI module that holds the
-            // kernel UI links
-            return userInterfaceModule;
-        }
-
-        /// <summary>
         /// Called when the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -73,8 +40,34 @@ namespace Apollo.ProjectExplorer
         {
             InitializeEnvironment();
 
-            var userInterfaceModule = LoadKernel();
-            LoadUserInterface(userInterfaceModule);
+            LoadKernel();
+        }
+
+        /// <summary>
+        /// Loads the kernel.
+        /// </summary>
+        /// <returns>
+        /// The module which contains the Dependency Injection 
+        /// registrations for the user interface connection to the
+        /// kernel.
+        /// </returns>
+        private void LoadKernel()
+        {
+            // At a later stage we need to clean this up.
+            // there are two constants and a DI reference.
+            var progressTracker = new TimeBasedProgressTracker(
+                new ProgressTimer(new TimeSpan(0, 0, 0, 0, 500)),
+                -1,
+                new StartupTimeStorage());
+
+            var bootstrapper = new KernelBootstrapper(
+                new BootstrapperStartInfo(),
+                () => new MockExceptionHandler(),
+                progressTracker,
+                module => LoadUserInterface(module));
+
+            // Load the kernel
+            bootstrapper.Load();
         }
 
         /// <summary>

@@ -67,11 +67,19 @@ namespace Apollo.Core.UserInterfaces
 
         private sealed class MockNotificationNameConstants : INotificationNameConstants
         {
-            public NotificationName Shutdown
+            public NotificationName StartupComplete
+            {
+                get
+                {
+                    return new NotificationName("StartupComplete");
+                }
+            }
+
+            public NotificationName SystemShuttingDown
             {
                 get 
                 {
-                    return new NotificationName("shutdown");
+                    return new NotificationName("SystemShuttingDown");
                 }
             }
         }
@@ -84,9 +92,7 @@ namespace Apollo.Core.UserInterfaces
         {
             private readonly IFuture<MessageBody> m_Future;
 
-            private Type m_MessageType;
-
-            private Action<KernelMessage> m_MessageAction;
+            private Dictionary<Type, Action<KernelMessage>> m_MessageActions = new Dictionary<Type, Action<KernelMessage>>();
 
             public MockMessageProcessingHelp() 
                 : this(null)
@@ -110,8 +116,7 @@ namespace Apollo.Core.UserInterfaces
 
             public void RegisterAction(Type messageType, Action<KernelMessage> messageAction)
             {
-                m_MessageType = messageType;
-                m_MessageAction = messageAction;
+                m_MessageActions.Add(messageType, messageAction);
             }
 
             public void SendMessage(DnsName recipient, MessageBody body, MessageId originalMessage)
@@ -135,19 +140,11 @@ namespace Apollo.Core.UserInterfaces
                 // Do nothing
             }
 
-            public Type MessageType
+            public IDictionary<Type, Action<KernelMessage>> MessageActions
             {
-                get
+                get 
                 {
-                    return m_MessageType;
-                }
-            }
-
-            public Action<KernelMessage> MessageAction
-            {
-                get
-                {
-                    return m_MessageAction;
+                    return m_MessageActions;
                 }
             }
 
@@ -939,9 +936,9 @@ namespace Apollo.Core.UserInterfaces
                 onStartService);
 
             Action<object> callback = obj => { };
-            service.RegisterNotification(notificationNames.Shutdown, callback);
+            service.RegisterNotification(notificationNames.SystemShuttingDown, callback);
 
-            Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.Shutdown, obj => { }));
+            Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { }));
         }
 
         [Test]
@@ -993,7 +990,7 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            service.RegisterNotification(notificationNames.Shutdown, obj => { throw new Exception(); });
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -1025,7 +1022,7 @@ namespace Apollo.Core.UserInterfaces
                 onStartService);
 
             bool wasInvoked = false;
-            service.RegisterNotification(notificationNames.Shutdown, obj => { wasInvoked = true; });
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { wasInvoked = true; });
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -1049,28 +1046,45 @@ namespace Apollo.Core.UserInterfaces
             var processor = new MockMessageProcessingHelp();
             var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
+            
+            bool isStarted = false;
+            Action<object> onApplicationStartup = obj => { isStarted = true; };
 
             var service = new UserInterfaceService(
-                commands.Object, 
-                dnsNames, 
-                notificationNames, 
-                processor, 
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                processor,
                 storage,
                 onStartService);
+            service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
 
             var pipeline = new MockPipeline();
             service.ConnectTo(pipeline);
 
             service.Start();
-            Assert.AreEqual(typeof(ServiceShutdownCapabilityRequestMessage), processor.MessageType);
 
-            var body = new ServiceShutdownCapabilityRequestMessage();
-            var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
-            processor.MessageAction(new KernelMessage(header, body));
+            var actions = processor.MessageActions;
 
-            Assert.AreEqual(header.Sender, processor.Recipient);
-            Assert.AreEqual(header.Id, processor.ReplyId);
-            Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
+            Assert.IsTrue(actions.ContainsKey(typeof(ServiceShutdownCapabilityRequestMessage)));
+            {
+                var body = new ServiceShutdownCapabilityRequestMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ServiceShutdownCapabilityRequestMessage)](new KernelMessage(header, body));
+
+                Assert.AreEqual(header.Sender, processor.Recipient);
+                Assert.AreEqual(header.Id, processor.ReplyId);
+                Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
+            }
+
+            Assert.IsTrue(actions.ContainsKey(typeof(ApplicationStartupCompleteMessage)));
+            {
+                var body = new ApplicationStartupCompleteMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla1"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ApplicationStartupCompleteMessage)](new KernelMessage(header, body));
+
+                Assert.IsTrue(isStarted);
+            }
         }
     }
 }

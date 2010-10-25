@@ -303,12 +303,12 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         protected override void PreMessageUnregisterStopAction()
         {
-            if (!m_Notifications.ContainsKey(m_NotificationNames.Shutdown))
+            if (!m_Notifications.ContainsKey(m_NotificationNames.SystemShuttingDown))
             {
-                throw new MissingNotificationActionException(m_NotificationNames.Shutdown);
+                throw new MissingNotificationActionException(m_NotificationNames.SystemShuttingDown);
             }
 
-            var action = m_Notifications[m_NotificationNames.Shutdown];
+            var action = m_Notifications[m_NotificationNames.SystemShuttingDown];
             try
             {
                 action(null);

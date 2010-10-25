@@ -16,16 +16,16 @@ using ICommand = Apollo.Utils.Commands.ICommand;
 namespace Apollo.Core
 {
     /// <summary>
-    /// Defines a command that sends a log message to the logger.
+    /// Defines a command that sends a message to the rest of the system.
     /// </summary>
-    internal sealed class LogMessageForKernelCommand : ICommand
+    internal sealed class SendMessageForKernelCommand : ICommand
     {
         #region Static members
 
         /// <summary>
-        /// Defines the Id for the <c>LogMessageForKernelCommand</c>.
+        /// Defines the Id for the <c>SendMessageForKernelCommand</c>.
         /// </summary>
-        internal static readonly CommandId CommandId = new CommandId(@"LogMessageForKernel");
+        internal static readonly CommandId CommandId = new CommandId(@"SendMessageForKernel");
 
         #endregion
 
@@ -35,29 +35,18 @@ namespace Apollo.Core
         private readonly SendMessageWithoutResponse m_MessageSender;
 
         /// <summary>
-        /// The name of the logsink.
+        /// Initializes a new instance of the <see cref="SendMessageForKernelCommand"/> class.
         /// </summary>
-        private readonly DnsName m_LogSinkName;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LogMessageForKernelCommand"/> class.
-        /// </summary>
-        /// <param name="logSinkName">The <see cref="DnsName"/> of the log sink.</param>
         /// <param name="messageSender">The function used to send a message.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="logSinkName"/> is <see langword="null"/>.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal LogMessageForKernelCommand(DnsName logSinkName, SendMessageWithoutResponse messageSender)
+        internal SendMessageForKernelCommand(SendMessageWithoutResponse messageSender)
         {
             {
-                Enforce.Argument(() => logSinkName);
                 Enforce.Argument(() => messageSender);
             }
 
-            m_LogSinkName = logSinkName;
             m_MessageSender = messageSender;
         }
 
@@ -81,17 +70,12 @@ namespace Apollo.Core
         /// <param name="context">The context for the command.</param>
         public void Invoke(ICommandContext context)
         {
-            var commandContext = context as LogMessageForKernelContext;
+            var commandContext = context as SendMessageForKernelContext;
             Debug.Assert(commandContext != null, "Incorrect command context specified.");
 
             m_MessageSender(
-                m_LogSinkName, 
-                new LogEntryRequestMessage(
-                    new LogMessage(
-                        m_LogSinkName.ToString(),
-                        commandContext.Level,
-                        commandContext.Message),
-                    LogType.Debug), 
+                commandContext.Recipient, 
+                commandContext.Message, 
                 MessageId.None);
         }
 

@@ -255,6 +255,7 @@
     <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
+    <Compile Include="ApplicationStartupCompleteMessage.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
@@ -347,6 +348,8 @@
       <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
     </Compile>
     <Compile Include="SecurityLevel.cs" />
+    <Compile Include="SendMessageForKernelCommand.cs" />
+    <Compile Include="SendMessageForKernelContext.cs" />
     <Compile Include="SendMessageWithoutResponse.cs" />
     <Compile Include="SendMessageWithResponse.cs" />
     <Compile Include="ServiceSecurityLevelAttribute.cs" />

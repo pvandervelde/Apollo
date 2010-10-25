@@ -276,4 +276,7 @@
   <data name="UserInterrface_LogMessage_DisconnectPreActionFailed" xml:space="preserve">
     <value>The pre-disconnection action failed with an exception. Error information: {0}</value>
   </data>
+  <data name="UserInterrface_LogMessage_StartupCompleteNotificationFailed" xml:space="preserve">
+    <value>Failed to send a notification of the application start-up completion. Error information: {0}</value>
+  </data>
 </root>

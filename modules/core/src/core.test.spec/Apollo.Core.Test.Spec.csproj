@@ -72,9 +72,13 @@
     <CodeAnalysisIgnoreBuiltInRules>true</CodeAnalysisIgnoreBuiltInRules>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ApolloLoader.cs" />
     <Compile Include="ApolloTest.cs" />
+    <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="KernelBootstrapper.cs" />
+    <Compile Include="MockExceptionHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StartupTimeStorage.cs" />
     <Compile Include="System\StartupTest.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +88,10 @@
     </Reference>
     <Reference Include="Concordion">
       <HintPath>..\..\tools\concordion\Concordion.dll</HintPath>
+    </Reference>
+    <Reference Include="OGNL, Version=1.0.3396.12987, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\tools\concordion\OGNL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -100,7 +108,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Apollo.html" />
     <EmbeddedResource Include="concordion.css" />
-    <EmbeddedResource Include="System\Startup.html" />
+    <EmbeddedResource Include="System\Startup.html">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
