@@ -42,21 +42,58 @@ namespace Apollo.Core.UserInterfaces
                 {
                     HandleStartupCompleteMessage();
                 });
-
-            // @TODO: Doesn't need to answer to a shutdown message?
         }
 
         private void HandleShutdownCapabilityRequest(DnsName originalSender, MessageId id)
         {
-            Debug.Assert(IsFullyFunctional, "For some reason we managed to register the message actions before being fully functional.");
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
 
             // @todo: Check with the UI if we can shutdown. This should only be a UI value, not the system value.
             // For now just send a message saying that we can shutdown.
-            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(true), id);
+            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(CanUserInterfaceShutDown()), id);
+        }
+
+        private bool CanUserInterfaceShutDown()
+        {
+            if (!m_Notifications.ContainsKey(m_NotificationNames.CanSystemShutDown))
+            {
+                return true;
+            }
+
+            var action = m_Notifications[m_NotificationNames.CanSystemShutDown];
+            try
+            {
+                var arg = new ShutdownCapabilityArguments();
+                action(arg);
+                
+                return arg.CanShutDown;
+            }
+            catch (Exception e)
+            {
+                // Log the fact that we failed
+                SendMessage(
+                    m_DnsNames.AddressOfLogger,
+                    new LogEntryRequestMessage(
+                        new LogMessage(
+                            Name.ToString(),
+                            LevelToLog.Error,
+                            string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, e)),
+                        LogType.Debug),
+                    MessageId.None);
+
+                // Now get the hell out of here.
+                throw;
+            }
         }
 
         private void HandleStartupCompleteMessage()
         {
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+
             if (!m_Notifications.ContainsKey(m_NotificationNames.StartupComplete))
             {
                 return;

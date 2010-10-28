@@ -56,6 +56,11 @@ namespace Apollo.Core.Logging
             Justification = "Documentation can start with a language keyword")]
         public bool ShouldLogMessage(LogType logType, ILogMessage message)
         {
+            if (!IsFullyFunctional)
+            {
+                return false;
+            }
+
             return m_Loggers.ContainsKey(logType) && m_Loggers[logType].ShouldLog(message);
         }
 
@@ -68,12 +73,30 @@ namespace Apollo.Core.Logging
         /// <exception cref="ArgumentException">
         /// Thrown when there is no registered logger for the given <paramref name="logType"/>.
         /// </exception>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Log(LogType logType, ILogMessage message)
         {
             {
                 Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exceptions_Messages_LogTypeHasNoLogger_WithLogType, logType);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
+            LogWithoutVerifying(logType, message);
+        }
+
+        /// <summary>
+        /// Logs the given message without doing any verification of the Logger state.
+        /// </summary>
+        /// <design>
+        /// This method should never be called without either verifying the state or verifying that it
+        /// is safe the perform the log action.
+        /// </design>
+        /// <param name="logType">Type of the log.</param>
+        /// <param name="message">The message.</param>
+        private void LogWithoutVerifying(LogType logType, ILogMessage message)
+        {
             m_Loggers[logType].Log(message);
         }
 

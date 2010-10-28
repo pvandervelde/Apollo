@@ -6,47 +6,46 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Properties;
-using Apollo.Utils;
+using Apollo.Utils.Properties;
 
-namespace Apollo.Core
+namespace Apollo.Utils
 {
     /// <summary>
-    /// An exception thrown when the <see cref="Kernel"/> is asked to uninstall a
-    /// <see cref="KernelService"/> that has not been installed.
+    /// An exception thrown when the <see cref="TimeBasedProgressTracker"/> is started without 
+    /// providing an initial <see cref="IProgressMark"/> object.
     /// </summary>
     [Serializable]
-    public sealed class UnknownKernelServiceTypeException : Exception
+    public sealed class CurrentProgressMarkNotSetException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownKernelServiceTypeException"/> class.
+        /// Initializes a new instance of the <see cref="CurrentProgressMarkNotSetException"/> class.
         /// </summary>
-        public UnknownKernelServiceTypeException() 
-            : this(Resources_NonTranslatable.Exceptions_Messages_UnknownKernelServiceType)
+        public CurrentProgressMarkNotSetException() 
+            : this(Resources.Exceptions_Messages_CurrentProgressMarkNotSet)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownKernelServiceTypeException"/> class.
+        /// Initializes a new instance of the <see cref="CurrentProgressMarkNotSetException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnknownKernelServiceTypeException(string message) 
+        public CurrentProgressMarkNotSetException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownKernelServiceTypeException"/> class.
+        /// Initializes a new instance of the <see cref="CurrentProgressMarkNotSetException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnknownKernelServiceTypeException(string message, Exception innerException)
+        public CurrentProgressMarkNotSetException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnknownKernelServiceTypeException"/> class.
+        /// Initializes a new instance of the <see cref="CurrentProgressMarkNotSetException"/> class.
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
@@ -56,7 +55,7 @@ namespace Apollo.Core
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnknownKernelServiceTypeException(SerializationInfo info, StreamingContext context)
+        private CurrentProgressMarkNotSetException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

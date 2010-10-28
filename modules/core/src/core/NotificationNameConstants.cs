@@ -20,6 +20,11 @@ namespace Apollo.Core
         private readonly NotificationName m_StartupComplete = new NotificationName("StartupComplete");
 
         /// <summary>
+        /// The <see cref="NotificationName"/> used for shut down capability requests.
+        /// </summary>
+        private readonly NotificationName m_CanSystemShutDown = new NotificationName("CanSystemShutDown");
+
+        /// <summary>
         /// The <see cref="NotificationName"/> used for shut down notifications.
         /// </summary>
         private readonly NotificationName m_SystemShuttingDown = new NotificationName("SystemShuttingDown");
@@ -36,6 +41,19 @@ namespace Apollo.Core
             get
             {
                 return m_StartupComplete;
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="NotificationName"/> that is used for
+        /// shut down capability checks.
+        /// </summary>
+        /// <value>The shutdown capability check.</value>
+        public NotificationName CanSystemShutDown
+        {
+            get
+            {
+                return m_CanSystemShutDown;
             }
         }
 

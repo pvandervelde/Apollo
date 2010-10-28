@@ -75,6 +75,14 @@ namespace Apollo.Core.UserInterfaces
                 }
             }
 
+            public NotificationName CanSystemShutDown
+            {
+                get
+                {
+                    return new NotificationName("CanSystemShutDown");
+                }
+            }
+
             public NotificationName SystemShuttingDown
             {
                 get 
@@ -621,8 +629,7 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            service.Invoke(new CommandId("bla"));
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
         }
 
         [Test]
@@ -649,6 +656,7 @@ namespace Apollo.Core.UserInterfaces
                 processor,
                 storage,
                 onStartService);
+
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
             service.Start();
@@ -682,8 +690,7 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object);
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
         }
 
         [Test]
@@ -935,7 +942,7 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            Action<object> callback = obj => { };
+            Action<INotificationArguments> callback = obj => { };
             service.RegisterNotification(notificationNames.SystemShuttingDown, callback);
 
             Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { }));
@@ -1036,8 +1043,8 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that ServiceShutdownCapabilityRequestMessage is handled correctly.")]
-        public void HandleServiceShutdownCapabilityRequestMessage()
+        [Description("Checks that ApplicationStartupCompleteMessage is handled correctly.")]
+        public void HandleApplicationStartupCompleteMessage()
         {
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
@@ -1046,9 +1053,9 @@ namespace Apollo.Core.UserInterfaces
             var processor = new MockMessageProcessingHelp();
             var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
-            
+
             bool isStarted = false;
-            Action<object> onApplicationStartup = obj => { isStarted = true; };
+            Action<INotificationArguments> onApplicationStartup = obj => { isStarted = true; };
 
             var service = new UserInterfaceService(
                 commands.Object,
@@ -1066,17 +1073,6 @@ namespace Apollo.Core.UserInterfaces
 
             var actions = processor.MessageActions;
 
-            Assert.IsTrue(actions.ContainsKey(typeof(ServiceShutdownCapabilityRequestMessage)));
-            {
-                var body = new ServiceShutdownCapabilityRequestMessage();
-                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
-                actions[typeof(ServiceShutdownCapabilityRequestMessage)](new KernelMessage(header, body));
-
-                Assert.AreEqual(header.Sender, processor.Recipient);
-                Assert.AreEqual(header.Id, processor.ReplyId);
-                Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
-            }
-
             Assert.IsTrue(actions.ContainsKey(typeof(ApplicationStartupCompleteMessage)));
             {
                 var body = new ApplicationStartupCompleteMessage();
@@ -1084,6 +1080,51 @@ namespace Apollo.Core.UserInterfaces
                 actions[typeof(ApplicationStartupCompleteMessage)](new KernelMessage(header, body));
 
                 Assert.IsTrue(isStarted);
+            }
+        }
+
+        [Test]
+        [Description("Checks that ServiceShutdownCapabilityRequestMessage is handled correctly.")]
+        public void HandleServiceShutdownCapabilityRequestMessage()
+        {
+            var commandCollection = new List<CommandId>();
+            var commands = new Mock<ICommandContainer>();
+            var dnsNames = new MockDnsNameConstants();
+            var notificationNames = new MockNotificationNameConstants();
+            var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
+            Action<IModule> onStartService = module => { };
+
+            bool hasMessageBeenReceived = false;
+            Action<INotificationArguments> onCanSystemShutDown = obj => { hasMessageBeenReceived = true; };
+
+            var service = new UserInterfaceService(
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                processor,
+                storage,
+                onStartService);
+            service.RegisterNotification(notificationNames.CanSystemShutDown, onCanSystemShutDown);
+
+            var pipeline = new MockPipeline();
+            service.ConnectTo(pipeline);
+
+            service.Start();
+
+            var actions = processor.MessageActions;
+
+            Assert.IsTrue(actions.ContainsKey(typeof(ServiceShutdownCapabilityRequestMessage)));
+            {
+                var body = new ServiceShutdownCapabilityRequestMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ServiceShutdownCapabilityRequestMessage)](new KernelMessage(header, body));
+
+                Assert.IsTrue(hasMessageBeenReceived);
+
+                Assert.AreEqual(header.Sender, processor.Recipient);
+                Assert.AreEqual(header.Id, processor.ReplyId);
+                Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
             }
         }
     }

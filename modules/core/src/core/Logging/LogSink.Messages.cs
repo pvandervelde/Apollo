@@ -57,6 +57,10 @@ namespace Apollo.Core.Logging
 
         private void HandleLogLevelChangeRequest(LevelToLog newLevel)
         {
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+
             foreach (var pair in m_Loggers)
             {
                 pair.Value.ChangeLevel(newLevel);
@@ -65,10 +69,9 @@ namespace Apollo.Core.Logging
 
         private void HandleShutdownCapabilityRequest(DnsName originalSender, MessageId id)
         {
-            if (!IsFullyFunctional)
-            {
-                return;
-            }
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
 
             // Send a message saying that we can shutdown.
             SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(true), id);

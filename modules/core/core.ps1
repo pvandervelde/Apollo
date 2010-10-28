@@ -131,6 +131,13 @@ function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [
 	Set-Content $newPath $text
 }
 
+function global:Create-ConcordionConfigFile([string]$path, [string]$newPath, [string]$concordionOutputPath){
+	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@OUTPUT_DIR@', $concordionOutputPath
+	
+	Set-Content $newPath $text
+}
+
 function global:Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
 	$yieldText = [string]::Join([Environment]::NewLine, (Get-Content -Path $yieldTemplate))
 	

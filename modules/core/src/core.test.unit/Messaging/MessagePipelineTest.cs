@@ -241,10 +241,23 @@ namespace Apollo.Core.Messaging
 
         [Test]
         [Description("Checks that a message cannot be send with a null sender object.")]
+        public void SendWhileNotBeingFunctional()
+        {
+            var sender = new DnsName("sender");
+            var listener = new DnsName("listener");
+            var pipeline = new MessagePipeline(new DnsNameConstants());
+
+            var bodyMock = new Mock<MessageBody>(false);
+            Assert.Throws<ArgumentException>(() => pipeline.Send(sender, listener, bodyMock.Object));
+        }
+
+        [Test]
+        [Description("Checks that a message cannot be send with a null sender object.")]
         public void SendWithNullSender()
         {
             var listener = new DnsName("listener");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             var bodyMock = new Mock<MessageBody>(false);
             Assert.Throws<ArgumentNullException>(() => pipeline.Send(null, listener, bodyMock.Object));
@@ -256,6 +269,7 @@ namespace Apollo.Core.Messaging
         {
             var listener = new DnsName("listener");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(DnsName.Nobody, listener, bodyMock.Object));
@@ -267,6 +281,7 @@ namespace Apollo.Core.Messaging
         {
             var sender = new DnsName("sender");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             var bodyMock = new Mock<MessageBody>(false);
             Assert.Throws<ArgumentNullException>(() => pipeline.Send(sender, null, bodyMock.Object));
@@ -278,6 +293,7 @@ namespace Apollo.Core.Messaging
         {
             var sender = new DnsName("sender");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, DnsName.Nobody, bodyMock.Object));
@@ -289,6 +305,7 @@ namespace Apollo.Core.Messaging
         {
             var sender = new DnsName("sender");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             var bodyMock = new Mock<MessageBody>();
             Assert.Throws<ArgumentException>(() => pipeline.Send(sender, sender, bodyMock.Object));
@@ -301,8 +318,9 @@ namespace Apollo.Core.Messaging
             var sender = new DnsName("sender");
             var listener = new DnsName("listener");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
-            Assert.Throws<ArgumentException>(() => pipeline.Send(sender, listener, null));
+            Assert.Throws<ArgumentNullException>(() => pipeline.Send(sender, listener, null));
         }
 
         [Test]
@@ -312,9 +330,10 @@ namespace Apollo.Core.Messaging
             var sender = new DnsName("sender");
             var listener = new DnsName("listener");
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
-            var bodyMock = new Mock<MessageBody>();
-            Assert.Throws<ArgumentException>(() => pipeline.Send(sender, listener, bodyMock.Object, null));
+            var bodyMock = new Mock<MessageBody>(false);
+            Assert.Throws<ArgumentNullException>(() => pipeline.Send(sender, listener, bodyMock.Object, null));
         }
 
         [Test]
@@ -340,6 +359,7 @@ namespace Apollo.Core.Messaging
             var listener = listenerMock.Object;
             var sender = senderMock.Object;
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
             
             pipeline.RegisterAsSender(sender);
             pipeline.RegisterAsListener(listener);
@@ -379,6 +399,7 @@ namespace Apollo.Core.Messaging
             var listener = listenerMock.Object;
             var sender = senderMock.Object;
             var pipeline = new MessagePipeline(new DnsNameConstants());
+            pipeline.Start();
 
             pipeline.RegisterAsSender(sender);
             pipeline.RegisterAsListener(listener);

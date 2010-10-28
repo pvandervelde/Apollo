@@ -19,6 +19,16 @@ namespace Apollo.Utils
     public sealed class TimeBasedProgressTracker : ITrackProgress, IDisposable
     {
         /// <summary>
+        /// The progress at the start of the event.
+        /// </summary>
+        private const int s_StartingProgress = 0;
+
+        /// <summary>
+        /// The progress at the end of the event.
+        /// </summary>
+        private const int s_FinishingProgress = 100;
+
+        /// <summary>
         /// The timer which is used to fire the progress event.
         /// </summary>
         private readonly IProgressTimer m_ProgressTimer;
@@ -89,14 +99,23 @@ namespace Apollo.Utils
         /// <summary>
         /// Starts the tracking of the progress.
         /// </summary>
+        /// <exception cref="CurrentProgressMarkNotSetException">Thrown if no <see cref="IProgressMark"/> has been set.</exception>
         public void StartTracking()
         {
+            {
+                Enforce.With<CurrentProgressMarkNotSetException>(m_CurrentMark != null, Resources.Exceptions_Messages_CurrentProgressMarkNotSet);
+            }
+
             // Capture the time at which the timer was started
             var startTime = DateTime.Now;
             m_ElapsedTime = time => time - startTime;
 
             // Initialize the timer
             m_ProgressTimer.Elapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
+
+            // Fire the first event. If all is well we have at least one mark
+            // And we'll assume there is no progress yet.
+            RaiseStartupProgress(s_StartingProgress, m_CurrentMark);
 
             // Start the timer
             m_ProgressTimer.Start();
@@ -161,6 +180,13 @@ namespace Apollo.Utils
                         if (estimatedTime != TimeSpan.Zero)
                         {
                             progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
+                            
+                            // Progress can never be larger as 100% so if it is then we just
+                            // assume we're at 100%
+                            if (progress > s_FinishingProgress)
+                            {
+                                progress = s_FinishingProgress;
+                            }
                         }
 
                         RaiseStartupProgress(progress, m_CurrentMark);
@@ -230,6 +256,9 @@ namespace Apollo.Utils
         {
             // Stop the progress timing. 
             StopProgressTimer();
+
+            // Indicate that we got to the end.
+            RaiseStartupProgress(s_FinishingProgress, m_CurrentMark);
         }
 
         /// <summary>

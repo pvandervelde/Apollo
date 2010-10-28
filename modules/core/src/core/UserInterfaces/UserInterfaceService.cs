@@ -29,7 +29,7 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "We need to store the action somehow ...")]
-        private readonly Dictionary<NotificationName, Action<object>> m_Notifications = new Dictionary<NotificationName, Action<object>>();
+        private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications = new Dictionary<NotificationName, Action<INotificationArguments>>();
 
         /// <summary>
         /// The container that stores all the commands for this service.
@@ -143,11 +143,13 @@ namespace Apollo.Core.UserInterfaces
         /// Invokes the command with the specified ID.
         /// </summary>
         /// <param name="id">The ID of the command.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id);
@@ -158,11 +160,13 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         /// <param name="id">The ID of the command.</param>
         /// <param name="context">The context that will be passed to the command as it is invoked.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id, ICommandContext context)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id, context);
@@ -182,9 +186,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToBeAvailable()
         {
-            // License
-            // Project
-            // Plugins
             return new Type[] 
                 { 
                     typeof(LogSink),
@@ -201,8 +202,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToConnectTo()
         {
-            // Persistence
-            // History
             return new[] 
                 { 
                     typeof(IMessagePipeline),
@@ -266,7 +265,7 @@ namespace Apollo.Core.UserInterfaces
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="callback"/> is <see langword="null" />.
         /// </exception>
-        public void RegisterNotification(NotificationName name, Action<object> callback)
+        public void RegisterNotification(NotificationName name, Action<INotificationArguments> callback)
         {
             {
                 Enforce.Argument(() => name);

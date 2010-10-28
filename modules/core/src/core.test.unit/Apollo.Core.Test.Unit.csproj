@@ -193,6 +193,7 @@
     <Compile Include="ShutdownRequestMessageTest.cs" />
     <Compile Include="ShutdownResponseMessageTest.cs" />
     <Compile Include="StartupProgressEventArgsTest.cs" />
+    <Compile Include="UnknownKernelServiceTypeExceptionTest.cs" />
     <Compile Include="UserInterfaces\Application\ApplicationFacadeTest.cs" />
     <Compile Include="UserInterfaces\DuplicateNotificationExceptionTest.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />

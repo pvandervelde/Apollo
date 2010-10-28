@@ -100,7 +100,7 @@ namespace Apollo.Core.UserInterfaces.Application
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="callback"/> is <see langword="null" />.
         /// </exception>
-        public void RegisterNotification(NotificationName name, Action<object> callback)
+        public void RegisterNotification(NotificationName name, Action<INotificationArguments> callback)
         {
             m_Service.RegisterNotification(name, callback);
         }

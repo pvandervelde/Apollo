@@ -559,8 +559,8 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
-        [Description("Checks that the object does log messages for log levels that are equal or higher than the loggers level.")]
-        public void ShouldLog()
+        [Description("Checks that the object does not log messages if the service is not fully functional.")]
+        public void ShouldLogWhileNotFullyFunctional()
         {
             var service = new LogSink(
                 new MockMessageProcessingHelp(), 
@@ -569,6 +569,27 @@ namespace Apollo.Core.Logging
                 new CommandLogTemplate(() => DateTime.Now),
                 new FileConstants(new ApplicationConstants()));
 
+            Assert.IsFalse(service.ShouldLogMessage(LogType.Debug, new LogMessage("fromHere", LevelToLog.Error, "Panic!")));
+        }
+
+        [Test]
+        [Description("Checks that the object logs messages for log levels that are equal or higher than the loggers level.")]
+        public void ShouldLog()
+        {
+            var dnsNames = new MockDnsNameConstants();
+            var processor = new MockMessageProcessingHelp();
+
+            var service = new LogSink(
+                processor,
+                new LoggerConfiguration("someDir", 1, 1),
+                new DebugLogTemplate(() => DateTime.Now),
+                new CommandLogTemplate(() => DateTime.Now),
+                new FileConstants(new ApplicationConstants()));
+
+            var pipeline = new MockPipeline();
+            service.ConnectTo(pipeline);
+
+            service.Start();
             Assert.IsTrue(service.ShouldLogMessage(LogType.Debug, new LogMessage("fromHere", LevelToLog.Error, "Panic!")));
         }
 

@@ -28,6 +28,16 @@ namespace Apollo.Core.Test.Spec
                 -1,
                 new StartupTimeStorage());
 
+            Load(onKernelLoad, progressTracker);
+        }
+
+        /// <summary>
+        /// Loads the Apollo core.
+        /// </summary>
+        /// <param name="onKernelLoad">The method called when the User Interface section of the core is loaded.</param>
+        /// <param name="progressTracker">The object used for progress tracking.</param>
+        public static void Load(Action<IModule> onKernelLoad, ITrackProgress progressTracker)
+        {
             var bootstrapper = new KernelBootstrapper(
                 new BootstrapperStartInfo(),
                 () => new MockExceptionHandler(),

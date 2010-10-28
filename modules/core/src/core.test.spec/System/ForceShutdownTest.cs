@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.UserInterfaces.Application;
 using Autofac;
@@ -16,7 +15,7 @@ namespace Apollo.Core.Test.Spec.System
     [ConcordionTest]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Specification tests do not need documentation.")]
-    public sealed class StartupTest
+    public sealed class ForceShutdownTest
     {
         /// <summary>
         /// The IOC container that contains the core modules.
@@ -24,15 +23,15 @@ namespace Apollo.Core.Test.Spec.System
         private IContainer m_CoreContainer;
 
         /// <summary>
-        /// Indicates if the application has started. Options are: 'not finished' while the system isn't
-        /// started and 'finished' if it has.
+        /// Indicates if the shut down process has finished successfully. Options are 'failed' while the system
+        /// hasn't completed the shut down and 'succesful' if it has.
         /// </summary>
-        private string m_HasStartupCompleted = "not finished";
+        private string m_WasForced = "not force";
 
         /// <summary>
         /// Starts the Apollo core and returns a string indicating if the startup has completed or not.
         /// </summary>
-        public void StartApollo()
+        public void ShutdownApollo()
         {
             // Load the core
             ApolloLoader.Load(ConnectToKernel);
@@ -40,7 +39,9 @@ namespace Apollo.Core.Test.Spec.System
             // Once everything is up and running then we don't need it anymore
             // so dump it.
             var applicationFacade = m_CoreContainer.Resolve<IAbstractApplications>();
-            applicationFacade.Shutdown(true, () => { });
+
+            m_WasForced = "force";
+            applicationFacade.Shutdown(true, () => { m_WasForced = "not force"; });
         }
 
         private void ConnectToKernel(IModule kernelUserInterfaceModule)
@@ -63,21 +64,29 @@ namespace Apollo.Core.Test.Spec.System
                     notificationNames.StartupComplete,
                     obj =>
                     {
-                        m_HasStartupCompleted = "finished";
+                        // Do nothing for now
+                    });
+
+                applicationFacade.RegisterNotification(
+                    notificationNames.CanSystemShutDown,
+                    obj =>
+                    {
+                        var shutdownArguments = (ShutdownCapabilityArguments)obj;
+                        shutdownArguments.CanShutDown = false;
                     });
 
                 applicationFacade.RegisterNotification(
                     notificationNames.SystemShuttingDown,
                     obj =>
                     {
-                        // Do nothing at the moment.
+                        // Do nothing
                     });
             }
         }
 
-        public string HasStartupCompleted()
+        public string WasForced()
         {
-            return m_HasStartupCompleted;
+            return m_WasForced;
         }
     }
 }

@@ -279,4 +279,7 @@
   <data name="UserInterrface_LogMessage_StartupCompleteNotificationFailed" xml:space="preserve">
     <value>Failed to send a notification of the application start-up completion. Error information: {0}</value>
   </data>
+  <data name="Exceptions_Messages_ServicesIsNotFullyFunctional" xml:space="preserve">
+    <value>The service tried to perform an action while it was not in a working state. The actual state was: {0}</value>
+  </data>
 </root>

@@ -311,6 +311,9 @@ namespace Apollo.Core.Messaging
         /// <remarks>
         /// All messages are send in parallel.
         /// </remarks>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="sender"/> is <see langword="null" />.
         /// </exception>
@@ -351,6 +354,9 @@ namespace Apollo.Core.Messaging
         /// <remarks>
         /// All messages are send in parallel.
         /// </remarks>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="sender"/> is <see langword="null" />.
         /// </exception>
@@ -385,6 +391,8 @@ namespace Apollo.Core.Messaging
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(
                     !sender.Equals(DnsName.Nobody),
@@ -542,7 +550,7 @@ namespace Apollo.Core.Messaging
         /// <param name="message">The message.</param>
         private void LogInfo(string message)
         {
-            if (m_Listeners.ContainsKey(m_DnsNames.AddressOfLogger))
+            if (IsFullyFunctional && m_Listeners.ContainsKey(m_DnsNames.AddressOfLogger))
             {
                 Send(
                     Name,

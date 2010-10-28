@@ -148,7 +148,7 @@ namespace Apollo.Core.Logging
         /// </summary>
         protected override void PreMessageInitializeStartup()
         {
-            Log(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStarted));
+            LogWithoutVerifying(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStarted));
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Apollo.Core.Logging
         /// </summary>
         protected override void PostMessageUnregisterStopAction()
         {
-            Log(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStopped));
+            LogWithoutVerifying(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStopped));
 
             // Inform all the loggers that the system is being stopped. This allows
             // the loggers to flush all the buffers.
@@ -172,8 +172,11 @@ namespace Apollo.Core.Logging
         /// <param name="e">The exception that should be logged.</param>
         protected override void LogErrorMessage(Exception e)
         {
-            var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.LogSink_LogMessage_MessageSendExceptionOccurred, e);
-            Log(LogType.Debug, new LogMessage(Name.ToString(), LevelToLog.Info, message));
+            if (IsFullyFunctional)
+            {
+                var message = string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.LogSink_LogMessage_MessageSendExceptionOccurred, e);
+                LogWithoutVerifying(LogType.Debug, new LogMessage(Name.ToString(), LevelToLog.Info, message));
+            }
         }
 
         #endregion

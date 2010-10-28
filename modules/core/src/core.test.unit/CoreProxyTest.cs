@@ -625,8 +625,7 @@ private sealed class MockMessageProcessingHelp : IHelpMessageProcessing
                 processor, 
                 dnsNames);
 
-            service.Invoke(new CommandId("bla"));
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
         }
 
         [Test]
@@ -676,8 +675,7 @@ private sealed class MockMessageProcessingHelp : IHelpMessageProcessing
                 processor, 
                 dnsNames);
 
-            service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object);
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
         }
 
         [Test]

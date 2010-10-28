@@ -83,12 +83,12 @@ namespace Apollo.Core.UserInterfaces.Application
         public void RegisterNotification()
         {
             NotificationName notification = null;
-            Action<object> action = null;
+            Action<INotificationArguments> action = null;
 
             var service = new Mock<IUserInterfaceService>();
             {
-                service.Setup(s => s.RegisterNotification(It.IsAny<NotificationName>(), It.IsAny<Action<object>>()))
-                    .Callback<NotificationName, Action<object>>(
+                service.Setup(s => s.RegisterNotification(It.IsAny<NotificationName>(), It.IsAny<Action<INotificationArguments>>()))
+                    .Callback<NotificationName, Action<INotificationArguments>>(
                         (n, o) => 
                             {
                                 notification = n;
@@ -99,7 +99,7 @@ namespace Apollo.Core.UserInterfaces.Application
             var facade = new ApplicationFacade(service.Object);
             
             var name = new NotificationName("bla");
-            Action<object> callback = o => { };
+            Action<INotificationArguments> callback = o => { };
             facade.RegisterNotification(name, callback);
 
             Assert.AreSame(name, notification);

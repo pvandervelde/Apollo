@@ -257,6 +257,7 @@
     <Compile Include="ApplicationStartingProgressMark.cs" />
     <Compile Include="ApplicationStartupCompleteMessage.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
+    <Compile Include="INotificationArguments.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -360,6 +361,7 @@
     <Compile Include="ServiceCannotDependOnItselfException.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
     <Compile Include="ShutdownApplicationContext.cs" />
+    <Compile Include="ShutdownCapabilityArguments.cs" />
     <Compile Include="ShutdownRequestMessage.cs" />
     <Compile Include="ShutdownResponseMessage.cs" />
     <Compile Include="StartupState.cs" />

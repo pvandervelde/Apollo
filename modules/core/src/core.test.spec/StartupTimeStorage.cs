@@ -30,9 +30,9 @@ namespace Apollo.Core.Test.Spec
             // cunning config reading thing
             // But for now we'll cheat and do something random
             m_MarkerTimes.Add(typeof(ApplicationStartingProgressMark), new TimeSpan(0, 0, 0, 0, 0));
-            m_MarkerTimes.Add(typeof(CoreLoadingProgressMark), new TimeSpan(0, 0, 0, 0, 1));
-            m_MarkerTimes.Add(typeof(CoreStartingProgressMark), new TimeSpan(0, 0, 0, 0, 2));
-            m_MarkerTimes.Add(typeof(ApplicationStartupFinishedProgressMark), new TimeSpan(0, 0, 0, 0, 3));
+            m_MarkerTimes.Add(typeof(CoreLoadingProgressMark), new TimeSpan(0, 0, 0, 1, 0));
+            m_MarkerTimes.Add(typeof(CoreStartingProgressMark), new TimeSpan(0, 0, 0, 3, 0));
+            m_MarkerTimes.Add(typeof(ApplicationStartupFinishedProgressMark), new TimeSpan(0, 0, 0, 4, 0));
         }
 
         #region Implementation of IStoreMarkerTimes

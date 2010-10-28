@@ -331,6 +331,15 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The service tried to perform an action while it was not in a working state. The actual state was: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_ServicesIsNotFullyFunctional {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ServicesIsNotFullyFunctional", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A service object of the given type is already installed..
         /// </summary>
         internal static string Exceptions_Messages_ServiceTypeAlreadyInstalled {
