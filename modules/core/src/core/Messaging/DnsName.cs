@@ -18,6 +18,18 @@ namespace Apollo.Core.Messaging
     /// <todo>
     /// This class should probably be renamed.
     /// </todo>
+    /// <design>
+    /// Note that there is no <c>DnsName</c> that allows sending messages 
+    /// to everybody in one go because:
+    /// 1) Every message must have a unique ID
+    /// 2) The sender should know which message went to which recipient
+    ///    (even if the sender doesn't care)
+    /// The combination of both means that we can't send one message to 
+    /// multiple recipients because then we'd have to return a collection
+    /// of ID numbers, and thus the sender wouldn't know which recipient
+    /// got which message. Obviously we could return a collection of 
+    /// maps but that seems to get very complicated very quickly.
+    /// </design>
     [Serializable]
     public sealed class DnsName : Id<DnsName, string>
     {

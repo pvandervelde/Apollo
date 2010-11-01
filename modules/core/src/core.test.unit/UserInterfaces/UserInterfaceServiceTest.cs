@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Autofac.Core;
@@ -66,11 +67,27 @@ namespace Apollo.Core.UserInterfaces
 
         private sealed class MockNotificationNameConstants : INotificationNameConstants
         {
-            public NotificationName Shutdown
+            public NotificationName StartupComplete
+            {
+                get
+                {
+                    return new NotificationName("StartupComplete");
+                }
+            }
+
+            public NotificationName CanSystemShutDown
+            {
+                get
+                {
+                    return new NotificationName("CanSystemShutDown");
+                }
+            }
+
+            public NotificationName SystemShuttingDown
             {
                 get 
                 {
-                    return new NotificationName("shutdown");
+                    return new NotificationName("SystemShuttingDown");
                 }
             }
         }
@@ -83,9 +100,7 @@ namespace Apollo.Core.UserInterfaces
         {
             private readonly IFuture<MessageBody> m_Future;
 
-            private Type m_MessageType;
-
-            private Action<KernelMessage> m_MessageAction;
+            private Dictionary<Type, Action<KernelMessage>> m_MessageActions = new Dictionary<Type, Action<KernelMessage>>();
 
             public MockMessageProcessingHelp() 
                 : this(null)
@@ -109,8 +124,7 @@ namespace Apollo.Core.UserInterfaces
 
             public void RegisterAction(Type messageType, Action<KernelMessage> messageAction)
             {
-                m_MessageType = messageType;
-                m_MessageAction = messageAction;
+                m_MessageActions.Add(messageType, messageAction);
             }
 
             public void SendMessage(DnsName recipient, MessageBody body, MessageId originalMessage)
@@ -134,19 +148,11 @@ namespace Apollo.Core.UserInterfaces
                 // Do nothing
             }
 
-            public Type MessageType
+            public IDictionary<Type, Action<KernelMessage>> MessageActions
             {
-                get
+                get 
                 {
-                    return m_MessageType;
-                }
-            }
-
-            public Action<KernelMessage> MessageAction
-            {
-                get
-                {
-                    return m_MessageAction;
+                    return m_MessageActions;
                 }
             }
 
@@ -423,13 +429,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
                 null, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService));
         }
 
@@ -440,13 +448,15 @@ namespace Apollo.Core.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
                 commands.Object, 
                 null, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService));
         }
 
@@ -457,6 +467,7 @@ namespace Apollo.Core.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var dnsNames = new MockDnsNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
@@ -464,6 +475,7 @@ namespace Apollo.Core.UserInterfaces
                 dnsNames, 
                 null, 
                 processor, 
+                storage,
                 onStartService));
         }
 
@@ -474,13 +486,34 @@ namespace Apollo.Core.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
-                commands.Object, 
-                dnsNames, 
-                notificationNames, 
-                null, 
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                null,
+                storage,
+                onStartService));
+        }
+
+        [Test]
+        [Description("Checks that an object cannot be created without an IValidationResultStorage object.")]
+        public void CreateWithNullValidationResultStorage()
+        {
+            var commands = new Mock<ICommandContainer>();
+            var dnsNames = new MockDnsNameConstants();
+            var notificationNames = new MockNotificationNameConstants();
+            var processor = new MockMessageProcessingHelp();
+            Action<IModule> onStartService = module => { };
+
+            Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                processor,
+                null,
                 onStartService));
         }
 
@@ -492,12 +525,14 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
 
             Assert.Throws<ArgumentNullException>(() => new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
                 processor, 
+                storage,
                 null));
         }
 
@@ -519,13 +554,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             // Check that everything is the right place
@@ -553,13 +590,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             Assert.IsFalse(service.Contains(new CommandId("bla")));
@@ -579,17 +618,18 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
-            service.Invoke(new CommandId("bla"));
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
         }
 
         [Test]
@@ -606,14 +646,17 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
+
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
             service.Start();
@@ -636,17 +679,18 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
-            service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object);
-            commands.Verify(c => c.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Never());
+            Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
         }
 
         [Test]
@@ -663,13 +707,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -688,13 +734,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             Assert.AreElementsEqualIgnoringOrder(new Type[] { typeof(LogSink) }, service.ServicesToBeAvailable());
@@ -709,13 +757,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             Assert.AreElementsEqualIgnoringOrder(new Type[] { typeof(IMessagePipeline) }, service.ServicesToConnectTo());
@@ -730,13 +780,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
 
@@ -754,13 +806,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -778,13 +832,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -802,13 +858,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -827,13 +885,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(null, obj => { }));
@@ -848,13 +908,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(new NotificationName("bla"), null));
@@ -869,19 +931,21 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
-            Action<object> callback = obj => { };
-            service.RegisterNotification(notificationNames.Shutdown, callback);
+            Action<INotificationArguments> callback = obj => { };
+            service.RegisterNotification(notificationNames.SystemShuttingDown, callback);
 
-            Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.Shutdown, obj => { }));
+            Assert.Throws<DuplicateNotificationException>(() => service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { }));
         }
 
         [Test]
@@ -893,13 +957,15 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
@@ -920,16 +986,18 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
-            service.RegisterNotification(notificationNames.Shutdown, obj => { throw new Exception(); });
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -949,17 +1017,19 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 dnsNames, 
                 notificationNames, 
-                processor, 
+                processor,
+                storage,
                 onStartService);
 
             bool wasInvoked = false;
-            service.RegisterNotification(notificationNames.Shutdown, obj => { wasInvoked = true; });
+            service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { wasInvoked = true; });
 
             var pipeline = new MessagePipeline(new DnsNameConstants());
             service.ConnectTo(pipeline);
@@ -973,6 +1043,47 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
+        [Description("Checks that ApplicationStartupCompleteMessage is handled correctly.")]
+        public void HandleApplicationStartupCompleteMessage()
+        {
+            var commandCollection = new List<CommandId>();
+            var commands = new Mock<ICommandContainer>();
+            var dnsNames = new MockDnsNameConstants();
+            var notificationNames = new MockNotificationNameConstants();
+            var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
+            Action<IModule> onStartService = module => { };
+
+            bool isStarted = false;
+            Action<INotificationArguments> onApplicationStartup = obj => { isStarted = true; };
+
+            var service = new UserInterfaceService(
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                processor,
+                storage,
+                onStartService);
+            service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
+
+            var pipeline = new MockPipeline();
+            service.ConnectTo(pipeline);
+
+            service.Start();
+
+            var actions = processor.MessageActions;
+
+            Assert.IsTrue(actions.ContainsKey(typeof(ApplicationStartupCompleteMessage)));
+            {
+                var body = new ApplicationStartupCompleteMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla1"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ApplicationStartupCompleteMessage)](new KernelMessage(header, body));
+
+                Assert.IsTrue(isStarted);
+            }
+        }
+
+        [Test]
         [Description("Checks that ServiceShutdownCapabilityRequestMessage is handled correctly.")]
         public void HandleServiceShutdownCapabilityRequestMessage()
         {
@@ -981,28 +1092,40 @@ namespace Apollo.Core.UserInterfaces
             var dnsNames = new MockDnsNameConstants();
             var notificationNames = new MockNotificationNameConstants();
             var processor = new MockMessageProcessingHelp();
+            var storage = new LicenseValidationResultStorage();
             Action<IModule> onStartService = module => { };
 
+            bool hasMessageBeenReceived = false;
+            Action<INotificationArguments> onCanSystemShutDown = obj => { hasMessageBeenReceived = true; };
+
             var service = new UserInterfaceService(
-                commands.Object, 
-                dnsNames, 
-                notificationNames, 
-                processor, 
+                commands.Object,
+                dnsNames,
+                notificationNames,
+                processor,
+                storage,
                 onStartService);
+            service.RegisterNotification(notificationNames.CanSystemShutDown, onCanSystemShutDown);
 
             var pipeline = new MockPipeline();
             service.ConnectTo(pipeline);
 
             service.Start();
-            Assert.AreEqual(typeof(ServiceShutdownCapabilityRequestMessage), processor.MessageType);
 
-            var body = new ServiceShutdownCapabilityRequestMessage();
-            var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
-            processor.MessageAction(new KernelMessage(header, body));
+            var actions = processor.MessageActions;
 
-            Assert.AreEqual(header.Sender, processor.Recipient);
-            Assert.AreEqual(header.Id, processor.ReplyId);
-            Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
+            Assert.IsTrue(actions.ContainsKey(typeof(ServiceShutdownCapabilityRequestMessage)));
+            {
+                var body = new ServiceShutdownCapabilityRequestMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ServiceShutdownCapabilityRequestMessage)](new KernelMessage(header, body));
+
+                Assert.IsTrue(hasMessageBeenReceived);
+
+                Assert.AreEqual(header.Sender, processor.Recipient);
+                Assert.AreEqual(header.Id, processor.ReplyId);
+                Assert.IsInstanceOfType<ServiceShutdownCapabilityResponseMessage>(processor.Body);
+            }
         }
     }
 }

@@ -106,6 +106,8 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
 
 function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+    $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
+    
 	$text = $text -replace '@CONFIGURATION@', $config
 	
 	$now = [DateTimeOffset]::Now
@@ -114,11 +116,24 @@ function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath
 	Set-Content -Path $newPath -Value $text
 }
 
-function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
-	# only do this when we run the tests
+function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string[]]$assemblyNames){
+    $attribute = '[assembly: InternalsVisibleTo("@ASSEMBLYNAME@")]'
+    
+    $inputText = ''
+    $assemblyNames | foreach{
+        $inputText += $attribute -replace '@ASSEMBLYNAME@', $_
+        $inputText += [System.Environment]::NewLine
+    }
+    
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@ATTRIBUTES@', $inputText
+	
+	Set-Content $newPath $text
+}
 
+function global:Create-ConcordionConfigFile([string]$path, [string]$newPath, [string]$concordionOutputPath){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
-	$text = $text -replace '@ASSEMBLYNAME@', $assemblyName
+	$text = $text -replace '@OUTPUT_DIR@', $concordionOutputPath
 	
 	Set-Content $newPath $text
 }
@@ -131,6 +146,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
 	$sequenceText = $sequenceText -replace '@START_TIME@', 'BuildTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
@@ -139,6 +155,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
 	$sequenceText = $sequenceText -replace '@START_TIME@', 'InstallTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
@@ -147,6 +164,7 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
 	$sequenceText = $sequenceText -replace '@START_TIME@', 'ProcessStartTime()'
 	$sequenceText += [Environment]::NewLine
 	$sequenceText += [Environment]::NewLine
@@ -164,6 +182,26 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
 	$sequenceText += $yieldText
 	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
 	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
+	$sequenceText = $sequenceText -replace '@START_TIME@', $timeText
+    $sequenceText += [Environment]::NewLine
+	$sequenceText += [Environment]::NewLine
+    
+    # Check within 3 minutes after start-up
+    $sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Minutely'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'false'
+	$sequenceText = $sequenceText -replace '@START_TIME@', 'ProcessStartTime()'
+	$sequenceText += [Environment]::NewLine
+	$sequenceText += [Environment]::NewLine
+    
+    # Check on a bunch of random dates
+	$timeText = 'new DateTimeOffset(2010, 08, 10, 23, 43, 05, 00, new TimeSpan(' + $time.Offset.Ticks + '))'
+	$sequenceText += $yieldText
+	$sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
+	$sequenceText = $sequenceText -replace '@MODIFIER@', '1'
+    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'false'
 	$sequenceText = $sequenceText -replace '@START_TIME@', $timeText
 	
 	# Write the sequences to the file
@@ -194,6 +232,7 @@ properties{
 	
 	# assembly names
 	$assemblyNameUnitTest = 'Apollo.Core.Test.Unit, PublicKey='
+    #$assemblyNameSpecTest = 'Apollo.Core.Test.Spec, PublicKey='
 	
 	# templates dirs
 	$dirTemplates = Join-Path $dirBase 'templates'
@@ -207,6 +246,7 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
+    $dirConcordion = Join-Path $dirTools 'Concordion'
 	$dirNCoverExplorer = Join-Path (Join-Path (Join-Path $dirMbUnit 'NCover') 'libs') 'NCoverExplorer'
 	
 	# solution files
@@ -227,6 +267,8 @@ properties{
 	$licenseVerificationSequencesTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.cs.in'
 	$licenseVerificationSequencesYieldTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
 	$licenseVerificationSequencesFile = Join-Path $dirSrc 'ValidationSequenceGenerator.cs'
+    
+    $concordionConfigTemplateFile = Join-Path $dirTemplates 'concordion.config.in'
 	
 	# output files
 	$logMsiBuild = 'core_msi.log'
@@ -278,6 +320,9 @@ task Build -depends buildBinaries
 # Runs the unit tests
 task UnitTest -depends runUnitTests
 
+# Runs the Specification tests
+task SpecTest -depends runSpecificationTests
+
 # Runs the integration tests
 task IntegrationTest -depends runIntegrationTests
 
@@ -317,9 +362,10 @@ The following build tasks are available
 	'debug':			Runs the script in debug mode. Mutually exclusive with the 'release' task
 	'release':			Runs the script in release mode. Mutually exclusive with the 'debug' task
 	'clean':			Cleans the output directory
-	'build':			Cleans the output directory and builds the binaries
-	'unittest':			Cleans the output directory, builds the binaries and runs the unit tests
-	'integrationtest':	Cleans the output directory, builds the binaries and runs the integration tests
+	'build':            Builds the binaries
+    'unittest':         Runs the unit tests
+    'spectest':         Runs the specification tests
+    'integrationtest':  Runs the integration tests
 	'verify':			Runs the source and binary verification. Returning one or more reports
 						describing the flaws in the source / binaries.
 	'package':			Packages the deliverables into a single zip file
@@ -394,8 +440,8 @@ task buildBinaries -depends runInit, getVersion -action{
 	
 	# Set the InternalsVisibleTo attribute
 	$publicKeyToken = Get-PublicKeySignature $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
-	$friendAssemblyName = $assemblyNameUnitTest + $publicKeyToken
-	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $friendAssemblyName
+	$unitTestAssemblyName = $assemblyNameUnitTest + $publicKeyToken
+	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile ($unitTestAssemblyName)
 	
 	# Create the license verification sequence file
 	Create-LicenseVerificationSequencesFile $licenseVerificationSequencesTemplateFile $licenseVerificationSequencesYieldTemplateFile $licenseVerificationSequencesFile
@@ -412,12 +458,12 @@ task buildBinaries -depends runInit, getVersion -action{
 	# Copy the binaries
 	$dirBinCore = Join-Path (Join-Path (Join-Path $dirSrc 'core') 'bin') $configuration
 	$dirBinUnit = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.unit') 'bin') $configuration
-	$dirBinIntegration = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.integration') 'bin') $configuration
+    $dirBinSpec = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.spec') 'bin') $configuration
 	$dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.perf') 'bin') $configuration
 	
 	Copy-Item (Join-Path $dirBinCore '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinUnit '*') $dirBuild -Force
-	Copy-Item (Join-Path $dirBinIntegration '*') $dirBuild -Force
+    Copy-Item (Join-Path $dirBinSpec '*') $dirBuild -Force
 	Copy-Item (Join-Path $dirBinPerf '*') $dirBuild -Force
 }
 
@@ -427,7 +473,7 @@ task runUnitTests -depends buildBinaries -action{
 	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
 	
 	$files = ""
-	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and ( $_.Name -like "*Unit*") -and !($_.Name -like "*vshost*")))}
 	$assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
 	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
 	if ($shouldCheckCoverage)
@@ -508,6 +554,41 @@ task runUnitTests -depends buildBinaries -action{
 		{
 			throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
 		}
+	}
+}
+
+task runSpecificationTests -depends buildBinaries -action{
+    "Running specification tests ..."
+    
+	# Start the integration tests. First setup the commandline for
+	# Concordion
+	$mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+	
+	$files = ""
+	$assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
+
+    # Create the concordion config file and copy it
+    $specAssembly = $assemblies | select -First 1
+	$configFile = Join-Path $dirBuild ([System.IO.Path]::GetFileNameWithoutExtension($specAssembly.FullName) + '.config')
+	Create-ConcordionConfigFile $concordionConfigTemplateFile $configFile $dirReports    
+    
+    $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+	$command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc /pd:"' + $dirConcordion + '" '
+	
+	# Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+	#   process. This means we can't load explicit 32-bit binaries. However using the 
+	#   isolated process runner we can
+	$command += "/r:Local " 
+	
+	# add the files.
+	$command += $files
+	
+	# run the tests
+	$command
+	Invoke-Expression $command
+	if ($LastExitCode -ne 0)
+	{
+		throw "Concordion failed on Apollo.Core with return code: $LastExitCode"
 	}
 }
 

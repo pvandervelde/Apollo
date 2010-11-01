@@ -11,6 +11,7 @@ using System.Globalization;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
+using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
 using Lokad;
@@ -28,7 +29,7 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "We need to store the action somehow ...")]
-        private readonly Dictionary<NotificationName, Action<object>> m_Notifications = new Dictionary<NotificationName, Action<object>>();
+        private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications = new Dictionary<NotificationName, Action<INotificationArguments>>();
 
         /// <summary>
         /// The container that stores all the commands for this service.
@@ -46,6 +47,11 @@ namespace Apollo.Core.UserInterfaces
         private readonly INotificationNameConstants m_NotificationNames;
 
         /// <summary>
+        /// The object that stores the validity of the license.
+        /// </summary>
+        private readonly IValidationResultStorage m_LicenseValidationStorage;
+
+        /// <summary>
         /// The action which is executed when the service is started.
         /// </summary>
         private readonly Action<IModule> m_OnStartService;
@@ -57,6 +63,7 @@ namespace Apollo.Core.UserInterfaces
         /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
         /// <param name="processor">The object that handles the incoming messages.</param>
+        /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
         /// <param name="onStartService">The method that provides the DI module.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
@@ -71,6 +78,9 @@ namespace Apollo.Core.UserInterfaces
         /// Thrown if <paramref name="processor"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
         public UserInterfaceService(
@@ -78,6 +88,7 @@ namespace Apollo.Core.UserInterfaces
             IDnsNameConstants dnsNames, 
             INotificationNameConstants notificationNames, 
             IHelpMessageProcessing processor, 
+            IValidationResultStorage licenseValidationStorage,
             Action<IModule> onStartService)
             : base(processor)
         {
@@ -85,6 +96,7 @@ namespace Apollo.Core.UserInterfaces
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => dnsNames);
                 Enforce.Argument(() => notificationNames);
+                Enforce.Argument(() => licenseValidationStorage);
                 Enforce.Argument(() => onStartService);
             }
 
@@ -92,6 +104,7 @@ namespace Apollo.Core.UserInterfaces
 
             m_DnsNames = dnsNames;
             m_NotificationNames = notificationNames;
+            m_LicenseValidationStorage = licenseValidationStorage;
             m_OnStartService = onStartService;
 
             m_Commands = commands;
@@ -130,11 +143,13 @@ namespace Apollo.Core.UserInterfaces
         /// Invokes the command with the specified ID.
         /// </summary>
         /// <param name="id">The ID of the command.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id);
@@ -145,11 +160,13 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         /// <param name="id">The ID of the command.</param>
         /// <param name="context">The context that will be passed to the command as it is invoked.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id, ICommandContext context)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id, context);
@@ -169,9 +186,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToBeAvailable()
         {
-            // License
-            // Project
-            // Plugins
             return new Type[] 
                 { 
                     typeof(LogSink),
@@ -188,8 +202,6 @@ namespace Apollo.Core.UserInterfaces
         /// </returns>
         public IEnumerable<Type> ServicesToConnectTo()
         {
-            // Persistence
-            // History
             return new[] 
                 { 
                     typeof(IMessagePipeline),
@@ -253,7 +265,7 @@ namespace Apollo.Core.UserInterfaces
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="callback"/> is <see langword="null" />.
         /// </exception>
-        public void RegisterNotification(NotificationName name, Action<object> callback)
+        public void RegisterNotification(NotificationName name, Action<INotificationArguments> callback)
         {
             {
                 Enforce.Argument(() => name);
@@ -290,12 +302,12 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         protected override void PreMessageUnregisterStopAction()
         {
-            if (!m_Notifications.ContainsKey(m_NotificationNames.Shutdown))
+            if (!m_Notifications.ContainsKey(m_NotificationNames.SystemShuttingDown))
             {
-                throw new MissingNotificationActionException(m_NotificationNames.Shutdown);
+                throw new MissingNotificationActionException(m_NotificationNames.SystemShuttingDown);
             }
 
-            var action = m_Notifications[m_NotificationNames.Shutdown];
+            var action = m_Notifications[m_NotificationNames.SystemShuttingDown];
             try
             {
                 action(null);

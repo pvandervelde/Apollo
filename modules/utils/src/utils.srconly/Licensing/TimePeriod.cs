@@ -32,6 +32,7 @@ namespace Apollo.Utils.Licensing
         private static readonly Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>> s_NextDateTimeMap =
             new Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>>
             {
+                { RepeatPeriod.Minutely, CalculateNextValidationTimePerMinute },
                 { RepeatPeriod.Hourly, CalculateNextValidationTimePerHour },
                 { RepeatPeriod.Daily, CalculateNextValidationTimePerDay },
                 { RepeatPeriod.Weekly, CalculateNextValidationTimePerWeek },
@@ -39,6 +40,19 @@ namespace Apollo.Utils.Licensing
                 { RepeatPeriod.Monthly, CalculateNextValidationTimePerMonth },
                 { RepeatPeriod.Yearly, CalculateNextValidationTimePerYear },
             };
+
+        /// <summary>
+        /// Calculates the next validation time based on an minutely repeat sequence.
+        /// </summary>
+        /// <param name="minutes">The number of minutes in the sequence.</param>
+        /// <param name="last">The last validation time.</param>
+        /// <returns>
+        ///     The next validation time.
+        /// </returns>
+        private static DateTimeOffset CalculateNextValidationTimePerMinute(sbyte minutes, DateTimeOffset last)
+        {
+            return last.AddMinutes(minutes);
+        }
 
         /// <summary>
         /// Calculates the next validation time based on an hourly repeat sequence.
@@ -155,11 +169,17 @@ namespace Apollo.Utils.Licensing
         private readonly sbyte m_Modifier;
 
         /// <summary>
+        /// Indicates if the time period is periodic or only meant to indicate a single
+        /// period.
+        /// </summary>
+        private readonly bool m_IsPeriodic;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
         /// </summary>
         /// <param name="period">The period after which the license check should be repeated.</param>
         public TimePeriod(RepeatPeriod period)
-            : this(period, 1)
+            : this(period, 1, true)
         {
         }
 
@@ -167,11 +187,32 @@ namespace Apollo.Utils.Licensing
         /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
         /// </summary>
         /// <param name="period">The period after which the license check should be repeated.</param>
-        /// <param name="modifier">The sequence multiplier.</param>
+        /// <param name="modifier">The multiplier which is applied to the period.</param>
+        public TimePeriod(RepeatPeriod period, sbyte modifier)
+            : this(period, modifier, true)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
+        /// </summary>
+        /// <param name="period">The period after which the license check should be repeated.</param>
+        /// <param name="isPeriodic">Indicates if the time period is periodic or not.</param>
+        public TimePeriod(RepeatPeriod period, bool isPeriodic)
+            : this(period, 1, isPeriodic)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TimePeriod"/> struct.
+        /// </summary>
+        /// <param name="period">The period after which the license check should be repeated.</param>
+        /// <param name="modifier">The multiplier which is applied to the period.</param>
+        /// <param name="isPeriodic">Indicates if the time period is periodic or not.</param>
         /// <exception cref="ArgumentOutOfRangeException">
         ///     Thrown when <paramref name="modifier"/> is smaller than 1.
         /// </exception>
-        public TimePeriod(RepeatPeriod period, sbyte modifier)
+        public TimePeriod(RepeatPeriod period, sbyte modifier, bool isPeriodic)
         {
             {
                 Enforce.With<ArgumentOutOfRangeException>(modifier > 0, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, modifier);
@@ -179,6 +220,7 @@ namespace Apollo.Utils.Licensing
 
             m_Period = period;
             m_Modifier = modifier;
+            m_IsPeriodic = isPeriodic;
         }
 
         /// <summary>
@@ -203,6 +245,17 @@ namespace Apollo.Utils.Licensing
             get
             {
                 return m_Modifier;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the time period is periodic or not.
+        /// </summary>
+        public bool IsPeriodic
+        {
+            get 
+            {
+                return m_IsPeriodic;
             }
         }
 
@@ -234,7 +287,7 @@ namespace Apollo.Utils.Licensing
             Justification = "Documentation can start with a language keyword")]
         public bool Equals(TimePeriod other)
         {
-            return m_Period.Equals(other.m_Period) && m_Modifier.Equals(other.m_Modifier);
+            return m_Period.Equals(other.m_Period) && m_Modifier.Equals(other.m_Modifier) && (m_IsPeriodic == other.m_IsPeriodic);
         }
 
         /// <summary>
@@ -269,7 +322,22 @@ namespace Apollo.Utils.Licensing
         /// </returns>
         public override int GetHashCode()
         {
-            return m_Period.GetHashCode() ^ m_Modifier.GetHashCode();
+            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
+            //
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                // Pick a random prime number
+                int hash = 17;
+
+                // Mash the hash together with yet another random prime number
+                hash = (hash * 23) ^ m_Period.GetHashCode();
+                hash = (hash * 23) ^ m_Modifier.GetHashCode();
+                hash = (hash * 23) ^ m_IsPeriodic.GetHashCode();
+
+                return hash;
+            }
         }
 
         /// <summary>

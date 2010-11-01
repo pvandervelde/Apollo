@@ -14,7 +14,7 @@ namespace Apollo.Core.Utils.Licensing
     /// Connects the different <see cref="ICacheConnectorChannelEndpoint"/> objects from 
     /// around the application.
     /// </summary>
-    internal sealed class CacheConnectorChannel : ICacheConnectorChannel
+    internal sealed class CacheConnectorChannel : MarshalByRefObject, ICacheConnectorChannel
     {
         /// <summary>
         /// The collection of endpoints that are known.

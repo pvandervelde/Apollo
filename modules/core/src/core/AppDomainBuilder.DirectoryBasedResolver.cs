@@ -89,8 +89,9 @@ namespace Apollo.Core
                     // Assert permission to control the AppDomain. This can be done safely
                     // because we will attach to the AssemblyResolve event but we'll only 
                     // resolve assemblies from a known set of paths or files.
-                    var set = new PermissionSet(PermissionState.None);
-                    set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
+                    // var set = new PermissionSet(PermissionState.None);
+                    // set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
+                    var set = new PermissionSet(PermissionState.Unrestricted);
 
                     SecurityHelpers.Elevate(
                         set, 

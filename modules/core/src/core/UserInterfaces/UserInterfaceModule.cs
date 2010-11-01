@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Core.UserInterfaces.Application;
-using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Autofac;
 using Lokad;
@@ -58,9 +57,6 @@ namespace Apollo.Core.UserInterfaces
 
             builder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
                 .As<IAbstractApplications>();
-
-            builder.Register(c => new LicenseValidationResultStorage())
-                .As<IValidationResultStorage>();
 
             // IInteractWithUsers
             // ILinkToProjects

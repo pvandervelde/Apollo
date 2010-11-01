@@ -22,6 +22,11 @@ namespace Apollo.Core.UserInterfaces.Application
         private readonly IUserInterfaceService m_Service;
 
         /// <summary>
+        /// The object that holds general information about the Apollo core.
+        /// </summary>
+        private readonly IHoldSystemInformation m_SystemInformation;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationFacade"/> class.
         /// </summary>
         /// <param name="service">
@@ -37,6 +42,13 @@ namespace Apollo.Core.UserInterfaces.Application
             }
 
             m_Service = service;
+
+            // Initialize the system information object.
+            // @todo: Setup a proper way to get the system information. At the moment the
+            //        startup time is incorrect.
+            m_SystemInformation = new SystemInformation(
+                () => DateTimeOffset.Now,
+                () => new SystemInformationStorage() { StartupTime = DateTimeOffset.Now });
         }
 
         #region Implementation of IAbstractApplications
@@ -85,7 +97,7 @@ namespace Apollo.Core.UserInterfaces.Application
         {
             get
             {
-                throw new NotImplementedException();
+                return m_SystemInformation;
             }
         }
 
@@ -100,7 +112,7 @@ namespace Apollo.Core.UserInterfaces.Application
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="callback"/> is <see langword="null" />.
         /// </exception>
-        public void RegisterNotification(NotificationName name, Action<object> callback)
+        public void RegisterNotification(NotificationName name, Action<INotificationArguments> callback)
         {
             m_Service.RegisterNotification(name, callback);
         }

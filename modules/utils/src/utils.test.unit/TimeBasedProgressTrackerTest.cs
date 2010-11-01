@@ -101,7 +101,23 @@ namespace Apollo.Utils
         }
 
         [Test]
-        [Description("Checks that the StartupProgress event is raised correctly.")]
+        [Description("Checks that the the tracker cannot be started without an progress mark.")]
+        public void StartupProgressWithoutCurrentMark()
+        {
+            var store = new Mock<IStoreMarkerTimes>();
+            {
+                store.Setup(s => s.TotalTime)
+                    .Returns(new TimeSpan(0, 0, 40));
+            }
+
+            var timer = new MockTimer();
+            var tracker = new TimeBasedProgressTracker(timer, -1, store.Object);
+
+            Assert.Throws<CurrentProgressMarkNotSetException>(() => tracker.StartTracking());
+        }
+
+        [Test]
+        [Description("Checks that the StartupProgress event correctly indicates maximum progress if the actual progress is higher than the maximum.")]
         public void StartupProgress()
         {
             var store = new Mock<IStoreMarkerTimes>();
@@ -125,8 +141,8 @@ namespace Apollo.Utils
             var mark2 = new MockMark2();
 
             var now = DateTime.Now;
-            tracker.StartTracking();
             tracker.Mark(mark1);
+            tracker.StartTracking();
 
             timer.RaiseElapsed(now.AddSeconds(10.0));
 
@@ -145,6 +161,44 @@ namespace Apollo.Utils
 
             Assert.AreEqual(mark2, storedMark);
             Assert.AreEqual(75, storedProgress);
+
+            tracker.StopTracking();
+        }
+
+        [Test]
+        [Description("Checks that the StartupProgress event is raised correctly.")]
+        public void StartupProgressWithProgressPastMaximumProgress()
+        {
+            var store = new Mock<IStoreMarkerTimes>();
+            {
+                store.Setup(s => s.TotalTime)
+                    .Returns(new TimeSpan(0, 0, 5));
+            }
+
+            var timer = new MockTimer();
+
+            IProgressMark storedMark = null;
+            int storedProgress = 0;
+            var tracker = new TimeBasedProgressTracker(timer, -1, store.Object);
+            tracker.StartupProgress += (s, e) =>
+            {
+                storedMark = e.CurrentlyProcessing;
+                storedProgress = e.Progress;
+            };
+
+            var mark1 = new MockMark1();
+
+            var now = DateTime.Now;
+            tracker.Mark(mark1);
+            tracker.StartTracking();
+
+            timer.RaiseElapsed(now.AddSeconds(10.0));
+
+            // wait for a bit so that the threadpool can catch up ...
+            Thread.Sleep(20);
+
+            Assert.AreEqual(mark1, storedMark);
+            Assert.AreEqual(100, storedProgress);
 
             tracker.StopTracking();
         }

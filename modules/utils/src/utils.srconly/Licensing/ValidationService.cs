@@ -203,8 +203,11 @@ namespace Apollo.Utils.Licensing
                     // correct element
                     m_VerificationOrder.RemoveAt(index);
 
-                    // Reschedule the verification
-                    ScheduleVerification(now, sequence);
+                    // Reschedule the verification if required
+                    if (sequence.Period.IsPeriodic)
+                    {
+                        ScheduleVerification(now, sequence);
+                    }
 
                     // Reset the failed verification count
                     sequentialFailedValidationCount = 0;

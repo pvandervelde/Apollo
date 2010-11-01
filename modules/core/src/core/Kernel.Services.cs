@@ -21,6 +21,28 @@ namespace Apollo.Core
     internal sealed partial class Kernel
     {
         /// <summary>
+        /// Sends a message to all services to indicate that the start-up process has completed.
+        /// </summary>
+        private void SendStartupCompleteMessage()
+        {
+            // Check all services
+            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
+
+            var servicesToNotify = from pair in m_Services
+                                   select pair.Value.Key as ISendMessages into nameObject
+                                   where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
+                                   select nameObject.Name;
+
+            Debug.Assert(coreProxy.Contains(SendMessageForKernelCommand.CommandId), "A command has gone missing.");
+            foreach (var service in servicesToNotify)
+            {
+                var context = new SendMessageForKernelContext(service, new ApplicationStartupCompleteMessage());
+                coreProxy.Invoke(SendMessageForKernelCommand.CommandId, context);
+            }
+        }
+
+        /// <summary>
         /// Determines whether this instance can shutdown.
         /// </summary>
         /// <returns>
@@ -41,8 +63,8 @@ namespace Apollo.Core
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var servicesToCheck = from pair in m_Services
-                                  select pair.Value.Key as ISendMessages into nameObject 
-                                  where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy)) 
+                                  select pair.Value.Key as ISendMessages into nameObject
+                                  where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
                                   select nameObject.Name;
             var context = new CheckCanServicesShutdownContext(servicesToCheck);
 
@@ -54,6 +76,12 @@ namespace Apollo.Core
         /// <summary>
         /// Shuts the application down.
         /// </summary>
+        /// <design>
+        /// Note that this method does not check if it is safe to shut the application down. It is assumed that
+        /// there are no more objections against shutting down once this method is reached. Under normal circumstances
+        /// this method should only be called by the <c>CoreProxy</c> which will perform the necessary checks
+        /// to ensure that all objections against shutdown are heard.
+        /// </design>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
         public void Shutdown()
@@ -86,21 +114,23 @@ namespace Apollo.Core
                     // An exception occured. Ignore it and move on
                     // we're about to destroy the appdomain the service lives in.
                 }
-
-                // @Todo: Fix the fact that we can't nuke the AppDomain on shutdown
-                // Cannot remove the services, because the only reason the individual
-                // AppDomains exist is that the kernel is holding on to a reference to the
-                // services. If we remove the service then the AppDomain unloads. That would
-                // normally be fine except that the callstack will very likely have some
-                // code that runs through all these services (e.g. the CoreProxy and the 
-                // MessagePipeline, which are essential in calling the Kernel.Shutdown method)
-                // In that case we'll unload the AppDomain while there is a thread active in
-                // that AppDomain. This is not appreciated.
-                // 
-                // Remove the service
-                // Uninstall(service);
             }
 
+            // @Todo: Fix the fact that we can't nuke the AppDomain on shutdown
+            // Cannot remove the services, because the only reason the individual
+            // AppDomains exist is that the kernel is holding on to a reference to the
+            // services. If we remove the service then the AppDomain unloads. That would
+            // normally be fine except that the callstack will very likely have some
+            // code that runs through all these services (e.g. the CoreProxy and the 
+            // MessagePipeline, which are essential in calling the Kernel.Shutdown method)
+            // In that case we'll unload the AppDomain while there is a thread active in
+            // that AppDomain. This is not appreciated.
+            // foreach (var service in startupOrder)
+            // {
+            //     Remove the service
+            //     Uninstall(service);
+            // }
+            //
             // If we get here then we have to have finished the
             // startup process, which means we're actually running.
             m_State = StartupState.Stopped;

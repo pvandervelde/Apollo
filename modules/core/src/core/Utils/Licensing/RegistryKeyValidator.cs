@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Utils;
 using Apollo.Utils.Licensing;
 using Microsoft.Win32;
@@ -40,13 +42,17 @@ namespace Apollo.Core.Utils.Licensing
                     ErrorCodes.ValidationExceededMaximumSequentialFailures));
 #endif
 
-            var key = Registry.CurrentUser.OpenSubKey(@"Software\Apollo");
+            var key = SecurityHelpers.Elevate<RegistryKey>(
+                new PermissionSet(PermissionState.Unrestricted),
+                () => Registry.CurrentUser.OpenSubKey(@"Software\Apollo"));
             if (key == null)
             {
                 return false;
             }
 
-            var licenseObj = key.GetValue("license");
+            var licenseObj = SecurityHelpers.Elevate<object>(
+                new PermissionSet(PermissionState.Unrestricted),
+                () => key.GetValue("license"));
             if (licenseObj == null)
             {
                 return false;

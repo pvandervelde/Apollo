@@ -51,7 +51,7 @@ namespace <#= nameSpace #>
         /// <summary>
         /// A <see cref="ILicenseValidationCacheProxy"/> for the <see cref="<#= className #>"/>.
         /// </summary>
-        private sealed class Proxy : ILicenseValidationCacheProxy
+        private sealed class Proxy : MarshalByRefObject, ILicenseValidationCacheProxy
         {
             /// <summary>
             /// The owner object.
@@ -151,9 +151,9 @@ namespace <#= nameSpace #>
     string expirationVariable = "expirationTime";
 #>
             // Store the generation time and the expiration time. At the moment we'll assume
-            // a 5 minute expiration time. Later on we should probably generate this arbitrairily.
+            // a 30 second expiration time. Later on we should probably generate this arbitrairily.
             var <#= generationVariable #> = m_Now();
-            var <#= expirationVariable #> = <#= generationVariable #>.Add(new TimeSpan(0, 5, 0));
+            var <#= expirationVariable #> = <#= generationVariable #>.Add(new TimeSpan(0, 0, 30));
 
 <#+
     var checksumVariable = "checksum";

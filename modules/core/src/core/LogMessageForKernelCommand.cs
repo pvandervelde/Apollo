@@ -23,7 +23,7 @@ namespace Apollo.Core
         #region Static members
 
         /// <summary>
-        /// Defines the Id for the <c>CheckApplicationCanShutdownCommand</c>.
+        /// Defines the Id for the <c>LogMessageForKernelCommand</c>.
         /// </summary>
         internal static readonly CommandId CommandId = new CommandId(@"LogMessageForKernel");
 
@@ -42,7 +42,7 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="LogMessageForKernelCommand"/> class.
         /// </summary>
-        /// <param name="logSinkName">The <see cref="DnsName"/> of the kernel.</param>
+        /// <param name="logSinkName">The <see cref="DnsName"/> of the log sink.</param>
         /// <param name="messageSender">The function used to send a message.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="logSinkName"/> is <see langword="null"/>.

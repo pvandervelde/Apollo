@@ -79,16 +79,28 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
+        [Description("Checks that the ApplicationStatus property returns the correct values.")]
+        public void ApplicationStatus()
+        {
+            var service = new Mock<IUserInterfaceService>();
+            var facade = new ApplicationFacade(service.Object);
+
+            var status = facade.ApplicationStatus;
+            Assert.IsNotNull(status);
+            Assert.AreEqual(typeof(ApplicationFacade).Assembly.GetName().Version, status.CoreVersion);
+        }
+
+        [Test]
         [Description("Checks that notifications can be registered.")]
         public void RegisterNotification()
         {
             NotificationName notification = null;
-            Action<object> action = null;
+            Action<INotificationArguments> action = null;
 
             var service = new Mock<IUserInterfaceService>();
             {
-                service.Setup(s => s.RegisterNotification(It.IsAny<NotificationName>(), It.IsAny<Action<object>>()))
-                    .Callback<NotificationName, Action<object>>(
+                service.Setup(s => s.RegisterNotification(It.IsAny<NotificationName>(), It.IsAny<Action<INotificationArguments>>()))
+                    .Callback<NotificationName, Action<INotificationArguments>>(
                         (n, o) => 
                             {
                                 notification = n;
@@ -99,7 +111,7 @@ namespace Apollo.Core.UserInterfaces.Application
             var facade = new ApplicationFacade(service.Object);
             
             var name = new NotificationName("bla");
-            Action<object> callback = o => { };
+            Action<INotificationArguments> callback = o => { };
             facade.RegisterNotification(name, callback);
 
             Assert.AreSame(name, notification);

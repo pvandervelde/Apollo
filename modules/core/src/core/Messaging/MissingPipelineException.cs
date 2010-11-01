@@ -15,7 +15,6 @@ namespace Apollo.Core.Messaging
     /// An exception thrown when the <see cref="MessageProcessingAssistance"/> class is asked to send
     /// a message without having a link to an <see cref="IMessagePipeline"/>.
     /// </summary>
-    [ExcludeFromCoverage("Exceptions do not need to be tested")]
     [Serializable]
     public sealed class MissingPipelineException : Exception
     {

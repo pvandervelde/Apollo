@@ -57,10 +57,9 @@ namespace Apollo.Core
         /// <param name="request">The request information.</param>
         private void HandleShutdownRequest(DnsName originalSender, MessageId id, ShutdownRequestMessage request)
         {
-            if (!IsFullyFunctional)
-            {
-                return;
-            }
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
 
             bool canShutdown = request.IsShutdownForced ? true : m_Owner.CanShutdown();
             if (request.IsResponseRequired)
@@ -87,10 +86,9 @@ namespace Apollo.Core
         /// <param name="id">The ID number of the requesting message.</param>
         private void HandleShutdownCapabilityRequest(DnsName originalSender, MessageId id)
         {
-            if (!IsFullyFunctional)
-            {
-                return;
-            }
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
 
             bool canShutdown = m_Owner.CanShutdown();
             SendMessage(originalSender, new ApplicationShutdownCapabilityResponseMessage(canShutdown), id);

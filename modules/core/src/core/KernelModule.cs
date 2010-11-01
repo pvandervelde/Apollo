@@ -32,6 +32,9 @@ namespace Apollo.Core
             builder.Register(c => new DnsNameConstants())
                 .As<IDnsNameConstants>();
 
+            builder.Register(c => new NotificationNameConstants())
+                .As<INotificationNameConstants>();
+
             builder.Register(c => new CommandFactory())
                 .As<ICommandContainer>();
         }

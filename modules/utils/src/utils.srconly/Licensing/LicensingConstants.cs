@@ -18,7 +18,7 @@ namespace Apollo.Utils.Licensing
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Milli",
             Justification = "It seems FxCop can't spell.")]
-        public const int LicenseWatchdogIntervalInMilliseconds = 10 * 1000;
+        public const int LicenseWatchdogIntervalInMilliseconds = 3 * 10 * 1000;
 
         /// <summary>
         /// The maximum number of sequential failures that we allow to happen 

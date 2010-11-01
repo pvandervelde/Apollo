@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Messaging;
 using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
@@ -12,6 +14,7 @@ using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Apollo.Utils.Licensing;
 using Autofac;
+using AutofacContrib.Startable;
 using Lokad;
 
 namespace Apollo.Core
@@ -47,6 +50,7 @@ namespace Apollo.Core
                     builder.RegisterModule(new UtilsModule());
                     builder.RegisterModule(new KernelModule());
                     builder.RegisterModule(new MessagingModule());
+                    builder.RegisterModule(new LicensingModule());
 
                     // Register the cache channel. Should live in the kernel appdomain because:
                     // - It has to live somewhere and the kernel appdomain is the least likely to die while the app survies
@@ -91,6 +95,17 @@ namespace Apollo.Core
             public void CreateKernel()
             {
                 var container = BuildContainer();
+                if (container.IsRegistered<IStarter>())
+                {
+                    SecurityHelpers.Elevate(
+                        new PermissionSet(PermissionState.Unrestricted), 
+                        () => 
+                            {
+                                var startable = container.Resolve<IStarter>();
+                                startable.Start();
+                            });
+                }
+
                 m_Kernel = new Kernel(
                     container.Resolve<ICommandContainer>(), 
                     container.Resolve<IHelpMessageProcessing>(), 

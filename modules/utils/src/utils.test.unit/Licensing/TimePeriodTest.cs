@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Utils.Licensing
 {
@@ -16,45 +19,66 @@ namespace Apollo.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class TimePeriodTest
     {
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TimePeriod>
         {
-            TimePeriod first = new TimePeriod(RepeatPeriod.Daily);
-            TimePeriod second = new TimePeriod(RepeatPeriod.Daily);
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances = DataGenerators.Join(
+                    new List<RepeatPeriod> 
+                        {
+                            RepeatPeriod.Minutely,
+                            RepeatPeriod.Hourly,
+                            RepeatPeriod.Daily,
+                            RepeatPeriod.Weekly,
+                            RepeatPeriod.Fortnightly,
+                            RepeatPeriod.Monthly,
+                            RepeatPeriod.Yearly,
+                        },
+                    DataGenerators.Sequential.Numbers(1, 127),
+                    new List<bool> 
+                        { 
+                            true,
+                            false,
+                        })
+                .Select(o => new TimePeriod(o.First, (sbyte)o.Second, o.Third)),
+        };
 
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<TimePeriod>
         {
-            TimePeriod first = new TimePeriod(RepeatPeriod.Daily, 2);
-            TimePeriod second = new TimePeriod(RepeatPeriod.Daily);
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            TimePeriod first = new TimePeriod(RepeatPeriod.Daily);
-            TimePeriod second = new TimePeriod(RepeatPeriod.Daily);
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            TimePeriod first = new TimePeriod(RepeatPeriod.Daily, 2);
-            TimePeriod second = new TimePeriod(RepeatPeriod.Daily);
-
-            Assert.IsTrue(first != second);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<TimePeriod> 
+                { 
+                    new TimePeriod(RepeatPeriod.Minutely, 1, true),
+                    new TimePeriod(RepeatPeriod.Minutely, 2, true),
+                    new TimePeriod(RepeatPeriod.Minutely, 1, false),
+                    new TimePeriod(RepeatPeriod.Hourly, 1, true),
+                    new TimePeriod(RepeatPeriod.Hourly, 2, true),
+                    new TimePeriod(RepeatPeriod.Hourly, 1, false),
+                    new TimePeriod(RepeatPeriod.Daily, 1, true),
+                    new TimePeriod(RepeatPeriod.Daily, 2, true),
+                    new TimePeriod(RepeatPeriod.Daily, 1, false),
+                    new TimePeriod(RepeatPeriod.Weekly, 1, true),
+                    new TimePeriod(RepeatPeriod.Weekly, 2, true),
+                    new TimePeriod(RepeatPeriod.Weekly, 1, false),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 1, true),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 2, true),
+                    new TimePeriod(RepeatPeriod.Fortnightly, 1, false),
+                    new TimePeriod(RepeatPeriod.Monthly, 1, true),
+                    new TimePeriod(RepeatPeriod.Monthly, 2, true),
+                    new TimePeriod(RepeatPeriod.Monthly, 1, false),
+                    new TimePeriod(RepeatPeriod.Yearly, 1, true),
+                    new TimePeriod(RepeatPeriod.Yearly, 2, true),
+                    new TimePeriod(RepeatPeriod.Yearly, 1, false),
+                },
+        };
 
         [Test]
         [Description("Checks that the TimePeriod struct can be created succesfully.")]
@@ -63,6 +87,7 @@ namespace Apollo.Utils.Licensing
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily);
             Assert.AreEqual(RepeatPeriod.Daily, period.Period);
             Assert.AreEqual(1, period.Modifier);
+            Assert.IsTrue(period.IsPeriodic);
         }
 
         [Test]
@@ -89,10 +114,52 @@ namespace Apollo.Utils.Licensing
         }
 
         [Test]
+        [Description("Checks that the TimePeriod struct can be created as a periodic time period.")]
+        public void CreateWithIsPeriodic()
+        {
+            TimePeriod period = new TimePeriod(RepeatPeriod.Daily, false);
+            Assert.AreEqual(RepeatPeriod.Daily, period.Period);
+            Assert.IsFalse(period.IsPeriodic);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesEnteringLeapDay()
+        {
+            var start = new DateTimeOffset(2004, 2, 28, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesExitingLeapDay()
+        {
+            var start = new DateTimeOffset(2004, 2, 29, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
+        }
+
+        [Test]
+        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to minutes.")]
+        public void RepeatAfterWithMinutesPassingNewYear()
+        {
+            var start = new DateTimeOffset(2004, 12, 31, 23, 30, 0, TimeSpan.Zero);
+
+            var period = new TimePeriod(RepeatPeriod.Minutely, 50);
+            var nextTime = period.RepeatAfter(start);
+            Assert.AreEqual(period.Modifier, nextTime.Minutes);
+        }
+
+        [Test]
         [Description("Checks that the correct time is returned when passing into daylight savings for a TimePeriod set to hours.")]
         [Ignore("Not sure how to find daylight savings time in a independent way.")]
         public void RepeatAfterWithHoursPassingEntryOfDaylightSaving()
-        { 
+        {
             // For sequenceStart there is no test here
         }
 
@@ -344,62 +411,6 @@ namespace Apollo.Utils.Licensing
             var period = new TimePeriod(RepeatPeriod.Yearly, 1);
             var nextTime = period.RepeatAfter(start);
             Assert.AreEqual(366 * period.Modifier, nextTime.Days);
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is not considered equal to another TimePeriod with a different period.")]
-        public void EqualsWithNonEqualTimePeriod()
-        {
-            var period1 = new TimePeriod(RepeatPeriod.Daily);
-            var period2 = new TimePeriod(RepeatPeriod.Yearly);
-
-            Assert.IsFalse(period1.Equals(period2));
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is considered equal to another TimePeriod with an equal period.")]
-        public void EqualsWithEqualTimePeriod()
-        {
-            var period1 = new TimePeriod(RepeatPeriod.Daily);
-            var period2 = new TimePeriod(RepeatPeriod.Daily);
-
-            Assert.IsTrue(period1.Equals(period2));
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is not considered equal to a null reference.")]
-        public void EqualsWithNullObject()
-        {
-            var period = new TimePeriod(RepeatPeriod.Daily);
-            Assert.IsFalse(period.Equals(null));
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is not considered equal to an object of a different type.")]
-        public void EqualsWithNonEqualType()
-        {
-            var period = new TimePeriod(RepeatPeriod.Daily);
-            Assert.IsFalse(period.Equals(new object()));
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is not considered equal to an object with a different period.")]
-        public void EqualsWithNonEqualObject()
-        {
-            var period1 = new TimePeriod(RepeatPeriod.Daily);
-            var period2 = new TimePeriod(RepeatPeriod.Yearly);
-
-            Assert.IsFalse(period1.Equals((object)period2));
-        }
-
-        [Test]
-        [Description("Checks that a TimePeriod is not considered equal to an object with an equal period.")]
-        public void EqualsWithEqualObject()
-        {
-            var period1 = new TimePeriod(RepeatPeriod.Daily);
-            var period2 = new TimePeriod(RepeatPeriod.Daily);
-
-            Assert.IsTrue(period1.Equals((object)period2));
         }
     }
 }

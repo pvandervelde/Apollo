@@ -4,8 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
+using System.Globalization;
+using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Properties;
 
 namespace Apollo.Core.UserInterfaces
 {
@@ -31,16 +35,93 @@ namespace Apollo.Core.UserInterfaces
                     HandleShutdownCapabilityRequest(message.Header.Sender, message.Header.Id);
                 });
 
-            // @TODO: Doesn't need to answer to a shutdown message?
+            // Define the response to a shutdown capability request
+            processor.RegisterAction(
+                typeof(ApplicationStartupCompleteMessage),
+                message =>
+                {
+                    HandleStartupCompleteMessage();
+                });
         }
 
         private void HandleShutdownCapabilityRequest(DnsName originalSender, MessageId id)
         {
-            Debug.Assert(IsFullyFunctional, "For some reason we managed to register the message actions before being fully functional.");
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
 
             // @todo: Check with the UI if we can shutdown. This should only be a UI value, not the system value.
             // For now just send a message saying that we can shutdown.
-            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(true), id);
+            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(CanUserInterfaceShutDown()), id);
+        }
+
+        private bool CanUserInterfaceShutDown()
+        {
+            if (!m_Notifications.ContainsKey(m_NotificationNames.CanSystemShutDown))
+            {
+                return true;
+            }
+
+            var action = m_Notifications[m_NotificationNames.CanSystemShutDown];
+            try
+            {
+                var arg = new ShutdownCapabilityArguments();
+                action(arg);
+                
+                return arg.CanShutDown;
+            }
+            catch (Exception e)
+            {
+                // Log the fact that we failed
+                SendMessage(
+                    m_DnsNames.AddressOfLogger,
+                    new LogEntryRequestMessage(
+                        new LogMessage(
+                            Name.ToString(),
+                            LevelToLog.Error,
+                            string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, e)),
+                        LogType.Debug),
+                    MessageId.None);
+
+                // Now get the hell out of here.
+                throw;
+            }
+        }
+
+        private void HandleStartupCompleteMessage()
+        {
+            // @todo: We can store the start-up time here. Effectively we're not started until we get this
+            //        message anyway so storing it in the UI service sounds reasonable
+            Debug.Assert(
+                IsFullyFunctional,
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+
+            if (!m_Notifications.ContainsKey(m_NotificationNames.StartupComplete))
+            {
+                return;
+            }
+
+            var action = m_Notifications[m_NotificationNames.StartupComplete];
+            try
+            {
+                action(null);
+            }
+            catch (Exception e)
+            {
+                // Log the fact that we failed
+                SendMessage(
+                    m_DnsNames.AddressOfLogger,
+                    new LogEntryRequestMessage(
+                        new LogMessage(
+                            Name.ToString(),
+                            LevelToLog.Error,
+                            string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, e)),
+                        LogType.Debug),
+                    MessageId.None);
+
+                // Now get the hell out of here.
+                throw;
+            }
         }
     }
 }

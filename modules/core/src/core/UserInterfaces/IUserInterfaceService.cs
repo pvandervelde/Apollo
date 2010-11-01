@@ -19,6 +19,6 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         /// <param name="name">The name of the notification.</param>
         /// <param name="callback">The callback method that is called when the notification is activated.</param>
-        void RegisterNotification(NotificationName name, Action<object> callback);
+        void RegisterNotification(NotificationName name, Action<INotificationArguments> callback);
     }
 }

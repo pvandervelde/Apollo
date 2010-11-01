@@ -82,6 +82,7 @@ namespace Apollo.Core
             {
                 m_Commands.Add(CheckServicesCanShutdownCommand.CommandId, () => new CheckServicesCanShutdownCommand(SendMessageWithResponse));
                 m_Commands.Add(LogMessageForKernelCommand.CommandId, () => new LogMessageForKernelCommand(m_DnsNames.AddressOfLogger, SendMessage));
+                m_Commands.Add(SendMessageForKernelCommand.CommandId, () => new SendMessageForKernelCommand(SendMessage));
             }
         }
 
@@ -109,11 +110,13 @@ namespace Apollo.Core
         /// Invokes the command with the specified ID.
         /// </summary>
         /// <param name="id">The ID of the command.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id);
@@ -124,11 +127,13 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="id">The ID of the command.</param>
         /// <param name="context">The context that will be passed to the command as it is invoked.</param>
+        /// <exception cref="ArgumentException">
+        /// Thrown when the service is not fully functional.
+        /// </exception>
         public void Invoke(CommandId id, ICommandContext context)
         {
-            if (!IsFullyFunctional)
             {
-                return;
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id, context);

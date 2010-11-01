@@ -136,6 +136,9 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseCheckResultTest.cs">
       <Link>Utils\Licensing\LicenseCheckResultTest.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\LicenseValidationFailedExceptionTest.cs">
+      <Link>Utils\Licensing\LicenseValidationFailedExceptionTest.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\TimePeriodTest.cs">
       <Link>Utils\Licensing\TimePeriodTest.cs</Link>
     </Compile>
@@ -148,9 +151,14 @@
     <Compile Include="AppDomainResolutionPathsTest.cs" />
     <Compile Include="AppDomainSandboxDataTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessageTest.cs" />
+    <Compile Include="ApplicationStartupCompleteMessageTest.cs" />
+    <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
     <Compile Include="CheckApplicationCanShutdownCommandTest.cs" />
     <Compile Include="CheckServiceCanShutdownCommandTest.cs" />
     <Compile Include="CoreProxyTest.cs" />
+    <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
+    <Compile Include="KernelServiceStartupFailedExceptionTest.cs" />
+    <Compile Include="KernelStartupFailedExceptionTest.cs" />
     <Compile Include="KernelTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessageTest.cs" />
     <Compile Include="Logging\CommandLogTemplateTest.cs" />
@@ -163,22 +171,34 @@
     <Compile Include="Logging\LogSinkTest.cs" />
     <Compile Include="LogMessageForKernelCommandTest.cs" />
     <Compile Include="Messaging\DnsNameTest.cs" />
+    <Compile Include="Messaging\DuplicateDnsNameExceptionTest.cs" />
     <Compile Include="Messaging\KernelMessageTest.cs" />
     <Compile Include="Messaging\MessageHeaderTest.cs" />
     <Compile Include="Messaging\MessageIdTest.cs" />
     <Compile Include="Messaging\MessagePipelineTest.cs" />
     <Compile Include="Messaging\MessageProcessingAssistenceTest.cs" />
+    <Compile Include="Messaging\MissingPipelineExceptionTest.cs" />
+    <Compile Include="Messaging\UnknownDnsNameExceptionTest.cs" />
+    <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
     <Compile Include="PingMessageTest.cs" />
     <Compile Include="PingResponseMessageTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
+    <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />
     <Compile Include="ServiceShutdownCapabilityRequestMessageTest.cs" />
     <Compile Include="ServiceShutdownCapabilityResponseMessageTest.cs" />
+    <Compile Include="ServiceTypeAlreadyInstalledExceptionTest.cs" />
     <Compile Include="ShutdownApplicationCommandTest.cs" />
     <Compile Include="ShutdownRequestMessageTest.cs" />
     <Compile Include="ShutdownResponseMessageTest.cs" />
     <Compile Include="StartupProgressEventArgsTest.cs" />
+    <Compile Include="UnknownKernelServiceTypeExceptionTest.cs" />
     <Compile Include="UserInterfaces\Application\ApplicationFacadeTest.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformationStorageTest.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformationTest.cs" />
+    <Compile Include="UserInterfaces\DuplicateNotificationExceptionTest.cs" />
+    <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />
     <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
     <Compile Include="Utils\ApplicationConstantsTest.cs" />
     <Compile Include="Utils\FileConstantsTest.cs" />
@@ -244,7 +264,7 @@
       <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
     </None>
   </ItemGroup>
-    <PropertyGroup>
+  <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>
     <ToolsPath>$(BasePath)\Tools</ToolsPath>

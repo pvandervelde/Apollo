@@ -13,6 +13,11 @@ namespace Apollo.Utils.Licensing
     internal enum RepeatPeriod
     {
         /// <summary>
+        /// The check should be repeated on a by minute basis.
+        /// </summary>
+        Minutely,
+
+        /// <summary>
         /// The check should be repeated on an hourly basis.
         /// </summary>
         Hourly,

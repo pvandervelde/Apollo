@@ -124,11 +124,11 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Cannot create a message where both the sender and the recipient are the same..
+        ///   Looks up a localized string similar to Cannot create a message where both the sender and the recipient are the same. The provided name was {0}..
         /// </summary>
-        internal static string Exceptions_Messages_CannotSendAMessageBackToTheSender {
+        internal static string Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageBackToTheSender", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName", resourceCulture);
             }
         }
         
@@ -327,6 +327,15 @@ namespace Apollo.Core.Properties {
         internal static string Exceptions_Messages_ServiceCannotDependOnItself {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_ServiceCannotDependOnItself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The service tried to perform an action while it was not in a working state. The actual state was: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_ServicesIsNotFullyFunctional {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ServicesIsNotFullyFunctional", resourceCulture);
             }
         }
         
@@ -535,6 +544,15 @@ namespace Apollo.Core.Properties {
         internal static string UserInterrface_LogMessage_DisconnectPreActionFailed {
             get {
                 return ResourceManager.GetString("UserInterrface_LogMessage_DisconnectPreActionFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Failed to send a notification of the application start-up completion. Error information: {0}.
+        /// </summary>
+        internal static string UserInterrface_LogMessage_StartupCompleteNotificationFailed {
+            get {
+                return ResourceManager.GetString("UserInterrface_LogMessage_StartupCompleteNotificationFailed", resourceCulture);
             }
         }
     }

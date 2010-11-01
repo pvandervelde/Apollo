@@ -123,6 +123,9 @@
   <data name="Exceptions_Messages_CannotReturnAResult" xml:space="preserve">
     <value>This command context does not allow a result to be returned.</value>
   </data>
+  <data name="Exceptions_Messages_CurrentProgressMarkNotSet" xml:space="preserve">
+    <value>A marker must be set before starting the timer.</value>
+  </data>
   <data name="Exceptions_Messages_DuplicateCommand" xml:space="preserve">
     <value>A command with the specified name has already been defined.</value>
   </data>

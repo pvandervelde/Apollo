@@ -136,7 +136,7 @@ namespace <#= nameSpace #>
             var cache = new <#= classUnderTest #>(new MockValidator(true), () => now, () => 42.0);
 
             Assert.IsTrue(now.EqualsExact(cache.LastValidationTime), "expected: {0}; value: {1}", now.ToString("o"), cache.LastValidationTime.ToString("o"));
-            Assert.AreEqual(now.AddMinutes(5), cache.LatestResult.Expires);
+            Assert.AreEqual(now.AddSeconds(30), cache.LatestResult.Expires);
         }
 
         [Test]

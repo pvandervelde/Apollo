@@ -222,6 +222,9 @@ namespace Apollo.Core
             // If we get here then we have to have finished the
             // startup process, which means we're actually running.
             m_State = StartupState.Started;
+
+            // Notify all services that we're done with the start-up process.
+            SendStartupCompleteMessage();
         }
 
         /// <summary>

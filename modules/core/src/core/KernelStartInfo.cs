@@ -75,6 +75,17 @@ namespace Apollo.Core
         /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
         /// </summary>
         protected KernelStartInfo()
+            : this(new Assembly[0])
+        { 
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
+        /// </summary>
+        /// <param name="fulltrustAssemblies">
+        /// A collection of assemblies which are full trust assemblies.
+        /// </param>
+        protected KernelStartInfo(IEnumerable<Assembly> fulltrustAssemblies)
         {
             m_CoreAssemblies = new List<FileInfo>
                 {
@@ -138,7 +149,19 @@ namespace Apollo.Core
 
                     // NLog: Required because it is retarded and has LinkDemands
                     typeof(NLog.Logger).Assembly.GetStrongName(),
+
+                    // Autofac: Required because it requires reflection permissions?
+                    typeof(Autofac.IContainer).Assembly.GetStrongName(),
                 };
+
+            foreach (var assembly in fulltrustAssemblies)
+            {
+                var strongName = assembly.GetStrongName();
+                if (!m_FullTrustAssemblies.Contains(strongName))
+                {
+                    m_FullTrustAssemblies.Add(strongName);
+                }
+            }
         }
 
         /// <summary>

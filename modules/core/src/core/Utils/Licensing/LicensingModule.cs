@@ -41,11 +41,15 @@ namespace Apollo.Core.Utils.Licensing
                     new StartableModule<ILoadOnApplicationStartup>(
                         s =>
                         {
-                            // Start the validation timer
-                            StartWatchdog();
-
                             // Start the license validation service
                             s.Initialize();
+                            
+                            // Start the validation timer. Do this after
+                            // we start the validation service so that the validation
+                            // service is active (and thus sending heart beats) before
+                            // we start checking for them. Otherwise we might not have the
+                            // first heartbeat and will fail validation.
+                            StartWatchdog();
                         }));
 
                 // Register the service runner as a 'startable' module
@@ -57,7 +61,16 @@ namespace Apollo.Core.Utils.Licensing
 
                 // Define the time span over which the heart beats have to be send
                 // from the licensing system.
-                var watchdogPeriod = new TimeSpan(0, 0, 0, 0, LicensingConstants.LicenseWatchdogIntervalInMilliseconds);
+                // Note that the timespan has to be shorter than the actual watchdog update 
+                // time because otherwise timing issues (we're running both the watchdog and
+                // the service on different threads) might mean that we get to the watchdog
+                // first. Then there will be no time and the validation will fail.
+                // In order to ensure that this works we divide the watchdog time by 2. This
+                // ensures that we have at least 1 update in the set (if the sequences run
+                // at the same start and stop times it is possible that the watchdog gets to the
+                // watchdog lock fractionally earlier than the service does, thus making it miss
+                // an update).
+                var watchdogPeriod = new TimeSpan(0, 0, 0, 0, (int)Math.Round(LicensingConstants.LicenseWatchdogIntervalInMilliseconds / 2.0));
 
                 builder.Register(c => new ValidationService(
                         () => DateTimeOffset.Now,
@@ -82,21 +95,21 @@ namespace Apollo.Core.Utils.Licensing
                         c.Resolve<ValidationServiceLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
-                    .As<ILicenseValidator>()
+                    .As<ValidationServiceLicenseValidator>()
                     .InstancePerDependency();
 
                 builder.Register(c => new CoreLicenseValidator(
                         c.Resolve<CoreLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
-                    .As<ILicenseValidator>()
+                    .As<CoreLicenseValidator>()
                     .InstancePerDependency();
 
                 builder.Register(c => new UserInterfaceLicenseValidator(
                         c.Resolve<UserInterfaceLicenseValidationCache>(),
                         c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
                         () => DateTimeOffset.Now))
-                    .As<ILicenseValidator>()
+                    .As<UserInterfaceLicenseValidator>()
                     .InstancePerDependency();
 
                 // Create a randomizer. For now we'll stick with the standard seed.
@@ -124,7 +137,7 @@ namespace Apollo.Core.Utils.Licensing
                         var channel = a.Context.Resolve<ICacheConnectorChannel>();
                         channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
                     })
-                    .As<ILicenseValidationCache>()
+                    .As<ValidationServiceLicenseValidationCache>()
                     .InstancePerDependency();
 
                 builder.Register(c => new CoreLicenseValidationCache(
@@ -143,7 +156,7 @@ namespace Apollo.Core.Utils.Licensing
                         var channel = a.Context.Resolve<ICacheConnectorChannel>();
                         channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
                     })
-                    .As<ILicenseValidationCache>()
+                    .As<CoreLicenseValidationCache>()
                     .InstancePerDependency();
 
                 builder.Register(c => new UserInterfaceLicenseValidationCache(
@@ -162,7 +175,7 @@ namespace Apollo.Core.Utils.Licensing
                         var channel = a.Context.Resolve<ICacheConnectorChannel>();
                         channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
                     })
-                    .As<ILicenseValidationCache>()
+                    .As<UserInterfaceLicenseValidationCache>()
                     .InstancePerDependency();
 
                 builder.Register((c, p) => new CacheConnectorChannelEndpoint(

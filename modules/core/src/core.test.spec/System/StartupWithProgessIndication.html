@@ -1,0 +1,41 @@
+﻿<html xmlns:concordion="http://www.concordion.org/2007/concordion">
+    <head>
+        <meta name="author"
+              content="P. van der Velde" />
+        <meta name="copyright"
+              content="P. van der Velde" />
+
+        <link href="../concordion.css"
+              rel="stylesheet"
+              type="text/css" />
+
+        <title>Getting start-up progress indication from Apollo</title>
+    </head>
+    <body>
+        <h2>Getting start-up progress indication from Apollo</h2>
+        <p>
+            During the start-up process Apollo will send progress indications to the user interface so that it can keep the user up to
+            date on the progress of the start-up process.
+        </p>
+        <div class="example">
+            <h3>Example</h3>
+            <p concordion:execute="StartApollo()">
+                During start-up Apollo sends progress indications in the following order
+                <ol>
+                    <li>
+                        <b concordion:assertEquals="ApplicationMarker(0)">Application starting</b>
+                    </li>
+                    <li>
+                        <b concordion:assertEquals="ApplicationMarker(1)">Core loading</b>
+                    </li>
+                    <li>
+                        <b concordion:assertEquals="ApplicationMarker(2)">Core starting</b>
+                    </li>
+                    <li>
+                        <b concordion:assertEquals="ApplicationMarker(3)">Application started</b>
+                    </li>
+                </ol>
+            </p>
+        </div>
+    </body>
+</html>
