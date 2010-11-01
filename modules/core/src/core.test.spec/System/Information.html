@@ -19,16 +19,11 @@
 
         <div class="Example">
             <h3>Example</h3>
-            
-            <!--
-                The global information we want is:
-                - Start time of the Apollo
-                - Version information for Apollo (taken from Apollo.Core -> AssemblyInfo.cs)
-                - Name + version of all loaded assemblies?
-                - Information of all loaded services
-                - License information
-            -->
-            
+
+            <p>
+                When the User Interface requests status information from the core it will receive this
+                <b concordion:assertEquals="GetInformationFromApollo()">information</b>.
+            </p>
         </div>
 
         <h2>Further details</h2>
@@ -37,7 +32,7 @@
                 <a href="InformationAboutAService.html">How can the User Interface get information about a specific service?</a>
             </li>
             <li>
-                <a href="InformatonAboutTheLicense.html">How can the User Interface get information about the license?</a>
+                <a href="InformationAboutTheLicense.html">How can the User Interface get information about the license?</a>
             </li>
         </ul>
     </body>

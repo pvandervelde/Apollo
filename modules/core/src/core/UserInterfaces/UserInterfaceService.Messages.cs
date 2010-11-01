@@ -90,6 +90,8 @@ namespace Apollo.Core.UserInterfaces
 
         private void HandleStartupCompleteMessage()
         {
+            // @todo: We can store the start-up time here. Effectively we're not started until we get this
+            //        message anyway so storing it in the UI service sounds reasonable
             Debug.Assert(
                 IsFullyFunctional,
                 string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));

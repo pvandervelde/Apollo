@@ -46,11 +46,6 @@ namespace Apollo.ProjectExplorer
         /// <summary>
         /// Loads the kernel.
         /// </summary>
-        /// <returns>
-        /// The module which contains the Dependency Injection 
-        /// registrations for the user interface connection to the
-        /// kernel.
-        /// </returns>
         private void LoadKernel()
         {
             // At a later stage we need to clean this up.

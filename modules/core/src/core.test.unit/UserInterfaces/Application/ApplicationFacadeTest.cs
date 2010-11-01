@@ -79,6 +79,18 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
+        [Description("Checks that the ApplicationStatus property returns the correct values.")]
+        public void ApplicationStatus()
+        {
+            var service = new Mock<IUserInterfaceService>();
+            var facade = new ApplicationFacade(service.Object);
+
+            var status = facade.ApplicationStatus;
+            Assert.IsNotNull(status);
+            Assert.AreEqual(typeof(ApplicationFacade).Assembly.GetName().Version, status.CoreVersion);
+        }
+
+        [Test]
         [Description("Checks that notifications can be registered.")]
         public void RegisterNotification()
         {

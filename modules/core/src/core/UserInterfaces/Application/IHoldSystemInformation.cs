@@ -30,15 +30,6 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         /// <summary>
-        /// Returns the collection containing information about the 
-        /// available services.
-        /// </summary>
-        /// <returns>
-        /// A collection containing information about the available services.
-        /// </returns>
-        IEnumerable<IServiceInformation> ServiceInformation();
-
-        /// <summary>
         /// Gets the time the kernel was started.
         /// </summary>
         /// <value>The startup time for the kernel.</value>
@@ -55,5 +46,22 @@ namespace Apollo.Core.UserInterfaces.Application
         {
             get; 
         }
+
+        /// <summary>
+        /// Gets the version number of the core of Apollo.
+        /// </summary>
+        Version CoreVersion
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the collection containing information about the 
+        /// available services.
+        /// </summary>
+        /// <returns>
+        /// A collection containing information about the available services.
+        /// </returns>
+        IEnumerable<IServiceInformation> ServiceInformation();
     }
 }
