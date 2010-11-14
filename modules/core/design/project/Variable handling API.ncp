@@ -1,33 +1,23 @@
 <Project>
   <Name>Variable handling API</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Variables - overview</Name>
     <Language>CSharp</Language>
     <Entities>
-      <Entity type="Comment">
-        <Text>Variables are data elements. They don't actually exist as a single class / object. They are more a collection of objects just like components
-
-Variables should be stored with the data set.
-
-Mark variables as stored / calculated to indicate how the value is determined.
-
-Provide variable value collections that can store values for the variables. These collections can be global or local. 
-Either store the cached value of the equation or just their value. Need to have some update mechanism that allows indication of cache invalidity.</Text>
-        <Location left="5" top="5" />
-        <Size width="394" height="240" />
-      </Entity>
       <Entity type="Class">
-        <Name>Alias</Name>
+        <Name>VariableAlias</Name>
         <Access>Public</Access>
-        <Location left="800" top="646" />
-        <Size width="162" height="85" />
+        <Location left="444" top="883" />
+        <Size width="276" height="111" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">public VariableId IdOfAliasesVariable { get; }</Member>
+        <Member type="Property">public Expression TransformationExpression { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>VariableId</Name>
         <Access>Public</Access>
-        <Location left="1172" top="10" />
+        <Location left="1105" top="417" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -35,27 +25,14 @@ Either store the cached value of the equation or just their value. Need to have 
       <Entity type="Class">
         <Name>Calculator</Name>
         <Access>Public</Access>
-        <Location left="1192" top="918" />
+        <Location left="1973" top="1019" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>Complemental</Name>
-        <Access>Public</Access>
-        <Location left="1082" top="646" />
-        <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Defines zero or more complemental variables + an equation or calculator that can transfer between the two variables</Text>
-        <Location left="1483" top="646" />
-        <Size width="206" height="85" />
+        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines zero or more calculators that are used to provide values for the variable based on the presence of other variables</Text>
-        <Location left="1482" top="918" />
+        <Location left="2119" top="854" />
         <Size width="194" height="85" />
       </Entity>
       <Entity type="Comment">
@@ -64,26 +41,18 @@ Either store the cached value of the equation or just their value. Need to have 
 Equivalent variables can share information?
 
 Note that equivalent variables can be done through a transform x = y</Text>
-        <Location left="334" top="605" />
+        <Location left="10" top="843" />
         <Size width="325" height="136" />
-      </Entity>
-      <Entity type="Class">
-        <Name>ValueOrigin</Name>
-        <Access>Public</Access>
-        <Location left="957" top="918" />
-        <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the way the variable value is obtained. this could be a calculation, a schedule or a sub-dataset</Text>
-        <Location left="643" top="918" />
+        <Location left="1226" top="1199" />
         <Size width="208" height="85" />
       </Entity>
       <Entity type="Class">
         <Name>Symbol</Name>
         <Access>Public</Access>
-        <Location left="827" top="509" />
+        <Location left="239" top="651" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -91,10 +60,10 @@ Note that equivalent variables can be done through a transform x = y</Text>
       <Entity type="Class">
         <Name>Range</Name>
         <Access>Public</Access>
-        <Location left="558" top="5" />
+        <Location left="605" top="403" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the range of the variable. Can be:
@@ -103,104 +72,77 @@ Note that equivalent variables can be done through a transform x = y</Text>
 - Always smaller than x
 - Set of values (e.g. all odd numbers between 4 and 21)
 - Expression</Text>
-        <Location left="800" top="5" />
+        <Location left="170" top="403" />
         <Size width="325" height="118" />
       </Entity>
       <Entity type="Class">
         <Name>Location</Name>
         <Access>Public</Access>
-        <Location left="558" top="238" />
+        <Location left="1329" top="761" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Location indicates if a variable is stored or calculated.
 
 Calculated variables can provide a use-caching equation which will be used to determine if caching the value is useful.</Text>
-        <Location left="800" top="238" />
+        <Location left="1660" top="604" />
         <Size width="325" height="113" />
       </Entity>
       <Entity type="Comment">
-        <Text>How about:
-- Transformation between different variables?
-- Should all variables store all information, or do we have 1 master variable (which stores all the info) and then slave variables (that are just aliases)</Text>
-        <Location left="1453" top="453" />
-        <Size width="253" height="141" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Stores unit</Text>
-        <Location left="1082" top="521" />
-        <Size width="99" height="50" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Provide directed variables as well --&gt; variables that are linked to a tensor system (e.g. a coordinate system). Provide information about which part of the tensor the variables is linked to</Text>
-        <Location left="10" top="258" />
+        <Location left="1003" top="10" />
         <Size width="253" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>Define variables to be tensors. Define size (scalar, vector, tensor + size). Allow definition of sub-variables which define the individual tensor elements</Text>
-        <Location left="1405" top="262" />
+        <Location left="604" top="1366" />
         <Size width="207" height="106" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Provide caching decision mechanisms. Need a way to determine if we should cache.
-
-Also indicate dependencies?</Text>
-        <Location left="10" top="372" />
-        <Size width="253" height="106" />
       </Entity>
       <Entity type="Comment">
         <Text>How do we deal with error information. We should be able to set a tolerance on each variable.
 
 Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</Text>
-        <Location left="10" top="489" />
+        <Location left="1266" top="212" />
         <Size width="253" height="123" />
       </Entity>
       <Entity type="Class">
-        <Name>Type</Name>
+        <Name>Quantity</Name>
         <Access>Public</Access>
-        <Location left="558" top="372" />
-        <Size width="162" height="93" />
+        <Location left="530" top="651" />
+        <Size width="172" height="111" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Describes the type of the variable, e.g. pressure, velocity etc.</Text>
-        <Location left="850" top="385" />
-        <Size width="162" height="72" />
+        <Member type="Property">public string Name { get; }</Member>
+        <Member type="Property">public Symbol SISymbol { get; }</Member>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>TensorType</Name>
         <Access>Public</Access>
-        <Location left="1172" top="120" />
+        <Location left="849" top="1060" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the type of the variable: scalar, vector, matrix. Also defines how to get access to it.</Text>
-        <Location left="1425" top="122" />
+        <Location left="624" top="1226" />
         <Size width="177" height="90" />
       </Entity>
       <Entity type="Comment">
         <Text>Default value?</Text>
-        <Location left="661" top="799" />
+        <Location left="1460" top="1199" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Free variable or not? A free variable is not controlled by an expression of some sorts. This allows the user to select a value for it.</Text>
-        <Location left="1803" top="727" />
+        <Location left="816" top="10" />
         <Size width="169" height="108" />
       </Entity>
       <Entity type="Comment">
-        <Text>Allow components to register a variable. Only variables that are registered can be used by the system.</Text>
-        <Location left="10" top="623" />
-        <Size width="253" height="75" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Aliasing variables shuld also allow for linking of variables. This allows for instance the creation of periodic boundary conditions by linking both sides of the domain</Text>
-        <Location left="334" top="810" />
+        <Location left="10" top="1045" />
         <Size width="223" height="105" />
       </Entity>
       <Entity type="Comment">
@@ -208,222 +150,313 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
 - lvl 1: time
 - lvl 2: x, y, z
 This means the iteration will run over x,y,z in each time step.</Text>
-        <Location left="10" top="708" />
+        <Location left="489" top="212" />
         <Size width="253" height="120" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IVariable</Name>
+        <Access>Public</Access>
+        <Location left="878" top="212" />
+        <Size width="244" height="163" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">VariableId Id { get; }</Member>
+        <Member type="Property">Range Range { get; }</Member>
+        <Member type="Property">Accessor Value { get; }</Member>
+        <Member type="Property">Quantity Quantity { get; }</Member>
+        <Member type="Property">TensorType Type { get; }</Member>
+        <Member type="Method">IEnumerable&lt;VariableAlias&gt; Aliasses()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ExpressionCalculator</Name>
+        <Access>Internal</Access>
+        <Location left="2068" top="1224" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProcessScheduleCalculator</Name>
+        <Access>Internal</Access>
+        <Location left="1884" top="1224" />
+        <Size width="167" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Accessor</Name>
+        <Access>Public</Access>
+        <Location left="1274" top="1019" />
+        <Size width="270" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public static implicit operator double(Accessor accessor)</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Variable</Name>
+        <Access>Public</Access>
+        <Location left="878" top="628" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IProcessSchedule</Name>
+        <Access>Internal</Access>
+        <Location left="1825" top="1436" />
+        <Size width="221" height="163" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">ScheduleId Id { get; }</Member>
+        <Member type="Property">bool IsBeingExecuted { get; }</Member>
+        <Member type="Property">bool IsLocked { get; }</Member>
+        <Member type="Method">LockToken Lock()</Member>
+        <Member type="Method">void Unlock(LockToken key)</Member>
+        <Member type="Property">IScheduleGraphVertex Start { get; }</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Mark variables as stored / calculated to indicate how the value is determined.
+</Text>
+        <Location left="1329" top="604" />
+        <Size width="199" height="75" />
       </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Comment" first="5" second="4">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1458</X>
-          <Y>681</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1269</X>
-          <Y>681</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="4" second="3">
-        <Label>
-        </Label>
+      <Relationship type="Comment" first="3" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1269</X>
-          <Y>711</Y>
+          <X>2094</X>
+          <Y>899</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1298</X>
-          <Y>893</Y>
+          <X>2050</X>
+          <Y>979</Y>
         </BendPoint>
-        <Direction>Bidirectional</Direction>
+      </Relationship>
+      <Relationship type="Comment" first="4" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>360</X>
+          <Y>928</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>419</X>
+          <Y>927</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>520</X>
+          <Y>449</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>579</X>
+          <Y>449</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="10" second="9">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1635</X>
+          <Y>646</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1535</X>
+          <Y>806</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="14" second="6">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>492</X>
+          <Y>707</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>478</X>
+          <Y>707</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>719</X>
+          <Y>1201</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="4" second="19">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="23" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2031</X>
+          <Y>1129</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="22" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2087</X>
+          <Y>1129</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="24" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Comment" first="6" second="3">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1457</X>
-          <Y>963</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1379</X>
-          <Y>963</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="1">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>684</X>
-          <Y>690</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>775</X>
-          <Y>690</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="4" second="8">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
+      <Relationship type="Realization" first="25" second="21">
+        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1057</X>
-          <Y>711</Y>
+          <X>978</X>
+          <Y>594</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1023</X>
-          <Y>893</Y>
-        </BendPoint>
-        <Direction>Bidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="9" second="8">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>876</X>
-          <Y>962</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>932</X>
-          <Y>962</Y>
+          <X>978</X>
+          <Y>404</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="8" second="3">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1144</X>
-          <Y>962</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1167</X>
-          <Y>962</Y>
-        </BendPoint>
-        <Direction>Bidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="12" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>775</X>
-          <Y>51</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>745</X>
-          <Y>51</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="14" second="13">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>775</X>
-          <Y>280</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>745</X>
-          <Y>280</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="16" second="10">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1056</X>
-          <Y>552</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1014</X>
-          <Y>552</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="21" second="10">
+      <Relationship type="Association" first="25" second="7">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>795</X>
-          <Y>555</Y>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>944</X>
+          <Y>578</Y>
         </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="25" second="1">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1065</X>
+          <Y>692</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1194</X>
+          <Y>527</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="25" second="14">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="25" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>806</X>
+          <Y>789</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>568</X>
+          <Y>850</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="25" second="24">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="17" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1482</X>
+          <Y>1174</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="24">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="23" second="26">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="22" second="21">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>822</X>
-          <Y>425</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>745</X>
-          <Y>425</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="24" second="23">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="24" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="15" second="5">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="25" second="9">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>745</X>
-          <Y>893</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="5" second="26">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1717</X>
-          <Y>686</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1899</X>
-          <Y>702</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="26" second="6">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1900</X>
-          <Y>860</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1701</X>
-          <Y>968</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="4" second="1">
+      <Relationship type="Association" first="24" second="9">
         <Label>
         </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Bidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="28">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="25" second="15">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="27" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="20" second="21">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="21">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="11" second="21">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1074</X>
+          <Y>187</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="21">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>935</X>
+          <Y>187</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

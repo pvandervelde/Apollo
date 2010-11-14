@@ -1,6 +1,6 @@
 <Project>
   <Name>Plug-in system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Plug-in detection</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -95,7 +95,7 @@
       <Entity type="Comment">
         <Text>Links to a in-memory database.</Text>
         <Location left="1226" top="809" />
-        <Size width="126" height="50" />
+        <Size width="158" height="60" />
       </Entity>
       <Entity type="Comment">
         <Text>Do we want to use the CCI (Common Compiler Infrastructure) for this? The use of CCI would provide us with a non-reflection way of reading assembly files. This may be faster and should prevent ever loading the assembly at all.</Text>
@@ -109,8 +109,6 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -154,7 +152,7 @@
       </Relationship>
     </Relationships>
   </ProjectItem>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Plug-in linking</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -168,7 +166,7 @@
       <Entity type="Comment">
         <Text>Holds information about the different object types availabe. Also knows about the different connections etc.</Text>
         <Location left="472" top="255" />
-        <Size width="167" height="78" />
+        <Size width="197" height="89" />
       </Entity>
       <Entity type="Interface">
         <Name>IStoreConnections</Name>
@@ -186,21 +184,21 @@
       </Entity>
       <Entity type="Comment">
         <Text>Stores information about the connection between a dependency and a dependent. This information exactly determines which dependency this is. </Text>
-        <Location left="435" top="800" />
-        <Size width="174" height="102" />
+        <Location left="435" top="807" />
+        <Size width="205" height="129" />
       </Entity>
       <Entity type="Comment">
         <Text>Stores information about all connections for all depents. Each connection stores enough information to uniquely identify it. Even in the face of multiple requests for the same type etc.</Text>
-        <Location left="430" top="592" />
-        <Size width="179" height="109" />
+        <Location left="435" top="595" />
+        <Size width="205" height="131" />
       </Entity>
       <Entity type="Comment">
         <Text>- Define default objects that get substituted for specific types, attribute values etc.. This is just like an IOC container. e.g. when using Autofac you hardcode that resolving interface X always gets you an instance of object Y. We can do a similar system for simple system components (e.g. a logger, a console application runner etc.)
 - If we make this mechanism available over the entire application then we can allow the higher level components to create substitutions too. That way we could allow the project to setup the resolvers for different simulation components based on the type of simulation that the user has selected. When using this system we'll get a sort of distributed, dynamic IOC container where all the reference types get filled in at the last possible minute.
 - We'll need to figure out how we are going to store all this information though. We could mabye use an actual IOC container and dynamically create builders (which we can discard when ever we want)
 - Another issue is figuring out a way to be able to load components without having the entire  object graph availabe. We might be able to create dynamic proxies that only load up their suggested component once they are needed?</Text>
-        <Location left="1184" top="207" />
-        <Size width="423" height="254" />
+        <Location left="1187" top="167" />
+        <Size width="460" height="296" />
       </Entity>
       <Entity type="Delegate">
         <Name>FindLinkDelegate</Name>
@@ -227,14 +225,19 @@
       <Entity type="Comment">
         <Text>Stores links to all the active components that should be considered for plug-in use.</Text>
         <Location left="1459" top="699" />
-        <Size width="160" height="75" />
+        <Size width="172" height="83" />
       </Entity>
       <Entity type="Comment">
         <Text>Need some kind of templating system to auto-load components based on property values.Does this need to be in the UI or in the project?
 
 Maybe also define tool sets which are collections of tools with hooks. Problem will be how to define the hooks.</Text>
         <Location left="821" top="42" />
-        <Size width="231" height="132" />
+        <Size width="276" height="157" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>The builder links to a resolution system which is controlled from the top level project system (or from another service?). </Text>
+        <Location left="10" top="10" />
+        <Size width="202" height="97" />
       </Entity>
     </Entities>
     <Relationships>
@@ -243,8 +246,6 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -263,16 +264,12 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -291,8 +288,6 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -305,9 +300,13 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
       <Relationship type="Comment" first="11" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1127</X>
+          <Y>105</Y>
+        </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1349</X>
-          <Y>182</Y>
+          <X>1352</X>
+          <Y>142</Y>
         </BendPoint>
       </Relationship>
     </Relationships>
