@@ -16,14 +16,14 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IHistory</Name>
         <Access>Internal</Access>
-        <Location left="2460" top="704" />
+        <Location left="2402" top="879" />
         <Size width="162" height="76" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>ITimeLineProxy</Name>
         <Access>Internal</Access>
-        <Location left="2460" top="861" />
+        <Location left="2402" top="1036" />
         <Size width="162" height="66" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -41,11 +41,6 @@ By separating the actual generated data from the 'description' data we can allow
         <Size width="162" height="83" />
         <Collapsed>False</Collapsed>
       </Entity>
-      <Entity type="Comment">
-        <Text>Allow saving a new project from any specific node downwards. This means we'll need to copy in all the parent information into the new top level node.</Text>
-        <Location left="397" top="10" />
-        <Size width="362" height="80" />
-      </Entity>
       <Entity type="Interface">
         <Name>IPersistenceProxy</Name>
         <Access>Internal</Access>
@@ -56,7 +51,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IComponentResolver</Name>
         <Access>Internal</Access>
-        <Location left="2754" top="569" />
+        <Location left="2588" top="788" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -65,12 +60,12 @@ By separating the actual generated data from the 'description' data we can allow
 - If we make this mechanism available over the entire application then we can allow the higher level components to create substitutions too. That way we could allow the project to setup the resolvers for different simulation components based on the type of simulation that the user has selected. When using this system we'll get a sort of distributed, dynamic IOC container where all the reference types get filled in at the last possible minute.
 - We'll need to figure out how we are going to store all this information though. We could mabye use an actual IOC container and dynamically create builders (which we can discard when ever we want)
 - Another issue is figuring out a way to be able to load components without having the entire  object graph availabe. We might be able to create dynamic proxies that only load up their suggested component once they are needed?</Text>
-        <Location left="3100" top="106" />
+        <Location left="2334" top="330" />
         <Size width="423" height="363" />
       </Entity>
       <Entity type="Comment">
         <Text>Should be available to the UI / project system.</Text>
-        <Location left="2998" top="620" />
+        <Location left="2832" top="839" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
@@ -97,18 +92,12 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IProject</Name>
         <Access>Internal</Access>
-        <Location left="1452" top="1252" />
-        <Size width="403" height="129" />
+        <Location left="1421" top="1252" />
+        <Size width="539" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IReadonlyDatasetGraph Datasets()</Member>
         <Member type="Method">void Save(Stream persistenceStream)</Member>
-      </Entity>
-      <Entity type="Interface">
-        <Name>ICommunicationChannel</Name>
-        <Access>Public</Access>
-        <Location left="3465" top="1732" />
-        <Size width="163" height="61" />
-        <Collapsed>False</Collapsed>
+        <Member type="Method">void Export(DatasetId datasetToExport, bool shouldIncludeChildren, Stream persistenceStream)</Member>
       </Entity>
       <Entity type="Class">
         <Name>ProjectBuilder</Name>
@@ -121,7 +110,7 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>ICommunicationLayer</Name>
         <Access>Public</Access>
-        <Location left="475" top="250" />
+        <Location left="2948" top="226" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -183,18 +172,18 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Class">
         <Name>DatasetOnlineInformation</Name>
         <Access>Internal</Access>
-        <Location left="3144" top="1475" />
+        <Location left="3124" top="1162" />
         <Size width="346" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public DatasetId Id { get; }</Member>
-        <Member type="Property">public ICommunicationChannel Channel { get; }</Member>
+        <Member type="Property">public MessageHub Channel { get; }</Member>
         <Member type="Method">public IEnumerable&lt;DatasetCommand&gt; AdditionalCommands()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>DatasetOfflineInformation</Name>
         <Access>Public</Access>
-        <Location left="3144" top="1188" />
+        <Location left="3124" top="1430" />
         <Size width="271" height="145" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public DatasetId Id { get; }</Member>
@@ -207,15 +196,16 @@ By separating the actual generated data from the 'description' data we can allow
         <Name>IReadonlyDataset</Name>
         <Access>Public</Access>
         <Location left="1432" top="1687" />
-        <Size width="474" height="180" />
+        <Size width="528" height="197" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;IReadonlyDataset&gt; Children()</Member>
         <Member type="Property">DatasetId Id { get; }</Member>
         <Member type="Property">bool IsLoaded { get; }</Member>
         <Member type="Method">void Load()</Member>
         <Member type="Method">void Unload()</Member>
-        <Member type="Method">DatasetId CreateNewChild(ICreationInformation newChild)</Member>
-        <Member type="Method">IEnumerable&lt;DatasetId&gt; CreateNewChildren(ICreationInformation[] newChildren)</Member>
+        <Member type="Method">DatasetId CreateNewChild(IDatasetCreationInformation newChild)</Member>
+        <Member type="Method">IEnumerable&lt;DatasetId&gt; CreateNewChildren(IDatasetCreationInformation[] newChildren)</Member>
+        <Member type="Property">ProxyCommandSet Commands { get; }</Member>
       </Entity>
       <Entity type="Class">
         <Name>ReadonlyDataset</Name>
@@ -228,17 +218,17 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Comment">
         <Text>what about:
 - Commands?</Text>
-        <Location left="2509" top="1132" />
+        <Location left="1808" top="1441" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Need a set of commands or methods to deal with a dataset itself.</Text>
-        <Location left="1806" top="1498" />
+        <Location left="1808" top="1538" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Note that the dataset does not chose it's own components. That's what the resolver is for.</Text>
-        <Location left="2984" top="724" />
+        <Location left="2818" top="943" />
         <Size width="181" height="99" />
       </Entity>
       <Entity type="Structure">
@@ -271,11 +261,6 @@ By separating the actual generated data from the 'description' data we can allow
         <Text>Defines how 'complex' a dataset is with respect to machine load (memory, CPU, HDD etc.)</Text>
         <Location left="2072" top="447" />
         <Size width="183" height="95" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>This needs to be renamed. It's not right yet. We want to hide the fact that it is some kind of channel.</Text>
-        <Location left="3465" top="1917" />
-        <Size width="182" height="91" />
       </Entity>
       <Entity type="Class">
         <Name>DatasetLoader</Name>
@@ -314,7 +299,7 @@ Loading on remote machines requires that there is a service or application runni
       <Entity type="Class">
         <Name>MessageHub</Name>
         <Access>Public</Access>
-        <Location left="896" top="308" />
+        <Location left="3006" top="45" />
         <Size width="366" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void Send(IMessage message, Action&lt;IMessage&gt; onReturn)</Member>
@@ -349,40 +334,68 @@ Loading on remote machines requires that there is a service or application runni
 - Execute visualizer commands
 - Add / Remove / Link components
 </Text>
-        <Location left="1565" top="2047" />
+        <Location left="1441" top="2050" />
         <Size width="295" height="116" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Any commands and interactions with the rest of the Apollo application run through the message proxy</Text>
+        <Location left="603" top="1533" />
+        <Size width="221" height="96" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDatasetCreationInformation</Name>
+        <Access>Public</Access>
+        <Location left="2196" top="2050" />
+        <Size width="179" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProxyCommandSet</Name>
+        <Access>Public</Access>
+        <Location left="1885" top="2050" />
+        <Size width="270" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">TCommand CommandsFor&lt;TCommand&gt;()</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The commands in this list are created by a automatically implemented proxy class (DynamicProxy2?). The methods mirror the original command sets that we need.
+
+The only catch is how are we going to make this work. We'd need an interface.</Text>
+        <Location left="1912" top="2261" />
+        <Size width="243" height="151" />
       </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="2" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2532</X>
-          <Y>836</Y>
+          <X>2474</X>
+          <Y>1011</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2532</X>
-          <Y>805</Y>
+          <X>2474</X>
+          <Y>980</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="8" second="7">
-        <StartOrientation>Horizontal</StartOrientation>
+      <Relationship type="Comment" first="7" second="6">
+        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3068</X>
-          <Y>364</Y>
+          <X>2687</X>
+          <Y>718</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2853</X>
-          <Y>541</Y>
+          <X>2687</X>
+          <Y>760</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="11" second="4">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="10" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -396,9 +409,7 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="11" second="3">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="10" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -412,9 +423,7 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="11" second="6">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="10" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -428,9 +437,7 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="10" second="7">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="9" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -438,29 +445,27 @@ Loading on remote machines requires that there is a service or application runni
           <Y>1173</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2729</X>
-          <Y>599</Y>
+          <X>2563</X>
+          <Y>818</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="10" second="2">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="9" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2348</X>
-          <Y>1201</Y>
+          <X>2421</X>
+          <Y>1268</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2536</X>
-          <Y>953</Y>
+          <X>2478</X>
+          <Y>1128</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="10" second="12">
+      <Relationship type="Realization" first="9" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -468,11 +473,11 @@ Loading on remote machines requires that there is a service or application runni
           <Y>1334</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1880</X>
+          <X>1985</X>
           <Y>1334</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="14" second="3">
+      <Relationship type="Realization" first="12" second="3">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -480,15 +485,15 @@ Loading on remote machines requires that there is a service or application runni
           <Y>1325</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="11" second="12">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="10" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="20" second="20">
+      <Relationship type="Association" first="18" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -504,7 +509,9 @@ Loading on remote machines requires that there is a service or application runni
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="18" second="19">
+      <Relationship type="Association" first="16" second="17">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -512,75 +519,55 @@ Loading on remote machines requires that there is a service or application runni
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="19" second="20">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="17" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="21">
+      <Relationship type="Association" first="16" second="19">
         <Label>Store by ID</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2981</X>
-          <Y>1391</Y>
+          <X>2985</X>
+          <Y>1324</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="21" second="13">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3313</X>
-          <Y>1628</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3440</X>
-          <Y>1760</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="10" second="18">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="9" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="22">
+      <Relationship type="Association" first="16" second="20">
         <Label>Store by ID</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2981</X>
+          <Y>1385</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>1..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Realization" first="24" second="23">
+      <Relationship type="Realization" first="22" second="21">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="12" second="23">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="11" second="21">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="23" second="23">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="21" second="21">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -589,14 +576,12 @@ Loading on remote machines requires that there is a service or application runni
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1511</X>
-          <Y>1915</Y>
+          <Y>1932</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="24" second="20">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="22" second="18">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -610,71 +595,55 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="25" second="10">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="26" second="23">
+      <Relationship type="Comment" first="24" second="21">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="9" second="7">
+      <Relationship type="Comment" first="8" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2887</X>
-          <Y>544</Y>
+          <X>2721</X>
+          <Y>763</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="27" second="7">
+      <Relationship type="Comment" first="25" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2861</X>
-          <Y>655</Y>
+          <X>2695</X>
+          <Y>874</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="29" second="28">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="27" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="17" second="29">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="15" second="27">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="16" second="30">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="14" second="28">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="31" second="30">
+      <Relationship type="Comment" first="29" second="28">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="32" second="13">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="10" second="24">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="9" second="22">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="35" second="33">
+      <Relationship type="Comment" first="32" second="30">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -682,7 +651,9 @@ Loading on remote machines requires that there is a service or application runni
           <Y>1010</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="17" second="33">
+      <Relationship type="Association" first="15" second="30">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -692,47 +663,49 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="36" second="29">
+      <Relationship type="Comment" first="33" second="27">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="22" second="37">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="20" second="34">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3440</X>
-          <Y>1237</Y>
+          <X>3420</X>
+          <Y>1479</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3706</X>
-          <Y>1326</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="21" second="37">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>3703</X>
+          <X>3678</X>
           <Y>1453</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="38" second="15">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="19" second="34">
         <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3498</X>
+          <Y>1271</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3678</X>
+          <Y>1316</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="35" second="13">
+        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3240</X>
+          <Y>183</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="34" second="33">
+      <Relationship type="Comment" first="31" second="30">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -744,22 +717,26 @@ Loading on remote machines requires that there is a service or application runni
           <Y>1024</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="33" second="38">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="10" second="40">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="30" second="35">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2238</X>
-          <Y>1201</Y>
+          <X>1064</X>
+          <Y>1023</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2951</X>
+          <Y>103</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="9" second="37">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2265</X>
+          <Y>1200</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1975</X>
@@ -768,24 +745,62 @@ Loading on remote machines requires that there is a service or application runni
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="11" second="33">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="10" second="30">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="40" second="33">
+      <Relationship type="Association" first="37" second="30">
         <Label>Links to</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="41" second="23">
+      <Relationship type="Comment" first="39" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="23" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="19" second="35">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3495</X>
+          <Y>1223</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3436</X>
+          <Y>123</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="22" second="41">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2115</X>
+          <Y>1884</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="42" second="41">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="38" second="41">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
@@ -876,24 +891,6 @@ The application can provide the exact assembly details (name, version number, pu
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
-      <Entity type="Class">
-        <Name>Dataset</Name>
-        <Access>Public</Access>
-        <Location left="643" top="1292" />
-        <Size width="220" height="126" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IDataSet</Name>
-        <Access>Internal</Access>
-        <Location left="277" top="1292" />
-        <Size width="191" height="112" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">DatasetId Id { get; }</Member>
-        <Member type="Property">string Name { get; set; }</Member>
-        <Member type="Property">string Description { get; set; }</Member>
-      </Entity>
       <Entity type="Interface">
         <Name>IHistory</Name>
         <Access>Internal</Access>
@@ -920,7 +917,7 @@ The application can provide the exact assembly details (name, version number, pu
       <Entity type="Interface">
         <Name>IComponent</Name>
         <Access>Internal</Access>
-        <Location left="1365" top="1930" />
+        <Location left="1365" top="1949" />
         <Size width="174" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">ComponentId Id { get; }</Member>
@@ -987,6 +984,28 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Member type="Property">public Range&lt;int&gt; DesiredDistributionRange { get; }</Member>
         <Modifier>None</Modifier>
       </Entity>
+      <Entity type="Interface">
+        <Name>IDataSet</Name>
+        <Access>Internal</Access>
+        <Location left="50" top="1247" />
+        <Size width="310" height="163" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">DatasetId Id { get; }</Member>
+        <Member type="Property">string Name { get; set; }</Member>
+        <Member type="Property">string Description { get; set; }</Member>
+        <Member type="Method">void Save(Stream persistenceStream)</Member>
+        <Member type="Method">TCommand CommandsFor&lt;TCommand&gt;()</Member>
+        <Member type="Method">CommandSet CommandsFor(Type commandType)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Dataset</Name>
+        <Access>Internal</Access>
+        <Location left="597" top="1277" />
+        <Size width="288" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void RegisterCommandSet(ICommandSet set)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="2" second="0">
@@ -998,6 +1017,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1023,91 +1044,31 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>541</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="12" second="13">
+      <Relationship type="Realization" first="13" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="13" second="8">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="12">
-        <Label>
-        </Label>
+      <Relationship type="Realization" first="14" second="8">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="8" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="12" second="9">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>996</X>
-          <Y>1360</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1446</X>
-          <Y>1392</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="12" second="10">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>769</X>
-          <Y>1470</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>663</X>
-          <Y>1773</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="12" second="14">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>713</X>
-          <Y>1443</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="15" second="9">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="15" second="8">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="16" second="8">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="8" second="18">
-        <Label>
-        </Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="19" second="15">
+      <Relationship type="Comment" first="17" second="13">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="20" second="15">
+      <Relationship type="Comment" first="18" second="13">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1115,7 +1076,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1788</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="6" second="15">
+      <Relationship type="Comment" first="6" second="13">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1127,41 +1088,19 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1637</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="21" second="11">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="19" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="0" second="21">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="0" second="19">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="12" second="21">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>888</X>
-          <Y>1320</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1372</X>
-          <Y>762</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="16" second="21">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="14" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1171,11 +1110,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="22" second="21">
+      <Relationship type="Comment" first="20" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="5" second="16">
+      <Relationship type="Comment" first="5" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1187,7 +1126,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1502</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="7" second="16">
+      <Relationship type="Comment" first="7" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1199,25 +1138,101 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1463</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="4" second="16">
+      <Relationship type="Comment" first="4" second="14">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="23" second="24">
+      <Relationship type="Comment" first="21" second="22">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="12" second="24">
+      <Relationship type="Realization" first="24" second="23">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>572</X>
+          <Y>1333</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>400</X>
+          <Y>1333</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="24" second="12">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>814</X>
-          <Y>1267</Y>
+          <X>668</X>
+          <Y>1397</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="24" second="10">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>742</X>
+          <Y>1401</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="24" second="9">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>930</X>
+          <Y>1325</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="24" second="22">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>836</X>
+          <Y>1245</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="1" second="24">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="24" second="19">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>951</X>
+          <Y>1302</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="13" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
     </Relationships>
   </ProjectItem>
@@ -1228,15 +1243,15 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>ICommunicationLayer</Name>
         <Access>Public</Access>
-        <Location left="726" top="68" />
-        <Size width="243" height="216" />
+        <Location left="988" top="297" />
+        <Size width="399" height="216" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">TProxy Commands&lt;TProxy&gt;()</Member>
+        <Member type="Method">void SendMessageTo(EndPointId endpoint, IMessage message)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>ICommunicationChannel</Name>
         <Access>Internal</Access>
-        <Location left="1086" top="619" />
+        <Location left="1608" top="964" />
         <Size width="236" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Send(IMessage messageToSend)</Member>
@@ -1244,7 +1259,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Class">
         <Name>NamedPipeChannel</Name>
         <Access>Internal</Access>
-        <Location left="602" top="839" />
+        <Location left="1124" top="1184" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1252,7 +1267,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Class">
         <Name>PeerToPeerChannel</Name>
         <Access>Internal</Access>
-        <Location left="1105" top="839" />
+        <Location left="1627" top="1184" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1260,7 +1275,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Class">
         <Name>TcpChannel</Name>
         <Access>Internal</Access>
-        <Location left="1714" top="839" />
+        <Location left="2236" top="1184" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1268,7 +1283,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>IMessage</Name>
         <Access>Internal</Access>
-        <Location left="1365" top="281" />
+        <Location left="2193" top="593" />
         <Size width="207" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">MessageId Id { get; }</Member>
@@ -1276,65 +1291,98 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       </Entity>
       <Entity type="Comment">
         <Text>How are we going to deal with large amounts of data? Do some kind of streaming system?</Text>
-        <Location left="1420" top="619" />
+        <Location left="1942" top="964" />
         <Size width="160" height="94" />
       </Entity>
       <Entity type="Comment">
         <Text>Need a good abstraction there. For named pipes we can share a memory block, but for P2P and TCP we need some streaming download. Probably chunked, restartable and compressed.</Text>
-        <Location left="1680" top="603" />
+        <Location left="2202" top="948" />
         <Size width="215" height="122" />
       </Entity>
       <Entity type="Comment">
         <Text>We only want to make one hole in the firewall for each of these communication methods. so there should really only be one port opened. The obvious catch is that we need to support the ability to run multiple instances of the same application ....</Text>
-        <Location left="1348" top="1145" />
+        <Location left="1870" top="1490" />
         <Size width="254" height="138" />
       </Entity>
       <Entity type="Class">
         <Name>MessageId</Name>
         <Access>Internal</Access>
-        <Location left="1689" top="281" />
+        <Location left="2215" top="295" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines a globally unique ID number for messages send between different instances of the Apollo application.</Text>
-        <Location left="1985" top="269" />
+        <Location left="2197" top="101" />
         <Size width="199" height="91" />
       </Entity>
       <Entity type="Comment">
         <Text>Should there be a layer in between the external interface (used by the app) and the actual channels. Somehow we need to track channels and for the P2P / TCP channels we may need to share ports etc.</Text>
-        <Location left="1047" top="281" />
+        <Location left="1000" top="75" />
         <Size width="224" height="120" />
       </Entity>
       <Entity type="Comment">
         <Text>Should be allowed to start a channel with given connection parameters. This is necessary for:
 - Initial start of the dataset application
 - Reconnecting to a lost dataset application / service.</Text>
-        <Location left="659" top="368" />
+        <Location left="1037" top="596" />
         <Size width="265" height="123" />
       </Entity>
       <Entity type="Class">
         <Name>MessageHub</Name>
         <Access>Public</Access>
-        <Location left="102" top="117" />
+        <Location left="364" top="346" />
         <Size width="366" height="111" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public void Send(IMessage message, Action&lt;IMessage&gt; onReturn)</Member>
-        <Member type="Method">public void Send(IMessage message)</Member>
+        <Member type="Method">public TProxy CommandsFor&lt;TProxy&gt;(EndPointId endpoint)</Member>
+        <Member type="Method">public TProxy RequestsFor&lt;TProxy&gt;(EndPointId endpoint)</Member>
         <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Hide the fact that we're using messages.</Text>
-        <Location left="217" top="368" />
-        <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Can have a method that returns a facade object. This facade object can then contain all the required methods for sending messages. e.g. there could be a DatasetFacade object which contains all the methods necessary for communicating with the dataset.
 
 This should help fix the problem of messages and needing to have one method per message etc..</Text>
-        <Location left="1047" top="49" />
-        <Size width="293" height="174" />
+        <Location left="402" top="35" />
+        <Size width="293" height="172" />
+      </Entity>
+      <Entity type="Class">
+        <Name>CommandSet</Name>
+        <Access>Public</Access>
+        <Location left="468" top="614" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CommunicationLayer</Name>
+        <Access>Public</Access>
+        <Location left="1635" top="303" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>CommunicationChannelCommands</Name>
+        <Access>Public</Access>
+        <Location left="438" top="1034" />
+        <Size width="215" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>MachineCommands</Name>
+        <Access>Public</Access>
+        <Location left="825" top="787" />
+        <Size width="388" height="215" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public EndPointId LoadNewDataset(MachineId machineToLoadOn)</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>How do we deal with incomming messages? They'll need to invoke commands.</Text>
+        <Location left="745" top="540" />
+        <Size width="176" height="90" />
       </Entity>
     </Entities>
     <Relationships>
@@ -1342,8 +1390,8 @@ This should help fix the problem of messages and needing to have one method per 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1124</X>
-          <Y>722</Y>
+          <X>1646</X>
+          <Y>1067</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Realization" first="3" second="1">
@@ -1354,8 +1402,8 @@ This should help fix the problem of messages and needing to have one method per 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1255</X>
-          <Y>724</Y>
+          <X>1777</X>
+          <Y>1069</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="7" second="6">
@@ -1370,27 +1418,41 @@ This should help fix the problem of messages and needing to have one method per 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1542</X>
-          <Y>1120</Y>
+          <X>2064</X>
+          <Y>1465</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="8" second="3">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1440</X>
-          <Y>1120</Y>
+          <X>1962</X>
+          <Y>1465</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="10" second="9">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2296</X>
+          <Y>217</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2296</X>
+          <Y>262</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Association" first="5" second="9">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2290</X>
+          <Y>557</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2290</X>
+          <Y>397</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
@@ -1399,8 +1461,6 @@ This should help fix the problem of messages and needing to have one method per 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1410,9 +1470,61 @@ This should help fix the problem of messages and needing to have one method per 
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="15" second="0">
+      <Relationship type="Comment" first="11" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="13" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="16" second="0">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="16" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Generalization" first="18" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>921</X>
+          <Y>762</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>655</X>
+          <Y>699</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="17" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="19" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>683</X>
+          <Y>482</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="19" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>963</X>
+          <Y>453</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

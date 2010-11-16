@@ -28,7 +28,7 @@
       </Entity>
       <Entity type="Interface">
         <Name>IExecutor</Name>
-        <Access>Internal</Access>
+        <Access>Public</Access>
         <Location left="976" top="199" />
         <Size width="363" height="78" />
         <Collapsed>False</Collapsed>
@@ -141,7 +141,7 @@ Also a start node does not have any parents and an end node does not have any ch
       </Entity>
       <Entity type="Class">
         <Name>ExecutionToken</Name>
-        <Access>Internal</Access>
+        <Access>Public</Access>
         <Location left="192" top="389" />
         <Size width="175" height="196" />
         <Collapsed>False</Collapsed>
