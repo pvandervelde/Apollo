@@ -14,9 +14,8 @@ namespace Apollo.Utils
     /// Defines methods for retrieving resource strings.
     /// </summary>
     /// <design>
-    /// Unlike any of the other source code in the <c>Apollo.Utils.SrcOnly</c> project
-    /// this class should NOT be copied to the host project. Define a NEW class called
-    /// <c>Apollo.Utils.SrcOnlyResources</c> that mimicks the current class.
+    /// This class handles the resource retrieval for the code that is linked from 
+    /// <c>Apollo.Utils.SrcOnly</c> project.
     /// </design>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Src",
         Justification = "This class is only used internally.")]

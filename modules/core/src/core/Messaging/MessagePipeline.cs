@@ -455,6 +455,7 @@ namespace Apollo.Core.Messaging
             // Really what you want here is send the message asynchronously but if possible not on a new thread. Putting up a new thread
             // for each message may well lead to problems like race-conditions / deadlocks & maybe even worse thread pool exhaustion (there
             // are after all only 25-ish threads in the pool).
+            // Reactive Extensions may be useful for this. Using them might mean that we have to twist some things around though.
             // @Todo: Would the use of a new thread for each message cause a problem with a) race-conditions / deadlocks & b) thread pool exhaustion?
             SecurityHelpers.Elevate(
                 new PermissionSet(PermissionState.Unrestricted),

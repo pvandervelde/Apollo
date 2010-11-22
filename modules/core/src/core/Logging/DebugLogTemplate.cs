@@ -77,7 +77,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         public LevelToLog DefaultLogLevel()
         {
-            #if DEBUG
+#if DEBUG
                 // Default debug setting is to log errors and fatals only.
                 return LevelToLog.Info;
 #else
