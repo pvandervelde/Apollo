@@ -25,7 +25,7 @@
       <Entity type="Class">
         <Name>Calculator</Name>
         <Access>Public</Access>
-        <Location left="1973" top="1019" />
+        <Location left="1970" top="1019" />
         <Size width="162" height="85" />
         <Collapsed>False</Collapsed>
         <Modifier>Abstract</Modifier>
@@ -61,9 +61,10 @@ Note that equivalent variables can be done through a transform x = y</Text>
         <Name>Range</Name>
         <Access>Public</Access>
         <Location left="605" top="403" />
-        <Size width="162" height="85" />
+        <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
+        <Member type="Property">public bool IsInRange { get; }</Member>
+        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Defines the range of the variable. Can be:
@@ -120,7 +121,7 @@ Also we'll need some way of storing the error with the variable (e.g. +- 0.01)</
       <Entity type="Class">
         <Name>TensorType</Name>
         <Access>Public</Access>
-        <Location left="849" top="1060" />
+        <Location left="907" top="1060" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -156,7 +157,7 @@ This means the iteration will run over x,y,z in each time step.</Text>
       <Entity type="Interface">
         <Name>IVariable</Name>
         <Access>Public</Access>
-        <Location left="878" top="212" />
+        <Location left="866" top="212" />
         <Size width="244" height="163" />
         <Collapsed>False</Collapsed>
         <Member type="Property">VariableId Id { get; }</Member>
@@ -186,17 +187,28 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <Name>Accessor</Name>
         <Access>Public</Access>
         <Location left="1274" top="1019" />
-        <Size width="270" height="94" />
+        <Size width="270" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public static implicit operator double(Accessor accessor)</Member>
+        <Member type="Method">public static implicit operator Vector(Accessor accessor)</Member>
+        <Member type="Method">public static implicit operator Matrix(Accessor accessor)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>Variable</Name>
         <Access>Public</Access>
-        <Location left="878" top="628" />
-        <Size width="162" height="216" />
+        <Location left="866" top="628" />
+        <Size width="245" height="230" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">public VariableId Id { get; }</Member>
+        <Member type="Property">public Range Range { get; }</Member>
+        <Member type="Property">public Accessor Value { get; }</Member>
+        <Member type="Property">public Quantity Quantity { get; }</Member>
+        <Member type="Property">public TensorType Type { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;VariableAlias&gt; Aliasses()</Member>
+        <Member type="Method">public override bool Equals(object obj)</Member>
+        <Member type="Method">public override int GetHashCode()</Member>
+        <Member type="Method">public override string ToString()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Interface">
@@ -228,7 +240,7 @@ This means the iteration will run over x,y,z in each time step.</Text>
           <Y>899</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2050</X>
+          <X>2047</X>
           <Y>979</Y>
         </BendPoint>
       </Relationship>
@@ -269,8 +281,6 @@ This means the iteration will run over x,y,z in each time step.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -304,7 +314,7 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2031</X>
+          <X>2028</X>
           <Y>1129</Y>
         </BendPoint>
       </Relationship>
@@ -312,13 +322,11 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2087</X>
+          <X>2084</X>
           <Y>1129</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="24" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -330,29 +338,33 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>978</X>
-          <Y>594</Y>
+          <X>982</X>
+          <Y>589</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>978</X>
-          <Y>404</Y>
+          <X>982</X>
+          <Y>400</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="25" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>944</X>
-          <Y>578</Y>
+          <X>898</X>
+          <Y>581</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="25" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1065</X>
+          <X>1136</X>
           <Y>692</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -363,16 +375,20 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="25" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="25" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>806</X>
+          <X>794</X>
           <Y>789</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -383,6 +399,8 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="25" second="24">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -401,18 +419,24 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="23" second="26">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="24" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="25" second="15">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -434,7 +458,7 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1074</X>
+          <X>1062</X>
           <Y>187</Y>
         </BendPoint>
       </Relationship>
@@ -442,7 +466,7 @@ This means the iteration will run over x,y,z in each time step.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>935</X>
+          <X>923</X>
           <Y>187</Y>
         </BendPoint>
       </Relationship>

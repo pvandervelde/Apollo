@@ -124,8 +124,8 @@ Note that some elements are manditory but others are not. Some components may ha
 - Inter component
 - Inter object
 - Component - UI and reverse</Text>
-        <Location left="10" top="601" />
-        <Size width="199" height="108" />
+        <Location left="10" top="578" />
+        <Size width="294" height="108" />
       </Entity>
       <Entity type="Comment">
         <Text>External interfaces describe the different "APIs" that are available to other components</Text>
@@ -161,7 +161,7 @@ e.g. a action could be defined by a set of coworker methods (on different object
 - construction links, e.g. one object relies on another for construction (either directly or indirectly, e.g. mesh - geometry)
 
 Note that objects may only be linked when they're executing. This is especially useful for actions.</Text>
-        <Location left="10" top="243" />
+        <Location left="10" top="239" />
         <Size width="294" height="167" />
       </Entity>
       <Entity type="Comment">
@@ -177,7 +177,7 @@ Do we allow objects to specify dialog layouts?</Text>
         <Text>Allow objects / components to indicate which of their coworkers are read, write or read/write connections. That way we can trace which components get changed by whom.
 
 For data components this should lead to a hierarchy of components. e.g. geometry - mesh</Text>
-        <Location left="10" top="420" />
+        <Location left="10" top="409" />
         <Size width="294" height="165" />
       </Entity>
       <Entity type="Comment">
@@ -185,11 +185,15 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Location left="372" top="705" />
         <Size width="160" height="89" />
       </Entity>
+      <Entity type="Comment">
+        <Text>Can we define coworkers based on a graph (i.e. be able to specify the graph of coworkers for one single component wiht coworkers of coworkers etc.).
+The obvious catch is how to we indicate the graph? And then is it worth it?</Text>
+        <Location left="10" top="689" />
+        <Size width="294" height="121" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="3" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -204,8 +208,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -220,8 +222,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="6" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
