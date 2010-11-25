@@ -4,13 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
+using Moq;
 
 namespace Apollo.Core.Logging
 {
@@ -20,76 +20,20 @@ namespace Apollo.Core.Logging
             Justification = "Unit tests do not need documentation.")]
     public sealed class LogEntryRequestMessageTest
     {
-        #region Internal class - MockMessage
-
-        /// <summary>
-        /// A mock implementation of <see cref="ILogMessage"/>.
-        /// </summary>
-        [Serializable]
-        private sealed class MockMessage : ILogMessage
+        private static ILogMessage GenerateMockMessage(string owner, LevelToLog level, string text)
         {
-            private readonly string m_Text;
-
-            public MockMessage()
-            { 
-            }
-
-            public MockMessage(string origin, LevelToLog level, string text)
+            var msg = new Mock<ILogMessage>();
             {
-                Origin = origin;
-                Level = level;
-                m_Text = text;
+                msg.Setup(m => m.Origin)
+                    .Returns(owner);
+                msg.Setup(m => m.Level)
+                    .Returns(level);
+                msg.Setup(m => m.Text())
+                    .Returns(text);
             }
 
-            #region Implementation of ILogMessage
-
-            /// <summary>
-            /// Gets the origin of the message. The origin can for instance be the
-            /// type from which the message came.
-            /// </summary>
-            /// <value>The type of the owner.</value>
-            public string Origin
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Gets the desired log level for this message.
-            /// </summary>
-            /// <value>The desired level.</value>
-            public LevelToLog Level
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Returns the message text for this message.
-            /// </summary>
-            /// <returns>
-            /// The text for this message.
-            /// </returns>
-            public string Text()
-            {
-                return m_Text;
-            }
-
-            #endregion
-
-            public override bool Equals(object obj)
-            {
-                var other = obj as MockMessage;
-                return (other != null) && (other.Text() == Text()) && (other.Level == Level) && (other.Origin == Origin);
-            }
-
-            public override int GetHashCode()
-            {
-                return base.GetHashCode();
-            }
+            return msg.Object;
         }
-
-        #endregion
 
         [VerifyContract]
         [Description("Checks that the GetHashCode() contract is implemented correctly.")]
@@ -104,11 +48,11 @@ namespace Apollo.Core.Logging
             DistinctInstances = DataGenerators.Join(
                     new List<ILogMessage> 
                         {
-                            new MockMessage(),
-                            new MockMessage(),
-                            new MockMessage(),
-                            new MockMessage(),
-                            new MockMessage(),
+                            GenerateMockMessage("a", LevelToLog.Info, "b"),
+                            GenerateMockMessage("c", LevelToLog.Info, "d"),
+                            GenerateMockMessage("a", LevelToLog.Warn, "b"),
+                            GenerateMockMessage("a", LevelToLog.Error, "b"),
+                            GenerateMockMessage("a", LevelToLog.Fatal, "b"),
                         },
                     new List<LogType> 
                         {
@@ -125,9 +69,9 @@ namespace Apollo.Core.Logging
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection<MessageBody> 
                 { 
-                    new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Debug),
-                    new LogEntryRequestMessage(new MockMessage("c", LevelToLog.Warn, "d"), LogType.Debug),
-                    new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Command),
+                    new LogEntryRequestMessage(GenerateMockMessage("a", LevelToLog.Info, "b"), LogType.Debug),
+                    new LogEntryRequestMessage(GenerateMockMessage("c", LevelToLog.Warn, "d"), LogType.Debug),
+                    new LogEntryRequestMessage(GenerateMockMessage("a", LevelToLog.Info, "b"), LogType.Command),
                 },
         };
 
@@ -135,30 +79,50 @@ namespace Apollo.Core.Logging
         [Description("Checks that the log type is properly stored.")]
         public void CheckLogType()
         {
-            var message = new LogEntryRequestMessage(new MockMessage(), LogType.Command);
-            Assert.AreEqual(LogType.Command, message.LogType);
+            var message = new Mock<ILogMessage>();
+            {
+                message.Setup(m => m.Level)
+                    .Returns(LevelToLog.Info);
+                message.Setup(m => m.Origin)
+                    .Returns("fromhere");
+                message.Setup(m => m.Text())
+                    .Returns("This is an interesting message.");
+            }
+
+            var msg = new LogEntryRequestMessage(message.Object, LogType.Command);
+            Assert.AreEqual(LogType.Command, msg.LogType);
         }
 
         [Test]
         [Description("Checks that the message is properly stored.")]
         public void Message()
         {
-            var logMessage = new MockMessage();
-            var message = new LogEntryRequestMessage(logMessage, LogType.Command);
-            Assert.AreSame(logMessage, message.Message);
+            var message = new Mock<ILogMessage>();
+            {
+                message.Setup(m => m.Level)
+                    .Returns(LevelToLog.None);
+                message.Setup(m => m.Origin)
+                    .Returns("fromhere");
+                message.Setup(m => m.Text())
+                    .Returns("This is an interesting message.");
+            }
+
+            var msg = new LogEntryRequestMessage(message.Object, LogType.Command);
+            Assert.AreSame(message.Object, msg.Message);
         }
 
         [Test]
         [Description("Checks that the message serialises and deserialises correctly.")]
         public void RoundTripSerialise()
         {
-            var msg = new LogEntryRequestMessage(new MockMessage("a", LevelToLog.Info, "b"), LogType.Command);
+            var msg = new LogEntryRequestMessage(new LogMessage("a", LevelToLog.Fatal, "b"), LogType.Command);
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
-            AssertEx.That(
-               () => msg.IsResponseRequired == otherMsg.IsResponseRequired
-                  && msg.LogType == otherMsg.LogType
-                  && msg.Message.Equals(otherMsg.Message));
+            Assert.IsTrue(msg.IsResponseRequired == otherMsg.IsResponseRequired);
+            Assert.AreEqual(msg.LogType, otherMsg.LogType);
+            Assert.AreEqual(msg.Message.Origin, otherMsg.Message.Origin);
+            Assert.AreEqual(msg.Message.Level, otherMsg.Message.Level);
+            Assert.AreEqual(msg.Message.Text(), otherMsg.Message.Text());
         }
     }
 }

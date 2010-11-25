@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils.Licensing;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Core.Utils.Licensing
 {
@@ -17,24 +18,6 @@ namespace Apollo.Core.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class ValidationServiceRunnerTest
     {
-        #region internal class - MockValidationService
-
-        private sealed class MockValidationService : IValidationService
-        {
-            public void StartValidation()
-            {
-                Started = true;
-            }
-
-            public bool Started
-            {
-                get;
-                set;
-            }
-        }
-        
-        #endregion
-
         [Test]
         [Description("Checks that a service runner cannot be created with a null service reference.")]
         public void CreateWithNullService()
@@ -46,11 +29,16 @@ namespace Apollo.Core.Utils.Licensing
         [Description("Checks that the service is correctly started.")]
         public void Initialize()
         {
-            var mockService = new MockValidationService();
-            var runner = new ValidationServiceRunner(mockService);
+            var mockService = new Mock<IValidationService>();
+            {
+                mockService.Setup(s => s.StartValidation())
+                    .Verifiable();
+            }
+
+            var runner = new ValidationServiceRunner(mockService.Object);
 
             runner.Initialize();
-            Assert.IsTrue(mockService.Started);
+            mockService.Verify(s => s.StartValidation(), Times.Exactly(1));
         }
     }
 }

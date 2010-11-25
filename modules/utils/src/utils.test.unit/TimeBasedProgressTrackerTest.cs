@@ -34,34 +34,6 @@ namespace Apollo.Utils
         
         #endregion
 
-        #region internal class - MockTimer
-
-        private sealed class MockTimer : IProgressTimer
-        {
-            public void Start()
-            {
-                // Do nothing
-            }
-
-            public void Stop()
-            {
-                // do nothing
-            }
-
-            public event EventHandler<TimerElapsedEventArgs> Elapsed;
-
-            public void RaiseElapsed(DateTime time)
-            {
-                var local = Elapsed;
-                if (local != null)
-                {
-                    local(this, new TimerElapsedEventArgs(time));
-                }
-            }
-        }
-
-        #endregion
-
         [Test]
         [Description("Checks that an object cannot be created with a null timer.")]
         public void CreateWithNullTimer()
@@ -110,8 +82,8 @@ namespace Apollo.Utils
                     .Returns(new TimeSpan(0, 0, 40));
             }
 
-            var timer = new MockTimer();
-            var tracker = new TimeBasedProgressTracker(timer, -1, store.Object);
+            var timer = new Mock<IProgressTimer>();
+            var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
 
             Assert.Throws<CurrentProgressMarkNotSetException>(() => tracker.StartTracking());
         }
@@ -126,13 +98,13 @@ namespace Apollo.Utils
                     .Returns(new TimeSpan(0, 0, 40));
             }
 
-            var timer = new MockTimer();
+            var timer = new Mock<IProgressTimer>();
 
             IProgressMark storedMark = null;
             int storedProgress = 0;
-            var tracker = new TimeBasedProgressTracker(timer, -1, store.Object);
-            tracker.StartupProgress += (s, e) => 
-                {  
+            var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
+            tracker.StartupProgress += (s, e) =>
+                {
                     storedMark = e.CurrentlyProcessing;
                     storedProgress = e.Progress;
                 };
@@ -144,7 +116,7 @@ namespace Apollo.Utils
             tracker.Mark(mark1);
             tracker.StartTracking();
 
-            timer.RaiseElapsed(now.AddSeconds(10.0));
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);
@@ -154,7 +126,7 @@ namespace Apollo.Utils
 
             tracker.Mark(mark2);
 
-            timer.RaiseElapsed(now.AddSeconds(30.0));
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(30.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);
@@ -175,11 +147,11 @@ namespace Apollo.Utils
                     .Returns(new TimeSpan(0, 0, 5));
             }
 
-            var timer = new MockTimer();
+            var timer = new Mock<IProgressTimer>();
 
             IProgressMark storedMark = null;
             int storedProgress = 0;
-            var tracker = new TimeBasedProgressTracker(timer, -1, store.Object);
+            var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
             tracker.StartupProgress += (s, e) =>
             {
                 storedMark = e.CurrentlyProcessing;
@@ -192,7 +164,7 @@ namespace Apollo.Utils
             tracker.Mark(mark1);
             tracker.StartTracking();
 
-            timer.RaiseElapsed(now.AddSeconds(10.0));
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);

@@ -82,10 +82,10 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
         /// </summary>
-        /// <param name="fulltrustAssemblies">
+        /// <param name="fullTrustAssemblies">
         /// A collection of assemblies which are full trust assemblies.
         /// </param>
-        protected KernelStartInfo(IEnumerable<Assembly> fulltrustAssemblies)
+        protected KernelStartInfo(IEnumerable<Assembly> fullTrustAssemblies)
         {
             m_CoreAssemblies = new List<FileInfo>
                 {
@@ -154,7 +154,7 @@ namespace Apollo.Core
                     typeof(Autofac.IContainer).Assembly.GetStrongName(),
                 };
 
-            foreach (var assembly in fulltrustAssemblies)
+            foreach (var assembly in fullTrustAssemblies)
             {
                 var strongName = assembly.GetStrongName();
                 if (!m_FullTrustAssemblies.Contains(strongName))

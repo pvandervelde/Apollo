@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils.Licensing;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Core.Utils.Licensing
 {
@@ -17,89 +18,49 @@ namespace Apollo.Core.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class CacheConnectorChannelEndPointTest
     {
-        #region internal class - MockLicenseValidationCacheProxy
-
-        private sealed class MockLicenseValidationCacheProxy : ILicenseValidationCacheProxy
-        {
-            public LicenseCheckResult LatestResult
-            {
-                get 
-                { 
-                    throw new NotImplementedException(); 
-                }
-            }
-        }
-        
-        #endregion
-
-        #region internal class - MockCacheProxyHolder
-
-        private sealed class MockCacheProxyHolder : ICacheProxyHolder
-        {
-            public void Store(ILicenseValidationCacheProxy proxy)
-            {
-                Proxy = proxy;
-            }
-
-            public void Release(ILicenseValidationCacheProxy proxy)
-            {
-                if (ReferenceEquals(Proxy, proxy))
-                {
-                    Proxy = null;
-                }
-            }
-
-            public ILicenseValidationCacheProxy Proxy
-            {
-                get;
-                set;
-            }
-        }
-        
-        #endregion
-
         [Test]
         [Description("Checks that an EndPoint cannot be created with a null factory reference.")]
         public void CreateWithNullProxyFactory()
         { 
-            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(null, new MockCacheProxyHolder()));
+            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(null, new Mock<ICacheProxyHolder>().Object));
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot be created with a null proxy holder.")]
         public void CreateWithNullCache()
         {
-            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(() => new MockLicenseValidationCacheProxy(), null));
+            Assert.Throws<ArgumentNullException>(() => new CacheConnectorChannelEndpoint(() => new Mock<ILicenseValidationCacheProxy>().Object, null));
         }
 
         [Test]
         [Description("Checks that an EndPoint returns the correct local proxy value.")]
         public void LocalProxy()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, new MockCacheProxyHolder());
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            var holder = new Mock<ICacheProxyHolder>();
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
-            Assert.AreSame(proxy, endPoint.LocalProxy());
+            Assert.AreSame(proxy.Object, endPoint.LocalProxy());
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot connect to a proxy with a null AppDomain reference.")]
         public void ConnectWithNullAppDomain()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            var holder = new Mock<ICacheProxyHolder>();
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
-            Assert.Throws<ArgumentNullException>(() => endPoint.Connect(null, new MockLicenseValidationCacheProxy()));
+            Assert.Throws<ArgumentNullException>(() => endPoint.Connect(null, new Mock<ILicenseValidationCacheProxy>().Object));
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot connect to a proxy with a null proxy reference.")]
         public void ConnectWithNullProxy()
-        { 
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+        {
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            var holder = new Mock<ICacheProxyHolder>();
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
             Assert.Throws<ArgumentNullException>(() => endPoint.Connect(AppDomain.CurrentDomain, null));
         }
@@ -108,35 +69,47 @@ namespace Apollo.Core.Utils.Licensing
         [Description("Checks that an EndPoint does not store a proxy if another proxy is already stored for the given AppDomain.")]
         public void ConnectWithExistingAppDomain()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            ILicenseValidationCacheProxy storedProxy = null;
+            var holder = new Mock<ICacheProxyHolder>();
+            {
+                holder.Setup(h => h.Store(It.IsAny<ILicenseValidationCacheProxy>()))
+                    .Callback<ILicenseValidationCacheProxy>(p => storedProxy = p);
+            }
 
-            endPoint.Connect(AppDomain.CurrentDomain, proxy);
-            endPoint.Connect(AppDomain.CurrentDomain, new MockLicenseValidationCacheProxy());
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
-            Assert.AreSame(proxy, holder.Proxy);
+            endPoint.Connect(AppDomain.CurrentDomain, proxy.Object);
+            endPoint.Connect(AppDomain.CurrentDomain, new Mock<ILicenseValidationCacheProxy>().Object);
+
+            Assert.AreSame(proxy.Object, storedProxy);
         }
 
         [Test]
         [Description("Checks that an EndPoint can be connected to a proxy.")]
         public void Connect()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            ILicenseValidationCacheProxy storedProxy = null;
+            var holder = new Mock<ICacheProxyHolder>();
+            {
+                holder.Setup(h => h.Store(It.IsAny<ILicenseValidationCacheProxy>()))
+                    .Callback<ILicenseValidationCacheProxy>(p => storedProxy = p);
+            }
 
-            endPoint.Connect(AppDomain.CurrentDomain, proxy);
-            Assert.AreSame(proxy, holder.Proxy);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
+
+            endPoint.Connect(AppDomain.CurrentDomain, proxy.Object);
+            Assert.AreSame(proxy.Object, storedProxy);
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot be disconnected with a null AppDomain reference.")]
         public void DisconnectWithNullAppDomain()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            var holder = new Mock<ICacheProxyHolder>();
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
             Assert.Throws<ArgumentNullException>(() => endPoint.Disconnect(null));
         }
@@ -145,28 +118,42 @@ namespace Apollo.Core.Utils.Licensing
         [Description("Checks that an EndPoint cannot connect to a proxy with a null AppDomain reference.")]
         public void DisconnectWithNonExistingAppDomain()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            ILicenseValidationCacheProxy storedProxy = null;
+            var holder = new Mock<ICacheProxyHolder>();
+            {
+                holder.Setup(h => h.Store(It.IsAny<ILicenseValidationCacheProxy>()))
+                    .Callback<ILicenseValidationCacheProxy>(p => storedProxy = p);
+            }
 
-            holder.Proxy = proxy;
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
+
             endPoint.Disconnect(AppDomain.CurrentDomain);
-            Assert.IsNotNull(holder.Proxy);
+            Assert.IsNull(storedProxy);
         }
 
         [Test]
         [Description("Checks that an EndPoint cannot be disconnected from a proxy.")]
         public void Disconnect()
         {
-            var proxy = new MockLicenseValidationCacheProxy();
-            var holder = new MockCacheProxyHolder();
-            var endPoint = new CacheConnectorChannelEndpoint(() => proxy, holder);
+            var proxy = new Mock<ILicenseValidationCacheProxy>();
+            ILicenseValidationCacheProxy storedProxy = null;
+            var holder = new Mock<ICacheProxyHolder>();
+            {
+                holder.Setup(h => h.Store(It.IsAny<ILicenseValidationCacheProxy>()))
+                    .Callback<ILicenseValidationCacheProxy>(p => storedProxy = p);
+                holder.Setup(h => h.Release(It.IsAny<ILicenseValidationCacheProxy>()))
+                    .Callback<ILicenseValidationCacheProxy>(p => storedProxy = p);
+            }
 
-            endPoint.Connect(AppDomain.CurrentDomain, proxy);
-            Assert.AreSame(proxy, holder.Proxy);
+            var endPoint = new CacheConnectorChannelEndpoint(() => proxy.Object, holder.Object);
 
+            endPoint.Connect(AppDomain.CurrentDomain, proxy.Object);
+            Assert.AreSame(proxy.Object, storedProxy);
+
+            storedProxy = null;
             endPoint.Disconnect(AppDomain.CurrentDomain);
-            Assert.IsNull(holder.Proxy);
+            Assert.IsNotNull(storedProxy);
         }
     }
 }
