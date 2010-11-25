@@ -57,18 +57,18 @@ namespace Apollo.Core.UserInterfaces
 
         private bool CanUserInterfaceShutDown()
         {
-            if (!m_Notifications.ContainsKey(m_NotificationNames.CanSystemShutDown))
+            if (!m_Notifications.ContainsKey(m_NotificationNames.CanSystemShutdown))
             {
                 return true;
             }
 
-            var action = m_Notifications[m_NotificationNames.CanSystemShutDown];
+            var action = m_Notifications[m_NotificationNames.CanSystemShutdown];
             try
             {
                 var arg = new ShutdownCapabilityArguments();
                 action(arg);
                 
-                return arg.CanShutDown;
+                return arg.CanShutdown;
             }
             catch (Exception e)
             {

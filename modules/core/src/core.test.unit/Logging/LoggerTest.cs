@@ -21,39 +21,6 @@ namespace Apollo.Core.Logging
             Justification = "Unit tests do not need documentation.")]
     public sealed class LoggerTest
     {
-        #region internal class - MockLogMessage
-
-        private sealed class MockLogMessage : ILogMessage
-        {
-            private readonly string m_Text;
-
-            public MockLogMessage(string origin, LevelToLog level, string text)
-            {
-                Origin = origin;
-                Level = level;
-                m_Text = text;
-            }
-
-            public string Origin
-            {
-                get;
-                private set;
-            }
-
-            public LevelToLog Level
-            {
-                get;
-                private set;
-            }
-
-            public string Text()
-            {
-                return m_Text;
-            }
-        }
-        
-        #endregion
-
         [Test]
         [Description("Checks that a logger cannot be created without a configuration.")]
         public void CreateWithoutConfiguration()
@@ -142,7 +109,17 @@ namespace Apollo.Core.Logging
                 new FileConstants(new ApplicationConstants()));
 
             logger.ChangeLevel(LevelToLog.None);
-            Assert.IsFalse(logger.ShouldLog(new MockLogMessage("fromhere", LevelToLog.None, "This is an interesting message")));
+            var message = new Mock<ILogMessage>();
+            {
+                message.Setup(m => m.Level)
+                    .Returns(LevelToLog.None);
+                message.Setup(m => m.Origin)
+                    .Returns("fromhere");
+                message.Setup(m => m.Text())
+                    .Returns("This is an interesting message.");
+            }
+
+            Assert.IsFalse(logger.ShouldLog(message.Object));
         }
 
         [Test]
@@ -155,7 +132,17 @@ namespace Apollo.Core.Logging
                 new DebugLogTemplate(() => DateTime.Now),
                 new FileConstants(new ApplicationConstants()));
 
-            Assert.IsFalse(logger.ShouldLog(new MockLogMessage("fromhere", LevelToLog.None, "This is an interesting message")));
+            var message = new Mock<ILogMessage>();
+            {
+                message.Setup(m => m.Level)
+                    .Returns(LevelToLog.None);
+                message.Setup(m => m.Origin)
+                    .Returns("fromhere");
+                message.Setup(m => m.Text())
+                    .Returns("This is an interesting message.");
+            }
+
+            Assert.IsFalse(logger.ShouldLog(message.Object));
         }
 
         [Test]

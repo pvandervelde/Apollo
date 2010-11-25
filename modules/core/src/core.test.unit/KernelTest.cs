@@ -21,55 +21,6 @@ namespace Apollo.Core
             Justification = "Unit tests do not need documentation.")]
     public sealed class KernelTest
     {
-        #region internal class - MockMessageProcessingHelp
-
-        private sealed class MockMessageProcessingHelp : IHelpMessageProcessing
-        {
-            private readonly IFuture<MessageBody> m_Future;
-
-            public MockMessageProcessingHelp() 
-                : this(null)
-            {
-            }
-
-            public MockMessageProcessingHelp(IFuture<MessageBody> future)
-            {
-                m_Future = future;
-            }
-
-            public void DefinePipelineInformation(IMessagePipeline pipeline, DnsName sender, Action<Exception> errorLogSender)
-            {
-                // Do nothing
-            }
-
-            public void DeletePipelineInformation()
-            {
-                // Do nothing
-            }
-
-            public void RegisterAction(Type messageType, Action<KernelMessage> messageAction)
-            {
-                // Do nothing
-            }
-
-            public void SendMessage(DnsName recipient, MessageBody body, MessageId originalMessage)
-            {
-                // Do nothing
-            }
-
-            public IFuture<MessageBody> SendMessageWithResponse(DnsName recipient, MessageBody body, MessageId originalMessage)
-            {
-                return m_Future;
-            }
-
-            public void ReceiveMessage(KernelMessage message)
-            {
-                // Do nothing
-            }
-        }
-
-        #endregion
-
         #region Internal class - MockPipeline
 
         /// <summary>
@@ -826,7 +777,7 @@ namespace Apollo.Core
         [Description("Checks that a service cannot be installed with a null reference.")]
         public void InstallServiceWithNullObject()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             Assert.Throws<ArgumentNullException>(() => kernel.Install(null, AppDomain.CurrentDomain));
         }
 
@@ -834,8 +785,8 @@ namespace Apollo.Core
         [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
-            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants()), AppDomain.CurrentDomain));
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants()), AppDomain.CurrentDomain));
         }
 
         [Test]
@@ -846,7 +797,7 @@ namespace Apollo.Core
                 new Type[0], 
                 new Type[] { typeof(AdaptableKernelService) });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             Assert.Throws<ServiceCannotDependOnItselfException>(() => kernel.Install(testMock, AppDomain.CurrentDomain));
         }
 
@@ -858,7 +809,7 @@ namespace Apollo.Core
                 new Type[0], 
                 new Type[] { typeof(KernelService) });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             Assert.Throws<ServiceCannotDependOnGenericKernelServiceException>(() => kernel.Install(testMock, AppDomain.CurrentDomain));
         }
 
@@ -878,7 +829,7 @@ namespace Apollo.Core
                        return;
                     });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(messageKernelMock, AppDomain.CurrentDomain);
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
 
@@ -901,7 +852,7 @@ namespace Apollo.Core
                        return;
                     });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
             kernel.Install(messageKernelMock, AppDomain.CurrentDomain);
 
@@ -914,7 +865,7 @@ namespace Apollo.Core
         {
             var messageMock = new MockPipeline();
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             Assert.Throws<UnknownKernelServiceTypeException>(() => kernel.Uninstall(messageMock, false));
         }
 
@@ -922,7 +873,7 @@ namespace Apollo.Core
         [Description("Checks that a service cannot be uninstalled if another object of the same type is installed.")]
         public void UninstallUnknownReference()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             var service1 = new KernelService1(
                 s =>
                     {
@@ -948,8 +899,8 @@ namespace Apollo.Core
         [Description("Checks that the CoreProxy service cannot be uninstalled.")]
         public void UninstallCoreProxy()
         {
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
-            var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
+            var secondProxy = new CoreProxy(kernel, new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Uninstall(secondProxy, false);
             Assert.Throws<ServiceTypeAlreadyInstalledException>(() => kernel.Install(secondProxy, AppDomain.CurrentDomain));
         }
@@ -970,7 +921,7 @@ namespace Apollo.Core
                        return;
                     });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
             kernel.Install(messageMock, AppDomain.CurrentDomain);
 
@@ -998,7 +949,7 @@ namespace Apollo.Core
                        return;
                     });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
             kernel.Install(messageMock, AppDomain.CurrentDomain);
 
@@ -1034,7 +985,7 @@ namespace Apollo.Core
                 typeof(MockPipeline).Assembly.FullName, 
                 typeof(MockPipeline).FullName) as MockPipeline;
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(messageMock, domain);
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
 
@@ -1070,7 +1021,7 @@ namespace Apollo.Core
                 typeof(MockPipeline).Assembly.FullName, 
                 typeof(MockPipeline).FullName) as MockPipeline;
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(messageMock, domain);
             kernel.Install(kernelTestMock, AppDomain.CurrentDomain);
 
@@ -1105,7 +1056,7 @@ namespace Apollo.Core
             var testMock3 = new KernelService3(storeAction, service => { return; });
             var testMock4 = new KernelService4(storeAction, service => { return; });
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(testMock1, AppDomain.CurrentDomain);
             kernel.Install(messageMock, AppDomain.CurrentDomain);
             kernel.Install(testMock2, AppDomain.CurrentDomain);
@@ -1150,7 +1101,7 @@ namespace Apollo.Core
             var testMock3 = new KernelService3(service => { return; }, storeAction);
             var testMock4 = new KernelService4(service => { return; }, storeAction);
 
-            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new MockMessageProcessingHelp(), new DnsNameConstants());
+            var kernel = new Kernel(new Mock<ICommandContainer>().Object, new Mock<IHelpMessageProcessing>().Object, new DnsNameConstants());
             kernel.Install(testMock1, AppDomain.CurrentDomain);
             kernel.Install(messageMock, AppDomain.CurrentDomain);
             kernel.Install(testMock2, AppDomain.CurrentDomain);

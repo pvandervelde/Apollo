@@ -23,15 +23,15 @@ namespace Apollo.Core
 
         /// <summary>
         /// Gets the <see cref="NotificationName"/> that is used for
-        /// shut down capability checks.
+        /// shutdown capability checks.
         /// </summary>
         /// <remarks>
-        /// In order to indicate that the system is clear to shut down an 
+        /// In order to indicate that the system is clear to shutdown an 
         /// <see cref="INotificationArguments"/> object is passed that allows
-        /// the registring party to indicate if shut down is allowed.
+        /// the registring party to indicate if shutdown is allowed.
         /// </remarks>
         /// <value>The shutdown capability check.</value>
-        NotificationName CanSystemShutDown
+        NotificationName CanSystemShutdown
         {
             get;
         }

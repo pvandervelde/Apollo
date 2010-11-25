@@ -16,9 +16,9 @@ namespace Apollo.Core
     public sealed class ShutdownCapabilityArguments : INotificationArguments
     {
         /// <summary>
-        /// Gets or sets a value indicating whether the service can shut down.
+        /// Gets or sets a value indicating whether the service can shutdown.
         /// </summary>
-        public bool CanShutDown
+        public bool CanShutdown
         {
             get;
             set;

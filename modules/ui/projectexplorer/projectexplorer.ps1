@@ -85,14 +85,19 @@ function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath
 
     Set-Content -Path $newPath -Value $text
 }
-
-function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
-    # only do this when we run the tests
-
-    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
-    $text = $text -replace '@ASSEMBLYNAME@', $assemblyName
+function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string[]]$assemblyNames){
+    $attribute = '[assembly: InternalsVisibleTo("@ASSEMBLYNAME@")]'
     
-    Set-Content $newPath $text
+    $inputText = ''
+    $assemblyNames | foreach{
+        $inputText += $attribute -replace '@ASSEMBLYNAME@', $_
+        $inputText += [System.Environment]::NewLine
+    }
+    
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@ATTRIBUTES@', $inputText
+	
+	Set-Content $newPath $text
 }
 
 # Properties

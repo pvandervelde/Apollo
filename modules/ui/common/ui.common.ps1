@@ -64,36 +64,63 @@ function global:Get-BzrVersion{
 	$versionInfo.SubString(0, $index)
 }
 
-function global:Get-PublicKeySignature([string]$tempDir, [string]$pathToKeyFile)
+function global:Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
 {
-	$sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
-	$publicKeyFile = Join-Path $tempDir ([System.IO.Path]::GetRandomFileName())
+    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+    $publicKeyFile = Join-Path $tempDir ([System.IO.Path]::GetRandomFileName())
 
-	# use snk to get the public key bit
-	& $sn -p $pathToKeyFile $publicKeyFile | Out-Null
-	$output = & $sn -tp $publicKeyFile
-	$publicKeyInfo = [string]::Join("", $output)
-	
-	# extract the public key text. This is hiding in:
-	# Microsoft (R) .NET Framework Strong Name Utility  Version 3.5.30729.1
-	# Copyright (c) Microsoft Corporation.  All rights reserved.
-	# 
-	# Public key is
-	# 0024000004800000940000000602000000240000525341310004000001000100cf9cb2eef36547
-	# 0a150da8bd50d1f7ca65ad3ca14fe30f3fbb8cc005b4ea399a5cc88aa271e8fd69222e0cb43d5c
-	# 04a1fa8ac57a3fc033fe7ab98881ad3287ed268d8bea2c9b08f76e197062ceef8f713b09eb4917
-	# 25404461f4ca754cbe5ab7fa7892a14a1b986c1b225e5a6529d385bbd803c2f9f6bc75d3ba4de1
-	# 896b24e2
-	# 
-	# Public key token is ee5b68ec5ad4ef93
-	
-	$startString = 'Public key is'
-	$endString = 'Public key token is'
-	$startIndex = $publicKeyInfo.IndexOf($startString)
-	$endIndex = $publicKeyInfo.IndexOf($endString)
-	$publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
+    # use snk to get the public key bit
+    & $sn -p $pathToKeyFile $publicKeyFile | Out-Null
+    $output = & $sn -tp $publicKeyFile
+    $publicKeyInfo = [string]::Join("", $output)
+    
+    # extract the public key text. This is hiding in:
+    # Microsoft (R) .NET Framework Strong Name Utility  Version 3.5.30729.1
+    # Copyright (c) Microsoft Corporation.  All rights reserved.
+    # 
+    # Public key is
+    # 0024000004800000940000000602000000240000525341310004000001000100cf9cb2eef36547
+    # 0a150da8bd50d1f7ca65ad3ca14fe30f3fbb8cc005b4ea399a5cc88aa271e8fd69222e0cb43d5c
+    # 04a1fa8ac57a3fc033fe7ab98881ad3287ed268d8bea2c9b08f76e197062ceef8f713b09eb4917
+    # 25404461f4ca754cbe5ab7fa7892a14a1b986c1b225e5a6529d385bbd803c2f9f6bc75d3ba4de1
+    # 896b24e2
+    # 
+    # Public key token is ee5b68ec5ad4ef93
+    
+    $startString = 'Public key is'
+    $endString = 'Public key token is'
+    $startIndex = $publicKeyInfo.IndexOf($startString)
+    $endIndex = $publicKeyInfo.IndexOf($endString)
+    $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
 }
 
+function global:Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
+{
+    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+
+    # use snk to get the public key bit
+    $output = & $sn -Tp $pathToAssembly
+    $publicKeyInfo = [string]::Join("", $output)
+    
+    # extract the public key text. This is hiding in:
+    # Microsoft (R) .NET Framework Strong Name Utility  Version 3.5.30729.1
+    # Copyright (c) Microsoft Corporation.  All rights reserved.
+    # 
+    # Public key is
+    # 0024000004800000940000000602000000240000525341310004000001000100cf9cb2eef36547
+    # 0a150da8bd50d1f7ca65ad3ca14fe30f3fbb8cc005b4ea399a5cc88aa271e8fd69222e0cb43d5c
+    # 04a1fa8ac57a3fc033fe7ab98881ad3287ed268d8bea2c9b08f76e197062ceef8f713b09eb4917
+    # 25404461f4ca754cbe5ab7fa7892a14a1b986c1b225e5a6529d385bbd803c2f9f6bc75d3ba4de1
+    # 896b24e2
+    # 
+    # Public key token is ee5b68ec5ad4ef93
+    
+    $startString = 'Public key is'
+    $endString = 'Public key token is'
+    $startIndex = $publicKeyInfo.IndexOf($startString)
+    $endIndex = $publicKeyInfo.IndexOf($endString)
+    $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
+}
 function global:Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
 	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
 	$text = $text -replace '@MAJOR@', $versionNumber.Major
@@ -116,11 +143,17 @@ function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath
 	Set-Content -Path $newPath -Value $text
 }
 
-function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string]$assemblyName){
-	# only do this when we run the tests
-
-	$text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
-	$text = $text -replace '@ASSEMBLYNAME@', $assemblyName
+function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string[]]$assemblyNames){
+    $attribute = '[assembly: InternalsVisibleTo("@ASSEMBLYNAME@")]'
+    
+    $inputText = ''
+    $assemblyNames | foreach{
+        $inputText += $attribute -replace '@ASSEMBLYNAME@', $_
+        $inputText += [System.Environment]::NewLine
+    }
+    
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@ATTRIBUTES@', $inputText
 	
 	Set-Content $newPath $text
 }
@@ -155,6 +188,8 @@ properties{
 	
 	# assembly names
 	$assemblyNameUnitTest = 'Apollo.Ui.Common.Test.Unit, PublicKey='
+    $assemblyNameDynamicProxy = 'DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7'
+    $assemblyNameMoq = 'Moq, PublicKey='
 	
 	# templates dirs
 	$dirTemplates = Join-Path $dirBase 'templates'
@@ -165,6 +200,7 @@ properties{
 	$dirFxCop = Join-Path $dirTools 'FxCop'
 	$dirMsbuildExtensionPack = Join-Path $dirTools 'MsBuild'
 	$dirMbUnit = Join-Path $dirTools 'MbUnit'
+    $dirMoq = Join-Path $dirTools 'Moq'
 	$dirConcordion = Join-Path $dirTools 'Concordion'
 	$dirNCoverExplorer = Join-Path (Join-Path (Join-Path $dirMbUnit 'NCover') 'libs') 'NCoverExplorer'
 	
@@ -354,9 +390,12 @@ task buildBinaries -depends runInit, getVersion -action{
 	Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
 	
 	# Set the InternalsVisibleTo attribute
-	$publicKeyToken = Get-PublicKeySignature $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
+	$publicKeyToken = Get-PublicKeySignatureFromKeyFile $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
 	$friendAssemblyName = $assemblyNameUnitTest + $publicKeyToken
-	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile $friendAssemblyName
+    
+    $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $dirMoq 'Moq.dll')
+    $moqAssemblyName = $assemblyNameMoq + $publicKeyToken
+	Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile ($friendAssemblyName, $moqAssemblyName, $assemblyNameDynamicProxy)
 
 	$logPath = Join-Path $dirLogs $logMsBuild
 	
