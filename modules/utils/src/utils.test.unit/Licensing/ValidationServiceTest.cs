@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Utils.Licensing
 {
@@ -17,109 +18,16 @@ namespace Apollo.Utils.Licensing
             Justification = "Unit tests do not need documentation.")]
     public sealed class ValidationServiceTest
     {
-        #region internal class - MockTimer
-
-        private sealed class MockTimer : IProgressTimer
-        {
-            public void Start()
-            {
-                // Do nothing
-            }
-
-            public void Stop()
-            {
-                // do nothing
-            }
-
-            public event EventHandler<TimerElapsedEventArgs> Elapsed;
-
-            public void RaiseElapsed(DateTime time)
-            {
-                var local = Elapsed;
-                if (local != null)
-                {
-                    local(this, new TimerElapsedEventArgs(time));
-                }
-            }
-        }
-
-        #endregion
-
-        #region internal class - MockLicenseValidator
-
-        private sealed class MockLicenseValidator : ILicenseValidator
-        {
-            private readonly bool m_ShouldThrow = false;
-            private readonly int m_ThrowFor = 0;
-
-            private int m_CalledSoFar = 0;
-
-            public MockLicenseValidator()
-            { 
-            }
-
-            public MockLicenseValidator(bool shouldThrow, int throwFor)
-            {
-                m_ShouldThrow = shouldThrow;
-                m_ThrowFor = throwFor;
-            }
-
-            public void Verify()
-            {
-                WasVerified = true;
-                m_CalledSoFar++;
-
-                if (m_ShouldThrow && (m_CalledSoFar <= m_ThrowFor))
-                {
-                    throw new Exception();
-                }
-            }
-
-            public void Verify(TimePeriod nextExpiration)
-            {
-                WasVerified = true;
-                Period = nextExpiration;
-                m_CalledSoFar++;
-
-                if (m_ShouldThrow && (m_CalledSoFar <= m_ThrowFor))
-                {
-                    throw new Exception();
-                }
-            }
-
-            public bool WasVerified
-            {
-                get;
-                set;
-            }
-
-            public TimePeriod Period
-            {
-                get;
-                set;
-            }
-
-            public int CalledSoFar
-            {
-                get
-                {
-                    return m_CalledSoFar;
-                }
-            }
-        }
-        
-        #endregion
-
         [Test]
         [Description("Checks that an ValidationService instance cannot be created with a null Date delegate reference.")]
         public void CreateWithNullDateDelegate()
         { 
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
             var sequences = new List<ValidationSequence>();
 
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(null, isAlive, timer, validator, sequences));
+            Assert.Throws<ArgumentNullException>(() => new ValidationService(null, isAlive, timer.Object, validator.Object, sequences));
         }
 
         [Test]
@@ -127,11 +35,11 @@ namespace Apollo.Utils.Licensing
         public void CreateWithNullIsAliveDelegate()
         {
             Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
             var sequences = new List<ValidationSequence>();
 
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, null, timer, validator, sequences));
+            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, null, timer.Object, validator.Object, sequences));
         }
 
         [Test]
@@ -140,10 +48,10 @@ namespace Apollo.Utils.Licensing
         {
             Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
             Action<DateTimeOffset> isAlive = time => { };
-            var validator = new MockLicenseValidator();
+            var validator = new Mock<ILicenseValidator>();
             var sequences = new List<ValidationSequence>();
 
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, null, validator, sequences));
+            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, null, validator.Object, sequences));
         }
 
         [Test]
@@ -152,10 +60,10 @@ namespace Apollo.Utils.Licensing
         {
             Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
+            var timer = new Mock<IProgressTimer>();
             var sequences = new List<ValidationSequence>();
 
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer, null, sequences));
+            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer.Object, null, sequences));
         }
 
         [Test]
@@ -164,10 +72,10 @@ namespace Apollo.Utils.Licensing
         {
             Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
 
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer, validator, null));
+            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer.Object, validator.Object, null));
         }
 
         [Test]
@@ -177,11 +85,11 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
             var sequences = new List<ValidationSequence>();
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, sequences);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, sequences);
             Assert.Throws<LicenseValidationFailedException>(() => service.StartValidation());
         }
 
@@ -192,14 +100,14 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { throw new Exception(); };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
             var sequences = new List<ValidationSequence> { new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now) };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, sequences);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, sequences);
             service.StartValidation();
 
-            Assert.Throws<LicenseValidationFailedException>(() => timer.RaiseElapsed(DateTime.Now));
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
         }
 
         [Test]
@@ -209,8 +117,15 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Verifiable();
+            }
+
             var sequences = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -218,15 +133,15 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 3), now) 
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, sequences);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, sequences);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(61);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(1, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(1));
 
             // Rerun the validation. This should hit the
             // 2-hourly sequence and the 1 hourly sequence (which
@@ -236,8 +151,8 @@ namespace Apollo.Utils.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(3, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
         }
 
         [Test]
@@ -247,8 +162,24 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator(true, 2);
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                int callCount = 0;
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Callback<TimePeriod>(p => 
+                        {
+                            callCount++;
+                            if (callCount <= 2)
+                            {
+                                throw new Exception();
+                            }
+                        })
+                    .Verifiable();
+            }
+
             var periods = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -256,15 +187,15 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 3), now) 
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, periods);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, periods);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(periods.Count, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
         }
 
         [Test]
@@ -274,8 +205,24 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator(true, 2);
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                int callCount = 0;
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Callback<TimePeriod>(p =>
+                    {
+                        callCount++;
+                        if (callCount <= 2)
+                        {
+                            throw new Exception();
+                        }
+                    })
+                    .Verifiable();
+            }
+            
             var periods = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -283,22 +230,22 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 3), now) 
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, periods);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, periods);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(2, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(2));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(5, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(5));
         }
 
         [Test]
@@ -308,8 +255,24 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator(true, 4);
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                int callCount = 0;
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Callback<TimePeriod>(p =>
+                    {
+                        callCount++;
+                        if (callCount <= 4)
+                        {
+                            throw new Exception();
+                        }
+                    })
+                    .Verifiable();
+            }
+
             var periods = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -318,15 +281,15 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 4), now),
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, periods);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, periods);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(301);
-            Assert.Throws<LicenseValidationFailedException>(() => timer.RaiseElapsed(DateTime.Now));
-            Assert.AreEqual(periods.Count, validator.CalledSoFar);
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(4));
         }
 
         [Test]
@@ -336,8 +299,24 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator(true, 4);
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                int callCount = 0;
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Callback<TimePeriod>(p =>
+                    {
+                        callCount++;
+                        if (callCount <= 4)
+                        {
+                            throw new Exception();
+                        }
+                    })
+                    .Verifiable();
+            }
+
             var periods = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -346,22 +325,22 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 4), now),
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, periods);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, periods);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(2, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(2));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            Assert.Throws<LicenseValidationFailedException>(() => timer.RaiseElapsed(DateTime.Now));
-            Assert.AreEqual(4, validator.CalledSoFar);
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(4));
         }
 
         [Test]
@@ -371,8 +350,15 @@ namespace Apollo.Utils.Licensing
             var now = DateTimeOffset.Now;
             Func<DateTimeOffset> datetime = () => now;
             Action<DateTimeOffset> isAlive = time => { };
-            var timer = new MockTimer();
-            var validator = new MockLicenseValidator();
+            var timer = new Mock<IProgressTimer>();
+            var validator = new Mock<ILicenseValidator>();
+            {
+                validator.Setup(v => v.Verify())
+                    .Verifiable();
+                validator.Setup(v => v.Verify(It.IsAny<TimePeriod>()))
+                    .Verifiable();
+            }
+
             var periods = new List<ValidationSequence> 
                 { 
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly), now),
@@ -381,29 +367,29 @@ namespace Apollo.Utils.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Hourly, 4), now),
                 };
 
-            var service = new ValidationService(datetime, isAlive, timer, validator, periods);
+            var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, periods);
             service.StartValidation();
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(61);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(1, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(1));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(3, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(481);
-            timer.RaiseElapsed(DateTime.Now);
-            Assert.AreEqual(7, validator.CalledSoFar);
+            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(7));
         }
     }
 }

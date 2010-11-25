@@ -268,7 +268,7 @@ task createTasks -action{
     if (!$shouldClean) { $tasks.Add('Incremental') | Out-Null }
     if ($shouldCheckCoverage) { $tasks.Add('Coverage') | Out-Null }
     $tasks.Add('Clean') | Out-Null
-    #$tasks.Add('Build') | Out-Null
+    #$tasks.Add('Build') | Out-Null # Don't normally want this one???
     
     if ($shouldRunUnitTests) { $tasks.Add('UnitTest') | Out-Null }
     if ($shouldRunSpecification) { $tasks.Add('SpecTest') | Out-Null }
@@ -301,7 +301,7 @@ task assembleApiDocs -depends runScripts -precondition{ return $shouldBuildApiDo
     # Set the DXROOT Environment variable
     $Env:DXROOT = $dirSandcastle
     
-    $msbuildExe = Get-MsbuildExe
+    $msbuildExe = "c:\windows\Microsoft.NET\Framework\v3.5\MSBuild.exe"
     
     # See if we need to create the reference data.
     $dirSandcastleReference = Join-Path $dirSandcastle 'Data'

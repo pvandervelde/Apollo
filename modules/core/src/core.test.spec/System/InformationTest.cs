@@ -81,11 +81,11 @@ namespace Apollo.Core.Test.Spec.System
                     });
 
                 applicationFacade.RegisterNotification(
-                    notificationNames.CanSystemShutDown,
+                    notificationNames.CanSystemShutdown,
                     obj =>
                     {
                         var shutdownArguments = (ShutdownCapabilityArguments)obj;
-                        shutdownArguments.CanShutDown = true;
+                        shutdownArguments.CanShutdown = true;
                     });
 
                 applicationFacade.RegisterNotification(

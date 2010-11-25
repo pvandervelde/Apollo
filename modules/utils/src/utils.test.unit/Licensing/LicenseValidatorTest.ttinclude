@@ -28,6 +28,7 @@ using Apollo.Utils.Licensing;
 }
 #>
 using MbUnit.Framework;
+using Moq;
 
 namespace <#= nameSpace #>
 {
@@ -37,79 +38,6 @@ namespace <#= nameSpace #>
             Justification = "Unit tests do not need documentation.")]
     public sealed class <#= className #>
     {
-        #region internal class - MockValidationCache
-
-        /// <summary>
-        /// A mock implementation of a <see cref="ILicenseValidationCache"/>.
-        /// </summary>
-        private sealed class MockValidationCache : ILicenseValidationCache
-        {
-            /// <summary>
-            /// The action that is executed when the invalidate method is called.
-            /// </summary>
-            private readonly Action<TimePeriod> m_InvalidateAction;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="MockValidationCache"/> class.
-            /// </summary>
-            /// <param name="result">The next validation result.</param>
-            /// <param name="invalidateAction">The action that will be invoked when the Invalidate method is called.</param>
-            public MockValidationCache(LicenseCheckResult result, Action<TimePeriod> invalidateAction)
-            {
-                LatestResult = result;
-                m_InvalidateAction = invalidateAction;
-            }
-
-            /// <summary>
-            /// Gets the latest validation result.
-            /// </summary>
-            /// <value>The latest result.</value>
-            public LicenseCheckResult LatestResult
-            {
-                get;
-                private set;
-            }
-
-            /// <summary>
-            /// Gets the last validation time.
-            /// </summary>
-            /// <value>The last validation time.</value>
-            public DateTimeOffset LastValidationTime
-            {
-                get
-                {
-                    return LatestResult.Generated;
-                }
-            }
-
-            /// <summary>
-            /// Invalidates the cache and gets a new <see cref="LicenseCheckResult"/> with the specified expiration time.
-            /// </summary>
-            /// <param name="nextExpiration">
-            /// The <see cref="TimePeriod"/> that must occur before the validated
-            /// license check expires.
-            /// </param>
-            public void Invalidate(TimePeriod nextExpiration)
-            {
-                m_InvalidateAction(nextExpiration);
-            }
-
-            /// <summary>
-            /// Creates a new <see cref="ILicenseValidationCacheProxy"/> object with the
-            /// current cache as owner.
-            /// </summary>
-            /// <returns>
-            ///     A new <see cref="ILicenseValidationCacheProxy"/> object.
-            /// </returns>
-            public ILicenseValidationCacheProxy CreateNewProxy()
-            {
-                // Do nothing for now ...
-                throw new NotImplementedException();
-            }
-        }
-        
-        #endregion
-
         [Test]
         [Description("Checks that an object cannot be created without a validation cache.")]
         public void CreateWithNullCache()
@@ -122,14 +50,14 @@ namespace <#= nameSpace #>
         public void CreateWithNullValidationResult()
         {
 
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new MockValidationCache(new LicenseCheckResult(), (TimePeriod period) => { }), null, () => DateTimeOffset.Now));
+            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<ILicenseValidationCache>().Object, null, () => DateTimeOffset.Now));
         }
 
         [Test]
         [Description("Checks that an object cannot be created without a current date/time function.")]
         public void CreateWithNullDateTimeFunction()
         {
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new MockValidationCache(new LicenseCheckResult(), (TimePeriod period) => { }), (sum, generated, expires) => { }, null));
+            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<ILicenseValidationCache>().Object, (sum, generated, expires) => { }, null));
         }
 
         [Test]
@@ -143,7 +71,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { throw new Exception(); });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.Invalidate(It.IsAny<TimePeriod>()))
+                    .Throws<Exception>();
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -151,7 +85,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             Assert.Throws<LicenseValidationFailedException>(() => validator.Verify());
         }
@@ -167,7 +101,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -175,7 +115,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             validator.Verify();
 
@@ -194,7 +134,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { throw new Exception(); });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.Invalidate(It.IsAny<TimePeriod>()))
+                    .Throws<Exception>();
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -202,7 +148,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             validator.Verify();
 
@@ -221,7 +167,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -229,7 +181,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             validator.Verify();
             Assert.IsTrue(original.Equals(checksum));
@@ -246,7 +198,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { throw new Exception(); });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.Invalidate(It.IsAny<TimePeriod>()))
+                    .Throws<Exception>();
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -254,7 +212,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             var nextExpiration = new TimePeriod(RepeatPeriod.Weekly);
             Assert.Throws<LicenseValidationFailedException>(() => validator.Verify(nextExpiration));
@@ -271,7 +229,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -279,7 +243,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             var nextExpiration = new TimePeriod(RepeatPeriod.Weekly);
             validator.Verify(nextExpiration);
@@ -299,7 +263,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { throw new Exception(); });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.Invalidate(It.IsAny<TimePeriod>()))
+                    .Throws<Exception>();
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -307,7 +277,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             var nextExpiration = new TimePeriod(RepeatPeriod.Weekly);
             validator.Verify(nextExpiration);
@@ -327,7 +297,13 @@ namespace <#= nameSpace #>
             var original = new Checksum(text, generated, expires);
             var result = new LicenseCheckResult(generated, expires, original);
 
-            var cache = new MockValidationCache(result, (TimePeriod period) => { });
+            var cache = new Mock<ILicenseValidationCache>();
+            {
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+                cache.Setup(c => c.LatestResult)
+                    .Returns(result);
+            }
 
             // Create a storage for the output and assign it a bogus value. 
             // The compiler doesn't see that we'll have an assigned value before checking.
@@ -335,7 +311,7 @@ namespace <#= nameSpace #>
 
             LicenseResultUpdated onValidationResult = (sum, generationTime, expirationTime) => { checksum = sum; };
             Func<DateTimeOffset> now = () => currentTime;
-            var validator = new <#= classUnderTest #>(cache, onValidationResult, now);
+            var validator = new <#= classUnderTest #>(cache.Object, onValidationResult, now);
 
             var nextExpiration = new TimePeriod(RepeatPeriod.Weekly);
             validator.Verify(nextExpiration);
