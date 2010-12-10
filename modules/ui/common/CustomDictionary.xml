@@ -342,8 +342,10 @@
       -->
       <Term CompoundAlternate="DataStore">datastore</Term>
       <Term CompoundAlternate="DataStores">datastores</Term>
+      <!--
       <Term CompoundAlternate="DataSet">dataset</Term>
       <Term CompoundAlternate="DataSets">datasets</Term>
+      -->
       <Term CompoundAlternate="TextBox">textbox</Term>
       <Term CompoundAlternate="TextBoxes">textboxes</Term>
       <Term CompoundAlternate="CodePage">codepage</Term>
