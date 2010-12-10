@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utils.Properties;
@@ -138,10 +139,25 @@ namespace Apollo.Utils
         /// <value>The internal value.</value>
         protected TInternalValue InternalValue
         {
+            [DebuggerStepThrough]
             get 
             {
                 return m_Value;
             }
+        }
+
+        /// <summary>
+        /// Returns a value indicating if the current instance is valid.
+        /// </summary>
+        /// <returns>
+        ///     <see langword="true" /> if the current instance is valid; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        [ExcludeFromCoverage("This always returns true. Derivative classes may implement additional logic for validity.")]
+        public virtual bool IsValid()
+        {
+            return true;
         }
 
         /// <summary>
@@ -270,7 +286,22 @@ namespace Apollo.Utils
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null) && m_Value.Equals(other.m_Value);
+            return !ReferenceEquals(other, null) && AreValuesEqual(m_Value, other.m_Value);
+        }
+
+        /// <summary>
+        /// Determines whether the specified values to see if they are equal.
+        /// </summary>
+        /// <param name="ourValue">The value owned by the current ID.</param>
+        /// <param name="theirValue">The value owned by the other ID.</param>
+        /// <returns>
+        ///     <see langword="true"/> if <paramref name="theirValue"/> is equal to the value owned by this instance; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected virtual bool AreValuesEqual(TInternalValue ourValue, TInternalValue theirValue)
+        {
+            return ourValue.Equals(theirValue);
         }
 
         /// <summary>

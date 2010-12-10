@@ -30,21 +30,25 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Interface">
         <Name>IBuildProjects</Name>
         <Access>Internal</Access>
-        <Location left="746" top="1280" />
-        <Size width="162" height="81" />
+        <Location left="50" top="1277" />
+        <Size width="515" height="129" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">IBuildProjects Define()</Member>
+        <Member type="Method">IBuildProjects WithDatasetDistributor(Func&lt;DatasetRequest, DistributionPlan&gt; distributor)</Member>
+        <Member type="Method">IBuildProjects FromStorage(IPersistenceInformation persistenceInfo)</Member>
+        <Member type="Method">IProject Build()</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IMessageCentralProxy</Name>
         <Access>Internal</Access>
-        <Location left="966" top="1533" />
+        <Location left="935" top="1533" />
         <Size width="162" height="83" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IPersistenceProxy</Name>
         <Access>Internal</Access>
-        <Location left="1177" top="1533" />
+        <Location left="1146" top="1533" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -72,37 +76,42 @@ By separating the actual generated data from the 'description' data we can allow
         <Name>Project</Name>
         <Access>Internal</Access>
         <Location left="2220" top="1226" />
-        <Size width="162" height="216" />
+        <Size width="400" height="128" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly DatasetGraph m_Graph</Member>
+        <Member type="Field">private readonly Dictionary&lt;DatasetId, DatasetOfflineInformation&gt; m_Datasets</Member>
+        <Member type="Field">private readonly Dictionary&lt;DatasetId, DatasetOnlineInformation&gt; m_ActiveDatasets</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>ProjectService</Name>
         <Access>Internal</Access>
-        <Location left="1082" top="1252" />
-        <Size width="171" height="162" />
+        <Location left="963" top="1252" />
+        <Size width="350" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private readonly DatasetLoader m_Loader</Member>
         <Member type="Field">private IProject m_Project</Member>
-        <Member type="Method">public void Create()</Member>
-        <Member type="Method">public void Load()</Member>
-        <Member type="Method">public void Unload()</Member>
+        <Member type="Method">public void CreateNewProject()</Member>
+        <Member type="Method">public void LoadProject(IPersistenceInformation persistenceInfo)</Member>
+        <Member type="Method">public void SaveProject(IPersistenceInformation persistenceInfo)</Member>
+        <Member type="Method">public void UnloadProject()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IProject</Name>
         <Access>Internal</Access>
         <Location left="1421" top="1252" />
-        <Size width="539" height="112" />
+        <Size width="606" height="129" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IReadonlyDataset Datasets()</Member>
-        <Member type="Method">void Save(Stream persistenceStream)</Member>
-        <Member type="Method">void Export(DatasetId datasetToExport, bool shouldIncludeChildren, Stream persistenceStream)</Member>
+        <Member type="Method">void Save(IPersistenceInformation persistenceInfo)</Member>
+        <Member type="Method">void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo)</Member>
+        <Member type="Method">void Close()</Member>
       </Entity>
       <Entity type="Class">
         <Name>ProjectBuilder</Name>
         <Access>Internal</Access>
-        <Location left="422" top="1280" />
+        <Location left="155" top="1688" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -111,14 +120,14 @@ By separating the actual generated data from the 'description' data we can allow
         <Name>DatasetRequest</Name>
         <Access>Public</Access>
         <Location left="1627" top="735" />
-        <Size width="334" height="179" />
+        <Size width="360" height="179" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public DatasetOfflineInformation DatasetToLoad { get; }</Member>
         <Member type="Property">public DatasetId Parent { get; }</Member>
         <Member type="Property">public bool ProvideParentWithHubConnection { get; }</Member>
         <Member type="Property">public ExpectedDatasetLoad ExpectedLoadPerMachine { get; }</Member>
         <Member type="Property">public LoadingLocation PreferredLoadingLocation { get; }</Member>
-        <Member type="Property">public Range&lt;int&gt; DesiredDistributionRange { get; }</Member>
+        <Member type="Property">public MachineDistributionRange DesiredDistributionRange { get; }</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
@@ -132,17 +141,6 @@ By separating the actual generated data from the 'description' data we can allow
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>DatasetStore</Name>
-        <Access>Public</Access>
-        <Location left="2556" top="1289" />
-        <Size width="400" height="128" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">private readonly Dictionary&lt;DatasetId, DatasetOfflineInformation&gt; m_Datasets</Member>
-        <Member type="Field">private readonly Dictionary&lt;DatasetId, DatasetOnlineInformation&gt; m_ActiveDatasets</Member>
-        <Member type="Field">private readonly DatasetGraph m_Graph</Member>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
         <Name>DatasetGraph</Name>
         <Access>Internal</Access>
         <Location left="2641" top="1546" />
@@ -152,20 +150,9 @@ By separating the actual generated data from the 'description' data we can allow
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>DatasetGraphNode</Name>
-        <Access>Internal</Access>
-        <Location left="2600" top="1749" />
-        <Size width="282" height="128" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public DatasetId Dataset { get; }</Member>
-        <Member type="Property">public DatasetId Parent { get; }</Member>
-        <Member type="Method">public IEnumerable&lt;DatasetGraphNode&gt; Children()</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
         <Name>DatasetOnlineInformation</Name>
-        <Access>Internal</Access>
-        <Location left="3124" top="1162" />
+        <Access>Public</Access>
+        <Location left="3146" top="1101" />
         <Size width="346" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public DatasetId Id { get; }</Member>
@@ -176,36 +163,43 @@ By separating the actual generated data from the 'description' data we can allow
       <Entity type="Class">
         <Name>DatasetOfflineInformation</Name>
         <Access>Public</Access>
-        <Location left="3124" top="1430" />
-        <Size width="271" height="145" />
+        <Location left="3146" top="1362" />
+        <Size width="311" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public DatasetId Id { get; }</Member>
-        <Member type="Property">public DatasetCreator Creator { get; }</Member>
-        <Member type="Property">public CreationReason ReasonForExistence { get; }</Member>
-        <Member type="Property">public IPersistenceInformation PersistedAt { get; }</Member>
+        <Member type="Property">public DatasetCreationReason ReasonForExistence { get; }</Member>
+        <Member type="Property">public IPersistenceInformation StoredAt { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IReadonlyDataset</Name>
-        <Access>Public</Access>
-        <Location left="1432" top="1687" />
-        <Size width="528" height="197" />
+        <Access>Internal</Access>
+        <Location left="1441" top="1687" />
+        <Size width="532" height="316" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">IEnumerable&lt;IReadonlyDataset&gt; Children()</Member>
         <Member type="Property">DatasetId Id { get; }</Member>
+        <Member type="Property">bool CanBeDeleted { get; }</Member>
+        <Member type="Property">bool CanBeAdopted { get; }</Member>
+        <Member type="Property">bool CanBeCopied { get; }</Member>
         <Member type="Property">bool IsLoaded { get; }</Member>
-        <Member type="Method">void Load()</Member>
+        <Member type="Method">IEnumerable&lt;Machine&gt; RunsOn()</Member>
+        <Member type="Method">void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range)</Member>
+        <Member type="Event">event EventHandler&lt;DatasetLoadEventArgs&gt; OnLoaded</Member>
         <Member type="Method">void Unload()</Member>
+        <Member type="Event">event EventHandler&lt;DatasetUnloadEventArgs&gt; OnUnloaded</Member>
+        <Member type="Property">bool CanBecomeParent { get; }</Member>
+        <Member type="Method">IEnumerable&lt;IReadonlyDataset&gt; Children()</Member>
         <Member type="Method">DatasetId CreateNewChild(IDatasetCreationInformation newChild)</Member>
         <Member type="Method">IEnumerable&lt;DatasetId&gt; CreateNewChildren(IDatasetCreationInformation[] newChildren)</Member>
         <Member type="Property">ProxyCommandSet Commands { get; }</Member>
       </Entity>
       <Entity type="Class">
         <Name>ReadonlyDataset</Name>
-        <Access>Public</Access>
+        <Access>Internal</Access>
         <Location left="2078" top="1687" />
         <Size width="298" height="163" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">DatasetId m_Id</Member>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
@@ -233,9 +227,11 @@ By separating the actual generated data from the 'description' data we can allow
         <Name>Machine</Name>
         <Access>Public</Access>
         <Location left="504" top="756" />
-        <Size width="274" height="111" />
+        <Size width="274" height="145" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public MachineId Id { get; }</Member>
+        <Member type="Property">public string DomainName { get; }</Member>
+        <Member type="Property">public bool IsLocalMachine { get; }</Member>
         <Member type="Property">public MachineSpecifications Specifications { get; }</Member>
       </Entity>
       <Entity type="Structure">
@@ -274,7 +270,7 @@ Loading on remote machines requires that there is a service or application runni
       <Entity type="Class">
         <Name>DatasetId</Name>
         <Access>Public</Access>
-        <Location left="3503" top="1354" />
+        <Location left="3525" top="1286" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -307,25 +303,18 @@ Loading on remote machines requires that there is a service or application runni
 - Execute visualizer commands
 - Add / Remove / Link components
 </Text>
-        <Location left="1441" top="2050" />
+        <Location left="1634" top="2055" />
         <Size width="295" height="116" />
       </Entity>
       <Entity type="Comment">
         <Text>Any commands and interactions with the rest of the Apollo application run through the message proxy</Text>
-        <Location left="603" top="1533" />
+        <Location left="590" top="1533" />
         <Size width="221" height="96" />
-      </Entity>
-      <Entity type="Interface">
-        <Name>IDatasetCreationInformation</Name>
-        <Access>Public</Access>
-        <Location left="2216" top="2050" />
-        <Size width="179" height="61" />
-        <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
         <Name>ProxyCommandSet</Name>
-        <Access>Public</Access>
-        <Location left="1885" top="2050" />
+        <Access>Internal</Access>
+        <Location left="2078" top="2055" />
         <Size width="270" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">TCommand CommandsFor&lt;TCommand&gt;()</Member>
@@ -335,7 +324,7 @@ Loading on remote machines requires that there is a service or application runni
         <Text>The commands in this list are created by a automatically implemented proxy class (DynamicProxy2?). The methods mirror the original command sets that we need.
 
 The only catch is how are we going to make this work. We'd need an interface.</Text>
-        <Location left="1912" top="2261" />
+        <Location left="2105" top="2266" />
         <Size width="243" height="151" />
       </Entity>
       <Entity type="Class">
@@ -364,11 +353,45 @@ Topology doesn't change:
         <Location left="1239" top="721" />
         <Size width="339" height="160" />
       </Entity>
+      <Entity type="Interface">
+        <Name>IPersistenceInformation</Name>
+        <Access>Public</Access>
+        <Location left="3561" top="1651" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>DatasetCreationInformation</Name>
+        <Access>Public</Access>
+        <Location left="3216" top="1651" />
+        <Size width="217" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public DatasetCreator CreatedBy { get; }</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Does this need to store a name + description? So that the user knows what the hell is in the dataset?</Text>
+        <Location left="2986" top="1651" />
+        <Size width="184" height="94" />
+      </Entity>
+      <Entity type="Class">
+        <Name>DatasetCreationInformation</Name>
+        <Access>Public</Access>
+        <Location left="1275" top="2095" />
+        <Size width="297" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public DatasetId InheritFrom { get; set; }</Member>
+        <Member type="Property">public IPersistenceInformation LoadFrom { get; set; }</Member>
+        <Member type="Property">public DatasetCreator CreatedOnRequestOf { get; set; }</Member>
+        <Member type="Property">public bool CanBecomeParent { get; set; }</Member>
+        <Member type="Property">public bool CanBeDeleted { get; set; }</Member>
+        <Member type="Property">public bool CanBeAdopted { get; set; }</Member>
+        <Member type="Property">public bool CanBeCopied { get; set; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="2" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -395,48 +418,56 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1152</X>
-          <Y>1439</Y>
+          <X>1015</X>
+          <Y>1456</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1046</X>
+          <X>1015</X>
           <Y>1508</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1037</X>
-          <Y>1311</Y>
+          <X>916</X>
+          <Y>1338</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>944</X>
-          <Y>1311</Y>
+          <X>602</X>
+          <Y>1338</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1211</X>
-          <Y>1439</Y>
+          <X>1247</X>
+          <Y>1456</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1278</X>
+          <X>1247</X>
           <Y>1508</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -451,11 +482,13 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="2">
-        <StartOrientation>Horizontal</StartOrientation>
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2421</X>
-          <Y>1268</Y>
+          <X>2478</X>
+          <Y>1188</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>2478</X>
@@ -472,125 +505,39 @@ Topology doesn't change:
           <Y>1334</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1985</X>
+          <X>2052</X>
           <Y>1334</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Realization" first="12" second="3">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>610</X>
-          <Y>1325</Y>
+          <X>234</X>
+          <Y>1647</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>272</X>
+          <Y>1433</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="11">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="17" second="17">
-        <Label>
-        </Label>
+      <Relationship type="Realization" first="19" second="18">
         <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2545</X>
-          <Y>1824</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2743</X>
-          <Y>1915</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Aggregation</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="15" second="16">
+      <Relationship type="Association" first="11" second="18">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>1</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Association" first="16" second="17">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="15" second="18">
-        <Label>Store by ID</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2985</X>
-          <Y>1324</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Association" first="9" second="15">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="15" second="19">
-        <Label>Store by ID</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2981</X>
-          <Y>1385</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>1..*</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Realization" first="21" second="20">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="11" second="20">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="20" second="20">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1366</X>
-          <Y>1764</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1511</X>
-          <Y>1932</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="21" second="17">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2401</X>
-          <Y>1773</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2525</X>
-          <Y>1773</Y>
-        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
@@ -602,7 +549,7 @@ Topology doesn't change:
           <Y>763</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="23" second="6">
+      <Relationship type="Comment" first="21" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -610,19 +557,37 @@ Topology doesn't change:
           <Y>874</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="25" second="24">
+      <Relationship type="Association" first="23" second="22">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="14" second="25">
+      <Relationship type="Association" first="14" second="23">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="13" second="26">
+      <Relationship type="Association" first="13" second="24">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="25" second="24">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="9" second="19">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -630,25 +595,13 @@ Topology doesn't change:
       </Relationship>
       <Relationship type="Comment" first="27" second="26">
         <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="9" second="21">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="29" second="28">
-        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>1292</X>
           <Y>1005</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="14" second="28">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="14" second="26">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -658,39 +611,45 @@ Topology doesn't change:
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="30" second="25">
+      <Relationship type="Comment" first="28" second="23">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="19" second="31">
+      <Relationship type="Association" first="17" second="29">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3420</X>
-          <Y>1479</Y>
+          <X>3482</X>
+          <Y>1411</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3570</X>
-          <Y>1456</Y>
+          <X>3592</X>
+          <Y>1388</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="31">
+      <Relationship type="Association" first="16" second="29">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3498</X>
-          <Y>1271</Y>
+          <X>3520</X>
+          <Y>1210</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3570</X>
-          <Y>1319</Y>
+          <X>3592</X>
+          <Y>1251</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="9" second="33">
+      <Relationship type="Association" first="9" second="31">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -704,55 +663,57 @@ Topology doesn't change:
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="10" second="28">
+      <Relationship type="Association" first="10" second="26">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="33" second="28">
+      <Relationship type="Association" first="31" second="26">
         <Label>Links to</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="35" second="4">
+      <Relationship type="Comment" first="33" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="22" second="11">
+      <Relationship type="Comment" first="20" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="21" second="37">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="19" second="34">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2115</X>
-          <Y>1884</Y>
+          <X>2225</X>
+          <Y>1881</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2225</X>
+          <Y>2030</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="38" second="37">
+      <Relationship type="Comment" first="35" second="34">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="34" second="37">
+      <Relationship type="Comment" first="32" second="34">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="18" second="39">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="16" second="36">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3495</X>
-          <Y>1237</Y>
+          <X>3517</X>
+          <Y>1176</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>3402</X>
@@ -761,9 +722,7 @@ Topology doesn't change:
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="28" second="39">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="26" second="36">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -777,13 +736,15 @@ Topology doesn't change:
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="13" second="32">
+      <Relationship type="Association" first="13" second="30">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="40" second="28">
+      <Relationship type="Comment" first="37" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -791,13 +752,90 @@ Topology doesn't change:
           <Y>1026</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="41" second="28">
+      <Relationship type="Comment" first="38" second="26">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1262</X>
           <Y>910</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="17" second="39">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3482</X>
+          <Y>1447</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="9" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="9" second="16">
+        <Label>store by ID</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="9" second="17">
+        <Label>store by ID</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2645</X>
+          <Y>1317</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3121</X>
+          <Y>1453</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="17" second="40">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="41" second="17">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3071</X>
+          <Y>1626</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3121</X>
+          <Y>1465</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="19" second="9">
+        <Label>links</Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2337</X>
+          <Y>1381</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>
@@ -1066,8 +1104,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1098,6 +1134,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1152,8 +1190,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="20" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1164,8 +1200,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1176,8 +1210,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1188,8 +1220,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="19">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1200,14 +1230,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1220,14 +1250,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="23">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1236,16 +1266,12 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndMultiplicity>1..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="23" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1260,6 +1286,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="21" second="25">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1300,8 +1328,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1312,8 +1338,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="12" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1324,8 +1348,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1691,6 +1713,8 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="5" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1709,6 +1733,8 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1719,6 +1745,8 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1735,6 +1763,8 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1875,6 +1905,8 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="35" second="36">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1889,8 +1921,6 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="35" second="37">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

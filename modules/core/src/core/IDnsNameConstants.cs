@@ -14,6 +14,24 @@ namespace Apollo.Core
     internal interface IDnsNameConstants
     {
         /// <summary>
+        /// Gets the <see cref="DnsName"/> used to send messages to the kernel.
+        /// </summary>
+        /// <value>The requested <c>DnsName</c>.</value>
+        DnsName AddressOfKernel
+        {
+            get;
+        }
+        
+        /// <summary>
+        /// Gets the <see cref="DnsName"/> used to send messages to the logsink.
+        /// </summary>
+        /// <value>The requested <c>DnsName</c>.</value>
+        DnsName AddressOfLogger
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets the <see cref="DnsName"/> used by the message pipeline. Note that the pipeline may not
         /// be listening for messages.
         /// </summary>
@@ -24,10 +42,10 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Gets the <see cref="DnsName"/> used to send messages to the kernel.
+        /// Gets the <see cref="DnsName"/> used by the project service.
         /// </summary>
         /// <value>The requested <c>DnsName</c>.</value>
-        DnsName AddressOfKernel
+        DnsName AddressOfProjects
         {
             get;
         }
@@ -37,15 +55,6 @@ namespace Apollo.Core
         /// </summary>
         /// <value>The requested <c>DnsName</c>.</value>
         DnsName AddressOfUserInterface
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="DnsName"/> used to send messages to the logsink.
-        /// </summary>
-        /// <value>The requested <c>DnsName</c>.</value>
-        DnsName AddressOfLogger
         {
             get;
         }

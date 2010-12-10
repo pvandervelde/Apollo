@@ -127,8 +127,8 @@ namespace Apollo.Utils
         /// <param name="time">The time at which the timer elapsed even took place.</param>
         /// <design>
         /// <para>
-        /// This example assumes that overlapping events can be
-        /// discarded. That is, if an Elapsed event is raised before 
+        /// This code assumes that overlapping events can be
+        /// discarded. That is, if an StartupProgress event is raised before 
         /// the previous event is finished processing, the second
         /// event is ignored. In this case that is probably not 
         /// directly what we want however we push all the event
@@ -159,12 +159,8 @@ namespace Apollo.Utils
             // (specified by the third parameter). If another thread
             // has set syncPoint to 1, or if the control thread has
             // set syncPoint to -1, the current event is skipped. 
-            // (Normally it would not be necessary to use a local 
-            // variable for the return value. A local variable is 
-            // used here to determine the reason the event was 
-            // skipped.)
-            int sync = Interlocked.CompareExchange(ref m_SyncPoint, 1, 0);
-            if (sync == 0)
+            Interlocked.CompareExchange(ref m_SyncPoint, 1, 0);
+            if (m_SyncPoint == 0)
             {
                 // No other event was executing.
                 // Note that the only other event that could be
@@ -192,7 +188,12 @@ namespace Apollo.Utils
                         RaiseStartupProgress(progress, m_CurrentMark);
                     });
 
-                // Release control of syncPoint.
+                // Release control of syncPoint
+                // We can just write to the value because integers 
+                // are atomically written.
+                // 
+                // On top of that we only use this variable internally and
+                // we'll never do anything with it if the value is unequal to 0.
                 m_SyncPoint = 0;
             }
         }

@@ -21,7 +21,7 @@ namespace Apollo.Core
         /// Initializes a new instance of the <see cref="KernelServiceStartupFailedException"/> class.
         /// </summary>
         public KernelServiceStartupFailedException() 
-            : this(Resources_NonTranslatable.Exceptions_Messages_KernelServiceStartupFailed)
+            : this(Resources_NonTranslatable.Exception_Messages_KernelServiceStartupFailed)
         {
         }
 

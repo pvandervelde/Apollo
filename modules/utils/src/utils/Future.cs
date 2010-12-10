@@ -89,7 +89,7 @@ namespace Apollo.Utils
                 // If not then wait for it.
                 if (!m_Result.IsCompleted)
                 {
-                    using(var waitHandle = m_Result.AsyncWaitHandle)
+                    using (var waitHandle = m_Result.AsyncWaitHandle)
                     {
                         waitHandle.WaitOne();
                     }

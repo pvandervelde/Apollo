@@ -78,7 +78,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         private static NLog.LogLevel TranslateToNlogLevel(LevelToLog levelToLog)
         {
-            switch(levelToLog)
+            switch (levelToLog)
             {
                 case LevelToLog.Trace:
                     return NLog.LogLevel.Trace;
@@ -141,7 +141,7 @@ namespace Apollo.Core.Logging
             {
                 // Define where the log is written to
                 var fileTarget = new FileTarget();
-                {   
+                {
                     // Only write the message. The message should contain all the important 
                     // information anyway.
                     fileTarget.Layout = "${message}";
@@ -253,12 +253,12 @@ namespace Apollo.Core.Logging
         {
             // Elevate to allow the call to the logger to work.
             SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        var nlogLevel = TranslateToNlogLevel(newLevel);
-                        m_Factory.GlobalThreshold = nlogLevel;
-                    });
+                new PermissionSet(PermissionState.Unrestricted),
+                () =>
+                {
+                    var nlogLevel = TranslateToNlogLevel(newLevel);
+                    m_Factory.GlobalThreshold = nlogLevel;
+                });
         }
 
         /// <summary>
@@ -277,7 +277,7 @@ namespace Apollo.Core.Logging
             {
                 return false;
             }
-            
+
             if (message == null)
             {
                 return false;
@@ -307,12 +307,12 @@ namespace Apollo.Core.Logging
 
             // Elevate to allow the call to the logger to work.
             SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        var level = TranslateToNlogLevel(message.Level);
-                        m_Logger.Log(level, m_Template.Translate(message));
-                    });
+                new PermissionSet(PermissionState.Unrestricted),
+                () =>
+                {
+                    var level = TranslateToNlogLevel(message.Level);
+                    m_Logger.Log(level, m_Template.Translate(message));
+                });
         }
 
         /// <summary>
@@ -325,11 +325,11 @@ namespace Apollo.Core.Logging
         public void Stop()
         {
             SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        m_Logger.Factory.Flush();
-                    });
+                new PermissionSet(PermissionState.Unrestricted),
+                () =>
+                {
+                    m_Logger.Factory.Flush();
+                });
         }
 
         #endregion

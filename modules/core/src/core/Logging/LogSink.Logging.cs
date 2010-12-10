@@ -37,7 +37,7 @@ namespace Apollo.Core.Logging
         public LevelToLog Level(LogType logType)
         {
             {
-                Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exceptions_Messages_LogTypeHasNoLogger_WithLogType, logType);
+                Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exception_Messages_LogTypeHasNoLogger_WithLogType, logType);
             }
 
             return m_Loggers[logType].Level;
@@ -79,8 +79,8 @@ namespace Apollo.Core.Logging
         public void Log(LogType logType, ILogMessage message)
         {
             {
-                Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exceptions_Messages_LogTypeHasNoLogger_WithLogType, logType);
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(m_Loggers.ContainsKey(logType), Resources_NonTranslatable.Exception_Messages_LogTypeHasNoLogger_WithLogType, logType);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             LogWithoutVerifying(logType, message);

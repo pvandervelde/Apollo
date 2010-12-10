@@ -69,7 +69,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exceptions_Messages_VerificationFailure;
+                return Resources_NonTranslatable.Exception_Messages_VerificationFailure;
             }
         }
     }

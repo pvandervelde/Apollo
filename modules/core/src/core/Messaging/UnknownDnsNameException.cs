@@ -22,7 +22,7 @@ namespace Apollo.Core.Messaging
         /// Initializes a new instance of the <see cref="UnknownDnsNameException"/> class.
         /// </summary>
         public UnknownDnsNameException()
-            : this(Resources_NonTranslatable.Exceptions_Messages_UnknownDnsName)
+            : this(Resources_NonTranslatable.Exception_Messages_UnknownDnsName)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Apollo.Core.Messaging
         /// </summary>
         /// <param name="name">The <c>DnsName</c> which was a duplicate.</param>
         public UnknownDnsNameException(DnsName name)
-            : this(string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.Exceptions_Messages_UnknownDnsName_WithName, name))
+            : this(string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.Exception_Messages_UnknownDnsName_WithName, name))
         {
         }
 

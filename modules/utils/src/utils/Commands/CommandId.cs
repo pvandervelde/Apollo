@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using Lokad;
 using Lokad.Rules;
@@ -15,6 +16,7 @@ namespace Apollo.Utils.Commands
     /// Defines the ID of a <see cref="ICommand"/> object.
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("CommandId: [{InternalValue}]")]
     public sealed class CommandId : Id<CommandId, string>
     {
         /// <summary>

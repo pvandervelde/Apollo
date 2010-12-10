@@ -22,7 +22,7 @@ namespace Apollo.Core
         /// Initializes a new instance of the <see cref="UnknownKernelServiceTypeException"/> class.
         /// </summary>
         public UnknownKernelServiceTypeException() 
-            : this(Resources_NonTranslatable.Exceptions_Messages_UnknownKernelServiceType)
+            : this(Resources_NonTranslatable.Exception_Messages_UnknownKernelServiceType)
         {
         }
 

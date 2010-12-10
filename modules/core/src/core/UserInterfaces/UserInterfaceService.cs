@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
@@ -149,7 +150,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id);
@@ -166,7 +167,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id, ICommandContext context)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
             }
 
             m_Commands.Invoke(id, context);
@@ -189,6 +190,7 @@ namespace Apollo.Core.UserInterfaces
             return new Type[] 
                 { 
                     typeof(LogSink),
+                    typeof(ProjectService),
                 };
         }
 

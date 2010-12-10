@@ -32,7 +32,7 @@ namespace Apollo.Core.Logging
         {
             {
                 Enforce.Argument(() => message);
-                Enforce.With<ArgumentException>(logType != LogType.None, Resources_NonTranslatable.Exceptions_Messages_IncorrectLogType, logType);
+                Enforce.With<ArgumentException>(logType != LogType.None, Resources_NonTranslatable.Exception_Messages_IncorrectLogType, logType);
             }
 
             Message = message;

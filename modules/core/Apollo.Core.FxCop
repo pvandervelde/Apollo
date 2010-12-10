@@ -22,6 +22,8 @@
   <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
+  <Target Name="$(ProjectDir)/bin/build/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/bin/build/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
@@ -39,8 +41,26 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2010-08-07 02:03:42Z">
+ <FxCopReport Version="1.36" LastAnalysis="2010-12-07 11:53:03Z">
   <Namespaces>
+   <Namespace Name="Apollo.Core.Base">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2010-12-07 11:30:08Z">
+      <Issue>
+       <Item>Apollo.Core.Base</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
+   <Namespace Name="Apollo.Core.Projects">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2010-12-07 11:29:25Z">
+      <Issue>
+       <Item>Apollo.Core.Projects</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
    <Namespace Name="Apollo.Core.UserInterfaces">
     <Messages>
      <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2010-05-15 14:38:49Z">
@@ -59,46 +79,371 @@
      </Message>
     </Messages>
    </Namespace>
-   <Namespace Name="Apollo.Utils.Licensing">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2010-07-03 08:10:20Z">
-      <Issue>
-       <Item>Apollo.Utils.Licensing</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
   </Namespaces>
   <Targets>
-   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll">
+   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.Base.dll">
     <Modules>
-     <Module Name="apollo.core.dll">
+     <Module Name="apollo.core.base.dll">
       <Namespaces>
-       <Namespace Name="Apollo.Core">
+       <Namespace Name="Apollo.Core.Base">
         <Types>
-         <Type Name="Bootstrapper+ServiceInjector">
+         <Type Name="IPersistenceInformation">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2010-12-07 11:30:08Z">
+            <Issue>
+             <Item>'IPersistenceInformation'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Core.Base.Projects">
+        <Types>
+         <Type Name="DatasetId">
           <Members>
-           <Member Name="#BuildContainer(Apollo.Core.Utils.Licensing.ICacheConnectorChannel,Autofac.Core.IModule[])">
+           <Member Name="#GetNextValue()">
             <Messages>
-             <Message Id="additionalModules" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-08-03 20:36:04Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'additionalModules'</Item>
-               <Item>'Bootstrapper.ServiceInjector.BuildContainer(ICacheConnectorChannel, IModule[])'</Item>
+             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2010-12-07 11:30:08Z">
+              <Issue Certainty="50" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetId.cs" Line="62">
+               <Item>'DatasetId.GetNextValue()'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
           </Members>
          </Type>
+         <Type Name="DatasetOfflineInformation">
+          <Members>
+           <Member Name="#m_Id">
+            <Messages>
+             <Message Id="mId" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2010-12-07 11:45:25Z" FixCategory="NonBreaking">
+              <Issue Name="MemberShouldBeDiscreteTerm">
+               <Item>mId</Item>
+               <Item>'DatasetOfflineInformation.m_Id'</Item>
+               <Item>mid</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DatasetOnlineInformation">
+          <Members>
+           <Member Name="#Id">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="25">
+               <Item>'DatasetOnlineInformation.Id'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_Id()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="26">
+                 <Item>'DatasetOnlineInformation.Id.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DatasetRequest">
+          <Members>
+           <Member Name="#DatasetToLoad">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="22">
+               <Item>'DatasetRequest.DatasetToLoad'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_DatasetToLoad()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="23">
+                 <Item>'DatasetRequest.DatasetToLoad.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ExpectedLoadPerMachine">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="59">
+               <Item>'DatasetRequest.ExpectedLoadPerMachine'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_ExpectedLoadPerMachine()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="60">
+                 <Item>'DatasetRequest.ExpectedLoadPerMachine.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#Parent">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="34">
+               <Item>'DatasetRequest.Parent'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_Parent()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="35">
+                 <Item>'DatasetRequest.Parent.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#PreferredDistributionRange">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="83">
+               <Item>'DatasetRequest.PreferredDistributionRange'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_PreferredDistributionRange()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="84">
+                 <Item>'DatasetRequest.PreferredDistributionRange.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#PreferredLoadingLocation">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="71">
+               <Item>'DatasetRequest.PreferredLoadingLocation'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_PreferredLoadingLocation()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="72">
+                 <Item>'DatasetRequest.PreferredLoadingLocation.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#ShouldProvideParentWithHubConnection">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="47">
+               <Item>'DatasetRequest.ShouldProvideParentWithHubConnection'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+            <Accessors>
+             <Accessor Name="#get_ShouldProvideParentWithHubConnection()">
+              <Messages>
+               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2010-12-07 11:30:08Z" FixCategory="Breaking">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DatasetRequest.cs" Line="48">
+                 <Item>'DatasetRequest.ShouldProvideParentWithHubConnection.get()'</Item>
+                 <Item>'NotImplementedException'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="DistributionPlan">
+          <Members>
+           <Member Name="#Accept()">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DistributionPlan.cs" Line="37">
+               <Item>'DistributionPlan.Accept()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#MachinesToDistributeTo()">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:30:08Z" FixCategory="DependsOnFix">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.base\Projects" File="DistributionPlan.cs" Line="25">
+               <Item>'DistributionPlan.MachinesToDistributeTo()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.Dataset.exe">
+    <Modules>
+     <Module Name="apollo.core.dataset.exe">
+      <Namespaces>
+       <Namespace Name="Apollo.Core.Dataset">
+        <Types>
+         <Type Name="Program">
+          <Members>
+           <Member Name="#EventCategoryForException(System.Exception)">
+            <Messages>
+             <Message Id="e" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2010-12-07 11:30:08Z" FixCategory="NonBreaking">
+              <Issue Name="MemberParameterMoreMeaningfulName" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.dataset" File="Program.cs" Line="206">
+               <Item>'Program.EventCategoryForException(Exception)'</Item>
+               <Item>'e'</Item>
+              </Issue>
+             </Message>
+             <Message Id="e" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:30:08Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.dataset" File="Program.cs" Line="206">
+               <Item>'e'</Item>
+               <Item>'Program.EventCategoryForException(Exception)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#EventIdForException(System.Exception)">
+            <Messages>
+             <Message Id="e" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2010-12-07 11:30:08Z" FixCategory="NonBreaking">
+              <Issue Name="MemberParameterMoreMeaningfulName" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.dataset" File="Program.cs" Line="198">
+               <Item>'Program.EventIdForException(Exception)'</Item>
+               <Item>'e'</Item>
+              </Issue>
+             </Message>
+             <Message Id="e" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:30:08Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.dataset" File="Program.cs" Line="198">
+               <Item>'e'</Item>
+               <Item>'Program.EventIdForException(Exception)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_ExceptionTypeToEventCategoryMap">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:30:08Z">
+              <Issue>
+               <Item>'Program.m_ExceptionTypeToEventCategoryMap'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_ExceptionTypeToEventIdMap">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:30:08Z">
+              <Issue>
+               <Item>'Program.m_ExceptionTypeToEventIdMap'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#WriteExceptionToFile(System.Exception)">
+            <Messages>
+             <Message Id="e" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2010-12-07 11:30:08Z" FixCategory="NonBreaking">
+              <Issue Name="MemberParameterMoreMeaningfulName" Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core.dataset" File="Program.cs" Line="214">
+               <Item>'Program.WriteExceptionToFile(Exception)'</Item>
+               <Item>'e'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
+   <Target Name="$(ProjectDir)/bin/build/Apollo.Core.dll">
+    <Modules>
+     <Module Name="apollo.core.dll">
+      <Namespaces>
+       <Namespace Name="Apollo.Core">
+        <Types>
          <Type Name="CoreProxy">
           <Members>
+           <Member Name="#HandleShutdownCapabilityRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core" File="CoreProxy.Messages.cs" Line="89">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'CoreProxy.HandleShutdownCapabilityRequest(DnsName, MessageId)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
            <Member Name="#HandleShutdownRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId,Apollo.Core.ShutdownRequestMessage)">
             <Messages>
              <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-05-15 14:38:49Z">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\modules\core\src\core" File="CoreProxy.Messages.cs" Line="79">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core" File="CoreProxy.Messages.cs" Line="78">
                <Item>'CoreProxy.HandleShutdownRequest(DnsName, MessageId, ShutdownRequestMessage)'</Item>
                <Item>'Parallel.Invoke(params Action[])'</Item>
                <Item>'System.Threading.dll'</Item>
+              </Issue>
+             </Message>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core" File="CoreProxy.Messages.cs" Line="60">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'CoreProxy.HandleShutdownRequest(DnsName, MessageId, ShutdownRequestMessage)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="INotificationArguments">
+          <Messages>
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2010-12-07 11:29:25Z">
+            <Issue>
+             <Item>'INotificationArguments'</Item>
+            </Issue>
+           </Message>
+          </Messages>
+         </Type>
+         <Type Name="NotificationNameConstants">
+          <Members>
+           <Member Name="#m_CanSystemShutDown">
+            <Messages>
+             <Message Id="ShutDown" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Name="MemberShouldBeDiscreteTerm">
+               <Item>ShutDown</Item>
+               <Item>'NotificationNameConstants.m_CanSystemShutDown'</Item>
+               <Item>Shutdown</Item>
               </Issue>
              </Message>
             </Messages>
@@ -128,10 +473,428 @@
            <Member Name="#ChangeLevel(Apollo.Core.Logging.LevelToLog)">
             <Messages>
              <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-05-15 14:38:49Z">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\modules\core\src\core\Logging" File="Logger.cs" Line="260">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Logging" File="Logger.cs" Line="260">
                <Item>'Logger.ChangeLevel(LevelToLog)'</Item>
                <Item>'LogFactory.GlobalThreshold.set(LogLevel)'</Item>
                <Item>'NLog.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="LogSink">
+          <Members>
+           <Member Name="#HandleLogLevelChangeRequest(Apollo.Core.Logging.LevelToLog)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Logging" File="LogSink.Messages.cs" Line="60">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'LogSink.HandleLogLevelChangeRequest(LevelToLog)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HandleShutdownCapabilityRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Logging" File="LogSink.Messages.cs" Line="72">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'LogSink.HandleShutdownCapabilityRequest(DnsName, MessageId)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Core.Projects">
+        <Types>
+         <Type Name="Project">
+          <Members>
+           <Member Name="#.ctor(System.Func`2&lt;Apollo.Core.Base.Projects.DatasetRequest,Apollo.Core.Base.Projects.DistributionPlan&gt;,Apollo.Core.Base.IPersistenceInformation)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="25">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'BidirectionalGraph&lt;DatasetId, Edge&lt;DatasetId&gt;&gt;.BidirectionalGraph(bool)'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.CanBeAdopted.set(bool)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.CanBeCopied.set(bool)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.CanBeDeleted.set(bool)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.CanBecomeParent.set(bool)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.CreatedOnRequestOf.set(DatasetCreator)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.DatasetCreationInformation()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="76">
+               <Item>'Project.Project(Func&lt;DatasetRequest, DistributionPlan&gt;, IPersistenceInformation)'</Item>
+               <Item>'DatasetCreationInformation.LoadFrom.set(IPersistenceInformation)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#Children(Apollo.Core.Base.Projects.DatasetId)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="90">
+               <Item>'Project.Children(DatasetId)'</Item>
+               <Item>'BidirectionalGraph&lt;DatasetId, Edge&lt;DatasetId&gt;&gt;.OutEdges(DatasetId)'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="91">
+               <Item>'Project.Children(DatasetId)'</Item>
+               <Item>'Edge&lt;DatasetId&gt;.Target.get()'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#CreateDataset(Apollo.Core.Base.Projects.DatasetId,Apollo.Core.Base.Projects.DatasetCreationInformation)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="73">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'BidirectionalGraph&lt;DatasetId, Edge&lt;DatasetId&gt;&gt;.AddEdge(Edge&lt;DatasetId&gt;)'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="59">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'BidirectionalGraph&lt;DatasetId, Edge&lt;DatasetId&gt;&gt;.AddVertex(DatasetId)'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="51">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetCreationInformation.LoadFrom.get()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="66">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetCreationReason.CanBecomeParent.get()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="51">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetCreationReason.DatasetCreationReason(DatasetCreationInformation)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="50">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetId.DatasetId()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="51">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetOfflineInformation.DatasetOfflineInformation(DatasetId, DatasetCreationReason, IPersistenceInformation)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="72">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'DatasetOfflineInformation.Id.get()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="73">
+               <Item>'Project.CreateDataset(DatasetId, DatasetCreationInformation)'</Item>
+               <Item>'Edge&lt;DatasetId&gt;.Edge(DatasetId, DatasetId)'</Item>
+               <Item>'QuickGraph.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#LoadOntoMachine(Apollo.Core.Base.Projects.DatasetId,Apollo.Core.Base.Projects.LoadingLocation,Apollo.Core.Base.Projects.MachineDistributionRange)">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="103">
+               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="id" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="103">
+               <Item>'id'</Item>
+               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="preferredLocation" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="103">
+               <Item>'preferredLocation'</Item>
+               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="range" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="103">
+               <Item>'range'</Item>
+               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_DatasetDistributor">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:29:25Z">
+              <Issue>
+               <Item>'Project.m_DatasetDistributor'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#ReasonForExistence(Apollo.Core.Base.Projects.DatasetId)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="85">
+               <Item>'Project.ReasonForExistence(DatasetId)'</Item>
+               <Item>'DatasetOfflineInformation.ReasonForExistence.get()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RestoreFromStore(Apollo.Core.Base.IPersistenceInformation)">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="91">
+               <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="persistenceInfo" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.cs" Line="91">
+               <Item>'persistenceInfo'</Item>
+               <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#UnloadFromMachine(Apollo.Core.Base.Projects.DatasetId)">
+            <Messages>
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="108">
+               <Item>'Project.UnloadFromMachine(DatasetId)'</Item>
+              </Issue>
+             </Message>
+             <Message Id="id" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.Datasets.cs" Line="108">
+               <Item>'id'</Item>
+               <Item>'Project.UnloadFromMachine(DatasetId)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="Project+ReadOnlyDataset">
+          <Members>
+           <Member Name="#CanBecomeParent">
+            <Accessors>
+             <Accessor Name="#get_CanBecomeParent()">
+              <Messages>
+               <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+                <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="192">
+                 <Item>'Project.ReadOnlyDataset.CanBecomeParent.get()'</Item>
+                 <Item>'DatasetCreationReason.CanBecomeParent.get()'</Item>
+                 <Item>'Apollo.Core.Base.dll'</Item>
+                </Issue>
+               </Message>
+              </Messages>
+             </Accessor>
+            </Accessors>
+           </Member>
+           <Member Name="#Children()">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="173">
+               <Item>'Project.ReadOnlyDataset.Children()'</Item>
+               <Item>'DatasetOfflineInformation.Id.get()'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#CreateNewChild(Apollo.Core.Base.Projects.DatasetCreationInformation)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="210">
+               <Item>'Project.ReadOnlyDataset.CreateNewChild(DatasetCreationInformation)'</Item>
+               <Item>'DatasetCannotBecomeParentException.DatasetCannotBecomeParentException(DatasetId)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#CreateNewChildren(System.Collections.Generic.IEnumerable`1&lt;Apollo.Core.Base.Projects.DatasetCreationInformation&gt;)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="229">
+               <Item>'Project.ReadOnlyDataset.CreateNewChildren(IEnumerable&lt;DatasetCreationInformation&gt;)'</Item>
+               <Item>'DatasetCannotBecomeParentException.DatasetCannotBecomeParentException(DatasetId)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_IdOfDataset">
+            <Messages>
+             <Message Id="mId" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Name="MemberShouldBeDiscreteTerm">
+               <Item>mId</Item>
+               <Item>'Project.ReadOnlyDataset.m_IdOfDataset'</Item>
+               <Item>mid</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RaiseOnLoaded(System.Collections.Generic.List`1&lt;Apollo.Core.Base.Projects.Machine&gt;)">
+            <Messages>
+             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="125">
+               <Item>'Project.ReadOnlyDataset.RaiseOnLoaded(List&lt;Machine&gt;)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#RaiseOnUnloaded()">
+            <Messages>
+             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="Project.ReadOnlyDataset.cs" Line="156">
+               <Item>'Project.ReadOnlyDataset.RaiseOnUnloaded()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+         <Type Name="ProjectService">
+          <Members>
+           <Member Name="#CreateNewProject()">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="ProjectService.Projects.cs" Line="43">
+               <Item>'ProjectService.CreateNewProject()'</Item>
+               <Item>'IHelpDistributingDatasets.ProposeDistributionFor(DatasetRequest)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HandleShutdownCapabilityRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="ProjectService.Messages.cs" Line="46">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'ProjectService.HandleShutdownCapabilityRequest(DnsName, MessageId)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#LoadProject(Apollo.Core.Base.IPersistenceInformation)">
+            <Messages>
+             <Message TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\Projects" File="ProjectService.Projects.cs" Line="63">
+               <Item>'ProjectService.LoadProject(IPersistenceInformation)'</Item>
+               <Item>'IHelpDistributingDatasets.ProposeDistributionFor(DatasetRequest)'</Item>
+               <Item>'Apollo.Core.Base.dll'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_DnsNames">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:29:25Z">
+              <Issue>
+               <Item>'ProjectService.m_DnsNames'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_LicenseValidationStorage">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:29:25Z">
+              <Issue>
+               <Item>'ProjectService.m_LicenseValidationStorage'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Core.UserInterfaces">
+        <Types>
+         <Type Name="UserInterfaceService">
+          <Members>
+           <Member Name="#HandleShutdownCapabilityRequest(Apollo.Core.Messaging.DnsName,Apollo.Core.Messaging.MessageId)">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\UserInterfaces" File="UserInterfaceService.Messages.cs" Line="49">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'UserInterfaceService.HandleShutdownCapabilityRequest(DnsName, MessageId)'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#HandleStartupCompleteMessage()">
+            <Messages>
+             <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Created="2010-12-07 11:29:25Z">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\project system\modules\core\src\core\UserInterfaces" File="UserInterfaceService.Messages.cs" Line="93">
+               <Item>'string.Format(string, object)'</Item>
+               <Item>'UserInterfaceService.HandleStartupCompleteMessage()'</Item>
+               <Item>'string.Format(IFormatProvider, string, params object[])'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#m_LicenseValidationStorage">
+            <Messages>
+             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2010-12-07 11:29:25Z">
+              <Issue>
+               <Item>'UserInterfaceService.m_LicenseValidationStorage'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+       <Namespace Name="Apollo.Core.UserInterfaces.Application">
+        <Types>
+         <Type Name="SystemInformationStorage">
+          <Members>
+           <Member Name="#s_CoreVersion">
+            <Messages>
+             <Message Id="sCore" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2010-12-07 11:29:25Z" FixCategory="NonBreaking">
+              <Issue Name="MemberShouldBeDiscreteTerm">
+               <Item>sCore</Item>
+               <Item>'SystemInformationStorage.s_CoreVersion'</Item>
+               <Item>score</Item>
               </Issue>
              </Message>
             </Messages>
@@ -149,14 +912,44 @@
    <Rule TypeName="AptcaMethodsShouldOnlyCallAptcaMethods" Category="Microsoft.Security" CheckId="CA2116">
     <Resolution Name="Default">The method {0} is defined in an assembly that has AllowPartiallyTrustedCallersAttribute and calls {1}, which is defined in an assembly ({2}) that does not. Review the called methods to ensure they cannot be used in a destructive manner if called by malicious code.</Resolution>
    </Rule>
+   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
+    <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
+   </Rule>
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
     <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
+   </Rule>
+   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
+    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
+   </Rule>
+   <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
+    <Resolution Name="MemberShouldBeDiscreteTerm">The compound word '{0}' in member name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
+   </Rule>
+   <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
+    <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
+   </Rule>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberParameterMoreMeaningfulName">In method {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
+    <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
    </Rule>
    <Rule TypeName="IdentifiersShouldNotMatchKeywords" Category="Microsoft.Naming" CheckId="CA1716">
     <Resolution Name="Member">Rename virtual/interface member {0} so that it no longer conflicts with the reserved language keyword '{1}'. Using a reserved keyword as the name of a virtual/interface member makes it harder for consumers in other languages to override/implement the member.</Resolution>
    </Rule>
+   <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
+    <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
+   </Rule>
    <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
     <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
+   </Rule>
+   <Rule TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305">
+    <Resolution Name="Default">Because the behavior of {0} could vary based on the current user's locale settings, replace this call in {1} with a call to {2}. If the result of {2} will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Resolution>
+   </Rule>
+   <Rule TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030">
+    <Resolution Name="Default">Consider making {0} an event.</Resolution>
+   </Rule>
+   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

@@ -21,7 +21,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Debug\Apollo.Core.Base.XML</DocumentationFile>
@@ -30,12 +30,16 @@
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Apollo.Core.Base.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -53,9 +57,31 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="NullPersistenceInformation.cs" />
+    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
+    <Compile Include="Projects\DatasetCreationInformation.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <Compile Include="IPersistenceInformation.cs" />
+    <Compile Include="Projects\DatasetCannotBecomeParentException.cs" />
+    <Compile Include="Projects\DatasetCreationReason.cs" />
+    <Compile Include="Projects\DatasetCreator.cs" />
+    <Compile Include="Projects\DatasetId.cs" />
+    <Compile Include="Projects\DatasetOfflineInformation.cs" />
+    <Compile Include="Projects\DatasetOnlineInformation.cs" />
+    <Compile Include="Projects\DatasetRequest.cs" />
+    <Compile Include="Projects\DistributionPlan.cs" />
+    <Compile Include="Projects\ExpectedDatasetLoad.cs" />
+    <Compile Include="Projects\IHelpDistributingDatasets.cs" />
+    <Compile Include="Projects\LoadingLocation.cs" />
+    <Compile Include="Projects\Machine.cs" />
+    <Compile Include="Projects\MachineDistributionRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -63,6 +89,12 @@
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
