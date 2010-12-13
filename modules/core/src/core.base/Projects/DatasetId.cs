@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -38,6 +39,7 @@ namespace Apollo.Core.Base.Projects
     /// only the project should generate new datasets.
     /// </para>
     /// </design>
+    [Serializable]
     [DebuggerDisplay("Dataset: [{InternalValue, m_IsValid}]")]
     public sealed class DatasetId : Id<DatasetId, int>
     {
@@ -65,11 +67,6 @@ namespace Apollo.Core.Base.Projects
         }
 
         /// <summary>
-        /// Indicates if the ID number is still valid.
-        /// </summary>
-        private bool m_IsValid = true;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetId"/> class.
         /// </summary>
         public DatasetId()
@@ -88,28 +85,6 @@ namespace Apollo.Core.Base.Projects
         }
 
         /// <summary>
-        /// Returns a value indicating if the current instance is valid.
-        /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if the current instance is valid; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public override bool IsValid()
-        {
-            Debug.Assert(InternalValue > InvalidId, "The internal ID value should never be invalid.");
-            return m_IsValid;
-        }
-
-        /// <summary>
-        /// Invalidates the ID number.
-        /// </summary>
-        public void Invalidate()
-        {
-            m_IsValid = false;
-        }
-
-        /// <summary>
         /// Performs the actual act of creating a copy of the current ID number.
         /// </summary>
         /// <param name="value">The internally stored value.</param>
@@ -119,8 +94,6 @@ namespace Apollo.Core.Base.Projects
         protected override DatasetId Clone(int value)
         {
             var result = new DatasetId(value);
-            result.m_IsValid = m_IsValid;
-
             return result;
         }
 

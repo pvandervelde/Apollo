@@ -44,6 +44,12 @@ namespace Apollo.Core.Projects
         /// </summary>
         private DatasetId m_RootDataset;
 
+        private bool IsValid(DatasetId id)
+        {
+            Debug.Assert(id != null, "The ID should not be a null reference.");
+            return !IsClosed && m_Datasets.ContainsKey(id);
+        }
+
         private bool IsLoaded(DatasetId id)
         {
             Debug.Assert(id != null, "The ID should not be a null reference.");
@@ -62,6 +68,7 @@ namespace Apollo.Core.Projects
         private DatasetOnlineInformation OnlineInformation(DatasetId id)
         {
             {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to get the online information.");
                 Debug.Assert(m_ActiveDatasets.ContainsKey(id), "Unknown dataset ID found.");
             }
 
@@ -70,6 +77,10 @@ namespace Apollo.Core.Projects
 
         private DatasetId CreateDataset(DatasetId parent, DatasetCreationInformation newChild)
         {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
+            }
+
             // First create the dataset
             var id = new DatasetId();
             var newDataset = new DatasetOfflineInformation(id, new DatasetCreationReason(newChild), newChild.LoadFrom);
@@ -102,6 +113,10 @@ namespace Apollo.Core.Projects
 
         private IEnumerable<DatasetOfflineInformation> Children(DatasetId parent)
         {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to get the children of a dataset.");
+            }
+
             var result = from outEdge in m_Graph.OutEdges(parent)
                          select m_Datasets[outEdge.Target];
 
@@ -110,11 +125,19 @@ namespace Apollo.Core.Projects
 
         private void LoadOntoMachine(DatasetId id, LoadingLocation preferredLocation, MachineDistributionRange range)
         {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to load a dataset onto a machine.");
+            }
+
             throw new NotImplementedException();
         }
 
         private void UnloadFromMachine(DatasetId id)
         {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
+            }
+
             throw new NotImplementedException();
         }
     }

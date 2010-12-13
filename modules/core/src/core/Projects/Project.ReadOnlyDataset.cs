@@ -46,7 +46,7 @@ namespace Apollo.Core.Projects
                 {
                     Debug.Assert(owner != null, "The owner object should not be a null reference.");
                     Debug.Assert(idOfDataset != null, "The dataset ID should not be a null reference.");
-                    Debug.Assert(idOfDataset.IsValid(), "The dataset ID should be valid.");
+                    Debug.Assert(owner.IsValid(idOfDataset), "The dataset ID should be valid.");
                 }
 
                 m_Owner = owner;
@@ -61,6 +61,24 @@ namespace Apollo.Core.Projects
                 get
                 {
                     return m_IdOfDataset;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the current object is valid. 
+            /// </summary>
+            /// <remarks>
+            /// The object can become invalid when:
+            /// <list type="bullet">
+            /// <item>The project is closed.</item>
+            /// <item>The dataset is deleted.</item>
+            /// </list>
+            /// </remarks>
+            public bool IsValid
+            {
+                get
+                {
+                    return m_Owner.IsValid(m_IdOfDataset);
                 }
             }
 

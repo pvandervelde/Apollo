@@ -53,11 +53,5 @@ namespace Apollo.Core.Projects
         /// some time because the datasets may be large, reside on a remote machine or both.
         /// </remarks>
         void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo);
-
-        /// <summary>
-        /// Stops all external datasets from running, unloads them from their machines and then prepares
-        /// the project for shut-down.
-        /// </summary>
-        void Close();
     }
 }

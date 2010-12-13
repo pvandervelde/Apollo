@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
+using System.Runtime.Remoting;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Lokad;
@@ -117,10 +119,10 @@ namespace Apollo.Core.Projects
         /// </design>
         public void UnloadProject()
         {
-            IProject current = null;
+            ICanClose current = null;
             lock (m_Lock)
             {
-                current = m_Current;
+                current = m_Current as ICanClose;
                 m_Current = null;
             }
 
@@ -129,6 +131,19 @@ namespace Apollo.Core.Projects
                 return;
             }
 
+            // Remove the project from the remoting service global cache
+            // otherwise we cannot register the next project
+            var marshal = current as MarshalByRefObject;
+            if (marshal != null)
+            {
+                if (!RemotingServices.Disconnect(marshal))
+                {
+                    Debug.Fail("Failed to unregister the project from the RemotingServices global cache.");
+                }
+            }
+
+            // Close the project. After this method call
+            // the project cannot be used anymore
             current.Close();
         }
     }

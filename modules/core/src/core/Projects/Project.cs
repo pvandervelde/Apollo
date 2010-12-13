@@ -23,7 +23,7 @@ namespace Apollo.Core.Projects
     /// described by the hierarchical set of datasets.
     /// </para>
     /// </remarks>
-    internal sealed partial class Project : IProject
+    internal sealed partial class Project : MarshalByRefObject, IProject, ICanClose
     {
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
@@ -135,6 +135,17 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Gets a value indicating whether the project is closed.
+        /// </summary>
+        private bool IsClosed
+        {
+            get 
+            {
+                return m_IsClosed;
+            }
+        }
+
+        /// <summary>
         /// Returns a read-only view of the dataset on which all the other datasets are based.
         /// </summary>
         /// <returns>
@@ -143,7 +154,7 @@ namespace Apollo.Core.Projects
         public IReadOnlyDataset BaseDataset()
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(!m_IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
             }
 
             return new ReadOnlyDataset(this, m_RootDataset);
@@ -167,10 +178,12 @@ namespace Apollo.Core.Projects
         public void Save(IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(!m_IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => persistenceInfo);
             }
 
+            // Do we need to have a save flag that we can set to prevent closing from happening
+            // while saving?
             throw new NotImplementedException();
         }
 
@@ -193,13 +206,15 @@ namespace Apollo.Core.Projects
         /// </remarks>
         public void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo)
         {
-            { 
-                Enforce.With<CannotUseProjectAfterClosingItException>(!m_IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+            {
+                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(m_Datasets.ContainsKey(datasetToExport), Resources_NonTranslatable.Exception_Messages_UnknownDataset_WithId, datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
             }
 
+            // Do we need to have a save flag that we can set to prevent closing from happening
+            // while saving?
             throw new NotImplementedException();
         }
 
@@ -207,8 +222,18 @@ namespace Apollo.Core.Projects
         /// Stops all external datasets from running, unloads them from their machines and then prepares
         /// the project for shut-down.
         /// </summary>
+        /// <design>
+        /// We do not want anybody to call the close, except for the owner of the project (i.e. the 
+        /// project service). This is because when we close a project we need the project service to
+        /// perform certain actions (like removing the project etc.). So closing should always be
+        /// done through the project owner.
+        /// </design>
         public void Close()
-        { 
+        {
+            // Indicat that we're closing the project. Do this first so that any actions that come
+            // in parallel to this one will be notified.
+            m_IsClosed = true;
+
             // NOTE: We should only close if we're not saving data. If we are saving data then wait till
             //       we're done, then close.
             //
@@ -217,7 +242,24 @@ namespace Apollo.Core.Projects
             // - Sign off from communications
             // - Clear out all the datastructures
             // - Terminate
-            m_IsClosed = true;
+        }
+
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns>
+        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
+        /// </returns>
+        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. 
+        /// </exception>
+        /// <filterpriority>2</filterpriority>
+        /// <PermissionSet>
+        ///     <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
+        /// </PermissionSet>
+        public override object InitializeLifetimeService()
+        {
+            // We don't really want the system to GC our object at random times...
+            return null;
         }
     }
 }

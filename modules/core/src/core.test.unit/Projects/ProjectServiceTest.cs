@@ -334,6 +334,253 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
+        [Description("Checks that CreateNewProjectMessage is handled correctly.")]
+        public void HandleCreateNewProjectMessage()
+        {
+            var dnsNames = new MockDnsNameConstants();
+
+            var actions = new Dictionary<Type, Action<KernelMessage>>();
+            DnsName storedSender = null;
+            MessageBody storedBody = null;
+            MessageId storedInReplyTo = null;
+            var processor = new Mock<IHelpMessageProcessing>();
+            {
+                processor.Setup(p => p.RegisterAction(It.IsAny<Type>(), It.IsAny<Action<KernelMessage>>()))
+                    .Callback<Type, Action<KernelMessage>>(
+                        (t, a) =>
+                        {
+                            actions.Add(t, a);
+                        });
+                processor.Setup(p => p.SendMessage(It.IsAny<DnsName>(), It.IsAny<MessageBody>(), It.IsAny<MessageId>()))
+                    .Callback<DnsName, MessageBody, MessageId>(
+                        (d, b, m) =>
+                        {
+                            storedSender = d;
+                            storedBody = b;
+                            storedInReplyTo = m;
+                        });
+            }
+
+            var storage = new LicenseValidationResultStorage();
+            var distributor = new Mock<IHelpDistributingDatasets>();
+
+            var marshal = new Mock<MarshalByRefObject>();
+            var project = marshal.As<IProject>();
+            var closable = marshal.As<ICanClose>();
+
+            var builder = new Mock<IBuildProjects>();
+            {
+                builder.Setup(b => b.Define())
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, DistributionPlan>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.Build())
+                    .Returns(project.Object)
+                    .Verifiable();
+            }
+
+            var service = new ProjectService(
+                dnsNames,
+                processor.Object,
+                storage,
+                distributor.Object,
+                builder.Object);
+            var pipeline = new Mock<KernelService>();
+            var pipelineInterface = pipeline.As<IMessagePipeline>();
+            service.ConnectTo(pipeline.Object);
+
+            service.Start();
+
+            Assert.IsTrue(actions.ContainsKey(typeof(CreateNewProjectMessage)));
+            {
+                var body = new CreateNewProjectMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(CreateNewProjectMessage)](new KernelMessage(header, body));
+
+                Assert.AreEqual(header.Sender, storedSender);
+                Assert.AreEqual(header.Id, storedInReplyTo);
+                Assert.IsInstanceOfType<ProjectRequestResponseMessage>(storedBody);
+
+                var message = storedBody as ProjectRequestResponseMessage;
+                Assert.IsNotNull(message.ProjectRemotingUri);
+
+                // Get rid of the project registration in the 
+                // Remoting services.
+                service.UnloadProject();
+            }
+        }
+
+        [Test]
+        [Description("Checks that LoadProjectMessage is handled correctly.")]
+        [Ignore("Not implemented yet.")]
+        public void HandleLoadProjectMessage()
+        {
+        }
+
+        [Test]
+        [Description("Checks that UnloadProjectMessage is handled correctly.")]
+        public void HandleUnloadProjectMessage()
+        {
+            var dnsNames = new MockDnsNameConstants();
+
+            var actions = new Dictionary<Type, Action<KernelMessage>>();
+            DnsName storedSender = null;
+            MessageBody storedBody = null;
+            MessageId storedInReplyTo = null;
+            var processor = new Mock<IHelpMessageProcessing>();
+            {
+                processor.Setup(p => p.RegisterAction(It.IsAny<Type>(), It.IsAny<Action<KernelMessage>>()))
+                    .Callback<Type, Action<KernelMessage>>(
+                        (t, a) =>
+                        {
+                            actions.Add(t, a);
+                        });
+                processor.Setup(p => p.SendMessage(It.IsAny<DnsName>(), It.IsAny<MessageBody>(), It.IsAny<MessageId>()))
+                    .Callback<DnsName, MessageBody, MessageId>(
+                        (d, b, m) =>
+                        {
+                            storedSender = d;
+                            storedBody = b;
+                            storedInReplyTo = m;
+                        });
+            }
+
+            var storage = new LicenseValidationResultStorage();
+            var distributor = new Mock<IHelpDistributingDatasets>();
+
+            var marshal = new Mock<MarshalByRefObject>();
+            var project = marshal.As<IProject>();
+            var closable = marshal.As<ICanClose>();
+            {
+                closable.Setup(p => p.Close())
+                    .Verifiable();
+            }
+
+            var builder = new Mock<IBuildProjects>();
+            {
+                builder.Setup(b => b.Define())
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, DistributionPlan>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.Build())
+                    .Returns(project.Object)
+                    .Verifiable();
+            }
+
+            var service = new ProjectService(
+                dnsNames,
+                processor.Object,
+                storage,
+                distributor.Object,
+                builder.Object);
+            var pipeline = new Mock<KernelService>();
+            var pipelineInterface = pipeline.As<IMessagePipeline>();
+            service.ConnectTo(pipeline.Object);
+
+            service.Start();
+            service.CreateNewProject();
+
+            Assert.IsTrue(actions.ContainsKey(typeof(UnloadProjectMessage)));
+            {
+                var body = new UnloadProjectMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(UnloadProjectMessage)](new KernelMessage(header, body));
+
+                closable.Verify(c => c.Close(), Times.Exactly(1));
+            }
+        }
+
+        [Test]
+        [Description("Checks that ProjectRequestMessage is handled correctly.")]
+        public void HandleProjectRequestMessage()
+        {
+            var dnsNames = new MockDnsNameConstants();
+
+            var actions = new Dictionary<Type, Action<KernelMessage>>();
+            DnsName storedSender = null;
+            MessageBody storedBody = null;
+            MessageId storedInReplyTo = null;
+            var processor = new Mock<IHelpMessageProcessing>();
+            {
+                processor.Setup(p => p.RegisterAction(It.IsAny<Type>(), It.IsAny<Action<KernelMessage>>()))
+                    .Callback<Type, Action<KernelMessage>>(
+                        (t, a) =>
+                        {
+                            actions.Add(t, a);
+                        });
+                processor.Setup(p => p.SendMessage(It.IsAny<DnsName>(), It.IsAny<MessageBody>(), It.IsAny<MessageId>()))
+                    .Callback<DnsName, MessageBody, MessageId>(
+                        (d, b, m) =>
+                        {
+                            storedSender = d;
+                            storedBody = b;
+                            storedInReplyTo = m;
+                        });
+            }
+
+            var storage = new LicenseValidationResultStorage();
+            var distributor = new Mock<IHelpDistributingDatasets>();
+
+            var marshal = new Mock<MarshalByRefObject>();
+            var project = marshal.As<IProject>();
+            var closable = marshal.As<ICanClose>();
+
+            var builder = new Mock<IBuildProjects>();
+            {
+                builder.Setup(b => b.Define())
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, DistributionPlan>>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.Build())
+                    .Returns(project.Object)
+                    .Verifiable();
+            }
+
+            var service = new ProjectService(
+                dnsNames,
+                processor.Object,
+                storage,
+                distributor.Object,
+                builder.Object);
+            var pipeline = new Mock<KernelService>();
+            var pipelineInterface = pipeline.As<IMessagePipeline>();
+            service.ConnectTo(pipeline.Object);
+
+            service.Start();
+            service.CreateNewProject();
+
+            Assert.IsTrue(actions.ContainsKey(typeof(ProjectRequestMessage)));
+            {
+                var body = new ProjectRequestMessage();
+                var header = new MessageHeader(MessageId.Next(), new DnsName("bla"), dnsNames.AddressOfUserInterface);
+                actions[typeof(ProjectRequestMessage)](new KernelMessage(header, body));
+
+                Assert.AreEqual(header.Sender, storedSender);
+                Assert.AreEqual(header.Id, storedInReplyTo);
+                Assert.IsInstanceOfType<ProjectRequestResponseMessage>(storedBody);
+
+                var message = storedBody as ProjectRequestResponseMessage;
+                Assert.IsNotNull(message.ProjectRemotingUri);
+
+                // Get rid of the project registration in the 
+                // Remoting services.
+                service.UnloadProject();
+            }
+        }
+
+        [Test]
         [Description("Checks that a new project can be created.")]
         public void CreateNewProject()
         {
@@ -344,6 +591,7 @@ namespace Apollo.Core.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())
@@ -405,6 +653,7 @@ namespace Apollo.Core.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())
@@ -472,6 +721,7 @@ namespace Apollo.Core.Projects
 
             IPersistenceInformation persistence = null;
             var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
             {
                 project.Setup(p => p.Save(It.IsAny<IPersistenceInformation>()))
                     .Callback<IPersistenceInformation>(p => persistence = p)
@@ -515,8 +765,9 @@ namespace Apollo.Core.Projects
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
             {
-                project.Setup(p => p.Close())
+                closable.Setup(p => p.Close())
                     .Verifiable();
             }
 
@@ -542,7 +793,7 @@ namespace Apollo.Core.Projects
             service.CreateNewProject();
             service.UnloadProject();
 
-            project.Verify(p => p.Close(), Times.Exactly(1));
+            closable.Verify(p => p.Close(), Times.Exactly(1));
         }
     }
 }

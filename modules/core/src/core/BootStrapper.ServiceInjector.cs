@@ -10,6 +10,7 @@ using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Projects;
 using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
@@ -54,6 +55,7 @@ namespace Apollo.Core
                     builder.RegisterModule(new KernelModule());
                     builder.RegisterModule(new MessagingModule());
                     builder.RegisterModule(new LoggerModule());
+                    builder.RegisterModule(new ProjectModule());
 
                     foreach (var module in additionalModules)
                     {
@@ -86,6 +88,10 @@ namespace Apollo.Core
                     new IModule[0];
 
                 var container = BuildContainer(channel, modules);
+
+                // Load up any components registered as self-starting (i.e. IStarter)
+                // this can be the license components or other components that need to 
+                // be loaded on system start-up.
                 if (container.IsRegistered<IStarter>())
                 {
                     SecurityHelpers.Elevate(

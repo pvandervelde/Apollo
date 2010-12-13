@@ -223,19 +223,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that the IsValid method returns the correct value.")]
-        public void IsValid()
-        {
-            Assert.IsTrue(new DatasetId().IsValid());
-
-            var id = new DatasetId();
-            Assert.IsTrue(id.IsValid());
-
-            id.Invalidate();
-            Assert.IsFalse(id.IsValid());
-        }
-
-        [Test]
         [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
@@ -243,18 +230,6 @@ namespace Apollo.Core.Projects
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
-        }
-
-        [Test]
-        [Description("Checks that the Clone method returns an exact copy of the original object.")]
-        public void CloneInvalidId()
-        {
-            var first = new DatasetId();
-            first.Invalidate();
-
-            var second = first.Clone();
-            Assert.AreEqual(first, second);
-            Assert.IsFalse(second.IsValid());
         }
 
         [Test]

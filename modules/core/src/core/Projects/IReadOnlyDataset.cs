@@ -25,6 +25,21 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Gets a value indicating whether the current object is valid. 
+        /// </summary>
+        /// <remarks>
+        /// The object can become invalid when:
+        /// <list type="bullet">
+        /// <item>The project is closed.</item>
+        /// <item>The dataset is deleted.</item>
+        /// </list>
+        /// </remarks>
+        bool IsValid
+        {
+            get;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the new dataset can be deleted from the
         /// project.
         /// </summary>

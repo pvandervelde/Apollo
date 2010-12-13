@@ -147,20 +147,6 @@ namespace Apollo.Utils
         }
 
         /// <summary>
-        /// Returns a value indicating if the current instance is valid.
-        /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if the current instance is valid; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        [ExcludeFromCoverage("This always returns true. Derivative classes may implement additional logic for validity.")]
-        public virtual bool IsValid()
-        {
-            return true;
-        }
-
-        /// <summary>
         /// Clones this ID number.
         /// </summary>
         /// <returns>
