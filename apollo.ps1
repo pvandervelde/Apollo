@@ -368,26 +368,53 @@ task deployToTestDirectory -depends runScripts,createTestDirectory -precondition
     }
 }
 
-task collectMetrics -depends runScripts -precondition{ return $shouldCheckCoverage -or $shouldRunVerify } -action{
+task collectMetrics -depends runScripts -precondition{ return $shouldRunUnitTests -or $shouldCheckCoverage -or $shouldRunVerify } -action{
     "Collecting statistics..."
     
     # gallio
     if ($shouldRunUnitTests)
     {
+        $paths = New-Object System.Collections.Generic.List``1[System.String]
         foreach ($key in $projects.Keys)
         {
             $proj = $projects[$key]
             $path = Split-Path $proj -Parent
-            $reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
             
+            $reportsPath = Join-Path (Join-Path $path 'bin') 'reports'
             "Checking $reportsPath for files ..."
             if (Test-Path -Path $reportsPath -PathType Container)
             {
-                Get-ChildItem -path $reportsPath | 
-                    Where-Object { (($_.Name -like "*test-report*") -and ($_.Extension -match ".xml"))} |
-                    Copy-Item -Destination (Join-Path $dirReports "$key-gallio.xml") -Force
+                $children = Get-ChildItem -path $reportsPath | 
+                    Where-Object { (($_.Name -like "*test-report*") -and ($_.Extension -match ".xml"))}
+
+                if ($children -ne $null)
+                {
+                    $children | Copy-Item -Destination (Join-Path $dirReports "$key-gallio.xml") -Force
+                    $paths.Add((Join-Path $dirReports "$key-gallio.xml"))
+                }
             }
         }
+        
+        $gallioMerge = Join-Path $dirMbunit 'Gallio.Utility.exe'
+        
+        $command = '& "' + $gallioMerge + '" MergeReports '
+        foreach ($path in $paths)
+        {
+            $command += '"' + $path + '" '
+        }
+        
+        $command += '/rnf:"apollo.test-report"'
+        
+        ""
+        "Running xml merge report"
+	    $command
+	    Invoke-Expression ($command + ' /ro:"' + $dirReports + '"')
+        
+        ""
+        "Running html merge report"
+        $command += ' /rt:xhtml'
+        $command
+        Invoke-Expression ($command + ' /ro:"' + $dirReports + '"')
     }
     
     # ncover
