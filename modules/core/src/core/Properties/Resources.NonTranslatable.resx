@@ -306,4 +306,28 @@
   <data name="Exception_Messages_CannotLoadDatasetWithoutLoadingLocation" xml:space="preserve">
     <value>A dataset cannot be loaded without a preferred loading location.</value>
   </data>
+  <data name="Exception_Messages_FailedToCreateProject" xml:space="preserve">
+    <value>The creation of a new project failed.</value>
+  </data>
+  <data name="Exception_Messages_FailedToLoadProject" xml:space="preserve">
+    <value>The loading of the specified project failed.</value>
+  </data>
+  <data name="Exception_Messages_NoCurrentProject" xml:space="preserve">
+    <value>There is no current project. It is not possible to adjust the properties of the current project or any of its datasets.</value>
+  </data>
+  <data name="Exception_Messages_CannotDeleteDataset" xml:space="preserve">
+    <value>The specified dataset cannot be deleted.</value>
+  </data>
+  <data name="Exception_Messages_CannotDeleteDataset_WithDatasetId" xml:space="preserve">
+    <value>The specified dataset (with ID: {0}) cannot be deleted.</value>
+  </data>
+  <data name="Exception_Messages_CannotCreateNewProject" xml:space="preserve">
+    <value>The current state of the application does not allow the creation of a new project.</value>
+  </data>
+  <data name="Exception_Messages_CannotLoadProject" xml:space="preserve">
+    <value>The current state of the application does not allow the loading of an existing project.</value>
+  </data>
+  <data name="Exception_Messages_CannotUnloadProject" xml:space="preserve">
+    <value>The current project cannot be unloaded.</value>
+  </data>
 </root>

@@ -12,6 +12,7 @@ using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Events.Listeners;
+using Apollo.ProjectExplorer.Views.Content;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.UI.Common;
@@ -81,8 +82,8 @@ namespace Apollo.ProjectExplorer
 
             // Register the regions
             m_Container.Resolve<ShowViewEventListener>().Start();
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(ShellPresenter), "Shell", new ShellParameter()));
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(MenuPresenter), "Menu", new MenuParameter()));
+            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
+            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
 
             // Set the shutdown action
             var notificationNames = m_Container.Resolve<INotificationNameConstants>();

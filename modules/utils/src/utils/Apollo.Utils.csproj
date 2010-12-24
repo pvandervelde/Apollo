@@ -204,11 +204,13 @@
     <Compile Include="IFuture.cs" />
     <Compile Include="IIsId.cs" />
     <Compile Include="ILockObject.cs" />
+    <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="IProgressMark.cs" />
     <Compile Include="IStoreMarkerTimes.cs" />
     <Compile Include="IProgressTimer.cs" />
     <Compile Include="ITrackProgress.cs" />
     <Compile Include="LockObject.cs" />
+    <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
     <Compile Include="StartupProgressEventArgs.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />

@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
 using Apollo.Core.Messaging;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Projects

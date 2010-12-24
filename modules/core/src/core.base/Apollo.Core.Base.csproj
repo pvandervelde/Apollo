@@ -58,7 +58,6 @@
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="ICanClose.cs" />
-    <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="Projects\DatasetCreationInformation.cs" />
     <Compile Include="Projects\MockDatasetDistributor.cs" />
@@ -70,9 +69,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-    <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="Projects\DatasetCannotBecomeParentException.cs" />
-    <Compile Include="Projects\DatasetCreationReason.cs" />
     <Compile Include="Projects\DatasetCreator.cs" />
     <Compile Include="Projects\DatasetId.cs" />
     <Compile Include="Projects\DatasetOfflineInformation.cs" />

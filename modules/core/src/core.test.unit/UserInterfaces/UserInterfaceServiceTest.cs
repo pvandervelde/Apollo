@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
+using Apollo.Core.UserInterfaces.Project;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
@@ -250,7 +251,10 @@ namespace Apollo.Core.UserInterfaces
                 var original = new List<CommandId>()
                     {
                         CheckApplicationCanShutdownCommand.CommandId,
-                        ShutdownApplicationCommand.CommandId
+                        ShutdownApplicationCommand.CommandId,
+                        CreateProjectCommand.CommandId,
+                        LoadProjectCommand.CommandId,
+                        UnloadProjectCommand.CommandId,
                     };
                 Assert.AreElementsEqualIgnoringOrder(original, commandCollection);
             }

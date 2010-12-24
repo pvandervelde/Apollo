@@ -106,11 +106,38 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current state of the application does not allow the creation of a new project..
+        /// </summary>
+        internal static string Exception_Messages_CannotCreateNewProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotCreateNewProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot create a project without a dataset distribution function..
         /// </summary>
         internal static string Exception_Messages_CannotCreateProjectWithoutDatasetDistributor {
             get {
                 return ResourceManager.GetString("Exception_Messages_CannotCreateProjectWithoutDatasetDistributor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified dataset cannot be deleted..
+        /// </summary>
+        internal static string Exception_Messages_CannotDeleteDataset {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotDeleteDataset", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified dataset (with ID: {0}) cannot be deleted..
+        /// </summary>
+        internal static string Exception_Messages_CannotDeleteDataset_WithDatasetId {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotDeleteDataset_WithDatasetId", resourceCulture);
             }
         }
         
@@ -129,6 +156,15 @@ namespace Apollo.Core.Properties {
         internal static string Exception_Messages_CannotLoadDatasetWithoutLoadingLocation {
             get {
                 return ResourceManager.GetString("Exception_Messages_CannotLoadDatasetWithoutLoadingLocation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The current state of the application does not allow the loading of an existing project..
+        /// </summary>
+        internal static string Exception_Messages_CannotLoadProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotLoadProject", resourceCulture);
             }
         }
         
@@ -169,6 +205,15 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The current project cannot be unloaded..
+        /// </summary>
+        internal static string Exception_Messages_CannotUnloadProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotUnloadProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The project cannot be used after it has been closed..
         /// </summary>
         internal static string Exception_Messages_CannotUseProjectAfterClosingIt {
@@ -201,6 +246,24 @@ namespace Apollo.Core.Properties {
         internal static string Exception_Messages_DuplicateDnsName_WithName {
             get {
                 return ResourceManager.GetString("Exception_Messages_DuplicateDnsName_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The creation of a new project failed..
+        /// </summary>
+        internal static string Exception_Messages_FailedToCreateProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_FailedToCreateProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the specified project failed..
+        /// </summary>
+        internal static string Exception_Messages_FailedToLoadProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_FailedToLoadProject", resourceCulture);
             }
         }
         
@@ -345,6 +408,15 @@ namespace Apollo.Core.Properties {
         internal static string Exception_Messages_MustFlushAfterPositiveTimestep_WithTimestep {
             get {
                 return ResourceManager.GetString("Exception_Messages_MustFlushAfterPositiveTimestep_WithTimestep", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There is no current project. It is not possible to adjust the properties of the current project or any of its datasets..
+        /// </summary>
+        internal static string Exception_Messages_NoCurrentProject {
+            get {
+                return ResourceManager.GetString("Exception_Messages_NoCurrentProject", resourceCulture);
             }
         }
         

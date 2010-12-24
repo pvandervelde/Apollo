@@ -4,15 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Base
+using Apollo.UI.Common;
+
+namespace Apollo.ProjectExplorer.Views.Content
 {
     /// <summary>
-    /// Defines methods for dealing with persistent storage.
+    /// The view for the <see cref="ContentModel"/>.
     /// </summary>
-    public interface IPersistenceInformation
+    internal interface IContentView : IView<ContentModel>
     {
-        // Define:
-        // - File, memory, dbase
-        // - Read / Write methods?
     }
 }

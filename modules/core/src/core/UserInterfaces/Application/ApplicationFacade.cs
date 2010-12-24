@@ -35,7 +35,7 @@ namespace Apollo.Core.UserInterfaces.Application
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="service"/> is <see langword="null" />.
         /// </exception>
-        public ApplicationFacade(IUserInterfaceService service)
+        internal ApplicationFacade(IUserInterfaceService service)
         {
             {
                 Enforce.Argument(() => service);

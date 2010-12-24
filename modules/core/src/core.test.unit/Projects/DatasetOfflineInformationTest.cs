@@ -6,8 +6,8 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
+using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
@@ -23,30 +23,22 @@ namespace Apollo.Core.Projects
         [Description("Checks that an object cannot be created with a null ID object.")]
         public void CreateWithNullId()
         {
-            var reason = new DatasetCreationReason(new DatasetCreationInformation() { CreatedOnRequestOf = DatasetCreator.User });
             var persistence = new Mock<IPersistenceInformation>();
+            var reason = new DatasetCreationInformation() 
+                { 
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    LoadFrom = persistence.Object,
+                };
 
-            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(null, reason, persistence.Object));
+            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(null, reason));
         }
 
         [Test]
-        [Description("Checks that an object cannot be created with a null CreationReason object.")]
-        public void CreateWithNullCreationReason()
+        [Description("Checks that an object cannot be created with a null DatasetCreationInformation object.")]
+        public void CreateWithNullCreationInformation()
         {
             var id = new DatasetId();
-            var persistence = new Mock<IPersistenceInformation>();
-
-            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(id, null, persistence.Object));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with a null persistence object.")]
-        public void CreateWithNullPersistence()
-        {
-            var id = new DatasetId();
-            var reason = new DatasetCreationReason(new DatasetCreationInformation() { CreatedOnRequestOf = DatasetCreator.User });
-
-            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(id, reason, null));
+            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(id, null));
         }
 
         [Test]
@@ -54,13 +46,21 @@ namespace Apollo.Core.Projects
         public void Create()
         {
             var id = new DatasetId();
-            var reason = new DatasetCreationReason(new DatasetCreationInformation() { CreatedOnRequestOf = DatasetCreator.User });
             var persistence = new Mock<IPersistenceInformation>();
+            var reason = new DatasetCreationInformation()
+            {
+                CreatedOnRequestOf = DatasetCreator.User,
+                LoadFrom = persistence.Object,
+            };
 
-            var information = new DatasetOfflineInformation(id, reason, persistence.Object);
+            var information = new DatasetOfflineInformation(id, reason);
 
             Assert.AreSame(id, information.Id);
-            Assert.AreSame(reason, information.ReasonForExistence);
+            Assert.AreEqual(reason.CanBeAdopted, information.CanBeAdopted);
+            Assert.AreEqual(reason.CanBecomeParent, information.CanBecomeParent);
+            Assert.AreEqual(reason.CanBeCopied, information.CanBeCopied);
+            Assert.AreEqual(reason.CanBeDeleted, information.CanBeDeleted);
+            Assert.AreEqual(reason.CreatedOnRequestOf, information.CreatedBy);
             Assert.AreSame(persistence.Object, information.StoredAt);
         }
     }

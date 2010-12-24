@@ -8,8 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
+using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
@@ -154,6 +154,9 @@ namespace Apollo.Core.Projects
 
             var child = dataset.CreateNewChild(creationInformation);
             Assert.AreNotEqual(dataset.Id, child.Id);
+            Assert.AreEqual(creationInformation.CreatedOnRequestOf, child.CreatedBy);
+            Assert.AreEqual(creationInformation.LoadFrom, child.StoredAt);
+            Assert.IsFalse(child.IsLoaded);
             Assert.IsFalse(child.CanBecomeParent);
             Assert.IsFalse(child.CanBeAdopted);
             Assert.IsFalse(child.CanBeCopied);

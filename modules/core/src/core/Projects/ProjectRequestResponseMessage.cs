@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Projects
@@ -18,39 +19,36 @@ namespace Apollo.Core.Projects
     internal sealed class ProjectRequestResponseMessage : MessageBody
     {
         /// <summary>
-        /// The project that is was requested.
+        /// The project that was requested.
         /// </summary>
         /// <design>
-        /// This field is not serialized by the default serializer because we need to do
-        /// some special work to serialize it. <c>Project</c> is a <c>MarshalByRefObject</c>
-        /// and is not serializable. We could capture an <c>ObjRef</c> object by calling
-        /// <c>RemotingServices.Marshal(MarshalByRefObject)</c> but once the <c>ObjRef</c>
-        /// object is deserialized it wants to turn into a project (as proxy) and not
-        /// an <c>ObjRef</c>. So we'll do the serialization ourselves.
+        /// This <c>ObjRef</c> needs to be created explicitly through a call to 
+        /// <c>RemotingServices.Marshal</c> in order to make sure we get the reference.
+        /// If we try to send the project directly (or an implicity ObjRef) then 
+        /// the proxy will be created in the first AppDomain where the ObjRef is deserialized.
+        /// That is not what we want because there are multiple AppDomains involved in sending 
+        /// messages in the application.
         /// </design>
-        private readonly string m_RemotingUri;
-
-        // Could send back just a string and then push the project into a 'tunnel'. Where the
-        // tunnel is the object that stores ObjRef objects until they get collected.
+        private readonly ObjRef m_ProjectReference;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectRequestResponseMessage"/> class.
         /// </summary>
-        /// <param name="remotingUri">The string that was used to provide the <see cref="IProject"/> to the remoting infrastructure.</param>
-        public ProjectRequestResponseMessage(string remotingUri)
+        /// <param name="projectReference">The <see cref="ObjRef"/> object that will create the proxy to the <see cref="IProject"/>.</param>
+        public ProjectRequestResponseMessage(ObjRef projectReference)
             : base(false)
         {
-            m_RemotingUri = remotingUri;
+            m_ProjectReference = projectReference;
         }
 
         /// <summary>
         /// Gets a value indicating the currently active project.
         /// </summary>
-        public string ProjectRemotingUri
+        public ObjRef ProjectReference
         {
             get
             {
-                return m_RemotingUri;
+                return m_ProjectReference;
             }
         }
 
@@ -64,7 +62,7 @@ namespace Apollo.Core.Projects
         /// </returns>
         public override MessageBody Copy()
         {
-            return new ProjectRequestResponseMessage(m_RemotingUri);
+            return new ProjectRequestResponseMessage(m_ProjectReference);
         }
 
         /// <summary>
@@ -84,7 +82,7 @@ namespace Apollo.Core.Projects
             }
 
             var msg = other as ProjectRequestResponseMessage;
-            return (msg != null) && (msg.m_RemotingUri == m_RemotingUri);
+            return (msg != null) && (msg.m_ProjectReference == m_ProjectReference);
         }
 
         /// <summary>

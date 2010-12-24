@@ -20,7 +20,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines a command that checks if a specific set of services can be shut down.
     /// </summary>
-    public class CheckServicesCanShutdownCommand : ICommand
+    public sealed class CheckServicesCanShutdownCommand : ICommand
     {
         #region Static members
 

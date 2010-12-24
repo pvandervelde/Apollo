@@ -14,7 +14,7 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Defines the interface for objects that store information about datasets.
     /// </summary>
-    internal interface IReadOnlyDataset
+    internal interface IReadOnlyDataset : IEquatable<IReadOnlyDataset>
     {
         /// <summary>
         /// Gets a value indicating the ID number of the dataset.
@@ -38,6 +38,11 @@ namespace Apollo.Core.Projects
         {
             get;
         }
+
+        /// <summary>
+        /// An event fired if the current dataset becomes invalid.
+        /// </summary>
+        event EventHandler<EventArgs> OnInvalidate;
 
         /// <summary>
         /// Gets a value indicating whether the new dataset can be deleted from the
@@ -67,6 +72,23 @@ namespace Apollo.Core.Projects
         /// dataset.
         /// </summary>
         bool CanBeCopied
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value indicating who created the dataset.
+        /// </summary>
+        DatasetCreator CreatedBy
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value indicating from where the datset is or will be 
+        /// loaded.
+        /// </summary>
+        IPersistenceInformation StoredAt
         {
             get;
         }

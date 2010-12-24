@@ -1,6 +1,6 @@
 <Project>
   <Name>Ui system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>UI - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -196,7 +196,7 @@
       <Entity type="Comment">
         <Text>This needs to be renamed. It's not so much the interaction stuff, it's more the settings / options / random stuff (e.g. plug-in system, licensing etc.)</Text>
         <Location left="1413" top="1493" />
-        <Size width="218" height="79" />
+        <Size width="218" height="97" />
       </Entity>
       <Entity type="Comment">
         <Text>Where does all this advice come from?
@@ -245,8 +245,6 @@ Some will probably come from the plugins, others we'll have to put in there some
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -308,6 +306,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="17" second="18">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -330,6 +330,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="21" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -340,6 +342,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="22" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -352,6 +356,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="22" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -366,6 +372,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="23" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -378,6 +386,8 @@ Some will probably come from the plugins, others we'll have to put in there some
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="21" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

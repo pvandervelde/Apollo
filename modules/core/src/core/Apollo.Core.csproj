@@ -364,6 +364,22 @@
     <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />
+    <Compile Include="UserInterfaces\Project\CannotCreateNewProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\CannotDeleteDatasetException.cs" />
+    <Compile Include="UserInterfaces\Project\CannotLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\CannotUnloadProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\CreateProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Project\CreateProjectContext.cs" />
+    <Compile Include="UserInterfaces\Project\DatasetFacade.cs" />
+    <Compile Include="UserInterfaces\Project\FailedToCreateProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\FailedToLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\ILinkToProjects.cs" />
+    <Compile Include="UserInterfaces\Project\LoadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Project\LoadProjectContext.cs" />
+    <Compile Include="UserInterfaces\Project\NoCurrentProjectException.cs" />
+    <Compile Include="UserInterfaces\Project\ProjectFacade.cs" />
+    <Compile Include="UserInterfaces\Project\UnloadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Project\UnloadProjectContext.cs" />
     <Compile Include="Utils\Licensing\CacheConnectorChannelEndpoint.cs" />
     <Compile Include="Utils\Licensing\ICacheConnectorChannelEndpoint.cs" />
     <Compile Include="Utils\Licensing\LicenseValidationResultStorage.cs" />
@@ -430,7 +446,6 @@
   <ItemGroup>
     <Folder Include="Plugins\" />
     <Folder Include="UserInterfaces\Plugins\" />
-    <Folder Include="UserInterfaces\Project\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\utils\src\utils\Apollo.Utils.csproj">

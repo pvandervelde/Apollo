@@ -40,6 +40,13 @@ namespace Apollo.Core.Projects
             new Dictionary<DatasetId, DatasetOnlineInformation>();
 
         /// <summary>
+        /// The collection that holds the proxies for the datasets that we are mirroring 
+        /// for the UI.
+        /// </summary>
+        private readonly Dictionary<DatasetId, IReadOnlyDataset> m_DatasetProxies =
+            new Dictionary<DatasetId, IReadOnlyDataset>();
+
+        /// <summary>
         /// The ID number of the root dataset.
         /// </summary>
         private DatasetId m_RootDataset;
@@ -48,6 +55,20 @@ namespace Apollo.Core.Projects
         {
             Debug.Assert(id != null, "The ID should not be a null reference.");
             return !IsClosed && m_Datasets.ContainsKey(id);
+        }
+
+        private IReadOnlyDataset ObtainProxyFor(DatasetId id)
+        {
+            {
+                Debug.Assert(IsValid(id), "Cannot create a proxy for an invalid ID.");
+            }
+
+            if (!m_DatasetProxies.ContainsKey(id))
+            {
+                m_DatasetProxies.Add(id, new ReadOnlyDataset(this, id));
+            }
+
+            return m_DatasetProxies[id];
         }
 
         private bool IsLoaded(DatasetId id)
@@ -83,7 +104,7 @@ namespace Apollo.Core.Projects
 
             // First create the dataset
             var id = new DatasetId();
-            var newDataset = new DatasetOfflineInformation(id, new DatasetCreationReason(newChild), newChild.LoadFrom);
+            var newDataset = new DatasetOfflineInformation(id, newChild);
 
             // Store the datset
             m_Datasets.Add(id, newDataset);
@@ -98,7 +119,7 @@ namespace Apollo.Core.Projects
                 // Check if the parent can have a child.
                 {
                     Debug.Assert(m_Datasets.ContainsKey(parent), "The provided parent node does not exist.");
-                    Debug.Assert(m_Datasets[parent].ReasonForExistence.CanBecomeParent, "The given parent is not allowed to have children.");
+                    Debug.Assert(m_Datasets[parent].CanBecomeParent, "The given parent is not allowed to have children.");
                 }
 
                 // Find the actual ID object that we have stored, the caller may have a copy
@@ -138,6 +159,7 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
             }
 
+            // Should invalidate the dataset?
             throw new NotImplementedException();
         }
     }

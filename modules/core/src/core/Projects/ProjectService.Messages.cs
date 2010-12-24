@@ -7,8 +7,8 @@
 using System;
 using System.Diagnostics;
 using System.Runtime.Remoting;
-using Apollo.Core.Base;
 using Apollo.Core.Messaging;
+using Apollo.Utils;
 
 namespace Apollo.Core.Projects
 {
@@ -17,11 +17,6 @@ namespace Apollo.Core.Projects
     /// </content>
     internal sealed partial class ProjectService
     {
-        /// <summary>
-        /// The remoting URI used for the project.
-        /// </summary>
-        private const string DefaultProjectUri = "Project";
-
         /// <summary>
         /// Stores the different message types and their connected actions.
         /// </summary>
@@ -110,16 +105,15 @@ namespace Apollo.Core.Projects
 
         private void HandleProjectRequest(DnsName originalSender, MessageId messageId)
         {
-            string projectUri = null;
+            ObjRef projectProxy = null;
 
             var obj = m_Current as MarshalByRefObject;
             if (obj != null)
             {
-                projectUri = DefaultProjectUri;
-                RemotingServices.Marshal(obj, projectUri, typeof(IProject));
+                projectProxy = RemotingServices.Marshal(obj);
             }
 
-            SendMessage(originalSender, new ProjectRequestResponseMessage(projectUri), messageId);
+            SendMessage(originalSender, new ProjectRequestResponseMessage(projectProxy), messageId);
         }
     }
 }

@@ -7,9 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Projects
@@ -24,8 +27,63 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Mirrors the storage of dataset information.
         /// </summary>
+        [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
         private sealed class ReadOnlyDataset : MarshalByRefObject, IReadOnlyDataset
         {
+            /// <summary>
+            /// Implements the operator ==.
+            /// </summary>
+            /// <param name="first">The first object.</param>
+            /// <param name="second">The second object.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator ==(ReadOnlyDataset first, ReadOnlyDataset second)
+            {
+                // Check if first is a null reference by using ReferenceEquals because
+                // we overload the == operator. If first isn't actually null then
+                // we get an infinite loop where we're constantly trying to compare to null.
+                if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+                {
+                    return true;
+                }
+
+                var nonNullObject = first;
+                var possibleNullObject = second;
+                if (ReferenceEquals(first, null))
+                {
+                    nonNullObject = second;
+                    possibleNullObject = first;
+                }
+
+                return nonNullObject.Equals(possibleNullObject);
+            }
+
+            /// <summary>
+            /// Implements the operator !=.
+            /// </summary>
+            /// <param name="first">The first object.</param>
+            /// <param name="second">The second object.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator !=(ReadOnlyDataset first, ReadOnlyDataset second)
+            {
+                // Check if first is a null reference by using ReferenceEquals because
+                // we overload the == operator. If first isn't actually null then
+                // we get an infinite loop where we're constantly trying to compare to null.
+                if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+                {
+                    return false;
+                }
+
+                var nonNullObject = first;
+                var possibleNullObject = second;
+                if (ReferenceEquals(first, null))
+                {
+                    nonNullObject = second;
+                    possibleNullObject = first;
+                }
+
+                return !nonNullObject.Equals(possibleNullObject);
+            }
+
             /// <summary>
             /// The owner which stores all the data.
             /// </summary>
@@ -58,6 +116,7 @@ namespace Apollo.Core.Projects
             /// </summary>
             public DatasetId Id
             {
+                [DebuggerStepThrough]
                 get
                 {
                     return m_IdOfDataset;
@@ -83,6 +142,20 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
+            /// An event fired if the current dataset becomes invalid.
+            /// </summary>
+            public event EventHandler<EventArgs> OnInvalidate;
+
+            private void RaiseOnInvalidate()
+            {
+                EventHandler<EventArgs> local = OnInvalidate;
+                if (local != null)
+                {
+                    local(this, EventArgs.Empty);
+                }
+            }
+
+            /// <summary>
             /// Gets a value indicating whether the new dataset can be deleted from the
             /// project.
             /// </summary>
@@ -91,7 +164,7 @@ namespace Apollo.Core.Projects
                 get
                 {
                     var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
-                    return dataset.ReasonForExistence.CanBeDeleted;
+                    return dataset.CanBeDeleted;
                 }
             }
 
@@ -109,7 +182,7 @@ namespace Apollo.Core.Projects
                 get
                 {
                     var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
-                    return dataset.ReasonForExistence.CanBeAdopted;
+                    return dataset.CanBeAdopted;
                 }
             }
 
@@ -122,7 +195,32 @@ namespace Apollo.Core.Projects
                 get
                 {
                     var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
-                    return dataset.ReasonForExistence.CanBeCopied;
+                    return dataset.CanBeCopied;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating who created the dataset.
+            /// </summary>
+            public DatasetCreator CreatedBy
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.CreatedBy;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating from where the datset is or will be 
+            /// loaded.
+            /// </summary>
+            public IPersistenceInformation StoredAt
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.StoredAt;
                 }
             }
 
@@ -240,7 +338,7 @@ namespace Apollo.Core.Projects
             public IEnumerable<IReadOnlyDataset> Children()
             {
                 var children = from dataset in m_Owner.Children(m_IdOfDataset)
-                               select new ReadOnlyDataset(m_Owner, dataset.Id) as IReadOnlyDataset;
+                               select m_Owner.ObtainProxyFor(dataset.Id);
 
                 return children;
             }
@@ -259,7 +357,7 @@ namespace Apollo.Core.Projects
                 get
                 {
                     var information = m_Owner.OfflineInformation(m_IdOfDataset);
-                    return information.ReasonForExistence.CanBecomeParent;
+                    return information.CanBecomeParent;
                 }
             }
 
@@ -334,6 +432,73 @@ namespace Apollo.Core.Projects
             {
                 // We don't really want the system to GC our object at random times...
                 return null;
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="IReadOnlyDataset"/> is equal to this instance.
+            /// </summary>
+            /// <param name="other">The <see cref="IReadOnlyDataset"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="IReadOnlyDataset"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool Equals(IReadOnlyDataset other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                var dataset = other as ReadOnlyDataset;
+                return (dataset != null) && dataset.m_IdOfDataset.Equals(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+            /// </summary>
+            /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                var dataset = obj as IReadOnlyDataset;
+                return Equals(dataset);
+            }
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            public override int GetHashCode()
+            {
+                return m_IdOfDataset.GetHashCode();
+            }
+
+            /// <summary>
+            /// Returns a <see cref="System.String"/> that represents this instance.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/> that represents this instance.
+            /// </returns>
+            public override string ToString()
+            {
+                return string.Format(CultureInfo.InvariantCulture, "Read-only dataset front for dataset with ID: {0}", m_IdOfDataset);
             }
         }
         

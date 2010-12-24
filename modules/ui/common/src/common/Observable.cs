@@ -4,9 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
 using System.ComponentModel;
-using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Apollo.UI.Common
 {
@@ -21,47 +22,42 @@ namespace Apollo.UI.Common
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event for every public property on this object.
+        /// Notifies listeners about a change.
         /// </summary>
-        protected void NotifyChanged()
+        /// <param name="EventHandler">The event to raise.</param>
+        /// <param name="Property">The property that changed.</param>
+        protected void Notify(Expression<Func<object>> Property)
         {
-            var propertyNames = TypeDescriptor.GetProperties(this).OfType<PropertyDescriptor>().Select(x => x.Name);
-            NotifyChanged(propertyNames);
-        }
+            // Check for null
+            if (PropertyChanged == null)
+                return;
 
-        /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event for each event in the collection.
-        /// </summary>
-        /// <param name="propertyNames">The property names.</param>
-        protected void NotifyChanged(IEnumerable<string> propertyNames)
-        {
-            foreach (var property in propertyNames.Distinct())
+            // Get property name
+            var lambda = Property as LambdaExpression;
+            MemberExpression memberExpression;
+            if (lambda.Body is UnaryExpression)
             {
-                OnPropertyChanged(new PropertyChangedEventArgs(property));
+                var unaryExpression = lambda.Body as UnaryExpression;
+                memberExpression = unaryExpression.Operand as MemberExpression;
             }
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event for the given property names.
-        /// </summary>
-        /// <param name="propertyName">The name of the property that has changed.</param>
-        /// <param name="additionalPropertyNames">Any other properties that also changed.</param>
-        protected void NotifyChanged(string propertyName, params string[] additionalPropertyNames)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-            NotifyChanged(additionalPropertyNames);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="PropertyChanged"/> event.
-        /// </summary>
-        /// <param name="e">The <see cref="System.ComponentModel.PropertyChangedEventArgs"/> instance containing the event data.</param>
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            var handler = PropertyChanged;
-            if (handler != null)
+            else
             {
-                handler(this, e);
+                memberExpression = lambda.Body as MemberExpression;
+            }
+
+            var constantExpression = memberExpression.Expression as ConstantExpression;
+            var propertyInfo = memberExpression.Member as PropertyInfo;
+
+            // Invoke event
+            RaisePropertyChanged(propertyInfo.Name);
+        }
+
+        private void RaisePropertyChanged(string name)
+        {
+            var local = PropertyChanged;
+            if (local != null)
+            {
+                local(this, new PropertyChangedEventArgs(name));
             }
         }
     }

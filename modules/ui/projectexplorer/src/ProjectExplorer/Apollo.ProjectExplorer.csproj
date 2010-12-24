@@ -182,6 +182,7 @@
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Events\ShowViewRequest.cs" />
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
+    <Compile Include="RegionNames.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
     <Compile Include="Views\About\AboutParameter.cs" />
     <Compile Include="Views\About\AboutPresenter.cs" />
@@ -189,6 +190,13 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\About\IAboutView.cs" />
+    <Compile Include="Views\Content\ContentModel.cs" />
+    <Compile Include="Views\Content\ContentParameter.cs" />
+    <Compile Include="Views\Content\ContentPresenter.cs" />
+    <Compile Include="Views\Content\ContentView.xaml.cs">
+      <DependentUpon>ContentView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Content\IContentView.cs" />
     <Compile Include="Views\Shell\IShellView.cs" />
     <Compile Include="KernelBootstrapper.cs" />
     <Compile Include="MockExceptionHandler.cs" />
@@ -236,6 +244,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\About\AboutWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Content\ContentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

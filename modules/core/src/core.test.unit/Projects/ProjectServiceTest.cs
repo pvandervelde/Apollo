@@ -12,6 +12,7 @@ using Apollo.Core.Base.Projects;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Utils.Licensing;
+using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
@@ -406,7 +407,7 @@ namespace Apollo.Core.Projects
                 Assert.IsInstanceOfType<ProjectRequestResponseMessage>(storedBody);
 
                 var message = storedBody as ProjectRequestResponseMessage;
-                Assert.IsNotNull(message.ProjectRemotingUri);
+                Assert.IsNotNull(message.ProjectReference);
 
                 // Get rid of the project registration in the 
                 // Remoting services.
@@ -572,7 +573,7 @@ namespace Apollo.Core.Projects
                 Assert.IsInstanceOfType<ProjectRequestResponseMessage>(storedBody);
 
                 var message = storedBody as ProjectRequestResponseMessage;
-                Assert.IsNotNull(message.ProjectRemotingUri);
+                Assert.IsNotNull(message.ProjectReference);
 
                 // Get rid of the project registration in the 
                 // Remoting services.

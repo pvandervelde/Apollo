@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Base.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Base.Projects
@@ -21,11 +23,6 @@ namespace Apollo.Core.Base.Projects
         private readonly DatasetId m_Id;
 
         /// <summary>
-        /// Describes for what purpose the dataset was created.
-        /// </summary>
-        private DatasetCreationReason m_ConstructionReason;
-
-        /// <summary>
         /// The object that describes how the dataset was persisted.
         /// </summary>
         private IPersistenceInformation m_LoadFrom;
@@ -35,27 +32,32 @@ namespace Apollo.Core.Base.Projects
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <param name="constructionReason">The object describing why the dataset was created.</param>
-        /// <param name="loadFrom">The object that stores information describing how and where the dataset is persisted.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="constructionReason"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="loadFrom"/> is <see langword="null" />.
+        /// <exception cref="CannotCreateDatasetWithoutCreatorException">
+        ///     Thrown if <paramref name="constructionReason"/> defines a creator as <see cref="DatasetCreator.None"/>.
         /// </exception>
-        public DatasetOfflineInformation(DatasetId id, DatasetCreationReason constructionReason, IPersistenceInformation loadFrom)
+        public DatasetOfflineInformation(DatasetId id, DatasetCreationInformation constructionReason)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => constructionReason);
-                Enforce.Argument(() => loadFrom);
+                Enforce.With<CannotCreateDatasetWithoutCreatorException>(
+                    constructionReason.CreatedOnRequestOf != DatasetCreator.None,
+                    Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
             }
 
             m_Id = id;
-            m_ConstructionReason = constructionReason;
-            m_LoadFrom = loadFrom;
+            CreatedBy = constructionReason.CreatedOnRequestOf;
+            CanBecomeParent = constructionReason.CanBecomeParent;
+            CanBeAdopted = constructionReason.CanBeAdopted;
+            CanBeCopied = constructionReason.CanBeCopied;
+            CanBeDeleted = constructionReason.CanBeDeleted;
+            m_LoadFrom = constructionReason.LoadFrom;
         }
 
         /// <summary>
@@ -71,14 +73,62 @@ namespace Apollo.Core.Base.Projects
         }
 
         /// <summary>
-        /// Gets a value indicating why the dataset was created and by whom.
+        /// Gets a value indicating who created the dataset.
         /// </summary>
-        public DatasetCreationReason ReasonForExistence
+        public DatasetCreator CreatedBy
         {
-            get
-            {
-                return m_ConstructionReason;
-            }
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current dataset is allowed to request the 
+        /// creation of its own children.
+        /// </summary>
+        /// <design>
+        /// Normally all datasets created by the user are allowed to create their own 
+        /// children. In some cases datasets created by the system are blocked from 
+        /// creating their own children.
+        /// </design>
+        public bool CanBecomeParent
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the new dataset can be deleted from the
+        /// project.
+        /// </summary>
+        public bool CanBeDeleted
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the new dataset can be moved from one parent
+        /// to another parent.
+        /// </summary>
+        /// <design>
+        /// Datasets created by the user are normally movable. Datasets created by the system
+        /// may not be movable because it doesn't make sense to move a dataset whose only purpose
+        /// is to provide information to the parent.
+        /// </design>
+        public bool CanBeAdopted
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the new dataset can be copied to another
+        /// dataset.
+        /// </summary>
+        public bool CanBeCopied
+        {
+            get;
+            private set;
         }
 
         /// <summary>

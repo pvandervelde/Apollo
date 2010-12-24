@@ -8,6 +8,7 @@ using System;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Projects
@@ -157,7 +158,7 @@ namespace Apollo.Core.Projects
                 Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
             }
 
-            return new ReadOnlyDataset(this, m_RootDataset);
+            return ObtainProxyFor(m_RootDataset);
         }
 
         // Do we need to get to individual nodes?

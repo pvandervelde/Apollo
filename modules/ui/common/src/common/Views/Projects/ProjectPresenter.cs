@@ -4,16 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-
-namespace Apollo.Core.Base
+namespace Apollo.UI.Common.Views.Projects
 {
     /// <summary>
-    /// Defines an empty <see cref="IPersistenceInformation"/> object which is used to
-    /// create new empty datasets.
+    /// The presenter for the <see cref="ProjectModel"/>.
     /// </summary>
-    [Serializable]
-    public sealed class NullPersistenceInformation : IPersistenceInformation
+    public sealed class ProjectPresenter : Presenter<IProjectView, ProjectModel, ProjectParameter>
     {
     }
 }

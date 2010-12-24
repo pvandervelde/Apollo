@@ -36,6 +36,11 @@ namespace Apollo.ProjectExplorer.Views.Menu
         protected override void Initialize()
         {
             View.Model = new MenuModel();
+            View.Model.NewProjectCommand = m_Container.Resolve<NewProjectCommand>();
+            View.Model.OpenProjectCommand = m_Container.Resolve<OpenProjectCommand>();
+            View.Model.SaveProjectCommand = m_Container.Resolve<SaveProjectCommand>();
+            View.Model.CloseProjectCommand = m_Container.Resolve<CloseProjectCommand>();
+
             View.Model.ExitCommand = m_Container.Resolve<ExitCommand>();
             View.Model.AboutCommand = m_Container.Resolve<ShowAboutWindowCommand>();
         }
