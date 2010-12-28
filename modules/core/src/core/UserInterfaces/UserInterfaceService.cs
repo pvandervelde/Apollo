@@ -8,11 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
@@ -304,7 +307,9 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         protected override void PreMessageInitializeStartup()
         {
-            InitializeDependencyInjectionContainer();
+            SecurityHelpers.Elevate(
+                new PermissionSet(PermissionState.Unrestricted),
+                InitializeDependencyInjectionContainer);
         }
 
         private void InitializeDependencyInjectionContainer()

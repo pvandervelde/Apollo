@@ -229,6 +229,7 @@
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
     <Compile Include="Projects\IBuildProjects.cs" />
+    <Compile Include="Projects\INotifyOnDatasetChange.cs" />
     <Compile Include="Projects\IProject.cs" />
     <Compile Include="Projects\IReadOnlyDataset.cs" />
     <Compile Include="Projects\LoadProjectMessage.cs" />

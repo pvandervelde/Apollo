@@ -198,7 +198,8 @@ namespace Apollo.Core.UserInterfaces.Project
             bool wasInvalidated = false;
             facade.OnInvalidate += (s, e) => wasInvalidated = true;
 
-            dataset.Raise(d => d.OnInvalidate += null, EventArgs.Empty);
+            var observer = facade as INotifyOnDatasetChange;
+            observer.DatasetInvalidated();
             Assert.IsTrue(wasInvalidated);
         }
 
@@ -212,7 +213,8 @@ namespace Apollo.Core.UserInterfaces.Project
             bool wasLoaded = false;
             facade.OnLoaded += (s, e) => wasLoaded = true;
 
-            dataset.Raise(d => d.OnLoaded += null, new DatasetLoadEventArgs(new DatasetId(), new List<Machine> { new Machine() }));
+            var observer = facade as INotifyOnDatasetChange;
+            observer.DatasetLoaded(new List<Machine> { new Machine() });
             Assert.IsTrue(wasLoaded);
         }
 
@@ -226,7 +228,8 @@ namespace Apollo.Core.UserInterfaces.Project
             bool wasUnloaded = false;
             facade.OnUnloaded += (s, e) => wasUnloaded = true;
 
-            dataset.Raise(d => d.OnUnloaded += null, new DatasetUnloadEventArgs(new DatasetId()));
+            var observer = facade as INotifyOnDatasetChange;
+            observer.DatasetUnloaded();
             Assert.IsTrue(wasUnloaded);
         }
 

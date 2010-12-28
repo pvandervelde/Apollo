@@ -10,14 +10,15 @@
              d:DesignHeight="300"
              d:DesignWidth="300">
     <UserControl.Resources>
-        <DataTemplate x:Key="demoTemplate"
+        <DataTemplate x:Key="datasetViewVertexTemplate"
                       DataType="{x:Type local:DatasetViewVertex}">
             <StackPanel Orientation="Horizontal"
                         Opacity="{Binding Path=Importance, Mode=OneWay}"
                         Margin="5">
-                <TextBlock Text="{Binding Path=Name, Mode=OneWay}"
+                <TextBlock Text="{Binding Path=Name, Mode=TwoWay}"
                            Foreground="White" />
                 <!-- CanBeDeleted -->
+                <!-- IsValid?? -->
                 <!-- IsLoaded + Loading location ==> a set of hyper links to the machine description? -->
                 <!-- IsRunning + progress -->
                 <!-- CanBecomeParent ==> little icon at the bottom with a plus? -->
@@ -35,7 +36,7 @@
                                 Padding="{TemplateBinding Padding}"
                                 Opacity="{Binding Path=Importance, Mode=OneWay}">
                             <ContentPresenter Content="{TemplateBinding Vertex}"
-                                              ContentTemplate="{StaticResource demoTemplate}" />
+                                              ContentTemplate="{StaticResource datasetViewVertexTemplate}" />
 
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="2"
@@ -52,6 +53,7 @@
 
         <Style TargetType="{x:Type graphsharp:EdgeControl}">
             <Style.Resources>
+                <!--
                 <ToolTip x:Key="ToolTipContent">
                     <StackPanel>
                         <TextBlock FontWeight="Bold"
@@ -59,9 +61,12 @@
                         <TextBlock Text="{Binding ID}" />
                     </StackPanel>
                 </ToolTip>
+                -->
             </Style.Resources>
+            <!--
             <Setter Property="ToolTip"
                     Value="{StaticResource ToolTipContent}" />
+            -->
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -78,7 +83,7 @@
                                       x:FieldModifier="private"
                                       Margin="10"
                                       Graph="{Binding Path=Graph}"
-                                      LayoutAlgorithmType="{Binding Path=LayoutAlgorithmType, Mode=OneWay}"
+                                      LayoutAlgorithmType="Tree"
                                       OverlapRemovalAlgorithmType="FSA"
                                       HighlightAlgorithmType="Simple" />
 

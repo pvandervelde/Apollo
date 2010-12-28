@@ -40,11 +40,6 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
-        /// An event fired if the current dataset becomes invalid.
-        /// </summary>
-        event EventHandler<EventArgs> OnInvalidate;
-
-        /// <summary>
         /// Gets a value indicating whether the new dataset can be deleted from the
         /// project.
         /// </summary>
@@ -129,19 +124,9 @@ namespace Apollo.Core.Projects
         void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range);
 
         /// <summary>
-        /// An event fired after the dataset has been distributed to one or more machines.
-        /// </summary>
-        event EventHandler<DatasetLoadEventArgs> OnLoaded;
-
-        /// <summary>
         /// Unloads the dataset from the machine it is currently loaded onto.
         /// </summary>
         void UnloadFromMachine();
-
-        /// <summary>
-        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
-        /// </summary>
-        event EventHandler<DatasetUnloadEventArgs> OnUnloaded;
 
         /// <summary>
         /// Returns the collection of sub-datasets.
@@ -191,5 +176,17 @@ namespace Apollo.Core.Projects
         {
             get;
         }
+
+        /// <summary>
+        /// Registers the given object for change notifications.
+        /// </summary>
+        /// <param name="toBeNotified">The object that wants to receive change notifications.</param>
+        void RegisterForEvents(INotifyOnDatasetChange toBeNotified);
+
+        /// <summary>
+        /// Unregisters the given object for change notifications.
+        /// </summary>
+        /// <param name="toBeNotified">The object that is registered for change notifications.</param>
+        void UnregisterForEvents(INotifyOnDatasetChange toBeNotified);
     }
 }

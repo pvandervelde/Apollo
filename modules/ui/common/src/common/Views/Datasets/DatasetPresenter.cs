@@ -4,6 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+using Autofac;
+
 namespace Apollo.UI.Common.Views.Datasets
 {
     /// <summary>

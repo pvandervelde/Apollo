@@ -142,20 +142,6 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
-            /// An event fired if the current dataset becomes invalid.
-            /// </summary>
-            public event EventHandler<EventArgs> OnInvalidate;
-
-            private void RaiseOnInvalidate()
-            {
-                EventHandler<EventArgs> local = OnInvalidate;
-                if (local != null)
-                {
-                    local(this, EventArgs.Empty);
-                }
-            }
-
-            /// <summary>
             /// Gets a value indicating whether the new dataset can be deleted from the
             /// project.
             /// </summary>
@@ -246,6 +232,7 @@ namespace Apollo.Core.Projects
             /// </returns>
             public IEnumerable<Machine> RunsOn()
             {
+                // Needs to be a list!
                 throw new NotImplementedException();
             }
 
@@ -280,21 +267,11 @@ namespace Apollo.Core.Projects
                 m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
                 if (IsLoaded)
                 {
-                    RaiseOnLoaded(new List<Machine>(RunsOn()));
-                }
-            }
-
-            /// <summary>
-            /// An event fired after the dataset has been distributed to one or more machines.
-            /// </summary>
-            public event EventHandler<DatasetLoadEventArgs> OnLoaded;
-
-            private void RaiseOnLoaded(List<Machine> machines)
-            {
-                EventHandler<DatasetLoadEventArgs> local = OnLoaded;
-                if (local != null)
-                { 
-                    local(this, new DatasetLoadEventArgs(m_IdOfDataset, machines));
+                    var observers = m_Owner.Observers(m_IdOfDataset);
+                    foreach (var observer in observers)
+                    {
+                        observer.DatasetLoaded(new List<Machine>(RunsOn()));
+                    }
                 }
             }
 
@@ -311,21 +288,11 @@ namespace Apollo.Core.Projects
                 m_Owner.UnloadFromMachine(m_IdOfDataset);
                 if (!IsLoaded)
                 {
-                    RaiseOnUnloaded();
-                }
-            }
-
-            /// <summary>
-            /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
-            /// </summary>
-            public event EventHandler<DatasetUnloadEventArgs> OnUnloaded;
-
-            private void RaiseOnUnloaded()
-            {
-                EventHandler<DatasetUnloadEventArgs> local = OnUnloaded;
-                if (local != null)
-                {
-                    local(this, new DatasetUnloadEventArgs(m_IdOfDataset));
+                    var observers = m_Owner.Observers(m_IdOfDataset);
+                    foreach (var observer in observers)
+                    {
+                        observer.DatasetUnloaded();
+                    }
                 }
             }
 
@@ -340,7 +307,7 @@ namespace Apollo.Core.Projects
                 var children = from dataset in m_Owner.Children(m_IdOfDataset)
                                select m_Owner.ObtainProxyFor(dataset.Id);
 
-                return children;
+                return new List<IReadOnlyDataset>(children);
             }
 
             /// <summary>
@@ -414,6 +381,32 @@ namespace Apollo.Core.Projects
                 {
                     throw new NotImplementedException();
                 }
+            }
+
+            /// <summary>
+            /// Registers the given object for change notifications.
+            /// </summary>
+            /// <param name="observer">The object that wants to receive change notifications.</param>
+            public void RegisterForEvents(INotifyOnDatasetChange observer)
+            {
+                {
+                    Enforce.Argument(() => observer);
+                }
+
+                m_Owner.RegisterForEvents(m_IdOfDataset, observer);
+            }
+
+            /// <summary>
+            /// Unregisters the given object for change notifications.
+            /// </summary>
+            /// <param name="observer">The object that is registered for change notifications.</param>
+            public void UnregisterForEvents(INotifyOnDatasetChange observer)
+            {
+                {
+                    Enforce.Argument(() => observer);
+                }
+
+                m_Owner.UnregisterForEvents(m_IdOfDataset, observer);
             }
 
             /// <summary>

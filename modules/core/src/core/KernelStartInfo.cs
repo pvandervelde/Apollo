@@ -60,13 +60,6 @@ namespace Apollo.Core
         private readonly List<FileInfo> m_PersistenceAssemblies;
 
         /// <summary>
-        /// The collection that holds all the assemblies which are required
-        /// for the project capabilities to function. These assemblies are the ones that
-        /// the fusion loader should be able to find.
-        /// </summary>
-        private readonly List<FileInfo> m_ProjectAssemblies;
-
-        /// <summary>
         /// The list of full trust assemblies.
         /// </summary>
         private readonly List<StrongName> m_FullTrustAssemblies;
@@ -89,6 +82,9 @@ namespace Apollo.Core
         {
             m_CoreAssemblies = new List<FileInfo>
                 {
+                    // Apollo.Core.Base
+                    DetermineAssemblyPath(typeof(Apollo.Core.Base.ICanClose).Assembly),
+
                     // Apollo.Core
                     DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
 
@@ -131,10 +127,11 @@ namespace Apollo.Core
 
             m_PersistenceAssemblies = new List<FileInfo>();
 
-            m_ProjectAssemblies = new List<FileInfo>();
-
             m_FullTrustAssemblies = new List<StrongName>
                 {
+                    // Apollo.Core.Base
+                    typeof(Apollo.Core.Base.ICanClose).Assembly.GetStrongName(),
+
                     // Apollo.Core
                     typeof(KernelStartInfo).Assembly.GetStrongName(),
 
@@ -200,19 +197,6 @@ namespace Apollo.Core
             get
             {
                 return m_PersistenceAssemblies.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of assemblies that are used for the
-        /// project system.
-        /// </summary>
-        /// <value>The project assemblies.</value>
-        public IEnumerable<FileInfo> ProjectAssemblies
-        {
-            get
-            {
-                return m_ProjectAssemblies.AsReadOnly();
             }
         }
 

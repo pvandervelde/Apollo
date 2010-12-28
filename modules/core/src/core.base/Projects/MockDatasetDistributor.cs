@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 
 namespace Apollo.Core.Base.Projects
 {
@@ -13,6 +14,14 @@ namespace Apollo.Core.Base.Projects
     /// </summary>
     public sealed class MockDatasetDistributor : IHelpDistributingDatasets
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MockDatasetDistributor"/> class.
+        /// </summary>
+        public MockDatasetDistributor()
+        {
+            Debug.Assert(true, "Got ya");
+        }
+
         /// <summary>
         /// Processes the dataset request and creates a distribution plan 
         /// which can then be accepted by the user.

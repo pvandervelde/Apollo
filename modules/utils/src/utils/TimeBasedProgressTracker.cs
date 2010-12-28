@@ -159,33 +159,39 @@ namespace Apollo.Utils
             // (specified by the third parameter). If another thread
             // has set syncPoint to 1, or if the control thread has
             // set syncPoint to -1, the current event is skipped. 
-            Interlocked.CompareExchange(ref m_SyncPoint, 1, 0);
-            if (m_SyncPoint == 0)
+            if (Interlocked.CompareExchange(ref m_SyncPoint, 1, 0) == 0)
             {
                 // No other event was executing.
                 // Note that the only other event that could be
                 // executing, is us.
                 ThreadPool.QueueUserWorkItem(state =>
                     {
-                        var elapsedTime = m_ElapsedTime(time);
-                        var estimatedTime = m_MarkerTimers.TotalTime;
-                        
-                        // If there is no known time then we return
-                        // a special progress count.
-                        int progress = m_UnknownProgressValue;
-                        if (estimatedTime != TimeSpan.Zero)
+                        try
                         {
-                            progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
-                            
-                            // Progress can never be larger as 100% so if it is then we just
-                            // assume we're at 100%
-                            if (progress > s_FinishingProgress)
-                            {
-                                progress = s_FinishingProgress;
-                            }
-                        }
+                            var elapsedTime = m_ElapsedTime(time);
+                            var estimatedTime = m_MarkerTimers.TotalTime;
 
-                        RaiseStartupProgress(progress, m_CurrentMark);
+                            // If there is no known time then we return
+                            // a special progress count.
+                            int progress = m_UnknownProgressValue;
+                            if (estimatedTime != TimeSpan.Zero)
+                            {
+                                progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
+
+                                // Progress can never be larger as 100% so if it is then we just
+                                // assume we're at 100%
+                                if (progress > s_FinishingProgress)
+                                {
+                                    progress = s_FinishingProgress;
+                                }
+                            }
+
+                            RaiseStartupProgress(progress, m_CurrentMark);
+                        }
+                        catch (Exception)
+                        {
+                            throw;
+                        }
                     });
 
                 // Release control of syncPoint
@@ -274,11 +280,6 @@ namespace Apollo.Utils
             // Stop the timer
             m_ProgressTimer.Stop();
 
-            // The 'counted' flag ensures that if this thread has
-            // to wait for an event to finish, the wait only gets 
-            // counted once.
-            bool counted = false;
-
             // Ensure that if an event is currently executing,
             // no further processing is done on this thread until
             // the event handler is finished. This is accomplished
@@ -294,13 +295,6 @@ namespace Apollo.Utils
                 // Give up the rest of this thread's current time
                 // slice. This is a naive algorithm for yielding.
                 Thread.Sleep(1);
-
-                // Tally a wait, but don't count multiple calls to
-                // Thread.Sleep.
-                if (!counted)
-                {
-                    counted = true;
-                }
             }
 
             // Any processing done after this point does not conflict

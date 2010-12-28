@@ -17,6 +17,10 @@ namespace Apollo.Core.UserInterfaces.Project
     /// <summary>
     /// Defines a facade for a project.
     /// </summary>
+    /// <design>
+    /// There should really only be one of these. If there are more then we could end up in the situation where
+    /// one facade creates a new project but the other facade(s) don't get the new project. 
+    /// </design>
     public sealed class ProjectFacade : ILinkToProjects
     {
         /// <summary>
@@ -99,6 +103,22 @@ namespace Apollo.Core.UserInterfaces.Project
             var proxy = RemotingServices.Unmarshal(projectReference);
             Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
             m_Current = proxy as IProject;
+
+            RaiseOnNewProjectLoaded();
+        }
+
+        /// <summary>
+        /// An event raised when a new project is created or loaded.
+        /// </summary>
+        public event EventHandler<EventArgs> OnNewProjectLoaded;
+
+        private void RaiseOnNewProjectLoaded()
+        {
+            var local = OnNewProjectLoaded;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -142,6 +162,8 @@ namespace Apollo.Core.UserInterfaces.Project
             var proxy = RemotingServices.Unmarshal(projectReference);
             Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
             m_Current = proxy as IProject;
+            
+            RaiseOnNewProjectLoaded();
         }
 
         /// <summary>
@@ -173,6 +195,21 @@ namespace Apollo.Core.UserInterfaces.Project
             m_Service.Invoke(UnloadProjectCommand.CommandId, context);
 
             m_Current = null;
+            RaiseOnProjectUnloaded();
+        }
+
+        /// <summary>
+        /// An event raised when the project is unloaded.
+        /// </summary>
+        public event EventHandler<EventArgs> OnProjectUnloaded;
+
+        private void RaiseOnProjectUnloaded()
+        {
+            var local = OnProjectUnloaded;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -185,6 +222,8 @@ namespace Apollo.Core.UserInterfaces.Project
             Justification = "Documentation can start with a language keyword")]
         public bool ShouldSaveProject()
         {
+            // Really we should only be able to save if there is something to save
+            // Then again we should always be able to save a project under a new name ...
             return HasActiveProject();
         }
 
@@ -214,6 +253,9 @@ namespace Apollo.Core.UserInterfaces.Project
             var dataset = m_Current.BaseDataset();
             return new DatasetFacade(dataset);
         }
+
+        // Events for the loading of a project
+        // Events for the unloading of a project
 
         // Events for the creation / removal of datasets
         //   these could come from the system.

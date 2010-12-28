@@ -4,33 +4,32 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Windows.Controls;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Common.Views.Projects
 {
     /// <summary>
-    /// Interaction logic for DatasetGraphView.xaml.
+    /// Interaction logic for ProjectGlobalView.xaml.
     /// </summary>
-    [CLSCompliant(false)]
-    public partial class DatasetGraphView : UserControl, IDatasetGraphView
+    public partial class ProjectGlobalView : UserControl, IProjectView
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetGraphView"/> class.
+        /// Initializes a new instance of the <see cref="ProjectGlobalView"/> class.
         /// </summary>
-        public DatasetGraphView()
+        public ProjectGlobalView()
         {
             InitializeComponent();
         }
 
         /// <summary>
-        /// Gets or sets the dataset graph model for the view.
+        /// Gets or sets the model.
         /// </summary>
-        public DatasetGraphModel Model
+        /// <value>The model.</value>
+        public ProjectModel Model
         {
             get
             {
-                return (DatasetGraphModel)DataContext;
+                return (ProjectModel)DataContext;
             }
 
             set

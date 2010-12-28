@@ -43,6 +43,11 @@ namespace Apollo.Core
         Persistence,
 
         /// <summary>
+        /// The security rights are set for use by the project system.
+        /// </summary>
+        Project,
+
+        /// <summary>
         /// The security rights are set for use by the user interface.
         /// </summary>
         UserInterface,

@@ -33,6 +33,7 @@ namespace Apollo.Core
                     { SecurityLevel.Logger, DefineLoggerPermissions },
                     { SecurityLevel.Discovery, DefineDiscoveryPermissions },
                     { SecurityLevel.Persistence, DefinePersistencePermissions },
+                    { SecurityLevel.Project, DefineProjectPermissions },
                     { SecurityLevel.UserInterface, DefineUserInterfacePermissions },
                     { SecurityLevel.PlugIns, DefinePlugInPermissions },
                 };
@@ -151,6 +152,22 @@ namespace Apollo.Core
         }
 
         /// <summary>
+        /// Defines the project permissions.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="PermissionSet"/> that defines the project rights.
+        /// </returns>
+        private static PermissionSet DefineProjectPermissions()
+        {
+            var set = DefineMinimumPermissions();
+
+            // Define file permissions for all file system parts. Note that
+            // the operating system can still restrict access to the user.
+            set.AddPermission(new SecurityPermission(SecurityPermissionFlag.RemotingConfiguration));
+            return set;
+        }
+
+        /// <summary>
         /// Defines the UI permissions.
         /// </summary>
         /// <returns>
@@ -160,6 +177,7 @@ namespace Apollo.Core
         {
             var set = DefineMinimumPermissions();
             set.AddPermission(new UIPermission(PermissionState.Unrestricted));
+            set.AddPermission(new SecurityPermission(SecurityPermissionFlag.RemotingConfiguration));
 
             return set;
         }

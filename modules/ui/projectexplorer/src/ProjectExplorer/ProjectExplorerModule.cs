@@ -10,12 +10,14 @@ using System.Windows;
 using System.Windows.Threading;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
+using Apollo.Core.UserInterfaces.Project;
 using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Events.Listeners;
-using Apollo.ProjectExplorer.Views.Content;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.UI.Common;
+using Apollo.UI.Common.Views.Datasets;
+using Apollo.UI.Common.Views.Projects;
 using Autofac;
 using Microsoft.Practices.Composite.Events;
 using Microsoft.Practices.Composite.Modularity;
@@ -53,10 +55,27 @@ namespace Apollo.ProjectExplorer
         /// </summary>
         public void Initialize()
         {
+            UpdateContainer();
+
+            RegisterNotifications();
+
+            ActivateRegions();
+        }
+
+        private void UpdateContainer()
+        {
             // Get all the registrations from Apollo.UI.Common
             var builder = new ContainerBuilder();
             {
                 var commonUiAssembly = typeof(Observable).Assembly;
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                   .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                   .InstancePerDependency()
+                   .PropertiesAutowired();
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency()
+                    .AsImplementedInterfaces();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
@@ -79,12 +98,10 @@ namespace Apollo.ProjectExplorer
             }
 
             builder.Update(m_Container);
+        }
 
-            // Register the regions
-            m_Container.Resolve<ShowViewEventListener>().Start();
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
-
+        private void RegisterNotifications()
+        {
             // Set the shutdown action
             var notificationNames = m_Container.Resolve<INotificationNameConstants>();
             var applicationFacade = m_Container.Resolve<IAbstractApplications>();
@@ -104,6 +121,46 @@ namespace Apollo.ProjectExplorer
                         }
                     });
             }
+        }
+
+        private void ActivateRegions()
+        {
+            m_Container.Resolve<ShowViewEventListener>().Start();
+            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
+            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
+
+            var projectFacade = m_Container.Resolve<ILinkToProjects>();
+            projectFacade.OnNewProjectLoaded +=
+                (s, e) =>
+                {
+                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                        new ShowViewRequest(
+                            typeof(ProjectPresenter),
+                            RegionNames.TopPane,
+                            new ProjectParameter()));
+
+                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                        new ShowViewRequest(
+                            typeof(DatasetGraphPresenter),
+                            RegionNames.Content,
+                            new DatasetGraphParameter()));
+                };
+
+            projectFacade.OnProjectUnloaded +=
+                (s, e) =>
+                {
+                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                        new CloseViewRequest(
+                            typeof(ProjectPresenter),
+                            RegionNames.TopPane,
+                            new ProjectParameter()));
+
+                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                        new CloseViewRequest(
+                            typeof(DatasetGraphPresenter),
+                            RegionNames.Content,
+                            new DatasetGraphParameter()));
+                };
         }
 
         #endregion

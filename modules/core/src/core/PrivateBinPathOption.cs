@@ -29,11 +29,6 @@ namespace Apollo.Core
         Persistence,
         
         /// <summary>
-        /// Indicates that the project set of paths should be provided.
-        /// </summary>
-        Project,
-        
-        /// <summary>
         /// Indicates that the user interface set of paths should be provided.
         /// </summary>
         UserInterface,

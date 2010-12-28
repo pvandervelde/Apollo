@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using QuickGraph;
 
 namespace Apollo.UI.Common.Views.Datasets
@@ -11,7 +12,8 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <summary>
     /// Defines a graph that displays the relations between datasets for the <see cref="DatasetGraphView"/>.
     /// </summary>
-    internal sealed class DatasetViewGraph : BidirectionalGraph<DatasetViewVertex, DatasetViewEdge>
+    [CLSCompliant(false)]
+    public sealed class DatasetViewGraph : BidirectionalGraph<DatasetViewVertex, DatasetViewEdge>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetViewGraph"/> class.

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 
@@ -41,6 +42,11 @@ namespace Apollo.Core.UserInterfaces.Project
         void NewProject();
 
         /// <summary>
+        /// An event raised when a new project is created or loaded.
+        /// </summary>
+        event EventHandler<EventArgs> OnNewProjectLoaded;
+
+        /// <summary>
         /// Returns a value indicating if a project can be loaded.
         /// </summary>
         /// <returns>
@@ -72,6 +78,11 @@ namespace Apollo.Core.UserInterfaces.Project
         void UnloadProject();
 
         /// <summary>
+        /// An event raised when the project is unloaded.
+        /// </summary>
+        event EventHandler<EventArgs> OnProjectUnloaded;
+
+        /// <summary>
         /// Returns a value indicating if the existing project should be saved.
         /// </summary>
         /// <returns>
@@ -87,10 +98,10 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <param name="persistenceInformation">The object that describes how the project should be persisted.</param>
         void SaveProject(IPersistenceInformation persistenceInformation);
 
-        // - Get project information
-
-        // - Get Dataset information
-        //   - Graph
-        //   - Datasets
+        /// <summary>
+        /// Returns the root dataset for the current project.
+        /// </summary>
+        /// <returns>The root dataset.</returns>
+        DatasetFacade Root();
     }
 }

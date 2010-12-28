@@ -369,9 +369,6 @@ namespace Apollo.Core
                     case PrivateBinPathOption.Persistence:
                         filePaths = ConcatSequences(filePaths, m_StartInfo.PersistenceAssemblies);
                         break;
-                    case PrivateBinPathOption.Project:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.ProjectAssemblies);
-                        break;
                     case PrivateBinPathOption.UserInterface:
                         filePaths = ConcatSequences(filePaths, m_StartInfo.UserInterfaceAssemblies);
                         break;

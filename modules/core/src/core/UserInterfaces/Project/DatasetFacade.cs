@@ -19,7 +19,7 @@ namespace Apollo.Core.UserInterfaces.Project
     /// <summary>
     /// Defines a facade for a dataset.
     /// </summary>
-    public sealed class DatasetFacade : IEquatable<DatasetFacade>
+    public sealed class DatasetFacade : MarshalByRefObject, INotifyOnDatasetChange, IEquatable<DatasetFacade>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -96,9 +96,7 @@ namespace Apollo.Core.UserInterfaces.Project
             }
 
             m_Dataset = dataset;
-            m_Dataset.OnInvalidate += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
-            m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
+            m_Dataset.RegisterForEvents(this);
         }
 
         /// <summary>
@@ -322,6 +320,36 @@ namespace Apollo.Core.UserInterfaces.Project
 
             var child = m_Dataset.CreateNewChild(creationInformation);
             return new DatasetFacade(child);
+        }
+
+        /// <summary>
+        /// The method called when the dataset is invalidated.
+        /// </summary>
+        void INotifyOnDatasetChange.DatasetInvalidated()
+        {
+            RaiseOnInvalidate();
+        }
+
+        /// <summary>
+        /// The method called when the dataset is loaded onto
+        /// one or more machines.
+        /// </summary>
+        /// <param name="loadedOnto">
+        ///     The collection that provides information about the machines 
+        ///     the dataset was loaded onto.
+        /// </param>
+        void INotifyOnDatasetChange.DatasetLoaded(ICollection<Machine> loadedOnto)
+        {
+            RaiseOnLoaded();
+        }
+
+        /// <summary>
+        /// The method called when the dataset is unloaded
+        /// from the machines it was loaded onto.
+        /// </summary>
+        void INotifyOnDatasetChange.DatasetUnloaded()
+        {
+            RaiseOnUnloaded();
         }
 
         /// <summary>

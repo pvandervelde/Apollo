@@ -174,6 +174,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Events\CloseViewEvent.cs" />
+    <Compile Include="Events\CloseViewRequest.cs" />
+    <Compile Include="Events\CloseViewRequest.Presenter.cs" />
+    <Compile Include="Events\Listeners\CloseViewEventListener.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
@@ -190,13 +194,6 @@
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\About\IAboutView.cs" />
-    <Compile Include="Views\Content\ContentModel.cs" />
-    <Compile Include="Views\Content\ContentParameter.cs" />
-    <Compile Include="Views\Content\ContentPresenter.cs" />
-    <Compile Include="Views\Content\ContentView.xaml.cs">
-      <DependentUpon>ContentView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Content\IContentView.cs" />
     <Compile Include="Views\Shell\IShellView.cs" />
     <Compile Include="KernelBootstrapper.cs" />
     <Compile Include="MockExceptionHandler.cs" />
@@ -244,10 +241,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\About\AboutWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Content\ContentView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

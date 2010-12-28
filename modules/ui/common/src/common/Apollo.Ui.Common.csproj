@@ -204,6 +204,9 @@
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
     <Compile Include="Views\Datasets\IDatasetView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />
+    <Compile Include="Views\Projects\ProjectGlobalView.xaml.cs">
+      <DependentUpon>ProjectGlobalView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Projects\ProjectModel.cs" />
     <Compile Include="Views\Projects\ProjectParameter.cs" />
     <Compile Include="Views\Projects\ProjectPresenter.cs" />
@@ -245,6 +248,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Views\Datasets\DatasetGraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Projects\ProjectGlobalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

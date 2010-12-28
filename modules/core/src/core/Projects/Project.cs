@@ -5,11 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
+using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
+using QuickGraph;
 
 namespace Apollo.Core.Projects
 {
@@ -92,6 +96,12 @@ namespace Apollo.Core.Projects
             {
                 Enforce.Argument(() => distributor);
             }
+
+            // Create the graph. This must be done in an elevated state because that is 
+            // what quickgraph wants.
+            m_Graph = SecurityHelpers.Elevate(
+                new PermissionSet(PermissionState.Unrestricted),
+                () => new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false));
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)

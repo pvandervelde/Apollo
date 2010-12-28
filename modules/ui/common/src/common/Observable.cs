@@ -24,13 +24,14 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Notifies listeners about a change.
         /// </summary>
-        /// <param name="EventHandler">The event to raise.</param>
         /// <param name="Property">The property that changed.</param>
         protected void Notify(Expression<Func<object>> Property)
         {
             // Check for null
             if (PropertyChanged == null)
+            {
                 return;
+            }
 
             // Get property name
             var lambda = Property as LambdaExpression;

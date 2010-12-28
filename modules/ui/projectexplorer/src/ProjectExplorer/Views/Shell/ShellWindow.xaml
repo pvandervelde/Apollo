@@ -7,8 +7,8 @@
         xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock"
         xmlns:infrastructure="clr-namespace:Apollo.ProjectExplorer"
         Title="{lex:LocText Key=MainWindow_Title, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Window_Title}"
-        Height="300"
-        Width="300"
+        Width="800"
+        Height="600"
         Closing="HandleShellClosing">
     <Grid>
         <Grid.RowDefinitions>
@@ -26,24 +26,31 @@
         <AvalonDock:DockingManager Grid.Row="1">
             <AvalonDock:ResizingPanel Orientation="Vertical">
                 <!-- Top -->
-                <AvalonDock:DockablePane Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.TopPane}" />
+                <AvalonDock:DockablePane AvalonDock:ResizingPanel.ResizeHeight="1*">
+                    <AvalonDock:DockableContent Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.TopPane}" />
+                </AvalonDock:DockablePane>
 
-                <AvalonDock:ResizingPanel Orientation="Horizontal">
+                <AvalonDock:ResizingPanel Orientation="Horizontal" AvalonDock:ResizingPanel.ResizeHeight="4*">
                     <!-- Left -->
-                    <AvalonDock:DockablePane Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.LeftPane}"
-                                             AvalonDock:ResizingPanel.ResizeWidth="1*" />
+                    <AvalonDock:DockablePane AvalonDock:ResizingPanel.ResizeWidth="1*">
+                        <AvalonDock:DockableContent Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.LeftPane}" />
+                    </AvalonDock:DockablePane>
 
                     <!-- Content -->
-                    <AvalonDock:DocumentPane Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}"
-                                             AvalonDock:ResizingPanel.ResizeWidth="4*" />
+                    <AvalonDock:DocumentPane AvalonDock:ResizingPanel.ResizeWidth="4*">
+                        <AvalonDock:DockableContent Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}" />
+                    </AvalonDock:DocumentPane>
 
                     <!-- Right -->
-                    <AvalonDock:DockablePane Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.RightPane}"
-                                             AvalonDock:ResizingPanel.ResizeWidth="1*" />
+                    <AvalonDock:DockablePane AvalonDock:ResizingPanel.ResizeWidth="1*">
+                        <AvalonDock:DockableContent Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.RightPane}" />
+                    </AvalonDock:DockablePane>
                 </AvalonDock:ResizingPanel>
 
                 <!-- Bottom -->
-                <AvalonDock:DockablePane Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.BottomPane}" />
+                <AvalonDock:DockablePane AvalonDock:ResizingPanel.ResizeHeight="1*">
+                    <AvalonDock:DockableContent Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.BottomPane}" />
+                </AvalonDock:DockablePane>
             </AvalonDock:ResizingPanel>
         </AvalonDock:DockingManager>
 

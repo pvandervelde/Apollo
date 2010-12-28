@@ -4,14 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
+using Microsoft.Practices.Composite.Presentation.Events;
 
-namespace Apollo.ProjectExplorer.Views.Content
+namespace Apollo.ProjectExplorer.Events
 {
     /// <summary>
-    /// The view for the <see cref="ContentModel"/>.
+    /// Manages publication and subscription of the closing of a view event.
     /// </summary>
-    internal interface IContentView : IView<ContentModel>
+    internal sealed class CloseViewEvent : CompositePresentationEvent<CloseViewRequest>
     {
     }
 }

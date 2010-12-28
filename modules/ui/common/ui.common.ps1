@@ -626,6 +626,15 @@ task buildPackage -depends buildBinaries -action{
 	
 	$serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
 	Copy-Item (Join-Path $dirBuild $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
+    
+    $graphSharpFile = 'GraphSharp.dll'
+	Copy-Item (Join-Path $dirBuild $graphSharpFile) -Destination (Join-Path $dirTempZip $graphSharpFile)
+    
+    $graphSharpControlsFile = 'GraphSharp.Controls.dll'
+	Copy-Item (Join-Path $dirBuild $graphSharpControlsFile) -Destination (Join-Path $dirTempZip $graphSharpControlsFile)
+    
+    $wpfExtensionsFile = 'WPFExtensions.dll'
+	Copy-Item (Join-Path $dirBuild $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
 	
 	# zip them
 	# Name the zip: Apollo.Ui.Common_<DATE>
