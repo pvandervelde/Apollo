@@ -37,7 +37,13 @@ namespace Apollo.UI.Common.Commands
                 return false;
             }
 
-            return projectFacade.ShouldSaveProject();
+            if (!projectFacade.HasActiveProject())
+            {
+                return false;
+            }
+
+            var project = projectFacade.ActiveProject();
+            return project.ShouldSaveProject();
         }
 
         /// <summary>
@@ -54,7 +60,13 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            projectFacade.SaveProject(persistenceInformation);
+            if (!projectFacade.HasActiveProject())
+            {
+                return;
+            }
+
+            var project = projectFacade.ActiveProject();
+            project.SaveProject(persistenceInformation);
         }
 
         /// <summary>

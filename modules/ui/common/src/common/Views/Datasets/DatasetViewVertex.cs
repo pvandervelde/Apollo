@@ -17,22 +17,6 @@ namespace Apollo.UI.Common.Views.Datasets
     public sealed class DatasetViewVertex
     {
         /// <summary>
-        /// The collection that maps the dataset creator to a value indicating how important
-        /// that creator. This value ranges between 0 (unimportant) and 1 (very important).
-        /// </summary>
-        /// <remarks>
-        /// The values in this collection are used to set the opacity of the vertex on the
-        /// canvas. System created datasets are considered less important and thus more
-        /// see-through.
-        /// </remarks>
-        private static readonly Dictionary<DatasetCreator, double> s_CreatorToImportanceMap 
-            = new Dictionary<DatasetCreator, double>()
-                {
-                    { DatasetCreator.System, 0.5 },
-                    { DatasetCreator.User, 1.0 },
-                };
-
-        /// <summary>
         /// The dataset that is linked to the current vertex.
         /// </summary>
         private readonly DatasetModel m_Dataset;
@@ -54,6 +38,18 @@ namespace Apollo.UI.Common.Views.Datasets
         }
 
         /// <summary>
+        /// Gets a value indicating the internal <see cref="DatasetModel"/> that 
+        /// the current vertex is based on.
+        /// </summary>
+        internal DatasetModel Model
+        {
+            get 
+            {
+                return m_Dataset;
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the dataset.
         /// </summary>
         public string Name
@@ -63,17 +59,13 @@ namespace Apollo.UI.Common.Views.Datasets
         }
 
         /// <summary>
-        /// Gets a value indicating how important the vertex is.
+        /// Gets a value indicating who created the dataset.
         /// </summary>
-        /// <remarks>
-        /// A vertex is more important if the dataset that it describes
-        /// was created by the user.
-        /// </remarks>
-        public double Importance
+        public DatasetCreator Creator
         {
             get
             {
-                return s_CreatorToImportanceMap[m_Dataset.CreatedBy];
+                return m_Dataset.CreatedBy;
             }
         }
     }

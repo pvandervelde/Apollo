@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using Apollo.Core.UserInterfaces.Project;
 using Autofac;
 
@@ -35,7 +36,11 @@ namespace Apollo.UI.Common.Views.Datasets
         /// </summary>
         protected override void Initialize()
         {
-            View.Model = new DatasetGraphModel(m_Container.Resolve<ILinkToProjects>());
+            var serviceFacade = m_Container.Resolve<ILinkToProjects>();
+            var project = serviceFacade.ActiveProject();
+
+            Debug.Assert(project != null, "There should be an active project.");
+            View.Model = new DatasetGraphModel(project);
         }
     }
 }

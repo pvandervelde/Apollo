@@ -78,7 +78,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <summary>
         /// The dataset for which this object is providing a facade.
         /// </summary>
-        private readonly IReadOnlyDataset m_Dataset;
+        private readonly IProxyDatasets m_Dataset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetFacade"/> class.
@@ -89,7 +89,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        internal DatasetFacade(IReadOnlyDataset dataset)
+        internal DatasetFacade(IProxyDatasets dataset)
         {
             {
                 Enforce.Argument(() => dataset);
@@ -97,6 +97,66 @@ namespace Apollo.Core.UserInterfaces.Project
 
             m_Dataset = dataset;
             m_Dataset.RegisterForEvents(this);
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the name of the dataset.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return m_Dataset.Name;
+            }
+
+            set
+            {
+                m_Dataset.Name = value;
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the name of the dataset is updated.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetNameUpdated;
+
+        private void RaiseOnDatasetNameUpdated()
+        {
+            var local = OnDatasetNameUpdated;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value describing the dataset.
+        /// </summary>
+        public string Summary
+        {
+            get
+            {
+                return m_Dataset.Summary;
+            }
+
+            set
+            {
+                m_Dataset.Summary = value;
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the summary of the dataset is updated.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetSummaryUpdated;
+
+        private void RaiseOnDatasetSummaryUpdated()
+        {
+            var local = OnDatasetSummaryUpdated;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -320,6 +380,22 @@ namespace Apollo.Core.UserInterfaces.Project
 
             var child = m_Dataset.CreateNewChild(creationInformation);
             return new DatasetFacade(child);
+        }
+
+        /// <summary>
+        /// The method called when the dataset name is updated.
+        /// </summary>
+        void INotifyOnDatasetChange.NameUpdated()
+        {
+            RaiseOnDatasetNameUpdated();
+        }
+
+        /// <summary>
+        /// The method called when the dataset summary is updated.
+        /// </summary>
+        void INotifyOnDatasetChange.SummaryUpdated()
+        {
+            RaiseOnDatasetSummaryUpdated();
         }
 
         /// <summary>

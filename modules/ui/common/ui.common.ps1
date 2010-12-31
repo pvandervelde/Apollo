@@ -635,6 +635,15 @@ task buildPackage -depends buildBinaries -action{
     
     $wpfExtensionsFile = 'WPFExtensions.dll'
 	Copy-Item (Join-Path $dirBuild $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
+    
+    $greyableImageFile = 'GreyableImage.dll'
+	Copy-Item (Join-Path $dirBuild $greyableImageFile) -Destination (Join-Path $dirTempZip $greyableImageFile)
+    
+    $pixelLabCommonFile = 'PixelLab.Common.dll'
+	Copy-Item (Join-Path $dirBuild $pixelLabCommonFile) -Destination (Join-Path $dirTempZip $pixelLabCommonFile)
+    
+    $pixelLabWpfFile = 'PixelLab.Wpf.dll'
+	Copy-Item (Join-Path $dirBuild $pixelLabWpfFile) -Destination (Join-Path $dirTempZip $pixelLabWpfFile)
 	
 	# zip them
 	# Name the zip: Apollo.Ui.Common_<DATE>

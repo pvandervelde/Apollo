@@ -1,0 +1,201 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Datasets.DatasetVertexView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
+             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             mc:Ignorable="d"
+             d:DesignWidth="450"
+             d:DesignHeight="300"
+             MinWidth="450"
+             MinHeight="300">
+    <!-- DataContext is: DatasetModel-->
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Icons -->
+            <RowDefinition Height="Auto" />
+
+            <!-- Name -->
+            <RowDefinition Height="Auto" />
+
+            <!-- Summary -->
+            <RowDefinition Height="*" />
+
+            <!-- Storage location -->
+            <RowDefinition Height="*" />
+
+            <!-- Loaded location -->
+            <RowDefinition Height="*" />
+
+            <!-- Progress -->
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <Grid.ColumnDefinitions>
+            <!-- Labels -->
+            <ColumnDefinition Width="Auto" />
+
+            <!-- Values -->
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Icons / Buttons -->
+        <Grid Grid.Row="0"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <StackPanel Orientation="Horizontal"
+                        FlowDirection="RightToLeft"
+                        Margin="3">
+                <!-- CanBeDeleted -->
+                <Button x:Name="deleteDatasetButton"
+                        Margin="5">
+                    <Image Source="{lex:LocImage Key=Img_Delete_256, Dict=Resources, Assembly=Apollo.UI.Common}"
+                           gi:ImageGreyer.IsGreyable="True"
+                           Width="24"
+                           Height="24"
+                           Margin="3, 0, 3, 0"/>
+                </Button>
+
+                <!-- CanBecomeParent ==> little icon at the bottom with a plus? -->
+                <Button x:Name="addChildDatasetButton"
+                        Margin="5">
+                    <Image Source="{lex:LocImage Key=Img_Add_256, Dict=Resources, Assembly=Apollo.UI.Common}"
+                           gi:ImageGreyer.IsGreyable="True"
+                           Width="24"
+                           Height="24"
+                           Margin="3, 0, 3, 0" />
+                </Button>
+            </StackPanel>
+        </Grid>
+
+        <!-- Name -->
+        <Label Grid.Row="1"
+               Grid.Column="0"
+               Margin="5, 5, 5, 0"
+               VerticalAlignment="Center">
+            <TextBlock Text="{lex:LocText Key=DatasetGraphView_DatasetName, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_Name}"
+                       Foreground="SeaShell"
+                       FontWeight="Bold" />
+        </Label>
+        <pix:InfoTextBox Grid.Row="1"
+                         Grid.Column="1"
+                         Margin="0, 5, 5, 5"
+                         VerticalAlignment="Center"
+                         Background="SeaShell"
+                         TextBoxInfo="{lex:LocText Key=DatasetGraphView_DatasetNameSuggestion, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_Name_Suggestion}"
+                         Text="{Binding Path=Name}" />
+
+        <!-- Summary -->
+        <Label Grid.Row="2"
+               Grid.Column="0"
+               Margin="5, 5, 5, 0"
+               VerticalAlignment="Center">
+            <TextBlock Text="{lex:LocText Key=DatasetGraphView_DatasetSummary, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_Summary}"
+                       Foreground="SeaShell"
+                       FontWeight="Bold" />
+        </Label>
+        <pix:InfoTextBox Grid.Row="2"
+                         Grid.Column="1"
+                         Margin="0, 5, 5, 5"
+                         Background="SeaShell"
+                         VerticalContentAlignment="Top"
+                         TextWrapping="WrapWithOverflow"
+                         AcceptsReturn="True"
+                         AcceptsTab="True"
+                         VerticalScrollBarVisibility="Auto"
+                         SpellCheck.IsEnabled="True"
+                         TextBoxInfo="{lex:LocText Key=DatasetGraphView_DatasetSummarySuggestion, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_Summary_Suggestion}"
+                         Text="{Binding Path=Summary}" />
+
+        <!-- Storage location? -->
+        <Label Grid.Row="3"
+               Grid.Column="0"
+               Margin="5, 5, 5, 0"
+               VerticalAlignment="Top">
+            <TextBlock Text="{lex:LocText Key=DatasetGraphView_DatasetStoredAt, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_StoredAt}"
+                       Foreground="SeaShell"
+                       FontWeight="Bold" />
+        </Label>
+        <Border Grid.Row="3"
+                Grid.Column="1"
+                Margin="0, 5, 5, 5"
+                Background="SeaShell"
+                BorderBrush="GoldenRod"
+                BorderThickness="3"
+                CornerRadius="10,10,10,10"
+                Padding="5">
+            <ListBox BorderThickness="0"
+                     Background="Transparent"
+                     SelectionMode="Single">
+
+            </ListBox>
+        </Border>
+
+        <!-- IsLoaded + Loading location ==> a set of hyper links to the machine description? -->
+        <Label Grid.Row="4"
+               Grid.Column="0"
+               Margin="5, 5, 5, 0"
+               VerticalAlignment="Top">
+            <TextBlock Text="{lex:LocText Key=DatasetGraphView_DatasetRunningOn, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_RunningOn}"
+                       Foreground="SeaShell"
+                       FontWeight="Bold" />
+        </Label>
+        <Border Grid.Row="4"
+                Grid.Column="1"
+                Margin="0, 5, 5, 5"
+                Background="SeaShell"
+                BorderBrush="GoldenRod"
+                BorderThickness="3"
+                CornerRadius="10,10,10,10"
+                Padding="5">
+            <ListBox BorderThickness="0"
+                     Background="Transparent"
+                     SelectionMode="Single">
+
+            </ListBox>
+        </Border>
+
+        <!-- IsRunning + progress -->
+        <Grid Grid.Row="5"
+              Grid.Column="0"
+              Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Row="0"
+                   Grid.Column="0"
+                   Margin="5, 5, 0, 0">
+                <TextBlock Text="{lex:LocText Key=DatasetGraphView_DatasetProcessing, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Dataset_Processing}"
+                           Foreground="SeaShell"
+                           FontWeight="Bold"/>
+            </Label>
+            <Label Grid.Row="0"
+                   Grid.Column="1"
+                   Margin="0, 5, 5, 0">
+                <TextBlock Text="Doing some difficult expensive operation"
+                           Foreground="SeaShell" />
+            </Label>
+
+            <Grid Grid.Row="1"
+                  Grid.Column="0"
+                  Grid.ColumnSpan="2">
+                <ProgressBar Value="60"
+                             Margin="5, 0, 5, 5"/>
+                <Label HorizontalAlignment="Center"
+                       Margin="5, 0, 5, 5">
+                    <TextBlock Text="Module N"
+                               Foreground="Blue" />
+                </Label>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

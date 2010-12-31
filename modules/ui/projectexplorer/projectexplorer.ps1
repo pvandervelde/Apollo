@@ -495,10 +495,7 @@ task buildPackage -depends buildBinaries -action{
     
     $wpfLocalizationFile = 'WPFLocalizeExtension.dll'
     Copy-Item (Join-Path $dirBuild $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
-    
-    $avalonDockFile = 'AvalonDock.dll'
-    Copy-Item (Join-Path $dirBuild $avalonDockFile) -Destination (Join-Path $dirTempZip $avalonDockFile)
-    
+   
     # zip them
     # Name the zip: Apollo.Ui.Common_<DATE>
     $output = Join-Path $dirDeploy ("Apollo.ProjectExplorer_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")

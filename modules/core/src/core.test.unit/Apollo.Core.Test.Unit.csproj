@@ -201,6 +201,7 @@
     <Compile Include="Projects\DatasetIdTest.cs" />
     <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
     <Compile Include="Projects\DatasetOfflineInformationTest.cs" />
+    <Compile Include="Projects\DatasetProxyTest.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Projects\LoadProjectMessageTest.cs" />
     <Compile Include="Projects\ProjectBuilderTest.cs" />
@@ -208,7 +209,6 @@
     <Compile Include="Projects\ProjectRequestResponseMessageTest.cs" />
     <Compile Include="Projects\ProjectServiceTest.cs" />
     <Compile Include="Projects\ProjectTest.cs" />
-    <Compile Include="Projects\ReadOnlyDatasetTest.cs" />
     <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
     <Compile Include="Projects\UnloadProjectMessageTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -239,6 +239,7 @@
     <Compile Include="UserInterfaces\Project\LoadProjectCommandTest.cs" />
     <Compile Include="UserInterfaces\Project\NoCurrentProjectExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\ProjectFacadeTest.cs" />
+    <Compile Include="UserInterfaces\Project\ProjectServiceFacade.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectCommandTest.cs" />
     <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
     <Compile Include="Utils\ApplicationConstantsTest.cs" />

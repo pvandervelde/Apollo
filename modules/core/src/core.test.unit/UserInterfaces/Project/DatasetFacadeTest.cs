@@ -23,12 +23,12 @@ namespace Apollo.Core.UserInterfaces.Project
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetFacadeTest
     {
-        private static IReadOnlyDataset CreateMockDataset()
+        private static IProxyDatasets CreateMockDataset()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
-                dataset.Setup(d => d.Equals(It.IsAny<IReadOnlyDataset>()))
-                    .Returns<IReadOnlyDataset>(other => ReferenceEquals(other, dataset.Object));
+                dataset.Setup(d => d.Equals(It.IsAny<IProxyDatasets>()))
+                    .Returns<IProxyDatasets>(other => ReferenceEquals(other, dataset.Object));
                 
                 dataset.Setup(d => d.Equals(It.IsAny<object>()))
                     .Returns<object>(other => ReferenceEquals(other, dataset.Object));
@@ -153,7 +153,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that an object can be created.")]
         public void Create()
         { 
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
                 dataset.Setup(d => d.CanBeAdopted)
                     .Returns(true);
@@ -192,7 +192,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that the invalidate event is fired correctly.")]
         public void OnInvalidate()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             var facade = new DatasetFacade(dataset.Object);
 
             bool wasInvalidated = false;
@@ -207,7 +207,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that the invalidate event is fired correctly.")]
         public void OnLoaded()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             var facade = new DatasetFacade(dataset.Object);
 
             bool wasLoaded = false;
@@ -222,7 +222,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that the invalidate event is fired correctly.")]
         public void OnUnloaded()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             var facade = new DatasetFacade(dataset.Object);
 
             bool wasUnloaded = false;
@@ -237,7 +237,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that the it is not possible to delete an un-deletable dataset.")]
         public void DeleteWithUndeletableDataset()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
                 dataset.Setup(d => d.CanBeDeleted)
                     .Returns(false);
@@ -259,10 +259,10 @@ namespace Apollo.Core.UserInterfaces.Project
         public void ChildrenOf()
         {
             var child = CreateMockDataset();
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
                 dataset.Setup(d => d.Children())
-                    .Returns(new List<IReadOnlyDataset> { child });
+                    .Returns(new List<IProxyDatasets> { child });
             }
 
             var facade = new DatasetFacade(dataset.Object);
@@ -281,7 +281,7 @@ namespace Apollo.Core.UserInterfaces.Project
 
             var storage = new Mock<IPersistenceInformation>();
             var child = CreateMockDataset();
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
                 dataset.Setup(d => d.StoredAt)
                     .Returns(storage.Object);
@@ -307,7 +307,7 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks that the AddChild method throws an exception if it is passed a null persistence object.")]
         public void AddChildWithNullPersistenceInformation()
         {
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             var facade = new DatasetFacade(dataset.Object);
             Assert.Throws<ArgumentNullException>(() => facade.AddChild(null));
         }
@@ -320,7 +320,7 @@ namespace Apollo.Core.UserInterfaces.Project
 
             var storage = new Mock<IPersistenceInformation>();
             var child = CreateMockDataset();
-            var dataset = new Mock<IReadOnlyDataset>();
+            var dataset = new Mock<IProxyDatasets>();
             {
                 dataset.Setup(d => d.StoredAt)
                     .Returns(new Mock<IPersistenceInformation>().Object);

@@ -6,37 +6,27 @@
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
              mc:Ignorable="d"
              d:DesignHeight="300"
              d:DesignWidth="300">
     <UserControl.Resources>
-        <DataTemplate x:Key="datasetViewVertexTemplate"
-                      DataType="{x:Type local:DatasetViewVertex}">
-            <StackPanel Orientation="Horizontal"
-                        Opacity="{Binding Path=Importance, Mode=OneWay}"
-                        Margin="5">
-                <TextBlock Text="{Binding Path=Name, Mode=TwoWay}"
-                           Foreground="White" />
-                <!-- CanBeDeleted -->
-                <!-- IsValid?? -->
-                <!-- IsLoaded + Loading location ==> a set of hyper links to the machine description? -->
-                <!-- IsRunning + progress -->
-                <!-- CanBecomeParent ==> little icon at the bottom with a plus? -->
-            </StackPanel>
-        </DataTemplate>
-
+        <local:DatasetViewVertextToDatasetModelConverter x:Key="viewVertexConverter" />
+        <local:DatasetCreatorToOpacityConverter x:Key="creatorToOpacityConverter" />
+        
         <Style TargetType="{x:Type graphsharp:VertexControl}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type graphsharp:VertexControl}">
-                        <Border BorderBrush="White"
-                                Background="Black"
-                                BorderThickness="2"
+                        <Border x:Name="vertexBorder"
+                                BorderBrush="MidnightBlue"
+                                Background="LightSteelBlue"
+                                BorderThickness="3"
                                 CornerRadius="10,10,10,10"
                                 Padding="{TemplateBinding Padding}"
-                                Opacity="{Binding Path=Importance, Mode=OneWay}">
-                            <ContentPresenter Content="{TemplateBinding Vertex}"
-                                              ContentTemplate="{StaticResource datasetViewVertexTemplate}" />
+                                Opacity="{Binding Path=Creator, Mode=OneWay, Converter={StaticResource creatorToOpacityConverter}}">
+                            <local:DatasetVertexView DataContext="{TemplateBinding Vertex, Converter={StaticResource viewVertexConverter}}" />
 
                             <Border.Effect>
                                 <DropShadowEffect BlurRadius="2"
@@ -48,6 +38,22 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <!--
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding Path=IsValid}"
+                             Value="false">
+                    <Setter TargetName="vertexBorder"
+                            Property="Effect">
+                        <Setter.Value>
+                            <DropShadowEffect BlurRadius="4"
+                                              Color="Red"
+                                              Direction="0"
+                                              Opacity="0.9" />
+                        </Setter.Value>
+                    </Setter>
+                </DataTrigger>
+            </Style.Triggers>
+            -->
         </Style>
 
 
@@ -74,19 +80,26 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <zoom:ZoomControl Grid.Row="0"
-                          Zoom="0.2"
-                          ZoomBoxOpacity="0.5"
-                          Background="#ff656565">
+        <Border Grid.Row="0"
+                Background="LightSlateGray"
+                BorderBrush="Black"
+                BorderThickness="3"
+                CornerRadius="10,10,10,10"
+                Padding="4">
+            <zoom:ZoomControl Grid.Row="0"
+                              Zoom="0.2"
+                              ZoomBoxOpacity="0.5"
+                              Background="Transparent">
 
-            <local:DatasetGraphLayout x:Name="graphLayout"
-                                      x:FieldModifier="private"
-                                      Margin="10"
-                                      Graph="{Binding Path=Graph}"
-                                      LayoutAlgorithmType="Tree"
-                                      OverlapRemovalAlgorithmType="FSA"
-                                      HighlightAlgorithmType="Simple" />
+                <local:DatasetGraphLayout x:Name="graphLayout"
+                                          x:FieldModifier="private"
+                                          Margin="10"
+                                          Graph="{Binding Path=Graph}"
+                                          LayoutAlgorithmType="Tree"
+                                          OverlapRemovalAlgorithmType="FSA"
+                                          HighlightAlgorithmType="Simple" />
 
-        </zoom:ZoomControl>
+            </zoom:ZoomControl>
+        </Border>
     </Grid>
 </UserControl>

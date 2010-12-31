@@ -58,6 +58,12 @@ namespace Apollo.UI.Common
             var local = PropertyChanged;
             if (local != null)
             {
+                // SECURITY EXCEPTION HERE ... NEED FULLTRUST???
+                // But it shouldn't. This is inside the actual app, which is
+                // started with full trust. Seems kinda like another problem 
+                // we had a while back.
+                // That problem was solved by adding one of the assemblies to 
+                // the path / full trust assemblies or something ...???
                 local(this, new PropertyChangedEventArgs(name));
             }
         }

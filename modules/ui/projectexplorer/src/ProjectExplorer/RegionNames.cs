@@ -12,19 +12,9 @@ namespace Apollo.ProjectExplorer
     internal static class RegionNames
     {
         /// <summary>
-        /// Defines the name fo the bottom pane region of the shell.
+        /// Defines the name of the shell region.
         /// </summary>
-        public const string BottomPane = "BottomPane";
-
-        /// <summary>
-        /// Defines the name of the content region of the shell.
-        /// </summary>
-        public const string Content = "Content";
-
-        /// <summary>
-        /// Defines the name of the left pane region of the shell.
-        /// </summary>
-        public const string LeftPane = "LeftPane";
+        public const string Shell = "Shell";
 
         /// <summary>
         /// Defines the name of the menu region of the shell.
@@ -32,18 +22,13 @@ namespace Apollo.ProjectExplorer
         public const string MainMenu = "MainMenu";
 
         /// <summary>
-        /// Defines the name of the right pane region of the shell.
-        /// </summary>
-        public const string RightPane = "RightPane";
-
-        /// <summary>
-        /// Defines the name of the shell region.
-        /// </summary>
-        public const string Shell = "Shell";
-
-        /// <summary>
         /// Defines the name of the top pane region of the shell.
         /// </summary>
         public const string TopPane = "TopPane";
+
+        /// <summary>
+        /// Defines the name of the content region of the shell.
+        /// </summary>
+        public const string Content = "Content";
     }
 }

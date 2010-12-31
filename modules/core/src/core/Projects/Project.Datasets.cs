@@ -45,14 +45,14 @@ namespace Apollo.Core.Projects
         /// The collection that holds the proxies for the datasets that we are mirroring 
         /// for the UI.
         /// </summary>
-        private readonly Dictionary<DatasetId, IReadOnlyDataset> m_DatasetProxies =
-            new Dictionary<DatasetId, IReadOnlyDataset>();
+        private readonly Dictionary<DatasetId, IProxyDatasets> m_DatasetProxies =
+            new Dictionary<DatasetId, IProxyDatasets>();
 
         /// <summary>
         /// The collection that holds all the object that require notification when a 
         /// dataset changes.
         /// </summary>
-        private readonly Dictionary<DatasetId, List<INotifyOnDatasetChange>> m_Observers =
+        private readonly Dictionary<DatasetId, List<INotifyOnDatasetChange>> m_DatasetObservers =
             new Dictionary<DatasetId, List<INotifyOnDatasetChange>>();
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <returns>The requested proxy.</returns>
-        private IReadOnlyDataset ObtainProxyFor(DatasetId id)
+        private IProxyDatasets ObtainProxyFor(DatasetId id)
         {
             {
                 Debug.Assert(IsValid(id), "Cannot create a proxy for an invalid ID.");
@@ -88,7 +88,7 @@ namespace Apollo.Core.Projects
 
             if (!m_DatasetProxies.ContainsKey(id))
             {
-                m_DatasetProxies.Add(id, new ReadOnlyDataset(this, id));
+                m_DatasetProxies.Add(id, new DatasetProxy(this, id));
             }
 
             return m_DatasetProxies[id];
@@ -182,6 +182,11 @@ namespace Apollo.Core.Projects
                     () => m_Graph.AddEdge(new Edge<DatasetId>(realParent, id)));
             }
 
+            foreach (var observer in m_ProjectObservers)
+            {
+                observer.DatasetCreated();
+            }
+
             return id;
         }
 
@@ -240,7 +245,7 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID of the dataset for which the notifications should be registered.</param>
         /// <param name="observer">The object that wants to receive change notifications.</param>
-        private void RegisterForEvents(DatasetId id, INotifyOnDatasetChange observer)
+        private void RegisterDatasetObservers(DatasetId id, INotifyOnDatasetChange observer)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
@@ -248,12 +253,12 @@ namespace Apollo.Core.Projects
                 Debug.Assert(observer != null, "The notification object should not be a Null reference.");
             }
 
-            if (!m_Observers.ContainsKey(id))
+            if (!m_DatasetObservers.ContainsKey(id))
             {
-                m_Observers.Add(id, new List<INotifyOnDatasetChange>());
+                m_DatasetObservers.Add(id, new List<INotifyOnDatasetChange>());
             }
 
-            var observers = m_Observers[id];
+            var observers = m_DatasetObservers[id];
             if (!observers.Contains(observer))
             {
                 observers.Add(observer);
@@ -265,19 +270,19 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID of the dataset for which the notifications should be unregistered.</param>
         /// <param name="observer">The object that is registered for change notifications.</param>
-        private void UnregisterForEvents(DatasetId id, INotifyOnDatasetChange observer)
+        private void UnregisterDatasetObservers(DatasetId id, INotifyOnDatasetChange observer)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
                 Debug.Assert(observer != null, "The notification object should not be a Null reference.");
             }
 
-            if (!m_Observers.ContainsKey(id))
+            if (!m_DatasetObservers.ContainsKey(id))
             {
                 return;
             }
 
-            var observers = m_Observers[id];
+            var observers = m_DatasetObservers[id];
             if (observers.Contains(observer))
             {
                 observers.Remove(observer);
@@ -288,15 +293,15 @@ namespace Apollo.Core.Projects
         /// Unregisters the given object for change notifications.
         /// </summary>
         /// <param name="id">The ID of the dataset for which the notifications should be unregistered.</param>
-        private void UnregisterForAllEvents(DatasetId id)
+        private void UnregisterAllDatasetObservers(DatasetId id)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
             }
 
-            if (m_Observers.ContainsKey(id))
+            if (m_DatasetObservers.ContainsKey(id))
             {
-                m_Observers.Remove(id);
+                m_DatasetObservers.Remove(id);
             }
         }
 
@@ -308,18 +313,18 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The collection of objects that have registered for change notifications.
         /// </returns>
-        private IEnumerable<INotifyOnDatasetChange> Observers(DatasetId id)
+        private IEnumerable<INotifyOnDatasetChange> DatasetObservers(DatasetId id)
         {
             {
                 Debug.Assert(id != null, "The ID should not be a null reference.");
             }
 
-            if (!m_Observers.ContainsKey(id))
+            if (!m_DatasetObservers.ContainsKey(id))
             {
                 return new INotifyOnDatasetChange[0];
             }
 
-            return m_Observers[id].AsReadOnly();
+            return m_DatasetObservers[id].AsReadOnly();
         }
     }
 }

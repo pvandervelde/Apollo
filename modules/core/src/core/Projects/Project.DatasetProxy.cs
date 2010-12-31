@@ -18,17 +18,17 @@ using Lokad;
 namespace Apollo.Core.Projects
 {
     /// <content>
-    /// Defines the implementation of <see cref="IReadOnlyDataset"/>.
+    /// Defines the implementation of <see cref="IProxyDatasets"/>.
     /// </content>
     internal sealed partial class Project
     {
-        #region Internal class - ReadOnlyDataset
+        #region Internal class - DatasetProxy
 
         /// <summary>
         /// Mirrors the storage of dataset information.
         /// </summary>
         [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
-        private sealed class ReadOnlyDataset : MarshalByRefObject, IReadOnlyDataset
+        private sealed class DatasetProxy : MarshalByRefObject, IProxyDatasets
         {
             /// <summary>
             /// Implements the operator ==.
@@ -36,7 +36,7 @@ namespace Apollo.Core.Projects
             /// <param name="first">The first object.</param>
             /// <param name="second">The second object.</param>
             /// <returns>The result of the operator.</returns>
-            public static bool operator ==(ReadOnlyDataset first, ReadOnlyDataset second)
+            public static bool operator ==(DatasetProxy first, DatasetProxy second)
             {
                 // Check if first is a null reference by using ReferenceEquals because
                 // we overload the == operator. If first isn't actually null then
@@ -63,7 +63,7 @@ namespace Apollo.Core.Projects
             /// <param name="first">The first object.</param>
             /// <param name="second">The second object.</param>
             /// <returns>The result of the operator.</returns>
-            public static bool operator !=(ReadOnlyDataset first, ReadOnlyDataset second)
+            public static bool operator !=(DatasetProxy first, DatasetProxy second)
             {
                 // Check if first is a null reference by using ReferenceEquals because
                 // we overload the == operator. If first isn't actually null then
@@ -95,11 +95,11 @@ namespace Apollo.Core.Projects
             private readonly DatasetId m_IdOfDataset;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="ReadOnlyDataset"/> class.
+            /// Initializes a new instance of the <see cref="DatasetProxy"/> class.
             /// </summary>
             /// <param name="owner">The owner which holds all the dataset information.</param>
             /// <param name="idOfDataset">The ID number of the dataset that is being mirrored.</param>
-            public ReadOnlyDataset(Project owner, DatasetId idOfDataset)
+            public DatasetProxy(Project owner, DatasetId idOfDataset)
             {
                 {
                     Debug.Assert(owner != null, "The owner object should not be a null reference.");
@@ -211,6 +211,60 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
+            /// Gets or sets a value indicating the name of the dataset.
+            /// </summary>
+            public string Name
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.Name;
+                }
+
+                set
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    if (!string.Equals(dataset.Name, value))
+                    {
+                        dataset.Name = value;
+
+                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                        foreach (var observer in observers)
+                        {
+                            observer.NameUpdated();
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value describing the dataset.
+            /// </summary>
+            public string Summary
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.Summary;
+                }
+
+                set
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    if (!string.Equals(dataset.Summary, value))
+                    {
+                        dataset.Summary = value;
+                        
+                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                        foreach (var observer in observers)
+                        {
+                            observer.SummaryUpdated();
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
             /// Gets a value indicating whether the dataset is loaded on the local machine
             /// or a remote machine.
             /// </summary>
@@ -267,7 +321,7 @@ namespace Apollo.Core.Projects
                 m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
                 if (IsLoaded)
                 {
-                    var observers = m_Owner.Observers(m_IdOfDataset);
+                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
                     foreach (var observer in observers)
                     {
                         observer.DatasetLoaded(new List<Machine>(RunsOn()));
@@ -288,7 +342,7 @@ namespace Apollo.Core.Projects
                 m_Owner.UnloadFromMachine(m_IdOfDataset);
                 if (!IsLoaded)
                 {
-                    var observers = m_Owner.Observers(m_IdOfDataset);
+                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
                     foreach (var observer in observers)
                     {
                         observer.DatasetUnloaded();
@@ -302,12 +356,12 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// The collection of sub-datasets.
             /// </returns>
-            public IEnumerable<IReadOnlyDataset> Children()
+            public IEnumerable<IProxyDatasets> Children()
             {
                 var children = from dataset in m_Owner.Children(m_IdOfDataset)
                                select m_Owner.ObtainProxyFor(dataset.Id);
 
-                return new List<IReadOnlyDataset>(children);
+                return new List<IProxyDatasets>(children);
             }
 
             /// <summary>
@@ -338,7 +392,7 @@ namespace Apollo.Core.Projects
             /// <exception cref="DatasetCannotBecomeParentException">
             /// Thrown when the current dataset cannot become a parent.
             /// </exception>
-            public IReadOnlyDataset CreateNewChild(DatasetCreationInformation newChild)
+            public IProxyDatasets CreateNewChild(DatasetCreationInformation newChild)
             {
                 {
                     Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
@@ -346,7 +400,7 @@ namespace Apollo.Core.Projects
                 }
 
                 var id = m_Owner.CreateDataset(m_IdOfDataset, newChild);
-                return new ReadOnlyDataset(m_Owner, id);
+                return new DatasetProxy(m_Owner, id);
             }
 
             /// <summary>
@@ -357,7 +411,7 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// A collection containing the ID numbers of the newly created children.
             /// </returns>
-            public IEnumerable<IReadOnlyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
+            public IEnumerable<IProxyDatasets> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
             {
                 {
                     Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
@@ -367,9 +421,9 @@ namespace Apollo.Core.Projects
 
                 var result = from child in newChildren
                                 let newDataset = m_Owner.CreateDataset(m_IdOfDataset, child)
-                             select new ReadOnlyDataset(m_Owner, newDataset) as IReadOnlyDataset;
+                             select new DatasetProxy(m_Owner, newDataset) as IProxyDatasets;
 
-                return new List<IReadOnlyDataset>(result);
+                return new List<IProxyDatasets>(result);
             }
 
             /// <summary>
@@ -393,7 +447,7 @@ namespace Apollo.Core.Projects
                     Enforce.Argument(() => observer);
                 }
 
-                m_Owner.RegisterForEvents(m_IdOfDataset, observer);
+                m_Owner.RegisterDatasetObservers(m_IdOfDataset, observer);
             }
 
             /// <summary>
@@ -406,7 +460,7 @@ namespace Apollo.Core.Projects
                     Enforce.Argument(() => observer);
                 }
 
-                m_Owner.UnregisterForEvents(m_IdOfDataset, observer);
+                m_Owner.UnregisterDatasetObservers(m_IdOfDataset, observer);
             }
 
             /// <summary>
@@ -428,15 +482,15 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
-            /// Determines whether the specified <see cref="IReadOnlyDataset"/> is equal to this instance.
+            /// Determines whether the specified <see cref="IProxyDatasets"/> is equal to this instance.
             /// </summary>
-            /// <param name="other">The <see cref="IReadOnlyDataset"/> to compare with this instance.</param>
+            /// <param name="other">The <see cref="IProxyDatasets"/> to compare with this instance.</param>
             /// <returns>
-            ///     <see langword="true"/> if the specified <see cref="IReadOnlyDataset"/> is equal to this instance; otherwise, <see langword="false"/>.
+            ///     <see langword="true"/> if the specified <see cref="IProxyDatasets"/> is equal to this instance; otherwise, <see langword="false"/>.
             /// </returns>
             [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
                 Justification = "Documentation can start with a language keyword")]
-            public bool Equals(IReadOnlyDataset other)
+            public bool Equals(IProxyDatasets other)
             {
                 if (other == null)
                 {
@@ -448,7 +502,7 @@ namespace Apollo.Core.Projects
                     return true;
                 }
 
-                var dataset = other as ReadOnlyDataset;
+                var dataset = other as DatasetProxy;
                 return (dataset != null) && dataset.m_IdOfDataset.Equals(m_IdOfDataset);
             }
 
@@ -468,7 +522,7 @@ namespace Apollo.Core.Projects
                     return true;
                 }
 
-                var dataset = obj as IReadOnlyDataset;
+                var dataset = obj as IProxyDatasets;
                 return Equals(dataset);
             }
 

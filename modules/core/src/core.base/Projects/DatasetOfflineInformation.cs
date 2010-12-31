@@ -142,6 +142,24 @@ namespace Apollo.Core.Base.Projects
             }
         }
 
+        /// <summary>
+        /// Gets or sets a value indicating the name of the dataset.
+        /// </summary>
+        public string Name
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value describing the dataset.
+        /// </summary>
+        public string Summary
+        {
+            get;
+            set;
+        }
+
         // Meta data?
         // - Loaded size?
     }

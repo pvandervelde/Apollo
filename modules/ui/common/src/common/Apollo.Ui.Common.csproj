@@ -94,6 +94,9 @@
     <Reference Include="GraphSharp.Controls">
       <HintPath>..\..\lib\graphsharp\GraphSharp.Controls.dll</HintPath>
     </Reference>
+    <Reference Include="GreyableImage">
+      <HintPath>..\..\lib\greyableimage\GreyableImage.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
@@ -105,6 +108,12 @@
     </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\..\lib\servicelocation\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Common">
+      <HintPath>..\..\lib\pixellab\PixelLab.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Wpf">
+      <HintPath>..\..\lib\pixellab\PixelLab.Wpf.dll</HintPath>
     </Reference>
     <Reference Include="QuickGraph, Version=3.3.40824.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -135,6 +144,9 @@
     <Reference Include="WPFExtensions">
       <HintPath>..\..\lib\graphsharp\WPFExtensions.dll</HintPath>
     </Reference>
+    <Reference Include="WPFLocalizeExtension">
+      <HintPath>..\..\lib\wpflocalizeextension\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
@@ -159,11 +171,15 @@
     <Compile Include="Bootstrapper\RegionAdapterMapper.cs" />
     <Compile Include="Bootstrapper\RegionBehaviorFactoryMapper.cs" />
     <Compile Include="Bootstrapper\ResolveAnythingSource.cs" />
+    <Compile Include="Commands\AddChildDatasetCommand.cs" />
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\NewProjectCommand.cs" />
     <Compile Include="Commands\OpenProjectCommand.cs" />
+    <Compile Include="Commands\DeleteDatasetCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertextToDatasetModelConverter.cs" />
     <Compile Include="Eventing\EventListener.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="IRegionView.cs" />
@@ -198,6 +214,9 @@
     <Compile Include="Views\Datasets\DatasetModel.cs" />
     <Compile Include="Views\Datasets\DatasetParameter.cs" />
     <Compile Include="Views\Datasets\DatasetPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
+      <DependentUpon>DatasetVertexView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Datasets\DatasetViewEdge.cs" />
     <Compile Include="Views\Datasets\DatasetViewGraph.cs" />
     <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
@@ -225,7 +244,6 @@
   <ItemGroup>
     <Folder Include="Controls\" />
     <Folder Include="Converters\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
@@ -251,10 +269,29 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Views\Datasets\DatasetVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Projects\ProjectGlobalView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_256x256.png" />
   </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>

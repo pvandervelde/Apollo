@@ -20,7 +20,7 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// The project that holds the dataset graph.
         /// </summary>
-        private readonly ILinkToProjects m_Project;
+        private readonly ProjectFacade m_Project;
 
         /// <summary>
         /// The graph that holds the information about the
@@ -35,15 +35,16 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        public DatasetGraphModel(ILinkToProjects facade)
+        public DatasetGraphModel(ProjectFacade facade)
         {
             {
                 Enforce.Argument(() => facade);
             }
 
             m_Project = facade;
-            m_Project.OnNewProjectLoaded += (s, e) => ReloadProject();
-            m_Project.OnProjectUnloaded += (s, e) => ReloadProject();
+            m_Project.OnDatasetCreated += (s, e) => ReloadProject();
+            m_Project.OnDatasetDeleted += (s, e) => ReloadProject();
+            m_Project.OnDatasetUpdated += (s, e) => ReloadProject();
 
             ReloadProject();
         }
@@ -52,34 +53,31 @@ namespace Apollo.UI.Common.Views.Datasets
         {
             m_Graph.Clear();
 
-            if (m_Project.HasActiveProject())
+            // There must be at least one dataset (the root dataset is created by default).
+            // Thus we can build a graph.
+            //
+            // First the root dataset.
+            var root = m_Project.Root();
+            var rootVertex = new DatasetViewVertex(new DatasetModel(root));
+            m_Graph.AddVertex(rootVertex);
+
+            var nodes = new Queue<Tuple<DatasetFacade, DatasetViewVertex>>();
+            nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(root, rootVertex));
+
+            // And then the children of the root dataset (and their children, etc. etc.)
+            while (nodes.Count > 0)
             {
-                // There is an active project so there must be at least one
-                // dataset (the root dataset is created by default).
-                // Thus we can build a graph.
-                // First the root dataset.
-                var root = m_Project.Root();
-                var rootVertex = new DatasetViewVertex(new DatasetModel(root));
-                m_Graph.AddVertex(rootVertex);
+                var pair = nodes.Dequeue();
+                var dataset = pair.Item1;
+                var vertex = pair.Item2;
 
-                var nodes = new Queue<Tuple<DatasetFacade, DatasetViewVertex>>();
-                nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(root, rootVertex));
-
-                // And then the children of the root dataset (and their children, etc. etc.)
-                while (nodes.Count > 0)
+                foreach (var child in dataset.Children())
                 {
-                    var pair = nodes.Dequeue();
-                    var dataset = pair.Item1;
-                    var vertex = pair.Item2;
+                    var childVertex = new DatasetViewVertex(new DatasetModel(child));
+                    nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(child, childVertex));
 
-                    foreach (var child in dataset.Children())
-                    {
-                        var childVertex = new DatasetViewVertex(new DatasetModel(child));
-                        nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(child, childVertex));
-
-                        m_Graph.AddVertex(childVertex);
-                        m_Graph.AddEdge(new DatasetViewEdge(vertex, childVertex));
-                    }
+                    m_Graph.AddVertex(childVertex);
+                    m_Graph.AddEdge(new DatasetViewEdge(vertex, childVertex));
                 }
             }
 

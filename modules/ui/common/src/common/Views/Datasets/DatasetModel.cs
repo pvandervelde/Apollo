@@ -7,7 +7,9 @@
 using System;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.UserInterfaces.Project;
+using Apollo.UI.Common.Commands;
 using Lokad;
+using ICommand = System.Windows.Input.ICommand;
 
 namespace Apollo.UI.Common.Views.Datasets
 {
@@ -35,7 +37,37 @@ namespace Apollo.UI.Common.Views.Datasets
             }
 
             m_Dataset = dataset;
+            m_Dataset.OnDatasetNameUpdated += (s, e) => Notify(() => Name);
+            m_Dataset.OnDatasetSummaryUpdated += (s, e) => Notify(() => Summary);
+            m_Dataset.OnLoaded += (s, e) => Notify(() => this.IsLoaded);
+            m_Dataset.OnUnloaded += (s, e) => Notify(() => this.IsLoaded);
+
+            NewChildDatasetCommand = new AddChildDatasetCommand(dataset);
+            DeleteDatasetCommand = new DeleteDatasetCommand(dataset);
         }
+
+        /// <summary>
+        /// Gets the new child dataset command.
+        /// </summary>
+        /// <value>The new child dataset command.</value>
+        public ICommand NewChildDatasetCommand
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the delete dataset command.
+        /// </summary>
+        /// <value>The delete dataset command.</value>
+        public ICommand DeleteDatasetCommand
+        {
+            get;
+            private set;
+        }
+
+        // Load & Unload
+        // Start & Stop etc.
 
         /// <summary>
         /// Gets a value indicating whether the new dataset can be moved from one parent
@@ -78,6 +110,38 @@ namespace Apollo.UI.Common.Views.Datasets
         }
 
         /// <summary>
+        /// Gets or sets the name of the dataset.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return m_Dataset.Name;
+            }
+
+            set
+            {
+                m_Dataset.Name = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the summary for the dataset.
+        /// </summary>
+        public string Summary
+        {
+            get
+            {
+                return m_Dataset.Summary;
+            }
+
+            set
+            {
+                m_Dataset.Summary = value;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the dataset is loaded on the local machine
         /// or a remote machine.
         /// </summary>
@@ -88,5 +152,9 @@ namespace Apollo.UI.Common.Views.Datasets
                 return m_Dataset.IsLoaded;
             }
         }
+
+        // MACHINES
+
+        // PROGRESS (Run / Save etc.)
     }
 }

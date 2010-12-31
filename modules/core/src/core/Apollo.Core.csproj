@@ -230,12 +230,13 @@
     <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
     <Compile Include="Projects\IBuildProjects.cs" />
     <Compile Include="Projects\INotifyOnDatasetChange.cs" />
+    <Compile Include="Projects\INotifyOnProjectChanges.cs" />
     <Compile Include="Projects\IProject.cs" />
-    <Compile Include="Projects\IReadOnlyDataset.cs" />
+    <Compile Include="Projects\IProxyDatasets.cs" />
     <Compile Include="Projects\LoadProjectMessage.cs" />
     <Compile Include="Projects\Project.cs" />
+    <Compile Include="Projects\Project.DatasetProxy.cs" />
     <Compile Include="Projects\Project.Datasets.cs" />
-    <Compile Include="Projects\Project.ReadOnlyDataset.cs" />
     <Compile Include="Projects\ProjectBuilder.cs" />
     <Compile Include="Projects\ProjectModule.cs" />
     <Compile Include="Projects\ProjectRequestMessage.cs" />
@@ -379,6 +380,7 @@
     <Compile Include="UserInterfaces\Project\LoadProjectContext.cs" />
     <Compile Include="UserInterfaces\Project\NoCurrentProjectException.cs" />
     <Compile Include="UserInterfaces\Project\ProjectFacade.cs" />
+    <Compile Include="UserInterfaces\Project\ProjectServiceFacade.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectCommand.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectContext.cs" />
     <Compile Include="Utils\Licensing\CacheConnectorChannelEndpoint.cs" />

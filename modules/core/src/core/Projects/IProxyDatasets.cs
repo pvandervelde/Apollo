@@ -14,7 +14,7 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Defines the interface for objects that store information about datasets.
     /// </summary>
-    internal interface IReadOnlyDataset : IEquatable<IReadOnlyDataset>
+    internal interface IProxyDatasets : IEquatable<IProxyDatasets>
     {
         /// <summary>
         /// Gets a value indicating the ID number of the dataset.
@@ -89,6 +89,24 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Gets or sets a value indicating the name of the dataset.
+        /// </summary>
+        string Name
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value describing the dataset.
+        /// </summary>
+        string Summary
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the dataset is loaded on the local machine
         /// or a remote machine.
         /// </summary>
@@ -134,7 +152,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The collection of sub-datasets.
         /// </returns>
-        IEnumerable<IReadOnlyDataset> Children();
+        IEnumerable<IProxyDatasets> Children();
 
         /// <summary>
         /// Gets a value indicating whether the current dataset is allowed to request the 
@@ -157,7 +175,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The newly created child.
         /// </returns>
-        IReadOnlyDataset CreateNewChild(DatasetCreationInformation newChild);
+        IProxyDatasets CreateNewChild(DatasetCreationInformation newChild);
 
         /// <summary>
         /// Creates a set of child datasets and returns a collection containing the ID numbers
@@ -167,7 +185,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// A collection containing the newly created children.
         /// </returns>
-        IEnumerable<IReadOnlyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren);
+        IEnumerable<IProxyDatasets> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren);
 
         /// <summary>
         /// Gets a value indicating the set of commands that apply to the current dataset.

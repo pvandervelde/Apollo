@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Projects;
 using Apollo.Utils;
 using Lokad;
@@ -21,100 +19,56 @@ namespace Apollo.Core.UserInterfaces.Project
     /// There should really only be one of these. If there are more then we could end up in the situation where
     /// one facade creates a new project but the other facade(s) don't get the new project. 
     /// </design>
-    public sealed class ProjectFacade : ILinkToProjects
+    public sealed class ProjectFacade : MarshalByRefObject, INotifyOnProjectChanges
     {
-        /// <summary>
-        /// The UI service that handles the communication with the rest of the system.
-        /// </summary>
-        private readonly IUserInterfaceService m_Service;
-
         /// <summary>
         /// The current project.
         /// </summary>
-        private IProject m_Current;
+        private readonly IProject m_Current;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectFacade"/> class.
         /// </summary>
-        /// <param name="service">
-        /// The user interface service that handles the communication with the rest of the system.
+        /// <param name="project">
+        /// The project.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="service"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="project"/> is <see langword="null" />.
         /// </exception>
-        internal ProjectFacade(IUserInterfaceService service)
+        internal ProjectFacade(IProject project)
         {
             {
-                Enforce.Argument(() => service);
+                Enforce.Argument(() => project);
             }
 
-            m_Service = service;
+            m_Current = project;
+            m_Current.RegisterProjectObserver(this);
         }
 
         /// <summary>
-        /// Returns a value indicating if a project is loaded.
+        /// Gets or sets a value indicating the name of the project.
         /// </summary>
-        /// <returns>
-        /// <see langword="true"/> if a project is loaded; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool HasActiveProject()
+        public string Name
         {
-            // There shouldn't be any other way of loading / creating 
-            // a project than through the UI layer of the core (i.e us)
-            return m_Current != null;
-        }
-
-        /// <summary>
-        /// Returns a value indicating if a new project can be created.
-        /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if a new project can be created; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool CanCreateNewProject()
-        {
-            return true;
-        }
-
-        /// <summary>
-        /// Creates a new project.
-        /// </summary>
-        public void NewProject()
-        {
-            if (!CanCreateNewProject())
+            get 
             {
-                throw new CannotCreateNewProjectException();
+                return m_Current.Name;
             }
 
-            var context = new CreateProjectContext();
-
-            Debug.Assert(m_Service.Contains(CreateProjectCommand.CommandId), "A command has gone missing.");
-            m_Service.Invoke(CreateProjectCommand.CommandId, context);
-            
-            var projectReference = context.Result;
-            if (projectReference == null)
+            set
             {
-                throw new FailedToCreateProjectException();
+                m_Current.Name = value;
             }
-
-            var proxy = RemotingServices.Unmarshal(projectReference);
-            Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
-            m_Current = proxy as IProject;
-
-            RaiseOnNewProjectLoaded();
         }
 
         /// <summary>
-        /// An event raised when a new project is created or loaded.
+        /// An event raised when the name of the project is updated.
         /// </summary>
-        public event EventHandler<EventArgs> OnNewProjectLoaded;
+        public event EventHandler<EventArgs> OnProjectNameUpdated;
 
-        private void RaiseOnNewProjectLoaded()
+        private void RaiseOnProjectNameUpdated()
         {
-            var local = OnNewProjectLoaded;
+            var local = OnProjectNameUpdated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -122,94 +76,54 @@ namespace Apollo.Core.UserInterfaces.Project
         }
 
         /// <summary>
-        /// Returns a value indicating if a project can be loaded.
+        /// Gets or sets a value describing the project.
         /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if a project can be loaded; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool CanLoadProject()
+        public string Summary
         {
-            return true;
-        }
-
-        /// <summary>
-        /// Loads a new project from the given resource stream.
-        /// </summary>
-        /// <param name="persistenceInformation">The object that describes how the project was persisted.</param>
-        public void LoadProject(IPersistenceInformation persistenceInformation)
-        {
-            if (!CanLoadProject())
+            get
             {
-                throw new CannotLoadProjectException();
+                return m_Current.Summary;
             }
 
-            var context = new LoadProjectContext 
-                { 
-                    LoadFrom = persistenceInformation 
-                };
-
-            Debug.Assert(m_Service.Contains(LoadProjectCommand.CommandId), "A command has gone missing.");
-            m_Service.Invoke(LoadProjectCommand.CommandId, context);
-
-            var projectReference = context.Result;
-            if (projectReference == null)
+            set
             {
-                throw new FailedToLoadProjectException();
+                m_Current.Summary = value;
             }
-
-            var proxy = RemotingServices.Unmarshal(projectReference);
-            Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
-            m_Current = proxy as IProject;
-            
-            RaiseOnNewProjectLoaded();
         }
 
         /// <summary>
-        /// Returns a value indicating if the existing project can be unloaded.
+        /// An event raised when the summary of the project is updated.
         /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if the existing project can be unloaded; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool CanUnloadProject()
+        public event EventHandler<EventArgs> OnProjectSummaryUpdated;
+
+        private void RaiseOnProjectSummaryUpdated()
         {
-            return HasActiveProject();
-        }
-
-        /// <summary>
-        /// Unloads the current project.
-        /// </summary>
-        public void UnloadProject()
-        {
-            if (!CanUnloadProject())
-            {
-                throw new CannotUnloadProjectException();
-            }
-
-            var context = new UnloadProjectContext();
-
-            Debug.Assert(m_Service.Contains(UnloadProjectCommand.CommandId), "A command has gone missing.");
-            m_Service.Invoke(UnloadProjectCommand.CommandId, context);
-
-            m_Current = null;
-            RaiseOnProjectUnloaded();
-        }
-
-        /// <summary>
-        /// An event raised when the project is unloaded.
-        /// </summary>
-        public event EventHandler<EventArgs> OnProjectUnloaded;
-
-        private void RaiseOnProjectUnloaded()
-        {
-            var local = OnProjectUnloaded;
+            var local = OnProjectSummaryUpdated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating the number of dataset for the project.
+        /// </summary>
+        public int NumberOfDatasets
+        {
+            get
+            {
+                return m_Current.NumberOfDatasets;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the project has changed since the 
+        /// last save.
+        /// </summary>
+        public bool HasProjectChanged
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -224,7 +138,7 @@ namespace Apollo.Core.UserInterfaces.Project
         {
             // Really we should only be able to save if there is something to save
             // Then again we should always be able to save a project under a new name ...
-            return HasActiveProject();
+            return (m_Current != null) && HasProjectChanged;
         }
 
         /// <summary>
@@ -233,9 +147,10 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <param name="persistenceInformation">The object that describes how the project should be persisted.</param>
         public void SaveProject(IPersistenceInformation persistenceInformation)
         {
-            if (HasActiveProject())
+            if (m_Current != null)
             {
                 m_Current.Save(persistenceInformation);
+                HasProjectChanged = false;
             }
         }
 
@@ -245,19 +160,95 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <returns>The root dataset.</returns>
         public DatasetFacade Root()
         {
-            if (!HasActiveProject())
-            {
-                throw new NoCurrentProjectException();
-            }
-
             var dataset = m_Current.BaseDataset();
             return new DatasetFacade(dataset);
         }
 
-        // Events for the loading of a project
-        // Events for the unloading of a project
+        /// <summary>
+        /// An event raised when a new dataset is created.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetCreated;
 
-        // Events for the creation / removal of datasets
-        //   these could come from the system.
+        private void RaiseOnDatasetCreated()
+        {
+            var local = OnDatasetCreated;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when a dataset is deleted.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetDeleted;
+
+        private void RaiseOnDatasetDeleted()
+        {
+            var local = OnDatasetDeleted;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when a dataset is updated.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetUpdated;
+
+        private void RaiseOnDatasetUpdated()
+        {
+            var local = OnDatasetUpdated;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// The method called when the project name is updated.
+        /// </summary>
+        void INotifyOnProjectChanges.NameUpdated()
+        {
+            HasProjectChanged = true;
+            RaiseOnProjectNameUpdated();
+        }
+
+        /// <summary>
+        /// The method called when the project summary is updated.
+        /// </summary>
+        void INotifyOnProjectChanges.SummaryUpdated()
+        {
+            HasProjectChanged = true;
+            RaiseOnProjectSummaryUpdated();
+        }
+
+        /// <summary>
+        /// The method called when a new dataset is created and added to the project.
+        /// </summary>
+        void INotifyOnProjectChanges.DatasetCreated()
+        {
+            HasProjectChanged = true;
+            RaiseOnDatasetCreated();
+        }
+
+        /// <summary>
+        /// The method called when a dataset is deleted from the project.
+        /// </summary>
+        void INotifyOnProjectChanges.DatasetDeleted()
+        {
+            HasProjectChanged = true;
+            RaiseOnDatasetDeleted();
+        }
+
+        /// <summary>
+        /// The method called when one of the datasets from the project gets updated.
+        /// </summary>
+        void INotifyOnProjectChanges.DatasetUpdated()
+        {
+            HasProjectChanged = true;
+            RaiseOnDatasetUpdated();
+        }
     }
 }

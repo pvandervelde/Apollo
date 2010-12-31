@@ -27,6 +27,14 @@ namespace Apollo.Core.UserInterfaces.Project
         bool HasActiveProject();
 
         /// <summary>
+        /// Returns the currently active project.
+        /// </summary>
+        /// <returns>
+        /// The currently active project.
+        /// </returns>
+        ProjectFacade ActiveProject();
+
+        /// <summary>
         /// Returns a value indicating if a new project can be created.
         /// </summary>
         /// <returns>
@@ -81,27 +89,5 @@ namespace Apollo.Core.UserInterfaces.Project
         /// An event raised when the project is unloaded.
         /// </summary>
         event EventHandler<EventArgs> OnProjectUnloaded;
-
-        /// <summary>
-        /// Returns a value indicating if the existing project should be saved.
-        /// </summary>
-        /// <returns>
-        ///     <see langword="true" /> if the existing project should be saved; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        bool ShouldSaveProject();
-
-        /// <summary>
-        /// Saves the current project.
-        /// </summary>
-        /// <param name="persistenceInformation">The object that describes how the project should be persisted.</param>
-        void SaveProject(IPersistenceInformation persistenceInformation);
-
-        /// <summary>
-        /// Returns the root dataset for the current project.
-        /// </summary>
-        /// <returns>The root dataset.</returns>
-        DatasetFacade Root();
     }
 }

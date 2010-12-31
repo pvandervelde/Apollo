@@ -124,9 +124,6 @@
     <Reference Include="Autofac">
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AvalonDock">
-      <HintPath>..\..\lib\avalondock\AvalonDock.dll</HintPath>
-    </Reference>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>

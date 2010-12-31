@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Security;
 using System.Security.Permissions;
 using Apollo.Core.Base;
@@ -30,6 +31,13 @@ namespace Apollo.Core.Projects
     /// </remarks>
     internal sealed partial class Project : MarshalByRefObject, IProject, ICanClose
     {
+        /// <summary>
+        /// The collection of objects that need to be notified if there are changes to
+        /// the project.
+        /// </summary>
+        private readonly List<INotifyOnProjectChanges> m_ProjectObservers =
+            new List<INotifyOnProjectChanges>();
+
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
@@ -62,6 +70,16 @@ namespace Apollo.Core.Projects
         /// </para>
         /// </design>
         private volatile bool m_IsClosed;
+
+        /// <summary>
+        /// The name of the project.
+        /// </summary>
+        private string m_Name;
+
+        /// <summary>
+        /// The summary for the project.
+        /// </summary>
+        private string m_Summary;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
@@ -146,6 +164,63 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Gets or sets a value indicating the name of the project.
+        /// </summary>
+        public string Name
+        {
+            get
+            {
+                return m_Name;
+            }
+
+            set
+            {
+                if (!string.Equals(m_Name, value))
+                {
+                    m_Name = value;
+                    foreach (var observer in m_ProjectObservers)
+                    {
+                        observer.NameUpdated();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value describing the project.
+        /// </summary>
+        public string Summary
+        {
+            get
+            {
+                return m_Summary;
+            }
+
+            set
+            {
+                if (!string.Equals(m_Summary, value))
+                {
+                    m_Summary = value;
+                    foreach (var observer in m_ProjectObservers)
+                    {
+                        observer.SummaryUpdated();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating the number of dataset for the project.
+        /// </summary>
+        public int NumberOfDatasets
+        {
+            get
+            {
+                return m_Datasets.Count;
+            }
+        }
+
+        /// <summary>
         /// Gets a value indicating whether the project is closed.
         /// </summary>
         private bool IsClosed
@@ -162,7 +237,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The read-only view of the base dataset.
         /// </returns>
-        public IReadOnlyDataset BaseDataset()
+        public IProxyDatasets BaseDataset()
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
@@ -227,6 +302,44 @@ namespace Apollo.Core.Projects
             // Do we need to have a save flag that we can set to prevent closing from happening
             // while saving?
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Registers the given observer.
+        /// </summary>
+        /// <param name="observer">
+        /// The object that should be notified when there are changes in the project.
+        /// </param>
+        public void RegisterProjectObserver(INotifyOnProjectChanges observer)
+        {
+            {
+                Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.Argument(() => observer);
+            }
+
+            if (!m_ProjectObservers.Contains(observer))
+            {
+                m_ProjectObservers.Add(observer);
+            }
+        }
+
+        /// <summary>
+        /// Unregisters the observer.
+        /// </summary>
+        /// <param name="observer">
+        /// The object that is notified when there are chanes in the project.
+        /// </param>
+        public void UnregisterProjectObserver(INotifyOnProjectChanges observer)
+        {
+            {
+                Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.Argument(() => observer);
+            }
+
+            if (m_ProjectObservers.Contains(observer))
+            {
+                m_ProjectObservers.Remove(observer);
+            }
         }
 
         /// <summary>
