@@ -213,9 +213,7 @@
     <Compile Include="AppDomainBuilder.cs" />
     <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
-    <Compile Include="AppDomainBuilder.Permissions.cs" />
     <Compile Include="AppDomainResolutionPaths.cs" />
-    <Compile Include="AppDomainSandboxData.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />

@@ -171,6 +171,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DispatcherContextWrapper.cs" />
     <Compile Include="Events\CloseViewEvent.cs" />
     <Compile Include="Events\CloseViewRequest.cs" />
     <Compile Include="Events\CloseViewRequest.Presenter.cs" />

@@ -161,9 +161,12 @@ namespace Apollo.Core.Projects
             // When adding a new dataset there is no way we can create cycles because
             // we can only add new children to parents, there is no way to link an
             // existing node to the parent.
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted),
-                () => m_Graph.AddVertex(id));
+            // NOTE: The Elevation is because QuickGraph is a full-trust assembly
+            //   which wants to actually have full trust.
+            // SecurityHelpers.Elevate(
+            //    new PermissionSet(PermissionState.Unrestricted),
+            //    () => m_Graph.AddVertex(id));
+            m_Graph.AddVertex(id);
 
             if (parent != null)
             {
@@ -176,10 +179,14 @@ namespace Apollo.Core.Projects
                 // Find the actual ID object that we have stored, the caller may have a copy
                 // of ID. Using a copy of the real ID might cause issues when connecting the
                 // graph so we only use the ID numbers that we have stored.
+                // NOTE: The Elevation is because QuickGraph is a full-trust assembly
+                //   which wants to actually have full trust.
                 var realParent = m_Datasets[parent].Id;
-                SecurityHelpers.Elevate(
-                    new PermissionSet(PermissionState.Unrestricted), 
-                    () => m_Graph.AddEdge(new Edge<DatasetId>(realParent, id)));
+
+                // SecurityHelpers.Elevate(
+                //    new PermissionSet(PermissionState.Unrestricted), 
+                //    () => m_Graph.AddEdge(new Edge<DatasetId>(realParent, id)));
+                m_Graph.AddEdge(new Edge<DatasetId>(realParent, id));
             }
 
             foreach (var observer in m_ProjectObservers)
@@ -203,10 +210,12 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to get the children of a dataset.");
             }
 
-            var result = SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted),
-                () => from outEdge in m_Graph.OutEdges(parent)
-                      select m_Datasets[outEdge.Target]);
+            // var result = SecurityHelpers.Elevate(
+            //    new PermissionSet(PermissionState.Unrestricted),
+            //    () => from outEdge in m_Graph.OutEdges(parent)
+            //          select m_Datasets[outEdge.Target]);
+            var result = from outEdge in m_Graph.OutEdges(parent)
+                         select m_Datasets[outEdge.Target];
 
             return result;
         }

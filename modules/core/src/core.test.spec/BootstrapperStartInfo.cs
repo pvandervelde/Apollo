@@ -30,12 +30,7 @@ namespace Apollo.Core.Test.Spec
         /// Initializes a new instance of the <see cref="BootstrapperStartInfo"/> class.
         /// </summary>
         public BootstrapperStartInfo()
-            : base(
-                new Assembly[] 
-                    { 
-                        typeof(Concordion.Concordion).Assembly,
-                        typeof(ognl.ClassResolver).Assembly
-                    })
+            : base()
         {
             m_UserInterfaceAssemblies = new List<FileInfo>
                 {

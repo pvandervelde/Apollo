@@ -182,6 +182,11 @@ Also a start node does not have any parents and an end node does not have any ch
         <Location left="270" top="1352" />
         <Size width="188" height="119" />
       </Entity>
+      <Entity type="Comment">
+        <Text>Do we need an insert node too? This allows insertion of schedules for specific conditions. The inserted schedule becomes 'part' of the current schedule graph.</Text>
+        <Location left="1501" top="1323" />
+        <Size width="233" height="110" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Realization" first="3" second="0">
@@ -189,6 +194,8 @@ Also a start node does not have any parents and an end node does not have any ch
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -203,6 +210,8 @@ Also a start node does not have any parents and an end node does not have any ch
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -213,8 +222,6 @@ Also a start node does not have any parents and an end node does not have any ch
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="5" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Bidirectional</Direction>
@@ -283,6 +290,8 @@ Also a start node does not have any parents and an end node does not have any ch
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -293,6 +302,8 @@ Also a start node does not have any parents and an end node does not have any ch
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -301,8 +312,6 @@ Also a start node does not have any parents and an end node does not have any ch
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="13" second="14">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -319,6 +328,14 @@ Also a start node does not have any parents and an end node does not have any ch
       <Relationship type="Comment" first="17" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1313</X>
+          <Y>1223</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

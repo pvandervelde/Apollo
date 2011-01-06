@@ -392,6 +392,8 @@ Topology doesn't change:
     </Entities>
     <Relationships>
       <Relationship type="Association" first="2" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -418,8 +420,6 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -434,8 +434,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -450,8 +448,6 @@ Topology doesn't change:
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -466,8 +462,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -482,8 +476,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -522,8 +514,6 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -534,8 +524,6 @@ Topology doesn't change:
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="18">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -558,24 +546,18 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="23" second="22">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="23">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="13" second="24">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -586,8 +568,6 @@ Topology doesn't change:
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="9" second="19">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -602,6 +582,8 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="26">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -616,8 +598,6 @@ Topology doesn't change:
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="17" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -632,8 +612,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="16" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -648,8 +626,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="31">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -664,8 +640,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="26">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -687,6 +661,8 @@ Topology doesn't change:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="19" second="34">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -709,6 +685,8 @@ Topology doesn't change:
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="36">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -723,6 +701,8 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="26" second="36">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -737,8 +717,6 @@ Topology doesn't change:
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="13" second="30">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -761,8 +739,6 @@ Topology doesn't change:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="17" second="39">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -773,6 +749,8 @@ Topology doesn't change:
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="15">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -807,8 +785,6 @@ Topology doesn't change:
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="17" second="40">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1093,6 +1069,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Member type="Method">public void RegisterRequestHandler(RequestId id, Action handler)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
+      <Entity type="Comment">
+        <Text>Remember versions and cultures. They're a pain in the behind but we'll need to store them.</Text>
+        <Location left="2136" top="2495" />
+        <Size width="180" height="95" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="2" second="0">
@@ -1104,6 +1085,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1134,8 +1117,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1190,6 +1171,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="20" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1200,6 +1183,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1210,6 +1195,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1220,6 +1207,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="19">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1230,14 +1219,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="20">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1250,14 +1239,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="23">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="14">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1266,12 +1255,16 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndMultiplicity>1..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="23" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1286,8 +1279,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="21" second="25">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1328,6 +1319,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="29">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1338,6 +1331,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="12" second="29">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1348,6 +1343,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="29">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1356,6 +1353,10 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="30" second="25">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
@@ -1713,8 +1714,6 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="5" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1733,8 +1732,6 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1745,8 +1742,6 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1763,8 +1758,6 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1905,8 +1898,6 @@ There is one administrator:
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="35" second="36">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1921,6 +1912,8 @@ There is one administrator:
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="35" second="37">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

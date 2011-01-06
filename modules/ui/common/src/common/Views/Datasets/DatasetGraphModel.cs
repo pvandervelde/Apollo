@@ -23,6 +23,12 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly ProjectFacade m_Project;
 
         /// <summary>
+        /// The context for executing actions that have
+        /// thread affinity.
+        /// </summary>
+        private readonly IContextAware m_Context;
+
+        /// <summary>
         /// The graph that holds the information about the
         /// datasets for visualization purposes.
         /// </summary>
@@ -32,21 +38,34 @@ namespace Apollo.UI.Common.Views.Datasets
         /// Initializes a new instance of the <see cref="DatasetGraphModel"/> class.
         /// </summary>
         /// <param name="facade">The project that holds the graph of datasets.</param>
+        /// <param name="context">The context for executing actions that have thread affinity.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        public DatasetGraphModel(ProjectFacade facade)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetGraphModel(ProjectFacade facade, IContextAware context)
         {
             {
                 Enforce.Argument(() => facade);
+                Enforce.Argument(() => context);
             }
 
+            m_Context = context;
+
             m_Project = facade;
-            m_Project.OnDatasetCreated += (s, e) => ReloadProject();
-            m_Project.OnDatasetDeleted += (s, e) => ReloadProject();
-            m_Project.OnDatasetUpdated += (s, e) => ReloadProject();
+            m_Project.OnDatasetCreated += (s, e) => ReloadProjectInCorrectContext();
+            m_Project.OnDatasetDeleted += (s, e) => ReloadProjectInCorrectContext();
+            m_Project.OnDatasetUpdated += (s, e) => ReloadProjectInCorrectContext();
 
             ReloadProject();
+        }
+
+        private void ReloadProjectInCorrectContext()
+        {
+            Action action = () => ReloadProject();
+            m_Context.Invoke(action);
         }
 
         private void ReloadProject()

@@ -109,6 +109,8 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="5" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -178,13 +180,13 @@
       <Entity type="Interface">
         <Name>IConnection</Name>
         <Access>Public</Access>
-        <Location left="140" top="807" />
+        <Location left="140" top="760" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Comment">
         <Text>Stores information about the connection between a dependency and a dependent. This information exactly determines which dependency this is. </Text>
-        <Location left="435" top="807" />
+        <Location left="435" top="760" />
         <Size width="205" height="129" />
       </Entity>
       <Entity type="Comment">
@@ -212,7 +214,7 @@
         <Name>IMapRequestsToDependencies</Name>
         <Access>Public</Access>
         <Location left="852" top="515" />
-        <Size width="187" height="61" />
+        <Size width="189" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
@@ -246,6 +248,8 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -264,12 +268,16 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -283,11 +291,13 @@ Maybe also define tool sets which are collections of tools with hooks. Problem w
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1113</X>
+          <X>1115</X>
           <Y>540</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>

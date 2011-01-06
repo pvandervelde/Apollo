@@ -260,7 +260,6 @@ namespace Apollo.Core
             // Create the kernel appdomain. 
             var kernelDomain = AppDomainBuilder.Assemble(
                 "Kernel AppDomain",
-                new AppDomainSandboxData(SecurityLevel.Kernel, m_StartInfo.FullTrustAssemblies), 
                 AppDomainResolutionPaths.WithFiles(
                     coreBasePath.FullName,
                     new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName)),
@@ -315,7 +314,6 @@ namespace Apollo.Core
 
             var serviceDomain = AppDomainBuilder.Assemble(
                 string.Format(CultureInfo.InvariantCulture, "AppDomain for {0}", serviceType.Name),
-                new AppDomainSandboxData(securityLevel, m_StartInfo.FullTrustAssemblies), 
                 AppDomainResolutionPaths.WithFilesAndDirectories(
                     coreBasePath.FullName, 
                     filePaths, 

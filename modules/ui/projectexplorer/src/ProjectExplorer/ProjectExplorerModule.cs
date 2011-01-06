@@ -95,6 +95,9 @@ namespace Apollo.ProjectExplorer
                 builder.RegisterAssemblyTypes(localAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
+
+                builder.Register(c => new DispatcherContextWrapper(Application.Current.Dispatcher))
+                    .As<IContextAware>();
             }
 
             builder.Update(m_Container);
