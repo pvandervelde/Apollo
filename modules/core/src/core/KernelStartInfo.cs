@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Security.Policy;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -67,25 +66,9 @@ namespace Apollo.Core
         private readonly List<FileInfo> m_ProjectAssemblies;
 
         /// <summary>
-        /// The list of full trust assemblies.
-        /// </summary>
-        private readonly List<StrongName> m_FullTrustAssemblies;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
         /// </summary>
         protected KernelStartInfo()
-            : this(new Assembly[0])
-        { 
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
-        /// </summary>
-        /// <param name="fullTrustAssemblies">
-        /// A collection of assemblies which are full trust assemblies.
-        /// </param>
-        protected KernelStartInfo(IEnumerable<Assembly> fullTrustAssemblies)
         {
             m_CoreAssemblies = new List<FileInfo>
                 {
@@ -132,36 +115,6 @@ namespace Apollo.Core
             m_PersistenceAssemblies = new List<FileInfo>();
 
             m_ProjectAssemblies = new List<FileInfo>();
-
-            m_FullTrustAssemblies = new List<StrongName>
-                {
-                    // Apollo.Core
-                    typeof(KernelStartInfo).Assembly.GetStrongName(),
-
-                    // Apollo.Utils
-                    typeof(ILockObject).Assembly.GetStrongName(),
-
-                    // QuickGraph
-                    typeof(QuickGraph.GraphExtensions).Assembly.GetStrongName(),
-
-                    // System.Threading: Required because it asks for SkipVerification
-                    typeof(System.Threading.Tasks.Task).Assembly.GetStrongName(),
-
-                    // NLog: Required because it is retarded and has LinkDemands
-                    typeof(NLog.Logger).Assembly.GetStrongName(),
-
-                    // Autofac: Required because it requires reflection permissions?
-                    typeof(Autofac.IContainer).Assembly.GetStrongName(),
-                };
-
-            foreach (var assembly in fullTrustAssemblies)
-            {
-                var strongName = assembly.GetStrongName();
-                if (!m_FullTrustAssemblies.Contains(strongName))
-                {
-                    m_FullTrustAssemblies.Add(strongName);
-                }
-            }
         }
 
         /// <summary>
@@ -234,18 +187,6 @@ namespace Apollo.Core
         public abstract IEnumerable<DirectoryInfo> PlugInDirectories
         {
             get;
-        }
-
-        /// <summary>
-        /// Gets the full trust assemblies.
-        /// </summary>
-        /// <value>The full trust assemblies.</value>
-        public IEnumerable<StrongName> FullTrustAssemblies
-        {
-            get
-            {
-                return m_FullTrustAssemblies.AsReadOnly();
-            }
         }
     }
 }

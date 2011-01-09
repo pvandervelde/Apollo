@@ -2,96 +2,96 @@
 
 # Globals
 function Get-ScriptLocation{
-	Split-Path $MyInvocation.ScriptName
+    Split-Path $MyInvocation.ScriptName
 }
 
 function Get-ApolloScriptFullPath{
-	$scriptPath = Get-ScriptLocation
-	Join-Path $scriptPath 'apollo.ps1'
+    $scriptPath = Get-ScriptLocation
+    Join-Path $scriptPath 'apollo.ps1'
 }
 
 function Get-PsakePath{
-	Join-Path (Join-Path (Get-ScriptLocation) 'tools') 'psake'
+    Join-Path (Join-Path (Get-ScriptLocation) 'tools') 'psake'
 }
 
 function Build-DebugDev{
-	Import-Psake (Get-PsakePath)
-	$script = Get-ApolloScriptFullPath
+    Import-Psake (Get-PsakePath)
+    $script = Get-ApolloScriptFullPath
 
-	'Running debug developer build'
-	"Running script from: $script"
-	& invoke-psake $script debug,unittest,spectest,verify,deploytotest,build 4.0x86
-	if (!$psake.build_success)
-	{
-		throw "Apollo build failed with return code: $LastExitCode"
-	}
+    'Running debug developer build'
+    "Running script from: $script"
+    & invoke-psake $script debug,unittest,spectest,verify,deploytotest,build 4.0x86
+    if (!$psake.build_success)
+    {
+        throw "Apollo build failed with return code: $LastExitCode"
+    }
 }
 
 function Build-ReleaseDev{
-	Import-Psake (Get-PsakePath)
-	$script = Get-ApolloScriptFullPath
+    Import-Psake (Get-PsakePath)
+    $script = Get-ApolloScriptFullPath
 
-	'Running release developer build'
-	'Running script from: $script'
-	& invoke-psake $script release,unittest,spectest,verify,deploytotest,build 4.0x86
-	if (!$psake.build_success)
-	{
-		throw "Apollo build failed with return code: $LastExitCode"
-	}
+    'Running release developer build'
+    'Running script from: $script'
+    & invoke-psake $script release,unittest,spectest,verify,deploytotest,build 4.0x86
+    if (!$psake.build_success)
+    {
+        throw "Apollo build failed with return code: $LastExitCode"
+    }
 }
 
 function Build-DebugFull{
-	Import-Psake (Get-PsakePath)
-	$script = Get-ApolloScriptFullPath
+    Import-Psake (Get-PsakePath)
+    $script = Get-ApolloScriptFullPath
 
-	'Running debug full build'
-	'Running script from: $script'
-	& invoke-psake $script coverage,debug,unittest,spectest,integrationtest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
-	if (!$psake.build_success)
-	{
-		throw "Apollo build failed with return code: $LastExitCode"
-	}
+    'Running debug full build'
+    'Running script from: $script'
+    & invoke-psake $script coverage,debug,unittest,spectest,integrationtest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
+    if (!$psake.build_success)
+    {
+        throw "Apollo build failed with return code: $LastExitCode"
+    }
 }
 
 function Build-ReleaseFull{
-	Import-Psake (Get-PsakePath)
-	$script = Get-ApolloScriptFullPath
+    Import-Psake (Get-PsakePath)
+    $script = Get-ApolloScriptFullPath
 
-	'Running release full build'
-	'Running script from: $script'
-	& invoke-psake $script coverage,release,unittest,spectest,integrationtest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
-	if (!$psake.build_success)
-	{
-		throw "Apollo build failed with return code: $LastExitCode"
-	}
+    'Running release full build'
+    'Running script from: $script'
+    & invoke-psake $script coverage,release,unittest,spectest,integrationtest,verify,apidoc,userdoc,install,deploytotest,build 4.0x86
+    if (!$psake.build_success)
+    {
+        throw "Apollo build failed with return code: $LastExitCode"
+    }
 }
 
 function Import-Psake([string] $psakeDirectory){
-	# See if psake is loaded. If it is we unload it and reload the correct
-	# one. We do this because that's currently the only way to guarantuee
-	# that we get the right version of the psake module
-	$modules = Get-Module
-	foreach ($module in $modules) {
-		if ($module.Name -eq 'psake'){
-			$path = Split-Path $module.Path
-			if ($path -eq $psakeDirectory)
-			{
-				'Correct version of Psake found. Done loading.'
-				return
-			}
-			
-			# Found a psake but it was not the correct version
-			# so unload it
-			"Found incorrect version of Psake at path: " + $module.Path
-			"Unloading ..."
-			Remove-Module -ModuleInfo ($module)
-		}
-	}
-	
-	'Psake not found, importing...'
-	
-	# import the psake module if we didn't find it
-	Import-Module (Join-Path $psakeDirectory 'psake.psm1')
-	$loadedModule = Get-Module -Name psake
-	"Loaded psake from: " + $loadedModule.Path
+    # See if psake is loaded. If it is we unload it and reload the correct
+    # one. We do this because that's currently the only way to guarantuee
+    # that we get the right version of the psake module
+    $modules = Get-Module
+    foreach ($module in $modules) {
+        if ($module.Name -eq 'psake'){
+            $path = Split-Path $module.Path
+            if ($path -eq $psakeDirectory)
+            {
+                'Correct version of Psake found. Done loading.'
+                return
+            }
+            
+            # Found a psake but it was not the correct version
+            # so unload it
+            "Found incorrect version of Psake at path: " + $module.Path
+            "Unloading ..."
+            Remove-Module -ModuleInfo ($module)
+        }
+    }
+    
+    'Psake not found, importing...'
+    
+    # import the psake module if we didn't find it
+    Import-Module (Join-Path $psakeDirectory 'psake.psm1')
+    $loadedModule = Get-Module -Name psake
+    "Loaded psake from: " + $loadedModule.Path
 }

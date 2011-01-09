@@ -407,8 +407,8 @@ task collectMetrics -depends runScripts -precondition{ return $shouldRunUnitTest
         
         ""
         "Running xml merge report"
-	    $command
-	    Invoke-Expression ($command + ' /ro:"' + $dirReports + '"')
+        $command
+        Invoke-Expression ($command + ' /ro:"' + $dirReports + '"')
         
         ""
         "Running html merge report"
