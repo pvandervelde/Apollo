@@ -388,18 +388,18 @@ task Help -action{
 @"
 In order to run this build script please call a specific target.
 The following build tasks are available
-    'incremental':		Turns on the incremental building of the binaries
-    'coverage':			Turns on the code coverage for the unit tests
-    'debug':			Runs the script in debug mode. Mutually exclusive with the 'release' task
-    'release':			Runs the script in release mode. Mutually exclusive with the 'debug' task
-    'clean':			Cleans the output directory
+    'incremental':      Turns on the incremental building of the binaries
+    'coverage':         Turns on the code coverage for the unit tests
+    'debug':            Runs the script in debug mode. Mutually exclusive with the 'release' task
+    'release':          Runs the script in release mode. Mutually exclusive with the 'debug' task
+    'clean':            Cleans the output directory
     'build':            Builds the binaries
     'unittest':         Runs the unit tests
     'spectest':         Runs the specification tests
     'integrationtest':  Runs the integration tests
-    'verify':			Runs the source and binary verification. Returning one or more reports
+    'verify':           Runs the source and binary verification. Returning one or more reports
                         describing the flaws in the source / binaries.
-    'package':			Packages the deliverables into a single zip file
+    'package':          Packages the deliverables into a single zip file
 
     ./build.ps1 <TARGET>
 Multiple build tasks can be specified separated by a comma. Also build tasks can be combined 
