@@ -7,10 +7,7 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Messaging;
-using Apollo.Core.Utils;
 
 namespace Apollo.Core
 {
@@ -93,7 +90,7 @@ namespace Apollo.Core
             // so that the startup order guarantuees that each service will have 
             // its dependencies and requirements running before it does.
             // Obviously this is prone to cyclic loops ...
-            var startupOrder = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => DetermineServiceStartupOrder());
+            var startupOrder = DetermineServiceStartupOrder();
 
             // Reverse the order so that we move from most dependent 
             // to least dependent

@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Reflection;
 using System.Security.Permissions;
 using Apollo.Utils;
@@ -41,7 +40,6 @@ namespace Apollo.Core
         /// Creates a new <see cref="AppDomain"/>.
         /// </summary>
         /// <param name="name">The friendly name of the new <c>AppDomain</c>.</param>
-        /// <param name="sandboxData">The sandbox information for the <c>AppDomain</c>.</param>
         /// <param name="resolutionPaths">The assembly resolution paths for the new <c>AppDomain</c>.</param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         [NotNull]
@@ -49,7 +47,6 @@ namespace Apollo.Core
             Justification = "We do really want a directory and not a file system object, therefore we shall stick with DirectoryInfo.")]
         private static AppDomain Create(
             string name,
-            AppDomainSandboxData sandboxData,
             AppDomainResolutionPaths resolutionPaths)
         {
             {
@@ -77,49 +74,12 @@ namespace Apollo.Core
                     DisallowCodeDownload = true
                 };
 
-            // Get the permissions
-            Debug.Assert(s_SecurityLevels.ContainsKey(sandboxData.Level), "Unknown SecurityLevel found.");
-            var permissions = s_SecurityLevels[sandboxData.Level]();
-
-            // Add the permission to scan the base path
-            var fileIOPermission = new FileIOPermission(PermissionState.Unrestricted);
-
-            // Allow scanning of the base path. Necessary for the assembly load to succeed
-            fileIOPermission.AddPathList(FileIOPermissionAccess.PathDiscovery, resolutionPaths.BasePath);
-
-            // Add the file permissions
-            if (((resolutionPaths.Files != null) && resolutionPaths.Files.Exists()) ||
-                ((resolutionPaths.Directories != null) && resolutionPaths.Directories.Exists()))
-            {
-                // Add permissions for all the assembly files
-                if (resolutionPaths.Files != null)
-                {
-                    foreach (var file in resolutionPaths.Files)
-                    {
-                        fileIOPermission.AddPathList(FileIOPermissionAccess.Read, file);
-                    }
-                }
-
-                // Add permissions for all the directories
-                if (resolutionPaths.Directories != null)
-                {
-                    foreach (var directory in resolutionPaths.Directories)
-                    {
-                        fileIOPermission.AddPathList(FileIOPermissionAccess.Read, directory);
-                    }
-                }
-
-                permissions.AddPermission(fileIOPermission);
-            }
-
             // Create the AppDomain as a sandboxed AppDomain. None of the assemblies
             // will have full trust
             var result = AppDomain.CreateDomain(
                 string.IsNullOrEmpty(name) ? GenerateNewAppDomainName() : name,
                 null,
-                setup,
-                permissions,
-                sandboxData.FullTrustAssemblies.ToArray());
+                setup);
             return result;
         }
 
@@ -127,7 +87,6 @@ namespace Apollo.Core
         /// Creates a new <see cref="AppDomain"/> and attaches the assembly resolver and exception handlers.
         /// </summary>
         /// <param name="friendlyName">The friendly name of the new <c>AppDomain</c>.</param>
-        /// <param name="sandboxData">The sandbox information for the <c>AppDomain</c>.</param>
         /// <param name="resolutionPaths">The assembly resolution paths for the new <c>AppDomain</c>.</param>
         /// <param name="exceptionHandler">The exception handler which will take care of all unhandled exceptions in the
         /// <c>AppDomain</c>.</param>
@@ -148,7 +107,6 @@ namespace Apollo.Core
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public static AppDomain Assemble(
             string friendlyName, 
-            AppDomainSandboxData sandboxData, 
             AppDomainResolutionPaths resolutionPaths, 
             IExceptionHandler exceptionHandler,
             IFileConstants fileConstants)
@@ -159,7 +117,7 @@ namespace Apollo.Core
                 Enforce.Argument(() => fileConstants);
             }
 
-            var domain = Create(friendlyName, sandboxData, resolutionPaths);
+            var domain = Create(friendlyName, resolutionPaths);
 
             // Attach to the assembly file resolve event
             // We check for a null reference but not for an empty one,

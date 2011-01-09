@@ -6,9 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security;
-using System.Security.Permissions;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Apollo.Utils.Fusion;
 using Lokad;
@@ -83,19 +80,7 @@ namespace Apollo.Core
                         () => m_Files,
                         m_FileConstants);
 
-                    // Assert permission to control the AppDomain. This can be done safely
-                    // because we will attach to the AssemblyResolve event but we'll only 
-                    // resolve assemblies from a known set of paths or files.
-                    // var set = new PermissionSet(PermissionState.None);
-                    // set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
-                    var set = new PermissionSet(PermissionState.Unrestricted);
-
-                    SecurityHelpers.Elevate(
-                        set, 
-                        () =>
-                            {
-                                domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
-                            });
+                    domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
                 }
             }
         }

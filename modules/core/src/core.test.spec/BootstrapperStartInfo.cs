@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace Apollo.Core.Test.Spec
 {
@@ -30,12 +29,7 @@ namespace Apollo.Core.Test.Spec
         /// Initializes a new instance of the <see cref="BootstrapperStartInfo"/> class.
         /// </summary>
         public BootstrapperStartInfo()
-            : base(
-                new Assembly[] 
-                    { 
-                        typeof(Concordion.Concordion).Assembly,
-                        typeof(ognl.ClassResolver).Assembly
-                    })
+            : base()
         {
             m_UserInterfaceAssemblies = new List<FileInfo>
                 {

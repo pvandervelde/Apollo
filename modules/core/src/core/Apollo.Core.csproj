@@ -249,9 +249,7 @@
     <Compile Include="AppDomainBuilder.cs" />
     <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
     <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
-    <Compile Include="AppDomainBuilder.Permissions.cs" />
     <Compile Include="AppDomainResolutionPaths.cs" />
-    <Compile Include="AppDomainSandboxData.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
@@ -348,12 +346,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
     </Compile>
-    <Compile Include="SecurityLevel.cs" />
     <Compile Include="SendMessageForKernelCommand.cs" />
     <Compile Include="SendMessageForKernelContext.cs" />
     <Compile Include="SendMessageWithoutResponse.cs" />
     <Compile Include="SendMessageWithResponse.cs" />
-    <Compile Include="ServiceSecurityLevelAttribute.cs" />
     <Compile Include="ServiceShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ServiceShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ShutdownApplicationCommand.cs" />
@@ -436,7 +432,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>LicensingModule.VerifyLicenseServiceIsAlive.tt</DependentUpon>
     </Compile>
-    <Compile Include="Utils\SecurityHelpers.cs" />
     <Compile Include="Utils\SrcOnlyResources.cs" />
     <Compile Include="Utils\UtilsModule.cs" />
   </ItemGroup>

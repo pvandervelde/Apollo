@@ -8,9 +8,6 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Security;
-using System.Security.Permissions;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 using NLog;
@@ -226,8 +223,8 @@ namespace Apollo.Core.Logging
             }
 
             m_Template = template;
-            m_Factory = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => BuildFactory(configuration, template, fileConstants));
-            m_Logger = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => m_Factory.GetLogger(template.Name));
+            m_Factory = BuildFactory(configuration, template, fileConstants);
+            m_Logger = m_Factory.GetLogger(template.Name);
         }
 
         #region Implementation of ILogger
@@ -241,7 +238,7 @@ namespace Apollo.Core.Logging
             get
             {
                 // Elevate to allow the call to the logger to work.
-                return SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => TranslateFromNlogLevel(m_Logger));
+                return TranslateFromNlogLevel(m_Logger);
             }
         }
 
@@ -251,14 +248,8 @@ namespace Apollo.Core.Logging
         /// <param name="newLevel">The new level.</param>
         public void ChangeLevel(LevelToLog newLevel)
         {
-            // Elevate to allow the call to the logger to work.
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        var nlogLevel = TranslateToNlogLevel(newLevel);
-                        m_Factory.GlobalThreshold = nlogLevel;
-                    });
+            var nlogLevel = TranslateToNlogLevel(newLevel);
+            m_Factory.GlobalThreshold = nlogLevel;
         }
 
         /// <summary>
@@ -305,14 +296,8 @@ namespace Apollo.Core.Logging
                 return;
             }
 
-            // Elevate to allow the call to the logger to work.
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        var level = TranslateToNlogLevel(message.Level);
-                        m_Logger.Log(level, m_Template.Translate(message));
-                    });
+            var level = TranslateToNlogLevel(message.Level);
+            m_Logger.Log(level, m_Template.Translate(message));
         }
 
         /// <summary>
@@ -324,12 +309,7 @@ namespace Apollo.Core.Logging
         [ExcludeFromCoverage("Depends on NLog which makes it only suitable for integration testing.")]
         public void Stop()
         {
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted), 
-                () => 
-                    {
-                        m_Logger.Factory.Flush();
-                    });
+            m_Logger.Factory.Flush();
         }
 
         #endregion

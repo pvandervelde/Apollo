@@ -149,7 +149,6 @@
       <Link>Utils\Licensing\ValidationServiceTest.cs</Link>
     </Compile>
     <Compile Include="AppDomainResolutionPathsTest.cs" />
-    <Compile Include="AppDomainSandboxDataTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessageTest.cs" />
     <Compile Include="ApplicationStartupCompleteMessageTest.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />

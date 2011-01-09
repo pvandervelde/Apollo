@@ -15,7 +15,6 @@ using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Lokad;
@@ -143,7 +142,7 @@ namespace Apollo.Core
             // its dependencies and requirements running before it does.
             // Obviously this is prone to cyclic loops ...
             // Using full trust permissions here because Quick-Graph needs them.
-            var startupOrder = SecurityHelpers.Elevate(new PermissionSet(PermissionState.Unrestricted), () => DetermineServiceStartupOrder());
+            var startupOrder = DetermineServiceStartupOrder();
             foreach (var service in startupOrder)
             {
                 // Grab the actual current service so that we can put it in the
@@ -188,13 +187,11 @@ namespace Apollo.Core
                     // setting.
                     var set = new PermissionSet(PermissionState.Unrestricted);
 
-                    var progressHandler = SecurityHelpers.Elevate(
-                        set,
-                        () => Activator.CreateInstanceFrom(
-                                    serviceDomain,
-                                    typeof(ServiceProgressHandler).Assembly.LocalFilePath(),
-                                    typeof(ServiceProgressHandler).FullName)
-                                .Unwrap() as ServiceProgressHandler);
+                    var progressHandler = Activator.CreateInstanceFrom(
+                            serviceDomain,
+                            typeof(ServiceProgressHandler).Assembly.LocalFilePath(),
+                            typeof(ServiceProgressHandler).FullName)
+                        .Unwrap() as ServiceProgressHandler;
                     Debug.Assert(progressHandler != null, "Failed to create the UnloadHandler.");
                     progressHandler.Attach(this, currentService, startupOrder.Count, startupOrder.IndexOf(currentService));
                     try
@@ -409,13 +406,11 @@ namespace Apollo.Core
                 // run secure code in the unload event.
                 var set = new PermissionSet(PermissionState.Unrestricted);
 
-                var unloadHandler = SecurityHelpers.Elevate(
-                    set, 
-                    () => Activator.CreateInstanceFrom(
-                                serviceDomain,
-                                typeof(AppDomainUnloadHandler).Assembly.LocalFilePath(),
-                                typeof(AppDomainUnloadHandler).FullName)
-                            .Unwrap() as AppDomainUnloadHandler);
+                var unloadHandler = Activator.CreateInstanceFrom(
+                        serviceDomain,
+                        typeof(AppDomainUnloadHandler).Assembly.LocalFilePath(),
+                        typeof(AppDomainUnloadHandler).FullName)
+                    .Unwrap() as AppDomainUnloadHandler;
 
                 Debug.Assert(unloadHandler != null, "Failed to create the UnloadHandler.");
                 unloadHandler.AttachToUnloadEvent(this);
@@ -632,7 +627,7 @@ namespace Apollo.Core
 
                     // This can go wrong if there are still threads executing in this
                     // AppDomain. If it does go wrong we'll bail out semi-gracefully
-                    SecurityHelpers.Elevate(set, () => AppDomain.Unload(serviceDomain));
+                    AppDomain.Unload(serviceDomain);
                 }
                 catch (Exception)
                 {

@@ -5,11 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics;
-using System.Security;
-using System.Security.Permissions;
 using System.Threading.Tasks;
 using Apollo.Core.Messaging;
-using Apollo.Core.Utils;
 
 namespace Apollo.Core
 {
@@ -69,13 +66,7 @@ namespace Apollo.Core
 
             if (canShutdown)
             {
-                // Elevate to full trust. This is required because System.Threading.Parallel.Invoke() is in a
-                // full-trust assembly. In order to invoke it we'll need to run it in that environment (full trust).
-                // @Todo: Does this elevation drop off the stack before or after we finish with the thread, i.e. is the thread running full-trust?
-                SecurityHelpers.Elevate(
-                    new PermissionSet(
-                        PermissionState.Unrestricted),
-                        () => Parallel.Invoke(() => m_Owner.Shutdown()));
+                Parallel.Invoke(() => m_Owner.Shutdown());
             }
         }
 
