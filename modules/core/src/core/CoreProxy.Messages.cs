@@ -42,7 +42,6 @@ namespace Apollo.Core
                        HandleShutdownCapabilityRequest(message.Header.Sender, message.Header.Id);
                    });
 
-            // Create new AppDomain request
             // Request for system information --> send an entire block in one go
         }
 
@@ -56,7 +55,7 @@ namespace Apollo.Core
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             bool canShutdown = request.IsShutdownForced ? true : m_Owner.CanShutdown();
             if (request.IsResponseRequired)
@@ -79,7 +78,7 @@ namespace Apollo.Core
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             bool canShutdown = m_Owner.CanShutdown();
             SendMessage(originalSender, new ApplicationShutdownCapabilityResponseMessage(canShutdown), id);

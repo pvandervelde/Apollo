@@ -387,7 +387,7 @@ namespace Apollo.Core.Messaging
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
 
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(

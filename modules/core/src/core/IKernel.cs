@@ -18,7 +18,6 @@ namespace Apollo.Core
         /// Installs the specified service.
         /// </summary>
         /// <param name="service">The service which should be installed.</param>
-        /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
         /// <remarks>
         /// <para>
         /// Only services that are 'installed' can be used by the service manager.
@@ -30,7 +29,7 @@ namespace Apollo.Core
         /// the service manager.
         /// </para>
         /// </remarks>
-        void Install(KernelService service, AppDomain serviceDomain);
+        void Install(KernelService service);
 
         /// <summary>
         /// Uninstalls the specified service.
@@ -42,10 +41,29 @@ namespace Apollo.Core
         /// <param name="service">
         ///     The service that needs to be uninstalled.
         /// </param>
-        /// <param name="shouldUnloadDomain">
-        /// Indicates if the <c>AppDomain</c> that held the service should be unloaded or not.
-        /// </param>
-        void Uninstall(KernelService service, bool shouldUnloadDomain);
+        void Uninstall(KernelService service);
+
+        /// <summary>
+        /// Initialized the kernel by allowing all the kernel services to 
+        /// go through their initialization processes.
+        /// </summary>
+        /// <design>
+        /// <para>
+        /// This method ensures that all the services are operational and
+        /// have been started. Once all the services are capable of
+        /// running then we return focus to the object that started the 
+        /// kernel.
+        /// </para>
+        /// <para>
+        /// The <c>Kernel.Start</c> method does not specifically start a
+        /// new thread for the services to run on (although individual
+        /// services may start new threads). This is done specifically because
+        /// eventually the focus needs to return to the UI thread. After all
+        /// this is where the user interaction will take place on. Thus there
+        /// is no reason for the kernel to have it's own thread.
+        /// </para>
+        /// </design>
+        void Start();
 
         /// <summary>
         /// Determines whether the application can shutdown cleanly.

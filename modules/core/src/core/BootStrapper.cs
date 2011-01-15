@@ -6,10 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Logging;
@@ -61,8 +57,13 @@ namespace Apollo.Core
     /// </list>
     /// </design>
     [ExcludeFromCoverage("This class is used to handle startup for Apollo. Integration testing is more suitable.")]
-    public abstract partial class Bootstrapper
+    public abstract class Bootstrapper
     {
+        /// <summary>
+        /// The DI container.
+        /// </summary>
+        private static readonly IContainer s_Container = InitializeContainer();
+
         /// <summary>
         /// Finds all the service types stored in the current assembly.
         /// </summary>
@@ -95,6 +96,34 @@ namespace Apollo.Core
         private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
         {
             return (existingSequence != null) ? existingSequence.Union(newSequence) : newSequence;
+        }
+
+        /// <summary>
+        /// Builds the IOC container.
+        /// </summary>
+        /// <param name="additionalModules">The collection of additional modules that should be loaded.</param>
+        /// <returns>
+        /// The DI container that is used to create the service.
+        /// </returns>
+        private static IContainer InitializeContainer(params IModule[] additionalModules)
+        {
+            var builder = new ContainerBuilder();
+            {
+                builder.RegisterModule(new UtilsModule());
+                builder.RegisterModule(new KernelModule());
+                builder.RegisterModule(new MessagingModule());
+                builder.RegisterModule(new LoggerModule());
+                builder.RegisterModule(new LicensingModule());
+            }
+
+            var container = builder.Build();
+            if (container.IsRegistered<IStarter>())
+            {
+                var startable = container.Resolve<IStarter>();
+                startable.Start();
+            }
+
+            return container;
         }
 
         /// <summary>
@@ -157,15 +186,14 @@ namespace Apollo.Core
 
             // Link assembly resolver to current AppDomain
             // Link exception handlers to current AppDomain
-            PrepareUserInterfaceAppDomain();
+            PrepareAppDomain();
 
             // Mark progress from UI to core
             {
                 m_Progress.Mark(new CoreLoadingProgressMark());
             }
 
-            var coreBasePath = new DirectoryInfo(Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath));
-            var kernel = CreateKernel(coreBasePath);
+            var kernel = CreateKernel();
 
             // Scan the current assembly for all exported parts.
             var serviceTypes = FindServiceTypes();
@@ -173,12 +201,12 @@ namespace Apollo.Core
             // Create all the services and pass them to the kernel
             foreach (var serviceType in serviceTypes)
             {
-                CreateService(serviceType, coreBasePath, kernel);
+                CreateService(serviceType, kernel);
             }
 
             // Load the UI service
-            var userInterfaceService = CreateUserInterfaceService(kernel.CacheConnectionChannel);
-            kernel.InstallService(userInterfaceService, AppDomain.CurrentDomain);
+            var userInterfaceService = CreateUserInterfaceService();
+            kernel.Install(userInterfaceService);
 
             // Mark progress to starting core
             {
@@ -196,15 +224,14 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Prepares the user interface app domain for use.
+        /// Prepares the <c>AppDomain</c> for use.
         /// </summary>
-        private void PrepareUserInterfaceAppDomain()
+        private void PrepareAppDomain()
         {
             // Grab the current AppDomain
             var currentDomain = AppDomain.CurrentDomain;
 
-            // Set the assembly resolver. Because we are inside the
-            // UI appdomain it doesn't matter how we set this up.
+            // Set the assembly resolver.
             var fusionHelper = new FusionHelper(
                 () =>
                     {
@@ -223,52 +250,27 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Creates the kernel AppDomain and injects the appropriate kernel objects..
+        /// Creates the kernel.
         /// </summary>
-        /// <param name="coreBasePath">The core base path.</param>
         /// <returns>
-        /// The proxy to the injector.
+        /// The newly created kernel.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "The coreBasePath cannot be a file, it must be a directory.")]
-        private IInjectKernels CreateKernel(DirectoryInfo coreBasePath)
+        private IKernel CreateKernel()
         {
-            // Create the kernel appdomain. 
-            var kernelDomain = AppDomainBuilder.Assemble(
-                "Kernel AppDomain",
-                AppDomainResolutionPaths.WithFiles(
-                    coreBasePath.FullName,
-                    new List<string>(from file in m_StartInfo.CoreAssemblies select file.FullName)),
-                m_ExceptionHandlerFactory(),
-                new FileConstants(new ApplicationConstants()));
+            var kernel = new Kernel(
+                s_Container.Resolve<ICommandContainer>(),
+                s_Container.Resolve<IHelpMessageProcessing>(),
+                s_Container.Resolve<IDnsNameConstants>());
 
-            Debug.Assert(!string.IsNullOrEmpty(typeof(KernelInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
-            var kernelInjector = Activator.CreateInstanceFrom(
-                    kernelDomain,
-                    typeof(KernelInjector).Assembly.LocalFilePath(),
-                    typeof(KernelInjector).FullName)
-                .Unwrap() as KernelInjector;
-
-            // And then create the kernel
-            Debug.Assert(kernelInjector != null, "The kernel injector is null, this means we couldn't find the proper assembly or type.");
-            kernelInjector.CreateKernel();
-            return kernelInjector;
+            return kernel;
         }
 
         /// <summary>
-        /// Creates the AppDomain for the given service type and then injects the specific service into 
-        /// that AppDomain.
+        /// Creates the given service type.
         /// </summary>
         /// <param name="serviceType">Type of the service.</param>
-        /// <param name="coreBasePath">The core base path.</param>
         /// <param name="kernel">The kernel.</param>
-        /// <todo>
-        /// We're currently passing a function that returns the IEnumerable. Maybe we should push that idea
-        /// all the way up?
-        /// </todo>
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "The coreBasePath cannot be a file, it must be a directory.")]
-        private void CreateService(Type serviceType, DirectoryInfo coreBasePath, IInjectKernels kernel)
+        private void CreateService(Type serviceType, IKernel kernel)
         {
             // Mark progress for service 'serviceType'
             {
@@ -282,129 +284,24 @@ namespace Apollo.Core
                 }
             }
 
-            List<string> filePaths;
-            List<string> directoryPaths;
-            SelectPaths(serviceType, out filePaths, out directoryPaths);
-
-            var serviceDomain = AppDomainBuilder.Assemble(
-                string.Format(CultureInfo.InvariantCulture, "AppDomain for {0}", serviceType.Name),
-                AppDomainResolutionPaths.WithFilesAndDirectories(
-                    coreBasePath.FullName, 
-                    filePaths, 
-                    directoryPaths),
-                m_ExceptionHandlerFactory(),
-                new FileConstants(new ApplicationConstants()));
-
-            Debug.Assert(!string.IsNullOrEmpty(typeof(ServiceInjector).Assembly.FullName), "The assembly name does not exist. Cannot create a type from this assembly.");
-            var injector = Activator.CreateInstanceFrom(
-                    serviceDomain,
-                    typeof(ServiceInjector).Assembly.LocalFilePath(), 
-                    typeof(ServiceInjector).FullName)
-                .Unwrap() as IInjectServices;
-
-            // Prepare the appdomain
-            Debug.Assert(injector != null, "Could not load the ServiceInjector.");
-            var service = injector.CreateService(serviceType, kernel.CacheConnectionChannel);
-            kernel.InstallService(service, serviceDomain);
-        }
-
-        /// <summary>
-        /// Selects the assembly resolution paths necessary for the given service type.
-        /// </summary>
-        /// <param name="serviceType">Type of the service.</param>
-        /// <param name="files">The files.</param>
-        /// <param name="directories">The directories.</param>
-        [SuppressMessage("Microsoft.Design", "CA1021:AvoidOutParameters", 
-            Justification = "It seems overkill to define a custom type to encapsulate the return values.")]
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "The use of the Type class indicates better what we want to achieve.")]
-        private void SelectPaths(Type serviceType, out List<string> files, out List<string> directories)
-        {
-            // Determine which log paths should be applied. 
-            // Note that the plugins path requires a directory resolver, the others
-            // require file resolvers!
-            var options = from option in serviceType.GetCustomAttributes(typeof(PrivateBinPathRequirementsAttribute), true)
-                          select ((PrivateBinPathRequirementsAttribute)option).Option;
-
-            IEnumerable<FileInfo> filePaths = null;
-            IEnumerable<DirectoryInfo> directoryPaths = null;
-            foreach (var option in options)
-            {
-                switch (option)
-                {
-                    case PrivateBinPathOption.Core:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.CoreAssemblies);
-                        break;
-                    case PrivateBinPathOption.Log:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.LogAssemblies);
-                        break;
-                    case PrivateBinPathOption.Persistence:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.PersistenceAssemblies);
-                        break;
-                    case PrivateBinPathOption.Project:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.ProjectAssemblies);
-                        break;
-                    case PrivateBinPathOption.UserInterface:
-                        filePaths = ConcatSequences(filePaths, m_StartInfo.UserInterfaceAssemblies);
-                        break;
-                    case PrivateBinPathOption.PlugIns:
-                        directoryPaths = m_StartInfo.PlugInDirectories;
-                        break;
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-
-            files = null;
-            if (filePaths != null)
-            {
-                files = new List<string>(from file in filePaths select file.FullName);
-            }
-
-            directories = null;
-            if (directoryPaths != null)
-            {
-                // This will only iterate over the directories in the directoryPaths collection, not all the sub-directories
-                // symbolic links etc. etc.
-                directories = new List<string>(from directory in directoryPaths select directory.FullName);
-            }
+            var service = s_Container.Resolve(serviceType) as KernelService;
+            kernel.Install(service);
         }
 
         /// <summary>
         /// Creates the user interface service.
         /// </summary>
-        /// <param name="channel">The channel that is used by the licensing system to pass information between the service AppDomains.</param>
         /// <returns>
         /// The newly created user interface service.
         /// </returns>
-        private KernelService CreateUserInterfaceService(ICacheConnectorChannel channel)
+        private KernelService CreateUserInterfaceService()
         {
-            var builder = new ContainerBuilder();
-            {
-                builder.RegisterModule(new UtilsModule());
-                builder.RegisterModule(new KernelModule());
-                builder.RegisterModule(new MessagingModule());
-                builder.RegisterModule(new LoggerModule());
-                builder.RegisterModule(new LicensingModule());
-
-                // Register the proxy to the cache channel
-                builder.Register(c => channel)
-                    .As<ICacheConnectorChannel>()
-                    .ExternallyOwned();
-            }
-
-            var container = builder.Build();
-            if (container.IsRegistered<IStarter>())
-            {
-                container.Resolve<IStarter>().Start();
-            }
-
             var userInterface = new UserInterfaceService(
-                container.Resolve<ICommandContainer>(),
-                container.Resolve<IDnsNameConstants>(), 
-                container.Resolve<INotificationNameConstants>(), 
-                container.Resolve<IHelpMessageProcessing>(),
-                container.Resolve<IValidationResultStorage>(),
+                s_Container.Resolve<ICommandContainer>(),
+                s_Container.Resolve<IDnsNameConstants>(),
+                s_Container.Resolve<INotificationNameConstants>(),
+                s_Container.Resolve<IHelpMessageProcessing>(),
+                s_Container.Resolve<IValidationResultStorage>(),
                 StoreContainer);
 
             return userInterface;

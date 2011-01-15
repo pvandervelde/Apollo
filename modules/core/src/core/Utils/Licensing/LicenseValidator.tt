@@ -6,10 +6,4 @@
 <# manager.StartNewFile("ValidationServiceLicenseValidator.cs"); #>
 <# WriteLicenseValidator("Apollo.Core.Utils.Licensing", "ValidationServiceLicenseValidator");#>
 <# manager.EndBlock(); #>
-<# manager.StartNewFile("CoreLicenseValidator.cs"); #>
-<# WriteLicenseValidator("Apollo.Core.Utils.Licensing", "CoreLicenseValidator");#>
-<# manager.EndBlock(); #>
-<# manager.StartNewFile("UserInterfaceLicenseValidator.cs"); #>
-<# WriteLicenseValidator("Apollo.Core.Utils.Licensing", "UserInterfaceLicenseValidator");#>
-<# manager.EndBlock(); #>
 <# manager.Process(true); #>

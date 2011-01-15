@@ -23,11 +23,11 @@ namespace Apollo.Core
         private void SendStartupCompleteMessage()
         {
             // Check all services
-            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var servicesToNotify = from pair in m_Services
-                                   select pair.Value.Key as ISendMessages into nameObject
+                                   select pair.Value as ISendMessages into nameObject
                                    where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
                                    select nameObject.Name;
 
@@ -56,11 +56,11 @@ namespace Apollo.Core
         public bool CanShutdown()
         {
             // Check all services
-            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var servicesToCheck = from pair in m_Services
-                                  select pair.Value.Key as ISendMessages into nameObject
+                                  select pair.Value as ISendMessages into nameObject
                                   where (nameObject != null) && (!ReferenceEquals(nameObject, coreProxy))
                                   select nameObject.Name;
             var context = new CheckCanServicesShutdownContext(servicesToCheck);

@@ -148,7 +148,6 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ValidationServiceTest.cs">
       <Link>Utils\Licensing\ValidationServiceTest.cs</Link>
     </Compile>
-    <Compile Include="AppDomainResolutionPathsTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessageTest.cs" />
     <Compile Include="ApplicationStartupCompleteMessageTest.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
@@ -180,8 +179,6 @@
     <Compile Include="Messaging\UnknownDnsNameExceptionTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
-    <Compile Include="PingMessageTest.cs" />
-    <Compile Include="PingResponseMessageTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />
@@ -204,21 +201,7 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ChecksumTest.cs">
       <Link>Utils\Licensing\ChecksumTest.cs</Link>
     </Compile>
-    <Compile Include="Utils\Licensing\CacheConnectorChannelEndPointTest.cs" />
-    <Compile Include="Utils\Licensing\CacheConnectorChannelTest.cs" />
-    <Compile Include="Utils\Licensing\CoreLicenseValidationCacheTest.cs">
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\CoreLicenseValidatorTest.cs">
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Licensing\LicenseValidationResultStorageTest.cs" />
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidationCacheTest.cs">
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidatorTest.cs">
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Licensing\ValidationServiceLicenseValidationCacheTest.cs">
       <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
     </Compile>

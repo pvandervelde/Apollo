@@ -48,7 +48,7 @@ namespace Apollo.Core.UserInterfaces
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             // @todo: Check with the UI if we can shutdown. This should only be a UI value, not the system value.
             // For now just send a message saying that we can shutdown.
@@ -94,7 +94,7 @@ namespace Apollo.Core.UserInterfaces
             //        message anyway so storing it in the UI service sounds reasonable
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             if (!m_Notifications.ContainsKey(m_NotificationNames.StartupComplete))
             {
