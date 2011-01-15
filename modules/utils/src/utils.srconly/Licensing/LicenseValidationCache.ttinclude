@@ -46,54 +46,12 @@ namespace <#= nameSpace #>
     /// Implements the <see cref="ILicenseValidationCache" /> interface.
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("TextTemplatingFileGenerator", "10.0.0.0")]
-    internal sealed class <#= className #> : ILicenseValidationCache, ICacheProxyHolder
+    internal sealed class <#= className #> : ILicenseValidationCache
     {
-        /// <summary>
-        /// A <see cref="ILicenseValidationCacheProxy"/> for the <see cref="<#= className #>"/>.
-        /// </summary>
-        private sealed class Proxy : MarshalByRefObject, ILicenseValidationCacheProxy
-        {
-            /// <summary>
-            /// The owner object.
-            /// </summary>
-            private readonly <#= className #> m_Owner;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="Proxy"/> class.
-            /// </summary>
-            /// <param name="owner">The owner.</param>
-            public Proxy(<#= className #> owner)
-            {
-                {
-                    Debug.Assert(owner != null, "The owner should not be null.");
-                }
-
-                m_Owner = owner;
-            }
-
-            /// <summary>
-            /// Gets the latest validation result.
-            /// </summary>
-            /// <value>The latest result.</value>
-            public LicenseCheckResult LatestResult
-            {
-                get
-                {
-                    return m_Owner.LatestResult;
-                }
-            }
-        }
-
         /// <summary>
         /// The object used to lock on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
-
-        /// <summary>
-        /// The collection of proxies that link to other caches.
-        /// </summary>
-        private readonly List<ILicenseValidationCacheProxy> m_Proxies =
-            new List<ILicenseValidationCacheProxy>();
 
         /// <summary>
         /// The object that performs the actual license validation.
@@ -160,41 +118,6 @@ namespace <#= nameSpace #>
 #>
             var <#= checksumVariable #> = new Checksum(<#= successText #>, <#= generationVariable #>, <#= expirationVariable #>);
             <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
-
-            // Store our own proxy so that we don't completely rely on other proxies for their results
-            Store(CreateNewProxy());
-        }
-
-        /// <summary>
-        /// Stores the specified proxy.
-        /// </summary>
-        /// <param name="proxy">The proxy.</param>
-        public void Store(ILicenseValidationCacheProxy proxy)
-        {
-            {
-                Enforce.Argument(() => proxy);
-            }
-
-            lock (m_Lock)
-            {
-                m_Proxies.Add(proxy);
-            }
-        }
-
-        /// <summary>
-        /// Releases the specified proxy from storage.
-        /// </summary>
-        /// <param name="proxy">The proxy.</param>
-        public void Release(ILicenseValidationCacheProxy proxy)
-        {
-            {
-                Enforce.Argument(() => proxy);
-            }
-
-            lock (m_Lock)
-            {
-                m_Proxies.Remove(proxy);
-            }
         }
 
         /// <summary>
@@ -231,28 +154,6 @@ namespace <#= nameSpace #>
             Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Invalidate(TimePeriod nextExpiration)
         {
-            // We don't expect the list to grow very large (no more than say 10) so copying 
-            // the list shouldn't be a big problem.
-            var localProxies = new List<ILicenseValidationCacheProxy>();
-            lock (m_Lock)
-            {
-                localProxies.AddRange(m_Proxies);
-            }
-
-            // If there are no proxies other than our own then we fail the
-            // validation
-            if (localProxies.Count <= 1)
-            {
-                var <#= generationVariable #> = m_Now();
-                var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
-
-                var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
-
-                // We're done here ...
-                return;
-            }
-
             // Store the generation time of the result that matches our expiry time period clostest.
             var bestMatchingGenerationTime = m_Now();
             
@@ -261,34 +162,16 @@ namespace <#= nameSpace #>
             // or nothing. If nothing then we'll validate.
             var ourTicks = nextExpiration.RepeatAfter(m_Now()).Ticks;
             var differentialTicks = ourTicks;
-            foreach (var proxy in localProxies)
+            var result = m_LastResult;
+
+            // If there is a success result then we grab 
+            // the expiry time
+            var expiryPeriod = result.Expires - result.Generated;
+            var difference = Math.Abs(expiryPeriod.Ticks - ourTicks);
+            if (difference < differentialTicks)
             {
-                var proxyResult = proxy.LatestResult;
-
-                // If ALL the proxies have a success result then we grab 
-                // the expiry time from the proxy with the expiry time
-                // span that is closest to our own.
-                var expiryPeriod = proxyResult.Expires - proxyResult.Generated;
-                var difference = Math.Abs(expiryPeriod.Ticks - ourTicks);
-                if (difference < differentialTicks)
-                {
-                    bestMatchingGenerationTime = proxyResult.Generated;
-                    differentialTicks = difference;
-                }
-
-                // if one of the proxies has failed then we fail too --> DONE
-                var failureChecksum = new Checksum(<#= failureText #>, proxyResult.Generated, proxyResult.Expires);
-                if (failureChecksum.Equals(proxyResult.Checksum))
-                {
-                    var <#= generationVariable #> = m_Now();
-                    var <#= expirationVariable #> = generationTime + nextExpiration.RepeatAfter(<#= generationVariable #>);
-
-                    var <#= checksumVariable #> = new Checksum(<#= failureText #>, <#= generationVariable #>, <#= expirationVariable #>);
-                    <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
-
-                    // We're done here ...
-                    return;
-                }
+                bestMatchingGenerationTime = result.Generated;
+                differentialTicks = difference;
             }
 
             // Calculate the number of ticks left in the expiration time. Then
@@ -357,18 +240,6 @@ namespace <#= nameSpace #>
                 var <#= checksumVariable #> = new Checksum(<#= successText #>, <#= generationVariable #>, <#= expirationVariable #>);
                 <#= lastResultField #> = new LicenseCheckResult(<#= generationVariable #>, <#= expirationVariable #>, <#= checksumVariable #>);
             }
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="ILicenseValidationCacheProxy"/> object with the
-        /// current cache as owner.
-        /// </summary>
-        /// <returns>
-        ///     A new <see cref="ILicenseValidationCacheProxy"/> object.
-        /// </returns>
-        public ILicenseValidationCacheProxy CreateNewProxy()
-        {
-            return new Proxy(this);
         }
     }
 }

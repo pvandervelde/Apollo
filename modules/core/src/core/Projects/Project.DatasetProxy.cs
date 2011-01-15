@@ -28,7 +28,7 @@ namespace Apollo.Core.Projects
         /// Mirrors the storage of dataset information.
         /// </summary>
         [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
-        private sealed class DatasetProxy : MarshalByRefObject, IProxyDatasets
+        private sealed class DatasetProxy : IProxyDatasets
         {
             /// <summary>
             /// Implements the operator ==.
@@ -461,24 +461,6 @@ namespace Apollo.Core.Projects
                 }
 
                 m_Owner.UnregisterDatasetObservers(m_IdOfDataset, observer);
-            }
-
-            /// <summary>
-            /// Obtains a lifetime service object to control the lifetime policy for this instance.
-            /// </summary>
-            /// <returns>
-            /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
-            /// </returns>
-            /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. 
-            /// </exception>
-            /// <filterpriority>2</filterpriority>
-            /// <PermissionSet>
-            ///     <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
-            /// </PermissionSet>
-            public override object InitializeLifetimeService()
-            {
-                // We don't really want the system to GC our object at random times...
-                return null;
             }
 
             /// <summary>

@@ -4,9 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics;
-using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 using Apollo.Utils;
 
@@ -79,7 +77,7 @@ namespace Apollo.Core.Projects
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             // @todo: Check with the project if we can shutdown. This should only be a project value, not the system value.
             // For now just send a message saying that we can shutdown.
@@ -105,15 +103,7 @@ namespace Apollo.Core.Projects
 
         private void HandleProjectRequest(DnsName originalSender, MessageId messageId)
         {
-            ObjRef projectProxy = null;
-
-            var obj = m_Current as MarshalByRefObject;
-            if (obj != null)
-            {
-                projectProxy = RemotingServices.Marshal(obj);
-            }
-
-            SendMessage(originalSender, new ProjectRequestResponseMessage(projectProxy), messageId);
+            SendMessage(originalSender, new ProjectRequestResponseMessage(m_Current), messageId);
         }
     }
 }

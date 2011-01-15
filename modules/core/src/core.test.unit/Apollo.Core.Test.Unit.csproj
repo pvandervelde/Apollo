@@ -115,7 +115,6 @@
       <HintPath>..\..\tools\moq\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.Runtime.Remoting" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\utils\src\utils\Apollo.Utils.csproj">
@@ -157,7 +156,6 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ValidationServiceTest.cs">
       <Link>Utils\Licensing\ValidationServiceTest.cs</Link>
     </Compile>
-    <Compile Include="AppDomainResolutionPathsTest.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessageTest.cs" />
     <Compile Include="ApplicationStartupCompleteMessageTest.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
@@ -189,8 +187,6 @@
     <Compile Include="Messaging\UnknownDnsNameExceptionTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
-    <Compile Include="PingMessageTest.cs" />
-    <Compile Include="PingResponseMessageTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
@@ -238,7 +234,7 @@
     <Compile Include="UserInterfaces\Project\LoadProjectCommandTest.cs" />
     <Compile Include="UserInterfaces\Project\NoCurrentProjectExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\ProjectFacadeTest.cs" />
-    <Compile Include="UserInterfaces\Project\ProjectServiceFacade.cs" />
+    <Compile Include="UserInterfaces\Project\ProjectServiceFacadeTest.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectCommandTest.cs" />
     <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
     <Compile Include="Utils\ApplicationConstantsTest.cs" />
@@ -246,21 +242,7 @@
     <Compile Include="..\..\..\utils\src\utils.test.unit\Licensing\ChecksumTest.cs">
       <Link>Utils\Licensing\ChecksumTest.cs</Link>
     </Compile>
-    <Compile Include="Utils\Licensing\CacheConnectorChannelEndPointTest.cs" />
-    <Compile Include="Utils\Licensing\CacheConnectorChannelTest.cs" />
-    <Compile Include="Utils\Licensing\CoreLicenseValidationCacheTest.cs">
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\CoreLicenseValidatorTest.cs">
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Licensing\LicenseValidationResultStorageTest.cs" />
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidationCacheTest.cs">
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidatorTest.cs">
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </Compile>
     <Compile Include="Utils\Licensing\ValidationServiceLicenseValidationCacheTest.cs">
       <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
     </Compile>

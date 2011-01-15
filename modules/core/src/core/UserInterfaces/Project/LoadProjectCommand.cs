@@ -18,7 +18,7 @@ namespace Apollo.Core.UserInterfaces.Project
     /// <summary>
     /// Defines a command that loads an existing project.
     /// </summary>
-    public sealed class LoadProjectCommand : ICommand
+    internal sealed class LoadProjectCommand : ICommand
     {
         #region Static members
 

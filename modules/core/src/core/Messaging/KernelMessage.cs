@@ -14,7 +14,6 @@ namespace Apollo.Core.Messaging
     /// <summary>
     /// Defines the base class for messages send inside the core of the Apollo system.
     /// </summary>
-    [Serializable]
     public sealed class KernelMessage : IEquatable<KernelMessage>
     {
         /// <summary>

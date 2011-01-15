@@ -18,7 +18,6 @@ namespace Apollo.Core.Messaging
     /// class must be marked as serializable because they will be transported
     /// across <see cref="AppDomain"/> boundaries.
     /// </remarks>
-    [Serializable]
     public abstract class MessageBody : IEquatable<MessageBody>
     {
         /// <summary>

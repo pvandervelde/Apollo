@@ -45,20 +45,6 @@ namespace Apollo.Core
         private readonly List<FileInfo> m_CoreAssemblies;
 
         /// <summary>
-        /// The collection that holds all the assemblies which are required
-        /// for the log capabilities to function. These assemblies are the ones that
-        /// the fusion loader should be able to find.
-        /// </summary>
-        private readonly List<FileInfo> m_LogAssemblies;
-
-        /// <summary>
-        /// The collection that holds all the assemblies which are required
-        /// for the persistence capabilities to function. These assemblies are the ones that
-        /// the fusion loader should be able to find.
-        /// </summary>
-        private readonly List<FileInfo> m_PersistenceAssemblies;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="KernelStartInfo"/> class.
         /// </summary>
         protected KernelStartInfo()
@@ -91,24 +77,10 @@ namespace Apollo.Core
 
                     // System.Threading
                     DetermineAssemblyPath(typeof(System.Threading.Tasks.Task).Assembly),
-                };
 
-            m_LogAssemblies = new List<FileInfo>
-                {
                     // NLog
                     DetermineAssemblyPath(typeof(NLog.Logger).Assembly),
-
-                    // Apollo.Core
-                    DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
-
-                    // Apollo.Utils
-                    DetermineAssemblyPath(typeof(ILockObject).Assembly),
-
-                    // Autofac
-                    DetermineAssemblyPath(typeof(Autofac.IContainer).Assembly),
                 };
-
-            m_PersistenceAssemblies = new List<FileInfo>();
         }
 
         /// <summary>
@@ -121,32 +93,6 @@ namespace Apollo.Core
             get
             {
                 return m_CoreAssemblies.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of assemblies that are used for logging
-        /// purposes.
-        /// </summary>
-        /// <value>The log assemblies.</value>
-        public IEnumerable<FileInfo> LogAssemblies
-        {
-            get
-            {
-                return m_LogAssemblies.AsReadOnly();
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of assemblies that are used for the
-        /// persistence.
-        /// </summary>
-        /// <value>The persistence assemblies.</value>
-        public IEnumerable<FileInfo> PersistenceAssemblies
-        {
-            get
-            {
-                return m_PersistenceAssemblies.AsReadOnly();
             }
         }
 

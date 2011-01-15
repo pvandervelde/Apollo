@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Projects;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
@@ -56,36 +55,28 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks the creation of a new project stores the project reference.")]
         public void CreateNewProject()
         {
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
+            var project = new Mock<IProject>();
 
-            try
+            var service = new Mock<IUserInterfaceService>();
             {
-                var service = new Mock<IUserInterfaceService>();
-                {
-                    service.Setup(s => s.Contains(It.IsAny<CommandId>()))
-                        .Returns(true);
+                service.Setup(s => s.Contains(It.IsAny<CommandId>()))
+                    .Returns(true);
 
-                    service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
-                        .Callback<CommandId, ICommandContext>(
-                            (id, context) =>
-                            {
-                                CreateProjectContext createContext = context as CreateProjectContext;
-                                createContext.Result = RemotingServices.Marshal(marshal.Object);
-                            })
-                        .Verifiable();
-                }
-
-                var facade = new ProjectServiceFacade(service.Object);
-                facade.NewProject();
-
-                Assert.IsTrue(facade.HasActiveProject());
-                service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<CreateProjectContext>()), Times.Exactly(1));
+                service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
+                    .Callback<CommandId, ICommandContext>(
+                        (id, context) =>
+                        {
+                            CreateProjectContext createContext = context as CreateProjectContext;
+                            createContext.Result = project.Object;
+                        })
+                    .Verifiable();
             }
-            finally
-            {
-                RemotingServices.Disconnect(marshal.Object);
-            }
+
+            var facade = new ProjectServiceFacade(service.Object);
+            facade.NewProject();
+
+            Assert.IsTrue(facade.HasActiveProject());
+            service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<CreateProjectContext>()), Times.Exactly(1));
         }
 
         [Test]
@@ -118,38 +109,30 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks the loading of a project stores the project reference.")]
         public void LoadNewProject()
         {
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
+            var project = new Mock<IProject>();
 
             var persistence = new Mock<IPersistenceInformation>();
-            try
+            var service = new Mock<IUserInterfaceService>();
             {
-                var service = new Mock<IUserInterfaceService>();
-                {
-                    service.Setup(s => s.Contains(It.IsAny<CommandId>()))
-                        .Returns(true);
+                service.Setup(s => s.Contains(It.IsAny<CommandId>()))
+                    .Returns(true);
 
-                    service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
-                        .Callback<CommandId, ICommandContext>(
-                            (id, context) =>
-                            {
-                                LoadProjectContext loadContext = context as LoadProjectContext;
-                                Assert.AreSame(persistence.Object, loadContext.LoadFrom);
-                                loadContext.Result = RemotingServices.Marshal(marshal.Object);
-                            })
-                        .Verifiable();
-                }
-
-                var facade = new ProjectServiceFacade(service.Object);
-                facade.LoadProject(persistence.Object);
-
-                Assert.IsTrue(facade.HasActiveProject());
-                service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Exactly(1));
+                service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
+                    .Callback<CommandId, ICommandContext>(
+                        (id, context) =>
+                        {
+                            LoadProjectContext loadContext = context as LoadProjectContext;
+                            Assert.AreSame(persistence.Object, loadContext.LoadFrom);
+                            loadContext.Result = project.Object;
+                        })
+                    .Verifiable();
             }
-            finally
-            {
-                RemotingServices.Disconnect(marshal.Object);
-            }
+
+            var facade = new ProjectServiceFacade(service.Object);
+            facade.LoadProject(persistence.Object);
+
+            Assert.IsTrue(facade.HasActiveProject());
+            service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Exactly(1));
         }
 
         [Test]
@@ -165,45 +148,37 @@ namespace Apollo.Core.UserInterfaces.Project
         [Description("Checks the current project can be unloaded.")]
         public void UnloadProject()
         {
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
+            var project = new Mock<IProject>();
 
-            try
+            var service = new Mock<IUserInterfaceService>();
             {
-                var service = new Mock<IUserInterfaceService>();
-                {
-                    service.Setup(s => s.Contains(It.IsAny<CommandId>()))
-                        .Returns(true);
-
-                    service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
-                        .Callback<CommandId, ICommandContext>(
-                            (id, context) =>
-                            {
-                                CreateProjectContext createContext = context as CreateProjectContext;
-                                createContext.Result = RemotingServices.Marshal(marshal.Object);
-                            });
-                }
-
-                var facade = new ProjectServiceFacade(service.Object);
-                facade.NewProject();
-                Assert.IsTrue(facade.HasActiveProject());
+                service.Setup(s => s.Contains(It.IsAny<CommandId>()))
+                    .Returns(true);
 
                 service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
                     .Callback<CommandId, ICommandContext>(
                         (id, context) =>
                         {
-                            Assert.IsAssignableFrom<UnloadProjectContext>(context.GetType());
-                        })
-                    .Verifiable();
+                            CreateProjectContext createContext = context as CreateProjectContext;
+                            createContext.Result = project.Object;
+                        });
+            }
 
-                facade.UnloadProject();
-                Assert.IsFalse(facade.HasActiveProject());
-                service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<UnloadProjectContext>()), Times.Exactly(1));
-            }
-            finally
-            {
-                RemotingServices.Disconnect(marshal.Object);
-            }
+            var facade = new ProjectServiceFacade(service.Object);
+            facade.NewProject();
+            Assert.IsTrue(facade.HasActiveProject());
+
+            service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
+                .Callback<CommandId, ICommandContext>(
+                    (id, context) =>
+                    {
+                        Assert.IsAssignableFrom<UnloadProjectContext>(context.GetType());
+                    })
+                .Verifiable();
+
+            facade.UnloadProject();
+            Assert.IsFalse(facade.HasActiveProject());
+            service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<UnloadProjectContext>()), Times.Exactly(1));
         }
     }
 }

@@ -37,17 +37,5 @@ namespace Apollo.Core
             var message = new ApplicationShutdownCapabilityResponseMessage(true);
             Assert.IsTrue(message.CanShutdown);
         }
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new ApplicationShutdownCapabilityResponseMessage(true);
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(
-               () => msg.IsResponseRequired == otherMsg.IsResponseRequired
-                  && msg.CanShutdown == otherMsg.CanShutdown);
-        }
     }
 }

@@ -14,7 +14,7 @@ namespace Apollo.Core.UserInterfaces.Project
     /// <summary>
     /// Defines an <see cref="ICommandContext"/> for the <see cref="LoadProjectCommand"/>.
     /// </summary>
-    public sealed class LoadProjectContext : ICommandContext
+    internal sealed class LoadProjectContext : ICommandContext
     {
         /// <summary>
         /// Gets or sets a value indicating the persistence information
@@ -33,7 +33,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <value>
         /// The command result.
         /// </value>
-        public ObjRef Result
+        public IProject Result
         {
             get;
             set;

@@ -387,20 +387,20 @@ namespace Apollo.Core.Messaging
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
 
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(
                     !sender.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                    Resources_NonTranslatable.Exception_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipient);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
+                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageToNoService);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(sender),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
                     sender);
 
                 Enforce.Argument(() => information);

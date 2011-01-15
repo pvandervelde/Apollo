@@ -5,8 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
-using System.Runtime.Remoting;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Utils;
@@ -130,17 +128,6 @@ namespace Apollo.Core.Projects
             if (current == null)
             {
                 return;
-            }
-
-            // Remove the project from the remoting service global cache
-            // otherwise we cannot register the next project
-            var marshal = current as MarshalByRefObject;
-            if (marshal != null)
-            {
-                if (!RemotingServices.Disconnect(marshal))
-                {
-                    Debug.Fail("Failed to unregister the project from the RemotingServices global cache.");
-                }
             }
 
             // Close the project. After this method call

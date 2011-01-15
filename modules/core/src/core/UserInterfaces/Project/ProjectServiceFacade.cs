@@ -105,15 +105,13 @@ namespace Apollo.Core.UserInterfaces.Project
             Debug.Assert(m_Service.Contains(CreateProjectCommand.CommandId), "A command has gone missing.");
             m_Service.Invoke(CreateProjectCommand.CommandId, context);
             
-            var projectReference = context.Result;
-            if (projectReference == null)
+            var project = context.Result;
+            if (project == null)
             {
                 throw new FailedToCreateProjectException();
             }
 
-            var proxy = RemotingServices.Unmarshal(projectReference);
-            Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
-            m_Facade = new ProjectFacade(proxy as IProject);
+            m_Facade = new ProjectFacade(project);
 
             RaiseOnNewProjectLoaded();
         }
@@ -164,15 +162,13 @@ namespace Apollo.Core.UserInterfaces.Project
             Debug.Assert(m_Service.Contains(LoadProjectCommand.CommandId), "A command has gone missing.");
             m_Service.Invoke(LoadProjectCommand.CommandId, context);
 
-            var projectReference = context.Result;
-            if (projectReference == null)
+            var project = context.Result;
+            if (project == null)
             {
                 throw new FailedToLoadProjectException();
             }
 
-            var proxy = RemotingServices.Unmarshal(projectReference);
-            Debug.Assert(typeof(IProject).IsAssignableFrom(proxy.GetType()), "The proxy object is of the wrong type.");
-            m_Facade = new ProjectFacade(proxy as IProject);
+            m_Facade = new ProjectFacade(project);
             
             RaiseOnNewProjectLoaded();
         }

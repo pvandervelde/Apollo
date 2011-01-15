@@ -135,16 +135,8 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ICacheProxyHolder.cs">
-      <Link>Utils\Licensing\ICacheProxyHolder.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidationCache.cs">
       <Link>Utils\Licensing\ILicenseValidationCache.cs</Link>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidationCacheProxy.cs">
-      <Link>Utils\Licensing\ILicenseValidationCacheProxy.cs</Link>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidator.cs">
@@ -210,10 +202,6 @@
       <Link>Utils\Licensing\ValidationSequenceGenerator.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppDomainBuilder.cs" />
-    <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
-    <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
-    <Compile Include="AppDomainResolutionPaths.cs" />
     <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
     <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
@@ -248,8 +236,6 @@
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Bootstrapper.KernelInjector.cs" />
-    <Compile Include="Bootstrapper.ServiceInjector.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
     <Compile Include="CheckApplicationCanShutdownCommand.cs" />
     <Compile Include="CheckApplicationCanShutdownContext.cs" />
@@ -259,19 +245,14 @@
     <Compile Include="CoreProxy.Messages.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
     <Compile Include="DnsNameConstants.cs" />
-    <Compile Include="IAppDomainAssemblyResolver.cs" />
     <Compile Include="IDnsNameConstants.cs" />
     <Compile Include="IHaveServiceDependencies.cs" />
-    <Compile Include="IInjectKernels.cs" />
-    <Compile Include="IInjectServices.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="INeedStartup.cs" />
     <Compile Include="IOwnServices.cs" />
     <Compile Include="CoreProxy.cs" />
-    <Compile Include="Kernel.AppDomains.cs" />
     <Compile Include="Kernel.ConnectionMap.cs" />
     <Compile Include="Kernel.cs" />
-    <Compile Include="Kernel.ServiceProgressHandler.cs" />
     <Compile Include="Kernel.Services.cs" />
     <Compile Include="Kernel.ServiceVertex.cs" />
     <Compile Include="KernelModule.cs" />
@@ -319,8 +300,6 @@
     <Compile Include="Messaging\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="NotificationNameConstants.cs" />
-    <Compile Include="PingMessage.cs" />
-    <Compile Include="PingResponseMessage.cs" />
     <Compile Include="PrivateBinPathOption.cs" />
     <Compile Include="PrivateBinPathRequirementsAttribute.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
@@ -379,8 +358,6 @@
     <Compile Include="UserInterfaces\Project\ProjectServiceFacade.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectCommand.cs" />
     <Compile Include="UserInterfaces\Project\UnloadProjectContext.cs" />
-    <Compile Include="Utils\Licensing\CacheConnectorChannelEndpoint.cs" />
-    <Compile Include="Utils\Licensing\ICacheConnectorChannelEndpoint.cs" />
     <Compile Include="Utils\Licensing\LicenseValidationResultStorage.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
@@ -389,21 +366,6 @@
     <Compile Include="Utils\ApplicationConstants.cs" />
     <Compile Include="Utils\FileConstants.cs" />
     <Compile Include="Utils\ILoadOnApplicationStartup.cs" />
-    <Compile Include="Utils\Licensing\CacheConnectorChannel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\CoreLicenseValidationCache.cs">
-      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\CoreLicenseValidator.cs">
-      <DependentUpon>LicenseValidator.tt</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\ICacheConnectorChannel.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\IncludeLicensingAttribute.cs" />
     <Compile Include="Utils\Licensing\IValidationResultStorage.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -412,14 +374,6 @@
     </Compile>
     <Compile Include="Utils\Licensing\LicensingModule.cs" />
     <Compile Include="Utils\Licensing\RegistryKeyValidator.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidationCache.cs">
-      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Utils\Licensing\UserInterfaceLicenseValidator.cs">
-      <DependentUpon>LicenseValidator.tt</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Utils\Licensing\ValidationServiceLicenseValidationCache.cs">

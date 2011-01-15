@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces.Project;
@@ -36,7 +35,7 @@ namespace Apollo.Core
                 LoadProjectMessage msg = body as LoadProjectMessage;
                 Assert.AreEqual(persistedProject.Object, msg.PersistedProject);
                 
-                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new ObjRef())));
+                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new Mock<IProject>().Object)));
             };
             var command = new LoadProjectCommand(sender, function);
 

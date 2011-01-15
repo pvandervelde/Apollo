@@ -166,7 +166,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id);
@@ -183,7 +183,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id, ICommandContext context)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id, context);
@@ -307,9 +307,7 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         protected override void PreMessageInitializeStartup()
         {
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted),
-                InitializeDependencyInjectionContainer);
+            InitializeDependencyInjectionContainer();
         }
 
         private void InitializeDependencyInjectionContainer()

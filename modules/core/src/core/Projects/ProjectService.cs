@@ -20,8 +20,6 @@ namespace Apollo.Core.Projects
     /// Defines the <see cref="KernelService"/> that handles the project interaction with the kernel.
     /// </summary>
     [PrivateBinPathRequirements(PrivateBinPathOption.Core)]
-    [ServiceSecurityLevel(SecurityLevel.Project)]
-    [IncludeLicensing]
     internal sealed partial class ProjectService : MessageEnabledKernelService, IHaveServiceDependencies
     {
         /// <summary>

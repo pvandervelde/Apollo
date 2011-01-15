@@ -62,7 +62,7 @@ namespace Apollo.Core.Messaging
         public void RegisterActionWithNullAction()
         {
             var assistence = new MessageProcessingAssistance();
-            Assert.Throws<ArgumentException>(() => assistence.RegisterAction(typeof(PingMessage), null));
+            Assert.Throws<ArgumentException>(() => assistence.RegisterAction(typeof(ShutdownResponseMessage), null));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace Apollo.Core.Messaging
         public void SendMessageWithoutRegisteringPipeline()
         {
             var assistence = new MessageProcessingAssistance();
-            Assert.Throws<MissingPipelineException>(() => assistence.SendMessage(new DnsName("name"), new PingMessage(), MessageId.None));
+            Assert.Throws<MissingPipelineException>(() => assistence.SendMessage(new DnsName("name"), new ShutdownResponseMessage(true), MessageId.None));
         }
 
         [Test]
@@ -79,7 +79,7 @@ namespace Apollo.Core.Messaging
         {
             var assistence = new MessageProcessingAssistance();
             assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
-            Assert.Throws<ArgumentNullException>(() => assistence.SendMessage(null, new PingMessage(), MessageId.None));
+            Assert.Throws<ArgumentNullException>(() => assistence.SendMessage(null, new ShutdownResponseMessage(true), MessageId.None));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Apollo.Core.Messaging
         {
             var assistence = new MessageProcessingAssistance();
             assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
-            Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("name"), new PingMessage(), MessageId.None));
+            Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("name"), new ShutdownResponseMessage(true), MessageId.None));
         }
 
         [Test]
@@ -97,7 +97,7 @@ namespace Apollo.Core.Messaging
         {
             var assistence = new MessageProcessingAssistance();
             assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
-            Assert.Throws<ArgumentException>(() => assistence.SendMessage(DnsName.Nobody, new PingMessage(), MessageId.None));
+            Assert.Throws<ArgumentException>(() => assistence.SendMessage(DnsName.Nobody, new ShutdownResponseMessage(true), MessageId.None));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Apollo.Core.Messaging
         {
             var assistence = new MessageProcessingAssistance();
             assistence.DefinePipelineInformation(new Mock<IMessagePipeline>().Object, new DnsName("name"), e => { });
-            Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("otherName"), new PingMessage(), null));
+            Assert.Throws<ArgumentException>(() => assistence.SendMessage(new DnsName("otherName"), new ShutdownResponseMessage(true), null));
         }
 
         [Test]
@@ -141,7 +141,7 @@ namespace Apollo.Core.Messaging
 
             assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
-            var messageBody = new PingMessage();
+            var messageBody = new ShutdownResponseMessage(true);
             var future = assistence.SendMessageWithResponse(recipientDns, messageBody, MessageId.None);
 
             var futureBody = future.Result();
@@ -172,7 +172,7 @@ namespace Apollo.Core.Messaging
             var assistence = new MessageProcessingAssistance();
             assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
-            var messageBody = new PingMessage();
+            var messageBody = new ShutdownResponseMessage(true);
             var future = assistence.SendMessageWithResponse(recipientDns, messageBody, MessageId.None);
             assistence.ReceiveMessage(messageToSend);
 
@@ -190,10 +190,10 @@ namespace Apollo.Core.Messaging
             var mockPipeline = new Mock<IMessagePipeline>();
 
             var assistence = new MessageProcessingAssistance();
-            assistence.RegisterAction(typeof(PingMessage), msg => { receivedMessage = msg; });
+            assistence.RegisterAction(typeof(ShutdownResponseMessage), msg => { receivedMessage = msg; });
             assistence.DefinePipelineInformation(mockPipeline.Object, senderDns, e => { });
 
-            var messageBody = new PingMessage();
+            var messageBody = new ShutdownResponseMessage(true);
             var kernelMessage = new KernelMessage(
                 new MessageHeader(
                     MessageId.Next(), 

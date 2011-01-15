@@ -29,15 +29,5 @@ namespace Apollo.Core.Projects
                     new ProjectRequestMessage(),
                 },
         };
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new LoadProjectMessage(new NullPersistenceInformation());
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(() => msg.IsResponseRequired == otherMsg.IsResponseRequired);
-        }
     }
 }

@@ -4,9 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
@@ -27,28 +25,9 @@ namespace Apollo.Core.Projects
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection<MessageBody> 
                 { 
-                    new ProjectRequestResponseMessage(new ObjRef()),
+                    new ProjectRequestResponseMessage(new Mock<IProject>().Object),
                     new ProjectRequestResponseMessage(null),
                 },
         };
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        [Ignore("For some reason the deserialization of an ObjRef object doesn't work, but it does work in the experiments ...")]
-        public void RoundTripSerialise()
-        {
-            var marshal = new Mock<MarshalByRefObject>();
-            try
-            {
-                var msg = new ProjectRequestResponseMessage(RemotingServices.Marshal(marshal.Object));
-                var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-                AssertEx.That(() => msg.IsResponseRequired == otherMsg.IsResponseRequired);
-            }
-            finally
-            {
-                RemotingServices.Disconnect(marshal.Object);
-            }
-        }
     }
 }

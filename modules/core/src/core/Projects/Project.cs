@@ -6,12 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 using QuickGraph;
@@ -29,7 +26,7 @@ namespace Apollo.Core.Projects
     /// described by the hierarchical set of datasets.
     /// </para>
     /// </remarks>
-    internal sealed partial class Project : MarshalByRefObject, IProject, ICanClose
+    internal sealed partial class Project : IProject, ICanClose
     {
         /// <summary>
         /// The collection of objects that need to be notified if there are changes to
@@ -117,9 +114,7 @@ namespace Apollo.Core.Projects
 
             // Create the graph. This must be done in an elevated state because that is 
             // what quickgraph wants.
-            m_Graph = SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted),
-                () => new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false));
+            m_Graph = new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false);
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)
@@ -366,24 +361,6 @@ namespace Apollo.Core.Projects
             // - Sign off from communications
             // - Clear out all the datastructures
             // - Terminate
-        }
-
-        /// <summary>
-        /// Obtains a lifetime service object to control the lifetime policy for this instance.
-        /// </summary>
-        /// <returns>
-        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
-        /// </returns>
-        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. 
-        /// </exception>
-        /// <filterpriority>2</filterpriority>
-        /// <PermissionSet>
-        ///     <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
-        /// </PermissionSet>
-        public override object InitializeLifetimeService()
-        {
-            // We don't really want the system to GC our object at random times...
-            return null;
         }
     }
 }

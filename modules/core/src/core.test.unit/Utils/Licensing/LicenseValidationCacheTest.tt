@@ -6,10 +6,4 @@
 <# manager.StartNewFile("ValidationServiceLicenseValidationCacheTest.cs"); #>
 <# WriteLicenseValidationCacheTest("Apollo.Core.Utils.Licensing", "ValidationServiceLicenseValidationCacheTest", "ValidationServiceLicenseValidationCache");#>
 <# manager.EndBlock(); #>
-<# manager.StartNewFile("CoreLicenseValidationCacheTest.cs"); #>
-<# WriteLicenseValidationCacheTest("Apollo.Core.Utils.Licensing", "CoreLicenseValidationCacheTest", "CoreLicenseValidationCache");#>
-<# manager.EndBlock(); #>
-<# manager.StartNewFile("UserInterfaceLicenseValidationCacheTest.cs"); #>
-<# WriteLicenseValidationCacheTest("Apollo.Core.Utils.Licensing", "UserInterfaceLicenseValidationCacheTest", "UserInterfaceLicenseValidationCache");#>
-<# manager.EndBlock(); #>
 <# manager.Process(true); #>

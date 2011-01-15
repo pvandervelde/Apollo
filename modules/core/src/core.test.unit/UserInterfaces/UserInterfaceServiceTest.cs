@@ -667,7 +667,7 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(pipeline);
 
             service.Start();
-            Assert.AreEqual(StartupState.Started, service.GetStartupState());
+            Assert.AreEqual(StartupState.Started, service.StartupState);
             
             Assert.Throws<MissingNotificationActionException>(() => service.Stop());
         }
@@ -698,7 +698,7 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(pipeline);
 
             service.Start();
-            Assert.AreEqual(StartupState.Started, service.GetStartupState());
+            Assert.AreEqual(StartupState.Started, service.StartupState);
             
             Assert.Throws<Exception>(() => service.Stop());
         }
@@ -730,10 +730,10 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(pipeline);
 
             service.Start();
-            Assert.AreEqual(StartupState.Started, service.GetStartupState());
+            Assert.AreEqual(StartupState.Started, service.StartupState);
             
             service.Stop();
-            Assert.AreEqual(StartupState.Stopped, service.GetStartupState());
+            Assert.AreEqual(StartupState.Stopped, service.StartupState);
             Assert.IsTrue(wasInvoked);
         }
 

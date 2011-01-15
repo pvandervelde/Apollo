@@ -5,12 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces.Project;
 using Apollo.Utils;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Core
 {
@@ -30,7 +30,7 @@ namespace Apollo.Core
             {
                 Assert.AreSame(sender, recipient);
                 Assert.IsInstanceOfType(typeof(CreateNewProjectMessage), body);
-                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new ObjRef())));
+                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new Mock<IProject>().Object)));
             };
             var command = new CreateProjectCommand(sender, function);
 

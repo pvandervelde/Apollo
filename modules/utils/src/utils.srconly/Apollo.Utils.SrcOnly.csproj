@@ -104,10 +104,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Checksum.HashCalculation.tt</DependentUpon>
     </Compile>
-    <Compile Include="Licensing\ICacheProxyHolder.cs" />
     <Compile Include="Licensing\ILicenseValidator.cs" />
     <Compile Include="Licensing\ILicenseValidationCache.cs" />
-    <Compile Include="Licensing\ILicenseValidationCacheProxy.cs" />
     <Compile Include="Licensing\ITimeBasedValidator.cs" />
     <Compile Include="Licensing\IValidationService.cs" />
     <Compile Include="Licensing\IValidator.cs" />

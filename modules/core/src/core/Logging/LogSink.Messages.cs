@@ -59,7 +59,7 @@ namespace Apollo.Core.Logging
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             foreach (var pair in m_Loggers)
             {
@@ -71,7 +71,7 @@ namespace Apollo.Core.Logging
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", GetStartupState()));
+                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
 
             // Send a message saying that we can shutdown.
             SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(true), id);

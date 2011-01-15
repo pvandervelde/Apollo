@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Apollo.Core.UserInterfaces.Project;
 using Lokad;
 
@@ -35,6 +36,12 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly DatasetViewGraph m_Graph = new DatasetViewGraph();
 
         /// <summary>
+        /// The collection that maps the current set of datasets to the current set of vertices.
+        /// </summary>
+        private readonly Dictionary<DatasetFacade, DatasetViewVertex> m_VertexMap =
+            new Dictionary<DatasetFacade, DatasetViewVertex>();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetGraphModel"/> class.
         /// </summary>
         /// <param name="facade">The project that holds the graph of datasets.</param>
@@ -55,50 +62,119 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Context = context;
 
             m_Project = facade;
-            m_Project.OnDatasetCreated += (s, e) => ReloadProjectInCorrectContext();
-            m_Project.OnDatasetDeleted += (s, e) => ReloadProjectInCorrectContext();
-            m_Project.OnDatasetUpdated += (s, e) => ReloadProjectInCorrectContext();
+            m_Project.OnDatasetCreated += (s, e) => AddDatasetToGraph();
+            m_Project.OnDatasetDeleted += (s, e) => RemoveDatasetFromGraph();
+            m_Project.OnDatasetUpdated += (s, e) => UpdateGraph();
 
             ReloadProject();
         }
 
-        private void ReloadProjectInCorrectContext()
+        private void AddDatasetToGraph()
         {
-            Action action = () => ReloadProject();
-            m_Context.Invoke(action);
+            Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action =
+                (graph, parent, child) =>
+                    {
+                        if (m_VertexMap.ContainsKey(child))
+                        {
+                            return;
+                        }
+
+                        var vertex = new DatasetViewVertex(new DatasetModel(child));
+                        m_VertexMap.Add(child, vertex);
+
+                        graph.AddVertex(vertex);
+                        if (parent != null)
+                        {
+                            Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
+                            var parentVertex = m_VertexMap[parent];
+                            var edge = new DatasetViewEdge(parentVertex, vertex);
+                            graph.AddEdge(edge);
+                        }
+                    };
+
+            IterateOverGraph(action);
+             Notify(() => Graph);
+        }
+
+        private void IterateOverGraph(Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action)
+        {
+            // @Todo: We should really just be able to iterate over the original graph
+            // that would be much cleaner ....
+            var root = m_Project.Root();
+            action(m_Graph, null, root);
+
+            var nodes = new Queue<DatasetFacade>();
+            nodes.Enqueue(root);
+            while (nodes.Count > 0)
+            {
+                var dataset = nodes.Dequeue();
+                foreach (var child in dataset.Children())
+                {
+                    var childVertex = new DatasetViewVertex(new DatasetModel(child));
+                    action(m_Graph, dataset, child);
+                    nodes.Enqueue(child);
+                }
+            }
+        }
+
+        private void RemoveDatasetFromGraph()
+        {
+            var datasets = new List<DatasetFacade>();
+            foreach (var pair in m_VertexMap)
+            {
+                datasets.Add(pair.Key);
+            }
+
+            Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action =
+                (graph, parent, child) =>
+                {
+                    if (m_VertexMap.ContainsKey(child))
+                    {
+                        datasets.Remove(child);
+                    }
+                };
+            IterateOverGraph(action);
+
+            foreach (var dataset in datasets)
+            {
+                m_Graph.RemoveVertex(m_VertexMap[dataset]);
+                m_VertexMap.Remove(dataset);
+            }
+
+            Notify(() => Graph);
+        }
+
+        private void UpdateGraph()
+        {
+            Notify(() => Graph);
         }
 
         private void ReloadProject()
         {
             m_Graph.Clear();
 
-            // There must be at least one dataset (the root dataset is created by default).
-            // Thus we can build a graph.
-            //
-            // First the root dataset.
-            var root = m_Project.Root();
-            var rootVertex = new DatasetViewVertex(new DatasetModel(root));
-            m_Graph.AddVertex(rootVertex);
+            Action<DatasetViewGraph, DatasetFacade, DatasetFacade> action =
+                (graph, parent, child) =>
+                    {
+                        if (m_VertexMap.ContainsKey(child))
+                        {
+                            return;
+                        }
 
-            var nodes = new Queue<Tuple<DatasetFacade, DatasetViewVertex>>();
-            nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(root, rootVertex));
+                        var vertex = new DatasetViewVertex(new DatasetModel(child));
+                        m_VertexMap.Add(child, vertex);
+                        graph.AddVertex(vertex);
 
-            // And then the children of the root dataset (and their children, etc. etc.)
-            while (nodes.Count > 0)
-            {
-                var pair = nodes.Dequeue();
-                var dataset = pair.Item1;
-                var vertex = pair.Item2;
+                        if (parent != null)
+                        {
+                            Debug.Assert(m_VertexMap.ContainsKey(parent), "Lost the parent!");
+                            var parentVertex = m_VertexMap[parent];
+                            var edge = new DatasetViewEdge(parentVertex, vertex);
+                            graph.AddEdge(edge);
+                        }
+                    };
 
-                foreach (var child in dataset.Children())
-                {
-                    var childVertex = new DatasetViewVertex(new DatasetModel(child));
-                    nodes.Enqueue(new Tuple<DatasetFacade, DatasetViewVertex>(child, childVertex));
-
-                    m_Graph.AddVertex(childVertex);
-                    m_Graph.AddEdge(new DatasetViewEdge(vertex, childVertex));
-                }
-            }
+            IterateOverGraph(action);
 
             Notify(() => Graph);
         }

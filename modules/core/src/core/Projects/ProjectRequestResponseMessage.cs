@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
 using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Projects
@@ -21,34 +20,26 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// The project that was requested.
         /// </summary>
-        /// <design>
-        /// This <c>ObjRef</c> needs to be created explicitly through a call to 
-        /// <c>RemotingServices.Marshal</c> in order to make sure we get the reference.
-        /// If we try to send the project directly (or an implicity ObjRef) then 
-        /// the proxy will be created in the first AppDomain where the ObjRef is deserialized.
-        /// That is not what we want because there are multiple AppDomains involved in sending 
-        /// messages in the application.
-        /// </design>
-        private readonly ObjRef m_ProjectReference;
+        private readonly IProject m_Project;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectRequestResponseMessage"/> class.
         /// </summary>
-        /// <param name="projectReference">The <see cref="ObjRef"/> object that will create the proxy to the <see cref="IProject"/>.</param>
-        public ProjectRequestResponseMessage(ObjRef projectReference)
+        /// <param name="project">The <see cref="IProject"/>.</param>
+        public ProjectRequestResponseMessage(IProject project)
             : base(false)
         {
-            m_ProjectReference = projectReference;
+            m_Project = project;
         }
 
         /// <summary>
         /// Gets a value indicating the currently active project.
         /// </summary>
-        public ObjRef ProjectReference
+        public IProject ProjectReference
         {
             get
             {
-                return m_ProjectReference;
+                return m_Project;
             }
         }
 
@@ -62,7 +53,7 @@ namespace Apollo.Core.Projects
         /// </returns>
         public override MessageBody Copy()
         {
-            return new ProjectRequestResponseMessage(m_ProjectReference);
+            return new ProjectRequestResponseMessage(m_Project);
         }
 
         /// <summary>
@@ -82,7 +73,7 @@ namespace Apollo.Core.Projects
             }
 
             var msg = other as ProjectRequestResponseMessage;
-            return (msg != null) && (msg.m_ProjectReference == m_ProjectReference);
+            return (msg != null) && (msg.m_Project == m_Project);
         }
 
         /// <summary>
@@ -104,7 +95,7 @@ namespace Apollo.Core.Projects
         /// </returns>
         public override string ToString()
         {
-            return "Returning the remoting URI.";
+            return "Returning the project.";
         }
 
         #endregion

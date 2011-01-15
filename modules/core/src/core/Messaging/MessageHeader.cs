@@ -16,7 +16,6 @@ namespace Apollo.Core.Messaging
     /// Stores the information required to succesfully send a message
     /// from one service to another service.
     /// </summary>
-    [Serializable]
     public sealed class MessageHeader : IEquatable<MessageHeader>
     {
         /// <summary>

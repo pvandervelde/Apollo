@@ -25,10 +25,10 @@ namespace Apollo.Core.Messaging
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection<KernelMessage> 
                 { 
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name2"), new DnsName("otherName1")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName2")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new PingResponseMessage()),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name2"), new DnsName("otherName1")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName2")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new ShutdownResponseMessage(false)),
                 },
         };
 
@@ -44,20 +44,6 @@ namespace Apollo.Core.Messaging
         public void CreateWithoutBody()
         {
             Assert.Throws<ArgumentNullException>(() => new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name"), new DnsName("otherName")), null));
-        }
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new KernelMessage(
-                new MessageHeader(MessageId.Next(), new DnsName("name"), new DnsName("otherName")), 
-                new PingMessage());
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(
-               () => msg.Header == otherMsg.Header
-                  && msg.Body == otherMsg.Body);
         }
     }
 }
