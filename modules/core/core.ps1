@@ -493,7 +493,7 @@ task buildBinaries -depends runInit, getVersion -action{
     $dirBinCore = Join-Path (Join-Path (Join-Path $dirSrc 'core') 'bin') $configuration
     $dirBinCoreBase = Join-Path (Join-Path (Join-Path $dirSrc 'core.base') 'bin') $configuration
     $dirBinCoreDataset = Join-Path (Join-Path (Join-Path $dirSrc 'core.dataset') 'bin') $configuration
-    
+
     $dirBinUnit = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.unit') 'bin') $configuration
     $dirBinSpec = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.spec') 'bin') $configuration
     $dirBinPerf = Join-Path (Join-Path (Join-Path $dirSrc 'core.test.perf') 'bin') $configuration
@@ -501,7 +501,7 @@ task buildBinaries -depends runInit, getVersion -action{
     Copy-Item (Join-Path $dirBinCore '*') $dirBuild -Force
     Copy-Item (Join-Path $dirBinCoreBase '*') $dirBuild -Force
     Copy-Item (Join-Path $dirBinCoreDataset '*') $dirBuild -Force
-    
+
     Copy-Item (Join-Path $dirBinUnit '*') $dirBuild -Force
     Copy-Item (Join-Path $dirBinSpec '*') $dirBuild -Force
     Copy-Item (Join-Path $dirBinPerf '*') $dirBuild -Force

@@ -9,12 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Security;
-using System.Security.Permissions;
 using System.Threading.Tasks;
 using Apollo.Core.Logging;
 using Apollo.Core.Properties;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 
@@ -24,7 +21,6 @@ namespace Apollo.Core.Messaging
     /// Provides message forwarding capabilities to the kernel of the Apollo application.
     /// </summary>
     [PrivateBinPathRequirements(PrivateBinPathOption.Core)]
-    [ServiceSecurityLevel(SecurityLevel.Minimum)]
     internal sealed class MessagePipeline : KernelService, IMessagePipeline
     {
         /// <summary>
@@ -391,20 +387,20 @@ namespace Apollo.Core.Messaging
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, GetStartupState());
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, GetStartupState());
 
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(
                     !sender.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exception_Messages_CannotCreateAMessageWithoutSender);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipient);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageToNoService);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(sender),
-                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
                     sender);
 
                 Enforce.Argument(() => information);
@@ -447,19 +443,7 @@ namespace Apollo.Core.Messaging
             }
 
             var id = MessageId.Next();
-
-            // Elevate to full trust. This is required because System.Threading.Parallel.Invoke() is in a
-            // full-trust assembly. In order to invoke it we'll need to run it in that environment (full trust).
-            // @Todo: Does this elevation drop off the stack before or after we finish with the thread, i.e. is the thread running full-trust?
-            //
-            // Really what you want here is send the message asynchronously but if possible not on a new thread. Putting up a new thread
-            // for each message may well lead to problems like race-conditions / deadlocks & maybe even worse thread pool exhaustion (there
-            // are after all only 25-ish threads in the pool).
-            // Reactive Extensions may be useful for this. Using them might mean that we have to twist some things around though.
-            // @Todo: Would the use of a new thread for each message cause a problem with a) race-conditions / deadlocks & b) thread pool exhaustion?
-            SecurityHelpers.Elevate(
-                new PermissionSet(PermissionState.Unrestricted),
-                () => Parallel.Invoke(() => SendMessage(sender, recipientObj, information, id, inReplyTo)));
+            Parallel.Invoke(() => SendMessage(sender, recipientObj, information, id, inReplyTo));
 
             return id;
         }

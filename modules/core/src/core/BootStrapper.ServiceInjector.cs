@@ -6,8 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
@@ -94,14 +92,8 @@ namespace Apollo.Core
                 // be loaded on system start-up.
                 if (container.IsRegistered<IStarter>())
                 {
-                    SecurityHelpers.Elevate(
-                        new PermissionSet(
-                            PermissionState.Unrestricted),
-                            () =>
-                                {
-                                    var startable = container.Resolve<IStarter>();
-                                    startable.Start();
-                                });
+                    var startable = container.Resolve<IStarter>();
+                    startable.Start();
                 }
 
                 var service = container.Resolve(typeToLoad) as KernelService;

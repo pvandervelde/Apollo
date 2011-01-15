@@ -19,7 +19,6 @@ namespace Apollo.Core.Logging
     /// Defines a <see cref="KernelService"/> that handles logging for the system.
     /// </summary>
     [PrivateBinPathRequirements(PrivateBinPathOption.Log)]
-    [ServiceSecurityLevel(SecurityLevel.Logger)]
     internal sealed partial class LogSink : MessageEnabledKernelService, ILogSink, IHaveServiceDependencies
     {
         /// <summary>

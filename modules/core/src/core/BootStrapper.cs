@@ -98,30 +98,6 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Determines the relevant security level.
-        /// </summary>
-        /// <param name="serviceType">Type of the service.</param>
-        /// <returns>
-        /// The <see cref="SecurityLevel"/> specified by the <see cref="ServiceSecurityLevelAttribute"/> or
-        /// <see cref="SecurityLevel.Minimum"/> if nothing is specified.
-        /// </returns>
-        private static SecurityLevel DetermineRelevantSecurityLevel(Type serviceType)
-        {
-            Debug.Assert(typeof(KernelService).IsAssignableFrom(serviceType), "The input type is not a derivative of KernelService.");
-
-            // Get the marker
-            var attributes = serviceType.GetCustomAttributes(typeof(ServiceSecurityLevelAttribute), false);
-            if (attributes.Length == 1)
-            {
-                // Create the marker
-                var level = ((ServiceSecurityLevelAttribute)attributes[0]).SecurityLevel;
-                return level;
-            }
-
-            return SecurityLevel.Minimum;
-        }
-
-        /// <summary>
         /// The collection that contains the base and private path information
         /// for the <c>AppDomain</c>s that need to be created.
         /// </summary>
@@ -305,8 +281,6 @@ namespace Apollo.Core
                     m_Progress.Mark(marker);
                 }
             }
-
-            var securityLevel = DetermineRelevantSecurityLevel(serviceType);
 
             List<string> filePaths;
             List<string> directoryPaths;

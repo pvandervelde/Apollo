@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
 using System.Security.Permissions;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -49,7 +48,7 @@ namespace Apollo.Core
                 set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
 
                 // Link to the unload event of the appdomain
-                SecurityHelpers.Elevate(set, () => domain.DomainUnload += (s, e) => owner.HandleServiceDomainUnloading(AppDomain.CurrentDomain));
+                domain.DomainUnload += (s, e) => owner.HandleServiceDomainUnloading(AppDomain.CurrentDomain);
             }
         }
     }

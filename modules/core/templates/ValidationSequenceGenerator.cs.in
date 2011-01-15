@@ -18,8 +18,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Utils;
 using Apollo.Utils.Licensing;
 
@@ -69,13 +67,8 @@ namespace Apollo.Core.Utils.Licensing
         /// </returns>
         private static DateTimeOffset ProcessStartTime()
         {
-            return SecurityHelpers.Elevate<DateTimeOffset>(
-                new PermissionSet(PermissionState.Unrestricted),
-                () => 
-                    {
-                        var ourProcess = Process.GetCurrentProcess();
-                        return new DateTimeOffset(ourProcess.StartTime);
-                    });
+            var ourProcess = Process.GetCurrentProcess();
+            return new DateTimeOffset(ourProcess.StartTime);
         }
 
         /// <summary>

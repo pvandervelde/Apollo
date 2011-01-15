@@ -154,9 +154,9 @@ function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [
     }
     
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
-	$text = $text -replace '@ATTRIBUTES@', $inputText
-	
-	Set-Content $newPath $text
+    $text = $text -replace '@ATTRIBUTES@', $inputText
+    
+    Set-Content $newPath $text
 }
 
 # Properties
