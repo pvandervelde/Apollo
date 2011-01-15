@@ -98,20 +98,6 @@ namespace Apollo.Core.Utils.Licensing
                     .As<ValidationServiceLicenseValidator>()
                     .InstancePerDependency();
 
-                builder.Register(c => new CoreLicenseValidator(
-                        c.Resolve<CoreLicenseValidationCache>(),
-                        c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
-                        () => DateTimeOffset.Now))
-                    .As<CoreLicenseValidator>()
-                    .InstancePerDependency();
-
-                builder.Register(c => new UserInterfaceLicenseValidator(
-                        c.Resolve<UserInterfaceLicenseValidationCache>(),
-                        c.Resolve<IValidationResultStorage>().StoreLicenseValidationResult,
-                        () => DateTimeOffset.Now))
-                    .As<UserInterfaceLicenseValidator>()
-                    .InstancePerDependency();
-
                 // Create a randomizer. For now we'll stick with the standard seed.
                 // @TODO: generate a proper random seed. We might be able to use
                 // a combination of:
@@ -125,63 +111,7 @@ namespace Apollo.Core.Utils.Licensing
                         c.Resolve<IValidator>(),
                         () => DateTimeOffset.Now,
                         () => random.NextDouble()))
-                    .OnActivated(a =>
-                    {
-                        // Create an endpoint and register that with the 
-                        // global channel.
-                        var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
-                            new TypedParameter(typeof(ILicenseValidationCache), cache),
-                            new TypedParameter(typeof(ICacheProxyHolder), cache));
-
-                        var channel = a.Context.Resolve<ICacheConnectorChannel>();
-                        channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
-                    })
                     .As<ValidationServiceLicenseValidationCache>()
-                    .InstancePerDependency();
-
-                builder.Register(c => new CoreLicenseValidationCache(
-                        c.Resolve<IValidator>(),
-                        () => DateTimeOffset.Now,
-                        () => random.NextDouble()))
-                    .OnActivated(a =>
-                    {
-                        // Create an endpoint and register that with the 
-                        // global channel.
-                        var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
-                            new TypedParameter(typeof(ILicenseValidationCache), cache),
-                            new TypedParameter(typeof(ICacheProxyHolder), cache));
-
-                        var channel = a.Context.Resolve<ICacheConnectorChannel>();
-                        channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
-                    })
-                    .As<CoreLicenseValidationCache>()
-                    .InstancePerDependency();
-
-                builder.Register(c => new UserInterfaceLicenseValidationCache(
-                        c.Resolve<IValidator>(),
-                        () => DateTimeOffset.Now,
-                        () => random.NextDouble()))
-                    .OnActivated(a =>
-                    {
-                        // Create an endpoint and register that with the 
-                        // global channel.
-                        var cache = a.Instance as ILicenseValidationCache;
-                        var endPoint = a.Context.Resolve<ICacheConnectorChannelEndpoint>(
-                            new TypedParameter(typeof(ILicenseValidationCache), cache),
-                            new TypedParameter(typeof(ICacheProxyHolder), cache));
-
-                        var channel = a.Context.Resolve<ICacheConnectorChannel>();
-                        channel.ConnectTo(AppDomain.CurrentDomain, endPoint);
-                    })
-                    .As<UserInterfaceLicenseValidationCache>()
-                    .InstancePerDependency();
-
-                builder.Register((c, p) => new CacheConnectorChannelEndpoint(
-                        () => p.TypedAs<ILicenseValidationCache>().CreateNewProxy(),
-                        p.TypedAs<ICacheProxyHolder>()))
-                    .As<ICacheConnectorChannelEndpoint>()
                     .InstancePerDependency();
 
                 builder.Register(c => new ValidationSequenceGenerator())

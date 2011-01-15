@@ -10,8 +10,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
@@ -33,15 +31,12 @@ namespace Apollo.Core
     /// services do NOT share AppDomains. Upon uninstalling a service the 
     /// service AppDomain will be removed.
     /// </design>
-    internal sealed partial class Kernel : MarshalByRefObject, INeedStartup, IKernel
+    internal sealed partial class Kernel : INeedStartup, IKernel
     {
         /// <summary>
         /// The collection of services that are currently known to the kernel.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "The storage requires that we link a type to a map of a service and an AppDomain. Nested generics is an easy way to achieve this.")]
-        private readonly Dictionary<Type, KeyValuePair<KernelService, AppDomain>> m_Services = 
-            new Dictionary<Type, KeyValuePair<KernelService, AppDomain>>();
+        private readonly Dictionary<Type, KernelService> m_Services = new Dictionary<Type, KernelService>();
 
         /// <summary>
         /// The collection which tracks the connections between a service and it's dependencies.
@@ -88,7 +83,7 @@ namespace Apollo.Core
             // possible if we start poking around in the data structures of the kernel.
             // In other words there shouldn't be any (legal) way of removing the
             // coreproxy object.
-            Install(new CoreProxy(this, commandStore, processingHelp, dnsNames), AppDomain.CurrentDomain);
+            Install(new CoreProxy(this, commandStore, processingHelp, dnsNames));
         }
 
         /// <summary>
@@ -173,34 +168,32 @@ namespace Apollo.Core
                 }
 
                 // Only start the service if it hasn't already been started
-                if (currentService.GetStartupState() != StartupState.Started)
+                if (currentService.StartupState != StartupState.Started)
                 {
-                    var map = m_Services[service.GetType()];
-                    var serviceDomain = map.Value;
+                    EventHandler<StartupProgressEventArgs> handler = (s, e) =>
+                        {
+                            // There are serviceIndex number of services that have finished
+                            // their startup process.
+                            var finishedPercentage = (double)startupOrder.IndexOf(currentService) / startupOrder.Count;
 
-                    // Assert full trust. This can be done safely
-                    // because we will load the ServiceProgressHandler which 
-                    // has an default (empty) constructor. It will not actually do 
-                    // any work. Once the constructor has finished
-                    // the full trust elevation will also finish. Any following
-                    // Progress events will be taken care of in the normal, low trust,
-                    // setting.
-                    var set = new PermissionSet(PermissionState.Unrestricted);
+                            // The current service is progress percentage finished. That
+                            // translates to:
+                            //   (percentage quantity for one service) * (progress in current service)
+                            //   which is: (1 / serviceCount) * progress / 100
+                            var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
+                            var total = finishedPercentage + currentPercentage;
 
-                    var progressHandler = Activator.CreateInstanceFrom(
-                            serviceDomain,
-                            typeof(ServiceProgressHandler).Assembly.LocalFilePath(),
-                            typeof(ServiceProgressHandler).FullName)
-                        .Unwrap() as ServiceProgressHandler;
-                    Debug.Assert(progressHandler != null, "Failed to create the UnloadHandler.");
-                    progressHandler.Attach(this, currentService, startupOrder.Count, startupOrder.IndexOf(currentService));
+                            RaiseStartupProgress((int)Math.Floor(total * 100), e.CurrentlyProcessing);
+                        };
+
+                    currentService.StartupProgress += handler;
                     try
                     {
                         // Start the service
                         currentService.Start();
 
                         // Check that that start was successful
-                        if (currentService.GetStartupState() != StartupState.Started)
+                        if (currentService.StartupState != StartupState.Started)
                         {
                             throw new KernelServiceStartupFailedException(
                                 string.Format(
@@ -211,7 +204,7 @@ namespace Apollo.Core
                     }
                     finally
                     {
-                        progressHandler.Detach();
+                        currentService.StartupProgress -= handler;
                     }
                 }
             }
@@ -243,7 +236,7 @@ namespace Apollo.Core
                 var typedCollection = new Dictionary<Type, ServiceVertex>();
                 foreach (var pair in m_Services)
                 {
-                    var vertex = new ServiceVertex(pair.Value.Key);
+                    var vertex = new ServiceVertex(pair.Value);
                     graph.AddVertex(vertex);
                     typedCollection.Add(pair.Key, vertex);
                 }
@@ -288,24 +281,23 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Returns a value indicating what the state of the object is regarding
+        /// Gets a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        /// <returns>
-        ///   The current startup state for the object.
-        /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
             Justification = "See: Framework Design Guidelines; Section 5.1, page 136.")]
-        public StartupState GetStartupState()
+        public StartupState StartupState
         {
-            return m_State;
+            get
+            {
+                return m_State;
+            }
         }
 
         /// <summary>
         /// Installs the specified service.
         /// </summary>
         /// <param name="service">The service which should be installed.</param>
-        /// <param name="serviceDomain">The <see cref="AppDomain"/> in which the service resides.</param>
         /// <remarks>
         /// <para>
         /// Only services that are 'installed' can be used by the service manager.
@@ -320,18 +312,10 @@ namespace Apollo.Core
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="service"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="serviceDomain"/> is <see langword="null" />.
-        /// </exception>
-        public void Install(KernelService service, AppDomain serviceDomain)
+        public void Install(KernelService service)
         {
-            // What happens with the lifetime management of all the services
-            // Effectively they should live until we lose them or until the
-            // app gets shut down 
-            // or until their AppDomain gets killed.
             {
                 Enforce.Argument(() => service);
-                Enforce.Argument(() => serviceDomain);
             }
 
             // We can only install when we are not started or started. No other 
@@ -397,48 +381,8 @@ namespace Apollo.Core
                 dependent.ConnectTo(service);
             }
             
-            // Only add an unload event if we're not attaching to the domain that 
-            // holds the kernel.
-            if (!ReferenceEquals(serviceDomain, AppDomain.CurrentDomain))
-            {
-                // Assert full trust. This can be done safely
-                // because we will attach to the DomainUnload event but we'll only 
-                // run secure code in the unload event.
-                var set = new PermissionSet(PermissionState.Unrestricted);
-
-                var unloadHandler = Activator.CreateInstanceFrom(
-                        serviceDomain,
-                        typeof(AppDomainUnloadHandler).Assembly.LocalFilePath(),
-                        typeof(AppDomainUnloadHandler).FullName)
-                    .Unwrap() as AppDomainUnloadHandler;
-
-                Debug.Assert(unloadHandler != null, "Failed to create the UnloadHandler.");
-                unloadHandler.AttachToUnloadEvent(this);
-            }
-
             // Finally add the service
-            m_Services.Add(service.GetType(), new KeyValuePair<KernelService, AppDomain>(service, serviceDomain));
-        }
-
-        /// <summary>
-        /// Handles the <see cref="AppDomain.DomainUnload"/> event for service AppDomains.
-        /// </summary>
-        /// <param name="domainToUnload">The <c>AppDomain</c> that is about to be unloaded.</param>
-        private void HandleServiceDomainUnloading(AppDomain domainToUnload)
-        {
-            if (domainToUnload != null)
-            {
-                // Go find the service(s) that reside in this appdomain.
-                var services = (from serviceMap in m_Services
-                                where serviceMap.Value.Value.Equals(domainToUnload)
-                                select serviceMap.Value.Key).ToList();
-
-                foreach (var service in services)
-                {
-                    // No need to explicitly unload the domain because that's already happening.
-                    Uninstall(service, false);
-                }
-            }
+            m_Services.Add(service.GetType(), service);
         }
 
         /// <summary>
@@ -459,7 +403,7 @@ namespace Apollo.Core
         {
             // Create a copy of the available service list. Then when we 
             // select a service we'll remove it from this list.
-            var available = new List<KernelService>(from service in m_Services select service.Value.Key);
+            var available = new List<KernelService>(from service in m_Services select service.Value);
 
             // Dependencies have just gotten a whole lot more complex
             // We want to be able to match up interfaces & abstract classes too
@@ -507,14 +451,14 @@ namespace Apollo.Core
             var result = new List<KeyValuePair<Type, KernelService>>();
             foreach (var map in m_Services)
             {
-                var dependencyHolder = map.Value.Key as IHaveServiceDependencies;
+                var dependencyHolder = map.Value as IHaveServiceDependencies;
                 if (dependencyHolder != null)
                 {
                     foreach (var dependency in dependencyHolder.ServicesToConnectTo())
                     {
                         if (dependency.IsAssignableFrom(service.GetType()))
                         {
-                            result.Add(new KeyValuePair<Type, KernelService>(dependency, map.Value.Key));
+                            result.Add(new KeyValuePair<Type, KernelService>(dependency, map.Value));
                             break;
                         }
                     }
@@ -528,14 +472,13 @@ namespace Apollo.Core
         /// Uninstalls the specified service.
         /// </summary>
         /// <param name="service">The service that needs to be uninstalled.</param>
-        /// <param name="shouldUnloadDomain">Indicates if the <c>AppDomain</c> that held the service should be unloaded or not.</param>
         /// <remarks>
         /// Once a service is uninstalled it can no longer be started. It is effectively
         /// removed from the list of known services.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "Once we started uninstalling it must finish.")]
-        public void Uninstall(KernelService service, bool shouldUnloadDomain)
+        public void Uninstall(KernelService service)
         {
             // Unlike installation, we can pretty much always uninstall.
             // It may get ugly but we can remove the references.
@@ -559,8 +502,8 @@ namespace Apollo.Core
 
             // Can only uninstall the service if we have the same
             // reference as the object that was installed
-            var installedServiceMap = m_Services[service.GetType()];
-            if (!ReferenceEquals(service, installedServiceMap.Key))
+            var installedService = m_Services[service.GetType()];
+            if (!ReferenceEquals(service, installedService))
             {
                 throw new CannotUninstallNonequivalentServiceException();
             }
@@ -607,39 +550,6 @@ namespace Apollo.Core
 
             // Remove the service. Now that it doesn't have any of the connections anymore.
             m_Services.Remove(service.GetType());
-            
-            // Unload the appdomain. It shouldn't be needed anymore.
-            // We don't need to disconnect from the DomainUnload event, the code
-            // that handles that lives inside the AppDomain so it'll be removed
-            // automatically
-            // only unload if it's not our own appdomain (that would be bad).
-            var serviceDomain = installedServiceMap.Value;
-            if (shouldUnloadDomain && !serviceDomain.Equals(AppDomain.CurrentDomain))
-            {
-                var domainName = serviceDomain.FriendlyName;
-                try
-                {
-                    // Assert permission to control the AppDomain. This can be done safely
-                    // because we will attach to the AssemblyResolve event but we'll only 
-                    // resolve assemblies from a known set of paths or files.
-                    var set = new PermissionSet(PermissionState.None);
-                    set.AddPermission(new SecurityPermission(SecurityPermissionFlag.ControlAppDomain));
-
-                    // This can go wrong if there are still threads executing in this
-                    // AppDomain. If it does go wrong we'll bail out semi-gracefully
-                    AppDomain.Unload(serviceDomain);
-                }
-                catch (Exception)
-                {
-                    // @Note should this do something nasty to the application?
-                    LogMessage(
-                            LevelToLog.Error,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                Resources_NonTranslatable.Kernel_LogMessage_DomainUnloadFailed, 
-                                domainName));
-                }
-            }
         }
 
         /// <summary>
@@ -649,31 +559,13 @@ namespace Apollo.Core
         /// <param name="message">The message.</param>
         private void LogMessage(LevelToLog level, string message)
         {
-            var coreProxy = m_Services[typeof(CoreProxy)].Key as CoreProxy;
+            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
             var context = new LogMessageForKernelContext(level, message);
 
             Debug.Assert(coreProxy.Contains(LogMessageForKernelCommand.CommandId), "A command has gone missing.");
             coreProxy.Invoke(LogMessageForKernelCommand.CommandId, context);
-        }
-
-        /// <summary>
-        /// Obtains a lifetime service object to control the lifetime policy for this instance.
-        /// </summary>
-        /// <returns>
-        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new lifetime service object initialized to the value of the <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
-        /// </returns>
-        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission. 
-        /// </exception>
-        /// <filterpriority>2</filterpriority>
-        /// <PermissionSet>
-        ///     <IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/>
-        /// </PermissionSet>
-        public override object InitializeLifetimeService()
-        {
-            // We don't really want the system to GC our kernel at random times...
-            return null;
         }
     }
 }

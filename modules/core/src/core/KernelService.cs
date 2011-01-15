@@ -18,7 +18,7 @@ namespace Apollo.Core
     /// public properties. You never know where the real object is so even property calls can
     /// take a long time.
     /// </design>
-    internal abstract class KernelService : MarshalByRefObject, INeedStartup
+    internal abstract class KernelService : INeedStartup
     {
         /// <summary>
         /// Stores the current startup state.
@@ -99,20 +99,15 @@ namespace Apollo.Core
         protected abstract void StopService();
 
         /// <summary>
-        /// Returns a value indicating what the state of the object is regarding
+        /// Gets a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        /// <returns>
-        /// The current startup state for the object.
-        /// </returns>
-        /// <design>
-        /// This is a method and not a property because the most of the main objects
-        /// in the kernel space will live in their own AppDomain. This means that
-        /// access of properties can be slow and could possibly have side effects.
-        /// </design>
-        public StartupState GetStartupState()
-        { 
-            return m_StartupState; 
+        public StartupState StartupState
+        {
+            get
+            {
+                return m_StartupState;
+            }
         }
 
         /// <summary>
@@ -194,24 +189,6 @@ namespace Apollo.Core
             {
                 return !IsNotStarted && !IsStarting && !IsStopping && !IsStopped;
             }
-        }
-
-        /// <summary>
-        /// Obtains a lifetime service object to control the lifetime policy for this instance.
-        /// </summary>
-        /// <returns>
-        /// An object of type <see cref="T:System.Runtime.Remoting.Lifetime.ILease"/> used to control the lifetime policy 
-        /// for this instance. This is the current lifetime service object for this instance if one exists; otherwise, a new 
-        /// lifetime service object initialized to the value of the 
-        /// <see cref="P:System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime"/> property.
-        /// </returns>
-        /// <exception cref="T:System.Security.SecurityException">The immediate caller does not have infrastructure permission.
-        /// </exception>
-        /// <PermissionSet><IPermission class="System.Security.Permissions.SecurityPermission, mscorlib, Version=2.0.3600.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" version="1" Flags="RemotingConfiguration, Infrastructure"/></PermissionSet>
-        public override object InitializeLifetimeService()
-        {
-            // We don't really want the system to remove our services at random times ..
-            return null;
         }
     }
 }

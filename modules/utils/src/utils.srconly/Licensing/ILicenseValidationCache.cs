@@ -39,14 +39,5 @@ namespace Apollo.Utils.Licensing
         /// license check expires.
         /// </param>
         void Invalidate(TimePeriod nextExpiration);
-
-        /// <summary>
-        /// Creates a new <see cref="ILicenseValidationCacheProxy"/> object with the
-        /// current cache as owner.
-        /// </summary>
-        /// <returns>
-        ///     A new <see cref="ILicenseValidationCacheProxy"/> object.
-        /// </returns>
-        ILicenseValidationCacheProxy CreateNewProxy();
     }
 }

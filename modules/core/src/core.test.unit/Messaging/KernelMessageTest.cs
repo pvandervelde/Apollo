@@ -25,10 +25,10 @@ namespace Apollo.Core.Messaging
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection<KernelMessage> 
                 { 
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name2"), new DnsName("otherName1")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName2")), new PingMessage()),
-                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new PingResponseMessage()),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name2"), new DnsName("otherName1")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName2")), new ShutdownResponseMessage(true)),
+                    new KernelMessage(new MessageHeader(MessageId.Next(), new DnsName("name1"), new DnsName("otherName1")), new ShutdownResponseMessage(false)),
                 },
         };
 
@@ -52,7 +52,7 @@ namespace Apollo.Core.Messaging
         {
             var msg = new KernelMessage(
                 new MessageHeader(MessageId.Next(), new DnsName("name"), new DnsName("otherName")), 
-                new PingMessage());
+                new ShutdownResponseMessage(true));
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
             AssertEx.That(
