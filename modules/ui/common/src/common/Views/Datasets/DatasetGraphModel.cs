@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Apollo.Core.UserInterfaces.Project;
+using GraphSharp.Algorithms.Layout;
+using GraphSharp.Algorithms.Layout.Simple.Tree;
 using Lokad;
 
 namespace Apollo.UI.Common.Views.Datasets
@@ -24,12 +26,6 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly ProjectFacade m_Project;
 
         /// <summary>
-        /// The context for executing actions that have
-        /// thread affinity.
-        /// </summary>
-        private readonly IContextAware m_Context;
-
-        /// <summary>
         /// The graph that holds the information about the
         /// datasets for visualization purposes.
         /// </summary>
@@ -42,29 +38,40 @@ namespace Apollo.UI.Common.Views.Datasets
             new Dictionary<DatasetFacade, DatasetViewVertex>();
 
         /// <summary>
+        /// The type of layout that should be used.
+        /// </summary>
+        private string m_LayoutType;
+
+        /// <summary>
+        /// The layout parameters.
+        /// </summary>
+        private ILayoutParameters m_LayoutParameters;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetGraphModel"/> class.
         /// </summary>
         /// <param name="facade">The project that holds the graph of datasets.</param>
-        /// <param name="context">The context for executing actions that have thread affinity.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
-        /// </exception>
-        public DatasetGraphModel(ProjectFacade facade, IContextAware context)
+        public DatasetGraphModel(ProjectFacade facade)
         {
             {
                 Enforce.Argument(() => facade);
-                Enforce.Argument(() => context);
             }
-
-            m_Context = context;
 
             m_Project = facade;
             m_Project.OnDatasetCreated += (s, e) => AddDatasetToGraph();
             m_Project.OnDatasetDeleted += (s, e) => RemoveDatasetFromGraph();
             m_Project.OnDatasetUpdated += (s, e) => UpdateGraph();
+
+            LayoutType = "Tree";
+            LayoutParameters = new SimpleTreeLayoutParameters 
+                { 
+                    LayerGap = 250,
+                    VertexGap = 250,
+                    Direction = LayoutDirection.TopToBottom,
+                };
 
             ReloadProject();
         }
@@ -187,6 +194,38 @@ namespace Apollo.UI.Common.Views.Datasets
             get 
             { 
                 return m_Graph; 
+            }
+        }
+
+        /// <summary>
+        /// Gets the layout type.
+        /// </summary>
+        public string LayoutType
+        {
+            get 
+            {
+                return m_LayoutType;
+            }
+
+            private set 
+            {
+                m_LayoutType = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the layout parameters for the current layout method.
+        /// </summary>
+        public ILayoutParameters LayoutParameters
+        {
+            get 
+            {
+                return m_LayoutParameters;
+            }
+
+            set
+            {
+                m_LayoutParameters = value;
             }
         }
 

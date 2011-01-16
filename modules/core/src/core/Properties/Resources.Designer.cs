@@ -61,11 +61,20 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to .
+        ///   Looks up a localized string similar to Root.
         /// </summary>
-        internal static string Exceptions_Messages_DatasetCannotBecomeParent_WithId {
+        internal static string Projects_Dataset_RootDatasetName {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_DatasetCannotBecomeParent_WithId", resourceCulture);
+                return ResourceManager.GetString("Projects_Dataset_RootDatasetName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to This dataset contains the default dataset information for the project. Any child dataset will inherit this default information unless it specifies otherwise..
+        /// </summary>
+        internal static string Projects_Dataset_RootDatasetSummary {
+            get {
+                return ResourceManager.GetString("Projects_Dataset_RootDatasetSummary", resourceCulture);
             }
         }
     }

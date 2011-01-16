@@ -36,7 +36,7 @@ namespace Apollo.UI.Common.Commands
                 return false;
             }
 
-            return datasetFacade.CanBecomeParent;
+            return datasetFacade.IsValid ? datasetFacade.CanBecomeParent : false;
         }
         
         /// <summary>

@@ -29,7 +29,7 @@ namespace Apollo.UI.Common.Views.Datasets
         private static readonly Dictionary<DatasetCreator, double> s_CreatorToImportanceMap
             = new Dictionary<DatasetCreator, double>()
                 {
-                    { DatasetCreator.System, 0.75 },
+                    { DatasetCreator.System, 0.65 },
                     { DatasetCreator.User, 1.0 },
                 };
 

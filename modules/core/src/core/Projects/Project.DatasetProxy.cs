@@ -155,6 +155,17 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
+            /// Deletes the current dataset and all its children.
+            /// </summary>
+            public void Delete()
+            {
+                // Note that after this action the current object is no longer 'valid'
+                // i.e. it can't be used to connect to the owner anymore other than to
+                // check validity.
+                m_Owner.DeleteDatasetAndChildren(m_IdOfDataset);
+            }
+
+            /// <summary>
             /// Gets a value indicating whether the new dataset can be moved from one parent
             /// to another parent.
             /// </summary>

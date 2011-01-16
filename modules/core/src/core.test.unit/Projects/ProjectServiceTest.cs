@@ -365,9 +365,8 @@ namespace Apollo.Core.Projects
             var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
-            var closable = marshal.As<ICanClose>();
+            var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
 
             var builder = new Mock<IBuildProjects>();
             {
@@ -453,9 +452,8 @@ namespace Apollo.Core.Projects
             var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
-            var closable = marshal.As<ICanClose>();
+            var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
             {
                 closable.Setup(p => p.Close())
                     .Verifiable();
@@ -530,9 +528,8 @@ namespace Apollo.Core.Projects
             var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
-            var marshal = new Mock<MarshalByRefObject>();
-            var project = marshal.As<IProject>();
-            var closable = marshal.As<ICanClose>();
+            var project = new Mock<IProject>();
+            var closable = project.As<ICanClose>();
 
             var builder = new Mock<IBuildProjects>();
             {

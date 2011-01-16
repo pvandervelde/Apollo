@@ -49,6 +49,11 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Deletes the current dataset and all its children.
+        /// </summary>
+        void Delete();
+
+        /// <summary>
         /// Gets a value indicating whether the new dataset can be moved from one parent
         /// to another parent.
         /// </summary>

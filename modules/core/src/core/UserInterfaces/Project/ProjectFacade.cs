@@ -24,7 +24,7 @@ namespace Apollo.Core.UserInterfaces.Project
     /// one facade creates a new project but the other facade(s) don't get the new project. 
     /// </para>
     /// </design>
-    public sealed class ProjectFacade : MarshalByRefObject, INotifyOnProjectChanges
+    public sealed class ProjectFacade : INotifyOnProjectChanges
     {
         /// <summary>
         /// The current project.

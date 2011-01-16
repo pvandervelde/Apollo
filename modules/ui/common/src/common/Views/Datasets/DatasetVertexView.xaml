@@ -10,7 +10,9 @@
              d:DesignWidth="450"
              d:DesignHeight="300"
              MinWidth="450"
-             MinHeight="300">
+             MinHeight="300"
+             MaxWidth="600"
+             MaxHeight="600">
     <!-- DataContext is: DatasetModel-->
     <Grid>
         <Grid.RowDefinitions>
@@ -129,7 +131,7 @@
             <ListBox BorderThickness="0"
                      Background="Transparent"
                      SelectionMode="Single">
-
+                <!-- Show all locations where the persistence files live, including version numbers and sequence numbers -->
             </ListBox>
         </Border>
 
@@ -188,7 +190,7 @@
             <Grid Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="2">
-                <ProgressBar Value="60"
+                <ProgressBar Value="0"
                              Margin="5, 0, 5, 5"/>
                 <Label HorizontalAlignment="Center"
                        Margin="5, 0, 5, 5">

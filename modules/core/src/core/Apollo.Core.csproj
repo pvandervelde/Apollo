@@ -209,6 +209,7 @@
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
+    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
     <Compile Include="Projects\CreateNewProjectMessage.cs" />
@@ -342,7 +343,6 @@
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />
     <Compile Include="UserInterfaces\Project\CannotCreateNewProjectException.cs" />
-    <Compile Include="UserInterfaces\Project\CannotDeleteDatasetException.cs" />
     <Compile Include="UserInterfaces\Project\CannotLoadProjectException.cs" />
     <Compile Include="UserInterfaces\Project\CannotUnloadProjectException.cs" />
     <Compile Include="UserInterfaces\Project\CreateProjectCommand.cs" />

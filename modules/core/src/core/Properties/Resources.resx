@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Projects_Dataset_RootDatasetName" xml:space="preserve">
+    <value>Root</value>
+  </data>
+  <data name="Projects_Dataset_RootDatasetSummary" xml:space="preserve">
+    <value>This dataset contains the default dataset information for the project. Any child dataset will inherit this default information unless it specifies otherwise.</value>
+  </data>
 </root>

@@ -9,11 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Projects;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 
@@ -22,7 +19,7 @@ namespace Apollo.Core.UserInterfaces.Project
     /// <summary>
     /// Defines a facade for a dataset.
     /// </summary>
-    public sealed class DatasetFacade : MarshalByRefObject, INotifyOnDatasetChange, IEquatable<DatasetFacade>
+    public sealed class DatasetFacade : INotifyOnDatasetChange, IEquatable<DatasetFacade>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -128,15 +125,6 @@ namespace Apollo.Core.UserInterfaces.Project
             var local = OnDatasetNameUpdated;
             if (local != null)
             {
-                // When this event is send we'll probably have (or get) a call stack that
-                // contains entries that aren't qualified to do things in our
-                // AppDomain. We expect these callers to be in the UI domain. Given that the
-                // UI domain has full trust (it is set-up in the initial appdomain which should
-                // have full trust) there shouldn't be any security restrictions on the sending of 
-                // the event. To enforce that we request elevation.
-                // SecurityHelpers.Elevate(
-                //    new PermissionSet(PermissionState.Unrestricted),
-                //    () => local(this, EventArgs.Empty));
                 local(this, EventArgs.Empty);
             }
         }
@@ -167,15 +155,6 @@ namespace Apollo.Core.UserInterfaces.Project
             var local = OnDatasetSummaryUpdated;
             if (local != null)
             {
-                // When this event is send we'll probably have (or get) a call stack that
-                // contains entries that aren't qualified to do things in our
-                // AppDomain. We expect these callers to be in the UI domain. Given that the
-                // UI domain has full trust (it is set-up in the initial appdomain which should
-                // have full trust) there shouldn't be any security restrictions on the sending of 
-                // the event. To enforce that we request elevation.
-                // SecurityHelpers.Elevate(
-                //    new PermissionSet(PermissionState.Unrestricted),
-                //    () => local(this, EventArgs.Empty));
                 local(this, EventArgs.Empty);
             }
         }
@@ -208,15 +187,6 @@ namespace Apollo.Core.UserInterfaces.Project
             EventHandler<EventArgs> local = OnInvalidate;
             if (local != null)
             {
-                // When this event is send we'll probably have (or get) a call stack that
-                // contains entries that aren't qualified to do things in our
-                // AppDomain. We expect these callers to be in the UI domain. Given that the
-                // UI domain has full trust (it is set-up in the initial appdomain which should
-                // have full trust) there shouldn't be any security restrictions on the sending of 
-                // the event. To enforce that we request elevation.
-                // SecurityHelpers.Elevate(
-                //    new PermissionSet(PermissionState.Unrestricted),
-                //    () => local(this, EventArgs.Empty));
                 local(this, EventArgs.Empty);
             }
         }
@@ -234,7 +204,7 @@ namespace Apollo.Core.UserInterfaces.Project
         }
 
         /// <summary>
-        /// Removes the current dataset from the project.
+        /// Removes the current dataset and it's children from the project.
         /// </summary>
         public void Delete()
         {
@@ -243,7 +213,7 @@ namespace Apollo.Core.UserInterfaces.Project
                 throw new CannotDeleteDatasetException();
             }
 
-            throw new NotImplementedException();
+            m_Dataset.Delete();
         }
 
         /// <summary>
@@ -321,15 +291,6 @@ namespace Apollo.Core.UserInterfaces.Project
             EventHandler<EventArgs> local = OnLoaded;
             if (local != null)
             {
-                // When this event is send we'll probably have (or get) a call stack that
-                // contains entries that aren't qualified to do things in our
-                // AppDomain. We expect these callers to be in the UI domain. Given that the
-                // UI domain has full trust (it is set-up in the initial appdomain which should
-                // have full trust) there shouldn't be any security restrictions on the sending of 
-                // the event. To enforce that we request elevation.
-                // SecurityHelpers.Elevate(
-                //    new PermissionSet(PermissionState.Unrestricted),
-                //    () => local(this, EventArgs.Empty));
                 local(this, EventArgs.Empty);
             }
         }
@@ -344,15 +305,6 @@ namespace Apollo.Core.UserInterfaces.Project
             EventHandler<EventArgs> local = OnUnloaded;
             if (local != null)
             {
-                // When this event is send we'll probably have (or get) a call stack that
-                // contains entries that aren't qualified to do things in our
-                // AppDomain. We expect these callers to be in the UI domain. Given that the
-                // UI domain has full trust (it is set-up in the initial appdomain which should
-                // have full trust) there shouldn't be any security restrictions on the sending of 
-                // the event. To enforce that we request elevation.
-                // SecurityHelpers.Elevate(
-                //    new PermissionSet(PermissionState.Unrestricted),
-                //    () => local(this, EventArgs.Empty));
                 local(this, EventArgs.Empty);
             }
         }

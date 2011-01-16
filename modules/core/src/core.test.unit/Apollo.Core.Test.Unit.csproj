@@ -189,6 +189,7 @@
     <Compile Include="NotificationNameTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
+    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
     <Compile Include="Projects\CreateNewProjectMessageTest.cs" />
@@ -224,7 +225,6 @@
     <Compile Include="UserInterfaces\DuplicateNotificationExceptionTest.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\CannotCreateNewProjectExceptionTest.cs" />
-    <Compile Include="UserInterfaces\Project\CannotDeleteDatasetExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\CannotLoadProjectExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\CannotUnloadProjectExceptionTest.cs" />
     <Compile Include="UserInterfaces\Project\CreateProjectCommandTest.cs" />

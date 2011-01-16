@@ -136,6 +136,11 @@ namespace Apollo.Core.Projects
                             CanBecomeParent = true,
                             CanBeAdopted = false,
                         });
+
+                // Set the standard name and summary for the root
+                var dataset = m_Datasets[m_RootDataset];
+                dataset.Name = Resources.Projects_Dataset_RootDatasetName;
+                dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
         }
 

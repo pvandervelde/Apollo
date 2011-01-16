@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using GraphSharp.Controls;
-using QuickGraph;
 
 namespace Apollo.UI.Common.Views.Datasets
 {

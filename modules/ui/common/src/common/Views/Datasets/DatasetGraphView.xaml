@@ -38,41 +38,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <!--
-            <Style.Triggers>
-                <DataTrigger Binding="{Binding Path=IsValid}"
-                             Value="false">
-                    <Setter TargetName="vertexBorder"
-                            Property="Effect">
-                        <Setter.Value>
-                            <DropShadowEffect BlurRadius="4"
-                                              Color="Red"
-                                              Direction="0"
-                                              Opacity="0.9" />
-                        </Setter.Value>
-                    </Setter>
-                </DataTrigger>
-            </Style.Triggers>
-            -->
         </Style>
 
 
         <Style TargetType="{x:Type graphsharp:EdgeControl}">
-            <Style.Resources>
-                <!--
-                <ToolTip x:Key="ToolTipContent">
-                    <StackPanel>
-                        <TextBlock FontWeight="Bold"
-                                   Text="Edge.ID" />
-                        <TextBlock Text="{Binding ID}" />
-                    </StackPanel>
-                </ToolTip>
-                -->
-            </Style.Resources>
-            <!--
-            <Setter Property="ToolTip"
-                    Value="{StaticResource ToolTipContent}" />
-            -->
+            <Setter Property="StrokeThickness"
+                    Value="5" />
         </Style>
     </UserControl.Resources>
     <Grid>
@@ -87,7 +58,7 @@
                 CornerRadius="10,10,10,10"
                 Padding="4">
             <zoom:ZoomControl Grid.Row="0"
-                              Zoom="0.2"
+                              Zoom="0.1"
                               ZoomBoxOpacity="0.5"
                               Background="Transparent">
 
@@ -95,10 +66,10 @@
                                           x:FieldModifier="private"
                                           Margin="10"
                                           Graph="{Binding Path=Graph}"
-                                          LayoutAlgorithmType="Tree"
+                                          LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
+                                          LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"
                                           OverlapRemovalAlgorithmType="FSA"
                                           HighlightAlgorithmType="Simple" />
-
             </zoom:ZoomControl>
         </Border>
     </Grid>

@@ -36,7 +36,7 @@ namespace Apollo.UI.Common.Commands
                 return false;
             }
 
-            return datasetFacade.CanBeDeleted;
+            return datasetFacade.IsValid ? datasetFacade.CanBeDeleted : false;
         }
         
         /// <summary>

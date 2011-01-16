@@ -185,7 +185,89 @@ namespace Apollo.Core.Projects
             return id;
         }
 
-        // Remove dataset?
+        /// <summary>
+        /// Deletes the given dataset and all its children.
+        /// </summary>
+        /// <remarks>
+        /// The dataset and all its children will be deleted. If any of the datasets are
+        /// loaded onto a (remote) machine they will be unloaded just before being deleted.
+        /// No data will be saved.
+        /// </remarks>
+        /// <param name="dataset">The dataset that should be deleted.</param>
+        /// <exception cref="CannotDeleteDatasetException">
+        /// Thrown when the dataset or one of its children cannot be deleted. The exception
+        /// is thrown before any of the datasets are deleted.
+        /// </exception>
+        private void DeleteDatasetAndChildren(DatasetId dataset)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
+            }
+
+            if (!IsValid(dataset))
+            {
+                // The dataset isn't valid so that means we don't have it.
+                return;
+            }
+
+            // Get all the datasets that need to be deleted
+            // make sure we do this in an ordered way. We need to 
+            // remove the children before we can remove a parent.
+            var datasetsToDelete = new Stack<DatasetId>();
+            datasetsToDelete.Push(dataset);
+            
+            var nodesToProcess = new Queue<DatasetId>();
+            nodesToProcess.Enqueue(dataset);
+
+            while (nodesToProcess.Count > 0)
+            {
+                var node = nodesToProcess.Dequeue();
+
+                Debug.Assert(m_Datasets.ContainsKey(node), "The dataset was in the graph but not in the collection.");
+                if (!m_Datasets[node].CanBeDeleted)
+                {
+                    throw new CannotDeleteDatasetException();
+                }
+
+                var children = Children(node);
+                foreach (var child in children)
+                {
+                    nodesToProcess.Enqueue(child.Id);
+                    datasetsToDelete.Push(child.Id);
+                }
+            }
+
+            // Delete all the datasets
+            while (datasetsToDelete.Count > 0)
+            {
+                var datasetToDelete = datasetsToDelete.Pop();
+
+                if (IsLoaded(datasetToDelete))
+                {
+                    UnloadFromMachine(datasetToDelete);
+                }
+
+                if (m_DatasetObservers.ContainsKey(datasetToDelete))
+                {
+                    var observers = m_DatasetObservers[datasetToDelete];
+                    foreach (var observer in observers)
+                    {
+                        observer.DatasetInvalidated();
+                    }
+                }
+
+                // Delete the nodes from the graph
+                m_Graph.RemoveVertex(datasetToDelete);
+                m_DatasetObservers.Remove(datasetToDelete);
+                m_DatasetProxies.Remove(datasetToDelete);
+                m_Datasets.Remove(datasetToDelete);
+            }
+
+            foreach (var observer in m_ProjectObservers)
+            {
+                observer.DatasetDeleted();
+            }
+        }
 
         /// <summary>
         /// Returns the collection of children for a given dataset.

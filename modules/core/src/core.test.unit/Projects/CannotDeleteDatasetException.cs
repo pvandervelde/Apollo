@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.Projects
 {
     [TestFixture]
     [Description("Tests the CannotDeleteDatasetException class.")]
