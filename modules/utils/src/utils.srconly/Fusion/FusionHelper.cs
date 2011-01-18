@@ -170,7 +170,7 @@ namespace Apollo.Utils.Fusion
                 if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
-                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x", CultureInfo.InvariantCulture));
+                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x2", CultureInfo.InvariantCulture));
                     return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }

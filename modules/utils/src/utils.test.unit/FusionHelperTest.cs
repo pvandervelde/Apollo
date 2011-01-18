@@ -51,6 +51,16 @@ namespace Apollo.Utils
             // gallio
             m_Assemblies.Add(GetAssemblyPath(typeof(FixtureSetUpAttribute).Assembly), typeof(FixtureSetUpAttribute).Assembly);
 
+            // lokad
+            m_Assemblies.Add(GetAssemblyPath(typeof(Lokad.Enforce).Assembly), typeof(Lokad.Enforce).Assembly);
+
+            // NLog - This one is to verify a bug fix
+            //   The bug behavior is that we couldn't locate this assembly because
+            //   the public key token is: 5120e14c03d0593c but we were looking for
+            //   5120e14c3d0593c (note the missing 0 in front of the c). This was 
+            //   because we did the bit-to-hex for the public key token incorrectly.
+            m_Assemblies.Add(GetAssemblyPath(typeof(NLog.Logger).Assembly), typeof(NLog.Logger).Assembly);
+
             // us
             m_Assemblies.Add(GetAssemblyPath(Assembly.GetExecutingAssembly()), Assembly.GetExecutingAssembly());
         }
@@ -119,6 +129,17 @@ namespace Apollo.Utils
             var name = Assembly.GetExecutingAssembly().GetName().FullName;
             var result = ExecuteLoadAssembly(helper, name);
             Assert.AreSame(Assembly.GetExecutingAssembly(), result, "Expected assembly with name {0} but got {1}", name, result);
+        }
+
+        [Test]
+        [Description("Tests that an assembly can be loaded with a full name.")]
+        public void LoadAssemblyBasedOnPublicToken()
+        {
+            var helper = InitializeFusionHelper();
+            Assert.AreSame(typeof(Lokad.Enforce).Assembly, ExecuteLoadAssembly(helper, typeof(Lokad.Enforce).Assembly.FullName));
+            Assert.AreSame(typeof(TestAttribute).Assembly, ExecuteLoadAssembly(helper, typeof(TestAttribute).Assembly.FullName));
+            Assert.AreSame(typeof(NLog.Logger).Assembly, ExecuteLoadAssembly(helper, typeof(NLog.Logger).Assembly.FullName));
+            Assert.AreSame(typeof(string).Assembly, ExecuteLoadAssembly(helper, typeof(string).Assembly.FullName));
         }
 
         [Test]
