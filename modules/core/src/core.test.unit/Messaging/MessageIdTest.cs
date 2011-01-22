@@ -5,8 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core.Messaging
 {
@@ -17,89 +20,49 @@ namespace Apollo.Core.Messaging
     public sealed class MessageIdTest
     {
         private static MessageId Create(Guid id)
-        { 
+        {
             return (MessageId)Mirror.ForType<MessageId>().Constructor.Invoke(id);
         }
 
-        [Test]
-        [Description("Checks that the == operator returns false if the first object is null.")]
-        public void EqualsOperatorWithFirstObjectNull()
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MessageId>
         {
-            MessageId first = null;
-            var second = MessageId.Next();
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances =
+                (new List<int> 
+                    {
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        9,
+                    }).Select(o => MessageId.Next()),
+        };
 
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if the second object is null.")]
-        public void EqualsOperatorWithSecondObjectNull()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<MessageId>
         {
-            var first = MessageId.Next();
-            MessageId second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = MessageId.Next();
-            var second = first.Clone();
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = MessageId.Next();
-            var second = MessageId.Next();
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the first object is null.")]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            MessageId first = null;
-            var second = MessageId.Next();
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the second object is null.")]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = MessageId.Next();
-            MessageId second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = MessageId.Next();
-            var second = first.Clone();
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = MessageId.Next();
-            var second = MessageId.Next();
-
-            Assert.IsTrue(first != second);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<MessageId> 
+                { 
+                    MessageId.Next(),
+                    MessageId.Next(),
+                    MessageId.Next(),
+                    MessageId.Next(),
+                    MessageId.Next(),
+                },
+        };
 
         [Test]
         [Description("Checks that the > operator returns false if the first object is null.")]
@@ -241,46 +204,6 @@ namespace Apollo.Core.Messaging
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is null.")]
-        public void EqualsWithNullObject()
-        {
-            var first = MessageId.Next();
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns true if the second object is equal to the first.")]
-        public void EqualsWithEqualObjects()
-        {
-            var first = MessageId.Next();
-            object second = first.Clone();
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is not equal to the first.")]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = MessageId.Next();
-            object second = MessageId.Next();
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects type is not equal to the first.")]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = MessageId.Next();
-            var second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
 
         [Test]

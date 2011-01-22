@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Projects;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core.Projects
 {
@@ -21,6 +23,52 @@ namespace Apollo.Core.Projects
         {
             return (DatasetId)Mirror.ForType<DatasetId>().Constructor.Invoke(id);
         }
+
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetId>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances =
+                new List<DatasetId> 
+                    {
+                        Create(0),
+                        Create(1),
+                        Create(2),
+                        Create(3),
+                        Create(4),
+                        Create(5),
+                        Create(6),
+                        Create(7),
+                        Create(8),
+                        Create(9),
+                    },
+        };
+
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<DatasetId>
+        {
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<DatasetId> 
+                { 
+                    Create(0),
+                    Create(1),
+                    Create(2),
+                    Create(3),
+                    Create(4),
+                    Create(5),
+                    Create(6),
+                    Create(7),
+                    Create(8),
+                    Create(9),
+                },
+        };
 
         [Test]
         [Description("Checks that the == operator returns false if the first object is null.")]

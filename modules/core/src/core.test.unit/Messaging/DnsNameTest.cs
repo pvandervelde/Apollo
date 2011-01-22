@@ -5,8 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 
 namespace Apollo.Core.Messaging
 {
@@ -16,85 +18,51 @@ namespace Apollo.Core.Messaging
             Justification = "Unit tests do not need documentation.")]
     public sealed class DnsNameTest
     {
-        [Test]
-        [Description("Checks that the == operator returns false if the first object is null.")]
-        public void EqualsOperatorWithFirstObjectNull()
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DnsName>
         {
-            DnsName first = null;
-            var second = new DnsName("name");
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances =
+                new List<DnsName> 
+                    {
+                        new DnsName("0"),
+                        new DnsName("1"),
+                        new DnsName("2"),
+                        new DnsName("3"),
+                        new DnsName("4"),
+                        new DnsName("5"),
+                        new DnsName("6"),
+                        new DnsName("7"),
+                        new DnsName("8"),
+                        new DnsName("9"),
+                    },
+        };
 
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if the second object is null.")]
-        public void EqualsOperatorWithSecondObjectNull()
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<DnsName>
         {
-            var first = new DnsName("name");
-            DnsName second = null;
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
-        public void EqualsOperatorWithEqualObject()
-        {
-            var first = new DnsName("name");
-            var second = new DnsName("name");
-
-            Assert.IsTrue(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
-        public void EqualsOperatorWithNonequalObjects()
-        {
-            var first = new DnsName("name");
-            var second = new DnsName("otherName");
-
-            Assert.IsFalse(first == second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the first object is null.")]
-        public void NotEqualsOperatorWithFirstObjectNull()
-        {
-            DnsName first = null;
-            var second = new DnsName("name");
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if the second object is null.")]
-        public void NotEqualsOperatorWithSecondObjectNull()
-        {
-            var first = new DnsName("name");
-            DnsName second = null;
-
-            Assert.IsTrue(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
-        public void NotEqualsOperatorWithEqualObject()
-        {
-            var first = new DnsName("name");
-            var second = new DnsName("name");
-
-            Assert.IsFalse(first != second);
-        }
-
-        [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
-        public void NotEqualsOperatorWithNonequalObjects()
-        {
-            var first = new DnsName("name");
-            var second = new DnsName("otherName");
-
-            Assert.IsTrue(first != second);
-        }
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<DnsName> 
+                { 
+                    new DnsName("0"),
+                    new DnsName("1"),
+                    new DnsName("2"),
+                    new DnsName("3"),
+                    new DnsName("4"),
+                    new DnsName("5"),
+                    new DnsName("6"),
+                    new DnsName("7"),
+                    new DnsName("8"),
+                    new DnsName("9"),
+                },
+        };
 
         [Test]
         [Description("Checks that the > operator returns false if the first object is null.")]
@@ -224,46 +192,6 @@ namespace Apollo.Core.Messaging
             var second = first.Clone();
 
             Assert.AreEqual(first, second);
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is null.")]
-        public void EqualsWithNullObject()
-        {
-            var first = new DnsName("name");
-            object second = null;
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns true if the second object is equal to the first.")]
-        public void EqualsWithEqualObjects()
-        {
-            var first = new DnsName("name");
-            object second = new DnsName("name");
-
-            Assert.IsTrue(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects is not equal to the first.")]
-        public void EqualsWithUnequalObjects()
-        {
-            var first = new DnsName("name");
-            object second = new DnsName("otherName");
-
-            Assert.IsFalse(first.Equals(second));
-        }
-
-        [Test]
-        [Description("Checks that the Equals method returns false if the second objects type is not equal to the first.")]
-        public void EqualsWithUnequalObjectTypes()
-        {
-            var first = new DnsName("name");
-            object second = new object();
-
-            Assert.IsFalse(first.Equals(second));
         }
 
         [Test]
