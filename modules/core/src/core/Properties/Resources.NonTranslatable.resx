@@ -330,4 +330,7 @@
   <data name="Exception_Messages_CannotUnloadProject" xml:space="preserve">
     <value>The current project cannot be unloaded.</value>
   </data>
+  <data name="Exception_Messages_CannotUseDatasetAfterItBecomesInvalid" xml:space="preserve">
+    <value>A dataset cannot be used after it has become invalid.</value>
+  </data>
 </root>

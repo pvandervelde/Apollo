@@ -11,6 +11,7 @@ using System.Linq;
 using Apollo.Core.Base.Projects;
 using Apollo.Utils;
 using MbUnit.Framework;
+using MbUnit.Framework.ContractVerifiers;
 using Moq;
 
 namespace Apollo.Core.Projects
@@ -21,6 +22,57 @@ namespace Apollo.Core.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetProxyTest
     {
+        private static IProject CreateProject()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            return new Project(distributor);
+        }
+
+        private static Project.DatasetProxy GenerateDataset(IProject project)
+        {
+            return (Project.DatasetProxy)project.BaseDataset();
+        }
+
+        [VerifyContract]
+        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<IProxyDataset>
+        {
+            // Note that the collision probability depends quite a lot on the number of 
+            // elements you test on. The fewer items you test on the larger the collision probability
+            // (if there is one obviously). So it's better to test for a large range of items
+            // (which is more realistic too, see here: http://gallio.org/wiki/doku.php?id=mbunit:contract_verifiers:hash_code_acceptance_contract)
+            CollisionProbabilityLimit = CollisionProbability.VeryLow,
+            UniformDistributionQuality = UniformDistributionQuality.Excellent,
+            DistinctInstances =
+                (new List<int> 
+                    {
+                        0,
+                        1,
+                        2,
+                        3,
+                        4,
+                        5,
+                        6,
+                        7,
+                        9,
+                    }).Select(o => (IProxyDataset)GenerateDataset(CreateProject())),
+        };
+
+        [VerifyContract]
+        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
+        public readonly IContract EqualityVerification = new EqualityContract<Project.DatasetProxy>
+        {
+            ImplementsOperatorOverloads = true,
+            EquivalenceClasses = new EquivalenceClassCollection<Project.DatasetProxy> 
+                { 
+                    GenerateDataset(CreateProject()),
+                    GenerateDataset(CreateProject()),
+                    GenerateDataset(CreateProject()),
+                    GenerateDataset(CreateProject()),
+                    GenerateDataset(CreateProject()),
+                },
+        };
+
         [Test]
         [Description("Checks that a dataset can be obtained from the project.")]
         public void GetDataset()
@@ -31,6 +83,52 @@ namespace Apollo.Core.Projects
 
             Assert.IsNotNull(dataset);
             Assert.IsNotNull(dataset.Id);
+        }
+
+        [Test]
+        [Description("Checks that when the name of a dataset is set a notification is send out.")]
+        public void Name()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            {
+                observer.Setup(o => o.NameUpdated())
+                    .Verifiable();
+            }
+
+            dataset.RegisterForEvents(observer.Object);
+            dataset.Name = "MyNewName";
+
+            // Set the name again, to the same thing. This 
+            // shouldn't notify
+            dataset.Name = "MyNewName";
+            observer.Verify(o => o.NameUpdated(), Times.Once());
+        }
+
+        [Test]
+        [Description("Checks that when the summary of a dataset is set a notification is send out.")]
+        public void Summary()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            {
+                observer.Setup(o => o.SummaryUpdated())
+                    .Verifiable();
+            }
+
+            dataset.RegisterForEvents(observer.Object);
+            dataset.Summary = "MyNewName";
+
+            // Set the summary again, to the same thing. This 
+            // shouldn't notify
+            dataset.Summary = "MyNewName";
+            observer.Verify(o => o.SummaryUpdated(), Times.Once());
         }
 
         [Test]
@@ -142,6 +240,14 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
+            var observer = new Mock<INotifyOnProjectChanges>();
+            {
+                observer.Setup(o => o.DatasetCreated())
+                    .Verifiable();
+            }
+
+            project.RegisterForEvents(observer.Object);
+
             var creationInformation = new DatasetCreationInformation()
             {
                 CreatedOnRequestOf = DatasetCreator.User,
@@ -161,6 +267,8 @@ namespace Apollo.Core.Projects
             Assert.IsFalse(child.CanBeAdopted);
             Assert.IsFalse(child.CanBeCopied);
             Assert.IsFalse(child.CanBeDeleted);
+
+            observer.Verify(o => o.DatasetCreated(), Times.Once());
         }
 
         [Test]
@@ -212,6 +320,278 @@ namespace Apollo.Core.Projects
                 Assert.IsFalse(child.CanBeCopied);
                 Assert.IsFalse(child.CanBeDeleted);
             }
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when deleting a dataset after the project is closed.")]
+        public void DeleteWhenClosed()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var root = project.BaseDataset();
+
+            var creationInformation = new DatasetCreationInformation()
+            {
+                CreatedOnRequestOf = DatasetCreator.User,
+                CanBecomeParent = false,
+                CanBeAdopted = false,
+                CanBeCopied = false,
+                CanBeDeleted = true,
+                LoadFrom = new Mock<IPersistenceInformation>().Object,
+            };
+
+            var dataset = root.CreateNewChild(creationInformation);
+            project.Close();
+
+            Assert.Throws<ArgumentException>(() => dataset.Delete());
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when deleting a dataset that can't be deleted.")]
+        public void DeleteUndeletableDataset()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var root = project.BaseDataset();
+
+            Assert.Throws<CannotDeleteDatasetException>(() => root.Delete());
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
+        public void DeleteDatasetWithUndeletableChild()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var root = project.BaseDataset();
+
+            var creationInformation = new DatasetCreationInformation()
+            {
+                CreatedOnRequestOf = DatasetCreator.User,
+                CanBecomeParent = true,
+                CanBeAdopted = false,
+                CanBeCopied = false,
+                CanBeDeleted = true,
+                LoadFrom = new Mock<IPersistenceInformation>().Object,
+            };
+
+            var child1 = root.CreateNewChild(creationInformation);
+
+            creationInformation = new DatasetCreationInformation()
+            {
+                CreatedOnRequestOf = DatasetCreator.User,
+                CanBecomeParent = false,
+                CanBeAdopted = false,
+                CanBeCopied = false,
+                CanBeDeleted = false,
+                LoadFrom = new Mock<IPersistenceInformation>().Object,
+            };
+
+            var child2 = child1.CreateNewChild(creationInformation);
+
+            Assert.Throws<CannotDeleteDatasetException>(() => child1.Delete());
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
+        public void DeleteDatasetWithChildren()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var root = project.BaseDataset();
+
+            var projectObserver = new Mock<INotifyOnProjectChanges>();
+            {
+                projectObserver.Setup(o => o.DatasetDeleted())
+                    .Verifiable();
+            }
+
+            project.RegisterForEvents(projectObserver.Object);
+
+            var datasetObserver = new Mock<INotifyOnDatasetChange>();
+            {
+                datasetObserver.Setup(o => o.DatasetInvalidated())
+                    .Verifiable();
+            }
+
+            // Create a 'binary' tree of datasets. This should create the following tree:
+            //                            X
+            //                          /   \
+            //                         /     \
+            //                        /       \
+            //                       /         \
+            //                      /           \
+            //                     X             X
+            //                   /   \         /   \
+            //                  /     \       /     \
+            //                 /       \     /       \
+            //                X         X   X         X
+            //              /   \     /   \
+            //             X     X   X     X
+            var children = new List<IProxyDataset>();
+            var datasets = new Queue<IProxyDataset>();
+            datasets.Enqueue(root);
+
+            int count = 0;
+            while (count < 10)
+            {
+                var creationInformation = new DatasetCreationInformation()
+                {
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    CanBecomeParent = true,
+                    CanBeAdopted = false,
+                    CanBeCopied = false,
+                    CanBeDeleted = true,
+                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                };
+
+                var parent = datasets.Dequeue();
+                var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
+                foreach (var child in newChildren)
+                {
+                    child.RegisterForEvents(datasetObserver.Object);
+
+                    datasets.Enqueue(child);
+                    children.Add(child);
+                    count++;
+                }
+            }
+
+            // We assume that the children are created in an ordered manner so just delete the first child
+            children[0].Delete();
+
+            Assert.AreEqual(4, project.NumberOfDatasets);
+            Assert.IsFalse(children[0].IsValid);
+            Assert.IsTrue(children[1].IsValid);
+            Assert.IsFalse(children[2].IsValid);
+            Assert.IsFalse(children[3].IsValid);
+            Assert.IsTrue(children[4].IsValid);
+            Assert.IsTrue(children[5].IsValid);
+            Assert.IsFalse(children[6].IsValid);
+            Assert.IsFalse(children[7].IsValid);
+            Assert.IsFalse(children[8].IsValid);
+            Assert.IsFalse(children[9].IsValid);
+
+            projectObserver.Verify(o => o.DatasetDeleted(), Times.Once());
+            datasetObserver.Verify(o => o.DatasetInvalidated(), Times.Exactly(7));
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when registering an observer after the project is closed.")]
+        public void RegisterForEventsWhenClosed()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+            project.Close();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            Assert.Throws<ArgumentException>(() => dataset.RegisterForEvents(observer.Object));
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when registering a null observer.")]
+        public void RegisterForEventsWithNullObserver()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            Assert.Throws<ArgumentNullException>(() => dataset.RegisterForEvents(null));
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when registering an observer on an invalid dataset.")]
+        public void RegisterForEventsWithInvalidDataset()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var root = project.BaseDataset();
+
+            var creationInformation = new DatasetCreationInformation()
+            {
+                CreatedOnRequestOf = DatasetCreator.User,
+                CanBecomeParent = false,
+                CanBeAdopted = false,
+                CanBeCopied = false,
+                CanBeDeleted = true,
+                LoadFrom = new Mock<IPersistenceInformation>().Object,
+            };
+
+            var dataset = root.CreateNewChild(creationInformation);
+            dataset.Delete();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            Assert.Throws<ArgumentException>(() => dataset.RegisterForEvents(observer.Object));
+        }
+
+        [Test]
+        [Description("Checks that an observer cannot be registered twice.")]
+        public void RegisterProjectObserverTwice()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            {
+                observer.Setup(o => o.NameUpdated())
+                    .Verifiable();
+            }
+
+            dataset.RegisterForEvents(observer.Object);
+            dataset.RegisterForEvents(observer.Object);
+
+            dataset.Name = "MyNewName";
+            observer.Verify(o => o.NameUpdated(), Times.Once());
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when unregistering an observer after the project is closed.")]
+        public void UnregisterFromEventsWhenClosed()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+            project.Close();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            Assert.Throws<ArgumentException>(() => dataset.UnregisterFromEvents(observer.Object));
+        }
+
+        [Test]
+        [Description("Checks that an exception is thrown when unregistering a null observer.")]
+        public void UnregisterFromEventsWithNullObserver()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            Assert.Throws<ArgumentNullException>(() => dataset.UnregisterFromEvents(null));
+        }
+
+        [Test]
+        [Description("Checks that an observer can be unregistered.")]
+        public void UnregisterFromEvents()
+        {
+            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+
+            var observer = new Mock<INotifyOnDatasetChange>();
+            {
+                observer.Setup(o => o.NameUpdated())
+                    .Verifiable();
+            }
+
+            dataset.RegisterForEvents(observer.Object);
+            dataset.Name = "MyNewName";
+            observer.Verify(o => o.NameUpdated(), Times.Once());
+
+            dataset.UnregisterFromEvents(observer.Object);
+
+            dataset.Name = "MyOtherNewName";
+            observer.Verify(o => o.NameUpdated(), Times.Once());
         }
     }
 }

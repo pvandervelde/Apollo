@@ -46,7 +46,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The read-only view of the base dataset.
         /// </returns>
-        IProxyDatasets BaseDataset();
+        IProxyDataset BaseDataset();
 
         /// <summary>
         /// Saves the project and all the datasets to the given stream.
@@ -85,7 +85,7 @@ namespace Apollo.Core.Projects
         /// <param name="observer">
         /// The object that should be notified when there are changes in the project.
         /// </param>
-        void RegisterProjectObserver(INotifyOnProjectChanges observer);
+        void RegisterForEvents(INotifyOnProjectChanges observer);
 
         /// <summary>
         /// Unregisters the observer.
@@ -93,6 +93,6 @@ namespace Apollo.Core.Projects
         /// <param name="observer">
         /// The object that is notified when there are chanes in the project.
         /// </param>
-        void UnregisterProjectObserver(INotifyOnProjectChanges observer);
+        void UnregisterFromEvents(INotifyOnProjectChanges observer);
     }
 }

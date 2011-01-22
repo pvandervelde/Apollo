@@ -237,7 +237,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The read-only view of the base dataset.
         /// </returns>
-        public IProxyDatasets BaseDataset()
+        public IProxyDataset BaseDataset()
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
@@ -310,7 +310,7 @@ namespace Apollo.Core.Projects
         /// <param name="observer">
         /// The object that should be notified when there are changes in the project.
         /// </param>
-        public void RegisterProjectObserver(INotifyOnProjectChanges observer)
+        public void RegisterForEvents(INotifyOnProjectChanges observer)
         {
             {
                 Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
@@ -329,7 +329,7 @@ namespace Apollo.Core.Projects
         /// <param name="observer">
         /// The object that is notified when there are chanes in the project.
         /// </param>
-        public void UnregisterProjectObserver(INotifyOnProjectChanges observer)
+        public void UnregisterFromEvents(INotifyOnProjectChanges observer)
         {
             {
                 Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);

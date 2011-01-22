@@ -14,7 +14,7 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Defines the interface for objects that store information about datasets.
     /// </summary>
-    internal interface IProxyDatasets : IEquatable<IProxyDatasets>
+    internal interface IProxyDataset : IEquatable<IProxyDataset>
     {
         /// <summary>
         /// Gets a value indicating the ID number of the dataset.
@@ -157,7 +157,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The collection of sub-datasets.
         /// </returns>
-        IEnumerable<IProxyDatasets> Children();
+        IEnumerable<IProxyDataset> Children();
 
         /// <summary>
         /// Gets a value indicating whether the current dataset is allowed to request the 
@@ -180,7 +180,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The newly created child.
         /// </returns>
-        IProxyDatasets CreateNewChild(DatasetCreationInformation newChild);
+        IProxyDataset CreateNewChild(DatasetCreationInformation newChild);
 
         /// <summary>
         /// Creates a set of child datasets and returns a collection containing the ID numbers
@@ -190,7 +190,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// A collection containing the newly created children.
         /// </returns>
-        IEnumerable<IProxyDatasets> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren);
+        IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren);
 
         /// <summary>
         /// Gets a value indicating the set of commands that apply to the current dataset.
@@ -210,6 +210,6 @@ namespace Apollo.Core.Projects
         /// Unregisters the given object for change notifications.
         /// </summary>
         /// <param name="toBeNotified">The object that is registered for change notifications.</param>
-        void UnregisterForEvents(INotifyOnDatasetChange toBeNotified);
+        void UnregisterFromEvents(INotifyOnDatasetChange toBeNotified);
     }
 }

@@ -78,7 +78,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <summary>
         /// The dataset for which this object is providing a facade.
         /// </summary>
-        private readonly IProxyDatasets m_Dataset;
+        private readonly IProxyDataset m_Dataset;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetFacade"/> class.
@@ -89,7 +89,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        internal DatasetFacade(IProxyDatasets dataset)
+        internal DatasetFacade(IProxyDataset dataset)
         {
             {
                 Enforce.Argument(() => dataset);

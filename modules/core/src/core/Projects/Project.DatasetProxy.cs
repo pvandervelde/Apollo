@@ -18,7 +18,7 @@ using Lokad;
 namespace Apollo.Core.Projects
 {
     /// <content>
-    /// Defines the implementation of <see cref="IProxyDatasets"/>.
+    /// Defines the implementation of <see cref="IProxyDataset"/>.
     /// </content>
     internal sealed partial class Project
     {
@@ -27,8 +27,12 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Mirrors the storage of dataset information.
         /// </summary>
+        /// <design>
+        /// It would be much nicer if this class was private, however if we want to test equality through
+        /// the equality contract verifiers then we need a reference to the class.
+        /// </design>
         [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
-        private sealed class DatasetProxy : IProxyDatasets
+        internal sealed class DatasetProxy : IProxyDataset, IEquatable<DatasetProxy>, IEquatable<IProxyDataset>
         {
             /// <summary>
             /// Implements the operator ==.
@@ -159,6 +163,10 @@ namespace Apollo.Core.Projects
             /// </summary>
             public void Delete()
             {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                }
+
                 // Note that after this action the current object is no longer 'valid'
                 // i.e. it can't be used to connect to the owner anymore other than to
                 // check validity.
@@ -318,6 +326,7 @@ namespace Apollo.Core.Projects
             public void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range)
             {
                 {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
                         preferredLocation != LoadingLocation.None, 
                         Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation);
@@ -367,12 +376,12 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// The collection of sub-datasets.
             /// </returns>
-            public IEnumerable<IProxyDatasets> Children()
+            public IEnumerable<IProxyDataset> Children()
             {
                 var children = from dataset in m_Owner.Children(m_IdOfDataset)
                                select m_Owner.ObtainProxyFor(dataset.Id);
 
-                return new List<IProxyDatasets>(children);
+                return new List<IProxyDataset>(children);
             }
 
             /// <summary>
@@ -403,9 +412,10 @@ namespace Apollo.Core.Projects
             /// <exception cref="DatasetCannotBecomeParentException">
             /// Thrown when the current dataset cannot become a parent.
             /// </exception>
-            public IProxyDatasets CreateNewChild(DatasetCreationInformation newChild)
+            public IProxyDataset CreateNewChild(DatasetCreationInformation newChild)
             {
                 {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
                     Enforce.Argument(() => newChild);
                 }
@@ -422,9 +432,10 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// A collection containing the ID numbers of the newly created children.
             /// </returns>
-            public IEnumerable<IProxyDatasets> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
+            public IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
             {
                 {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
                     Enforce.Argument(() => newChildren);
                     Enforce.With<ArgumentException>(newChildren.Any(), Resources_NonTranslatable.Exception_Messages_MissingCreationInformation);
@@ -432,9 +443,9 @@ namespace Apollo.Core.Projects
 
                 var result = from child in newChildren
                                 let newDataset = m_Owner.CreateDataset(m_IdOfDataset, child)
-                             select new DatasetProxy(m_Owner, newDataset) as IProxyDatasets;
+                             select new DatasetProxy(m_Owner, newDataset) as IProxyDataset;
 
-                return new List<IProxyDatasets>(result);
+                return new List<IProxyDataset>(result);
             }
 
             /// <summary>
@@ -455,6 +466,8 @@ namespace Apollo.Core.Projects
             public void RegisterForEvents(INotifyOnDatasetChange observer)
             {
                 {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<ArgumentException>(IsValid, Resources_NonTranslatable.Exception_Messages_CannotUseDatasetAfterItBecomesInvalid);
                     Enforce.Argument(() => observer);
                 }
 
@@ -465,9 +478,10 @@ namespace Apollo.Core.Projects
             /// Unregisters the given object for change notifications.
             /// </summary>
             /// <param name="observer">The object that is registered for change notifications.</param>
-            public void UnregisterForEvents(INotifyOnDatasetChange observer)
+            public void UnregisterFromEvents(INotifyOnDatasetChange observer)
             {
                 {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.Argument(() => observer);
                 }
 
@@ -475,15 +489,39 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
-            /// Determines whether the specified <see cref="IProxyDatasets"/> is equal to this instance.
+            /// Determines whether the specified <see cref="DatasetProxy"/> is equal to this instance.
             /// </summary>
-            /// <param name="other">The <see cref="IProxyDatasets"/> to compare with this instance.</param>
+            /// <param name="other">The <see cref="DatasetProxy"/> to compare with this instance.</param>
             /// <returns>
-            ///     <see langword="true"/> if the specified <see cref="IProxyDatasets"/> is equal to this instance; otherwise, <see langword="false"/>.
+            ///     <see langword="true"/> if the specified <see cref="DatasetProxy"/> is equal to this instance; otherwise, <see langword="false"/>.
             /// </returns>
             [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
                 Justification = "Documentation can start with a language keyword")]
-            public bool Equals(IProxyDatasets other)
+            public bool Equals(DatasetProxy other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return other.m_IdOfDataset.Equals(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="IProxyDataset"/> is equal to this instance.
+            /// </summary>
+            /// <param name="other">The <see cref="IProxyDataset"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="IProxyDataset"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool Equals(IProxyDataset other)
             {
                 if (other == null)
                 {
@@ -496,7 +534,7 @@ namespace Apollo.Core.Projects
                 }
 
                 var dataset = other as DatasetProxy;
-                return (dataset != null) && dataset.m_IdOfDataset.Equals(m_IdOfDataset);
+                return Equals(dataset);
             }
 
             /// <summary>
@@ -515,7 +553,7 @@ namespace Apollo.Core.Projects
                     return true;
                 }
 
-                var dataset = obj as IProxyDatasets;
+                var dataset = obj as IProxyDataset;
                 return Equals(dataset);
             }
 

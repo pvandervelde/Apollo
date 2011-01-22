@@ -11,7 +11,7 @@ using Apollo.Core.Base.Projects;
 namespace Apollo.Core.Projects
 {
     /// <summary>
-    /// Defines the interface for objects that need to be notified of changes in a <see cref="IProxyDatasets"/>.
+    /// Defines the interface for objects that need to be notified of changes in a <see cref="IProxyDataset"/>.
     /// </summary>
     internal interface INotifyOnDatasetChange
     {

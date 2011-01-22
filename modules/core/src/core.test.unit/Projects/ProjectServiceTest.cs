@@ -265,17 +265,30 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that the service can start successfully.")]
-        [Ignore("Not implemented yet")]
-        public void Start()
-        { 
-        }
-
-        [Test]
         [Description("Checks that the service can stop successfully.")]
-        [Ignore("Not implemented yet")]
         public void Stop()
         {
+            var dnsNames = new MockDnsNameConstants();
+            var processor = new Mock<IHelpMessageProcessing>();
+            var storage = new LicenseValidationResultStorage();
+            var distributor = new Mock<IHelpDistributingDatasets>();
+            var builder = new Mock<IBuildProjects>();
+
+            var service = new ProjectService(
+                dnsNames,
+                processor.Object,
+                storage,
+                distributor.Object,
+                builder.Object);
+            var pipeline = new Mock<KernelService>();
+            var pipelineInterface = pipeline.As<IMessagePipeline>();
+            service.ConnectTo(pipeline.Object);
+
+            service.Start();
+            Assert.AreEqual(StartupState.Started, service.StartupState);
+
+            service.Stop();
+            Assert.AreEqual(StartupState.Stopped, service.StartupState);
         }
 
         [Test]
@@ -416,7 +429,7 @@ namespace Apollo.Core.Projects
 
         [Test]
         [Description("Checks that LoadProjectMessage is handled correctly.")]
-        [Ignore("Not implemented yet.")]
+        [Ignore("The project persistence is not finished yet. Can't test until that is there.")]
         public void HandleLoadProjectMessage()
         {
         }

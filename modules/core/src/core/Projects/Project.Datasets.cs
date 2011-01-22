@@ -42,8 +42,8 @@ namespace Apollo.Core.Projects
         /// The collection that holds the proxies for the datasets that we are mirroring 
         /// for the UI.
         /// </summary>
-        private readonly Dictionary<DatasetId, IProxyDatasets> m_DatasetProxies =
-            new Dictionary<DatasetId, IProxyDatasets>();
+        private readonly Dictionary<DatasetId, IProxyDataset> m_DatasetProxies =
+            new Dictionary<DatasetId, IProxyDataset>();
 
         /// <summary>
         /// The collection that holds all the object that require notification when a 
@@ -77,7 +77,7 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <returns>The requested proxy.</returns>
-        private IProxyDatasets ObtainProxyFor(DatasetId id)
+        private IProxyDataset ObtainProxyFor(DatasetId id)
         {
             {
                 Debug.Assert(IsValid(id), "Cannot create a proxy for an invalid ID.");

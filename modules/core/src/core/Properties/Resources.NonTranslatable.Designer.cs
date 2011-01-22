@@ -214,6 +214,15 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A dataset cannot be used after it has become invalid..
+        /// </summary>
+        internal static string Exception_Messages_CannotUseDatasetAfterItBecomesInvalid {
+            get {
+                return ResourceManager.GetString("Exception_Messages_CannotUseDatasetAfterItBecomesInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The project cannot be used after it has been closed..
         /// </summary>
         internal static string Exception_Messages_CannotUseProjectAfterClosingIt {

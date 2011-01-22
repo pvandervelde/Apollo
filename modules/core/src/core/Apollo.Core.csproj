@@ -219,7 +219,7 @@
     <Compile Include="Projects\INotifyOnDatasetChange.cs" />
     <Compile Include="Projects\INotifyOnProjectChanges.cs" />
     <Compile Include="Projects\IProject.cs" />
-    <Compile Include="Projects\IProxyDatasets.cs" />
+    <Compile Include="Projects\IProxyDataset.cs" />
     <Compile Include="Projects\LoadProjectMessage.cs" />
     <Compile Include="Projects\Project.cs" />
     <Compile Include="Projects\Project.DatasetProxy.cs" />

@@ -103,6 +103,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\mbunit\Gallio.dll</HintPath>
     </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="MbUnit, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\mbunit\MbUnit.dll</HintPath>
@@ -113,6 +117,10 @@
     </Reference>
     <Reference Include="Moq">
       <HintPath>..\..\tools\moq\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
