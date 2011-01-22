@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Core.UserInterfaces.Application;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Utils;
 using Autofac;
 using Lokad;

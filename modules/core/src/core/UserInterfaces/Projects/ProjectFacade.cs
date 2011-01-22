@@ -13,7 +13,7 @@ using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
     /// Defines a facade for a project.
@@ -174,6 +174,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetCreated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -188,6 +190,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;
@@ -202,6 +206,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnDatasetUpdated()
         {
             var local = OnDatasetUpdated;

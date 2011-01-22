@@ -7,7 +7,7 @@
 using Apollo.Core.Projects;
 using Apollo.Utils.Commands;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
     /// Defines an <see cref="ICommandContext"/> for the <see cref="CreateProjectCommand"/>.

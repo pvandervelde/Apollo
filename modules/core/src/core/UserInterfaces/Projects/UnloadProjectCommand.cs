@@ -13,28 +13,28 @@ using Apollo.Utils.Commands;
 using Lokad;
 using ICommand = Apollo.Utils.Commands.ICommand;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
-    /// Defines a command that loads an existing project.
+    /// Defines a command that unloads the current project.
     /// </summary>
-    internal sealed class LoadProjectCommand : ICommand
+    public sealed class UnloadProjectCommand : ICommand
     {
         #region Static members
 
         /// <summary>
-        /// Defines the Id for the <c>LoadProjectCommand</c>.
+        /// Defines the Id for the <c>UnloadProjectCommand</c>.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A CommandId reference is immutable")]
-        public static readonly CommandId CommandId = new CommandId(@"LoadProject");
+        public static readonly CommandId CommandId = new CommandId(@"UnloadProject");
 
         #endregion
 
         /// <summary>
-        /// The delegate used to send a message for which a response is expected.
+        /// The delegate used to send a message for which a response is not expected.
         /// </summary>
-        private readonly SendMessageWithResponse m_MessageSender;
+        private readonly SendMessageWithoutResponse m_MessageSender;
 
         /// <summary>
         /// The name of the project system.
@@ -42,7 +42,7 @@ namespace Apollo.Core.UserInterfaces.Project
         private readonly DnsName m_ProjectName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadProjectCommand"/> class.
+        /// Initializes a new instance of the <see cref="UnloadProjectCommand"/> class.
         /// </summary>
         /// <param name="projectName">The <c>DnsName</c> of the project sub-system.</param>
         /// <param name="messageSender">The function used to send a message.</param>
@@ -52,7 +52,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal LoadProjectCommand(DnsName projectName, SendMessageWithResponse messageSender)
+        internal UnloadProjectCommand(DnsName projectName, SendMessageWithoutResponse messageSender)
         {
             {
                 Enforce.Argument(() => projectName);
@@ -83,14 +83,10 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <param name="context">The context for the command.</param>
         public void Invoke(ICommandContext context)
         {
-            var commandContext = context as LoadProjectContext;
+            var commandContext = context as UnloadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            var future = m_MessageSender(m_ProjectName, new LoadProjectMessage(commandContext.LoadFrom), MessageId.None);
-            var body = future.Result() as ProjectRequestResponseMessage;
-            Debug.Assert(body != null, "Incorrect message response received.");
-
-            commandContext.Result = body.ProjectReference;
+            m_MessageSender(m_ProjectName, new UnloadProjectMessage(), MessageId.None);
         }
 
         #endregion

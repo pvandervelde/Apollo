@@ -15,7 +15,7 @@ using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
     [Description("Tests the DatasetFacade class.")]

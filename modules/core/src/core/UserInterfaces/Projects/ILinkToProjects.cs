@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
     /// Defines the interface for objects that provide an interface abstraction to the

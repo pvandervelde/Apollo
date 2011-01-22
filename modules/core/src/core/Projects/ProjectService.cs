@@ -28,11 +28,6 @@ namespace Apollo.Core.Projects
         private readonly ILockObject m_Lock = new LockObject();
 
         /// <summary>
-        /// The collection of DnsNames.
-        /// </summary>
-        private readonly IDnsNameConstants m_DnsNames;
-
-        /// <summary>
         /// The object that stores the validity of the license.
         /// </summary>
         private readonly IValidationResultStorage m_LicenseValidationStorage;
@@ -79,7 +74,6 @@ namespace Apollo.Core.Projects
 
             // No locks are necessary because we're in the constructor, no other
             // methods have been called or can be called.
-            m_DnsNames = dnsNames;
             m_LicenseValidationStorage = licenseValidationStorage;
             m_DatasetDistributor = datasetDistributor;
             m_Builder = projectBuilder;

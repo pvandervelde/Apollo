@@ -14,7 +14,7 @@ using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;

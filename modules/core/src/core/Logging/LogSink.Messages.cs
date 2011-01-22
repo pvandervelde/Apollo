@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Globalization;
 using Apollo.Core.Messaging;
 
 namespace Apollo.Core.Logging
@@ -59,7 +60,10 @@ namespace Apollo.Core.Logging
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             foreach (var pair in m_Loggers)
             {
@@ -71,7 +75,10 @@ namespace Apollo.Core.Logging
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             // Send a message saying that we can shutdown.
             SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(true), id);

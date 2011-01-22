@@ -96,6 +96,8 @@ namespace Apollo.Core.Projects
             /// <summary>
             /// The ID number of the dataset that is being mirrored.
             /// </summary>
+            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mId",
+                Justification = "Eh duh.")]
             private readonly DatasetId m_IdOfDataset;
 
             /// <summary>

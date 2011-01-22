@@ -86,27 +86,12 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Concatenates two IEnumerable sequences.
-        /// </summary>
-        /// <typeparam name="T">The object type in the sequence.</typeparam>
-        /// <param name="existingSequence">The existing sequence.</param>
-        /// <param name="newSequence">The new sequence.</param>
-        /// <returns>
-        /// The concatenation of the two sequences.
-        /// </returns>
-        private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
-        {
-            return (existingSequence != null) ? existingSequence.Union(newSequence) : newSequence;
-        }
-
-        /// <summary>
         /// Builds the IOC container.
         /// </summary>
-        /// <param name="additionalModules">The collection of additional modules that should be loaded.</param>
         /// <returns>
         /// The DI container that is used to create the service.
         /// </returns>
-        private static IContainer InitializeContainer(params IModule[] additionalModules)
+        private static IContainer InitializeContainer()
         {
             var builder = new ContainerBuilder();
             {

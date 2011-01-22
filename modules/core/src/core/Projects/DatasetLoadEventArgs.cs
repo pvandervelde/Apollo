@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
@@ -16,6 +17,8 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Stores event arguments used when a dataset load is complete.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Args",
+        Justification = "This is an EventArgs derivative class.")]
     public sealed class DatasetLoadEventArgs : EventArgs
     {
         /// <summary>

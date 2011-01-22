@@ -49,6 +49,8 @@ namespace Apollo.Core.Projects
         /// The collection that holds all the object that require notification when a 
         /// dataset changes.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "We need to map the dataset ID to the collection of observers.")]
         private readonly Dictionary<DatasetId, List<INotifyOnDatasetChange>> m_DatasetObservers =
             new Dictionary<DatasetId, List<INotifyOnDatasetChange>>();
 

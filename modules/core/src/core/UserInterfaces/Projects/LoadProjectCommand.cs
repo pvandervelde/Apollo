@@ -13,21 +13,21 @@ using Apollo.Utils.Commands;
 using Lokad;
 using ICommand = Apollo.Utils.Commands.ICommand;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
-    /// Defines a command that creates a new project.
+    /// Defines a command that loads an existing project.
     /// </summary>
-    public sealed class CreateProjectCommand : ICommand
+    internal sealed class LoadProjectCommand : ICommand
     {
         #region Static members
 
         /// <summary>
-        /// Defines the Id for the <c>CreateProjectCommand</c>.
+        /// Defines the Id for the <c>LoadProjectCommand</c>.
         /// </summary>
         [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
             Justification = "A CommandId reference is immutable")]
-        public static readonly CommandId CommandId = new CommandId(@"CreateProject");
+        public static readonly CommandId CommandId = new CommandId(@"LoadProject");
 
         #endregion
 
@@ -42,7 +42,7 @@ namespace Apollo.Core.UserInterfaces.Project
         private readonly DnsName m_ProjectName;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreateProjectCommand"/> class.
+        /// Initializes a new instance of the <see cref="LoadProjectCommand"/> class.
         /// </summary>
         /// <param name="projectName">The <c>DnsName</c> of the project sub-system.</param>
         /// <param name="messageSender">The function used to send a message.</param>
@@ -52,7 +52,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
         /// </exception>
-        internal CreateProjectCommand(DnsName projectName, SendMessageWithResponse messageSender)
+        internal LoadProjectCommand(DnsName projectName, SendMessageWithResponse messageSender)
         {
             {
                 Enforce.Argument(() => projectName);
@@ -83,10 +83,10 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <param name="context">The context for the command.</param>
         public void Invoke(ICommandContext context)
         {
-            var commandContext = context as CreateProjectContext;
+            var commandContext = context as LoadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            var future = m_MessageSender(m_ProjectName, new CreateNewProjectMessage(), MessageId.None);
+            var future = m_MessageSender(m_ProjectName, new LoadProjectMessage(commandContext.LoadFrom), MessageId.None);
             var body = future.Result() as ProjectRequestResponseMessage;
             Debug.Assert(body != null, "Incorrect message response received.");
 

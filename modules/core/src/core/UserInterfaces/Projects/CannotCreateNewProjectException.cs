@@ -8,44 +8,43 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
-    /// An exception thrown when the user tries to access information on the current project
-    /// without there actually being a current project.
+    /// An exception thrown when the user tries to create a new project while that is not possible.
     /// </summary>
     [Serializable]
-    public sealed class NoCurrentProjectException : Exception
+    public sealed class CannotCreateNewProjectException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoCurrentProjectException"/> class.
+        /// Initializes a new instance of the <see cref="CannotCreateNewProjectException"/> class.
         /// </summary>
-        public NoCurrentProjectException()
-            : this(Resources_NonTranslatable.Exception_Messages_NoCurrentProject)
+        public CannotCreateNewProjectException()
+            : this(Resources_NonTranslatable.Exception_Messages_CannotCreateNewProject)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoCurrentProjectException"/> class.
+        /// Initializes a new instance of the <see cref="CannotCreateNewProjectException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public NoCurrentProjectException(string message) 
+        public CannotCreateNewProjectException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoCurrentProjectException"/> class.
+        /// Initializes a new instance of the <see cref="CannotCreateNewProjectException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public NoCurrentProjectException(string message, Exception innerException)
+        public CannotCreateNewProjectException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NoCurrentProjectException"/> class.
+        /// Initializes a new instance of the <see cref="CannotCreateNewProjectException"/> class.
         /// </summary>
         /// <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
         /// <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
@@ -55,7 +54,7 @@ namespace Apollo.Core.UserInterfaces.Project
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private NoCurrentProjectException(SerializationInfo info, StreamingContext context)
+        private CannotCreateNewProjectException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

@@ -194,7 +194,7 @@ namespace Apollo.Core.Dataset
             }
         }
 
-        private static int EventIdForException(Exception e)
+        private static int EventIdForException(Exception exception)
         {
             // Go over the exception and see if we have defined it's type, if not
             // then go for the parent exception etc. all the way up to the base 
@@ -202,7 +202,7 @@ namespace Apollo.Core.Dataset
             throw new NotImplementedException();
         }
 
-        private static short EventCategoryForException(Exception e)
+        private static short EventCategoryForException(Exception exception)
         {
             // Go over the exception and see if we have defined it's type, if not
             // then go for the parent exception etc. all the way up to the base 
@@ -210,7 +210,7 @@ namespace Apollo.Core.Dataset
             throw new NotImplementedException();
         }
 
-        private static void WriteExceptionToFile(Exception e)
+        private static void WriteExceptionToFile(Exception exception)
         {
             // Get the local file path. There is a function for this (AssemblyExtensions.LocalFilePath)
             // but we don't want to use it because we want to prevent any of our own code from
@@ -251,7 +251,7 @@ namespace Apollo.Core.Dataset
             using (var writer = new StreamWriter(new FileStream(filePath, FileMode.OpenOrCreate), Encoding.ASCII))
             {
                 writer.WriteLine("Unhandled exception occurred. Exception information to follow.");
-                writer.WriteLine(e);
+                writer.WriteLine(exception);
             }
         }
 

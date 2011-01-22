@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Globalization;
 using Apollo.Core.Messaging;
 using Apollo.Utils;
 
@@ -77,7 +78,10 @@ namespace Apollo.Core.Projects
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture, 
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             // @todo: Check with the project if we can shutdown. This should only be a project value, not the system value.
             // For now just send a message saying that we can shutdown.

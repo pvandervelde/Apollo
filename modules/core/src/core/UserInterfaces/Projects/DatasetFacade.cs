@@ -14,7 +14,7 @@ using Apollo.Core.Projects;
 using Apollo.Utils;
 using Lokad;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
     /// Defines a facade for a dataset.
@@ -120,6 +120,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetNameUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnDatasetNameUpdated()
         {
             var local = OnDatasetNameUpdated;
@@ -150,6 +152,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetSummaryUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnDatasetSummaryUpdated()
         {
             var local = OnDatasetSummaryUpdated;
@@ -182,6 +186,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnInvalidate;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnInvalidate()
         {
             EventHandler<EventArgs> local = OnInvalidate;
@@ -286,6 +292,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnLoaded;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnLoaded()
         {
             EventHandler<EventArgs> local = OnLoaded;
@@ -300,6 +308,8 @@ namespace Apollo.Core.UserInterfaces.Project
         /// </summary>
         public event EventHandler<EventArgs> OnUnloaded;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnUnloaded()
         {
             EventHandler<EventArgs> local = OnUnloaded;

@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
     /// An exception thrown when the user tries to unload the currently active project

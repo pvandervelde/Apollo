@@ -7,12 +7,11 @@
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
-using Apollo.Core.UserInterfaces.Project;
 using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core
+namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
     [Description("Tests the LoadProjectCommand class.")]

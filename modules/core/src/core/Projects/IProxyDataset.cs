@@ -203,13 +203,13 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Registers the given object for change notifications.
         /// </summary>
-        /// <param name="toBeNotified">The object that wants to receive change notifications.</param>
-        void RegisterForEvents(INotifyOnDatasetChange toBeNotified);
+        /// <param name="observer">The object that wants to receive change notifications.</param>
+        void RegisterForEvents(INotifyOnDatasetChange observer);
 
         /// <summary>
         /// Unregisters the given object for change notifications.
         /// </summary>
-        /// <param name="toBeNotified">The object that is registered for change notifications.</param>
-        void UnregisterFromEvents(INotifyOnDatasetChange toBeNotified);
+        /// <param name="observer">The object that is registered for change notifications.</param>
+        void UnregisterFromEvents(INotifyOnDatasetChange observer);
     }
 }

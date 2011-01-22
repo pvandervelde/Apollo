@@ -22,7 +22,7 @@ namespace Apollo.Core
         /// <summary>
         /// The <see cref="NotificationName"/> used for shut down capability requests.
         /// </summary>
-        private readonly NotificationName m_CanSystemShutDown = new NotificationName("CanSystemShutdown");
+        private readonly NotificationName m_CanSystemShutdown = new NotificationName("CanSystemShutdown");
 
         /// <summary>
         /// The <see cref="NotificationName"/> used for shut down notifications.
@@ -53,7 +53,7 @@ namespace Apollo.Core
         {
             get
             {
-                return m_CanSystemShutDown;
+                return m_CanSystemShutdown;
             }
         }
 

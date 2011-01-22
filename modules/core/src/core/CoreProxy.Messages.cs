@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Globalization;
 using System.Threading.Tasks;
 using Apollo.Core.Messaging;
 
@@ -55,7 +56,10 @@ namespace Apollo.Core
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             bool canShutdown = request.IsShutdownForced ? true : m_Owner.CanShutdown();
             if (request.IsResponseRequired)
@@ -78,7 +82,10 @@ namespace Apollo.Core
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             bool canShutdown = m_Owner.CanShutdown();
             SendMessage(originalSender, new ApplicationShutdownCapabilityResponseMessage(canShutdown), id);

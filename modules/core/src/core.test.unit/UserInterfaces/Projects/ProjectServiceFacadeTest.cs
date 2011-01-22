@@ -12,7 +12,7 @@ using Apollo.Utils.Commands;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Project
+namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
     [Description("Tests the ProjectFacade class.")]
