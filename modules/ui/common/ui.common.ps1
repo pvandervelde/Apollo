@@ -423,94 +423,91 @@ task buildBinaries -depends runInit, getVersion -action{
 
 task runUnitTests -depends buildBinaries -action{
     "Running unit tests..."
-    "There are currently no unit tests. You should make some ..."       
-#   
-#   $mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
-#   
-#   $files = ""
-#   $assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo*") -and ( $_.Name -like "*Test*") -and !($_.Name -like "*vshost*")))}
-#   $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-#   $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
-#   if ($shouldCheckCoverage)
-#   {
-#       #throw "Code coverage doesn't work at the moment. Please run without coverage"
-#       
-#       $coverageFiles = ""
-#       $coverageAssemblies = Get-ChildItem -path $dirBuildBin |
-#           Where-Object { ((($_.Name -like "*Apollo*") -and `
-#                           !( $_.Name -like "*Utils.*") -and `
-#                           !( $_.Name -like "*Core.*") -and `
-#                           !( $_.Name -like "*Test.*") -and `
-#                           !($_.Name -like "*vshost*")) -and `
-#                           ($_.Extension -match ".dll"))}
-#       $coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
-#       
-#       # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-#       #   process. This means we can't load explicit 32-bit binaries. However using the 
-#       #   isolated process runner we can.
-#       # Turn on the code coverage and specify which files need coverage checked
-#       $command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
-#       
-#       # Specify where the XML log file should be written to
-#       $command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
-#   
-#       # Indicate which Attribute is used to exclude classes / methods from coverage
-#       $command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute' "
-#   }
-#   else
-#   {
-#       # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-#       #   process. This means we can't load explicit 32-bit binaries. However using the 
-#       #   isolated process runner we can
-#       $command += "/r:IsolatedProcess " 
-#   }
-#   
-#   # add the files.
-#   $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
-#   
-#   # run the tests
-#   $command
-#   Invoke-Expression $command
-#   if ($shouldCheckCoverage)
-#   {
-#       $ncoverFile = Join-Path $dirBase 'Coverage.xml'
-#       if (Test-Path -Path $ncoverFile)
-#       {
-#           # The directory does not exist. Create it
-#           Remove-Item $ncoverFile -Force
-#       }
-#
-#       if (!(Test-Path -Path (Join-Path $dirReports $logNCover)))
-#       {
-#           Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
-#       }
-#       else
-#       {
-#           Remove-Item -Path (Join-Path $dirBase 'Coverage.xml')
-#       }
-#   }
-#   
-#   if ($LastExitCode -ne 0)
-#   {
-#       throw "MbUnit failed on Apollo.UI.Common with return code: $LastExitCode"
-#   }
-#   
-#   # Generate the code coverage HTML report
-#   if ($shouldCheckCoverage)
-#   {
-#       $ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-#       $command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:4"
-#       if ($verbose)
-#       {
-#           $command
-#       }
-#       
-#       Invoke-Expression $command
-#       if ($LastExitCode -ne 0)
-#       {
-#           throw "NCoverExplorer failed on Apollo.UI.Common with return code: $LastExitCode"
-#       }
-#   }
+    
+    $mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
+    
+    $files = ""
+    $assemblies = Get-ChildItem -path $dirBuild -Filter "*.dll" | Where-Object { ((($_.Name -like "*Apollo.UI.Common*") -and ( $_.Name -like "*Test*") -and ( $_.Name -like "*Unit*") -and !($_.Name -like "*vshost*")))}
+    $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
+    $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
+    if ($shouldCheckCoverage)
+    {
+        #throw "Code coverage doesn't work at the moment. Please run without coverage"
+        
+        $coverageFiles = ""
+        $coverageAssemblies = Get-ChildItem -path $dirBuild |
+            Where-Object { ((($_.Name -like "*Apollo.UI.Common*") -and `
+                            !( $_.Name -like "*Test.*") -and `
+                            !($_.Name -like "*vshost*")) -and `
+                            ($_.Extension -match ".dll"))}
+        $coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
+        
+        # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+        #   process. This means we can't load explicit 32-bit binaries. However using the 
+        #   isolated process runner we can.
+        # Turn on the code coverage and specify which files need coverage checked
+        $command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
+        
+        # Specify where the XML log file should be written to
+        $command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
+    
+        # Indicate which Attribute is used to exclude classes / methods from coverage
+        $command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute;System.Runtime.CompilerServices.CompilerGeneratedAttribute' "
+    }
+    else
+    {
+        # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
+        #   process. This means we can't load explicit 32-bit binaries. However using the 
+        #   isolated process runner we can
+        $command += "/r:IsolatedProcess " 
+    }
+    
+    # add the files.
+    $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+    
+    # run the tests
+    $command
+    Invoke-Expression $command
+    if ($shouldCheckCoverage)
+    {
+        $ncoverFile = Join-Path $dirBase 'Coverage.log'
+        if (Test-Path -Path $ncoverFile)
+        {
+            # The directory does not exist. Create it
+            Remove-Item $ncoverFile -Force
+        }
+        
+        if (!(Test-Path -Path (Join-Path $dirReports $logNCover)))
+        {
+            Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
+        }
+        else
+        {
+            Remove-Item -Path (Join-Path $dirBase 'Coverage.xml')
+        }
+    }
+    
+    if ($LastExitCode -ne 0)
+    {
+        throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
+    }
+    
+    # Generate the code coverage HTML report
+    if ($shouldCheckCoverage)
+    {
+        $ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
+        $command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
+        if ($verbose)
+        {
+            $command
+        }
+        
+        Invoke-Expression $command
+        if ($LastExitCode -ne 0)
+        {
+            throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
+        }
+    }
 }
 
 task runSpecificationTests -depends buildBinaries -action{

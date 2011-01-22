@@ -10,7 +10,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Events.Listeners;
 using Apollo.ProjectExplorer.Views.Menu;
