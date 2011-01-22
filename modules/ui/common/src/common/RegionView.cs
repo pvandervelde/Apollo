@@ -9,12 +9,14 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
+using Apollo.Utils;
 
 namespace Apollo.UI.Common
 {
     /// <summary>
     /// A view that is shown in a region.
     /// </summary>
+    [ExcludeFromCoverage("Views will not be unit tested. They will be tested in the UI tests.")]
     public class RegionView : UserControl, IRegionView
     {
         /// <summary>

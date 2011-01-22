@@ -5,12 +5,14 @@
 //-----------------------------------------------------------------------
 
 using System.Windows.Controls;
+using Apollo.Utils;
 
 namespace Apollo.UI.Common.Views.Projects
 {
     /// <summary>
     /// Interaction logic for ProjectGlobalView.xaml.
     /// </summary>
+    [ExcludeFromCoverage("Views will not be unit tested. They will be tested in the UI tests.")]
     public partial class ProjectGlobalView : UserControl, IProjectView
     {
         /// <summary>

@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using GraphSharp.Algorithms.Layout;
 using GraphSharp.Algorithms.Layout.Simple.Tree;
 using Lokad;

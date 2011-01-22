@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Base.Projects;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.UI.Common.Commands;
 using Lokad;
 using ICommand = System.Windows.Input.ICommand;

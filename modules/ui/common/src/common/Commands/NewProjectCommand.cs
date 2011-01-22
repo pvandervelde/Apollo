@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Project;
+using Apollo.Core.UserInterfaces.Projects;
 using Microsoft.Practices.Composite.Presentation.Commands;
 
 namespace Apollo.UI.Common.Commands
