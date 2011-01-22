@@ -17,7 +17,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     internal partial class ShellWindow : IShellView
     {
         /// <summary>
-        /// The bolmand used to exit.
+        /// The command used to exit.
         /// </summary>
         private readonly ExitCommand m_ExitCommand;
 

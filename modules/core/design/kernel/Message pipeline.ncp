@@ -1,6 +1,6 @@
 <Project>
   <Name>Message pipeline</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Message pipeline - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -89,10 +89,9 @@
         <Text>Each service has it's own DNS name which is used by the pipeline to look up the actual proxy to the service.
 
 The other DNS names (which are not related to a specific service) are:
-- AllServices (used for broadcast)
 - Nobody (used to make message disappear)</Text>
         <Location left="10" top="505" />
-        <Size width="254" height="148" />
+        <Size width="254" height="173" />
       </Entity>
       <Entity type="Comment">
         <Text>What do we store in the message body. It must be possible for services to select a message based on stuff in the body too so the types have to be known a head of time...</Text>
@@ -149,8 +148,8 @@ The other DNS names (which are not related to a specific service) are:
         <Text>Do we multithread this thing?
 
 Remember that some services can only execute on a specific thread (i.e. the UI) so we'll have to marshall those calls.</Text>
-        <Location left="47" top="1063" />
-        <Size width="217" height="91" />
+        <Location left="43" top="1035" />
+        <Size width="217" height="130" />
       </Entity>
       <Entity type="Comment">
         <Text>Must be serializable</Text>
@@ -188,6 +187,11 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <Location left="789" top="1217" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Note that it is not possible to send one message to everybody because every message must be unique (ID-wise). And it is not possible to return multiple ID's from the send method because then you don't know which ID goes with what message.</Text>
+        <Location left="1092" top="689" />
+        <Size width="216" height="146" />
       </Entity>
     </Entities>
     <Relationships>
@@ -301,8 +305,6 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -315,6 +317,18 @@ Remember that some services can only execute on a specific thread (i.e. the UI) 
       <Relationship type="Realization" first="0" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="19" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1064</X>
+          <Y>744</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>922</X>
+          <Y>815</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

@@ -1,0 +1,109 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Projects.ProjectGlobalView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             mc:Ignorable="d" 
+             d:DesignWidth="600"
+             d:DesignHeight="250"
+             MinHeight="150"
+             MaxHeight="150">
+    <!-- Main grid -->
+    <Grid>
+        <!-- 
+            Create the border and force the border scroll to be off, otherwise
+            we can't scroll the individual controls.
+        -->
+        <Border BorderBrush="White"
+                Background="Goldenrod"
+                BorderThickness="2"
+                CornerRadius="10,10,10,10"
+                Padding="5, 5, 5, 5"
+                ScrollViewer.CanContentScroll="False">
+            <!-- Project Name & Summary -->
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                
+                <Grid Grid.Row="0"
+                      Margin="0, 0, 0, 5">
+                    <Grid.RowDefinitions>
+                        <!-- Name -->
+                        <RowDefinition Height="Auto" />
+                        <!-- Summary -->
+                        <RowDefinition Height="*" />
+                        <!-- Number of datasets -->
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                
+                    <Grid.ColumnDefinitions>
+                        <!-- Labels -->
+                        <ColumnDefinition Width="Auto" />
+                        <!-- Information -->
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                
+                    <!-- Project Name (stored in root dataset as meta-data) -->
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           VerticalAlignment="Center">
+                        <TextBlock Text="{lex:LocText Key=ProjectGlobalView_ProjectName, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Project_Name_Label}"
+                                   FontWeight="Bold"/>
+                    </Label>
+
+                    <pix:InfoTextBox Grid.Row="0"
+                                     Grid.Column="1"
+                                     VerticalAlignment="Center"
+                                     TextBoxInfo="{lex:LocText Key=ProjectGlobalView_ProjectNameSuggestion, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Project_Name_Suggestion}"
+                                     Text="{Binding Path=Name, Mode=TwoWay}" />
+                
+                    <!-- Project Summary (stored in root dataset as meta-data) -->
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           VerticalAlignment="Top">
+                        <TextBlock Text="{lex:LocText Key=ProjectGlobalView_ProjectSummary, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Project_Summary_Label}"
+                                   FontWeight="Bold" />
+                    </Label>
+
+                    <pix:InfoTextBox Grid.Row="1"
+                                     Grid.Column="1"
+                                     VerticalContentAlignment="Top"
+                                     TextWrapping="WrapWithOverflow"
+                                     AcceptsReturn="True"
+                                     AcceptsTab="True"
+                                     VerticalScrollBarVisibility="Auto"
+                                     SpellCheck.IsEnabled="True"
+                                     TextBoxInfo="{lex:LocText Key=ProjectGlobalView_ProjectSummarySuggestion, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Project_Summary_Suggestion}"
+                                     Text="{Binding Path=Summary, Mode=TwoWay}">
+                    </pix:InfoTextBox>
+                </Grid>
+                
+                <!-- Meta data -->
+                <Grid Grid.Row="1"
+                      Margin="0, 5, 0, 0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Number of datasets -->
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           VerticalAlignment="Center">
+                        <TextBlock Text="{lex:LocText Key=ProjectGlobalView_ProjectNumberOfDatasets, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Project_DatasetCount_Label}"
+                                   FontWeight="Bold" />
+                    </Label>
+
+                    <TextBlock Grid.Row="0"
+                               Grid.Column="1"
+                               VerticalAlignment="Center"
+                               Text="{Binding Path=NumberOfDatasets, Mode=OneWay}" />
+                </Grid>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

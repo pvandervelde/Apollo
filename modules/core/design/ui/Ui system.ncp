@@ -1,6 +1,6 @@
 <Project>
   <Name>Ui system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>UI - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -43,7 +43,7 @@
         <Name>IAbstractApplications</Name>
         <Access>Public</Access>
         <Location left="994" top="1650" />
-        <Size width="294" height="112" />
+        <Size width="303" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Method">bool CanShutdown()</Member>
         <Member type="Method">void Shutdown(bool shouldForce)</Member>
@@ -71,8 +71,8 @@
       <Entity type="Interface">
         <Name>IHoldSystemInformation</Name>
         <Access>Public</Access>
-        <Location left="543" top="1349" />
-        <Size width="322" height="146" />
+        <Location left="543" top="1350" />
+        <Size width="333" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Refresh()</Member>
         <Member type="Property">DateTimeOffset LastUpdateTime { get; }</Member>
@@ -84,7 +84,7 @@
         <Name>ApplicationFacade</Name>
         <Access>Internal</Access>
         <Location left="994" top="1418" />
-        <Size width="294" height="128" />
+        <Size width="309" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public bool CanShutdown { get; }</Member>
         <Member type="Method">public void Shutdown(bool shouldForce)</Member>
@@ -153,7 +153,7 @@
         <Name>IServiceInformation</Name>
         <Access>Public</Access>
         <Location left="572" top="1156" />
-        <Size width="224" height="112" />
+        <Size width="227" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Property">string Name { get; }</Member>
         <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
@@ -196,7 +196,19 @@
       <Entity type="Comment">
         <Text>This needs to be renamed. It's not so much the interaction stuff, it's more the settings / options / random stuff (e.g. plug-in system, licensing etc.)</Text>
         <Location left="1413" top="1493" />
-        <Size width="218" height="79" />
+        <Size width="218" height="97" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Where does all this advice come from?
+
+Some will probably come from the plugins, others we'll have to put in there some how. Maybe have seperate files for advice?</Text>
+        <Location left="2553" top="1262" />
+        <Size width="212" height="132" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need to handle the licensing information.</Text>
+        <Location left="731" top="1757" />
+        <Size width="160" height="75" />
       </Entity>
     </Entities>
     <Relationships>
@@ -386,6 +398,14 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Comment" first="25" second="21">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="26" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="27" second="5">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>

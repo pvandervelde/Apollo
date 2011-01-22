@@ -27,7 +27,7 @@ namespace Apollo.Core.Messaging
         /// The object used to take locks out on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
-        
+
         /// <summary>
         /// The collection of objects that have registered to receive messages.
         /// </summary>
@@ -83,9 +83,9 @@ namespace Apollo.Core.Messaging
             Justification = "Documentation can start with a language keyword")]
         public bool IsRegistered(DnsName name)
         {
-            lock(m_Lock)
+            lock (m_Lock)
             {
-                return name != null && (m_Senders.ContainsKey(name) || m_Listeners.ContainsKey(name) || name.Equals(Name)); 
+                return name != null && (m_Senders.ContainsKey(name) || m_Listeners.ContainsKey(name) || name.Equals(Name));
             }
         }
 
@@ -387,20 +387,20 @@ namespace Apollo.Core.Messaging
         public MessageId Send(DnsName sender, DnsName recipient, MessageBody information, MessageId inReplyTo)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
 
                 Enforce.Argument(() => sender);
                 Enforce.With<ArgumentException>(
                     !sender.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                    Resources_NonTranslatable.Exception_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipient);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(DnsName.Nobody),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
+                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageToNoService);
                 Enforce.With<ArgumentException>(
                     !recipient.Equals(sender),
-                    Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                    Resources_NonTranslatable.Exception_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
                     sender);
 
                 Enforce.Argument(() => information);

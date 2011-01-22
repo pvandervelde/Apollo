@@ -28,15 +28,5 @@ namespace Apollo.Core
                     new ApplicationShutdownCapabilityRequestMessage(),
                 },
         };
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new ApplicationStartupCompleteMessage();
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(() => msg.IsResponseRequired == otherMsg.IsResponseRequired);
-        }
     }
 }

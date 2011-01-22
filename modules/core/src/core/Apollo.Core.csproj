@@ -25,25 +25,6 @@
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>False</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsBuildReferenceAssembly>False</CodeContractsBuildReferenceAssembly>
-    <CodeContractsNonNullObligations>True</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>True</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>True</CodeContractsArithmeticObligations>
-    <CodeContractsLibPaths />
-    <CodeContractsPlatformPath />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DocumentationFile>bin\Debug\Apollo.Core.XML</DocumentationFile>
   </PropertyGroup>
@@ -56,25 +37,6 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\Apollo.Core.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <CodeContractsEnableRuntimeChecking>False</CodeContractsEnableRuntimeChecking>
-    <CodeContractsCustomRewriterAssembly />
-    <CodeContractsCustomRewriterClass />
-    <CodeContractsRuntimeCheckingLevel>Full</CodeContractsRuntimeCheckingLevel>
-    <CodeContractsRuntimeOnlyPublicSurface>False</CodeContractsRuntimeOnlyPublicSurface>
-    <CodeContractsRuntimeThrowOnFailure>False</CodeContractsRuntimeThrowOnFailure>
-    <CodeContractsRuntimeCallSiteRequires>False</CodeContractsRuntimeCallSiteRequires>
-    <CodeContractsRunCodeAnalysis>False</CodeContractsRunCodeAnalysis>
-    <CodeContractsBuildReferenceAssembly>False</CodeContractsBuildReferenceAssembly>
-    <CodeContractsNonNullObligations>False</CodeContractsNonNullObligations>
-    <CodeContractsBoundsObligations>False</CodeContractsBoundsObligations>
-    <CodeContractsArithmeticObligations>False</CodeContractsArithmeticObligations>
-    <CodeContractsLibPaths />
-    <CodeContractsPlatformPath />
-    <CodeContractsExtraAnalysisOptions />
-    <CodeContractsBaseLineFile />
-    <CodeContractsUseBaseLine>False</CodeContractsUseBaseLine>
-    <CodeContractsRunInBackground>True</CodeContractsRunInBackground>
-    <CodeContractsShowSquigglies>True</CodeContractsShowSquigglies>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -170,6 +132,8 @@
       <Link>Utils\Licensing\Checksum.HashCalculation.cs</Link>
       <DependentUpon>Checksum.HashCalculation.tt</DependentUpon>
       <SubType>Code</SubType>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="..\..\..\utils\src\utils.srconly\Licensing\ILicenseValidationCache.cs">
       <Link>Utils\Licensing\ILicenseValidationCache.cs</Link>
@@ -244,6 +208,32 @@
     <Compile Include="ApplicationStartupCompleteMessage.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="INotificationArguments.cs" />
+    <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
+    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
+    <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
+    <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
+    <Compile Include="Projects\CreateNewProjectMessage.cs" />
+    <Compile Include="Projects\DatasetLoadEventArgs.cs" />
+    <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
+    <Compile Include="Projects\IBuildProjects.cs" />
+    <Compile Include="Projects\INotifyOnDatasetChange.cs" />
+    <Compile Include="Projects\INotifyOnProjectChanges.cs" />
+    <Compile Include="Projects\IProject.cs" />
+    <Compile Include="Projects\IProxyDataset.cs" />
+    <Compile Include="Projects\LoadProjectMessage.cs" />
+    <Compile Include="Projects\Project.cs" />
+    <Compile Include="Projects\Project.DatasetProxy.cs" />
+    <Compile Include="Projects\Project.Datasets.cs" />
+    <Compile Include="Projects\ProjectBuilder.cs" />
+    <Compile Include="Projects\ProjectModule.cs" />
+    <Compile Include="Projects\ProjectRequestMessage.cs" />
+    <Compile Include="Projects\ProjectRequestResponseMessage.cs" />
+    <Compile Include="Projects\ProjectService.cs" />
+    <Compile Include="Projects\ProjectService.Messages.cs" />
+    <Compile Include="Projects\ProjectService.Projects.cs" />
+    <Compile Include="Projects\ProxyCommandSet.cs" />
+    <Compile Include="Projects\UnknownDatasetException.cs" />
+    <Compile Include="Projects\UnloadProjectMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
@@ -352,6 +342,22 @@
     <Compile Include="INotificationNameConstants.cs" />
     <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
     <Compile Include="NotificationName.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotCreateNewProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotUnloadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CreateProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\CreateProjectContext.cs" />
+    <Compile Include="UserInterfaces\Projects\DatasetFacade.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToCreateProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\ILinkToProjects.cs" />
+    <Compile Include="UserInterfaces\Projects\LoadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\LoadProjectContext.cs" />
+    <Compile Include="UserInterfaces\Projects\NoCurrentProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectFacade.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectServiceFacade.cs" />
+    <Compile Include="UserInterfaces\Projects\UnloadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\UnloadProjectContext.cs" />
     <Compile Include="Utils\Licensing\LicenseValidationResultStorage.cs" />
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
@@ -391,14 +397,16 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Plugins\" />
-    <Folder Include="Projects\" />
     <Folder Include="UserInterfaces\Plugins\" />
-    <Folder Include="UserInterfaces\Project\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\utils\src\utils\Apollo.Utils.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

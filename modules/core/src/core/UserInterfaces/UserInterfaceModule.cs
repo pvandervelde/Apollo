@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Core.UserInterfaces.Application;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Utils;
 using Autofac;
 using Lokad;
@@ -56,10 +57,14 @@ namespace Apollo.Core.UserInterfaces
                 .ExternallyOwned();
 
             builder.Register(c => new ApplicationFacade(c.Resolve<IUserInterfaceService>()))
-                .As<IAbstractApplications>();
+                .As<IAbstractApplications>()
+                .SingleInstance();
+
+            builder.Register(c => new ProjectServiceFacade(c.Resolve<IUserInterfaceService>()))
+                .As<ILinkToProjects>()
+                .SingleInstance();
 
             // IInteractWithUsers
-            // ILinkToProjects
             // IGiveAdvice
         }
     }

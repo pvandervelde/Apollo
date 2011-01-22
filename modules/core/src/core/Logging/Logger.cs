@@ -75,7 +75,7 @@ namespace Apollo.Core.Logging
         /// </returns>
         private static NLog.LogLevel TranslateToNlogLevel(LevelToLog levelToLog)
         {
-            switch(levelToLog)
+            switch (levelToLog)
             {
                 case LevelToLog.Trace:
                     return NLog.LogLevel.Trace;
@@ -138,7 +138,7 @@ namespace Apollo.Core.Logging
             {
                 // Define where the log is written to
                 var fileTarget = new FileTarget();
-                {   
+                {
                     // Only write the message. The message should contain all the important 
                     // information anyway.
                     fileTarget.Layout = "${message}";
@@ -268,7 +268,7 @@ namespace Apollo.Core.Logging
             {
                 return false;
             }
-            
+
             if (message == null)
             {
                 return false;

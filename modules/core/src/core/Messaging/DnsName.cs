@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utils;
 using Lokad;
@@ -31,11 +33,13 @@ namespace Apollo.Core.Messaging
     /// maps but that seems to get very complicated very quickly.
     /// </design>
     [Serializable]
+    [DebuggerDisplay("DnsName: [{InternalValue}]")]
     public sealed class DnsName : Id<DnsName, string>
     {
         /// <summary>
         /// The unique identifier for none of the services.
         /// </summary>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly DnsName s_Nobody = new DnsName(@"Nobody");
 
         /// <summary>
@@ -46,6 +50,7 @@ namespace Apollo.Core.Messaging
         /// <value>The <c>DnsName</c> for none of the services.</value>
         public static DnsName Nobody
         {
+            [DebuggerStepThrough]
             get 
             {
                 return s_Nobody;
@@ -102,6 +107,21 @@ namespace Apollo.Core.Messaging
         protected override int CompareValues(string ourValue, string theirValue)
         {
             return string.Compare(ourValue, theirValue, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Determines whether the specified values to see if they are equal.
+        /// </summary>
+        /// <param name="ourValue">The value owned by the current ID.</param>
+        /// <param name="theirValue">The value owned by the other ID.</param>
+        /// <returns>
+        ///     <see langword="true"/> if <paramref name="theirValue"/> is equal to the value owned by this instance; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected override bool AreValuesEqual(string ourValue, string theirValue)
+        {
+            return string.Equals(ourValue, theirValue, StringComparison.Ordinal);
         }
 
         /// <summary>

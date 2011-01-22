@@ -29,7 +29,7 @@
       </Entity>
       <Entity type="Comment">
         <Text>Links to nlog for the actual logging.</Text>
-        <Location left="385" top="952" />
+        <Location left="297" top="946" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
@@ -143,7 +143,7 @@
       <Entity type="Interface">
         <Name>ILogMessage</Name>
         <Access>Internal</Access>
-        <Location left="705" top="858" />
+        <Location left="764" top="859" />
         <Size width="162" height="216" />
         <Collapsed>False</Collapsed>
       </Entity>
@@ -162,6 +162,8 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="8">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -198,18 +200,38 @@
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="12" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="12" second="13">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>507</X>
+          <Y>847</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="0" second="13">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1102</X>
+          <Y>690</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>

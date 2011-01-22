@@ -144,18 +144,5 @@ namespace Apollo.Core.Messaging
         {
             Assert.Throws<ArgumentNullException>(() => new MessageHeader(MessageId.Next(), new DnsName("name"), new DnsName("other"), null));
         }
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new MessageHeader(MessageId.Next(), new DnsName("a"), new DnsName("b"));
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(
-               () => msg.Id == otherMsg.Id
-                  && msg.Recipient == otherMsg.Recipient
-                  && msg.Sender == otherMsg.Sender);
-        }
     }
 }

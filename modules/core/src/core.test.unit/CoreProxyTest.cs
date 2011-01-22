@@ -25,11 +25,11 @@ namespace Apollo.Core
 
         private sealed class MockDnsNameConstants : IDnsNameConstants
         {
-            public DnsName AddressOfMessagePipeline
+            public DnsName AddressOfLogger
             {
-                get 
-                { 
-                    return new DnsName("pipeline");
+                get
+                {
+                    return new DnsName("logger");
                 }
             }
 
@@ -41,19 +41,27 @@ namespace Apollo.Core
                 }
             }
 
+            public DnsName AddressOfMessagePipeline
+            {
+                get
+                {
+                    return new DnsName("pipeline");
+                }
+            }
+
+            public DnsName AddressOfProjects
+            {
+                get 
+                {
+                    return new DnsName("projects");
+                }
+            }
+
             public DnsName AddressOfUserInterface
             {
                 get 
                 { 
                     return new DnsName("ui");
-                }
-            }
-
-            public DnsName AddressOfLogger
-            {
-                get 
-                { 
-                    return new DnsName("logger");
                 }
             }
         }

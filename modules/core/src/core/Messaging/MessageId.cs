@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using Apollo.Utils;
 
@@ -14,6 +15,7 @@ namespace Apollo.Core.Messaging
     /// Defines an ID number for messages.
     /// </summary>
     [Serializable]
+    [DebuggerDisplay("Message with ID: [{InternalValue}]")]
     public sealed class MessageId : Id<MessageId, Guid>
     {
         /// <summary>
@@ -23,6 +25,7 @@ namespace Apollo.Core.Messaging
         /// The GUID is hard-coded in order to keep it constant between different
         /// revisions of the software.
         /// </design>
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Guid s_NoneId = new Guid(@"6C01758E-D1E7-4DF8-B847-51ED22083E96");
 
         /// <summary>
@@ -31,6 +34,7 @@ namespace Apollo.Core.Messaging
         /// <value>The none ID.</value>
         public static MessageId None
         {
+            [DebuggerStepThrough]
             get
             {
                 return new MessageId(s_NoneId);
@@ -43,6 +47,7 @@ namespace Apollo.Core.Messaging
         /// <returns>
         /// A new and unique message ID number.
         /// </returns>
+        [DebuggerStepThrough]
         public static MessageId Next()
         {
             return new MessageId(Guid.NewGuid());

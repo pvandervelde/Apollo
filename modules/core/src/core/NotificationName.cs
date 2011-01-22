@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using Apollo.Utils;
 using Lokad;
@@ -15,6 +16,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines a name for a notification event.
     /// </summary>
+    [DebuggerDisplay("Notification with ID: [{InternalValue}]")]
     public sealed class NotificationName : Id<NotificationName, string>
     {
         /// <summary>

@@ -35,7 +35,7 @@ namespace Apollo.Core.UserInterfaces
                     HandleShutdownCapabilityRequest(message.Header.Sender, message.Header.Id);
                 });
 
-            // Define the response to a shutdown capability request
+            // Define the response to a start-up complete message
             processor.RegisterAction(
                 typeof(ApplicationStartupCompleteMessage),
                 message =>
@@ -48,14 +48,15 @@ namespace Apollo.Core.UserInterfaces
         {
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
-            // @todo: Check with the UI if we can shutdown. This should only be a UI value, not the system value.
-            // For now just send a message saying that we can shutdown.
-            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(CanUserInterfaceShutDown()), id);
+            SendMessage(originalSender, new ServiceShutdownCapabilityResponseMessage(CanUserInterfaceShutdown()), id);
         }
 
-        private bool CanUserInterfaceShutDown()
+        private bool CanUserInterfaceShutdown()
         {
             if (!m_Notifications.ContainsKey(m_NotificationNames.CanSystemShutdown))
             {
@@ -94,7 +95,10 @@ namespace Apollo.Core.UserInterfaces
             //        message anyway so storing it in the UI service sounds reasonable
             Debug.Assert(
                 IsFullyFunctional,
-                string.Format("The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", StartupState));
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "The service tried to perform an action but wasn't in the correct startup state. The actual state was: {0}", 
+                    StartupState));
 
             if (!m_Notifications.ContainsKey(m_NotificationNames.StartupComplete))
             {

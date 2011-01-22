@@ -30,7 +30,7 @@ namespace Apollo.Core.Messaging
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The whole point of this collection is to have user provided actions.")]
-        private readonly Dictionary<Type, Action<KernelMessage>> m_MessageActions = 
+        private readonly Dictionary<Type, Action<KernelMessage>> m_MessageActions =
             new Dictionary<Type, Action<KernelMessage>>();
 
         /// <summary>
@@ -38,14 +38,14 @@ namespace Apollo.Core.Messaging
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "This collection holds the setter of the get-set pair that works with the IFuture return values.")]
-        private readonly Dictionary<MessageId, WaitPair<MessageBody>> m_UnansweredMessages = 
+        private readonly Dictionary<MessageId, WaitPair<MessageBody>> m_UnansweredMessages =
             new Dictionary<MessageId, WaitPair<MessageBody>>();
 
         /// <summary>
         /// The collection that contains the message responses that have been answered before the message has been
         /// stored in the <see cref="m_UnansweredMessages"/> collection.
         /// </summary>
-        private readonly Dictionary<MessageId, MessageBody> m_PreAnsweredMessages = 
+        private readonly Dictionary<MessageId, MessageBody> m_PreAnsweredMessages =
             new Dictionary<MessageId, MessageBody>();
 
         /// <summary>
@@ -88,14 +88,14 @@ namespace Apollo.Core.Messaging
         {
             {
                 Enforce.Argument(() => pipeline);
-                
+
                 Enforce.Argument(() => sender);
-                Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_SenderCannotBeNobody);
+                Enforce.With<ArgumentException>(!sender.Equals(DnsName.Nobody), Resources_NonTranslatable.Exception_Messages_SenderCannotBeNobody);
 
                 Enforce.Argument(() => errorLogSender);
             }
 
-            lock(m_Lock)
+            lock (m_Lock)
             {
                 m_Pipeline = pipeline;
                 m_Name = sender;
@@ -127,9 +127,9 @@ namespace Apollo.Core.Messaging
             {
                 Enforce.Argument(() => messageType);
                 Enforce.With<ArgumentException>(
-                    typeof(MessageBody).IsAssignableFrom(messageType), 
-                    Resources_NonTranslatable.Exceptions_Messages_IncorrectType_WithTypes, 
-                    typeof(MessageBody), 
+                    typeof(MessageBody).IsAssignableFrom(messageType),
+                    Resources_NonTranslatable.Exception_Messages_IncorrectType_WithTypes,
+                    typeof(MessageBody),
                     messageType);
 
                 Enforce.Argument(() => messageAction);
@@ -247,7 +247,7 @@ namespace Apollo.Core.Messaging
         {
             {
                 Enforce.Argument(() => recipient);
-                Enforce.With<ArgumentException>(recipient != DnsName.Nobody, Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(recipient != DnsName.Nobody, Resources_NonTranslatable.Exception_Messages_CannotSendAMessageToNoService);
 
                 Enforce.Argument(() => body);
                 Enforce.Argument(() => originalMessage);
@@ -276,7 +276,7 @@ namespace Apollo.Core.Messaging
                 throw new ArgumentException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
+                        Resources_NonTranslatable.Exception_Messages_CannotSendAMessageBackToTheSender_WithDnsName,
                         name));
             }
 

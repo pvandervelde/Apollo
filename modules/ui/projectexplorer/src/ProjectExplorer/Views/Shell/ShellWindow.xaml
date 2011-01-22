@@ -3,49 +3,52 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Regions="clr-namespace:Microsoft.Practices.Composite.Presentation.Regions;assembly=Microsoft.Practices.Composite.Presentation"
-        xmlns:lex="http://schemas.root-project.org/xaml/presentation" 
-        xmlns:AvalonDock="clr-namespace:AvalonDock;assembly=AvalonDock" 
-        Title="{lex:LocText Key=MainWindow_Title, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Window_Title}" 
-        Height="300" 
-        Width="300"
-        Closing="HandleShellClosing"
-        >
+        xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+        xmlns:infrastructure="clr-namespace:Apollo.ProjectExplorer"
+        Title="{lex:LocText Key=MainWindow_Title, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Window_Title}"
+        Width="800"
+        Height="600"
+        Closing="HandleShellClosing">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
-        
+
         <!-- Menu bar -->
-        <ItemsControl Grid.Row="0" Regions:RegionManager.RegionName="Menu" />
-        
+        <ItemsControl Grid.Row="0"
+                      Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainMenu}" />
+
         <!-- Content -->
-        <!-- Docking manager -->
-        <AvalonDock:DockingManager Grid.Row="1">
-            <AvalonDock:ResizingPanel Orientation="Vertical">
-                <!-- Top -->
-                <AvalonDock:DockablePane Regions:RegionManager.RegionName="TopPane" />
-
-                <AvalonDock:ResizingPanel Orientation="Horizontal">
-                    <!-- Left -->
-                    <AvalonDock:DockablePane Regions:RegionManager.RegionName="LeftPane" AvalonDock:ResizingPanel.ResizeWidth="1*" />
-
+        <Border Grid.Row="1"
+                Background="LightSteelBlue"
+                Margin="0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Top -->
+                    <RowDefinition Height="Auto" />
                     <!-- Content -->
-                    <AvalonDock:DocumentPane Regions:RegionManager.RegionName="ContentPane" AvalonDock:ResizingPanel.ResizeWidth="4*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
 
-                    <!-- Right -->
-                    <AvalonDock:DockablePane Regions:RegionManager.RegionName="RightPane" AvalonDock:ResizingPanel.ResizeWidth="1*" />
-                </AvalonDock:ResizingPanel>
+                <ContentControl Grid.Row="0"
+                                Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.TopPane}"
+                                Margin="5, 5, 5, 5"
+                                Padding="5, 5, 5, 5" />
 
-                <!-- Bottom -->
-                <AvalonDock:DockablePane Regions:RegionManager.RegionName="BottomPane" />
-            </AvalonDock:ResizingPanel>
-        </AvalonDock:DockingManager>
-        
+                <GridSplitter Grid.Row="0"
+                              Height="5" />
+
+                <ContentControl Grid.Row="1"
+                                Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}"
+                                Margin="5, 5, 5, 5"
+                                Padding="5, 5, 5, 5" />
+            </Grid>
+        </Border>
         <!-- Status bar -->
         <StatusBar Grid.Row="2">
-            
+
         </StatusBar>
     </Grid>
 </Window>

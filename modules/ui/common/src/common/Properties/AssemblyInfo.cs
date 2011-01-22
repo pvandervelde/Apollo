@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Resources;
+using System.Security;
 using System.Windows;
 
 // General Information about an assembly is controlled through the following 

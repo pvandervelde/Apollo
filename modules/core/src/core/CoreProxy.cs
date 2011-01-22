@@ -116,7 +116,7 @@ namespace Apollo.Core
         public void Invoke(CommandId id)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id);
@@ -133,7 +133,7 @@ namespace Apollo.Core
         public void Invoke(CommandId id, ICommandContext context)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id, context);

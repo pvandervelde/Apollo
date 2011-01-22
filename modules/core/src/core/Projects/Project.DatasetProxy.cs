@@ -1,0 +1,587 @@
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
+using System.Linq;
+using Apollo.Core.Base.Projects;
+using Apollo.Core.Properties;
+using Apollo.Utils;
+using Lokad;
+
+namespace Apollo.Core.Projects
+{
+    /// <content>
+    /// Defines the implementation of <see cref="IProxyDataset"/>.
+    /// </content>
+    internal sealed partial class Project
+    {
+        #region Internal class - DatasetProxy
+
+        /// <summary>
+        /// Mirrors the storage of dataset information.
+        /// </summary>
+        /// <design>
+        /// It would be much nicer if this class was private, however if we want to test equality through
+        /// the equality contract verifiers then we need a reference to the class.
+        /// </design>
+        [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
+        internal sealed class DatasetProxy : IProxyDataset, IEquatable<DatasetProxy>, IEquatable<IProxyDataset>
+        {
+            /// <summary>
+            /// Implements the operator ==.
+            /// </summary>
+            /// <param name="first">The first object.</param>
+            /// <param name="second">The second object.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator ==(DatasetProxy first, DatasetProxy second)
+            {
+                // Check if first is a null reference by using ReferenceEquals because
+                // we overload the == operator. If first isn't actually null then
+                // we get an infinite loop where we're constantly trying to compare to null.
+                if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+                {
+                    return true;
+                }
+
+                var nonNullObject = first;
+                var possibleNullObject = second;
+                if (ReferenceEquals(first, null))
+                {
+                    nonNullObject = second;
+                    possibleNullObject = first;
+                }
+
+                return nonNullObject.Equals(possibleNullObject);
+            }
+
+            /// <summary>
+            /// Implements the operator !=.
+            /// </summary>
+            /// <param name="first">The first object.</param>
+            /// <param name="second">The second object.</param>
+            /// <returns>The result of the operator.</returns>
+            public static bool operator !=(DatasetProxy first, DatasetProxy second)
+            {
+                // Check if first is a null reference by using ReferenceEquals because
+                // we overload the == operator. If first isn't actually null then
+                // we get an infinite loop where we're constantly trying to compare to null.
+                if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+                {
+                    return false;
+                }
+
+                var nonNullObject = first;
+                var possibleNullObject = second;
+                if (ReferenceEquals(first, null))
+                {
+                    nonNullObject = second;
+                    possibleNullObject = first;
+                }
+
+                return !nonNullObject.Equals(possibleNullObject);
+            }
+
+            /// <summary>
+            /// The owner which stores all the data.
+            /// </summary>
+            private readonly Project m_Owner;
+
+            /// <summary>
+            /// The ID number of the dataset that is being mirrored.
+            /// </summary>
+            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mId",
+                Justification = "Eh duh.")]
+            private readonly DatasetId m_IdOfDataset;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="DatasetProxy"/> class.
+            /// </summary>
+            /// <param name="owner">The owner which holds all the dataset information.</param>
+            /// <param name="idOfDataset">The ID number of the dataset that is being mirrored.</param>
+            public DatasetProxy(Project owner, DatasetId idOfDataset)
+            {
+                {
+                    Debug.Assert(owner != null, "The owner object should not be a null reference.");
+                    Debug.Assert(idOfDataset != null, "The dataset ID should not be a null reference.");
+                    Debug.Assert(owner.IsValid(idOfDataset), "The dataset ID should be valid.");
+                }
+
+                m_Owner = owner;
+                m_IdOfDataset = idOfDataset;
+            }
+
+            /// <summary>
+            /// Gets a value indicating the ID number of the dataset.
+            /// </summary>
+            public DatasetId Id
+            {
+                [DebuggerStepThrough]
+                get
+                {
+                    return m_IdOfDataset;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the current object is valid. 
+            /// </summary>
+            /// <remarks>
+            /// The object can become invalid when:
+            /// <list type="bullet">
+            /// <item>The project is closed.</item>
+            /// <item>The dataset is deleted.</item>
+            /// </list>
+            /// </remarks>
+            public bool IsValid
+            {
+                get
+                {
+                    return m_Owner.IsValid(m_IdOfDataset);
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the new dataset can be deleted from the
+            /// project.
+            /// </summary>
+            public bool CanBeDeleted
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.CanBeDeleted;
+                }
+            }
+
+            /// <summary>
+            /// Deletes the current dataset and all its children.
+            /// </summary>
+            public void Delete()
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                }
+
+                // Note that after this action the current object is no longer 'valid'
+                // i.e. it can't be used to connect to the owner anymore other than to
+                // check validity.
+                m_Owner.DeleteDatasetAndChildren(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the new dataset can be moved from one parent
+            /// to another parent.
+            /// </summary>
+            /// <design>
+            /// Datasets created by the user are normally movable. Datasets created by the system
+            /// may not be movable because it doesn't make sense to move a dataset whose only purpose
+            /// is to provide information to the parent.
+            /// </design>
+            public bool CanBeAdopted
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.CanBeAdopted;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the new dataset can be copied to another
+            /// dataset.
+            /// </summary>
+            public bool CanBeCopied
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.CanBeCopied;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating who created the dataset.
+            /// </summary>
+            public DatasetCreator CreatedBy
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.CreatedBy;
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating from where the datset is or will be 
+            /// loaded.
+            /// </summary>
+            public IPersistenceInformation StoredAt
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.StoredAt;
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value indicating the name of the dataset.
+            /// </summary>
+            public string Name
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.Name;
+                }
+
+                set
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    if (!string.Equals(dataset.Name, value))
+                    {
+                        dataset.Name = value;
+
+                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                        foreach (var observer in observers)
+                        {
+                            observer.NameUpdated();
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Gets or sets a value describing the dataset.
+            /// </summary>
+            public string Summary
+            {
+                get
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return dataset.Summary;
+                }
+
+                set
+                {
+                    var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                    if (!string.Equals(dataset.Summary, value))
+                    {
+                        dataset.Summary = value;
+                        
+                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                        foreach (var observer in observers)
+                        {
+                            observer.SummaryUpdated();
+                        }
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the dataset is loaded on the local machine
+            /// or a remote machine.
+            /// </summary>
+            public bool IsLoaded
+            {
+                get
+                {
+                    return m_Owner.IsLoaded(m_IdOfDataset);
+                }
+            }
+
+            /// <summary>
+            /// Returns a collection containing information on all the machines
+            /// the dataset is distributed over.
+            /// </summary>
+            /// <returns>
+            /// A collection containing information about all the machines the
+            /// dataset is distributed over.
+            /// </returns>
+            public IEnumerable<Machine> RunsOn()
+            {
+                // Needs to be a list!
+                throw new NotImplementedException();
+            }
+
+            /// <summary>
+            /// Loads the dataset onto a machine.
+            /// </summary>
+            /// <param name="preferredLocation">
+            /// Indicates a preferred machine location for the dataset to be loaded onto.
+            /// </param>
+            /// <param name="range">
+            /// The number of machines over which the data set should be distributed.
+            /// </param>
+            /// <remarks>
+            /// Note that the <paramref name="preferredLocation"/> and the <paramref name="range"/> are
+            /// only suggestions. The loader may deside to ignore the suggestions if there is a distribution
+            /// plan that is better suited to the contents of the dataset.
+            /// </remarks>
+            public void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range)
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
+                        preferredLocation != LoadingLocation.None, 
+                        Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation);
+                    Enforce.Argument(() => range);
+                }
+
+                if (IsLoaded)
+                {
+                    return;
+                }
+
+                m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
+                if (IsLoaded)
+                {
+                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                    foreach (var observer in observers)
+                    {
+                        observer.DatasetLoaded(new List<Machine>(RunsOn()));
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Unloads the dataset from the machine it is currently loaded onto.
+            /// </summary>
+            public void UnloadFromMachine()
+            {
+                if (!IsLoaded)
+                {
+                    return;
+                }
+
+                m_Owner.UnloadFromMachine(m_IdOfDataset);
+                if (!IsLoaded)
+                {
+                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
+                    foreach (var observer in observers)
+                    {
+                        observer.DatasetUnloaded();
+                    }
+                }
+            }
+
+            /// <summary>
+            /// Returns the collection of sub-datasets.
+            /// </summary>
+            /// <returns>
+            /// The collection of sub-datasets.
+            /// </returns>
+            public IEnumerable<IProxyDataset> Children()
+            {
+                var children = from dataset in m_Owner.Children(m_IdOfDataset)
+                               select m_Owner.ObtainProxyFor(dataset.Id);
+
+                return new List<IProxyDataset>(children);
+            }
+
+            /// <summary>
+            /// Gets a value indicating whether the current dataset is allowed to request the 
+            /// creation of its own children.
+            /// </summary>
+            /// <design>
+            /// Normally all datasets created by the user are allowed to create their own 
+            /// children. In some cases datasets created by the system are blocked from 
+            /// creating their own children.
+            /// </design>
+            public bool CanBecomeParent
+            {
+                get
+                {
+                    var information = m_Owner.OfflineInformation(m_IdOfDataset);
+                    return information.CanBecomeParent;
+                }
+            }
+
+            /// <summary>
+            /// Creates a new child dataset and returns the ID number of the child.
+            /// </summary>
+            /// <param name="newChild">The information required to create the new child.</param>
+            /// <returns>
+            /// The ID number of the child.
+            /// </returns>
+            /// <exception cref="DatasetCannotBecomeParentException">
+            /// Thrown when the current dataset cannot become a parent.
+            /// </exception>
+            public IProxyDataset CreateNewChild(DatasetCreationInformation newChild)
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
+                    Enforce.Argument(() => newChild);
+                }
+
+                var id = m_Owner.CreateDataset(m_IdOfDataset, newChild);
+                return new DatasetProxy(m_Owner, id);
+            }
+
+            /// <summary>
+            /// Creates a set of child datasets and returns a collection containing the ID numbers
+            /// of the newly created children.
+            /// </summary>
+            /// <param name="newChildren">The collection containing the information to create the child datasets.</param>
+            /// <returns>
+            /// A collection containing the ID numbers of the newly created children.
+            /// </returns>
+            public IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
+                    Enforce.Argument(() => newChildren);
+                    Enforce.With<ArgumentException>(newChildren.Any(), Resources_NonTranslatable.Exception_Messages_MissingCreationInformation);
+                }
+
+                var result = from child in newChildren
+                                let newDataset = m_Owner.CreateDataset(m_IdOfDataset, child)
+                             select new DatasetProxy(m_Owner, newDataset) as IProxyDataset;
+
+                return new List<IProxyDataset>(result);
+            }
+
+            /// <summary>
+            /// Gets a value indicating the set of commands that apply to the current dataset.
+            /// </summary>
+            public ProxyCommandSet Commands
+            {
+                get
+                {
+                    throw new NotImplementedException();
+                }
+            }
+
+            /// <summary>
+            /// Registers the given object for change notifications.
+            /// </summary>
+            /// <param name="observer">The object that wants to receive change notifications.</param>
+            public void RegisterForEvents(INotifyOnDatasetChange observer)
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<ArgumentException>(IsValid, Resources_NonTranslatable.Exception_Messages_CannotUseDatasetAfterItBecomesInvalid);
+                    Enforce.Argument(() => observer);
+                }
+
+                m_Owner.RegisterDatasetObservers(m_IdOfDataset, observer);
+            }
+
+            /// <summary>
+            /// Unregisters the given object for change notifications.
+            /// </summary>
+            /// <param name="observer">The object that is registered for change notifications.</param>
+            public void UnregisterFromEvents(INotifyOnDatasetChange observer)
+            {
+                {
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.Argument(() => observer);
+                }
+
+                m_Owner.UnregisterDatasetObservers(m_IdOfDataset, observer);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="DatasetProxy"/> is equal to this instance.
+            /// </summary>
+            /// <param name="other">The <see cref="DatasetProxy"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="DatasetProxy"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool Equals(DatasetProxy other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return other.m_IdOfDataset.Equals(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="IProxyDataset"/> is equal to this instance.
+            /// </summary>
+            /// <param name="other">The <see cref="IProxyDataset"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="IProxyDataset"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public bool Equals(IProxyDataset other)
+            {
+                if (other == null)
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                var dataset = other as DatasetProxy;
+                return Equals(dataset);
+            }
+
+            /// <summary>
+            /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+            /// </summary>
+            /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+            /// <returns>
+            ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+            /// </returns>
+            [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+                Justification = "Documentation can start with a language keyword")]
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+
+                var dataset = obj as IProxyDataset;
+                return Equals(dataset);
+            }
+
+            /// <summary>
+            /// Returns a hash code for this instance.
+            /// </summary>
+            /// <returns>
+            /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+            /// </returns>
+            public override int GetHashCode()
+            {
+                return m_IdOfDataset.GetHashCode();
+            }
+
+            /// <summary>
+            /// Returns a <see cref="System.String"/> that represents this instance.
+            /// </summary>
+            /// <returns>
+            /// A <see cref="System.String"/> that represents this instance.
+            /// </returns>
+            public override string ToString()
+            {
+                return string.Format(CultureInfo.InvariantCulture, "Read-only dataset front for dataset with ID: {0}", m_IdOfDataset);
+            }
+        }
+        
+        #endregion
+    }
+}

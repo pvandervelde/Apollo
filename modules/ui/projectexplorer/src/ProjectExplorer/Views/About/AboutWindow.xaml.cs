@@ -21,8 +21,6 @@ namespace Apollo.ProjectExplorer.Views.About
             InitializeComponent();
         }
 
-        #region Implementation of IView<AboutModel>
-
         /// <summary>
         /// Gets or sets the model.
         /// </summary>
@@ -39,8 +37,6 @@ namespace Apollo.ProjectExplorer.Views.About
                 DataContext = value;
             }
         }
-
-        #endregion
 
         private void OnCloseButtonClick(object sender, RoutedEventArgs e)
         {

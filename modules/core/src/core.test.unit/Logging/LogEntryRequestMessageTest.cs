@@ -110,19 +110,5 @@ namespace Apollo.Core.Logging
             var msg = new LogEntryRequestMessage(message.Object, LogType.Command);
             Assert.AreSame(message.Object, msg.Message);
         }
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new LogEntryRequestMessage(new LogMessage("a", LevelToLog.Fatal, "b"), LogType.Command);
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            Assert.IsTrue(msg.IsResponseRequired == otherMsg.IsResponseRequired);
-            Assert.AreEqual(msg.LogType, otherMsg.LogType);
-            Assert.AreEqual(msg.Message.Origin, otherMsg.Message.Origin);
-            Assert.AreEqual(msg.Message.Level, otherMsg.Message.Level);
-            Assert.AreEqual(msg.Message.Text(), otherMsg.Message.Text());
-        }
     }
 }

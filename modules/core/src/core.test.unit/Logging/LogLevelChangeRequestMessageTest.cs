@@ -68,17 +68,5 @@ namespace Apollo.Core.Logging
             var message = new LogLevelChangeRequestMessage(LevelToLog.Info);
             Assert.AreEqual(LevelToLog.Info, message.Level);
         }
-
-        [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
-        public void RoundTripSerialise()
-        {
-            var msg = new LogLevelChangeRequestMessage(LevelToLog.Info);
-            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
-
-            AssertEx.That(
-               () => msg.IsResponseRequired == otherMsg.IsResponseRequired
-                  && msg.Level == otherMsg.Level);
-        }
     }
 }

@@ -8,9 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Security;
+using System.Security.Permissions;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Projects;
 using Apollo.Core.Properties;
+using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
@@ -116,6 +121,18 @@ namespace Apollo.Core.UserInterfaces
                 m_Commands.Add(
                     ShutdownApplicationCommand.CommandId,
                     () => new ShutdownApplicationCommand(m_DnsNames.AddressOfKernel, SendMessageWithResponse));
+
+                m_Commands.Add(
+                   CreateProjectCommand.CommandId,
+                   () => new CreateProjectCommand(m_DnsNames.AddressOfProjects, SendMessageWithResponse));
+
+                m_Commands.Add(
+                   LoadProjectCommand.CommandId,
+                   () => new LoadProjectCommand(m_DnsNames.AddressOfProjects, SendMessageWithResponse));
+
+                m_Commands.Add(
+                   UnloadProjectCommand.CommandId,
+                   () => new UnloadProjectCommand(m_DnsNames.AddressOfProjects, SendMessage));
             }
         }
 
@@ -149,7 +166,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id);
@@ -166,7 +183,7 @@ namespace Apollo.Core.UserInterfaces
         public void Invoke(CommandId id, ICommandContext context)
         {
             {
-                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exceptions_Messages_ServicesIsNotFullyFunctional, StartupState);
+                Enforce.With<ArgumentException>(IsFullyFunctional, Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, StartupState);
             }
 
             m_Commands.Invoke(id, context);
@@ -189,6 +206,7 @@ namespace Apollo.Core.UserInterfaces
             return new Type[] 
                 { 
                     typeof(LogSink),
+                    typeof(ProjectService),
                 };
         }
 

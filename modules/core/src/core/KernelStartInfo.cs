@@ -51,6 +51,9 @@ namespace Apollo.Core
         {
             m_CoreAssemblies = new List<FileInfo>
                 {
+                    // Apollo.Core.Base
+                    DetermineAssemblyPath(typeof(Apollo.Core.Base.ICanClose).Assembly),
+
                     // Apollo.Core
                     DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
 

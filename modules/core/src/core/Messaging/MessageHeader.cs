@@ -16,7 +16,6 @@ namespace Apollo.Core.Messaging
     /// Stores the information required to succesfully send a message
     /// from one service to another service.
     /// </summary>
-    [Serializable]
     public sealed class MessageHeader : IEquatable<MessageHeader>
     {
         /// <summary>
@@ -137,14 +136,14 @@ namespace Apollo.Core.Messaging
         {
             {
                 Enforce.Argument(() => messageId);
-                Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutId);
+                Enforce.With<ArgumentException>(!messageId.Equals(MessageId.None), Resources_NonTranslatable.Exception_Messages_CannotCreateAMessageWithoutId);
 
                 Enforce.Argument(() => senderDns);
-                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_CannotCreateAMessageWithoutSender);
+                Enforce.With<ArgumentException>(!senderDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exception_Messages_CannotCreateAMessageWithoutSender);
 
                 Enforce.Argument(() => recipientDns);
-                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageToNoService);
-                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources_NonTranslatable.Exceptions_Messages_CannotSendAMessageBackToTheSender_WithDnsName, senderDns);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(DnsName.Nobody), Resources_NonTranslatable.Exception_Messages_CannotSendAMessageToNoService);
+                Enforce.With<ArgumentException>(!recipientDns.Equals(senderDns), Resources_NonTranslatable.Exception_Messages_CannotSendAMessageBackToTheSender_WithDnsName, senderDns);
 
                 Enforce.Argument(() => replyToId);
             }

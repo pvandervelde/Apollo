@@ -1,88 +1,341 @@
 <Project>
   <Name>Scheduling system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Scheduling - overview</Name>
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Interface">
-        <Name>IExecuteGraph</Name>
-        <Access>Internal</Access>
-        <Location left="370" top="443" />
-        <Size width="162" height="216" />
-        <Collapsed>False</Collapsed>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Defines the entry point for all scheduling graph processors</Text>
-        <Location left="71" top="443" />
-        <Size width="162" height="72" />
-      </Entity>
-      <Entity type="Interface">
         <Name>IProcessSchedule</Name>
         <Access>Internal</Access>
-        <Location left="383" top="37" />
-        <Size width="162" height="216" />
+        <Location left="1616" top="449" />
+        <Size width="221" height="163" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">ScheduleId Id { get; }</Member>
+        <Member type="Property">bool IsBeingExecuted { get; }</Member>
+        <Member type="Property">bool IsLocked { get; }</Member>
+        <Member type="Method">LockToken Lock()</Member>
+        <Member type="Method">void Unlock(LockToken key)</Member>
+        <Member type="Property">IScheduleGraphVertex Start { get; }</Member>
       </Entity>
       <Entity type="Interface">
-        <Name>IExecuteGraphNode</Name>
+        <Name>IScheduleGraphVertex</Name>
         <Access>Internal</Access>
-        <Location left="138" top="742" />
-        <Size width="162" height="90" />
+        <Location left="1018" top="1103" />
+        <Size width="346" height="95" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
+        <Member type="Property">IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
       </Entity>
       <Entity type="Interface">
-        <Name>IExecuteGraphConnection</Name>
-        <Access>Internal</Access>
-        <Location left="357" top="742" />
-        <Size width="175" height="90" />
+        <Name>IExecutor</Name>
+        <Access>Public</Access>
+        <Location left="976" top="199" />
+        <Size width="363" height="78" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">ExecutionToken Execute(IProcessSchedule scheduleToExecute)</Member>
       </Entity>
-      <Entity type="Interface">
-        <Name>IScheduleStateMachine</Name>
+      <Entity type="Class">
+        <Name>ProcessSchedule</Name>
         <Access>Internal</Access>
-        <Location left="762" top="339" />
-        <Size width="162" height="216" />
+        <Location left="1616" top="725" />
+        <Size width="226" height="213" />
         <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly ScheduleGraphStartNode m_Start</Member>
+        <Member type="Field">private readonly ScheduleGraphEndNode m_End</Member>
+        <Member type="Property">public ScheduleId Id { get; }</Member>
+        <Member type="Property">public bool IsBeingExecuted { get; }</Member>
+        <Member type="Property">public bool IsLocked { get; }</Member>
+        <Member type="Method">public LockToken Lock()</Member>
+        <Member type="Method">public void Unlock(LockToken key)</Member>
+        <Member type="Property">public IScheduleGraphVertex Start { get; }</Member>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
-        <Text>The scheduling system is mainly about getting values for variables. This can be done with a schedule or from a calculation or from a sub-dataset.</Text>
-        <Location left="52" top="175" />
-        <Size width="206" height="112" />
+        <Text>The graph always starts at a start node and always ends at an end node. 
+Start and end nodes cannot have an action.
+Also a start node does not have any parents and an end node does not have any children.</Text>
+        <Location left="1054" top="724" />
+        <Size width="228" height="134" />
       </Entity>
-      <Entity type="Delegate">
-        <Name>GraphNodeInterpreter</Name>
+      <Entity type="Class">
+        <Name>ScheduleGraphEdge</Name>
         <Access>Internal</Access>
-        <Location left="722" top="64" />
-        <Size width="230" height="61" />
+        <Location left="1688" top="1103" />
+        <Size width="226" height="128" />
         <Collapsed>False</Collapsed>
-        <ReturnType>void</ReturnType>
+        <Member type="Property">public IScheduleGraphVertex Start { get; }</Member>
+        <Member type="Property">public IScheduleGraphVertex End { get; }</Member>
+        <Member type="Method">public bool CanTraverse()</Member>
+        <Modifier>Sealed</Modifier>
       </Entity>
-      <Entity type="Delegate">
-        <Name>GraphConnectionInterpreter</Name>
+      <Entity type="Class">
+        <Name>ScheduleGraphActionNode</Name>
         <Access>Internal</Access>
-        <Location left="722" top="175" />
-        <Size width="230" height="78" />
+        <Location left="491" top="1103" />
+        <Size width="355" height="162" />
         <Collapsed>False</Collapsed>
-        <ReturnType>void</ReturnType>
-        <Param>IExecuteGraphConnection connection</Param>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
+        <Member type="Property">public Action Action { get; }</Member>
+        <Member type="Property">public bool IsValid { get; }</Member>
+        <Member type="Method">public void Invalidate()</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleGraphStartNode</Name>
+        <Access>Internal</Access>
+        <Location left="1189" top="895" />
+        <Size width="355" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleGraphEndNode</Name>
+        <Access>Internal</Access>
+        <Location left="801" top="895" />
+        <Size width="355" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleGraphGroupNode</Name>
+        <Access>Internal</Access>
+        <Location left="1018" top="1310" />
+        <Size width="355" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
+        <Member type="Property">public IProcessSchedule SubSchedule { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHaveActions</Name>
+        <Access>Internal</Access>
+        <Location left="574" top="1348" />
+        <Size width="163" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">Action Action { get; }</Member>
+        <Member type="Property">bool IsValid { get; }</Member>
+        <Member type="Method">void Invalidate()</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHaveSubSchedules</Name>
+        <Access>Internal</Access>
+        <Location left="1072" top="1526" />
+        <Size width="235" height="78" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">IProcessSchedule SubSchedule { get; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ExecutorPool</Name>
+        <Access>Internal</Access>
+        <Location left="960" top="449" />
+        <Size width="375" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public ExecutionToken Execute(IProcessSchedule scheduleToExecute)</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ExecutionToken</Name>
+        <Access>Public</Access>
+        <Location left="192" top="389" />
+        <Size width="175" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public bool IsTokenValid { get; }</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public void Pause()</Member>
+        <Member type="Method">public void Stop()</Member>
+        <Member type="Method">public void Terminate()</Member>
+        <Member type="Property">public bool IsRunning { get; }</Member>
+        <Member type="Property">public bool IsPaused { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleExecutor</Name>
+        <Access>Internal</Access>
+        <Location left="457" top="415" />
+        <Size width="336" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public ScheduleExecutor(IProcessSchedule scheduleToExecute)</Member>
+        <Member type="Property">public ExecutionToken Token { get; }</Member>
+        <Member type="Method">public void Start()</Member>
+        <Member type="Method">public void Pause()</Member>
+        <Member type="Method">public void Stop(bool terminateImmediately)</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Serializable</Text>
+        <Location left="234" top="268" />
+        <Size width="82" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Lock should lock everything. Schedule and components.</Text>
+        <Location left="1986" top="493" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Using actions also allows us to exchange components etc.. However we'll have to remember to invoke actions on in a way that allows components to be replaced.</Text>
+        <Location left="270" top="1352" />
+        <Size width="188" height="119" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we need an insert node too? This allows insertion of schedules for specific conditions. The inserted schedule becomes 'part' of the current schedule graph.</Text>
+        <Location left="1501" top="1323" />
+        <Size width="233" height="110" />
       </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Comment" first="1" second="0">
+      <Relationship type="Realization" first="3" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="5" second="0">
+      <Relationship type="Association" first="3" second="1">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1644</X>
+          <Y>965</Y>
+        </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>595</X>
-          <Y>615</Y>
+          <X>1413</X>
+          <Y>1126</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="5">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1793</X>
+          <Y>963</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="5" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Realization" first="7" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1306</X>
+          <Y>1032</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1306</X>
+          <Y>1076</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="8" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1055</X>
+          <Y>1073</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="6" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="9" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="4" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1307</X>
+          <Y>790</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1371</X>
+          <Y>870</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="4" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1023</X>
+          <Y>797</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>955</X>
+          <Y>870</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="6" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="9" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="12" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="12" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="12" second="14">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>0..*</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="13" second="14">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="15" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="17" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="18" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1313</X>
+          <Y>1223</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

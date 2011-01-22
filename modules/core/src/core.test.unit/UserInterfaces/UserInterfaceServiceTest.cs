@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Projects;
+using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
 using Autofac.Core;
@@ -27,35 +29,43 @@ namespace Apollo.Core.UserInterfaces
 
         private sealed class MockDnsNameConstants : IDnsNameConstants
         {
-            public DnsName AddressOfMessagePipeline
+            public DnsName AddressOfLogger
             {
-                get 
-                { 
-                    return new DnsName("pipeline");
+                get
+                {
+                    return new DnsName("logger");
                 }
             }
 
             public DnsName AddressOfKernel
             {
-                get 
-                { 
+                get
+                {
                     return new DnsName("kernel");
+                }
+            }
+
+            public DnsName AddressOfMessagePipeline
+            {
+                get
+                {
+                    return new DnsName("pipeline");
+                }
+            }
+
+            public DnsName AddressOfProjects
+            {
+                get
+                {
+                    return new DnsName("projects");
                 }
             }
 
             public DnsName AddressOfUserInterface
             {
-                get 
-                { 
+                get
+                {
                     return new DnsName("ui");
-                }
-            }
-
-            public DnsName AddressOfLogger
-            {
-                get 
-                { 
-                    return new DnsName("logger");
                 }
             }
         }
@@ -241,7 +251,10 @@ namespace Apollo.Core.UserInterfaces
                 var original = new List<CommandId>()
                     {
                         CheckApplicationCanShutdownCommand.CommandId,
-                        ShutdownApplicationCommand.CommandId
+                        ShutdownApplicationCommand.CommandId,
+                        CreateProjectCommand.CommandId,
+                        LoadProjectCommand.CommandId,
+                        UnloadProjectCommand.CommandId,
                     };
                 Assert.AreElementsEqualIgnoringOrder(original, commandCollection);
             }
@@ -416,7 +429,13 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            Assert.AreElementsEqualIgnoringOrder(new Type[] { typeof(LogSink) }, service.ServicesToBeAvailable());
+            Assert.AreElementsEqualIgnoringOrder(
+                new Type[] 
+                    {
+                        typeof(LogSink),
+                        typeof(ProjectService)
+                    }, 
+                service.ServicesToBeAvailable());
         }
 
         [Test]
@@ -439,7 +458,12 @@ namespace Apollo.Core.UserInterfaces
                 storage,
                 onStartService);
 
-            Assert.AreElementsEqualIgnoringOrder(new Type[] { typeof(IMessagePipeline) }, service.ServicesToConnectTo());
+            Assert.AreElementsEqualIgnoringOrder(
+                new Type[] 
+                    { 
+                        typeof(IMessagePipeline),
+                    }, 
+                service.ServicesToConnectTo());
         }
 
         [Test]

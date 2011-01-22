@@ -13,7 +13,7 @@ namespace Apollo.Utils
     /// <summary>
     /// Defines a class that promises to return a value at a certain point in time.
     /// </summary>
-    /// <typeparam name="T">The type of the promissed return value.</typeparam>
+    /// <typeparam name="T">The type of the promised return value.</typeparam>
     public sealed class Future<T> : IFuture<T>, IDisposable
     {
         /// <summary>
@@ -89,7 +89,7 @@ namespace Apollo.Utils
                 // If not then wait for it.
                 if (!m_Result.IsCompleted)
                 {
-                    using(var waitHandle = m_Result.AsyncWaitHandle)
+                    using (var waitHandle = m_Result.AsyncWaitHandle)
                     {
                         waitHandle.WaitOne();
                     }

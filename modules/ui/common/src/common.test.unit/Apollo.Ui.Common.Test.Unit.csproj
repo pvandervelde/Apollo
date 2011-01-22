@@ -74,15 +74,41 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Gallio">
+      <HintPath>..\..\tools\mbunit\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit">
+      <HintPath>..\..\tools\mbunit\MbUnit.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit35">
+      <HintPath>..\..\tools\mbunit\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\tools\moq\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Views\Projects\ProjectModelTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\core\src\core\Apollo.Core.csproj">
+      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
+      <Name>Apollo.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\common\Apollo.UI.Common.csproj">
+      <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
+      <Name>Apollo.UI.Common</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Datasets\" />
   </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>

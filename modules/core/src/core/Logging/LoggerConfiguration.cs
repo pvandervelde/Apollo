@@ -42,12 +42,12 @@ namespace Apollo.Core.Logging
 
                 Enforce.With<ArgumentOutOfRangeException>(
                     numberOfMessagesToBuffer > 0,
-                    Resources_NonTranslatable.Exceptions_Messages_MustBufferMoreThanZeroMessages_WithCount,
+                    Resources_NonTranslatable.Exception_Messages_MustBufferMoreThanZeroMessages_WithCount,
                     numberOfMessagesToBuffer);
 
                 Enforce.With<ArgumentOutOfRangeException>(
                     flushAfter >= 0,
-                    Resources_NonTranslatable.Exceptions_Messages_MustFlushAfterPositiveTimestep_WithTimestep,
+                    Resources_NonTranslatable.Exception_Messages_MustFlushAfterPositiveTimestep_WithTimestep,
                     flushAfter);
             }
 

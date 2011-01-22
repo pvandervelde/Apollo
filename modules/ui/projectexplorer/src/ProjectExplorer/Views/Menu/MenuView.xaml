@@ -1,84 +1,64 @@
-﻿<Common:RegionView 
-    x:Class="Apollo.ProjectExplorer.Views.Menu.MenuView"
-    x:ClassModifier="internal"
-    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" 
-    xmlns:lex="http://schemas.root-project.org/xaml/presentation"
-    xmlns:Common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
-    <Menu DockPanel.Dock="Top" IsMainMenu="True">
-        <MenuItem 
-            Header="{lex:LocText Key=MainWindow_Menu_File, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_File}"
-            >
-            <MenuItem 
-                    Header="{lex:LocText Key=MainWindow_Menu_File_New, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_New}" 
-                    IsEnabled="False"
-                >
+﻿<Common:RegionView x:Class="Apollo.ProjectExplorer.Views.Menu.MenuView"
+                   x:ClassModifier="internal"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+                   xmlns:Common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
+    <Menu DockPanel.Dock="Top"
+          IsMainMenu="True">
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_File, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_File}">
+            <MenuItem x:Name="miFileNewProject"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_File_NewProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_New}">
             </MenuItem>
-            <MenuItem 
-                    Header="{lex:LocText Key=MainWindow_Menu_File_Open, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Open}" 
-                    IsEnabled="False"
-                />
+            <MenuItem x:Name="miFileOpenProject"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_File_OpenProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Open}" />
             <Separator />
-            <MenuItem 
-                    Header="{lex:LocText Key=MainWindow_Menu_File_Close, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Close}" 
-                    IsEnabled="False"
-                />
-            <MenuItem 
-                    Header="{lex:LocText Key=MainWindow_Menu_File_Save, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Save}" 
-                    IsEnabled="False"
-                />
-            <MenuItem 
-                    Header="{lex:LocText Key=MainWindow_Menu_File_SaveAs, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_SaveAs}" 
-                    IsEnabled="False"
-                />
+            <MenuItem x:Name="miFileCloseProject"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_File_CloseProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Close}" />
+            <MenuItem x:Name="miFileSaveProject"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_File_SaveProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Save}" />
+            <MenuItem Header="{lex:LocText Key=MainWindow_Menu_File_SaveProjectAs, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_SaveAs}"
+                      IsEnabled="False" />
             <Separator />
             <!-- Recent -->
             <Separator />
-            <MenuItem 
-                    x:Name="miFileExit"
-                    x:FieldModifier="private"
-                    Header="{lex:LocText Key=MainWindow_Menu_File_Exit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Exit}"
-                />
+            <MenuItem x:Name="miFileExit"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_File_Exit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Exit}" />
         </MenuItem>
-        
+
         <!-- Edit -->
-        <MenuItem 
-            Header="{lex:LocText Key=MainWindow_Menu_Edit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Edit}"
-            IsEnabled="False"
-            >
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Edit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Edit}"
+                  IsEnabled="False">
         </MenuItem>
-        
+
         <!-- View -->
-        <MenuItem 
-            Header="{lex:LocText Key=MainWindow_Menu_View, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_View}"
-            IsEnabled="False"
-            >
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_View, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_View}"
+                  IsEnabled="False">
         </MenuItem>
-        
+
         <!-- Run -->
-        <MenuItem 
-            Header="{lex:LocText Key=MainWindow_Menu_Run, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Run}"
-            IsEnabled="False"
-            >
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Run, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Run}"
+                  IsEnabled="False">
         </MenuItem>
-        
+
         <!-- Tools -->
-                
+
         <!-- Window -->
-                
+
         <!-- Help -->
         <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Help, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Help}">
-            <MenuItem 
-                Header="{lex:LocText Key=MainWindow_Menu_Help_Help, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Help}" 
-                IsEnabled="False"
-                />
+            <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Help_Help, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Help}"
+                      IsEnabled="False" />
             <Separator />
-            <MenuItem 
-                x:Name="miHelpAbout"
-                x:FieldModifier="private"
-                Header="{lex:LocText Key=MainWindow_Menu_Help_About, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_About}" 
-                />
+            <MenuItem x:Name="miHelpAbout"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_Help_About, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_About}" />
         </MenuItem>
-        
+
     </Menu>
 </Common:RegionView>

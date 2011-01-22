@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using Apollo.Core.Logging;
 using Apollo.Core.Messaging;
+using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
 using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
@@ -85,27 +86,12 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// Concatenates two IEnumerable sequences.
-        /// </summary>
-        /// <typeparam name="T">The object type in the sequence.</typeparam>
-        /// <param name="existingSequence">The existing sequence.</param>
-        /// <param name="newSequence">The new sequence.</param>
-        /// <returns>
-        /// The concatenation of the two sequences.
-        /// </returns>
-        private static IEnumerable<T> ConcatSequences<T>(IEnumerable<T> existingSequence, IEnumerable<T> newSequence)
-        {
-            return (existingSequence != null) ? existingSequence.Union(newSequence) : newSequence;
-        }
-
-        /// <summary>
         /// Builds the IOC container.
         /// </summary>
-        /// <param name="additionalModules">The collection of additional modules that should be loaded.</param>
         /// <returns>
         /// The DI container that is used to create the service.
         /// </returns>
-        private static IContainer InitializeContainer(params IModule[] additionalModules)
+        private static IContainer InitializeContainer()
         {
             var builder = new ContainerBuilder();
             {
@@ -113,6 +99,7 @@ namespace Apollo.Core
                 builder.RegisterModule(new KernelModule());
                 builder.RegisterModule(new MessagingModule());
                 builder.RegisterModule(new LoggerModule());
+                builder.RegisterModule(new ProjectModule());
                 builder.RegisterModule(new LicensingModule());
             }
 

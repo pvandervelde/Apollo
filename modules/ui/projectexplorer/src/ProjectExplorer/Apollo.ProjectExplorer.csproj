@@ -124,9 +124,6 @@
     <Reference Include="Autofac">
       <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
     </Reference>
-    <Reference Include="AvalonDock">
-      <HintPath>..\..\lib\avalondock\AvalonDock.dll</HintPath>
-    </Reference>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
@@ -174,6 +171,11 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DispatcherContextWrapper.cs" />
+    <Compile Include="Events\CloseViewEvent.cs" />
+    <Compile Include="Events\CloseViewRequest.cs" />
+    <Compile Include="Events\CloseViewRequest.Presenter.cs" />
+    <Compile Include="Events\Listeners\CloseViewEventListener.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
@@ -182,6 +184,7 @@
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Events\ShowViewRequest.cs" />
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
+    <Compile Include="RegionNames.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
     <Compile Include="Views\About\AboutParameter.cs" />
     <Compile Include="Views\About\AboutPresenter.cs" />

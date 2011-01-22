@@ -46,7 +46,7 @@ namespace Apollo.Core.Logging
                 Enforce.Argument(() => origin);
                 Enforce.Argument(() => origin, StringIs.NotEmpty);
 
-                Enforce.With<ArgumentException>(level != LevelToLog.None, Resources_NonTranslatable.Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone);
+                Enforce.With<ArgumentException>(level != LevelToLog.None, Resources_NonTranslatable.Exception_Messages_CannotLogMessageWithLogLevelSetToNone);
 
                 Enforce.Argument(() => text);
             }

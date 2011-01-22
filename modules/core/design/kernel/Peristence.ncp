@@ -69,8 +69,20 @@ This serializer should be serializable itself (to cross the AppDomain boundaries
       <Entity type="Comment">
         <Text>Think about how we handle versioning. For some file types that will not be a problem. For others it will. Solutions could be:
 - Have a different serializer for each version. Each version of the system updates all writers + adds new ones.</Text>
-        <Location left="126" top="593" />
+        <Location left="126" top="426" />
         <Size width="242" height="151" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Delegates could be useful here. Note that we can't use Func&lt;&gt; or Action&lt;&gt; because they don't serialize across AppDomains</Text>
+        <Location left="1162" top="667" />
+        <Size width="220" height="102" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Define different template types. Each type will have it's own set of rules. Suggested types are:
+- Temporary: no versioning necessary
+- SaveFileStorage: versioned, is part of the main project fileset</Text>
+        <Location left="106" top="654" />
+        <Size width="260" height="137" />
       </Entity>
     </Entities>
     <Relationships>
@@ -119,12 +131,20 @@ This serializer should be serializable itself (to cross the AppDomain boundaries
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>429</X>
-          <Y>672</Y>
+          <Y>505</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>759</X>
-          <Y>507</Y>
+          <X>762</X>
+          <Y>505</Y>
         </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="9" second="11">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
