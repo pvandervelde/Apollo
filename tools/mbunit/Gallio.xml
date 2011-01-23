@@ -27366,7 +27366,7 @@
         </member>
         <member name="M:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.GetResourceLookup(System.String)">
             <summary>
-            Gets or sets a resource to use for internationalization of strings
+            Gets or sets a resource to use for localization of strings
             </summary>
         </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.Flags">
@@ -27384,6 +27384,11 @@
             The short name of the argument.
             </summary>
         </member>
+        <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.LocalizedShortName">
+            <summary>
+            The localized short name of the argument.
+            </summary>
+        </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.IsDefaultLongName">
             <summary>
             Returns true if the argument did not have an explicit long name specified.
@@ -27394,9 +27399,19 @@
             The long name of the argument.
             </summary>
         </member>
+        <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.LocalizedLongName">
+            <summary>
+            The localized long name of the argument.
+            </summary>
+        </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.Description">
             <summary>
             The description of the argument.
+            </summary>
+        </member>
+        <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.LocalizedDescription">
+            <summary>
+            The localized description of the argument.
             </summary>
         </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.ValueLabel">
@@ -27404,9 +27419,19 @@
              The description of the argument value.
             </summary>
         </member>
+        <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.LocalizedValueLabel">
+            <summary>
+             The localized description of the argument value.
+            </summary>
+        </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.Synonyms">
             <summary>
             Gets or sets an array of additional synonyms that are silently accepted.
+            </summary>
+        </member>
+        <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.LocalizedSynonyms">
+            <summary>
+            Gets an array of localized additional synonyms that are silently accepted.
             </summary>
         </member>
         <member name="P:Gallio.Runtime.ConsoleSupport.CommandLineArgumentAttribute.ResourceType">
@@ -44381,17 +44406,17 @@
         </member>
         <member name="P:Gallio.Properties.Resources.CommandLineArgumentAttribute_NoResourceException">
             <summary>
-              Looks up a localized string similar to Internationalized attribute strings must supply a resource.
+              Looks up a localized string similar to Localized attribute strings must supply a resource.
             </summary>
         </member>
         <member name="P:Gallio.Properties.Resources.CommandLineArgumentAttribute_ResourceNotAStringException">
             <summary>
-              Looks up a localized string similar to Internationalized attribute string does not point to a string resource.
+              Looks up a localized string similar to Localized attribute string does not point to a string resource.
             </summary>
         </member>
         <member name="P:Gallio.Properties.Resources.CommandLineArgumentAttribute_ResourceNotFoundException">
             <summary>
-              Looks up a localized string similar to Internationalized attribute string not found in resource named.
+              Looks up a localized string similar to Localized attribute string not found in resource named.
             </summary>
         </member>
         <member name="P:Gallio.Properties.Resources.CommandLineArgumentParser_Argument_CollectionArgumentsMustAllowMultipleValues">

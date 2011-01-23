@@ -1,0 +1,311 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ACD26D23-36BA-4035-84CA-6E462A03B033}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apollo.UI.Common</RootNamespace>
+    <AssemblyName>Apollo.UI.Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>false</DelaySign>
+    <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\..\bin\build\Debug\Apollo.UI.Common.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DocumentationFile>..\..\bin\build\Release\Apollo.UI.Common.xml</DocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>..\..\bin\build\Debug\Apollo.UI.Common.xml</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>..\..\bin\build\Release\Apollo.UI.Common.xml</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\bin\build\x64\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>..\..\bin\build\Debug\Apollo.UI.Common.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\bin\build\x64\Release\</OutputPath>
+    <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
+    <DocumentationFile>..\..\bin\build\Release\Apollo.UI.Common.XML</DocumentationFile>
+    <Optimize>true</Optimize>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphSharp">
+      <HintPath>..\..\lib\graphsharp\GraphSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphSharp.Controls">
+      <HintPath>..\..\lib\graphsharp\GraphSharp.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="GreyableImage">
+      <HintPath>..\..\lib\greyableimage\GreyableImage.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared">
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Composite">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Composite.Presentation">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.Presentation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\lib\servicelocation\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Common">
+      <HintPath>..\..\lib\pixellab\PixelLab.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Wpf">
+      <HintPath>..\..\lib\pixellab\PixelLab.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.3.40824.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WPFExtensions">
+      <HintPath>..\..\lib\graphsharp\WPFExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFLocalizeExtension">
+      <HintPath>..\..\lib\wpflocalizeextension\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="Bootstrapper\AutofacContainerAdapter.cs" />
+    <Compile Include="Bootstrapper\AutofacServiceLocator.cs" />
+    <Compile Include="Bootstrapper\CompositeBootstrapper.cs" />
+    <Compile Include="Bootstrapper\ContainerAdapterExtensions.cs" />
+    <Compile Include="Bootstrapper\ContainerRegistrationScope.cs" />
+    <Compile Include="Bootstrapper\ContainerRegistrationScopeExtensions.cs" />
+    <Compile Include="Bootstrapper\IContainerAdapter.cs" />
+    <Compile Include="Bootstrapper\RegionAdapterMapper.cs" />
+    <Compile Include="Bootstrapper\RegionBehaviorFactoryMapper.cs" />
+    <Compile Include="Bootstrapper\ResolveAnythingSource.cs" />
+    <Compile Include="Commands\AddChildDatasetCommand.cs" />
+    <Compile Include="Commands\CloseProjectCommand.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Commands\NewProjectCommand.cs" />
+    <Compile Include="Commands\OpenProjectCommand.cs" />
+    <Compile Include="Commands\DeleteDatasetCommand.cs" />
+    <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="IContextAware.cs" />
+    <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertextToDatasetModelConverter.cs" />
+    <Compile Include="Eventing\EventListener.cs" />
+    <Compile Include="IPresenter.cs" />
+    <Compile Include="IRegionView.cs" />
+    <Compile Include="IStandardView.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Presenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RegionExtensions.cs" />
+    <Compile Include="RegionView.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphLayout.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphModel.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphParameter.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphView.xaml.cs">
+      <DependentUpon>DatasetGraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Datasets\DatasetModel.cs" />
+    <Compile Include="Views\Datasets\DatasetParameter.cs" />
+    <Compile Include="Views\Datasets\DatasetPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
+      <DependentUpon>DatasetVertexView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Datasets\DatasetViewEdge.cs" />
+    <Compile Include="Views\Datasets\DatasetViewGraph.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
+    <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
+    <Compile Include="Views\Datasets\IDatasetView.cs" />
+    <Compile Include="Views\Projects\IProjectView.cs" />
+    <Compile Include="Views\Projects\ProjectGlobalView.xaml.cs">
+      <DependentUpon>ProjectGlobalView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Projects\ProjectModel.cs" />
+    <Compile Include="Views\Projects\ProjectParameter.cs" />
+    <Compile Include="Views\Projects\ProjectPresenter.cs" />
+    <Compile Include="WindowsVersionNumbers.cs" />
+    <Compile Include="WindowView.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\" />
+    <Folder Include="Converters\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core\Apollo.Core.csproj">
+      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
+      <Name>Apollo.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utils\Apollo.Utils.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\Datasets\DatasetGraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Datasets\DatasetVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Projects\ProjectGlobalView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_256x256.png" />
+  </ItemGroup>
+  <PropertyGroup>
+    <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
+    <BasePath>$(ProjectPath)\..\..</BasePath>
+    <ToolsPath>$(BasePath)\Tools</ToolsPath>
+    <StyleCopToolsPath>$(ToolsPath)\StyleCop</StyleCopToolsPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(StyleCopToolsPath)\Microsoft.StyleCop.targets" />
+  <PropertyGroup>
+    <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
