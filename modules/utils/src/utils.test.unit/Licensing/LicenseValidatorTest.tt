@@ -1,4 +1,0 @@
-﻿<#@ template debug="false" hostspecific="true" language="C#" #>
-<#@ output extension=".cs" #>
-<#@ include file="LicenseValidatorTest.ttinclude" #>
-<# WriteLicenseValidatorTest("Apollo.Utils.Licensing", "LicenseValidatorTest", "LicenseValidator"); #>

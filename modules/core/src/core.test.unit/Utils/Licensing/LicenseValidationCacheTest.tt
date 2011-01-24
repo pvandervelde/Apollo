@@ -1,9 +1,0 @@
-﻿<#@ template language="C#" hostspecific="True" #>
-<#@ include file="..\..\..\core\Utils\Licensing\Manager.ttinclude" #>
-<#@ output extension=".txt" #>
-<#@ include file="..\..\..\..\..\utils\src\utils.test.unit\Licensing\LicenseValidationCacheTest.ttinclude" #>
-<# var manager = Manager.Create(Host, GenerationEnvironment); #>
-<# manager.StartNewFile("ValidationServiceLicenseValidationCacheTest.cs"); #>
-<# WriteLicenseValidationCacheTest("Apollo.Core.Utils.Licensing", "ValidationServiceLicenseValidationCacheTest", "ValidationServiceLicenseValidationCache");#>
-<# manager.EndBlock(); #>
-<# manager.Process(true); #>

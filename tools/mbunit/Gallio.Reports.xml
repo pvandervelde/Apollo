@@ -35,6 +35,55 @@
             Defaults to <see cref="F:Gallio.Common.Markup.AttachmentContentDisposition.Absent"/>.
             </summary>
         </member>
+        <member name="T:Gallio.Reports.VtlReportFormatter">
+            <summary>
+            <para>
+            Generic report formatter based on the NVelocity template engine.
+            </para>
+            <para>
+            Recognizes the following options:
+            <list type="bullet">
+            <listheader>
+            <term>Option</term>
+            <description>Description</description>
+            </listheader>
+            <item>
+            <term>AttachmentContentDisposition</term>
+            <description>Overrides the default attachment content disposition for the format.
+            The content disposition may be "Absent" to exclude attachments, "Link" to
+            include attachments by reference to external files, or "Inline" to include attachments as
+            inline content within the formatted document.  Different formats use different
+            default content dispositions.</description>
+            </item>
+            </list>
+            </para>
+            </summary>
+        </member>
+        <member name="M:Gallio.Reports.VtlReportFormatter.#ctor(System.String,System.String,System.IO.DirectoryInfo,System.String,System.String[])">
+            <summary>
+            Creates an XSLT report formatter.
+            </summary>
+            <param name="extension">The preferred extension without a '.'</param>
+            <param name="contentType">The content type of the main report document.</param>
+            <param name="resourceDirectory">The resource directory.</param>
+            <param name="templatePath">The path of the NVelocity template relative to the resource directory.</param>
+            <param name="resourcePaths">The paths of the resources (such as images or CSS) to copy
+            to the report directory relative to the resource directory.</param>
+            <exception cref="T:System.ArgumentNullException">Thrown if any arguments are null.</exception>
+        </member>
+        <member name="M:Gallio.Reports.VtlReportFormatter.Format(Gallio.Runner.Reports.IReportWriter,Gallio.Runner.Reports.ReportFormatterOptions,Gallio.Runtime.ProgressMonitoring.IProgressMonitor)">
+            <inheritdoc />
+        </member>
+        <member name="M:Gallio.Reports.VtlReportFormatter.ApplyTemplate(Gallio.Runner.Reports.IReportWriter,Gallio.Common.Markup.AttachmentContentDisposition,Gallio.Runner.Reports.ReportFormatterOptions)">
+            <summary>
+            Applies the template to produce a report.
+            </summary>
+        </member>
+        <member name="M:Gallio.Reports.VtlReportFormatter.CopyResources(Gallio.Runner.Reports.IReportWriter)">
+            <summary>
+            Copies additional resources to the content path within the report.
+            </summary>
+        </member>
         <member name="T:Gallio.Reports.MHtmlReportFormatter">
             <summary>
             <para>

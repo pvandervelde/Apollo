@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Stores the current version number for the Apollo Core modules -->
-<version>
-	<major>0</major>
-	<minor>1</minor>
-	<build>0</build>
-</version>
