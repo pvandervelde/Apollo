@@ -49,11 +49,6 @@ namespace <#= nameSpace #>
     internal sealed class <#= className #> : ILicenseValidationCache
     {
         /// <summary>
-        /// The object used to lock on.
-        /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
-
-        /// <summary>
         /// The object that performs the actual license validation.
         /// </summary>
         private readonly IValidator m_Validator;

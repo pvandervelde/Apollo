@@ -354,9 +354,13 @@ namespace Apollo.Core.Projects
         /// </design>
         public void Close()
         {
-            // Indicat that we're closing the project. Do this first so that any actions that come
+            // Indicate that we're closing the project. Do this first so that any actions that come
             // in parallel to this one will be notified.
             m_IsClosed = true;
+
+            // Unregister all observers
+            m_DatasetObservers.Clear();
+            m_ProjectObservers.Clear();
 
             // NOTE: We should only close if we're not saving data. If we are saving data then wait till
             //       we're done, then close.

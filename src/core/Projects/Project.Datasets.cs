@@ -367,22 +367,6 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
-        /// Unregisters the given object for change notifications.
-        /// </summary>
-        /// <param name="id">The ID of the dataset for which the notifications should be unregistered.</param>
-        private void UnregisterAllDatasetObservers(DatasetId id)
-        {
-            {
-                Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
-            }
-
-            if (m_DatasetObservers.ContainsKey(id))
-            {
-                m_DatasetObservers.Remove(id);
-            }
-        }
-
-        /// <summary>
         /// Returns the collection of objects that have registered for change notifications
         /// for the dataset with the given ID.
         /// </summary>

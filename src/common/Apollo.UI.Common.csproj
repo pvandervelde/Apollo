@@ -157,16 +157,16 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="Bootstrapper\AutofacContainerAdapter.cs" />
-    <Compile Include="Bootstrapper\AutofacServiceLocator.cs" />
-    <Compile Include="Bootstrapper\CompositeBootstrapper.cs" />
-    <Compile Include="Bootstrapper\ContainerAdapterExtensions.cs" />
-    <Compile Include="Bootstrapper\ContainerRegistrationScope.cs" />
-    <Compile Include="Bootstrapper\ContainerRegistrationScopeExtensions.cs" />
-    <Compile Include="Bootstrapper\IContainerAdapter.cs" />
-    <Compile Include="Bootstrapper\RegionAdapterMapper.cs" />
-    <Compile Include="Bootstrapper\RegionBehaviorFactoryMapper.cs" />
-    <Compile Include="Bootstrapper\ResolveAnythingSource.cs" />
+    <Compile Include="Bootstrappers\AutofacContainerAdapter.cs" />
+    <Compile Include="Bootstrappers\AutofacServiceLocator.cs" />
+    <Compile Include="Bootstrappers\CompositeBootstrapper.cs" />
+    <Compile Include="Bootstrappers\ContainerAdapterExtensions.cs" />
+    <Compile Include="Bootstrappers\ContainerRegistrationScope.cs" />
+    <Compile Include="Bootstrappers\ContainerRegistrationScopeExtensions.cs" />
+    <Compile Include="Bootstrappers\IContainerAdapter.cs" />
+    <Compile Include="Bootstrappers\RegionAdapterMapper.cs" />
+    <Compile Include="Bootstrappers\RegionBehaviorFactoryMapper.cs" />
+    <Compile Include="Bootstrappers\ResolveAnythingSource.cs" />
     <Compile Include="Commands\AddChildDatasetCommand.cs" />
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
@@ -174,10 +174,9 @@
     <Compile Include="Commands\OpenProjectCommand.cs" />
     <Compile Include="Commands\DeleteDatasetCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="EventListener.cs" />
     <Compile Include="IContextAware.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
-    <Compile Include="Views\Datasets\DatasetViewVertextToDatasetModelConverter.cs" />
-    <Compile Include="Eventing\EventListener.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="IRegionView.cs" />
     <Compile Include="IStandardView.cs" />
@@ -217,6 +216,7 @@
     <Compile Include="Views\Datasets\DatasetViewEdge.cs" />
     <Compile Include="Views\Datasets\DatasetViewGraph.cs" />
     <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
     <Compile Include="Views\Datasets\IDatasetView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />

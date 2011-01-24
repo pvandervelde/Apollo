@@ -20,7 +20,7 @@ namespace Apollo.ProjectExplorer.Events
         /// <param name="regionName">Name of the region.</param>
         /// <param name="parameter">The parameter.</param>
         public CloseViewRequest(string regionName, Parameter parameter)
-            : base(typeof(TPresenter), regionName, parameter)
+            : base(regionName, parameter)
         {
         }
     }

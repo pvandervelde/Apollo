@@ -16,11 +16,6 @@ namespace Apollo.ProjectExplorer.Events
     internal class CloseViewRequest
     {
         /// <summary>
-        /// The type of the <see cref="IPresenter"/>.
-        /// </summary>
-        private readonly Type m_PresenterType;
-
-        /// <summary>
         /// The name of the region.
         /// </summary>
         private readonly string m_RegionName;
@@ -38,23 +33,20 @@ namespace Apollo.ProjectExplorer.Events
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseViewRequest"/> class.
         /// </summary>
-        /// <param name="presenterType">Type of the presenter.</param>
         /// <param name="regionName">Name of the region.</param>
         /// <param name="parameter">The parameter.</param>
-        public CloseViewRequest(Type presenterType, string regionName, Parameter parameter) : this(presenterType, regionName, parameter, null)
+        public CloseViewRequest(string regionName, Parameter parameter) : this(regionName, parameter, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseViewRequest"/> class.
         /// </summary>
-        /// <param name="presenterType">Type of the presenter.</param>
         /// <param name="regionName">Name of the region.</param>
         /// <param name="parameter">The parameter.</param>
         /// <param name="regionManager">The region manager.</param>
-        public CloseViewRequest(Type presenterType, string regionName, Parameter parameter, IRegionManager regionManager)
+        public CloseViewRequest(string regionName, Parameter parameter, IRegionManager regionManager)
         {
-            m_PresenterType = presenterType;
             m_RegionName = regionName;
             m_Parameter = parameter;
             m_RegionManager = regionManager;
@@ -81,18 +73,6 @@ namespace Apollo.ProjectExplorer.Events
             get 
             { 
                 return m_RegionName; 
-            }
-        }
-
-        /// <summary>
-        /// Gets the type of the presenter.
-        /// </summary>
-        /// <value>The type of the presenter.</value>
-        public Type PresenterType
-        {
-            get 
-            { 
-                return m_PresenterType; 
             }
         }
 

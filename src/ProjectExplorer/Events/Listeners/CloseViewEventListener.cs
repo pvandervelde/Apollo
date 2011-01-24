@@ -8,7 +8,6 @@ using System;
 using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common;
-using Apollo.UI.Common.Eventing;
 using Autofac;
 using Microsoft.Practices.Composite.Presentation.Regions;
 using Microsoft.Practices.Composite.Regions;

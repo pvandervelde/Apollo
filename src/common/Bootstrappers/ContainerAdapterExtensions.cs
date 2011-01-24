@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Microsoft.Practices.Composite.Logging;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// Defines extension methods for <see cref="IContainerAdapter"/> objects.

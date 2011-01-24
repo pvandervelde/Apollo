@@ -16,7 +16,7 @@ using Microsoft.Practices.Composite.Presentation.Regions.Behaviors;
 using Microsoft.Practices.Composite.Regions;
 using Microsoft.Practices.ServiceLocation;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// An <see cref="IContainerAdapter"/> for an Autofac <see cref="IContainer"/>.

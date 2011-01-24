@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Input;
 using Apollo.Utils;
@@ -64,24 +65,32 @@ namespace Apollo.UI.Common.Views.Datasets
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandNewDatasetCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model != null ? Model.NewChildDatasetCommand.CanExecute(null) : false;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandNewDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.NewChildDatasetCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandDeleteDatasetCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model != null ? Model.DeleteDatasetCommand.CanExecute(null) : false;
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandDeleteDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;

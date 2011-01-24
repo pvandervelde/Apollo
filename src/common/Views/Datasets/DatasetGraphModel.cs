@@ -117,7 +117,6 @@ namespace Apollo.UI.Common.Views.Datasets
                 var dataset = nodes.Dequeue();
                 foreach (var child in dataset.Children())
                 {
-                    var childVertex = new DatasetViewVertex(new DatasetModel(child));
                     action(m_Graph, dataset, child);
                     nodes.Enqueue(child);
                 }

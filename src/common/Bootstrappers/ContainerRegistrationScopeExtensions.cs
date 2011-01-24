@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// Extension methods for <see cref="ContainerRegistrationScope"/>.

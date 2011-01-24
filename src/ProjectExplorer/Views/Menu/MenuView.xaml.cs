@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 
 namespace Apollo.ProjectExplorer.Views.Menu
@@ -128,72 +129,96 @@ namespace Apollo.ProjectExplorer.Views.Menu
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandNewProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.NewProjectCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandNewProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.NewProjectCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandLoadProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.OpenProjectCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandLoadProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.OpenProjectCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandSaveProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.SaveProjectCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandSaveProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.SaveProjectCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandCloseProjectCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.CloseProjectCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandCloseProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.CloseProjectCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandExitCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.ExitCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandExitExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
             Model.ExitCommand.Execute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
         private void CommandAboutCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
             e.CanExecute = Model.AboutCommand.CanExecute(null);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
         private void CommandAboutExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;

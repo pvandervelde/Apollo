@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// Scope for instances created from types registered in the container.

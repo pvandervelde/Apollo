@@ -134,7 +134,6 @@
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
-    <Compile Include="Events\DataChangedEvent.cs" />
     <Compile Include="Events\Listeners\ShowViewEventListener.cs" />
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Events\ShowViewRequest.cs" />

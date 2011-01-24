@@ -6,9 +6,9 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Windows.Threading;
 
 namespace Apollo.UI.Common
 {
@@ -25,8 +25,10 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Notifies listeners about a change.
         /// </summary>
-        /// <param name="Property">The property that changed.</param>
-        protected void Notify(Expression<Func<object>> Property)
+        /// <param name="property">The property that changed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "We need the expresion bit to determine the property name programatically.")]
+        protected void Notify(Expression<Func<object>> property)
         {
             // Check for null
             if (PropertyChanged == null)
@@ -35,7 +37,7 @@ namespace Apollo.UI.Common
             }
 
             // Get property name
-            var lambda = Property as LambdaExpression;
+            var lambda = property as LambdaExpression;
             MemberExpression memberExpression;
             if (lambda.Body is UnaryExpression)
             {
@@ -47,10 +49,7 @@ namespace Apollo.UI.Common
                 memberExpression = lambda.Body as MemberExpression;
             }
 
-            var constantExpression = memberExpression.Expression as ConstantExpression;
             var propertyInfo = memberExpression.Member as PropertyInfo;
-
-            // Invoke event
             RaisePropertyChanged(propertyInfo.Name);
         }
 

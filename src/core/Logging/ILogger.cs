@@ -50,6 +50,8 @@ namespace Apollo.Core.Logging
         /// Stops the logger and ensures that all log messages have been 
         /// saved to the log.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Stop",
+            Justification = "Stop is the right word for stopping a logger.")]
         void Stop();
     }
 }

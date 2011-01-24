@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common.Bootstrapper;
+using Apollo.UI.Common.Bootstrappers;
 using Autofac;
 using Lokad;
 using Microsoft.Practices.Composite.Logging;

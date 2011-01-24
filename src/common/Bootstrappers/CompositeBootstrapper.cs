@@ -17,7 +17,7 @@ using Microsoft.Practices.Composite.Presentation.Regions.Behaviors;
 using Microsoft.Practices.Composite.Regions;
 using Microsoft.Practices.ServiceLocation;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// This is a version of the UnityBootstrapper that is generic for any IOC container.
@@ -43,6 +43,8 @@ namespace Apollo.UI.Common.Bootstrapper
         /// <summary>
         /// Indicates if the default Prism services should be registered.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mUse",
+            Justification = "One day FxCop will learn the difference between mUse and m_Use. Until then ...")]
         private bool m_UseDefaultConfiguration = true;
 
         /// <summary>

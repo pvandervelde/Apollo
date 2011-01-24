@@ -114,6 +114,22 @@ namespace Apollo.Core
         }
 
         /// <summary>
+        /// Creates the kernel.
+        /// </summary>
+        /// <returns>
+        /// The newly created kernel.
+        /// </returns>
+        private static IKernel CreateKernel()
+        {
+            var kernel = new Kernel(
+                s_Container.Resolve<ICommandContainer>(),
+                s_Container.Resolve<IHelpMessageProcessing>(),
+                s_Container.Resolve<IDnsNameConstants>());
+
+            return kernel;
+        }
+
+        /// <summary>
         /// The collection that contains the base and private path information
         /// for the <c>AppDomain</c>s that need to be created.
         /// </summary>
@@ -234,22 +250,6 @@ namespace Apollo.Core
             // the exceptionHandler cannot be collected until the AppDomain
             // is killed.
             currentDomain.UnhandledException += m_ExceptionHandlerFactory().OnUnhandledException;
-        }
-
-        /// <summary>
-        /// Creates the kernel.
-        /// </summary>
-        /// <returns>
-        /// The newly created kernel.
-        /// </returns>
-        private IKernel CreateKernel()
-        {
-            var kernel = new Kernel(
-                s_Container.Resolve<ICommandContainer>(),
-                s_Container.Resolve<IHelpMessageProcessing>(),
-                s_Container.Resolve<IDnsNameConstants>());
-
-            return kernel;
         }
 
         /// <summary>

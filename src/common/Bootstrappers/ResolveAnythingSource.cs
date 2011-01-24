@@ -10,7 +10,7 @@ using System.Linq;
 using Autofac.Builder;
 using Autofac.Core;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// A <see cref="IRegistrationSource"/> that registers all concrete types that are 

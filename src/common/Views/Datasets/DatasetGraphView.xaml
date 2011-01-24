@@ -12,7 +12,7 @@
              d:DesignHeight="300"
              d:DesignWidth="300">
     <UserControl.Resources>
-        <local:DatasetViewVertextToDatasetModelConverter x:Key="viewVertexConverter" />
+        <local:DatasetViewVertexToDatasetModelConverter x:Key="viewVertexConverter" />
         <local:DatasetCreatorToOpacityConverter x:Key="creatorToOpacityConverter" />
         
         <Style TargetType="{x:Type graphsharp:VertexControl}">
@@ -62,9 +62,7 @@
                               ZoomBoxOpacity="0.5"
                               Background="Transparent">
 
-                <local:DatasetGraphLayout x:Name="graphLayout"
-                                          x:FieldModifier="private"
-                                          Margin="10"
+                <local:DatasetGraphLayout Margin="10"
                                           Graph="{Binding Path=Graph}"
                                           LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
                                           LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"

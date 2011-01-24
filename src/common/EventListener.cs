@@ -8,7 +8,7 @@ using Autofac;
 using Microsoft.Practices.Composite.Events;
 using Microsoft.Practices.Composite.Regions;
 
-namespace Apollo.UI.Common.Eventing
+namespace Apollo.UI.Common
 {
     /// <summary>
     /// Defines methods for event handling.

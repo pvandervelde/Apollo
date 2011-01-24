@@ -154,13 +154,11 @@ namespace Apollo.ProjectExplorer
                 {
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
-                            typeof(ProjectPresenter),
                             RegionNames.TopPane,
                             new ProjectParameter()));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
-                            typeof(DatasetGraphPresenter),
                             RegionNames.Content,
                             new DatasetGraphParameter()));
                 };

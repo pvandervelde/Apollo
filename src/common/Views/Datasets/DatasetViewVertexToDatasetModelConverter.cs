@@ -19,7 +19,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <see cref="DatasetVertexView"/> (note the word order) needs a <c>DatasetModel</c>.
     /// Unfortunately we can't call methods in XAML so we'll use a converter.
     /// </design>
-    internal sealed class DatasetViewVertextToDatasetModelConverter : IValueConverter
+    internal sealed class DatasetViewVertexToDatasetModelConverter : IValueConverter
     {
         /// <summary>
         /// Converts a value.

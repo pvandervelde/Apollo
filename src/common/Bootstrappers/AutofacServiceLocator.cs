@@ -12,7 +12,7 @@ using System.Linq;
 using Autofac;
 using Microsoft.Practices.ServiceLocation;
 
-namespace Apollo.UI.Common.Bootstrapper
+namespace Apollo.UI.Common.Bootstrappers
 {
     /// <summary>
     /// An AutoFac based <see cref="IServiceLocator"/>.

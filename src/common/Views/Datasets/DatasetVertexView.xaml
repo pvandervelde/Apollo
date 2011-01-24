@@ -52,6 +52,7 @@
                         Margin="3">
                 <!-- CanBeDeleted -->
                 <Button x:Name="deleteDatasetButton"
+                        x:FieldModifier="private"
                         Margin="5">
                     <Image Source="{lex:LocImage Key=Img_Delete_256, Dict=Resources, Assembly=Apollo.UI.Common}"
                            gi:ImageGreyer.IsGreyable="True"
@@ -62,6 +63,7 @@
 
                 <!-- CanBecomeParent ==> little icon at the bottom with a plus? -->
                 <Button x:Name="addChildDatasetButton"
+                        x:FieldModifier="private"
                         Margin="5">
                     <Image Source="{lex:LocImage Key=Img_Add_256, Dict=Resources, Assembly=Apollo.UI.Common}"
                            gi:ImageGreyer.IsGreyable="True"
