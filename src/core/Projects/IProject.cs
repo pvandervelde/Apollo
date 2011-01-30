@@ -75,11 +75,6 @@ namespace Apollo.Core.Projects
         event EventHandler<EventArgs> OnDatasetDeleted;
 
         /// <summary>
-        /// The event raised when one of the datasets from the project gets updated.
-        /// </summary>
-        event EventHandler<EventArgs> OnDatasetUpdated;
-
-        /// <summary>
         /// Returns a read-only view of the dataset on which all the other datasets are based.
         /// </summary>
         /// <returns>

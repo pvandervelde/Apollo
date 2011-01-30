@@ -125,7 +125,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnNameChanged;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnNameChanged()
         {
             var local = OnNameChanged;
@@ -157,7 +157,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnSummaryChanged;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnSummaryChanged()
         {
             var local = OnSummaryChanged;
@@ -191,7 +191,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnInvalidate;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnInvalidate()
         {
             EventHandler<EventArgs> local = OnInvalidate;
@@ -297,7 +297,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnLoaded;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnLoaded()
         {
             EventHandler<EventArgs> local = OnLoaded;
@@ -313,7 +313,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnUnloaded;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnUnloaded()
         {
             EventHandler<EventArgs> local = OnUnloaded;

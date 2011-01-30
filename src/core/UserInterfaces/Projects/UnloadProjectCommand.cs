@@ -33,22 +33,22 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// The method used to unload the project.
         /// </summary>
-        private Action m_Unloader;
+        private Action m_UnloadMethod;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnloadProjectCommand"/> class.
         /// </summary>
-        /// <param name="projectUnloader">The method used to unload the project.</param>
+        /// <param name="unloadMethod">The method used to unload the project.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="projectUnloader"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="unloadMethod"/> is <see langword="null"/>.
         /// </exception>
-        internal UnloadProjectCommand(Action projectUnloader)
+        internal UnloadProjectCommand(Action unloadMethod)
         {
             {
-                Enforce.Argument(() => projectUnloader);
+                Enforce.Argument(() => unloadMethod);
             }
 
-            m_Unloader = projectUnloader;
+            m_UnloadMethod = unloadMethod;
         }
 
         #region Implementation of ICommand
@@ -74,7 +74,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             var commandContext = context as UnloadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            commandContext.Result = Task.Factory.StartNew(() => m_Unloader());
+            commandContext.Result = Task.Factory.StartNew(() => m_UnloadMethod());
         }
 
         #endregion

@@ -354,17 +354,6 @@ namespace Apollo.Core.UserInterfaces
         #endregion
 
         /// <summary>
-        /// Logs the error messages coming from the service.
-        /// </summary>
-        /// <param name="e">The exception that should be logged.</param>
-        private void LogErrorMessage(Exception e)
-        {
-            LogMessage(
-                LevelToLog.Error,
-                string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterface_LogMessage_MessageSendExceptionOccurred, e));
-        }
-
-        /// <summary>
         /// Logs the messages coming from the service.
         /// </summary>
         /// <param name="level">The log level.</param>

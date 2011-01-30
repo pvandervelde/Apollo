@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
 using Apollo.Utils;
@@ -26,8 +25,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// Defines the Id for the <c>LoadProjectCommand</c>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"LoadProject");
 
         #endregion

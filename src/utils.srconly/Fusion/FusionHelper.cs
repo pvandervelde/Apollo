@@ -43,8 +43,6 @@ namespace Apollo.Utils.Fusion
     /// be called from one thread.
     /// </para>
     /// </design>
-    [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", 
-        Justification = "Source will be linked from other projects and thus be used.")]
     internal sealed class FusionHelper
     {
         // @TODO: Do we need to make this all thread safe? Probably, but how...
@@ -208,8 +206,6 @@ namespace Apollo.Utils.Fusion
         /// </exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The use of the Func<> delegate is the most efficient way to pass a lazy evaluation of the enumerable.")]
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
         public FusionHelper(Func<IEnumerable<string>> fileEnumerator, IFileConstants fileConstants)
         {
             {
@@ -224,8 +220,6 @@ namespace Apollo.Utils.Fusion
         /// <summary>
         /// Gets the file enumerator which is used to enumerate the files in a specific directory. 
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Property is used internally only.")]
         private Func<IEnumerable<string>> FileEnumerator
@@ -243,8 +237,6 @@ namespace Apollo.Utils.Fusion
         /// The assembly loader should also deal with NGEN-ed assemblies. This means that using
         /// Assembly.LoadFrom is not the best choice.
         /// </todo>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
         [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly",
             Justification = "The getter method is only called from the inside of the class. Properties 'feel' better here.")]
         internal Func<string, Assembly> AssemblyLoader 
@@ -270,8 +262,6 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         ///     An assembly reference if the required assembly can be found; otherwise <see langword="null"/>.
         /// </returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
         public Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
         {
             // This handler is called only when the common language runtime tries to bind to 
@@ -286,8 +276,6 @@ namespace Apollo.Utils.Fusion
         /// <returns>
         /// The desired assembly if is is in the search path; otherwise, <see langword="null"/>.
         /// </returns>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "Source will be linked from other projects and thus be used.")]
         private Assembly LocateAssembly(string assemblyFullName)
         {
             Debug.Assert(assemblyFullName != null, "Expected a non-null assembly name string.");

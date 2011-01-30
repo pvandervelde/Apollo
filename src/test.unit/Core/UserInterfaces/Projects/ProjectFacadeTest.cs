@@ -115,20 +115,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updating a dataset raise the correct event.")]
-        public void OnDatasetUpdated()
-        {
-            var project = new Mock<IProject>();
-            var facade = new ProjectFacade(project.Object);
-
-            bool eventRaised = false;
-            facade.OnDatasetUpdated += (s, e) => { eventRaised = true; };
-
-            project.Raise(p => p.OnDatasetUpdated += null, EventArgs.Empty);
-            Assert.IsTrue(eventRaised);
-        }
-
-        [Test]
         [Description("Checks the current project can be saved.")]
         public void SaveProject()
         {

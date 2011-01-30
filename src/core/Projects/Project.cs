@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
@@ -172,6 +172,8 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnClosed;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnClosed()
         {
             var local = OnClosed;
@@ -204,8 +206,12 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// An event raised when the name of a project is changed.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
         public event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnNameChanged(string newName)
         {
             var local = OnNameChanged;
@@ -238,8 +244,12 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// An event raised when the summary of a project is changed.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
         public event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnSummaryChanged(string newSummary)
         {
             var local = OnSummaryChanged;
@@ -265,6 +275,8 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetCreated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -279,23 +291,11 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// The event raised when one of the datasets from the project gets updated.
-        /// </summary>
-        public event EventHandler<EventArgs> OnDatasetUpdated;
-
-        private void RaiseOnDatasetUpdated()
-        {
-            var local = OnDatasetUpdated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

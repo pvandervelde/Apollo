@@ -199,10 +199,6 @@ namespace Apollo.Core
         /// <returns>
         /// An ordered collection of services. Where the order indicates the ideal startup order.
         /// </returns>
-        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
-            Justification = "One could use static constructors to inject malicious code when loading the dependent types. " + 
-                            "However the KernelService base class is internal and cannot be used from outside the current assembly." +
-                            "The same goes for all the install methods of the kernel.")]
         private List<KernelService> DetermineServiceStartupOrder()
         {
             // Define the result collection
@@ -258,8 +254,6 @@ namespace Apollo.Core
         /// Gets a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "See: Framework Design Guidelines; Section 5.1, page 136.")]
         public StartupState StartupState
         {
             get

@@ -53,6 +53,8 @@ namespace Apollo.UI.Common
             RaisePropertyChanged(propertyInfo.Name);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaisePropertyChanged(string name)
         {
             var local = PropertyChanged;

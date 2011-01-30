@@ -50,7 +50,6 @@ namespace Apollo.Core.UserInterfaces.Projects
             m_Current.OnClosed += (s, e) => RaiseOnProjectClosed();
             m_Current.OnDatasetCreated += (s, e) => RaiseOnDatasetCreated();
             m_Current.OnDatasetDeleted += (s, e) => RaiseOnDatasetDeleted();
-            m_Current.OnDatasetUpdated += (s, e) => RaiseOnDatasetUpdated();
             m_Current.OnNameChanged += (s, e) => RaiseOnProjectNameUpdated();
             m_Current.OnSummaryChanged += (s, e) => RaiseOnProjectSummaryUpdated();
         }
@@ -71,6 +70,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectClosed;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectClosed()
         {
             var local = OnProjectClosed;
@@ -101,6 +102,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectNameUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectNameUpdated()
         {
             var local = OnProjectNameUpdated;
@@ -131,6 +134,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectSummaryUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectSummaryUpdated()
         {
             var local = OnProjectSummaryUpdated;
@@ -205,7 +210,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnDatasetCreated;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -221,26 +226,10 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// An event raised when a dataset is updated.
-        /// </summary>
-        public event EventHandler<EventArgs> OnDatasetUpdated;
-
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
-        private void RaiseOnDatasetUpdated()
-        {
-            var local = OnDatasetUpdated;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
