@@ -202,6 +202,7 @@ function global:Create-PartCoverConfigFile(
     [string]$dirGallio,
     [string]$exeGallio,
     [string]$dirBuild,
+    [string]$dirReportsGallio,
     [string]$files,
     [string]$reportFile)
 {
@@ -216,6 +217,7 @@ function global:Create-PartCoverConfigFile(
     $text = $text -replace '@{GALLIO_EXE}@', $exeGallio
     $text = $text -replace '@{BIN_DIR}@', $dirBuild
     $text = $text -replace '@{FILES}@', $files
+    $text = $text -replace '@{REPORTS_DIR}@', $dirReportsGallio
     $text = $text -replace '@{REPORT}@', $reportFile
 	
 	Set-Content $newPath $text
@@ -590,7 +592,7 @@ task runUnitTests -depends buildBinaries -action{
         $reportFile = Join-Path $dirReports $logPartCover
         
         # Create the config file
-        Create-PartCoverConfigFile $partCoverConfigTemplateFile $partCoverConfigFile $dirMbUnit $gallioExe $dirOutput $files $reportFile
+        Create-PartCoverConfigFile $partCoverConfigTemplateFile $partCoverConfigFile $dirMbUnit $gallioExe $dirOutput $dirReports $files $reportFile
 
         # Add the exclusions
         $writer = Join-Path $dirPartCoverExclusionWriter 'partcoverexclusionwriter.exe'

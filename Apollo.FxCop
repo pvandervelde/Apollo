@@ -46,7 +46,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="10.0" LastAnalysis="2011-01-30 04:59:34Z">
+ <FxCopReport Version="10.0" LastAnalysis="2011-01-30 05:03:16Z">
   <Namespaces>
    <Namespace Name="Apollo.Core.Base">
     <Messages>
@@ -484,13 +484,6 @@
    <Target Name="$(ProjectDir)/bin/build/Debug/Apollo.ProjectExplorer.exe">
     <Modules>
      <Module Name="apollo.projectexplorer.exe">
-      <Messages>
-       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2011-01-30 04:50:56Z">
-        <Issue Name="NoStrongName">
-         <Item>'Apollo.ProjectExplorer.exe'</Item>
-        </Issue>
-       </Message>
-      </Messages>
       <Namespaces>
        <Namespace Name="Apollo.ProjectExplorer.Events">
         <Types>
@@ -649,9 +642,6 @@
    </Target>
   </Targets>
   <Rules>
-   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
-    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
-   </Rule>
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>

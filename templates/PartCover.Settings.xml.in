@@ -2,7 +2,7 @@
 <PartCoverSettings>
   <Target>@{GALLIO_DIR}@\@{GALLIO_EXE}@</Target>
   <TargetWorkDir>@{BIN_DIR}@</TargetWorkDir>
-  <TargetArgs>/hd:"@{GALLIO_DIR}@" /sc /v:Verbose /r:Local @{FILES}@</TargetArgs>
+  <TargetArgs>/hd:"@{GALLIO_DIR}@" /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rd:"@{REPORTS_DIR}@" /r:Local @{FILES}@</TargetArgs>
   <Output>@{REPORT}@</Output>
   <LogLevel>0</LogLevel>
   <Rule>+[Apollo.*]*</Rule>
