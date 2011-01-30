@@ -111,7 +111,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                 throw new FailedToCreateProjectException();
             }
 
-            m_Facade = new ProjectFacade(project);
+            m_Facade = new ProjectFacade(project.Result);
 
             RaiseOnNewProjectLoaded();
         }
@@ -170,7 +170,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                 throw new FailedToLoadProjectException();
             }
 
-            m_Facade = new ProjectFacade(project);
+            m_Facade = new ProjectFacade(project.Result);
             
             RaiseOnNewProjectLoaded();
         }

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.Messaging;
 using Apollo.Utils;
 using Autofac;
 
@@ -50,7 +49,6 @@ namespace Apollo.Core.Logging
 
             // LogSink
             builder.Register(c => new LogSink(
-                    c.Resolve<IHelpMessageProcessing>(),
                     c.Resolve<ILoggerConfiguration>(),
                     c.Resolve<DebugLogTemplate>(),
                     c.Resolve<CommandLogTemplate>(),

@@ -4,8 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Utils;
 using MbUnit.Framework;
@@ -23,20 +23,14 @@ namespace Apollo.Core.UserInterfaces.Projects
         [Description("Checks that the command can be invoked successfully.")]
         public void Invoke()
         {
-            var sender = new DnsName("sender");
             var persistedProject = new Mock<IPersistenceInformation>();
 
-            SendMessageWithResponse function = (recipient, body, id) =>
+            Func<IPersistenceInformation, IProject> function = persistenceInfo =>
             {
-                Assert.AreSame(sender, recipient);
-                Assert.IsInstanceOfType(typeof(LoadProjectMessage), body);
-                
-                LoadProjectMessage msg = body as LoadProjectMessage;
-                Assert.AreEqual(persistedProject.Object, msg.PersistedProject);
-                
-                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new Mock<IProject>().Object)));
+                Assert.AreEqual(persistedProject.Object, persistenceInfo);
+                return new Mock<IProject>().Object;
             };
-            var command = new LoadProjectCommand(sender, function);
+            var command = new LoadProjectCommand(function);
 
             var context = new LoadProjectContext 
                 { 

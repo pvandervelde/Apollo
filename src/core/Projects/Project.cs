@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Projects;
 using Apollo.Core.Properties;
@@ -28,13 +28,6 @@ namespace Apollo.Core.Projects
     /// </remarks>
     internal sealed partial class Project : IProject, ICanClose
     {
-        /// <summary>
-        /// The collection of objects that need to be notified if there are changes to
-        /// the project.
-        /// </summary>
-        private readonly List<INotifyOnProjectChanges> m_ProjectObservers =
-            new List<INotifyOnProjectChanges>();
-
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
@@ -164,6 +157,33 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Gets a value indicating whether the project has been closed.
+        /// </summary>
+        public bool IsClosed
+        {
+            get
+            {
+                return m_IsClosed;
+            }
+        }
+
+        /// <summary>
+        /// The event raised when the project is closed.
+        /// </summary>
+        public event EventHandler<EventArgs> OnClosed;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnClosed()
+        {
+            var local = OnClosed;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the project.
         /// </summary>
         public string Name
@@ -178,11 +198,26 @@ namespace Apollo.Core.Projects
                 if (!string.Equals(m_Name, value))
                 {
                     m_Name = value;
-                    foreach (var observer in m_ProjectObservers)
-                    {
-                        observer.NameUpdated();
-                    }
+                    RaiseOnNameChanged(value);
                 }
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the name of a project is changed.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
+        public event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnNameChanged(string newName)
+        {
+            var local = OnNameChanged;
+            if (local != null)
+            {
+                local(this, new ValueChangedEventArgs<string>(newName));
             }
         }
 
@@ -201,11 +236,26 @@ namespace Apollo.Core.Projects
                 if (!string.Equals(m_Summary, value))
                 {
                     m_Summary = value;
-                    foreach (var observer in m_ProjectObservers)
-                    {
-                        observer.SummaryUpdated();
-                    }
+                    RaiseOnSummaryChanged(value);
                 }
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the summary of a project is changed.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
+        public event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnSummaryChanged(string newSummary)
+        {
+            var local = OnSummaryChanged;
+            if (local != null)
+            {
+                local(this, new ValueChangedEventArgs<string>(newSummary));
             }
         }
 
@@ -221,13 +271,34 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
-        /// Gets a value indicating whether the project is closed.
+        /// The event raised when a new dataset is created and added to the project.
         /// </summary>
-        private bool IsClosed
+        public event EventHandler<EventArgs> OnDatasetCreated;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnDatasetCreated()
         {
-            get 
+            var local = OnDatasetCreated;
+            if (local != null)
             {
-                return m_IsClosed;
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// The event raised when a dataset is deleted from the project.
+        /// </summary>
+        public event EventHandler<EventArgs> OnDatasetDeleted;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnDatasetDeleted()
+        {
+            var local = OnDatasetDeleted;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
             }
         }
 
@@ -305,44 +376,6 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
-        /// Registers the given observer.
-        /// </summary>
-        /// <param name="observer">
-        /// The object that should be notified when there are changes in the project.
-        /// </param>
-        public void RegisterForEvents(INotifyOnProjectChanges observer)
-        {
-            {
-                Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                Enforce.Argument(() => observer);
-            }
-
-            if (!m_ProjectObservers.Contains(observer))
-            {
-                m_ProjectObservers.Add(observer);
-            }
-        }
-
-        /// <summary>
-        /// Unregisters the observer.
-        /// </summary>
-        /// <param name="observer">
-        /// The object that is notified when there are chanes in the project.
-        /// </param>
-        public void UnregisterFromEvents(INotifyOnProjectChanges observer)
-        {
-            {
-                Enforce.With<ArgumentException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                Enforce.Argument(() => observer);
-            }
-
-            if (m_ProjectObservers.Contains(observer))
-            {
-                m_ProjectObservers.Remove(observer);
-            }
-        }
-
-        /// <summary>
         /// Stops all external datasets from running, unloads them from their machines and then prepares
         /// the project for shut-down.
         /// </summary>
@@ -358,10 +391,6 @@ namespace Apollo.Core.Projects
             // in parallel to this one will be notified.
             m_IsClosed = true;
 
-            // Unregister all observers
-            m_DatasetObservers.Clear();
-            m_ProjectObservers.Clear();
-
             // NOTE: We should only close if we're not saving data. If we are saving data then wait till
             //       we're done, then close.
             //
@@ -370,6 +399,7 @@ namespace Apollo.Core.Projects
             // - Sign off from communications
             // - Clear out all the datastructures
             // - Terminate
+            RaiseOnClosed();
         }
     }
 }

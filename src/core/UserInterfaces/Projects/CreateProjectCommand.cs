@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
+using System.Threading.Tasks;
 using Apollo.Core.Projects;
 using Apollo.Utils.Commands;
 using Lokad;
@@ -32,35 +32,24 @@ namespace Apollo.Core.UserInterfaces.Projects
         #endregion
 
         /// <summary>
-        /// The delegate used to send a message for which a response is expected.
+        /// The function that is used to create the new project.
         /// </summary>
-        private readonly SendMessageWithResponse m_MessageSender;
-
-        /// <summary>
-        /// The name of the project system.
-        /// </summary>
-        private readonly DnsName m_ProjectName;
+        private Func<IProject> m_Creator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateProjectCommand"/> class.
         /// </summary>
-        /// <param name="projectName">The <c>DnsName</c> of the project sub-system.</param>
-        /// <param name="messageSender">The function used to send a message.</param>
+        /// <param name="projectCreator">The function that is used to create the new project.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="projectName"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="projectCreator"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
-        /// </exception>
-        internal CreateProjectCommand(DnsName projectName, SendMessageWithResponse messageSender)
+        internal CreateProjectCommand(Func<IProject> projectCreator)
         {
             {
-                Enforce.Argument(() => projectName);
-                Enforce.Argument(() => messageSender);
+                Enforce.Argument(() => projectCreator);
             }
 
-            m_ProjectName = projectName;
-            m_MessageSender = messageSender;
+            m_Creator = projectCreator;
         }
 
         #region Implementation of ICommand
@@ -86,11 +75,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             var commandContext = context as CreateProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            var future = m_MessageSender(m_ProjectName, new CreateNewProjectMessage(), MessageId.None);
-            var body = future.Result() as ProjectRequestResponseMessage;
-            Debug.Assert(body != null, "Incorrect message response received.");
-
-            commandContext.Result = body.ProjectReference;
+            commandContext.Result = Task<IProject>.Factory.StartNew(m_Creator);
         }
 
         #endregion

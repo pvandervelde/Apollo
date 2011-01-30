@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Apollo.Core.Projects;
 using Apollo.Utils.Commands;
 
@@ -20,7 +21,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <value>
         /// The command result.
         /// </value>
-        public IProject Result
+        public Task<IProject> Result
         {
             get;
             set;

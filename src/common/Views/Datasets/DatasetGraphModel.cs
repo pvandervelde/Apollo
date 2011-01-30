@@ -63,7 +63,6 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Project = facade;
             m_Project.OnDatasetCreated += (s, e) => AddDatasetToGraph();
             m_Project.OnDatasetDeleted += (s, e) => RemoveDatasetFromGraph();
-            m_Project.OnDatasetUpdated += (s, e) => UpdateGraph();
 
             LayoutType = "Tree";
             LayoutParameters = new SimpleTreeLayoutParameters 
@@ -147,11 +146,6 @@ namespace Apollo.UI.Common.Views.Datasets
                 m_VertexMap.Remove(dataset);
             }
 
-            Notify(() => Graph);
-        }
-
-        private void UpdateGraph()
-        {
             Notify(() => Graph);
         }
 

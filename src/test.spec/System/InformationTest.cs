@@ -53,7 +53,7 @@ namespace Test.Spec.System
             {
                 if (applicationFacade != null)
                 {
-                    applicationFacade.Shutdown(false, () => { });
+                    applicationFacade.Shutdown();
                 }
             }
         }

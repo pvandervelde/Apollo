@@ -40,7 +40,7 @@ namespace Apollo.Core.Base.Projects
     /// </para>
     /// </design>
     [Serializable]
-    [DebuggerDisplay("Dataset: [{InternalValue, m_IsValid}]")]
+    [DebuggerDisplay("Dataset: [{InternalValue}]")]
     public sealed class DatasetId : Id<DatasetId, int>
     {
         /// <summary>
@@ -60,6 +60,8 @@ namespace Apollo.Core.Base.Projects
         /// <returns>
         /// The next unused ID value.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
+            Justification = "This should really be a method because it has side effects.")]
         private static int GetNextValue()
         {
             var current = Interlocked.Increment(ref s_LastId);

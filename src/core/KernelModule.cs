@@ -29,9 +29,6 @@ namespace Apollo.Core
         {
             base.Load(builder);
 
-            builder.Register(c => new DnsNameConstants())
-                .As<IDnsNameConstants>();
-
             builder.Register(c => new NotificationNameConstants())
                 .As<INotificationNameConstants>();
 

@@ -4,9 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
-using Apollo.Core.Projects;
 using MbUnit.Framework;
 
 namespace Apollo.Core.UserInterfaces.Projects
@@ -21,17 +20,19 @@ namespace Apollo.Core.UserInterfaces.Projects
         [Description("Checks that the command can be invoked successfully.")]
         public void Invoke()
         {
-            var sender = new DnsName("sender");
+            bool wasInvoked = false;
 
-            SendMessageWithoutResponse function = (recipient, body, id) =>
+            Action action = () =>
             {
-                Assert.AreSame(sender, recipient);
-                Assert.IsInstanceOfType(typeof(UnloadProjectMessage), body);
+                wasInvoked = true;
             };
-            var command = new UnloadProjectCommand(sender, function);
-
+            
+            var command = new UnloadProjectCommand(action);
             var context = new UnloadProjectContext();
             command.Invoke(context);
+
+            context.Result.Wait();
+            Assert.IsTrue(wasInvoked);
         }
     }
 }

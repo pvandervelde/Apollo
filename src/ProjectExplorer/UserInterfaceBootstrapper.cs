@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common.Bootstrappers;
 using Autofac;
 using Lokad;
@@ -16,6 +17,8 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// The bootstrapper for the User Interface.
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
+        Justification = "The logger doesn't die until the application is terminated. No point in having it be disposable.")]
     internal sealed class UserInterfaceBootstrapper : CompositeBootstrapper
     {
         /// <summary>

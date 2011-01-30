@@ -40,7 +40,7 @@ namespace Test.Spec.System
             // Once everything is up and running then we don't need it anymore
             // so dump it.
             var applicationFacade = m_CoreContainer.Resolve<IAbstractApplications>();
-            applicationFacade.Shutdown(true, () => { });
+            applicationFacade.Shutdown();
         }
 
         private void ConnectToKernel(IModule kernelUserInterfaceModule)

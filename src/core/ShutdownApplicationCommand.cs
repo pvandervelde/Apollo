@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using Apollo.Utils.Commands;
 using Lokad;
 using ICommand = Apollo.Utils.Commands.ICommand;
@@ -31,35 +30,24 @@ namespace Apollo.Core
         #endregion
 
         /// <summary>
-        /// The delegate used to send a message for which a response is expected.
+        /// The action that performs the shutdown.
         /// </summary>
-        private readonly SendMessageWithResponse m_MessageSender;
-
-        /// <summary>
-        /// The name of the kernel.
-        /// </summary>
-        private readonly DnsName m_KernelName;
+        private Action m_Action;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShutdownApplicationCommand"/> class.
         /// </summary>
-        /// <param name="kernelName">The <see cref="DnsName"/> of the kernel.</param>
-        /// <param name="messageSender">The function used to send a message.</param>
+        /// <param name="shutdownAction">The <see cref="Action"/> that performs the shutdown.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="kernelName"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="shutdownAction"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
-        /// </exception>
-        internal ShutdownApplicationCommand(DnsName kernelName, SendMessageWithResponse messageSender)
+        internal ShutdownApplicationCommand(Action shutdownAction)
         {
             {
-                Enforce.Argument(() => kernelName);
-                Enforce.Argument(() => messageSender);
+                Enforce.Argument(() => shutdownAction);
             }
 
-            m_KernelName = kernelName;
-            m_MessageSender = messageSender;
+            m_Action = shutdownAction;
         }
 
         #region Implementation of ICommand
@@ -85,11 +73,7 @@ namespace Apollo.Core
             var commandContext = context as ShutdownApplicationContext;
             Debug.Assert(commandContext != null, "Incorrect command context specified.");
 
-            var future = m_MessageSender(m_KernelName, new ShutdownRequestMessage(commandContext.IsShutdownForced), MessageId.None);
-            var body = future.Result() as ShutdownResponseMessage;
-            Debug.Assert(body != null, "Incorrect message response received.");
-
-            commandContext.Result = body.WasRequestGranted;
+            m_Action();
         }
 
         #endregion

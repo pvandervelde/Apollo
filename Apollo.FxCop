@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<FxCopProject Version="1.36" Name="Apollo.Core">
+<FxCopProject Version="10.0" Name="Apollo.Core">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
   <Stylesheet Apply="False" />
@@ -19,7 +19,6 @@
   <SearchGlobalAssemblyCache>False</SearchGlobalAssemblyCache>
   <DeadlockDetectionTimeout>120</DeadlockDetectionTimeout>
   <IgnoreGeneratedCode>False</IgnoreGeneratedCode>
-  <TargetFrameworkVersion>3.5</TargetFrameworkVersion>
  </ProjectOptions>
  <Targets>
   <AssemblyReferenceDirectories>
@@ -47,7 +46,7 @@
   <Groups />
   <Settings />
  </Rules>
- <FxCopReport Version="1.36" LastAnalysis="2011-01-24 07:17:54Z">
+ <FxCopReport Version="10.0" LastAnalysis="2011-01-30 04:59:34Z">
   <Namespaces>
    <Namespace Name="Apollo.Core.Base">
     <Messages>
@@ -93,25 +92,12 @@
       <Namespaces>
        <Namespace Name="Apollo.Core.Base.Projects">
         <Types>
-         <Type Name="DatasetId">
-          <Members>
-           <Member Name="#GetNextValue()">
-            <Messages>
-             <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Created="2011-01-23 09:51:38Z">
-              <Issue Certainty="50" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetId.cs" Line="64">
-               <Item>'DatasetId.GetNextValue()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
          <Type Name="DatasetOnlineInformation">
           <Members>
            <Member Name="#Id">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="25">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="25">
                <Item>'DatasetOnlineInformation.Id'</Item>
               </Issue>
              </Message>
@@ -120,7 +106,7 @@
              <Accessor Name="#get_Id()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="26">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetOnlineInformation.cs" Line="26">
                  <Item>'DatasetOnlineInformation.Id.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -136,7 +122,7 @@
            <Member Name="#DatasetToLoad">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="22">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="22">
                <Item>'DatasetRequest.DatasetToLoad'</Item>
               </Issue>
              </Message>
@@ -145,7 +131,7 @@
              <Accessor Name="#get_DatasetToLoad()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="23">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="23">
                  <Item>'DatasetRequest.DatasetToLoad.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -157,7 +143,7 @@
            <Member Name="#ExpectedLoadPerMachine">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="59">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="59">
                <Item>'DatasetRequest.ExpectedLoadPerMachine'</Item>
               </Issue>
              </Message>
@@ -166,7 +152,7 @@
              <Accessor Name="#get_ExpectedLoadPerMachine()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="60">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="60">
                  <Item>'DatasetRequest.ExpectedLoadPerMachine.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -178,7 +164,7 @@
            <Member Name="#Parent">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="34">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="34">
                <Item>'DatasetRequest.Parent'</Item>
               </Issue>
              </Message>
@@ -187,7 +173,7 @@
              <Accessor Name="#get_Parent()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="35">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="35">
                  <Item>'DatasetRequest.Parent.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -199,7 +185,7 @@
            <Member Name="#PreferredDistributionRange">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="83">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="83">
                <Item>'DatasetRequest.PreferredDistributionRange'</Item>
               </Issue>
              </Message>
@@ -208,7 +194,7 @@
              <Accessor Name="#get_PreferredDistributionRange()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="84">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="84">
                  <Item>'DatasetRequest.PreferredDistributionRange.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -220,7 +206,7 @@
            <Member Name="#PreferredLoadingLocation">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="71">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="71">
                <Item>'DatasetRequest.PreferredLoadingLocation'</Item>
               </Issue>
              </Message>
@@ -229,7 +215,7 @@
              <Accessor Name="#get_PreferredLoadingLocation()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="72">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="72">
                  <Item>'DatasetRequest.PreferredLoadingLocation.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -241,7 +227,7 @@
            <Member Name="#ShouldProvideParentWithHubConnection">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="47">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="47">
                <Item>'DatasetRequest.ShouldProvideParentWithHubConnection'</Item>
               </Issue>
              </Message>
@@ -250,7 +236,7 @@
              <Accessor Name="#get_ShouldProvideParentWithHubConnection()">
               <Messages>
                <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-01-23 09:51:38Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DatasetRequest.cs" Line="48">
+                <Issue Name="PropertyGetter" Level="Warning" Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DatasetRequest.cs" Line="48">
                  <Item>'DatasetRequest.ShouldProvideParentWithHubConnection.get()'</Item>
                  <Item>'NotImplementedException'</Item>
                 </Issue>
@@ -266,7 +252,7 @@
            <Member Name="#Accept()">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DistributionPlan.cs" Line="37">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DistributionPlan.cs" Line="37">
                <Item>'DistributionPlan.Accept()'</Item>
               </Issue>
              </Message>
@@ -275,7 +261,7 @@
            <Member Name="#MachinesToDistributeTo()">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="DependsOnFix">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.base\Projects" File="DistributionPlan.cs" Line="25">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.base\Projects" File="DistributionPlan.cs" Line="25">
                <Item>'DistributionPlan.MachinesToDistributeTo()'</Item>
               </Issue>
              </Message>
@@ -300,7 +286,7 @@
            <Member Name="#EventCategoryForException(System.Exception)">
             <Messages>
              <Message Id="exception" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.dataset" File="Program.cs" Line="206">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.dataset" File="Program.cs" Line="206">
                <Item>'exception'</Item>
                <Item>'Program.EventCategoryForException(Exception)'</Item>
               </Issue>
@@ -310,7 +296,7 @@
            <Member Name="#EventIdForException(System.Exception)">
             <Messages>
              <Message Id="exception" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="d:\documents\Petrik\documents\software\apollo\solutionmerge\src\core.dataset" File="Program.cs" Line="198">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core.dataset" File="Program.cs" Line="198">
                <Item>'exception'</Item>
                <Item>'Program.EventIdForException(Exception)'</Item>
               </Issue>
@@ -366,20 +352,14 @@
           <Members>
            <Member Name="#LoadOntoMachine(Apollo.Core.Base.Projects.DatasetId,Apollo.Core.Base.Projects.LoadingLocation,Apollo.Core.Base.Projects.MachineDistributionRange)">
             <Messages>
-             <Message Id="id" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.Datasets.cs" Line="298">
-               <Item>'id'</Item>
-               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
-              </Issue>
-             </Message>
              <Message Id="preferredLocation" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.Datasets.cs" Line="298">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core\Projects" File="Project.Datasets.cs" Line="284">
                <Item>'preferredLocation'</Item>
                <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
               </Issue>
              </Message>
              <Message Id="range" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.Datasets.cs" Line="298">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core\Projects" File="Project.Datasets.cs" Line="284">
                <Item>'range'</Item>
                <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
               </Issue>
@@ -398,8 +378,28 @@
            <Member Name="#OnlineInformation(Apollo.Core.Base.Projects.DatasetId)">
             <Messages>
              <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-01-23 09:51:38Z">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.Datasets.cs" Line="132">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core\Projects" File="Project.Datasets.cs" Line="123">
                <Item>'Project.OnlineInformation(DatasetId)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OnNameChanged">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2011-01-30 04:23:31Z">
+              <Issue>
+               <Item>'Project.OnNameChanged'</Item>
+               <Item>'EventHandler&lt;ValueChangedEventArgs&lt;string&gt;&gt;'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OnSummaryChanged">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2011-01-30 04:23:31Z">
+              <Issue>
+               <Item>'Project.OnSummaryChanged'</Item>
+               <Item>'EventHandler&lt;ValueChangedEventArgs&lt;string&gt;&gt;'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -407,24 +407,38 @@
            <Member Name="#RestoreFromStore(Apollo.Utils.IPersistenceInformation)">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.cs" Line="148">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core\Projects" File="Project.cs" Line="141">
                <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
               </Issue>
              </Message>
              <Message Id="persistenceInfo" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.cs" Line="148">
+              <Issue Path="d:\documents\Petrik\documents\software\apollo\net40upgrade\src\core\Projects" File="Project.cs" Line="141">
                <Item>'persistenceInfo'</Item>
                <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
               </Issue>
              </Message>
             </Messages>
            </Member>
-           <Member Name="#UnloadFromMachine(Apollo.Core.Base.Projects.DatasetId)">
+          </Members>
+         </Type>
+         <Type Name="Project+DatasetProxy">
+          <Members>
+           <Member Name="#OnNameChanged">
             <Messages>
-             <Message Id="id" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\Projects" File="Project.Datasets.cs" Line="311">
-               <Item>'id'</Item>
-               <Item>'Project.UnloadFromMachine(DatasetId)'</Item>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2011-01-30 04:23:31Z">
+              <Issue>
+               <Item>'Project.DatasetProxy.OnNameChanged'</Item>
+               <Item>'EventHandler&lt;ValueChangedEventArgs&lt;string&gt;&gt;'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+           <Member Name="#OnSummaryChanged">
+            <Messages>
+             <Message TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006" Created="2011-01-30 04:23:31Z">
+              <Issue>
+               <Item>'Project.DatasetProxy.OnSummaryChanged'</Item>
+               <Item>'EventHandler&lt;ValueChangedEventArgs&lt;string&gt;&gt;'</Item>
               </Issue>
              </Message>
             </Messages>
@@ -463,32 +477,6 @@
          </Type>
         </Types>
        </Namespace>
-       <Namespace Name="Apollo.Core.UserInterfaces.Projects">
-        <Types>
-         <Type Name="ProjectFacade">
-          <Members>
-           <Member Name="#RaiseOnProjectNameUpdated()">
-            <Messages>
-             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2011-01-23 09:51:38Z">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\UserInterfaces\Projects" File="ProjectFacade.cs" Line="75">
-               <Item>'ProjectFacade.RaiseOnProjectNameUpdated()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnProjectSummaryUpdated()">
-            <Messages>
-             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2011-01-23 09:51:38Z">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\core\UserInterfaces\Projects" File="ProjectFacade.cs" Line="105">
-               <Item>'ProjectFacade.RaiseOnProjectSummaryUpdated()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
       </Namespaces>
      </Module>
     </Modules>
@@ -496,21 +484,14 @@
    <Target Name="$(ProjectDir)/bin/build/Debug/Apollo.ProjectExplorer.exe">
     <Modules>
      <Module Name="apollo.projectexplorer.exe">
+      <Messages>
+       <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Created="2011-01-30 04:50:56Z">
+        <Issue Name="NoStrongName">
+         <Item>'Apollo.ProjectExplorer.exe'</Item>
+        </Issue>
+       </Message>
+      </Messages>
       <Namespaces>
-       <Namespace Name="Apollo.ProjectExplorer">
-        <Types>
-         <Type Name="UserInterfaceBootstrapper">
-          <Messages>
-           <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-            <Issue Name="NonBreaking">
-             <Item>'UserInterfaceBootstrapper'</Item>
-             <Item>'TextLogger'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
        <Namespace Name="Apollo.ProjectExplorer.Events">
         <Types>
          <Type Name="CloseViewEvent">
@@ -593,54 +574,8 @@
     <Modules>
      <Module Name="apollo.ui.common.dll">
       <Namespaces>
-       <Namespace Name="Apollo.UI.Common">
-        <Types>
-         <Type Name="Observable">
-          <Members>
-           <Member Name="#RaisePropertyChanged(System.String)">
-            <Messages>
-             <Message TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030" Created="2011-01-23 09:51:38Z">
-              <Issue Path="D:\documents\Petrik\documents\software\apollo\solutionmerge\src\common" File="Observable.cs" Line="57">
-               <Item>'Observable.RaisePropertyChanged(string)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.UI.Common.Bootstrappers">
-        <Types>
-         <Type Name="CompositeBootstrapper">
-          <Members>
-           <Member Name="#m_UseDefaultConfiguration">
-            <Messages>
-             <Message Id="mUse" TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702" Created="2011-01-24 07:17:54Z" FixCategory="NonBreaking">
-              <Issue Name="MemberShouldBeDiscreteTerm">
-               <Item>mUse</Item>
-               <Item>'CompositeBootstrapper.m_UseDefaultConfiguration'</Item>
-               <Item>muse</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
        <Namespace Name="Apollo.UI.Common.Views.Datasets">
         <Types>
-         <Type Name="DatasetViewVertextToDatasetModelConverter">
-          <Messages>
-           <Message Id="Vertext" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2011-01-23 09:51:38Z" FixCategory="NonBreaking">
-            <Issue Name="Type">
-             <Item>Vertext</Item>
-             <Item>'DatasetViewVertextToDatasetModelConverter'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
          <Type Name="IDatasetGraphView">
           <Messages>
            <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-01-23 09:51:38Z">
@@ -684,42 +619,11 @@
       <Namespaces>
        <Namespace Name="Apollo.Utils">
         <Types>
-         <Type Name="ILockObject">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-01-23 09:51:38Z">
-            <Issue>
-             <Item>'ILockObject'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
          <Type Name="IPersistenceInformation">
           <Messages>
            <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-01-23 09:51:38Z">
             <Issue>
              <Item>'IPersistenceInformation'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-         <Type Name="IProgressMark">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-01-23 09:51:38Z">
-            <Issue>
-             <Item>'IProgressMark'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Utils.Commands">
-        <Types>
-         <Type Name="ICommandContext">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-01-23 09:51:38Z">
-            <Issue>
-             <Item>'ICommandContext'</Item>
             </Issue>
            </Message>
           </Messages>
@@ -745,6 +649,9 @@
    </Target>
   </Targets>
   <Rules>
+   <Rule TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210">
+    <Resolution Name="NoStrongName">Sign {0} with a strong name key.</Resolution>
+   </Rule>
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
@@ -760,35 +667,17 @@
    <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
     <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
    </Rule>
-   <Rule TypeName="CompoundWordsShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1702">
-    <Resolution Name="MemberShouldBeDiscreteTerm">The compound word '{0}' in member name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}' or strip the first token entirely if it represents any sort of Hungarian notation.</Resolution>
-    <Resolution Name="TypeShouldBeDiscreteTerm">The compound word '{0}' in type name {1} exists as a discrete term. If your usage is intended to be single word, case it as '{2}'.</Resolution>
+   <Rule TypeName="DoNotNestGenericTypesInMemberSignatures" Category="Microsoft.Design" CheckId="CA1006">
+    <Resolution Name="Default">Consider a design where {0} doesn't nest generic type {1}.</Resolution>
    </Rule>
    <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
     <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
-   </Rule>
-   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
-    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
-    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
-    <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
-    <Resolution Name="MemberParameterMoreMeaningfulName">In method {0}, consider providing a more meaningful name than parameter name {1}.</Resolution>
-    <Resolution Name="Namespace">Correct the spelling of '{0}' in namespace name '{1}'.</Resolution>
-    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
    </Rule>
    <Rule TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801">
     <Resolution Name="Default">Parameter {0} of {1} is never used. Remove the parameter or use it in the method body.</Resolution>
-   </Rule>
-   <Rule TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001">
-    <Resolution Name="NonBreaking">Implement IDisposable on {0} because it creates members of the following IDisposable types: {1}.</Resolution>
-   </Rule>
-   <Rule TypeName="UseEventsWhereAppropriate" Category="Microsoft.Design" CheckId="CA1030">
-    <Resolution Name="Default">Consider making {0} an event.</Resolution>
-   </Rule>
-   <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
-    <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
    </Rule>
   </Rules>
  </FxCopReport>

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Threading.Tasks;
 using Apollo.Utils.Commands;
 
 namespace Apollo.Core.UserInterfaces.Projects
@@ -13,5 +14,14 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// </summary>
     public sealed class UnloadProjectContext : ICommandContext
     {
+        /// <summary>
+        /// Gets or sets the <see cref="Task"/> that is currently handling the
+        /// shutdown of the project.
+        /// </summary>
+        public Task Result
+        {
+            get;
+            set;
+        }
     }
 }

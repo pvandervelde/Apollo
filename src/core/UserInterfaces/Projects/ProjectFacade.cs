@@ -24,7 +24,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// one facade creates a new project but the other facade(s) don't get the new project. 
     /// </para>
     /// </design>
-    public sealed class ProjectFacade : INotifyOnProjectChanges
+    public sealed class ProjectFacade
     {
         /// <summary>
         /// The current project.
@@ -47,7 +47,38 @@ namespace Apollo.Core.UserInterfaces.Projects
             }
 
             m_Current = project;
-            m_Current.RegisterForEvents(this);
+            m_Current.OnClosed += (s, e) => RaiseOnProjectClosed();
+            m_Current.OnDatasetCreated += (s, e) => RaiseOnDatasetCreated();
+            m_Current.OnDatasetDeleted += (s, e) => RaiseOnDatasetDeleted();
+            m_Current.OnNameChanged += (s, e) => RaiseOnProjectNameUpdated();
+            m_Current.OnSummaryChanged += (s, e) => RaiseOnProjectSummaryUpdated();
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the project has been closed.
+        /// </summary>
+        public bool IsClosed
+        {
+            get
+            {
+                return m_Current.IsClosed;
+            }
+        }
+
+        /// <summary>
+        /// The event raised when the project is closed.
+        /// </summary>
+        public event EventHandler<EventArgs> OnProjectClosed;
+
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnProjectClosed()
+        {
+            var local = OnProjectClosed;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -71,6 +102,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectNameUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectNameUpdated()
         {
             var local = OnProjectNameUpdated;
@@ -101,6 +134,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectSummaryUpdated;
 
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectSummaryUpdated()
         {
             var local = OnProjectSummaryUpdated;
@@ -175,7 +210,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnDatasetCreated;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -191,7 +226,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;
@@ -199,67 +234,6 @@ namespace Apollo.Core.UserInterfaces.Projects
             {
                 local(this, EventArgs.Empty);
             }
-        }
-
-        /// <summary>
-        /// An event raised when a dataset is updated.
-        /// </summary>
-        public event EventHandler<EventArgs> OnDatasetUpdated;
-
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
-        private void RaiseOnDatasetUpdated()
-        {
-            var local = OnDatasetUpdated;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// The method called when the project name is updated.
-        /// </summary>
-        void INotifyOnProjectChanges.NameUpdated()
-        {
-            HasProjectChanged = true;
-            RaiseOnProjectNameUpdated();
-        }
-
-        /// <summary>
-        /// The method called when the project summary is updated.
-        /// </summary>
-        void INotifyOnProjectChanges.SummaryUpdated()
-        {
-            HasProjectChanged = true;
-            RaiseOnProjectSummaryUpdated();
-        }
-
-        /// <summary>
-        /// The method called when a new dataset is created and added to the project.
-        /// </summary>
-        void INotifyOnProjectChanges.DatasetCreated()
-        {
-            HasProjectChanged = true;
-            RaiseOnDatasetCreated();
-        }
-
-        /// <summary>
-        /// The method called when a dataset is deleted from the project.
-        /// </summary>
-        void INotifyOnProjectChanges.DatasetDeleted()
-        {
-            HasProjectChanged = true;
-            RaiseOnDatasetDeleted();
-        }
-
-        /// <summary>
-        /// The method called when one of the datasets from the project gets updated.
-        /// </summary>
-        void INotifyOnProjectChanges.DatasetUpdated()
-        {
-            HasProjectChanged = true;
-            RaiseOnDatasetUpdated();
         }
     }
 }

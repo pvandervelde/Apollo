@@ -22,16 +22,6 @@ namespace Apollo.Core
     internal interface IHaveServiceDependencies
     {
         /// <summary>
-        /// Returns a set of types indicating which services need to be present
-        /// for the current service to be functional.
-        /// </summary>
-        /// <returns>
-        ///     An <see cref="IEnumerable{Type}"/> which contains the types of 
-        ///     services which this service requires to be functional.
-        /// </returns>
-        IEnumerable<Type> ServicesToBeAvailable();
-
-        /// <summary>
         /// Returns a set of types indicating which services the current service
         /// needs to be linked to in order to be functional.
         /// </summary>
@@ -46,12 +36,6 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="dependency">The dependency service.</param>
         void ConnectTo(KernelService dependency);
-
-        /// <summary>
-        /// Disconnects from one of the services on which the current service depends.
-        /// </summary> 
-        /// <param name="dependency">The dependency service.</param>
-        void DisconnectFrom(KernelService dependency);
 
         /// <summary>
         /// Gets a value indicating whether this instance is connected to all dependencies.

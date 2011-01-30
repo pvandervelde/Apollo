@@ -19,7 +19,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// <summary>
     /// Defines a facade for a dataset.
     /// </summary>
-    public sealed class DatasetFacade : INotifyOnDatasetChange, IEquatable<DatasetFacade>
+    public sealed class DatasetFacade : IEquatable<DatasetFacade>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -96,7 +96,11 @@ namespace Apollo.Core.UserInterfaces.Projects
             }
 
             m_Dataset = dataset;
-            m_Dataset.RegisterForEvents(this);
+            m_Dataset.OnDeleted += (s, e) => RaiseOnInvalidate();
+            m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
+            m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
+            m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
+            m_Dataset.OnSummaryChanged += (s, e) => RaiseOnSummaryChanged();
         }
 
         /// <summary>
@@ -118,13 +122,13 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// An event raised when the name of the dataset is updated.
         /// </summary>
-        public event EventHandler<EventArgs> OnDatasetNameUpdated;
+        public event EventHandler<EventArgs> OnNameChanged;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
-        private void RaiseOnDatasetNameUpdated()
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnNameChanged()
         {
-            var local = OnDatasetNameUpdated;
+            var local = OnNameChanged;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -150,13 +154,13 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// An event raised when the summary of the dataset is updated.
         /// </summary>
-        public event EventHandler<EventArgs> OnDatasetSummaryUpdated;
+        public event EventHandler<EventArgs> OnSummaryChanged;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
-        private void RaiseOnDatasetSummaryUpdated()
+            Justification = "This method is used to call said event.")]
+        private void RaiseOnSummaryChanged()
         {
-            var local = OnDatasetSummaryUpdated;
+            var local = OnSummaryChanged;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -187,7 +191,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnInvalidate;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnInvalidate()
         {
             EventHandler<EventArgs> local = OnInvalidate;
@@ -293,7 +297,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnLoaded;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnLoaded()
         {
             EventHandler<EventArgs> local = OnLoaded;
@@ -309,7 +313,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public event EventHandler<EventArgs> OnUnloaded;
 
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
+            Justification = "This method is used to call said event.")]
         private void RaiseOnUnloaded()
         {
             EventHandler<EventArgs> local = OnUnloaded;
@@ -390,52 +394,6 @@ namespace Apollo.Core.UserInterfaces.Projects
 
             var child = m_Dataset.CreateNewChild(creationInformation);
             return new DatasetFacade(child);
-        }
-
-        /// <summary>
-        /// The method called when the dataset name is updated.
-        /// </summary>
-        void INotifyOnDatasetChange.NameUpdated()
-        {
-            RaiseOnDatasetNameUpdated();
-        }
-
-        /// <summary>
-        /// The method called when the dataset summary is updated.
-        /// </summary>
-        void INotifyOnDatasetChange.SummaryUpdated()
-        {
-            RaiseOnDatasetSummaryUpdated();
-        }
-
-        /// <summary>
-        /// The method called when the dataset is invalidated.
-        /// </summary>
-        void INotifyOnDatasetChange.DatasetInvalidated()
-        {
-            RaiseOnInvalidate();
-        }
-
-        /// <summary>
-        /// The method called when the dataset is loaded onto
-        /// one or more machines.
-        /// </summary>
-        /// <param name="loadedOnto">
-        ///     The collection that provides information about the machines 
-        ///     the dataset was loaded onto.
-        /// </param>
-        void INotifyOnDatasetChange.DatasetLoaded(ICollection<Machine> loadedOnto)
-        {
-            RaiseOnLoaded();
-        }
-
-        /// <summary>
-        /// The method called when the dataset is unloaded
-        /// from the machines it was loaded onto.
-        /// </summary>
-        void INotifyOnDatasetChange.DatasetUnloaded()
-        {
-            RaiseOnUnloaded();
         }
 
         /// <summary>

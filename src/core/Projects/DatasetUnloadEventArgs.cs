@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Projects;
 using Lokad;
 
@@ -14,8 +13,6 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Stores event arguments used when a dataset unload is complete.
     /// </summary>
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Args",
-        Justification = "This is an EventArgs derivative class.")]
     public sealed class DatasetUnloadEventArgs : EventArgs
     {
         /// <summary>

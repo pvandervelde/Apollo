@@ -93,19 +93,16 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
-            var observer = new Mock<INotifyOnDatasetChange>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            dataset.RegisterForEvents(observer.Object);
+            var name = string.Empty;
+            dataset.OnNameChanged += (s, e) => { name = e.Value; };
             dataset.Name = "MyNewName";
+            Assert.AreEqual(dataset.Name, name);
 
             // Set the name again, to the same thing. This 
             // shouldn't notify
+            name = string.Empty;
             dataset.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
+            Assert.AreEqual(string.Empty, name);
         }
 
         [Test]
@@ -116,19 +113,16 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
-            var observer = new Mock<INotifyOnDatasetChange>();
-            {
-                observer.Setup(o => o.SummaryUpdated())
-                    .Verifiable();
-            }
-
-            dataset.RegisterForEvents(observer.Object);
+            var summary = string.Empty;
+            dataset.OnSummaryChanged += (s, e) => { summary = e.Value; };
             dataset.Summary = "MyNewName";
+            Assert.AreEqual(dataset.Summary, summary);
 
             // Set the summary again, to the same thing. This 
             // shouldn't notify
+            summary = string.Empty;
             dataset.Summary = "MyNewName";
-            observer.Verify(o => o.SummaryUpdated(), Times.Once());
+            Assert.AreEqual(string.Empty, summary);
         }
 
         [Test]
@@ -240,13 +234,8 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
-            var observer = new Mock<INotifyOnProjectChanges>();
-            {
-                observer.Setup(o => o.DatasetCreated())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(observer.Object);
+            bool wasInvoked = false;
+            project.OnDatasetCreated += (s, e) => { wasInvoked = true; };
 
             var creationInformation = new DatasetCreationInformation()
             {
@@ -267,8 +256,8 @@ namespace Apollo.Core.Projects
             Assert.IsFalse(child.CanBeAdopted);
             Assert.IsFalse(child.CanBeCopied);
             Assert.IsFalse(child.CanBeDeleted);
-
-            observer.Verify(o => o.DatasetCreated(), Times.Once());
+            
+            Assert.IsTrue(wasInvoked);
         }
 
         [Test]
@@ -400,19 +389,8 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
-            var projectObserver = new Mock<INotifyOnProjectChanges>();
-            {
-                projectObserver.Setup(o => o.DatasetDeleted())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(projectObserver.Object);
-
-            var datasetObserver = new Mock<INotifyOnDatasetChange>();
-            {
-                datasetObserver.Setup(o => o.DatasetInvalidated())
-                    .Verifiable();
-            }
+            bool projectWasNotified = false;
+            project.OnDatasetDeleted += (s, e) => { projectWasNotified = true; };
 
             // Create a 'binary' tree of datasets. This should create the following tree:
             //                            X
@@ -433,6 +411,7 @@ namespace Apollo.Core.Projects
             datasets.Enqueue(root);
 
             int count = 0;
+            int deleteCount = 0;
             while (count < 10)
             {
                 var creationInformation = new DatasetCreationInformation()
@@ -449,7 +428,7 @@ namespace Apollo.Core.Projects
                 var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
                 foreach (var child in newChildren)
                 {
-                    child.RegisterForEvents(datasetObserver.Object);
+                    child.OnDeleted += (s, e) => { deleteCount++; };
 
                     datasets.Enqueue(child);
                     children.Add(child);
@@ -472,126 +451,8 @@ namespace Apollo.Core.Projects
             Assert.IsFalse(children[8].IsValid);
             Assert.IsFalse(children[9].IsValid);
 
-            projectObserver.Verify(o => o.DatasetDeleted(), Times.Once());
-            datasetObserver.Verify(o => o.DatasetInvalidated(), Times.Exactly(7));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when registering an observer after the project is closed.")]
-        public void RegisterForEventsWhenClosed()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-            project.Close();
-
-            var observer = new Mock<INotifyOnDatasetChange>();
-            Assert.Throws<ArgumentException>(() => dataset.RegisterForEvents(observer.Object));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when registering a null observer.")]
-        public void RegisterForEventsWithNullObserver()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-
-            Assert.Throws<ArgumentNullException>(() => dataset.RegisterForEvents(null));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when registering an observer on an invalid dataset.")]
-        public void RegisterForEventsWithInvalidDataset()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var root = project.BaseDataset();
-
-            var creationInformation = new DatasetCreationInformation()
-            {
-                CreatedOnRequestOf = DatasetCreator.User,
-                CanBecomeParent = false,
-                CanBeAdopted = false,
-                CanBeCopied = false,
-                CanBeDeleted = true,
-                LoadFrom = new Mock<IPersistenceInformation>().Object,
-            };
-
-            var dataset = root.CreateNewChild(creationInformation);
-            dataset.Delete();
-
-            var observer = new Mock<INotifyOnDatasetChange>();
-            Assert.Throws<ArgumentException>(() => dataset.RegisterForEvents(observer.Object));
-        }
-
-        [Test]
-        [Description("Checks that an observer cannot be registered twice.")]
-        public void RegisterProjectObserverTwice()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-
-            var observer = new Mock<INotifyOnDatasetChange>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            dataset.RegisterForEvents(observer.Object);
-            dataset.RegisterForEvents(observer.Object);
-
-            dataset.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when unregistering an observer after the project is closed.")]
-        public void UnregisterFromEventsWhenClosed()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-            project.Close();
-
-            var observer = new Mock<INotifyOnDatasetChange>();
-            Assert.Throws<ArgumentException>(() => dataset.UnregisterFromEvents(observer.Object));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when unregistering a null observer.")]
-        public void UnregisterFromEventsWithNullObserver()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-
-            Assert.Throws<ArgumentNullException>(() => dataset.UnregisterFromEvents(null));
-        }
-
-        [Test]
-        [Description("Checks that an observer can be unregistered.")]
-        public void UnregisterFromEvents()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-
-            var observer = new Mock<INotifyOnDatasetChange>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            dataset.RegisterForEvents(observer.Object);
-            dataset.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
-
-            dataset.UnregisterFromEvents(observer.Object);
-
-            dataset.Name = "MyOtherNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
+            Assert.IsTrue(projectWasNotified);
+            Assert.AreEqual(7, deleteCount);
         }
     }
 }

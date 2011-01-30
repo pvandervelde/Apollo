@@ -136,19 +136,16 @@ namespace Apollo.Core.Projects
             Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
             var project = new Project(distributor);
 
-            var observer = new Mock<INotifyOnProjectChanges>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(observer.Object);
+            var name = string.Empty;
+            project.OnNameChanged += (s, e) => { name = e.Value; };
             project.Name = "MyNewName";
+            Assert.AreEqual(project.Name, name);
 
             // Set the name again, to the same thing. This 
             // shouldn't notify
+            name = string.Empty;
             project.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
+            Assert.AreEqual(string.Empty, name);
         }
 
         [Test]
@@ -158,107 +155,16 @@ namespace Apollo.Core.Projects
             Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
             var project = new Project(distributor);
 
-            var observer = new Mock<INotifyOnProjectChanges>();
-            {
-                observer.Setup(o => o.SummaryUpdated())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(observer.Object);
+            var summary = string.Empty;
+            project.OnSummaryChanged += (s, e) => { summary = e.Value; };
             project.Summary = "MyNewName";
+            Assert.AreEqual(project.Summary, summary);
 
             // Set the summary again, to the same thing. This 
             // shouldn't notify
+            summary = string.Empty;
             project.Summary = "MyNewName";
-            observer.Verify(o => o.SummaryUpdated(), Times.Once());
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when registering an observer after the project is closed.")]
-        public void RegisterForEventsWhenClosed()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            project.Close();
-
-            var observer = new Mock<INotifyOnProjectChanges>();
-            Assert.Throws<ArgumentException>(() => project.RegisterForEvents(observer.Object));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when registering a null observer.")]
-        public void RegisterForEventsWithNullObserver()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-
-            Assert.Throws<ArgumentNullException>(() => project.RegisterForEvents(null));
-        }
-
-        [Test]
-        [Description("Checks that an observer cannot be registered twice.")]
-        public void RegisterForEventsTwice()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-
-            var observer = new Mock<INotifyOnProjectChanges>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(observer.Object);
-            project.RegisterForEvents(observer.Object);
-
-            project.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when unregistering an observer after the project is closed.")]
-        public void UnregisterFromEventsWhenClosed()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-            project.Close();
-
-            var observer = new Mock<INotifyOnProjectChanges>();
-            Assert.Throws<ArgumentException>(() => project.UnregisterFromEvents(observer.Object));
-        }
-
-        [Test]
-        [Description("Checks that an exception is thrown when unregistering a null observer.")]
-        public void UnregisterFromEventsWithNullObserver()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-
-            Assert.Throws<ArgumentNullException>(() => project.UnregisterFromEvents(null));
-        }
-
-        [Test]
-        [Description("Checks that an observer can be unregistered.")]
-        public void UnregisterFromEvents()
-        {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
-            var project = new Project(distributor);
-
-            var observer = new Mock<INotifyOnProjectChanges>();
-            {
-                observer.Setup(o => o.NameUpdated())
-                    .Verifiable();
-            }
-
-            project.RegisterForEvents(observer.Object);
-
-            project.Name = "MyNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
-
-            project.UnregisterFromEvents(observer.Object);
-
-            project.Name = "MyOtherNewName";
-            observer.Verify(o => o.NameUpdated(), Times.Once());
+            Assert.AreEqual(string.Empty, summary);
         }
     }
 }

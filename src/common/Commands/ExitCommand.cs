@@ -36,8 +36,7 @@ namespace Apollo.UI.Common.Commands
                 return false;
             }
 
-            var canShutdown = applicationFacade.CanShutdown();
-            return canShutdown;
+            return true;
         }
 
         /// <summary>
@@ -56,13 +55,9 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            // Determine if we can shutdown. If we can't then we'll 
-            // force the issue ...?
-            var canShutdown = applicationFacade.CanShutdown();
-
             // the only catch is that the Shutdown method will return before
             // we know if the shutdown will be canceled?
-            applicationFacade.Shutdown(!canShutdown, () => { });
+            applicationFacade.Shutdown();
         }
 
         /// <summary>

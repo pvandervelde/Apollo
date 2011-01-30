@@ -10,11 +10,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
-using Apollo.Core.Logging;
-using Apollo.Core.Messaging;
 using Apollo.Core.Properties;
 using Apollo.Utils;
-using Apollo.Utils.Commands;
 using Lokad;
 using QuickGraph;
 using QuickGraph.Algorithms;
@@ -27,9 +24,6 @@ namespace Apollo.Core
     /// <design>
     /// The kernel will determine the order in which the services must be 
     /// started based on their dependencies. 
-    /// It is assumed that each service will reside in their own AppDomain and that
-    /// services do NOT share AppDomains. Upon uninstalling a service the 
-    /// service AppDomain will be removed.
     /// </design>
     internal sealed partial class Kernel : INeedStartup, IKernel
     {
@@ -54,26 +48,8 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Kernel"/> class.
         /// </summary>
-        /// <param name="commandStore">The container that stores all the commands.</param>
-        /// <param name="processingHelp">The processing help.</param>
-        /// <param name="dnsNames">The object that stores all the <see cref="DnsName"/> objects for the application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="commandStore"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="processingHelp"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="dnsNames"/> is <see langword="null"/>.
-        /// </exception>
-        public Kernel(ICommandContainer commandStore, IHelpMessageProcessing processingHelp, IDnsNameConstants dnsNames)
+        public Kernel()
         {
-            {
-                Enforce.Argument(() => commandStore);
-                Enforce.Argument(() => processingHelp);
-                Enforce.Argument(() => dnsNames);
-            }
-
             // Add our own proxy to the collection of services.
             // Do that in the constructor so that this is always loaded.
             // That means that there is no way to install another CoreProxy that
@@ -83,7 +59,7 @@ namespace Apollo.Core
             // possible if we start poking around in the data structures of the kernel.
             // In other words there shouldn't be any (legal) way of removing the
             // coreproxy object.
-            Install(new CoreProxy(this, commandStore, processingHelp, dnsNames));
+            Install(new CoreProxy(this));
         }
 
         /// <summary>
@@ -223,10 +199,6 @@ namespace Apollo.Core
         /// <returns>
         /// An ordered collection of services. Where the order indicates the ideal startup order.
         /// </returns>
-        [SuppressMessage("Microsoft.Security", "CA2116:AptcaMethodsShouldOnlyCallAptcaMethods",
-            Justification = "One could use static constructors to inject malicious code when loading the dependent types. " + 
-                            "However the KernelService base class is internal and cannot be used from outside the current assembly." +
-                            "The same goes for all the install methods of the kernel.")]
         private List<KernelService> DetermineServiceStartupOrder()
         {
             // Define the result collection
@@ -257,20 +229,6 @@ namespace Apollo.Core
 
                             graph.AddEdge(new Edge<ServiceVertex>(source, target));
                         }
-
-                        // Handle the available demands
-                        var connections = GetInstalledDependencies(target.ServiceAsDependencyHolder().ServicesToBeAvailable());
-                        foreach (var connection in connections)
-                        {
-                            Debug.Assert(typedCollection.ContainsKey(connection.Value.GetType()), "Missing a service type.");
-                            var source = typedCollection[connection.Value.GetType()];
-
-                            // Remove any duplicate edges before we create them
-                            if (!graph.ContainsEdge(source, target))
-                            {
-                                graph.AddEdge(new Edge<ServiceVertex>(source, target));
-                            }
-                        }
                     }
                 }
             }
@@ -281,17 +239,75 @@ namespace Apollo.Core
         }
 
         /// <summary>
+        /// Sends a message to all services to indicate that the start-up process has completed.
+        /// </summary>
+        private void SendStartupCompleteMessage()
+        {
+            // Check all services
+            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
+            Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
+
+            coreProxy.NotifyServicesOfStartupCompletion();
+        }
+
+        /// <summary>
         /// Gets a value indicating what the state of the object is regarding
         /// the startup process.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "See: Framework Design Guidelines; Section 5.1, page 136.")]
         public StartupState StartupState
         {
             get
             {
                 return m_State;
             }
+        }
+
+        /// <summary>
+        /// Shuts the application down.
+        /// </summary>
+        /// <design>
+        /// Note that this method does not check if it is safe to shut the application down. It is assumed that
+        /// there are no more objections against shutting down once this method is reached. Under normal circumstances
+        /// this method should only be called by the <c>CoreProxy</c> which will perform the necessary checks
+        /// to ensure that all objections against shutdown are heard.
+        /// </design>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
+        public void Shutdown()
+        {
+            // Indicate that the kernel is stopping.
+            m_State = StartupState.Stopping;
+
+            // In order to keep this flexible we will need to sort the services
+            // so that the startup order guarantuees that each service will have 
+            // its dependencies and requirements running before it does.
+            // Obviously this is prone to cyclic loops ...
+            var startupOrder = DetermineServiceStartupOrder();
+
+            // Reverse the order so that we move from most dependent 
+            // to least dependent
+            startupOrder.Reverse();
+
+            // Stop all the services and disconnect them.
+            foreach (var service in startupOrder)
+            {
+                // Grab the actual current service so that we can put it in the
+                // lambda expression without having it wiped or replaced on us
+                try
+                {
+                    // Start the service
+                    service.Stop();
+                }
+                catch
+                {
+                    // An exception occured. Ignore it and move on
+                    // we're about to destroy the appdomain the service lives in.
+                }
+            }
+
+            // If we get here then we have to have finished the
+            // startup process, which means we're actually finished.
+            m_State = StartupState.Stopped;
         }
 
         /// <summary>
@@ -336,14 +352,12 @@ namespace Apollo.Core
             var dependencyHolder = service as IHaveServiceDependencies;
             if (dependencyHolder != null)
             {
-                if (dependencyHolder.ServicesToBeAvailable().Contains(dependencyHolder.GetType()) ||
-                    dependencyHolder.ServicesToConnectTo().Contains(dependencyHolder.GetType()))
+                if (dependencyHolder.ServicesToConnectTo().Contains(dependencyHolder.GetType()))
                 {
                     throw new ServiceCannotDependOnItselfException();
                 }
 
-                if (dependencyHolder.ServicesToBeAvailable().Contains(typeof(KernelService)) ||
-                    dependencyHolder.ServicesToConnectTo().Contains(typeof(KernelService)))
+                if (dependencyHolder.ServicesToConnectTo().Contains(typeof(KernelService)))
                 {
                     throw new ServiceCannotDependOnGenericKernelServiceException();
                 }
@@ -466,106 +480,6 @@ namespace Apollo.Core
             }
 
             return result;
-        }
-
-        /// <summary>
-        /// Uninstalls the specified service.
-        /// </summary>
-        /// <param name="service">The service that needs to be uninstalled.</param>
-        /// <remarks>
-        /// Once a service is uninstalled it can no longer be started. It is effectively
-        /// removed from the list of known services.
-        /// </remarks>
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "Once we started uninstalling it must finish.")]
-        public void Uninstall(KernelService service)
-        {
-            // Unlike installation, we can pretty much always uninstall.
-            // It may get ugly but we can remove the references.
-            {
-                Enforce.Argument(() => service);
-            }
-
-            // Check if we're trying to unload the CoreProxy. If so then 
-            // just ignore it. We don't allow unloading that because then
-            // the kernel will lose the connection to the other systems.
-            if (service.GetType().Equals(typeof(CoreProxy)))
-            {
-                return;
-            }
-
-            // Check if we have the service
-            if (!m_Services.ContainsKey(service.GetType()))
-            {
-                throw new UnknownKernelServiceTypeException();
-            }
-
-            // Can only uninstall the service if we have the same
-            // reference as the object that was installed
-            var installedService = m_Services[service.GetType()];
-            if (!ReferenceEquals(service, installedService))
-            {
-                throw new CannotUninstallNonequivalentServiceException();
-            }
-
-            // Get all the services that depend on this one.
-            var connected = (from pair in m_Connections 
-                                let index = pair.Value.FindIndex(map => map.Applied.Equals(service)) 
-                             where index > -1 
-                             select new KeyValuePair<KernelService, int>(pair.Key, index)).ToList();
-
-            foreach (var map in connected)
-            {
-                ((IHaveServiceDependencies) map.Key).DisconnectFrom(service);
-                m_Connections[map.Key].RemoveAt(map.Value);
-            }
-
-            // Disconnect the service from all it's dependencies
-            // Note that we need to check that the service still exists because
-            // we might be halfway through a shutdown.
-            var dependencyHolder = service as IHaveServiceDependencies;
-            if ((dependencyHolder != null) && m_Connections.ContainsKey(service))
-            {
-                var connections = m_Connections[service];
-                foreach (var map in connections)
-                {
-                    try
-                    {
-                        dependencyHolder.DisconnectFrom(map.Applied);
-                    }
-                    catch (Exception)
-                    {
-                        LogMessage(
-                            LevelToLog.Error,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                Resources_NonTranslatable.Kernel_LogMessage_ServiceDisconnectionFailed, 
-                                service.GetType(), 
-                                dependencyHolder.GetType()));
-                    }
-                }
-
-                m_Connections.Remove(service);
-            }
-
-            // Remove the service. Now that it doesn't have any of the connections anymore.
-            m_Services.Remove(service.GetType());
-        }
-
-        /// <summary>
-        /// Logs a debug message with the given text at the given level.
-        /// </summary>
-        /// <param name="level">The level.</param>
-        /// <param name="message">The message.</param>
-        private void LogMessage(LevelToLog level, string message)
-        {
-            var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
-            Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
-
-            var context = new LogMessageForKernelContext(level, message);
-
-            Debug.Assert(coreProxy.Contains(LogMessageForKernelCommand.CommandId), "A command has gone missing.");
-            coreProxy.Invoke(LogMessageForKernelCommand.CommandId, context);
         }
     }
 }

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Core.Base.Projects;
 using Apollo.Utils;
 
@@ -15,6 +16,19 @@ namespace Apollo.Core.Projects
     internal interface IProject
     {
         /// <summary>
+        /// Gets a value indicating whether the project has been closed.
+        /// </summary>
+        bool IsClosed
+        {
+            get;
+        }
+
+        /// <summary>
+        /// The event raised when the project is closed.
+        /// </summary>
+        event EventHandler<EventArgs> OnClosed;
+
+        /// <summary>
         /// Gets or sets a value indicating the name of the project.
         /// </summary>
         string Name
@@ -22,6 +36,11 @@ namespace Apollo.Core.Projects
             get;
             set;
         }
+
+        /// <summary>
+        /// An event raised when the name of a project is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
 
         /// <summary>
         /// Gets or sets a value describing the project.
@@ -33,12 +52,27 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// An event raised when the summary of a project is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
+
+        /// <summary>
         /// Gets a value indicating the number of dataset for the project.
         /// </summary>
         int NumberOfDatasets
         {
             get;
         }
+
+        /// <summary>
+        /// The event raised when a new dataset is created and added to the project.
+        /// </summary>
+        event EventHandler<EventArgs> OnDatasetCreated;
+
+        /// <summary>
+        /// The event raised when a dataset is deleted from the project.
+        /// </summary>
+        event EventHandler<EventArgs> OnDatasetDeleted;
 
         /// <summary>
         /// Returns a read-only view of the dataset on which all the other datasets are based.
@@ -78,21 +112,5 @@ namespace Apollo.Core.Projects
         /// some time because the datasets may be large, reside on a remote machine or both.
         /// </remarks>
         void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo);
-
-        /// <summary>
-        /// Registers the given observer.
-        /// </summary>
-        /// <param name="observer">
-        /// The object that should be notified when there are changes in the project.
-        /// </param>
-        void RegisterForEvents(INotifyOnProjectChanges observer);
-
-        /// <summary>
-        /// Unregisters the observer.
-        /// </summary>
-        /// <param name="observer">
-        /// The object that is notified when there are chanes in the project.
-        /// </param>
-        void UnregisterFromEvents(INotifyOnProjectChanges observer);
     }
 }
