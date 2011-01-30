@@ -7,8 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
-using Apollo.Core.Projects;
+using System.Threading.Tasks;
 using Apollo.Utils.Commands;
 using Lokad;
 using ICommand = Apollo.Utils.Commands.ICommand;
@@ -32,35 +31,24 @@ namespace Apollo.Core.UserInterfaces.Projects
         #endregion
 
         /// <summary>
-        /// The delegate used to send a message for which a response is not expected.
+        /// The method used to unload the project.
         /// </summary>
-        private readonly SendMessageWithoutResponse m_MessageSender;
-
-        /// <summary>
-        /// The name of the project system.
-        /// </summary>
-        private readonly DnsName m_ProjectName;
+        private Action m_Unloader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnloadProjectCommand"/> class.
         /// </summary>
-        /// <param name="projectName">The <c>DnsName</c> of the project sub-system.</param>
-        /// <param name="messageSender">The function used to send a message.</param>
+        /// <param name="projectUnloader">The method used to unload the project.</param>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="projectName"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="projectUnloader"/> is <see langword="null"/>.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="messageSender"/> is <see langword="null"/>.
-        /// </exception>
-        internal UnloadProjectCommand(DnsName projectName, SendMessageWithoutResponse messageSender)
+        internal UnloadProjectCommand(Action projectUnloader)
         {
             {
-                Enforce.Argument(() => projectName);
-                Enforce.Argument(() => messageSender);
+                Enforce.Argument(() => projectUnloader);
             }
 
-            m_ProjectName = projectName;
-            m_MessageSender = messageSender;
+            m_Unloader = projectUnloader;
         }
 
         #region Implementation of ICommand
@@ -86,7 +74,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             var commandContext = context as UnloadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            m_MessageSender(m_ProjectName, new UnloadProjectMessage(), MessageId.None);
+            commandContext.Result = Task.Factory.StartNew(() => m_Unloader());
         }
 
         #endregion

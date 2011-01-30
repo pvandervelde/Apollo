@@ -23,6 +23,13 @@ namespace Apollo.Core.Logging
         LevelToLog Level(LogType logType);
 
         /// <summary>
+        /// Sets the log level for the specified log type.
+        /// </summary>
+        /// <param name="logType">Type of the log.</param>
+        /// <param name="newLevel">The new log level.</param>
+        void Level(LogType logType, LevelToLog newLevel);
+
+        /// <summary>
         /// Indicates if the log message will be logged, depending on the 
         /// current log level.
         /// </summary>

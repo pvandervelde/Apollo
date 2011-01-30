@@ -40,7 +40,7 @@ namespace Apollo.Core.Base.Projects
     /// </para>
     /// </design>
     [Serializable]
-    [DebuggerDisplay("Dataset: [{InternalValue, m_IsValid}]")]
+    [DebuggerDisplay("Dataset: [{InternalValue}]")]
     public sealed class DatasetId : Id<DatasetId, int>
     {
         /// <summary>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PartCoverSettings>
+  <Target>@{GALLIO_DIR}@\@{GALLIO_EXE}@</Target>
+  <TargetWorkDir>@{BIN_DIR}@</TargetWorkDir>
+  <TargetArgs>/hd:"@{GALLIO_DIR}@" /sc /v:Verbose /r:Local @{FILES}@</TargetArgs>
+  <Output>@{REPORT}@</Output>
+  <LogLevel>0</LogLevel>
+  <Rule>+[Apollo.*]*</Rule>
+  <Rule>-[*Test.Unit*]*</Rule>
+  <Rule>-[Gallio]*</Rule>
+  <Rule>-[Gallio.*]*</Rule>
+</PartCoverSettings>

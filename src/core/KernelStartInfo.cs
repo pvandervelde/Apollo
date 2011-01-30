@@ -72,12 +72,6 @@ namespace Apollo.Core
                     // QuickGraph
                     DetermineAssemblyPath(typeof(QuickGraph.GraphExtensions).Assembly),
 
-                    // System.CoreEx
-                    DetermineAssemblyPath(typeof(Property).Assembly),
-
-                    // System.Threading
-                    DetermineAssemblyPath(typeof(System.Threading.Tasks.Task).Assembly),
-
                     // NLog
                     DetermineAssemblyPath(typeof(NLog.Logger).Assembly),
                 };

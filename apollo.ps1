@@ -196,6 +196,31 @@ function global:Create-SandcastleConfigFile([string]$path, [string]$newPath, [st
     Set-Content $newPath $text
 }
 
+function global:Create-PartCoverConfigFile(
+    [string]$path, 
+    [string]$newPath,
+    [string]$dirGallio,
+    [string]$exeGallio,
+    [string]$dirBuild,
+    [string]$files,
+    [string]$reportFile)
+{
+    $inputText = ''
+    $assemblyNames | foreach{
+        $inputText += $attribute -replace '@ASSEMBLYNAME@', $_
+        $inputText += [System.Environment]::NewLine
+    }
+    
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+	$text = $text -replace '@{GALLIO_DIR}@', $dirGallio
+    $text = $text -replace '@{GALLIO_EXE}@', $exeGallio
+    $text = $text -replace '@{BIN_DIR}@', $dirBuild
+    $text = $text -replace '@{FILES}@', $files
+    $text = $text -replace '@{REPORT}@', $reportFile
+	
+	Set-Content $newPath $text
+}
+
 function global:Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
     $yieldText = [string]::Join([Environment]::NewLine, (Get-Content -Path $yieldTemplate))
     
@@ -298,6 +323,8 @@ properties{
     $dirFxCop = Join-Path $dirTools 'FxCop'
     $dirMoq = Join-Path $dirTools 'Moq'
     $dirConcordion = Join-Path $dirTools 'Concordion'
+    $dirPartCover = Join-Path $dirTools 'PartCover'
+    $dirPartCoverExclusionWriter = Join-Path $dirTools 'partcoverexclusionwriter'
     
     # solutions
     $slnApollo = Join-Path $dirSrc 'Apollo.sln'
@@ -324,6 +351,9 @@ properties{
     $licenseVerificationSequencesYieldTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
     $licenseVerificationSequencesFile = Join-Path $dirSrc 'ValidationSequenceGenerator.cs'
     
+    $partCoverConfigTemplateFile = Join-Path $dirTemplates 'PartCover.Settings.xml.in'
+    $partCoverConfigFile = Join-Path $dirTemp 'PartCover.Settings.xml'
+    
     $concordionConfigTemplateFile = Join-Path $dirTemplates 'concordion.config.in'
     $sandcastleTemplateFile = Join-Path $dirTemplates 'sandcastle.shfbproj.in'
     
@@ -331,8 +361,11 @@ properties{
     $logMsiBuild = 'msi.log'
     $logMsBuild = 'msbuild.log'
     $logFxCop = 'fxcop.xml'
-    $logNCover = 'ncover.xml'
-    $logNCoverHtml = 'ncover.html'
+    $logPartCover = 'partcover.xml'
+    $logPartCoverHtml = 'partcover.html'
+    
+    # output directories
+    $dirPartCoverHtml = 'partcoverhtml'
     
     # settings
     $levelMinCoverage = 85
@@ -531,89 +564,95 @@ task buildBinaries -depends runInit, getVersion -action{
 task runUnitTests -depends buildBinaries -action{
     "Running unit tests..."
     
-    $mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.x86.exe'
+    $gallioExe = 'Gallio.Echo.x86.exe'
     
     $files = ""
-    $assemblies = Get-ChildItem -path $dirOutput -Filter "*.dll" | Where-Object { (( $_.Name -like "*Test*") -and ( $_.Name -like "*Unit*"))}
+    $assemblies = Get-ChildItem -path $dirOutput -Filter "*.dll" | 
+        Where-Object { (( $_.Name -like "*Test*") -and `
+                        ( $_.Name -like "*Unit*"))}
     $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-    $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
+    
+    $command = ""
     if ($shouldCheckCoverage)
     {
-        #throw "Code coverage doesn't work at the moment. Please run without coverage"
-        
         $coverageFiles = ""
         $coverageAssemblies = Get-ChildItem -path $dirOutput |
             Where-Object { ((($_.Name -like "*Apollo*") -and `
                             !( $_.Name -like "*Test.*") -and `
                             !($_.Name -like "*vshost*")) -and `
                             (($_.Extension -match ".dll") -or `
-                            ($_.Extension -match ".exe")))}
-        $coverageAssemblies | ForEach-Object -Process { $coverageFiles += [System.IO.Path]::GetFileNameWithoutExtension($_.FullName) + ";"}
+                             ($_.Extension -match ".exe")))}
+                             
+        $coverageAssemblies
+        $coverageAssemblies | ForEach-Object -Process { $coverageFiles += '"' + [System.IO.Path]::GetFullPath($_.FullName) + '" '}
+        $coverageFiles
         
-        # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
-        #   process. This means we can't load explicit 32-bit binaries. However using the 
-        #   isolated process runner we can.
-        # Turn on the code coverage and specify which files need coverage checked
-        $command += "/r:NCover /rp:NCoverArguments='//a " + $coverageFiles
+        $reportFile = Join-Path $dirReports $logPartCover
         
-        # Specify where the XML log file should be written to
-        $command += " //x " + '\"' + (Join-Path $dirReports $logNCover) + '\"'
-    
-        # Indicate which Attribute is used to exclude classes / methods from coverage
-        $command += " //ea Apollo.Utils.ExcludeFromCoverageAttribute;System.Runtime.CompilerServices.CompilerGeneratedAttribute' "
+        # Create the config file
+        Create-PartCoverConfigFile $partCoverConfigTemplateFile $partCoverConfigFile $dirMbUnit $gallioExe $dirOutput $files $reportFile
+
+        # Add the exclusions
+        $writer = Join-Path $dirPartCoverExclusionWriter 'partcoverexclusionwriter.exe'
+        $writerCommand = '& "' + $writer + '" ' + "/i " + '"' + $partCoverConfigFile + '" ' + "/o " + '"' + $partCoverConfigFile + '"'
+        $writerCommand += " /e Apollo.Utils.ExcludeFromCoverageAttribute System.Runtime.CompilerServices.CompilerGeneratedAttribute"
+        $writerCommand += " /a " + $coverageFiles
+        
+        $writerCommand
+        Invoke-Expression $writerCommand
+        if ($LastExitCode -ne 0)
+        {
+            throw 'PartCoverExclusionWriter failed on Apollo with return code: $LastExitCode'
+        }
+        
+        $partCoverExe = Join-Path $dirPartCover 'PartCover.x86.exe'
+        $command += '& "' + "$partCoverExe" + '" --register' 
+        $command += ' --settings "' + $partCoverConfigFile + '"'
+        
+        # run the tests
+        $command
+        
+        Invoke-Expression $command
+        "" # Add an extra line because PartCover is retarded and doesn't do a writeline at the end
+        if ($LastExitCode -ne 0)
+        {
+            throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
+        }
+        
+        $transformExe = Join-Path (Join-Path $dirSandcastle "ProductionTools")"xsltransform.exe"
+        $partCoverXslt = Join-Path (Join-Path $dirPartCover 'xslt') "partcoverfullreport.xslt"
+        $partCoverHtml = Join-Path $dirReports $logPartCoverHtml
+        $command = '& "' + $transformExe + '" "' + $reportFile + '" /xsl:"' + $partCoverXslt + '" /out:"' + $partCoverHtml + '" '
+        
+        $command
+        Invoke-Expression $command
+        if ($LastExitCode -ne 0)
+        {
+            throw "XSLT transformation failed on Apollo with return code: $LastExitCode"
+        }
     }
     else
     {
+        $mbunitExe = Join-Path $dirMbUnit $gallioExe
+        
+        $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
+    
         # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
         #   process. This means we can't load explicit 32-bit binaries. However using the 
         #   isolated process runner we can
         $command += "/r:IsolatedProcess " 
-    }
-    
-    # add the files.
-    $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
-    
-    # run the tests
-    $command
-    Invoke-Expression $command
-    if ($shouldCheckCoverage)
-    {
-        $ncoverFile = Join-Path $dirBase 'Coverage.log'
-        if (Test-Path -Path $ncoverFile)
-        {
-            # The directory does not exist. Create it
-            Remove-Item $ncoverFile -Force
-        }
         
-        if (!(Test-Path -Path (Join-Path $dirReports $logNCover)))
-        {
-            Move-Item -Path (Join-Path $dirBase 'Coverage.xml') -Destination (Join-Path $dirReports $logNCover)
-        }
-        else
-        {
-            Remove-Item -Path (Join-Path $dirBase 'Coverage.xml')
-        }
-    }
-    
-    if ($LastExitCode -ne 0)
-    {
-        throw "MbUnit failed on Apollo.Core with return code: $LastExitCode"
-    }
-    
-    # Generate the code coverage HTML report
-    if ($shouldCheckCoverage)
-    {
-        $ncoverExplorer = Join-Path $dirNCoverExplorer 'NCoverExplorer.Console.exe'
-        $command = '& "' + "$ncoverExplorer" + '" ' + ' "' + (Join-Path $dirReports $logNCover) + '"' + " /h:" + '"' + (Join-Path $dirReports $logNCoverHtml) + '"' + " /r:ModuleClassSummary" + " /m:" + $levelMinCoverage
-        if ($verbose)
-        {
-            $command
-        }
+        # add the files.
+        $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+        
+        # run the tests
+        $command
         
         Invoke-Expression $command
+        "" # Add an extra line because PartCover is retarded and doesn't do a writeline at the end
         if ($LastExitCode -ne 0)
         {
-            throw "NCoverExplorer failed on Apollo.Core with return code: $LastExitCode"
+            throw "MbUnit failed on Apollo with return code: $LastExitCode"
         }
     }
 }
@@ -781,9 +820,6 @@ task buildPackage -depends buildBinaries -action{
     
     $quickgraph = 'QuickGraph.dll'
     Copy-Item (Join-Path $dirOutput $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)    
-    
-    $systemCoreEx = 'System.CoreEx.dll'
-    Copy-Item (Join-Path $dirOutput $systemCoreEx) -Destination (Join-Path $dirTempZip $systemCoreEx)    
     
     $nlog = 'NLog.dll'
     Copy-Item (Join-Path $dirOutput $nlog) -Destination (Join-Path $dirTempZip $nlog)    

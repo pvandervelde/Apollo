@@ -42,17 +42,8 @@ namespace Apollo.Core.Projects
         /// The collection that holds the proxies for the datasets that we are mirroring 
         /// for the UI.
         /// </summary>
-        private readonly Dictionary<DatasetId, IProxyDataset> m_DatasetProxies =
-            new Dictionary<DatasetId, IProxyDataset>();
-
-        /// <summary>
-        /// The collection that holds all the object that require notification when a 
-        /// dataset changes.
-        /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need to map the dataset ID to the collection of observers.")]
-        private readonly Dictionary<DatasetId, List<INotifyOnDatasetChange>> m_DatasetObservers =
-            new Dictionary<DatasetId, List<INotifyOnDatasetChange>>();
+        private readonly Dictionary<DatasetId, IOwnedProxyDataset> m_DatasetProxies =
+            new Dictionary<DatasetId, IOwnedProxyDataset>();
 
         /// <summary>
         /// The ID number of the root dataset.
@@ -179,10 +170,7 @@ namespace Apollo.Core.Projects
                 m_Graph.AddEdge(new Edge<DatasetId>(realParent, id));
             }
 
-            foreach (var observer in m_ProjectObservers)
-            {
-                observer.DatasetCreated();
-            }
+            RaiseOnDatasetCreated();
 
             return id;
         }
@@ -249,26 +237,24 @@ namespace Apollo.Core.Projects
                     UnloadFromMachine(datasetToDelete);
                 }
 
-                if (m_DatasetObservers.ContainsKey(datasetToDelete))
+                IOwnedProxyDataset proxy = null;
+                if (m_DatasetProxies.ContainsKey(datasetToDelete))
                 {
-                    var observers = m_DatasetObservers[datasetToDelete];
-                    foreach (var observer in observers)
-                    {
-                        observer.DatasetInvalidated();
-                    }
+                    proxy = m_DatasetProxies[datasetToDelete];
                 }
 
                 // Delete the nodes from the graph
                 m_Graph.RemoveVertex(datasetToDelete);
-                m_DatasetObservers.Remove(datasetToDelete);
                 m_DatasetProxies.Remove(datasetToDelete);
                 m_Datasets.Remove(datasetToDelete);
+
+                if (proxy != null)
+                {
+                    proxy.OwnerHasDeletedDataset();
+                }
             }
 
-            foreach (var observer in m_ProjectObservers)
-            {
-                observer.DatasetDeleted();
-            }
+            RaiseOnDatasetDeleted();
         }
 
         /// <summary>
@@ -300,6 +286,12 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to load a dataset onto a machine.");
             }
 
+            if (m_DatasetProxies.ContainsKey(id))
+            {
+                var proxy = m_DatasetProxies[id];
+                proxy.OwnerHasLoadedDataset();
+            }
+
             throw new NotImplementedException();
         }
 
@@ -313,79 +305,14 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
             }
 
+            if (m_DatasetProxies.ContainsKey(id))
+            {
+                var proxy = m_DatasetProxies[id];
+                proxy.OwnerHasUnloadedDataset();
+            }
+
             // Should invalidate the dataset?
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Registers the given object for change notifications.
-        /// </summary>
-        /// <param name="id">The ID of the dataset for which the notifications should be registered.</param>
-        /// <param name="observer">The object that wants to receive change notifications.</param>
-        private void RegisterDatasetObservers(DatasetId id, INotifyOnDatasetChange observer)
-        {
-            {
-                Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
-                Debug.Assert(IsValid(id), "The dataset should be valid.");
-                Debug.Assert(observer != null, "The notification object should not be a Null reference.");
-            }
-
-            if (!m_DatasetObservers.ContainsKey(id))
-            {
-                m_DatasetObservers.Add(id, new List<INotifyOnDatasetChange>());
-            }
-
-            var observers = m_DatasetObservers[id];
-            if (!observers.Contains(observer))
-            {
-                observers.Add(observer);
-            }
-        }
-
-        /// <summary>
-        /// Unregisters the given object for change notifications.
-        /// </summary>
-        /// <param name="id">The ID of the dataset for which the notifications should be unregistered.</param>
-        /// <param name="observer">The object that is registered for change notifications.</param>
-        private void UnregisterDatasetObservers(DatasetId id, INotifyOnDatasetChange observer)
-        {
-            {
-                Debug.Assert(!IsClosed, "The project should not be closed if we want to register a notification.");
-                Debug.Assert(observer != null, "The notification object should not be a Null reference.");
-            }
-
-            if (!m_DatasetObservers.ContainsKey(id))
-            {
-                return;
-            }
-
-            var observers = m_DatasetObservers[id];
-            if (observers.Contains(observer))
-            {
-                observers.Remove(observer);
-            }
-        }
-
-        /// <summary>
-        /// Returns the collection of objects that have registered for change notifications
-        /// for the dataset with the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the dataset.</param>
-        /// <returns>
-        /// The collection of objects that have registered for change notifications.
-        /// </returns>
-        private IEnumerable<INotifyOnDatasetChange> DatasetObservers(DatasetId id)
-        {
-            {
-                Debug.Assert(id != null, "The ID should not be a null reference.");
-            }
-
-            if (!m_DatasetObservers.ContainsKey(id))
-            {
-                return new INotifyOnDatasetChange[0];
-            }
-
-            return m_DatasetObservers[id].AsReadOnly();
         }
     }
 }

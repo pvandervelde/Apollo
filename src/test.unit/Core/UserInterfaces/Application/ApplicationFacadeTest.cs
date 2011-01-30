@@ -26,34 +26,10 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
-        [Description("Checks that the canshutdown command is correctly given.")]
-        public void CanShutDown()
-        {
-            bool returnValue = false;
-
-            var service = new Mock<IUserInterfaceService>();
-            {
-                service.Setup(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()))
-                    .Callback<CommandId, ICommandContext>(
-                        (id, context) => 
-                            {
-                                Assert.AreEqual(CheckApplicationCanShutdownCommand.CommandId, id);
-                                var c = (CheckApplicationCanShutdownContext)context;
-                                c.Result = returnValue;
-                            });
-            }
-
-            var facade = new ApplicationFacade(service.Object);
-            var result = facade.CanShutdown();
-
-            Assert.AreEqual(returnValue, result);
-        }
-
-        [Test]
         [Description("Checks that the shutdown command is correctly given.")]
         public void Shutdown()
         {
-            var force = true;
+            bool wasTriggered = false;
 
             var service = new Mock<IUserInterfaceService>();
             {
@@ -62,19 +38,13 @@ namespace Apollo.Core.UserInterfaces.Application
                         (id, context) => 
                             {
                                 Assert.AreEqual(ShutdownApplicationCommand.CommandId, id);
-                                
-                                var c = (ShutdownApplicationContext)context;
-                                Assert.AreEqual(force, c.IsShutdownForced);
-                                c.Result = false;
+
+                                wasTriggered = true;
                             });
             }
 
             var facade = new ApplicationFacade(service.Object);
-
-            bool wasTriggered = false;
-            Action action = () => { wasTriggered = true; };
-            facade.Shutdown(force, action);
-
+            facade.Shutdown();
             Assert.IsTrue(wasTriggered);
         }
 

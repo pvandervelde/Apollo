@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using Apollo.Core.Base.Projects;
-using Apollo.Core.Messaging;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Autofac;
@@ -28,8 +27,6 @@ namespace Apollo.Core.Projects
             base.Load(builder);
 
             builder.Register(c => new ProjectService(
-                    c.Resolve<IDnsNameConstants>(),
-                    c.Resolve<IHelpMessageProcessing>(),
                     c.Resolve<IValidationResultStorage>(),
                     c.Resolve<IHelpDistributingDatasets>(),
                     c.Resolve<IBuildProjects>()))

@@ -4,9 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
-using Apollo.Utils;
 using MbUnit.Framework;
 
 namespace Apollo.Core
@@ -21,19 +20,17 @@ namespace Apollo.Core
         [Description("Checks that the command can be invoked successfully.")]
         public void Invoke()
         {
-            var sender = new DnsName("sender");
+            bool wasInvoked = false;
 
-            SendMessageWithResponse function = (recipient, body, id) =>
+            Action function = () =>
                 {
-                    Assert.AreSame(sender, recipient);
-                    Assert.IsInstanceOfType(typeof(ShutdownRequestMessage), body);
-                    return new Future<MessageBody>(new WaitPair<MessageBody>(new ShutdownResponseMessage(true)));
+                    wasInvoked = true;
                 };
-            var command = new ShutdownApplicationCommand(sender, function);
+            var command = new ShutdownApplicationCommand(function);
 
-            var context = new ShutdownApplicationContext(false);
+            var context = new ShutdownApplicationContext();
             command.Invoke(context);
-            Assert.IsTrue(context.Result);
+            Assert.IsTrue(wasInvoked);
         }
     }
 }

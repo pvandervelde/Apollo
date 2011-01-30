@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Lokad;
 
 namespace Apollo.Core.UserInterfaces.Application
@@ -54,39 +53,14 @@ namespace Apollo.Core.UserInterfaces.Application
         #region Implementation of IAbstractApplications
 
         /// <summary>
-        /// Gets a value indicating whether the application can shutdown.
+        /// Shuts the application down.
         /// </summary>
-        /// <returns>
-        ///     <see langword="true"/> if the application can shutdown; otherwise, <see langword="false"/>.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool CanShutdown()
+        public void Shutdown()
         {
-            var context = new CheckApplicationCanShutdownContext();
-
-            Debug.Assert(m_Service.Contains(CheckApplicationCanShutdownCommand.CommandId), "A command has gone missing.");
-            m_Service.Invoke(CheckApplicationCanShutdownCommand.CommandId, context);
-            return context.Result;
-        }
-
-        /// <summary>
-        /// Shuts the application down, forcibly if asked.
-        /// </summary>
-        /// <param name="shouldBeForced">If set to <see langword="true"/> then the shutdown will be forced.</param>
-        /// <param name="onShutdownRefuse">The <see cref="Action"/> that will be performed if the shutdown is refused.</param>
-        public void Shutdown(bool shouldBeForced, Action onShutdownRefuse)
-        {
-            var context = new ShutdownApplicationContext(shouldBeForced);
+            var context = new ShutdownApplicationContext();
 
             Debug.Assert(m_Service.Contains(ShutdownApplicationCommand.CommandId), "A command has gone missing.");
             m_Service.Invoke(ShutdownApplicationCommand.CommandId, context);
-            
-            // If we failed to shutdown the system
-            if (!context.Result)
-            {
-                onShutdownRefuse();
-            }
         }
 
         /// <summary>

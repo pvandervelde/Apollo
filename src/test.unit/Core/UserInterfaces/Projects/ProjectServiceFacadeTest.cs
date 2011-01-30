@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Apollo.Core.Projects;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
@@ -67,7 +68,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = project.Object;
+                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
                         })
                     .Verifiable();
             }
@@ -123,7 +124,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                         {
                             LoadProjectContext loadContext = context as LoadProjectContext;
                             Assert.AreSame(persistence.Object, loadContext.LoadFrom);
-                            loadContext.Result = project.Object;
+                            loadContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
                         })
                     .Verifiable();
             }
@@ -160,7 +161,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = project.Object;
+                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
                         });
             }
 

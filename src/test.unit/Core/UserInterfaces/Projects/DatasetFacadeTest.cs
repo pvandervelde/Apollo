@@ -212,9 +212,9 @@ namespace Apollo.Core.UserInterfaces.Projects
             var facade = new DatasetFacade(dataset.Object);
 
             bool eventRaised = false;
-            facade.OnDatasetNameUpdated += (s, e) => { eventRaised = true; };
+            facade.OnNameChanged += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnDatasetChange)facade).NameUpdated();
+            dataset.Raise(d => d.OnNameChanged += null, new ValueChangedEventArgs<string>("newName"));
             Assert.IsTrue(eventRaised);
         }
 
@@ -242,9 +242,9 @@ namespace Apollo.Core.UserInterfaces.Projects
             var facade = new DatasetFacade(dataset.Object);
 
             bool eventRaised = false;
-            facade.OnDatasetSummaryUpdated += (s, e) => { eventRaised = true; };
+            facade.OnSummaryChanged += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnDatasetChange)facade).SummaryUpdated();
+            dataset.Raise(d => d.OnSummaryChanged += null, new ValueChangedEventArgs<string>("newSummary"));
             Assert.IsTrue(eventRaised);
         }
 
@@ -258,8 +258,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool wasInvalidated = false;
             facade.OnInvalidate += (s, e) => wasInvalidated = true;
 
-            var observer = facade as INotifyOnDatasetChange;
-            observer.DatasetInvalidated();
+            dataset.Raise(d => d.OnDeleted += null, EventArgs.Empty);
             Assert.IsTrue(wasInvalidated);
         }
 
@@ -273,8 +272,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool wasLoaded = false;
             facade.OnLoaded += (s, e) => wasLoaded = true;
 
-            var observer = facade as INotifyOnDatasetChange;
-            observer.DatasetLoaded(new List<Machine> { new Machine() });
+            dataset.Raise(d => d.OnLoaded += null, EventArgs.Empty);
             Assert.IsTrue(wasLoaded);
         }
 
@@ -288,8 +286,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool wasUnloaded = false;
             facade.OnUnloaded += (s, e) => wasUnloaded = true;
 
-            var observer = facade as INotifyOnDatasetChange;
-            observer.DatasetUnloaded();
+            dataset.Raise(d => d.OnUnloaded += null, EventArgs.Empty);
             Assert.IsTrue(wasUnloaded);
         }
 

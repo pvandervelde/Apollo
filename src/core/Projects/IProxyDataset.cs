@@ -54,6 +54,11 @@ namespace Apollo.Core.Projects
         void Delete();
 
         /// <summary>
+        /// An event raised when the dataset is deleted.
+        /// </summary>
+        event EventHandler<EventArgs> OnDeleted;
+
+        /// <summary>
         /// Gets a value indicating whether the new dataset can be moved from one parent
         /// to another parent.
         /// </summary>
@@ -103,6 +108,11 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// An event raised when the name of a dataset is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
+
+        /// <summary>
         /// Gets or sets a value describing the dataset.
         /// </summary>
         string Summary
@@ -110,6 +120,11 @@ namespace Apollo.Core.Projects
             get;
             set;
         }
+
+        /// <summary>
+        /// An event raised when the summary of a dataset is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
 
         /// <summary>
         /// Gets a value indicating whether the dataset is loaded on the local machine
@@ -147,9 +162,19 @@ namespace Apollo.Core.Projects
         void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range);
 
         /// <summary>
+        /// An event raised when the dataset is loaded onto one or more machines.
+        /// </summary>
+        event EventHandler<EventArgs> OnLoaded;
+
+        /// <summary>
         /// Unloads the dataset from the machine it is currently loaded onto.
         /// </summary>
         void UnloadFromMachine();
+
+        /// <summary>
+        /// An event raised when the dataset is unloaded from the machines it was loaded onto.
+        /// </summary>
+        event EventHandler<EventArgs> OnUnloaded;
 
         /// <summary>
         /// Returns the collection of sub-datasets.
@@ -199,17 +224,5 @@ namespace Apollo.Core.Projects
         {
             get;
         }
-
-        /// <summary>
-        /// Registers the given object for change notifications.
-        /// </summary>
-        /// <param name="observer">The object that wants to receive change notifications.</param>
-        void RegisterForEvents(INotifyOnDatasetChange observer);
-
-        /// <summary>
-        /// Unregisters the given object for change notifications.
-        /// </summary>
-        /// <param name="observer">The object that is registered for change notifications.</param>
-        void UnregisterFromEvents(INotifyOnDatasetChange observer);
     }
 }

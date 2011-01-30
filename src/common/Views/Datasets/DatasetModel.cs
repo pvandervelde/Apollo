@@ -37,8 +37,8 @@ namespace Apollo.UI.Common.Views.Datasets
             }
 
             m_Dataset = dataset;
-            m_Dataset.OnDatasetNameUpdated += (s, e) => Notify(() => Name);
-            m_Dataset.OnDatasetSummaryUpdated += (s, e) => Notify(() => Summary);
+            m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
+            m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Dataset.OnLoaded += (s, e) => Notify(() => this.IsLoaded);
             m_Dataset.OnUnloaded += (s, e) => Notify(() => this.IsLoaded);
 

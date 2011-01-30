@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
@@ -22,12 +23,6 @@ namespace Test.Spec.System
         /// The IOC container that contains the core modules.
         /// </summary>
         private IContainer m_CoreContainer;
-
-        /// <summary>
-        /// Indicates that the system has requested permission to stop the application. Options are 'not stopped' when
-        /// the system has not requested permission and 'stopped' if it has.
-        /// </summary>
-        private string m_HasBeenNotified = "not stopped";
 
         /// <summary>
         /// Indicates if the shut down process has started. Options are: 'not started' while the system hasn't
@@ -53,8 +48,15 @@ namespace Test.Spec.System
             // so dump it.
             var applicationFacade = m_CoreContainer.Resolve<IAbstractApplications>();
 
-            m_ShutdownCompletedSuccessfully = "succesfully";
-            applicationFacade.Shutdown(false, () => { m_ShutdownCompletedSuccessfully = "failed";  });
+            try
+            {
+                applicationFacade.Shutdown();
+                m_ShutdownCompletedSuccessfully = "succesfully";
+            }
+            catch (Exception)
+            {
+                m_ShutdownCompletedSuccessfully = "failed with exception";
+            }
         }
 
         private void ConnectToKernel(IModule kernelUserInterfaceModule)
@@ -81,27 +83,12 @@ namespace Test.Spec.System
                     });
 
                 applicationFacade.RegisterNotification(
-                    notificationNames.CanSystemShutdown,
-                    obj =>
-                    {
-                        var shutdownArguments = (ShutdownCapabilityArguments)obj;
-                        shutdownArguments.CanShutdown = true;
-
-                        m_HasBeenNotified = "stopped";
-                    });
-
-                applicationFacade.RegisterNotification(
                     notificationNames.SystemShuttingDown,
                     obj =>
                     {
                         m_ShutdownStarted = "notifies";
                     });
             }
-        }
-
-        public string HasBeenNotified()
-        {
-            return m_HasBeenNotified;
         }
 
         public string HasShutdownStarted()

@@ -32,7 +32,7 @@ namespace Apollo.Core.Projects
         /// the equality contract verifiers then we need a reference to the class.
         /// </design>
         [DebuggerDisplay("ReadonlyDataset: [m_IdOfDataset]")]
-        internal sealed class DatasetProxy : IProxyDataset, IEquatable<DatasetProxy>, IEquatable<IProxyDataset>
+        internal sealed class DatasetProxy : IOwnedProxyDataset, IEquatable<DatasetProxy>, IEquatable<IProxyDataset>
         {
             /// <summary>
             /// Implements the operator ==.
@@ -172,7 +172,33 @@ namespace Apollo.Core.Projects
                 // Note that after this action the current object is no longer 'valid'
                 // i.e. it can't be used to connect to the owner anymore other than to
                 // check validity.
+                //
+                // Also note that the delete event is only called indirectly. The parent project
+                // will handle that because the current dataset may be deleted because its parent
+                // is deleted.
                 m_Owner.DeleteDatasetAndChildren(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// A method called by the owner when the owner is about to delete the dataset.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasDeletedDataset()
+            {
+                RaiseOnDeleted();
+            }
+
+            /// <summary>
+            /// An event raised when the dataset is deleted.
+            /// </summary>
+            public event EventHandler<EventArgs> OnDeleted;
+
+            private void RaiseOnDeleted()
+            {
+                var local = OnDeleted;
+                if (local != null)
+                {
+                    local(this, EventArgs.Empty);
+                }
             }
 
             /// <summary>
@@ -248,13 +274,22 @@ namespace Apollo.Core.Projects
                     if (!string.Equals(dataset.Name, value))
                     {
                         dataset.Name = value;
-
-                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
-                        foreach (var observer in observers)
-                        {
-                            observer.NameUpdated();
-                        }
+                        RaiseOnNameChanged(value);
                     }
+                }
+            }
+
+            /// <summary>
+            /// An event raised when the name of a dataset is changed.
+            /// </summary>
+            public event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
+
+            private void RaiseOnNameChanged(string newName)
+            {
+                var local = OnNameChanged;
+                if (local != null)
+                {
+                    local(this, new ValueChangedEventArgs<string>(newName));
                 }
             }
 
@@ -275,13 +310,22 @@ namespace Apollo.Core.Projects
                     if (!string.Equals(dataset.Summary, value))
                     {
                         dataset.Summary = value;
-                        
-                        var observers = m_Owner.DatasetObservers(m_IdOfDataset);
-                        foreach (var observer in observers)
-                        {
-                            observer.SummaryUpdated();
-                        }
+                        RaiseOnSummaryChanged(value);
                     }
+                }
+            }
+
+            /// <summary>
+            /// An event raised when the summary of a dataset is changed.
+            /// </summary>
+            public event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
+
+            private void RaiseOnSummaryChanged(string newSummary)
+            {
+                var local = OnSummaryChanged;
+                if (local != null)
+                {
+                    local(this, new ValueChangedEventArgs<string>(newSummary));
                 }
             }
 
@@ -341,13 +385,27 @@ namespace Apollo.Core.Projects
                 }
 
                 m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
-                if (IsLoaded)
+            }
+
+            /// <summary>
+            /// Called when the owner has successfully loaded the dataset onto one or more machines.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasLoadedDataset()
+            {
+                RaiseOnLoaded();
+            }
+
+            /// <summary>
+            /// An event raised when the dataset is loaded onto one or more machines.
+            /// </summary>
+            public event EventHandler<EventArgs> OnLoaded;
+
+            private void RaiseOnLoaded()
+            {
+                var local = OnLoaded;
+                if (local != null)
                 {
-                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
-                    foreach (var observer in observers)
-                    {
-                        observer.DatasetLoaded(new List<Machine>(RunsOn()));
-                    }
+                    local(this, EventArgs.Empty);
                 }
             }
 
@@ -364,11 +422,29 @@ namespace Apollo.Core.Projects
                 m_Owner.UnloadFromMachine(m_IdOfDataset);
                 if (!IsLoaded)
                 {
-                    var observers = m_Owner.DatasetObservers(m_IdOfDataset);
-                    foreach (var observer in observers)
-                    {
-                        observer.DatasetUnloaded();
-                    }
+                    RaiseOnUnloaded();
+                }
+            }
+
+            /// <summary>
+            /// Called when the owner has successfully unloaded the dataset from the machines it was loaded onto.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasUnloadedDataset()
+            {
+                RaiseOnLoaded();
+            }
+
+            /// <summary>
+            /// An event raised when the dataset is unloaded from the machines it was loaded onto.
+            /// </summary>
+            public event EventHandler<EventArgs> OnUnloaded;
+
+            private void RaiseOnUnloaded()
+            {
+                var local = OnUnloaded;
+                if (local != null)
+                {
+                    local(this, EventArgs.Empty);
                 }
             }
 
@@ -423,7 +499,7 @@ namespace Apollo.Core.Projects
                 }
 
                 var id = m_Owner.CreateDataset(m_IdOfDataset, newChild);
-                return new DatasetProxy(m_Owner, id);
+                return m_Owner.ObtainProxyFor(id);
             }
 
             /// <summary>
@@ -445,7 +521,7 @@ namespace Apollo.Core.Projects
 
                 var result = from child in newChildren
                                 let newDataset = m_Owner.CreateDataset(m_IdOfDataset, child)
-                             select new DatasetProxy(m_Owner, newDataset) as IProxyDataset;
+                             select m_Owner.ObtainProxyFor(newDataset);
 
                 return new List<IProxyDataset>(result);
             }
@@ -459,35 +535,6 @@ namespace Apollo.Core.Projects
                 {
                     throw new NotImplementedException();
                 }
-            }
-
-            /// <summary>
-            /// Registers the given object for change notifications.
-            /// </summary>
-            /// <param name="observer">The object that wants to receive change notifications.</param>
-            public void RegisterForEvents(INotifyOnDatasetChange observer)
-            {
-                {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                    Enforce.With<ArgumentException>(IsValid, Resources_NonTranslatable.Exception_Messages_CannotUseDatasetAfterItBecomesInvalid);
-                    Enforce.Argument(() => observer);
-                }
-
-                m_Owner.RegisterDatasetObservers(m_IdOfDataset, observer);
-            }
-
-            /// <summary>
-            /// Unregisters the given object for change notifications.
-            /// </summary>
-            /// <param name="observer">The object that is registered for change notifications.</param>
-            public void UnregisterFromEvents(INotifyOnDatasetChange observer)
-            {
-                {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                    Enforce.Argument(() => observer);
-                }
-
-                m_Owner.UnregisterDatasetObservers(m_IdOfDataset, observer);
             }
 
             /// <summary>

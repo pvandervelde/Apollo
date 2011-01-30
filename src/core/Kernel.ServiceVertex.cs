@@ -6,6 +6,7 @@
 
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Utils;
 
 namespace Apollo.Core
@@ -56,19 +57,8 @@ namespace Apollo.Core
             {
                 get
                 {
-                    return Service is IHaveServiceDependencies;
+                    return Service.ServicesToConnectTo().Count() > 0;
                 }
-            }
-
-            /// <summary>
-            /// Returns the service cast to the <see cref="IHaveServiceDependencies"/> interface.
-            /// </summary>
-            /// <returns>
-            /// An <see cref="IHaveServiceDependencies"/> object.
-            /// </returns>
-            public IHaveServiceDependencies ServiceAsDependencyHolder()
-            {
-                return Service as IHaveServiceDependencies;
             }
         }
     }

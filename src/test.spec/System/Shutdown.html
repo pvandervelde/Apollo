@@ -18,8 +18,7 @@
             different controls and forms and their data.
         </p>
         <p concordion:execute="ShutdownApollo()">
-            During the shutdown process Apollo first checks that all parts of the system can indeed be <b concordion:assertEquals="HasBeenNotified()">stopped</b>.
-            If this is the case then Apollo <b concordion:assertEquals="HasShutdownStarted()">notifies</b> the user interface indicating that
+            During the shutdown process Apollo <b concordion:assertEquals="HasShutdownStarted()">notifies</b> the user interface indicating that
             the shutdown process has begon. This process should then run <b concordion:assertEquals="HasShutdownCompletedSuccessfully()">succesfully</b>.
         </p>
 

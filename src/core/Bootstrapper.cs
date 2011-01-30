@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Logging;
-using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
 using Apollo.Core.Utils;
@@ -97,7 +96,6 @@ namespace Apollo.Core
             {
                 builder.RegisterModule(new UtilsModule());
                 builder.RegisterModule(new KernelModule());
-                builder.RegisterModule(new MessagingModule());
                 builder.RegisterModule(new LoggerModule());
                 builder.RegisterModule(new ProjectModule());
                 builder.RegisterModule(new LicensingModule());
@@ -121,12 +119,7 @@ namespace Apollo.Core
         /// </returns>
         private static IKernel CreateKernel()
         {
-            var kernel = new Kernel(
-                s_Container.Resolve<ICommandContainer>(),
-                s_Container.Resolve<IHelpMessageProcessing>(),
-                s_Container.Resolve<IDnsNameConstants>());
-
-            return kernel;
+            return new Kernel();
         }
 
         /// <summary>
@@ -285,9 +278,7 @@ namespace Apollo.Core
         {
             var userInterface = new UserInterfaceService(
                 s_Container.Resolve<ICommandContainer>(),
-                s_Container.Resolve<IDnsNameConstants>(),
                 s_Container.Resolve<INotificationNameConstants>(),
-                s_Container.Resolve<IHelpMessageProcessing>(),
                 s_Container.Resolve<IValidationResultStorage>(),
                 StoreContainer);
 

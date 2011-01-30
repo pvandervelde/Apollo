@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 
@@ -18,7 +19,7 @@ namespace Apollo.Core
     /// public properties. You never know where the real object is so even property calls can
     /// take a long time.
     /// </design>
-    internal abstract class KernelService : INeedStartup
+    internal abstract class KernelService : INeedStartup, IHaveServiceDependencies
     {
         /// <summary>
         /// Stores the current startup state.
@@ -39,7 +40,7 @@ namespace Apollo.Core
         {
             EventHandler<StartupProgressEventArgs> local = StartupProgress;
             if (local != null)
-            { 
+            {
                 local(this, new StartupProgressEventArgs(progress, currentAction));
             }
         }
@@ -69,7 +70,10 @@ namespace Apollo.Core
         /// Provides derivative classes with a possibility to
         /// perform startup tasks.
         /// </summary>
-        protected abstract void StartService();
+        protected virtual void StartService()
+        { 
+            // Do nothing here. Derrivatives may override and implement this method.
+        }
 
         /// <summary>
         /// Stops the service.
@@ -96,7 +100,10 @@ namespace Apollo.Core
         /// Provides derivative classes with a possibility to
         /// perform shutdown tasks.
         /// </summary>
-        protected abstract void StopService();
+        protected virtual void StopService()
+        {
+            // Do nothing here. Derrivatives may override and implement this method.
+        }
 
         /// <summary>
         /// Gets a value indicating what the state of the object is regarding
@@ -187,7 +194,45 @@ namespace Apollo.Core
         {
             get
             {
-                return !IsNotStarted && !IsStarting && !IsStopping && !IsStopped;
+                return !IsNotStarted && !IsStarting && !IsStopping && !IsStopped && IsConnectedToAllDependencies;
+            }
+        }
+
+        /// <summary>
+        /// Returns a set of types indicating which services the current service
+        /// needs to be linked to in order to be functional.
+        /// </summary>
+        /// <returns>
+        ///     An <see cref="IEnumerable{Type}"/> which contains the types of services
+        ///     on which this service depends.
+        /// </returns>
+        public virtual IEnumerable<Type> ServicesToConnectTo()
+        {
+            return new Type[0];
+        }
+
+        /// <summary>
+        /// Provides one of the services on which the current service depends.
+        /// </summary>
+        /// <param name="dependency">The dependency service.</param>
+        public virtual void ConnectTo(KernelService dependency)
+        {
+            // Do nothing here ...
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is connected to all dependencies.
+        /// </summary>
+        /// <value>
+        ///     <see langword="true"/> if this instance is connected to all dependencies; otherwise, <see langword="false"/>.
+        /// </value>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+          Justification = "Documentation can start with a language keyword")]
+        public virtual bool IsConnectedToAllDependencies
+        {
+            get
+            {
+                return true;
             }
         }
     }

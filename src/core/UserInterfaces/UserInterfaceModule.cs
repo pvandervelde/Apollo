@@ -49,9 +49,6 @@ namespace Apollo.Core.UserInterfaces
             builder.Register(c => new NotificationNameConstants())
                 .As<INotificationNameConstants>();
 
-            builder.Register(c => new DnsNameConstants())
-                .As<IDnsNameConstants>();
-
             builder.Register(c => m_Owner)
                 .As<IUserInterfaceService>()
                 .ExternallyOwned();

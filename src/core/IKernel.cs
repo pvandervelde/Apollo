@@ -32,18 +32,6 @@ namespace Apollo.Core
         void Install(KernelService service);
 
         /// <summary>
-        /// Uninstalls the specified service.
-        /// </summary>
-        /// <remarks>
-        ///     Once a service is uninstalled it can no longer be started. It is effectively
-        ///     removed from the list of known services.
-        /// </remarks>
-        /// <param name="service">
-        ///     The service that needs to be uninstalled.
-        /// </param>
-        void Uninstall(KernelService service);
-
-        /// <summary>
         /// Initialized the kernel by allowing all the kernel services to 
         /// go through their initialization processes.
         /// </summary>
@@ -64,16 +52,6 @@ namespace Apollo.Core
         /// </para>
         /// </design>
         void Start();
-
-        /// <summary>
-        /// Determines whether the application can shutdown cleanly.
-        /// </summary>
-        /// <returns>
-        ///     <see langword="true"/> if the application can shutdown cleanly; otherwise, <see langword="false"/>.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        bool CanShutdown();
 
         /// <summary>
         /// Shuts the application down.

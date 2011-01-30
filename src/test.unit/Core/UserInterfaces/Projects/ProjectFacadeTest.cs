@@ -52,7 +52,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool eventRaised = false;
             facade.OnProjectNameUpdated += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnProjectChanges)facade).NameUpdated();
+            project.Raise(p => p.OnNameChanged += null, new ValueChangedEventArgs<string>("newName"));
             Assert.IsTrue(eventRaised);
         }
 
@@ -82,7 +82,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool eventRaised = false;
             facade.OnProjectSummaryUpdated += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnProjectChanges)facade).SummaryUpdated();
+            project.Raise(p => p.OnSummaryChanged += null, new ValueChangedEventArgs<string>("newSummary"));
             Assert.IsTrue(eventRaised);
         }
 
@@ -96,7 +96,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool eventRaised = false;
             facade.OnDatasetCreated += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnProjectChanges)facade).DatasetCreated();
+            project.Raise(p => p.OnDatasetCreated += null, EventArgs.Empty);
             Assert.IsTrue(eventRaised);
         }
 
@@ -110,7 +110,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool eventRaised = false;
             facade.OnDatasetDeleted += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnProjectChanges)facade).DatasetDeleted();
+            project.Raise(p => p.OnDatasetDeleted += null, EventArgs.Empty);
             Assert.IsTrue(eventRaised);
         }
 
@@ -124,7 +124,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             bool eventRaised = false;
             facade.OnDatasetUpdated += (s, e) => { eventRaised = true; };
 
-            ((INotifyOnProjectChanges)facade).DatasetUpdated();
+            project.Raise(p => p.OnDatasetUpdated += null, EventArgs.Empty);
             Assert.IsTrue(eventRaised);
         }
 

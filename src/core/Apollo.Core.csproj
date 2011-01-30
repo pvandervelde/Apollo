@@ -10,12 +10,13 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Apollo.Core</RootNamespace>
     <AssemblyName>Apollo.Core</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PlatformTarget>x86</PlatformTarget>
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -99,12 +100,6 @@
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="System.CoreEx">
-      <HintPath>..\..\lib\taskparallel\System.CoreEx.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Threading">
-      <HintPath>..\..\lib\taskparallel\System.Threading.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -195,51 +190,35 @@
       <Link>Utils\Licensing\ValidationSequenceGenerator.cs</Link>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ApplicationShutdownCapabilityRequestMessage.cs" />
-    <Compile Include="ApplicationShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ApplicationStartingProgressMark.cs" />
-    <Compile Include="ApplicationStartupCompleteMessage.cs" />
+    <Compile Include="ApplicationStartupEventArgs.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
-    <Compile Include="Projects\CreateNewProjectMessage.cs" />
+    <Compile Include="Projects\IOwnedProxyDataset.cs" />
+    <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
     <Compile Include="Projects\IBuildProjects.cs" />
-    <Compile Include="Projects\INotifyOnDatasetChange.cs" />
-    <Compile Include="Projects\INotifyOnProjectChanges.cs" />
     <Compile Include="Projects\IProject.cs" />
     <Compile Include="Projects\IProxyDataset.cs" />
-    <Compile Include="Projects\LoadProjectMessage.cs" />
     <Compile Include="Projects\Project.cs" />
     <Compile Include="Projects\Project.DatasetProxy.cs" />
     <Compile Include="Projects\Project.Datasets.cs" />
     <Compile Include="Projects\ProjectBuilder.cs" />
     <Compile Include="Projects\ProjectModule.cs" />
-    <Compile Include="Projects\ProjectRequestMessage.cs" />
-    <Compile Include="Projects\ProjectRequestResponseMessage.cs" />
     <Compile Include="Projects\ProjectService.cs" />
-    <Compile Include="Projects\ProjectService.Messages.cs" />
-    <Compile Include="Projects\ProjectService.Projects.cs" />
     <Compile Include="Projects\ProxyCommandSet.cs" />
     <Compile Include="Projects\UnknownDatasetException.cs" />
-    <Compile Include="Projects\UnloadProjectMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
-    <Compile Include="CheckApplicationCanShutdownCommand.cs" />
-    <Compile Include="CheckApplicationCanShutdownContext.cs" />
-    <Compile Include="CheckServicesCanShutdownCommand.cs" />
-    <Compile Include="CheckServicesCanShutdownContext.cs" />
     <Compile Include="CoreLoadingProgressMark.cs" />
-    <Compile Include="CoreProxy.Messages.cs" />
     <Compile Include="CoreStartingProgressMark.cs" />
-    <Compile Include="DnsNameConstants.cs" />
-    <Compile Include="IDnsNameConstants.cs" />
     <Compile Include="IHaveServiceDependencies.cs" />
     <Compile Include="IKernel.cs" />
     <Compile Include="INeedStartup.cs" />
@@ -247,7 +226,6 @@
     <Compile Include="CoreProxy.cs" />
     <Compile Include="Kernel.ConnectionMap.cs" />
     <Compile Include="Kernel.cs" />
-    <Compile Include="Kernel.Services.cs" />
     <Compile Include="Kernel.ServiceVertex.cs" />
     <Compile Include="KernelModule.cs" />
     <Compile Include="KernelNotInInstallReadyStateException.cs" />
@@ -266,36 +244,11 @@
     <Compile Include="Logging\Logger.cs" />
     <Compile Include="Logging\LoggerConfiguration.cs" />
     <Compile Include="Logging\LoggerModule.cs" />
-    <Compile Include="Logging\LogEntryRequestMessage.cs" />
-    <Compile Include="Logging\LogLevelChangeRequestMessage.cs" />
     <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Logging\LogSink.cs" />
-    <Compile Include="Logging\LogSink.Logging.cs" />
-    <Compile Include="Logging\LogSink.Messages.cs" />
     <Compile Include="Logging\LogType.cs" />
-    <Compile Include="LogMessageForKernelCommand.cs" />
-    <Compile Include="LogMessageForKernelContext.cs" />
-    <Compile Include="MessageEnabledKernelService.cs" />
-    <Compile Include="Messaging\DnsName.cs" />
-    <Compile Include="Messaging\DuplicateDnsNameException.cs" />
-    <Compile Include="Messaging\IDnsNameObject.cs" />
-    <Compile Include="Messaging\IHelpMessageProcessing.cs" />
-    <Compile Include="Messaging\IMessagePipeline.cs" />
-    <Compile Include="Messaging\IProcessMessages.cs" />
-    <Compile Include="Messaging\ISendMessages.cs" />
-    <Compile Include="Messaging\KernelMessage.cs" />
-    <Compile Include="Messaging\MessageBody.cs" />
-    <Compile Include="Messaging\MessageHeader.cs" />
-    <Compile Include="Messaging\MessageId.cs" />
-    <Compile Include="Messaging\MessagePipeline.cs" />
-    <Compile Include="Messaging\MessageProcessingAssistance.cs" />
-    <Compile Include="Messaging\MessagingModule.cs" />
-    <Compile Include="Messaging\MissingPipelineException.cs" />
-    <Compile Include="Messaging\UnknownDnsNameException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="NotificationNameConstants.cs" />
-    <Compile Include="PrivateBinPathOption.cs" />
-    <Compile Include="PrivateBinPathRequirementsAttribute.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -308,20 +261,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
     </Compile>
-    <Compile Include="SendMessageForKernelCommand.cs" />
-    <Compile Include="SendMessageForKernelContext.cs" />
-    <Compile Include="SendMessageWithoutResponse.cs" />
-    <Compile Include="SendMessageWithResponse.cs" />
-    <Compile Include="ServiceShutdownCapabilityRequestMessage.cs" />
-    <Compile Include="ServiceShutdownCapabilityResponseMessage.cs" />
     <Compile Include="ShutdownApplicationCommand.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceException.cs" />
     <Compile Include="ServiceCannotDependOnItselfException.cs" />
     <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
     <Compile Include="ShutdownApplicationContext.cs" />
     <Compile Include="ShutdownCapabilityArguments.cs" />
-    <Compile Include="ShutdownRequestMessage.cs" />
-    <Compile Include="ShutdownResponseMessage.cs" />
     <Compile Include="StartupState.cs" />
     <Compile Include="UnknownKernelServiceTypeException.cs" />
     <Compile Include="UserInterfaces\Application\ApplicationFacade.cs" />
@@ -355,7 +300,6 @@
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
-    <Compile Include="UserInterfaces\UserInterfaceService.Messages.cs" />
     <Compile Include="Utils\ApplicationConstants.cs" />
     <Compile Include="Utils\FileConstants.cs" />
     <Compile Include="Utils\ILoadOnApplicationStartup.cs" />

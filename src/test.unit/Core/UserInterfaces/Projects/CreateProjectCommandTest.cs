@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Messaging;
 using Apollo.Core.Projects;
-using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
@@ -23,15 +22,11 @@ namespace Apollo.Core.UserInterfaces.Projects
         [Description("Checks that the command can be invoked successfully.")]
         public void Invoke()
         {
-            var sender = new DnsName("sender");
-
-            SendMessageWithResponse function = (recipient, body, id) =>
+            Func<IProject> function = () =>
             {
-                Assert.AreSame(sender, recipient);
-                Assert.IsInstanceOfType(typeof(CreateNewProjectMessage), body);
-                return new Future<MessageBody>(new WaitPair<MessageBody>(new ProjectRequestResponseMessage(new Mock<IProject>().Object)));
+                return new Mock<IProject>().Object;
             };
-            var command = new CreateProjectCommand(sender, function);
+            var command = new CreateProjectCommand(function);
 
             var context = new CreateProjectContext();
             command.Invoke(context);

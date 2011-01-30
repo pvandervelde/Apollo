@@ -10,13 +10,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Apollo</RootNamespace>
     <AssemblyName>Test.Unit</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PlatformTarget>x86</PlatformTarget>
     <StartupObject />
     <SignAssembly>true</SignAssembly>
     <DelaySign>false</DelaySign>
     <AssemblyOriginatorKeyFile>$(SOFTWARE_SIGNING_KEY_PATH)</AssemblyOriginatorKeyFile>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -27,6 +28,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +37,7 @@
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -63,6 +66,7 @@
     <DebugType>full</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
     <OutputPath>..\..\bin\build\x64\Release\</OutputPath>
@@ -71,6 +75,7 @@
     <DebugType>pdbonly</DebugType>
     <PlatformTarget>x64</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
+    <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.1.7.720, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -125,12 +130,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Core\ApplicationShutdownCapabilityRequestMessageTest.cs" />
-    <Compile Include="Core\ApplicationShutdownCapabilityResponseMessageTest.cs" />
-    <Compile Include="Core\ApplicationStartupCompleteMessageTest.cs" />
     <Compile Include="Core\CannotUninstallNonequivalentServiceExceptionTest.cs" />
-    <Compile Include="Core\CheckApplicationCanShutdownCommandTest.cs" />
-    <Compile Include="Core\CheckServiceCanShutdownCommandTest.cs" />
     <Compile Include="Core\CoreProxyTest.cs" />
     <Compile Include="Core\KernelNotInInstallReadyStateExceptionTest.cs" />
     <Compile Include="Core\KernelServiceStartupFailedExceptionTest.cs" />
@@ -138,22 +138,10 @@
     <Compile Include="Core\KernelTest.cs" />
     <Compile Include="Core\Logging\CommandLogTemplateTest.cs" />
     <Compile Include="Core\Logging\DebugLogTemplateTest.cs" />
-    <Compile Include="Core\Logging\LogEntryRequestMessageTest.cs" />
     <Compile Include="Core\Logging\LoggerConfigurationTest.cs" />
     <Compile Include="Core\Logging\LoggerTest.cs" />
-    <Compile Include="Core\Logging\LogLevelChangeRequestMessageTest.cs" />
     <Compile Include="Core\Logging\LogMessageTest.cs" />
     <Compile Include="Core\Logging\LogSinkTest.cs" />
-    <Compile Include="Core\LogMessageForKernelCommandTest.cs" />
-    <Compile Include="Core\Messaging\DnsNameTest.cs" />
-    <Compile Include="Core\Messaging\DuplicateDnsNameExceptionTest.cs" />
-    <Compile Include="Core\Messaging\KernelMessageTest.cs" />
-    <Compile Include="Core\Messaging\MessageHeaderTest.cs" />
-    <Compile Include="Core\Messaging\MessageIdTest.cs" />
-    <Compile Include="Core\Messaging\MessagePipelineTest.cs" />
-    <Compile Include="Core\Messaging\MessageProcessingAssistenceTest.cs" />
-    <Compile Include="Core\Messaging\MissingPipelineExceptionTest.cs" />
-    <Compile Include="Core\Messaging\UnknownDnsNameExceptionTest.cs" />
     <Compile Include="Core\MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="Core\NotificationNameTest.cs" />
     <Compile Include="Core\Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
@@ -161,30 +149,20 @@
     <Compile Include="Core\Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Core\Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Core\Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
-    <Compile Include="Core\Projects\CreateNewProjectMessageTest.cs" />
     <Compile Include="Core\Projects\DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="Core\Projects\DatasetIdTest.cs" />
     <Compile Include="Core\Projects\DatasetLoadEventArgsTest.cs" />
     <Compile Include="Core\Projects\DatasetOfflineInformationTest.cs" />
     <Compile Include="Core\Projects\DatasetProxyTest.cs" />
     <Compile Include="Core\Projects\DatasetUnloadEventArgsTest.cs" />
-    <Compile Include="Core\Projects\LoadProjectMessageTest.cs" />
     <Compile Include="Core\Projects\ProjectBuilderTest.cs" />
-    <Compile Include="Core\Projects\ProjectRequestMessageTest.cs" />
-    <Compile Include="Core\Projects\ProjectRequestResponseMessageTest.cs" />
     <Compile Include="Core\Projects\ProjectServiceTest.cs" />
     <Compile Include="Core\Projects\ProjectTest.cs" />
     <Compile Include="Core\Projects\UnknownDatasetExceptionTest.cs" />
-    <Compile Include="Core\Projects\UnloadProjectMessageTest.cs" />
-    <Compile Include="Core\SendMessageForKernelCommandTest.cs" />
     <Compile Include="Core\ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="Core\ServiceCannotDependOnItselfExceptionTest.cs" />
-    <Compile Include="Core\ServiceShutdownCapabilityRequestMessageTest.cs" />
-    <Compile Include="Core\ServiceShutdownCapabilityResponseMessageTest.cs" />
     <Compile Include="Core\ServiceTypeAlreadyInstalledExceptionTest.cs" />
     <Compile Include="Core\ShutdownApplicationCommandTest.cs" />
-    <Compile Include="Core\ShutdownRequestMessageTest.cs" />
-    <Compile Include="Core\ShutdownResponseMessageTest.cs" />
     <Compile Include="Core\StartupProgressEventArgsTest.cs" />
     <Compile Include="Core\UnknownKernelServiceTypeExceptionTest.cs" />
     <Compile Include="Core\UserInterfaces\Application\ApplicationFacadeTest.cs" />
@@ -216,7 +194,6 @@
     <Compile Include="Utils\CurrentProgressMarkNotSetExceptionTest.cs" />
     <Compile Include="Utils\FileConstantsTest.cs" />
     <Compile Include="Utils\Fusion\FusionHelperTest.cs" />
-    <Compile Include="Utils\FutureTest.cs" />
     <Compile Include="Utils\IdTest.cs" />
     <Compile Include="Utils\Licensing\ChecksumTest.cs" />
     <Compile Include="Utils\Licensing\ChecksumTest.HashCalculation.cs">
