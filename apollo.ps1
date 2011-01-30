@@ -808,10 +808,7 @@ task buildPackage -depends buildBinaries -action{
     # Copy the dependencies
     $lokadFile = 'Lokad.Shared.dll'
     Copy-Item (Join-Path $dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
-    
-    $systemThreading = 'System.Threading.dll'
-    Copy-Item (Join-Path $dirOutput $systemThreading) -Destination (Join-Path $dirTempZip $systemThreading)  
-    
+   
     $autofacFile = 'Autofac.dll'
     Copy-Item (Join-Path $dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
     
@@ -855,12 +852,12 @@ task buildPackage -depends buildBinaries -action{
     Copy-Item (Join-Path $dirOutput $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
     
     # zip them
-    # Name the zip: Apollo.Core_<DATE>
-    $output = Join-Path $dirDeploy ("Apollo.Core_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
+    # Name the zip: Apollo_<DATE>
+    $output = Join-Path $dirDeploy ("Apollo_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
 
     "Compressing..."
 
-    # zip the hudson temp dir
+    # zip the temp dir
     $7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
     & $7zipExe a -tzip $output (Get-ChildItem $dirTempZip | foreach { $_.FullName })
     if ($LastExitCode -ne 0)
