@@ -8,7 +8,7 @@ using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// An exception thrown when the user tries to create a dataset without specifying the

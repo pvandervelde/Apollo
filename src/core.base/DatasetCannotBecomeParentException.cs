@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// An exception thrown when a new dataset is requested as a child of another 

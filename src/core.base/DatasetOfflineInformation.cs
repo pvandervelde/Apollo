@@ -10,7 +10,7 @@ using Apollo.Core.Base.Properties;
 using Apollo.Utils;
 using Lokad;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Stores persistent information about a dataset. This information will be loaded

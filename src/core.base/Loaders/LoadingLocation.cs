@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Indicates where a dataset can be loaded.

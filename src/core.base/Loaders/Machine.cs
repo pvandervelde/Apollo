@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Stores information about a machine.

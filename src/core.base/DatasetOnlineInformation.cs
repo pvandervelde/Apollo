@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Stores non-persistent information about a dataset. This includes information

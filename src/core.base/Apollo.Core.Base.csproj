@@ -59,9 +59,9 @@
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="ICanClose.cs" />
-    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
-    <Compile Include="Projects\DatasetCreationInformation.cs" />
-    <Compile Include="Projects\MockDatasetDistributor.cs" />
+    <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
+    <Compile Include="DatasetCreationInformation.cs" />
+    <Compile Include="Loaders\MockDatasetDistributor.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -71,17 +71,17 @@
       <Link>Properties\App.snk</Link>
     </None>
     <Compile Include="Projects\DatasetCannotBecomeParentException.cs" />
-    <Compile Include="Projects\DatasetCreator.cs" />
-    <Compile Include="Projects\DatasetId.cs" />
-    <Compile Include="Projects\DatasetOfflineInformation.cs" />
-    <Compile Include="Projects\DatasetOnlineInformation.cs" />
-    <Compile Include="Projects\DatasetRequest.cs" />
-    <Compile Include="Projects\DistributionPlan.cs" />
-    <Compile Include="Projects\ExpectedDatasetLoad.cs" />
-    <Compile Include="Projects\IHelpDistributingDatasets.cs" />
-    <Compile Include="Projects\LoadingLocation.cs" />
-    <Compile Include="Projects\Machine.cs" />
-    <Compile Include="Projects\MachineDistributionRange.cs" />
+    <Compile Include="DatasetCreator.cs" />
+    <Compile Include="DatasetId.cs" />
+    <Compile Include="DatasetOfflineInformation.cs" />
+    <Compile Include="DatasetOnlineInformation.cs" />
+    <Compile Include="Loaders\DatasetRequest.cs" />
+    <Compile Include="Loaders\DistributionPlan.cs" />
+    <Compile Include="Loaders\ExpectedDatasetLoad.cs" />
+    <Compile Include="Loaders\IHelpDistributingDatasets.cs" />
+    <Compile Include="Loaders\LoadingLocation.cs" />
+    <Compile Include="Loaders\Machine.cs" />
+    <Compile Include="Loaders\MachineDistributionRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -95,6 +95,9 @@
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utils</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Communication\" />
   </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>

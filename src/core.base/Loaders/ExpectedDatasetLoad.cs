@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Describes the expected load a dataset will put on a given machine.

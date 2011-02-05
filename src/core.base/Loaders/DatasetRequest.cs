@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Stores the information that describes a loading request for a dataset.

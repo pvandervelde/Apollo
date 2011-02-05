@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Defines who requested the creation of a specific dataset.

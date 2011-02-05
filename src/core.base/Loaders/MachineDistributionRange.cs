@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Defines the number of machines over which a dataset can be distributed.

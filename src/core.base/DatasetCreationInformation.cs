@@ -7,7 +7,7 @@
 using System;
 using Apollo.Utils;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Stores information used in the creation of a new dataset.

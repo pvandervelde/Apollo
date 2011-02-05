@@ -20,7 +20,7 @@ using Apollo.Utils;
    Target = "Apollo.Core.Base.Projects.DatasetId.#.cctor()",
    Justification = "Initializing the DatasetId.s_LastId member to be explicit about the value required.")]
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Defines an ID number for datasets.

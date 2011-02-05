@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Apollo.Core.Base.Projects
+namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Defines the plan for distributing a dataset across one or more machines.
