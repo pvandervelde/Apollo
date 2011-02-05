@@ -70,7 +70,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-    <Compile Include="Projects\DatasetCannotBecomeParentException.cs" />
+    <Compile Include="DatasetCannotBecomeParentException.cs" />
     <Compile Include="DatasetCreator.cs" />
     <Compile Include="DatasetId.cs" />
     <Compile Include="DatasetOfflineInformation.cs" />

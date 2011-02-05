@@ -7,12 +7,12 @@
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.ServiceProcess;
-using Apollo.Core.LoaderService.Properties;
+using Apollo.Core.BatchService.Properties;
 
-namespace Apollo.Core.LoaderService
+namespace Apollo.Core.BatchService
 {
     /// <summary>
-    /// The installer for the <see cref="WindowsService"/>.
+    /// The installer for the <see cref="BatchProcessor"/>.
     /// </summary>
     /// <design>
     /// Note that this class is only meant to be used for local installs used
@@ -20,12 +20,12 @@ namespace Apollo.Core.LoaderService
     /// an install framework, e.g. WiX.
     /// </design>
     [RunInstaller(true)]
-    internal sealed class WindowsServiceInstaller : Installer
+    internal sealed class BatchProcessorInstaller : Installer
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WindowsServiceInstaller"/> class.
+        /// Initializes a new instance of the <see cref="BatchProcessorInstaller"/> class.
         /// </summary>
-        public WindowsServiceInstaller()
+        public BatchProcessorInstaller()
         {
             var serviceProcessInstaller = new ServiceProcessInstaller();
             var serviceInstaller = new ServiceInstaller();
@@ -41,7 +41,7 @@ namespace Apollo.Core.LoaderService
 
             // This must be identical to the WindowsService.ServiceBase name
             // set in the constructor of WindowsService.cs
-            serviceInstaller.ServiceName = WindowsService.Name;
+            serviceInstaller.ServiceName = BatchProcessor.Name;
 
             this.Installers.Add(serviceProcessInstaller);
             this.Installers.Add(serviceInstaller);

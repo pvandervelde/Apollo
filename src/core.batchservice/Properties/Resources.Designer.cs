@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Apollo.Core.LoaderService.Properties {
+namespace Apollo.Core.BatchService.Properties {
     using System;
     
     

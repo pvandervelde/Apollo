@@ -7,12 +7,12 @@
 using System.Diagnostics.CodeAnalysis;
 using System.ServiceProcess;
 
-namespace Apollo.Core.LoaderService
+namespace Apollo.Core.BatchService
 {
     /// <summary>
     /// Defines the service methods for the dataset loader service.
     /// </summary>
-    internal sealed class WindowsService : ServiceBase
+    internal sealed class BatchProcessor : ServiceBase
     {
         /// <summary>
         /// The name of the service.
@@ -26,13 +26,13 @@ namespace Apollo.Core.LoaderService
             Justification = "Access modifiers should not be declared on the entry point for a command line application. See FxCop.")]
         static void Main()
         {
-            ServiceBase.Run(new WindowsService());
+            ServiceBase.Run(new BatchProcessor());
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="WindowsService"/> class.
+        /// Initializes a new instance of the <see cref="BatchProcessor"/> class.
         /// </summary>
-        public WindowsService()
+        public BatchProcessor()
         {
             CanHandlePowerEvent = true;
             CanHandleSessionChangeEvent = false;

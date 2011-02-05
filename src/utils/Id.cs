@@ -232,7 +232,7 @@ namespace Apollo.Utils
         {
             // We don't strictly need to use the ReferenceEquals method but
             // it seems more consistent to use it.
-            if (ReferenceEquals(obj,null))
+            if (ReferenceEquals(obj, null))
             {
                 return 1;
             }

@@ -25,7 +25,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit", "test.unit\Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.LoaderApplication", "core.loaderapplication\Apollo.Core.LoaderApplication.csproj", "{985E9AA4-D2A1-432F-B3B7-17E35DCCB61B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.LoaderService", "core.loaderservice\Apollo.Core.LoaderService.csproj", "{B3BA9DF3-7259-449A-8939-E44B9D3E90C9}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.BatchService", "core.batchservice\Apollo.Core.BatchService.csproj", "{B3BA9DF3-7259-449A-8939-E44B9D3E90C9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
