@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows.Forms;
 using Apollo.Utils.Applications;
 
-namespace Apollo.Core.Dataset
+namespace Apollo.Core.LoaderApplication
 {
     /// <summary>
     /// The main entry point for the application.
@@ -22,7 +22,7 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "dataset.error.log";
+        private const string s_DefaultErrorFileName = "loaderapplication.error.log";
 
         /// <summary>
         /// The main entry point for the dataset application.
@@ -42,9 +42,9 @@ namespace Apollo.Core.Dataset
                 () =>
                 {
                     var context = new ApplicationContext()
-                        {
-                            Tag = args
-                        };
+                    {
+                        Tag = args
+                    };
 
                     // To stop the application from running use the ApplicationContext
                     // and call context.ExitThread();

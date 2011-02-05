@@ -60,9 +60,7 @@ namespace Apollo.Core.Base.Projects
         /// <returns>
         /// The next unused ID value.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "This should really be a method because it has side effects.")]
-        private static int GetNextValue()
+        private static int NextIdValue()
         {
             var current = Interlocked.Increment(ref s_LastId);
             return current;
@@ -72,7 +70,7 @@ namespace Apollo.Core.Base.Projects
         /// Initializes a new instance of the <see cref="DatasetId"/> class.
         /// </summary>
         public DatasetId()
-            : this(GetNextValue())
+            : this(NextIdValue())
         { 
         }
 

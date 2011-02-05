@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Utils.Fusion
+namespace Apollo.Utils
 {
     /// <summary>
     /// Provides constants for use with AssemblyName objects.

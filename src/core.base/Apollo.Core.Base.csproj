@@ -21,20 +21,20 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\build\Debug\Apollo.Core.Base.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Debug\Apollo.Core.Base.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Release\</OutputPath>
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\build\Release\Apollo.Core.Base.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Release\Apollo.Core.Base.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">

@@ -23,21 +23,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\bin\build\Debug\Apollo.Utils.SrcOnly.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Debug\Apollo.Utils.SrcOnly.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\build\Release\Apollo.Utils.SrcOnly.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Release\Apollo.Utils.SrcOnly.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -67,7 +67,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|x86'">
     <OutputPath>..\..\bin\build\x86\Deploy\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>..\..\bin\build\Release\Apollo.Utils.SrcOnly.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Deploy\Apollo.Utils.SrcOnly.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
@@ -78,7 +78,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Deploy|AnyCPU'">
     <OutputPath>..\..\bin\build\Deploy\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <DocumentationFile>..\..\bin\build\Release\Apollo.Utils.SrcOnly.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\Deploy\Apollo.Utils.SrcOnly.XML</DocumentationFile>
     <Optimize>true</Optimize>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DebugType>pdbonly</DebugType>
@@ -96,9 +96,11 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
+    <Compile Include="Applications\EventType.cs" />
+    <Compile Include="Applications\CommandLineProgram.cs" />
     <Compile Include="ErrorCodes.cs" />
-    <Compile Include="Fusion\AssemblyNameElements.cs" />
-    <Compile Include="Fusion\FusionHelper.cs" />
+    <Compile Include="AssemblyNameElements.cs" />
+    <Compile Include="FusionHelper.cs" />
     <Compile Include="Licensing\Checksum.cs" />
     <Compile Include="Licensing\Checksum.HashCalculation.cs">
       <AutoGen>True</AutoGen>

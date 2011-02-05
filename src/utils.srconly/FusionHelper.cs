@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Security;
 using Lokad;
 
-namespace Apollo.Utils.Fusion
+namespace Apollo.Utils
 {
     /// <summary>
     /// Contains methods for assisting with the assembly loading process.

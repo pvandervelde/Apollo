@@ -16,7 +16,6 @@ using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Apollo.Utils.ExceptionHandling;
-using Apollo.Utils.Fusion;
 using Autofac;
 using Autofac.Core;
 using AutofacContrib.Startable;

@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using Apollo.Utils.Fusion;
 using MbUnit.Framework;
 using Moq;
 

@@ -23,7 +23,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -33,7 +33,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Release\</OutputPath>
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -193,7 +193,7 @@
     <Compile Include="Utils\Commands\UnknownCommandExceptionTest.cs" />
     <Compile Include="Utils\CurrentProgressMarkNotSetExceptionTest.cs" />
     <Compile Include="Utils\FileConstantsTest.cs" />
-    <Compile Include="Utils\Fusion\FusionHelperTest.cs" />
+    <Compile Include="Utils\FusionHelperTest.cs" />
     <Compile Include="Utils\IdTest.cs" />
     <Compile Include="Utils\Licensing\ChecksumTest.cs" />
     <Compile Include="Utils\Licensing\ChecksumTest.HashCalculation.cs">

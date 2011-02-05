@@ -22,21 +22,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\bin\build\Debug\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <DocumentationFile>..\..\bin\build\Debug\Apollo.Core.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Debug\Apollo.Core.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\bin\build\Release\</OutputPath>
+    <OutputPath>..\..\bin\build\x86\Release\</OutputPath>
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>..\..\bin\build\Release\Apollo.Core.XML</DocumentationFile>
+    <DocumentationFile>..\..\bin\build\x86\Release\Apollo.Core.XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
@@ -103,14 +103,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utils.srconly\AssemblyNameElements.cs">
+      <Link>Utils\AssemblyNameElements.cs</Link>
+    </Compile>
     <Compile Include="..\utils.srconly\ErrorCodes.cs">
       <Link>Utils\ErrorCodes.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Fusion\AssemblyNameElements.cs">
-      <Link>Utils\Fusion\AssemblyNameElements.cs</Link>
-    </Compile>
-    <Compile Include="..\utils.srconly\Fusion\FusionHelper.cs">
-      <Link>Utils\Fusion\FusionHelper.cs</Link>
+    <Compile Include="..\utils.srconly\FusionHelper.cs">
+      <Link>Utils\FusionHelper.cs</Link>
     </Compile>
     <Compile Include="..\utils.srconly\Licensing\Checksum.cs">
       <Link>Utils\Licensing\Checksum.cs</Link>
