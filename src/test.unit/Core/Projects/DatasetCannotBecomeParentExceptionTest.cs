@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 

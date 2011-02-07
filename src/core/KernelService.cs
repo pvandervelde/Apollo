@@ -54,8 +54,6 @@ namespace Apollo.Core
             try
             {
                 StartService();
-
-                // If we get here then we have started successfully
                 m_StartupState = StartupState.Started;
             }
             catch (Exception)
@@ -84,8 +82,6 @@ namespace Apollo.Core
             try
             {
                 StopService();
-
-                // If we get here then we have started successfully
                 m_StartupState = StartupState.Stopped;
             }
             catch (Exception)

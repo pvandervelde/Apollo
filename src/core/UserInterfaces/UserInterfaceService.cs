@@ -290,12 +290,10 @@ namespace Apollo.Core.UserInterfaces
             }
             catch (Exception e)
             {
-                // Log the fact that we failed
                 LogMessage(
                     LevelToLog.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, e));
 
-                // Now get the hell out of here.
                 throw;
             }
         }
@@ -341,12 +339,10 @@ namespace Apollo.Core.UserInterfaces
             }
             catch (Exception e)
             {
-                // Log the fact that we failed
                 LogMessage(
                     LevelToLog.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 
-                // Now get the hell out of here.
                 throw;
             }
         }

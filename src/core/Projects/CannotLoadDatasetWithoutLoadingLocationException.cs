@@ -6,7 +6,8 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
 
 namespace Apollo.Core.Projects

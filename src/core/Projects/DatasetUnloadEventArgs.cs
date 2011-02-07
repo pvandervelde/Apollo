@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 using Lokad;
 
 namespace Apollo.Core.Projects

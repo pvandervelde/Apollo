@@ -124,13 +124,11 @@ namespace Apollo.Utils.Licensing
 #endif
             }
 
-            // Store all the sequences in a sorted order
             foreach (var sequence in m_Sequences)
             {
                 ScheduleVerification(sequence.StartDate, sequence);
             }
 
-            // Start the validation
             m_ValidationTimer.Start();
         }
 
@@ -165,7 +163,6 @@ namespace Apollo.Utils.Licensing
 
             try
             {
-                // Indicate that we're still alive
                 m_OnIsAlive(now);
             }
             catch (Exception)
@@ -209,7 +206,6 @@ namespace Apollo.Utils.Licensing
                         ScheduleVerification(now, sequence);
                     }
 
-                    // Reset the failed verification count
                     sequentialFailedValidationCount = 0;
                 }
                 catch (Exception)
@@ -233,18 +229,14 @@ namespace Apollo.Utils.Licensing
 #endif
                     }
 
-                    // We simply leave the current item where it is and move on to the next one
                     index++;
                 }
 
-                // If we have handled all verifications then we simply wait for the next 
-                // validation sequence.
                 if (index >= m_VerificationOrder.Count)
                 {
                     break;
                 }
 
-                // Get the next verification time
                 nextValidationTime = m_VerificationOrder.Keys[index];
             }
         }
@@ -254,10 +246,8 @@ namespace Apollo.Utils.Licensing
         /// </summary>
         public void Dispose()
         {
-            // Stop the timer
             m_ValidationTimer.Stop();
 
-            // and then dispose of the timer
             IDisposable disposable = m_ValidationTimer as IDisposable;
             if (disposable != null)
             {

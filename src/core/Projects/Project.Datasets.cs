@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Loaders;
 using QuickGraph;
 
 namespace Apollo.Core.Projects
@@ -141,11 +142,8 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
             }
 
-            // First create the dataset
             var id = new DatasetId();
             var newDataset = new DatasetOfflineInformation(id, newChild);
-
-            // Store the datset
             m_Datasets.Add(id, newDataset);
 
             // When adding a new dataset there is no way we can create cycles because
@@ -196,7 +194,6 @@ namespace Apollo.Core.Projects
 
             if (!IsValid(dataset))
             {
-                // The dataset isn't valid so that means we don't have it.
                 return;
             }
 
@@ -227,7 +224,6 @@ namespace Apollo.Core.Projects
                 }
             }
 
-            // Delete all the datasets
             while (datasetsToDelete.Count > 0)
             {
                 var datasetToDelete = datasetsToDelete.Pop();
@@ -243,7 +239,6 @@ namespace Apollo.Core.Projects
                     proxy = m_DatasetProxies[datasetToDelete];
                 }
 
-                // Delete the nodes from the graph
                 m_Graph.RemoveVertex(datasetToDelete);
                 m_DatasetProxies.Remove(datasetToDelete);
                 m_Datasets.Remove(datasetToDelete);

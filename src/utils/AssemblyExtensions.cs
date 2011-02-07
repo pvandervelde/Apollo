@@ -58,8 +58,6 @@ namespace Apollo.Utils
             }
 
             var assemblyName = assembly.GetName();
-
-            // get the public key blob
             byte[] publicKey = assemblyName.GetPublicKey();
             if (publicKey == null || publicKey.Length == 0)
             {

@@ -56,13 +56,11 @@ namespace Apollo.ProjectExplorer.Events.Listeners
                 }
             }
 
-            // Resolve the presenter and view
             var presenter = (IPresenter)Container.Resolve(request.PresenterType);
             var view = Container.Resolve(presenter.ViewType);
             presenter.Initialize(view, request.Parameter);
             RegionManager.SetRegionManager((DependencyObject) view, regionManager);
 
-            // Show the view
             var viewWindow = view as Window;
             if (viewWindow != null)
             {

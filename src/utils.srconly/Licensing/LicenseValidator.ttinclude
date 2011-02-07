@@ -133,7 +133,6 @@ private void WriteValidationText(string nextExpiration)
 {
     string lastResultVariable = "lastResult";
 #>
-            // Check if the cache has a valid result
             var <#= lastResultVariable #> = m_Cache.LatestResult;
 
             // Define the maximum amount of time that we allow the generation time to be
@@ -143,7 +142,6 @@ private void WriteValidationText(string nextExpiration)
             // if the validation is more than x seconds into the future we fail it
             if (<#= lastResultVariable #>.Generated > m_Now().Add(maxFutureTime))
             {
-                // Invalidate the cache
                 try
                 {
                     m_Cache.Invalidate(<#= nextExpiration #>);

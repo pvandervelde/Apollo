@@ -60,9 +60,7 @@ namespace Apollo.Utils
         {
             Debug.Assert(!string.IsNullOrEmpty(assemblyFullName), "The assembly full name should not be empty.");
 
-            // We will assume that the name is fully qualified if there is a comma in the file name.
-            // If there is a comma in the file name it is relatively safe to assume that the file name is NOT
-            // a qualified assembly file path so it will probably be a fully qualified assembly name.
+            // Assume that assembly file paths do not normally have commas in them
             return assemblyFullName.Contains(",");
         }
 
@@ -104,15 +102,13 @@ namespace Apollo.Utils
                 return false;
             }
 
-            // The path exists so there is a file with the specific file name. This is probably
-            // an assembly.
             if ((!string.IsNullOrEmpty(version)) || (!string.IsNullOrEmpty(culture)) || (!string.IsNullOrEmpty(publicKey)))
             {
                 AssemblyName assemblyName;
                 try
                 {
                     // Load the assembly name but without loading the assembly file into the AppDomain.
-                    assemblyName = AssemblyName.GetAssemblyName(filePath); // ASSERT?
+                    assemblyName = AssemblyName.GetAssemblyName(filePath);
                 }
                 catch (ArgumentException)
                 {
@@ -264,8 +260,6 @@ namespace Apollo.Utils
         /// </returns>
         public Assembly LocateAssemblyOnAssemblyLoadFailure(object sender, ResolveEventArgs args)
         {
-            // This handler is called only when the common language runtime tries to bind to 
-            // an assembly and fails to locate the assembly.
             return LocateAssembly(args.Name);
         }
 
@@ -282,7 +276,7 @@ namespace Apollo.Utils
             Debug.Assert(assemblyFullName.Length != 0, "Expected a non-empty assembly name string.");
 
             // It is not possible to use the AssemblyName class because that attempts to load the 
-            // assembly. Obviously we're are currently trying to find the assembly.
+            // assembly. Obviously we are currently trying to find the assembly.
             // So parse the actual assembly name from the name string
             //
             // First check if we have been passed a fully qualified name or only a module name
@@ -302,27 +296,16 @@ namespace Apollo.Utils
                 string[] nameSections = assemblyFullName.Split(',');
                 Debug.Assert(nameSections.Length == 4, "There should be 4 sections in the assembly name.");
 
-                // The first section is the module name
                 fileName = nameSections[0].Trim();
-
-                // The second section is the version number
                 version = ExtractValueFromKeyValuePair(nameSections[1]);
-
-                // The third element is the culture
                 culture = ExtractValueFromKeyValuePair(nameSections[2]);
-
-                // The final element is the public key
                 publicKey = ExtractValueFromKeyValuePair(nameSections[3]);
             }
 
             // If the file name already has the '.dll' extension then we don't need to add that, otherwise we do
             fileName = MakeModuleNameQualifiedFileName(fileName);
 
-            // Search through all the directories and see if we can match the assemblyFileName with any of
-            // the files in the stored directories
             var files = FileEnumerator();
-
-            // Search for the first file that matches the assembly we're looking for
             var match = (from filePath in files
                          where IsFileTheDesiredAssembly(filePath, fileName, version, culture, publicKey)
                          select filePath)
@@ -333,7 +316,6 @@ namespace Apollo.Utils
                 return AssemblyLoader(match);
             }
 
-            // Did not find the assembly.
             return null;
         }
 

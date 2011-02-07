@@ -30,13 +30,11 @@ namespace Apollo.UI.Common
             Justification = "We need the expresion bit to determine the property name programatically.")]
         protected void Notify(Expression<Func<object>> property)
         {
-            // Check for null
             if (PropertyChanged == null)
             {
                 return;
             }
 
-            // Get property name
             var lambda = property as LambdaExpression;
             MemberExpression memberExpression;
             if (lambda.Body is UnaryExpression)

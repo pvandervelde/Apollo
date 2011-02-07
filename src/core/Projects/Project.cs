@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
@@ -105,8 +105,6 @@ namespace Apollo.Core.Projects
                 Enforce.Argument(() => distributor);
             }
 
-            // Create the graph. This must be done in an elevated state because that is 
-            // what quickgraph wants.
             m_Graph = new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false);
 
             m_DatasetDistributor = distributor;
@@ -130,7 +128,6 @@ namespace Apollo.Core.Projects
                             CanBeAdopted = false,
                         });
 
-                // Set the standard name and summary for the root
                 var dataset = m_Datasets[m_RootDataset];
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;

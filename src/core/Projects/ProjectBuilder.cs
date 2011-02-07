@@ -6,7 +6,7 @@
 
 using System;
 using System.IO;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;

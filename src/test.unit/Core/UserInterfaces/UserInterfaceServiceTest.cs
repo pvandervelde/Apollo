@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Logging;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces.Projects;

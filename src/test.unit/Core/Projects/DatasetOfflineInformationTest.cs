@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;

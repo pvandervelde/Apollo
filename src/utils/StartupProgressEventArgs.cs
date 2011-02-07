@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Globalization;
 using Apollo.Utils.Properties;
 using Lokad;
 
@@ -35,28 +34,9 @@ namespace Apollo.Utils
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="progress"/> is more than 100.</exception>
         public StartupProgressEventArgs(int progress, IProgressMark currentlyProcessing)
         {
-            // Argument validation.
             {
-                if (progress < 0)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        "progress", 
-                        string.Format(
-                            CultureInfo.InvariantCulture, 
-                            Resources.Exceptions_Messages_ProgressToSmall, 
-                            0));
-                }
-
-                if (progress > 100)
-                {
-                    throw new ArgumentOutOfRangeException(
-                        "progress", 
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            Resources.Exceptions_Messages_ProgressToLarge,
-                            100));
-                }
-
+                Enforce.With<ArgumentOutOfRangeException>(progress >= 0, Resources.Exceptions_Messages_ProgressToSmall, progress);
+                Enforce.With<ArgumentOutOfRangeException>(progress <= 100, Resources.Exceptions_Messages_ProgressToLarge, progress);
                 Enforce.Argument(() => currentlyProcessing);
             }
 

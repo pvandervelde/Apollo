@@ -190,10 +190,7 @@ namespace Apollo.Core
 
             var kernel = CreateKernel();
 
-            // Scan the current assembly for all exported parts.
             var serviceTypes = FindServiceTypes();
-
-            // Create all the services and pass them to the kernel
             foreach (var serviceType in serviceTypes)
             {
                 CreateService(serviceType, kernel);
@@ -208,7 +205,6 @@ namespace Apollo.Core
                 m_Progress.Mark(new CoreStartingProgressMark());
             }
 
-            // Finally start the kernel and wait for it to finish starting
             kernel.Start();
 
             // Indicate core startup is done
@@ -223,10 +219,7 @@ namespace Apollo.Core
         /// </summary>
         private void PrepareAppDomain()
         {
-            // Grab the current AppDomain
             var currentDomain = AppDomain.CurrentDomain;
-
-            // Set the assembly resolver.
             var fusionHelper = new FusionHelper(
                 () =>
                     {
@@ -253,11 +246,9 @@ namespace Apollo.Core
         {
             // Mark progress for service 'serviceType'
             {
-                // Get the marker
                 var markers = serviceType.GetCustomAttributes(typeof(ProgressMarkerTypeAttribute), false);
                 if (markers.Length == 1)
                 {
-                    // Create the marker
                     var marker = Activator.CreateInstance(((ProgressMarkerTypeAttribute)markers[0]).MarkerType) as IProgressMark;
                     m_Progress.Mark(marker);
                 }

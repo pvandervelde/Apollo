@@ -229,7 +229,6 @@ namespace Apollo.Core.Logging
         {
             get
             {
-                // Elevate to allow the call to the logger to work.
                 return TranslateFromNlogLevel(m_Logger);
             }
         }

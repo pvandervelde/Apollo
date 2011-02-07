@@ -81,8 +81,6 @@ namespace Apollo.Core.Logging
         {
             LogWithoutVerifying(LogType.Debug, new LogMessage(GetType().FullName, LevelToLog.Info, Resources_NonTranslatable.LogSink_LogMessage_LoggersStopped));
 
-            // Inform all the loggers that the system is being stopped. This allows
-            // the loggers to flush all the buffers.
             foreach (var pair in m_Loggers)
             {
                 pair.Value.Stop();

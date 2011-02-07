@@ -120,7 +120,6 @@ namespace Apollo.Core.Utils.Licensing
             Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Invalidate(TimePeriod nextExpiration)
         {
-            // Store the generation time of the result that matches our expiry time period clostest.
             var bestMatchingGenerationTime = m_Now();
             
             // By setting the differential ticks to the number of ticks from now to
@@ -174,7 +173,6 @@ namespace Apollo.Core.Utils.Licensing
                     return;
                 }
 
-                // check if the validation was successful
                 if (isValid)
                 {
                     // If we do not validate then grab the success result and 

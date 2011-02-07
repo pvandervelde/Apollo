@@ -7,7 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Loaders;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Projects

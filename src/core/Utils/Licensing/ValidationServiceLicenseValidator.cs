@@ -85,7 +85,6 @@ namespace Apollo.Core.Utils.Licensing
             Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Verify()
         {
-            // Check if the cache has a valid result
             var lastResult = m_Cache.LatestResult;
 
             // Define the maximum amount of time that we allow the generation time to be
@@ -95,7 +94,6 @@ namespace Apollo.Core.Utils.Licensing
             // if the validation is more than x seconds into the future we fail it
             if (lastResult.Generated > m_Now().Add(maxFutureTime))
             {
-                // Invalidate the cache
                 try
                 {
                     m_Cache.Invalidate(s_StandardExpirationTime);
@@ -119,7 +117,6 @@ namespace Apollo.Core.Utils.Licensing
 #endif
                 }
 
-                // fail the validation
                 var generated = m_Now();
                 var expires = generated + s_StandardExpirationTime.RepeatAfter(generated);
                 var failChecksum = new Checksum("ValidationFailure", generated, expires);
@@ -132,7 +129,6 @@ namespace Apollo.Core.Utils.Licensing
             // has expired.
             if (lastResult.Expires < m_Now())
             {
-                // Validation has expired. Request a new one
                 try
                 {
                     m_Cache.Invalidate(s_StandardExpirationTime);
@@ -174,7 +170,6 @@ namespace Apollo.Core.Utils.Licensing
             Justification = "We don't want any exception to escape from here. In production we'll kill the app anyway.")]
         public void Verify(TimePeriod nextExpiration)
         {
-            // Check if the cache has a valid result
             var lastResult = m_Cache.LatestResult;
 
             // Define the maximum amount of time that we allow the generation time to be
@@ -184,7 +179,6 @@ namespace Apollo.Core.Utils.Licensing
             // if the validation is more than x seconds into the future we fail it
             if (lastResult.Generated > m_Now().Add(maxFutureTime))
             {
-                // Invalidate the cache
                 try
                 {
                     m_Cache.Invalidate(nextExpiration);
@@ -208,7 +202,6 @@ namespace Apollo.Core.Utils.Licensing
 #endif
                 }
 
-                // fail the validation
                 var generated = m_Now();
                 var expires = generated + nextExpiration.RepeatAfter(generated);
                 var failChecksum = new Checksum("ValidationFailure", generated, expires);
@@ -221,7 +214,6 @@ namespace Apollo.Core.Utils.Licensing
             // has expired.
             if (lastResult.Expires < m_Now())
             {
-                // Validation has expired. Request a new one
                 try
                 {
                     m_Cache.Invalidate(nextExpiration);

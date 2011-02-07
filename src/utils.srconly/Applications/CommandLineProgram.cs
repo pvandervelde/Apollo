@@ -126,10 +126,10 @@ namespace Apollo.Utils.Applications
                     // Simply bail.
                 }
 
-                // We'll also try to log the exception to an exception file in a semi-sane
-                // location (users application directory)
                 try
                 {
+                    // We'll also try to log the exception to an exception file in a semi-sane
+                    // location (users application directory)
                     WriteExceptionToFile(errorLogFileName, e);
                 }
                 catch (IOException)
@@ -159,14 +159,9 @@ namespace Apollo.Utils.Applications
 
         private static int EventIdForException(Exception exception)
         {
-            // Go over the exception and see if we have defined it's type, if not
-            // then go for the parent exception etc. all the way up to the base 
-            // Exception type.
             var exceptionType = exception.GetType();
             while (!m_ExceptionTypeToEventIdMap.ContainsKey(exceptionType))
             {
-                // The exception type isn't in the map so just move on to the parent
-                // exception
                 exceptionType = exceptionType.BaseType;
             }
 
@@ -186,9 +181,6 @@ namespace Apollo.Utils.Applications
         /// <param name="text">The text which should be recorded in the event entry.</param>
         public static void WriteToEventLog(EventLogEntryType entryType, int eventId, EventType category, string text)
         {
-            // Write the exception to the event log if we can.
-            // We won't create an event log if it isn't there. Too
-            // much chance of things going wrong.
             if (EventLog.Exists(ApplicationEventLog))
             {
                 var log = new EventLog(ApplicationEventLog);
@@ -214,9 +206,6 @@ namespace Apollo.Utils.Applications
             // loader issues. These are probably due to us trying to load some of our code or
             // one of it's dependencies. Given that this is causing a problem it seems wise to not
             // try to use our code to find an assembly file path ...
-            //
-            // Note that some (nearly) identical code lives in Apollo.Core.Utils.ApplicationConstant.
-            // However we can't load any additional code so we have had to duplicate it here (sigh).
             var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             if (localAppDataPath == null)
             {
@@ -242,7 +231,6 @@ namespace Apollo.Utils.Applications
                 Directory.CreateDirectory(productDirectory);
             }
 
-            // Write the exception text to the file.
             var filePath = Path.Combine(productDirectory, fileName);
             using (var writer = new StreamWriter(new FileStream(filePath, FileMode.OpenOrCreate), Encoding.ASCII))
             {

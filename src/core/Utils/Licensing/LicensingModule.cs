@@ -41,7 +41,6 @@ namespace Apollo.Core.Utils.Licensing
                     new StartableModule<ILoadOnApplicationStartup>(
                         s =>
                         {
-                            // Start the license validation service
                             s.Initialize();
                             
                             // Start the validation timer. Do this after
@@ -52,7 +51,6 @@ namespace Apollo.Core.Utils.Licensing
                             StartWatchdog();
                         }));
 
-                // Register the service runner as a 'startable' module
                 builder.Register(c => new ValidationServiceRunner(
                         c.Resolve<IValidationService>()))
                     .As<ILoadOnApplicationStartup>()
