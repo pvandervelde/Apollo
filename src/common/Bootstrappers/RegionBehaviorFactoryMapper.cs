@@ -5,8 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Practices.Composite.Presentation.Regions;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.UI.Common.Bootstrappers
 {

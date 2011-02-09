@@ -6,8 +6,8 @@
 
 using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Views.About;
-using Microsoft.Practices.Composite.Events;
-using Microsoft.Practices.Composite.Presentation.Commands;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.ProjectExplorer.Commands
 {

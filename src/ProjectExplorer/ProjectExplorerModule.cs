@@ -19,8 +19,8 @@ using Apollo.UI.Common;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Projects;
 using Autofac;
-using Microsoft.Practices.Composite.Events;
-using Microsoft.Practices.Composite.Modularity;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Prism.Modularity;
 
 namespace Apollo.ProjectExplorer
 {

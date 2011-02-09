@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.UI.Common;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.ProjectExplorer.Events
 {

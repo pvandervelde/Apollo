@@ -9,8 +9,7 @@ using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common;
 using Autofac;
-using Microsoft.Practices.Composite.Presentation.Regions;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.ProjectExplorer.Events.Listeners
 {

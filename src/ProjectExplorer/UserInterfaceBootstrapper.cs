@@ -9,8 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common.Bootstrappers;
 using Autofac;
 using Lokad;
-using Microsoft.Practices.Composite.Logging;
-using Microsoft.Practices.Composite.Modularity;
+using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.Prism.Modularity;
 
 namespace Apollo.ProjectExplorer
 {

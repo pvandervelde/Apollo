@@ -7,7 +7,7 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.Practices.Composite.Events;
+using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.UI.Common
 {

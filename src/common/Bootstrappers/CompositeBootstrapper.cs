@@ -8,13 +8,12 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using Microsoft.Practices.Composite;
-using Microsoft.Practices.Composite.Events;
-using Microsoft.Practices.Composite.Logging;
-using Microsoft.Practices.Composite.Modularity;
-using Microsoft.Practices.Composite.Presentation.Regions;
-using Microsoft.Practices.Composite.Presentation.Regions.Behaviors;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.Prism.Modularity;
+using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Prism.Regions.Behaviors;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Apollo.UI.Common.Bootstrappers
