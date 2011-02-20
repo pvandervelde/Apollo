@@ -32,7 +32,7 @@ namespace Apollo.Core.Projects
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
         /// </summary>
-        private readonly Func<DatasetRequest, DistributionPlan> m_DatasetDistributor;
+        private readonly Func<DatasetRequest, IObservable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
         /// A flag that indicates if the project has been closed.
@@ -81,7 +81,7 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, DistributionPlan> distributor)
+        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor)
             : this(distributor, null)
         {
         }
@@ -99,7 +99,7 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, DistributionPlan> distributor, IPersistenceInformation persistenceInfo)
+        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor, IPersistenceInformation persistenceInfo)
         {
             {
                 Enforce.Argument(() => distributor);

@@ -22,7 +22,7 @@ namespace Apollo.Core.Projects
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
         /// </summary>
-        private Func<DatasetRequest, DistributionPlan> m_Distributor;
+        private Func<DatasetRequest, IObservable<DistributionPlan>> m_Distributor;
 
         /// <summary>
         /// The object describes how the project was persisted.
@@ -54,7 +54,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The current builder instance with the function stored.
         /// </returns>
-        public IBuildProjects WithDatasetDistributor(Func<DatasetRequest, DistributionPlan> distributor)
+        public IBuildProjects WithDatasetDistributor(Func<DatasetRequest, IObservable<DistributionPlan>> distributor)
         {
             {
                 Enforce.Argument(() => distributor);

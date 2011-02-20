@@ -22,7 +22,8 @@ namespace Apollo.Core.Base.Loaders
         Local,
 
         /// <summary>
-        /// The dataset should be loaded onto a remote machine.
+        /// The dataset should be loaded onto a remote machine which may 
+        /// either be a P2P node or a cluster node.
         /// </summary>
         Distributed,
 

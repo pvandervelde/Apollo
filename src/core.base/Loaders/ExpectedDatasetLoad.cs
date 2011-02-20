@@ -4,11 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
@@ -16,10 +11,54 @@ namespace Apollo.Core.Base.Loaders
     /// </summary>
     public sealed class ExpectedDatasetLoad
     {
-        // Define normal + minimum + peak
-        // Define 
-        // - HDD (Mb)
-        // - RAM (Mb)
-        // - CPU (FLOPS?)
+        /// <summary>
+        /// Gets or sets a value indicating the size of the dataset in bytes while
+        /// stored on disk.
+        /// </summary>
+        public long OnDiskSizeInBytes
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicatingthe size of the dataset in bytes while
+        /// loaded into memory.
+        /// </summary>
+        public long InMemorySizeInBytes
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the ID number of the baseline with
+        /// which the current dataset is comparable.
+        /// </summary>
+        public BaseLineId BaseLine
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the expansion of the memory demands
+        /// relative to the loaded size when the dataset is running calculations.
+        /// </summary>
+        public double RelativeMemoryExpansionWhileRunning
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the expansion of the disk space demands
+        /// relative to the original size if the dataset is stored after running calculations.
+        /// </summary>
+        public double RelativeOnDiskExpansionAfterRunning
+        {
+            get;
+            set;
+        }
     }
 }

@@ -42,7 +42,7 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var project = builder.Define()
-                .WithDatasetDistributor(r => new DistributionPlan())
+                .WithDatasetDistributor(r => new Mock<IObservable<DistributionPlan>>().Object)
                 .Build();
 
             Assert.IsNotNull(project);
@@ -71,7 +71,7 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var project = builder.Define()
-                .WithDatasetDistributor(r => new DistributionPlan())
+                .WithDatasetDistributor(r => new Mock<IObservable<DistributionPlan>>().Object)
                 .FromStorage(new Mock<IPersistenceInformation>().Object)
                 .Build();
 

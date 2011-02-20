@@ -61,6 +61,51 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A channel type must inherit from IChannelType..
+        /// </summary>
+        internal static string Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A machine needs at least one disk..
+        /// </summary>
+        internal static string Exceptions_Messages_AMachineNeedsAtLeastOneDisk {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_AMachineNeedsAtLeastOneDisk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A machine needs at least one processor..
+        /// </summary>
+        internal static string Exceptions_Messages_AMachineNeedsAtLeastOneProcessor {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_AMachineNeedsAtLeastOneProcessor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A message must have an ID number. It cannot have the None ID as ID..
+        /// </summary>
+        internal static string Exceptions_Messages_AMessageNeedsToHaveAnId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_AMessageNeedsToHaveAnId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The value for a base line ID must not be smaller than that of the ID for an unknown value..
+        /// </summary>
+        internal static string Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A dataset cannot be created without a creator..
         /// </summary>
         internal static string Exceptions_Messages_CannotCreateDatasetWithoutCreator {
@@ -84,6 +129,33 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_DatasetCannotBecomeParent_WithId {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_DatasetCannotBecomeParent_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The domain name of a machine must not be an empty string..
+        /// </summary>
+        internal static string Exceptions_Messages_MachineDomainNameMustNotBeEmpty {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MachineDomainNameMustNotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}..
+        /// </summary>
+        internal static string Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}..
+        /// </summary>
+        internal static string Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue", resourceCulture);
             }
         }
     }

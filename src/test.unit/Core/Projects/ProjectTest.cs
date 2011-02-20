@@ -31,7 +31,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that an object can be created with only a distribution function.")]
         public void Create()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             Assert.IsNotNull(project);
@@ -49,7 +49,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a project cannot be persisted without a persistence storage.")]
         public void SaveWithullPersistenceInformation()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Save(null));
@@ -59,7 +59,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a project can be closed.")]
         public void SaveAfterClosing()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
             project.Close();
 
@@ -77,7 +77,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset cannot be persisted with a null ID reference.")]
         public void ExportWithNullDatasetId()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Export(null, false, new Mock<IPersistenceInformation>().Object));
@@ -87,7 +87,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset cannot be persisted with an unknown dataset ID.")]
         public void ExportWithUnknownDatasetId()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             Assert.Throws<UnknownDatasetException>(() => project.Export(new DatasetId(), false, new Mock<IPersistenceInformation>().Object));
@@ -97,7 +97,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset cannot be persisted without a persistence storage.")]
         public void ExportWithNullPersistenceInformation()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -108,7 +108,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that a project can be closed.")]
         public void ExportAfterClosing()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             project.Close();
@@ -134,7 +134,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that when the name of a project is set a notification is send out.")]
         public void Name()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             var name = string.Empty;
@@ -153,7 +153,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that when the summary of a project is set a notification is send out.")]
         public void Summary()
         {
-            Func<DatasetRequest, DistributionPlan> distributor = r => new DistributionPlan();
+            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
             var project = new Project(distributor);
 
             var summary = string.Empty;

@@ -35,7 +35,7 @@ namespace Apollo.Core.Projects
         /// <returns>
         /// The current builder instance with the function stored.
         /// </returns>
-        IBuildProjects WithDatasetDistributor(Func<DatasetRequest, DistributionPlan> distributor);
+        IBuildProjects WithDatasetDistributor(Func<DatasetRequest, IObservable<DistributionPlan>> distributor);
 
         /// <summary>
         /// Provides the <see cref="Stream"/> from which the project must be loaded.

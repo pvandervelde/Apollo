@@ -26,6 +26,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\build\x86\Debug\Apollo.Core.Base.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -35,6 +36,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>..\..\bin\build\x86\Release\Apollo.Core.Base.XML</DocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
@@ -43,7 +45,18 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
@@ -58,10 +71,60 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="Communication\ChannelBuilder.cs" />
+    <Compile Include="Communication\ChannelClosedEventArgs.cs" />
+    <Compile Include="Communication\ChannelConnectionInformation.cs" />
+    <Compile Include="Communication\ChunkArrivalInfo.cs" />
+    <Compile Include="Communication\CommandProxyBuilder.cs" />
+    <Compile Include="Communication\CommandSetAvailabilityEventArgs.cs" />
+    <Compile Include="Communication\CommunicationChannel.cs" />
+    <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
+    <Compile Include="Communication\CommunicationLayer.cs" />
+    <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
+    <Compile Include="Communication\EndpointAvailabilityEventArgs.cs" />
+    <Compile Include="Communication\EndpointEventArgs.cs" />
+    <Compile Include="Communication\EndpointId.cs" />
+    <Compile Include="Communication\IChannelProxy.cs" />
+    <Compile Include="Communication\IChannelType.cs" />
+    <Compile Include="Communication\ICommandSet.cs" />
+    <Compile Include="Communication\ICommunicationChannel.cs" />
+    <Compile Include="Communication\ICommunicationChannelCommands.cs" />
+    <Compile Include="Communication\ICommunicationLayer.cs" />
+    <Compile Include="Communication\ICommunicationMessage.cs" />
+    <Compile Include="Communication\IDiscoverOtherServices.cs" />
+    <Compile Include="Communication\IMachineCommands.cs" />
+    <Compile Include="Communication\IMessagePipe.cs" />
+    <Compile Include="Communication\IReceivingEndpoint.cs" />
+    <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
+    <Compile Include="Communication\ISendingEndpoint.cs" />
+    <Compile Include="Communication\NamedPipeChannelType.cs" />
+    <Compile Include="Communication\StreamTransferInformation.cs" />
+    <Compile Include="Communication\MessageEventArgs.cs" />
+    <Compile Include="Communication\MessageHub.cs" />
+    <Compile Include="Communication\MessageId.cs" />
+    <Compile Include="Communication\Messages\CommunicationMessage.cs" />
+    <Compile Include="Communication\Messages\EndpointDisconnectMessage.cs" />
+    <Compile Include="Communication\NetDataContractOperationBehavior.cs" />
+    <Compile Include="Communication\ReceivingEndpoint.cs" />
+    <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
+    <Compile Include="Communication\SendingEndpoint.cs" />
+    <Compile Include="Communication\TcpChannelType.cs" />
+    <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
+    <Compile Include="Loaders\BaseLine.cs" />
+    <Compile Include="Loaders\DiskSpecification.cs" />
+    <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
     <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="DatasetCreationInformation.cs" />
+    <Compile Include="Loaders\BaseLineId.cs" />
+    <Compile Include="Loaders\DatasetLoader.cs" />
+    <Compile Include="Loaders\IDatasetLoaderCommands.cs" />
+    <Compile Include="Loaders\ILoadDatasets.cs" />
     <Compile Include="Loaders\MockDatasetDistributor.cs" />
+    <Compile Include="Loaders\NetworkIdentifier.cs" />
+    <Compile Include="Loaders\NetworkSpecification.cs" />
+    <Compile Include="Loaders\ProcessorArchitecture.cs" />
+    <Compile Include="Loaders\ProcessorSpecification.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,9 +159,7 @@
       <Name>Apollo.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Communication\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>

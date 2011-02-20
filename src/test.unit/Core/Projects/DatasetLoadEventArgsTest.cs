@@ -23,7 +23,7 @@ namespace Apollo.Core.Projects
         [Description("Checks that an object cannot be created with a null ID object.")]
         public void CreateWithNullId()
         {
-            var machines = new List<Machine> { new Machine() };
+            var machines = new List<Machine> { new Machine(new Dictionary<BaseLineId, BaseLineResult>()) };
             Assert.Throws<ArgumentNullException>(() => new DatasetLoadEventArgs(null, machines));
         }
 
@@ -49,7 +49,7 @@ namespace Apollo.Core.Projects
         public void Create()
         {
             var id = new DatasetId();
-            var machines = new List<Machine> { new Machine() };
+            var machines = new List<Machine> { new Machine(new Dictionary<BaseLineId, BaseLineResult>()) };
 
             var args = new DatasetLoadEventArgs(id, machines);
             Assert.AreSame(id, args.Id);

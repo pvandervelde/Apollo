@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
@@ -24,6 +26,6 @@ namespace Apollo.Core.Base.Loaders
         /// The distribution plan that takes into account the characteristics of
         /// the dataset and the currently available computing power.
         /// </returns>
-        DistributionPlan ProposeDistributionFor(DatasetRequest request);
+        IObservable<DistributionPlan> ProposeDistributionFor(DatasetRequest request);
     }
 }

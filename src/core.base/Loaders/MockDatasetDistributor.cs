@@ -34,7 +34,7 @@ namespace Apollo.Core.Base.Loaders
         /// The distribution plan that takes into account the characteristics of
         /// the dataset and the currently available computing power.
         /// </returns>
-        public DistributionPlan ProposeDistributionFor(DatasetRequest request)
+        public IObservable<DistributionPlan> ProposeDistributionFor(DatasetRequest request)
         {
             throw new NotImplementedException();
         }

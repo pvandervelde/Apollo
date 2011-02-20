@@ -139,8 +139,9 @@
     <Compile Include="Commands\IInvokeCommands.cs" />
     <Compile Include="Commands\ICommandContainer.cs" />
     <Compile Include="Commands\UnknownCommandException.cs" />
+    <Compile Include="Configuration\ConfigurationKey.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
-    <Compile Include="Configuration\IConfigurationKey.cs" />
+    <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="ExcludeFromCoverageAttribute.cs" />

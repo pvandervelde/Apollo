@@ -4,12 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Utils.Configuration
+namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Defines the interface for objects that serve as keys for the <see cref="IConfiguration"/> collection.
+    /// Stores information about the safe arrival of a chunk of a datastream.
     /// </summary>
-    public interface IConfigurationKey
+    internal sealed class ChunkArrivalInfo
     {
     }
 }

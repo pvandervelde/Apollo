@@ -112,11 +112,26 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType" xml:space="preserve">
+    <value>A channel type must inherit from IChannelType.</value>
+  </data>
+  <data name="Exceptions_Messages_AMachineNeedsAtLeastOneDisk" xml:space="preserve">
+    <value>A machine needs at least one disk.</value>
+  </data>
+  <data name="Exceptions_Messages_AMachineNeedsAtLeastOneProcessor" xml:space="preserve">
+    <value>A machine needs at least one processor.</value>
+  </data>
+  <data name="Exceptions_Messages_AMessageNeedsToHaveAnId" xml:space="preserve">
+    <value>A message must have an ID number. It cannot have the None ID as ID.</value>
+  </data>
+  <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
+    <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
+  </data>
   <data name="Exceptions_Messages_CannotCreateDatasetWithoutCreator" xml:space="preserve">
     <value>A dataset cannot be created without a creator.</value>
   </data>
@@ -125,5 +140,14 @@
   </data>
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
+  </data>
+  <data name="Exceptions_Messages_MachineDomainNameMustNotBeEmpty" xml:space="preserve">
+    <value>The domain name of a machine must not be an empty string.</value>
+  </data>
+  <data name="Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues" xml:space="preserve">
+    <value>The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue" xml:space="preserve">
+    <value>The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}.</value>
   </data>
 </root>

@@ -4,85 +4,97 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using System.Collections.Generic;
 
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Stores the information that describes a loading request for a dataset.
     /// </summary>
+    /// <design>
+    /// <para>
+    /// For the moment we only allow loading multiple dataset in a request if they
+    /// hav the same machine demands and distribution range. This should cover most
+    /// cases because for parameter studies all the datasets should be equivalent and
+    /// for domain decomposition the goal is to make the machine loads equivalent. Hence
+    /// this approach should work.
+    /// </para>
+    /// <para>
+    /// Note that in the domain decomposition case we might also need the ability to reserve
+    /// nodes between when we get a proposal and when we apply it. Obviously this can get 
+    /// troublesome because of the untrustworthiness of the network etc.
+    /// </para>
+    /// </design>
     public sealed class DatasetRequest
     {
         /// <summary>
-        /// Gets a value indicating which dataset should be loaded.
+        /// Gets or sets a value indicating which datasets should be loaded.
         /// </summary>
-        public DatasetOfflineInformation DatasetToLoad
+        public IList<DatasetOfflineInformation> DatasetsToLoad
         {
-            get 
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets a value indicating which dataset is the parent 
+        /// Gets or sets a value indicating which dataset is the parent 
         /// of the dataset that should be loaded.
         /// </summary>
         public DatasetId Parent
         {
-            get 
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets a value indicating whether the parent dataset needs 
+        /// Gets or sets a value indicating whether the parent dataset needs 
         /// to be able to communicate with the dataset that should be
         /// loaded.
         /// </summary>
         public bool ShouldProvideParentWithHubConnection
         {
-            get 
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets a value indicating how much load the dataset is expected
+        /// Gets or sets a value indicating whether there is a need for
+        /// communication between the datasets.
+        /// </summary>
+        public bool IsIntraDatasetCommunicationRequired
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating how much load the dataset is expected
         /// to place on a given machine.
         /// </summary>
         public ExpectedDatasetLoad ExpectedLoadPerMachine
         {
-            get 
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets a value indicating what the preferred location is for the
+        /// Gets or sets a value indicating what the preferred location is for the
         /// dataset.
         /// </summary>
         public LoadingLocation PreferredLoadingLocation
         {
-            get 
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
 
         /// <summary>
-        /// Gets a value indicating over how many machines the dataset
+        /// Gets or sets a value indicating over how many machines the dataset
         /// can be distributed.
         /// </summary>
         public MachineDistributionRange PreferredDistributionRange
         {
-            get
-            {
-                throw new NotImplementedException();
-            }
+            get;
+            set;
         }
     }
 }
