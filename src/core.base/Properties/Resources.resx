@@ -141,6 +141,9 @@
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
   </data>
+  <data name="Exceptions_Messages_FilePathCannotBeEmpty" xml:space="preserve">
+    <value>A file path cannot be an empty string.</value>
+  </data>
   <data name="Exceptions_Messages_MachineDomainNameMustNotBeEmpty" xml:space="preserve">
     <value>The domain name of a machine must not be an empty string.</value>
   </data>

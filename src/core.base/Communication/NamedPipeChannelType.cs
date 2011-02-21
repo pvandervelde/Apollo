@@ -79,12 +79,17 @@ namespace Apollo.Core.Base.Communication
         /// Creates the required channel(s) to receive a data stream across the network and returns
         /// the connection information and the task responsible for handling the data reception.
         /// </summary>
+        /// <remarks>
+        /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
+        /// it does exist then the data will be appended to it.
+        /// </remarks>
+        /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(CancellationToken token)
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
         {
             throw new NotImplementedException();
         }
@@ -92,6 +97,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
+        /// <param name="file">The file stream that contains the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -100,7 +106,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        public Task TransferData(StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
         {
             throw new NotImplementedException();
         }

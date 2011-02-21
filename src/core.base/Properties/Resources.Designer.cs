@@ -133,6 +133,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A file path cannot be an empty string..
+        /// </summary>
+        internal static string Exceptions_Messages_FilePathCannotBeEmpty {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FilePathCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The domain name of a machine must not be an empty string..
         /// </summary>
         internal static string Exceptions_Messages_MachineDomainNameMustNotBeEmpty {

@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Net;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -17,9 +14,34 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class StreamTransferInformation
     {
-        // Uri
-        // Protocol
-        // resume location
-        // full file path
+        /// <summary>
+        /// Gets or sets a value indicating the position in the file stream from where the
+        /// transfer should start.
+        /// </summary>
+        public long StartPosition
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the IP address of the remote computer to which 
+        /// the file should be transferred.
+        /// </summary>
+        public IPAddress IPAddress
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating the port on the remote computer on which the computer
+        /// is listening for the file transfer.
+        /// </summary>
+        public int Port
+        {
+            get;
+            set;
+        }
     }
 }

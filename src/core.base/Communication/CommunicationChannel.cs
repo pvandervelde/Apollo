@@ -8,10 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Core.Base.Properties;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication
@@ -253,8 +255,39 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// Creates the required channel(s) to receive a data stream across the network and returns
+        /// the connection information and the task responsible for handling the data reception.
+        /// </summary>
+        /// <remarks>
+        /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
+        /// it does exist then the data will be appended to it.
+        /// </remarks>
+        /// <param name="localFile">The full file path to which the network stream should be written.</param>
+        /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <returns>
+        /// The connection information necessary to connect to the newly created channel and the task 
+        /// responsible for handling the data reception.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="localFile"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="localFile"/> is an empty string.
+        /// </exception>
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
+        {
+            {
+                Enforce.Argument(() => localFile);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(localFile), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
+            }
+
+            return m_Type.PrepareForDataReception(localFile, token);
+        }
+
+        /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
+        /// <param name="file">The file stream that contains the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -264,15 +297,19 @@ namespace Apollo.Core.Base.Communication
         /// An task that indicates when the transfer is complete.
         /// </returns>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="file"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
         /// </exception>
-        public Task TransferData(StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
         {
             {
+                Enforce.Argument(() => file);
                 Enforce.Argument(() => transferInformation);
             }
 
-            return m_Type.TransferData(transferInformation, token);
+            return m_Type.TransferData(file, transferInformation, token);
         }
 
         /// <summary>

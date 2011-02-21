@@ -15,6 +15,7 @@ using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Properties;
 using Apollo.Utils.Configuration;
 using Lokad;
 
@@ -26,6 +27,11 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class TcpChannelType : IChannelType
     {
+        /// <summary>
+        /// Defines the default buffer size used for reading and writing.
+        /// </summary>
+        private const int ReadBufferSize = 4096;
+
         /// <summary>
         /// Returns the DNS name of the machine.
         /// </summary>
@@ -157,19 +163,85 @@ namespace Apollo.Core.Base.Communication
         /// Creates the required channel(s) to receive a data stream across the network and returns
         /// the connection information and the task responsible for handling the data reception.
         /// </summary>
+        /// <remarks>
+        /// <para>
+        /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
+        /// it does exist then the data will be appended to it.
+        /// </para>
+        /// </remarks>
+        /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(CancellationToken token)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="localFile"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="localFile"/> is an empty string.
+        /// </exception>
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
         {
-            throw new NotImplementedException();
+            {
+                Enforce.Argument(() => localFile);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(localFile), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
+            }
+
+            var tcpListener = new TcpListener(IPAddress.Any, 0);
+            var endpoint = tcpListener.LocalEndpoint as IPEndPoint;
+
+            var info = new StreamTransferInformation
+                {
+                    StartPosition = File.Exists(localFile) ? new FileInfo(localFile).Length : 0,
+                    IPAddress = endpoint.Address,
+                    Port = endpoint.Port,
+                };
+
+            Task<FileInfo> result = Task<FileInfo>.Factory.StartNew(
+                () =>
+                {
+                    // Don't catch any exception because the Task will store them if we don't catch them
+                    try
+                    {
+                        using (var file = new FileStream(localFile, FileMode.Append, FileAccess.Write, FileShare.None))
+                        {
+                            using (TcpClient client = tcpListener.AcceptTcpClient())
+                            {
+                                NetworkStream clientStream = client.GetStream();
+
+                                byte[] message = new byte[ReadBufferSize];
+                                while (!token.IsCancellationRequested)
+                                {
+                                    int bytesRead = clientStream.Read(message, 0, message.Length);
+                                    if (bytesRead == 0)
+                                    {
+                                        break;
+                                    }
+
+                                    file.Write(message, 0, bytesRead);
+                                }
+                            }
+                        }
+                    }
+                    finally
+                    {
+                        tcpListener.Stop();
+                    }
+
+                    return new FileInfo(localFile);
+                },
+                token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+
+            return new Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
         }
 
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
+        /// <param name="file">The file stream that contains the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -178,9 +250,52 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        public Task TransferData(StreamTransferInformation transferInformation, CancellationToken token)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="file"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
+        /// </exception>
+        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
         {
-            throw new NotImplementedException();
+            {
+                Enforce.Argument(() => file);
+                Enforce.Argument(() => transferInformation);
+            }
+
+            Task result = Task.Factory.StartNew(
+                () =>
+                {
+                    // Don't catch any exception because the task will store them if we don't catch them.
+                    using (var client = new TcpClient())
+                    {
+                        var serverEndPoint = new IPEndPoint(transferInformation.IPAddress, transferInformation.Port);
+
+                        client.Connect(serverEndPoint);
+                        using (NetworkStream clientStream = client.GetStream())
+                        {
+                            using (file)
+                            {
+                                file.Position = transferInformation.StartPosition;
+
+                                byte[] buffer = new byte[ReadBufferSize];
+                                while (!token.IsCancellationRequested)
+                                {
+                                    int bytesRead = file.Read(buffer, 0, ReadBufferSize);
+                                    if (bytesRead == 0)
+                                    {
+                                        break;
+                                    }
+
+                                    clientStream.Write(buffer, 0, bytesRead);
+                                    clientStream.Flush();
+                                }
+                            }
+                        }
+                    }
+                });
+
+            return result;
         }
     }
 }

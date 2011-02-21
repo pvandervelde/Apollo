@@ -110,7 +110,7 @@
     <Compile Include="Communication\SendingEndpoint.cs" />
     <Compile Include="Communication\TcpChannelType.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
-    <Compile Include="Loaders\BaseLine.cs" />
+    <Compile Include="Loaders\BaseLineResult.cs" />
     <Compile Include="Loaders\DiskSpecification.cs" />
     <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
