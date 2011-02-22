@@ -5,22 +5,23 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Net;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
     /// Defines the methods for storing information about the way a stream should 
-    /// be transferred over a stream connection.
+    /// be transferred over a named pipe.
     /// </summary>
     [Serializable]
-    internal abstract class StreamTransferInformation
+    internal sealed class NamedPipeStreamTransferInformation : StreamTransferInformation
     {
         /// <summary>
-        /// Gets or sets a value indicating the position in the file stream from where the
-        /// transfer should start.
+        /// Gets or sets a value indicating the name of the pipe.
         /// </summary>
-        public long StartPosition
+        public string Name
         {
             get;
             set;

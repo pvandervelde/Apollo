@@ -7,6 +7,7 @@
 using System;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using Apollo.Core.Base.Properties;
 using Apollo.Utils;
 using Lokad;
 
@@ -77,14 +78,19 @@ namespace Apollo.Core.Base.Communication
                     service.AcceptMessage(message);
                 }
             }
-            catch (FaultException)
+            catch (FaultException e)
             {
                 // The receiving end threw an exception.
+                if (e.InnerException != null)
+                {
+                    throw new FailedToSendMessageException(Resources.Exceptions_Messages_FailedToSendMessage, e.InnerException);
+                }
             }
-            catch (CommunicationException)
+            catch (CommunicationException e)
             { 
                 // Either the connection was aborted or faulted (although it shouldn't be)
                 // or something else nasty went wrong.
+                throw new FailedToSendMessageException(Resources.Exceptions_Messages_FailedToSendMessage, e);
             }
         }
 

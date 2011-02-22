@@ -146,15 +146,15 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Binding GenerateBinding()
         {
-            var binding = new NetTcpBinding(SecurityMode.None, false);
-            {
-                binding.MaxConnections = m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpBindingMaximumNumberOfConnections) ?
-                    m_Configuration.Value<int>(CommunicationConfigurationKeys.TcpBindingMaximumNumberOfConnections) : 
-                    25;
-                binding.ReceiveTimeout = m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpBindingReceiveTimeout) ?
-                    m_Configuration.Value<TimeSpan>(CommunicationConfigurationKeys.TcpBindingReceiveTimeout) : 
-                    new TimeSpan(0, 30, 00);
-            }
+            var binding = new NetTcpBinding(SecurityMode.None, false)
+                {
+                    MaxConnections = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) ?
+                        m_Configuration.Value<int>(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) :
+                        25,
+                    ReceiveTimeout = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingReceiveTimeout) ?
+                        m_Configuration.Value<TimeSpan>(CommunicationConfigurationKeys.BindingReceiveTimeout) :
+                        new TimeSpan(0, 30, 00),
+                };
 
             return binding;
         }
@@ -191,7 +191,7 @@ namespace Apollo.Core.Base.Communication
             var tcpListener = new TcpListener(IPAddress.Any, 0);
             var endpoint = tcpListener.LocalEndpoint as IPEndPoint;
 
-            var info = new StreamTransferInformation
+            var info = new TcpStreamTransferInformation
                 {
                     StartPosition = File.Exists(localFile) ? new FileInfo(localFile).Length : 0,
                     IPAddress = endpoint.Address,
@@ -261,15 +261,21 @@ namespace Apollo.Core.Base.Communication
             {
                 Enforce.Argument(() => file);
                 Enforce.Argument(() => transferInformation);
+                Enforce.With<ArgumentException>(
+                    transferInformation is TcpStreamTransferInformation, 
+                    Resources.Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes,
+                    typeof(TcpStreamTransferInformation),
+                    transferInformation.GetType());
             }
 
+            var transfer = transferInformation as TcpStreamTransferInformation;
             Task result = Task.Factory.StartNew(
                 () =>
                 {
                     // Don't catch any exception because the task will store them if we don't catch them.
                     using (var client = new TcpClient())
                     {
-                        var serverEndPoint = new IPEndPoint(transferInformation.IPAddress, transferInformation.Port);
+                        var serverEndPoint = new IPEndPoint(transfer.IPAddress, transfer.Port);
 
                         client.Connect(serverEndPoint);
                         using (NetworkStream clientStream = client.GetStream())

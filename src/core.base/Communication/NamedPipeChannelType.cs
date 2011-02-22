@@ -6,9 +6,12 @@
 
 using System;
 using System.IO;
+using System.IO.Pipes;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Properties;
 using Apollo.Utils.Configuration;
 using Lokad;
 
@@ -20,6 +23,11 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class NamedPipeChannelType : IChannelType
     {
+        /// <summary>
+        /// Defines the default buffer size used for reading and writing.
+        /// </summary>
+        private const int ReadBufferSize = 4096;
+
         /// <summary>
         /// The object that stores the configuration values for the
         /// named pipe WCF connection.
@@ -50,7 +58,8 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Uri GenerateNewChannelUri()
         {
-            throw new NotImplementedException();
+            var channelUri = "net.pipe://localhost/pipe";
+            return new Uri(channelUri);
         }
 
         /// <summary>
@@ -61,7 +70,9 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public string GenerateNewAddress()
         {
-            throw new NotImplementedException();
+            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.NamedPipeSubAddress) ?
+                m_Configuration.Value<string>(CommunicationConfigurationKeys.NamedPipeSubAddress) :
+                "ApolloThroughNamedPipe";
         }
 
         /// <summary>
@@ -72,7 +83,17 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Binding GenerateBinding()
         {
-            throw new NotImplementedException();
+            var binding = new NetNamedPipeBinding(NetNamedPipeSecurityMode.None) 
+                { 
+                    MaxConnections = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) ?
+                        m_Configuration.Value<int>(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) : 
+                        25,
+                    ReceiveTimeout = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingReceiveTimeout) ?
+                        m_Configuration.Value<TimeSpan>(CommunicationConfigurationKeys.BindingReceiveTimeout) : 
+                        new TimeSpan(0, 30, 00),
+                };
+
+            return binding;
         }
 
         /// <summary>
@@ -91,7 +112,53 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
         {
-            throw new NotImplementedException();
+            {
+                Enforce.Argument(() => localFile);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(localFile), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
+            }
+
+            var pipeAddress = Guid.NewGuid().ToString();
+            var pipe = new NamedPipeServerStream(pipeAddress);
+
+            var info = new NamedPipeStreamTransferInformation
+            {
+                StartPosition = File.Exists(localFile) ? new FileInfo(localFile).Length : 0,
+                Name = pipeAddress,
+            };
+
+            Task<FileInfo> result = Task<FileInfo>.Factory.StartNew(
+                () =>
+                {
+                    // Don't catch any exception because the Task will store them if we don't catch them
+                    using (var file = new FileStream(localFile, FileMode.Append, FileAccess.Write, FileShare.None))
+                    {
+                        using (pipe)
+                        {
+                            pipe.WaitForConnection();
+
+                            byte[] message = new byte[ReadBufferSize];
+                            while (!token.IsCancellationRequested)
+                            {
+                                // In theory we could just write the file name to the pipe
+                                // and then read that on the other side ...
+                                int bytesRead = pipe.Read(message, 0, message.Length);
+                                if (bytesRead == 0)
+                                {
+                                    break;
+                                }
+
+                                file.Write(message, 0, bytesRead);
+                            }
+                        }
+                    }
+
+                    return new FileInfo(localFile);
+                },
+                token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
+
+            return new Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
         }
 
         /// <summary>
@@ -108,7 +175,45 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
         {
-            throw new NotImplementedException();
+            {
+                Enforce.Argument(() => file);
+                Enforce.Argument(() => transferInformation);
+                Enforce.With<ArgumentException>(
+                    transferInformation is NamedPipeStreamTransferInformation,
+                    Resources.Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes,
+                    typeof(NamedPipeStreamTransferInformation),
+                    transferInformation.GetType());
+            }
+
+            var transfer = transferInformation as NamedPipeStreamTransferInformation;
+            Task result = Task.Factory.StartNew(
+                () =>
+                {
+                    // Don't catch any exception because the task will store them if we don't catch them.
+                    using (NamedPipeClientStream pipe = new NamedPipeClientStream(transfer.Name))
+                    {
+                        pipe.Connect();
+                        using (file)
+                        {
+                            file.Position = transferInformation.StartPosition;
+
+                            byte[] buffer = new byte[ReadBufferSize];
+                            while (!token.IsCancellationRequested)
+                            {
+                                int bytesRead = file.Read(buffer, 0, ReadBufferSize);
+                                if (bytesRead == 0)
+                                {
+                                    break;
+                                }
+
+                                pipe.Write(buffer, 0, bytesRead);
+                                pipe.Flush();
+                            }
+                        }
+                    }
+                });
+
+            return result;
         }
     }
 }

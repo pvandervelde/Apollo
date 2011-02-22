@@ -15,5 +15,9 @@ namespace Apollo.Utils.Configuration
         // What kind of storage do we want to allow?
         // - XML
         // - SQL
+        //
+        // Group --> Indicates what the config is globally for. e.g. Network
+        // Block --> Indicates what the config is exactly for. e.g. TCP
+        // Entry --> Indicates a single setting. e.g. TCP port
     }
 }

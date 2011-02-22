@@ -84,6 +84,7 @@
     <Compile Include="Communication\EndpointAvailabilityEventArgs.cs" />
     <Compile Include="Communication\EndpointEventArgs.cs" />
     <Compile Include="Communication\EndpointId.cs" />
+    <Compile Include="Communication\FailedToSendMessageException.cs" />
     <Compile Include="Communication\IChannelProxy.cs" />
     <Compile Include="Communication\IChannelType.cs" />
     <Compile Include="Communication\ICommandSet.cs" />
@@ -98,6 +99,7 @@
     <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
     <Compile Include="Communication\ISendingEndpoint.cs" />
     <Compile Include="Communication\NamedPipeChannelType.cs" />
+    <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
     <Compile Include="Communication\StreamTransferInformation.cs" />
     <Compile Include="Communication\MessageEventArgs.cs" />
     <Compile Include="Communication\MessageHub.cs" />
@@ -109,6 +111,7 @@
     <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
     <Compile Include="Communication\SendingEndpoint.cs" />
     <Compile Include="Communication\TcpChannelType.cs" />
+    <Compile Include="Communication\TcpStreamTransferInformation.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="Loaders\BaseLineResult.cs" />
     <Compile Include="Loaders\DiskSpecification.cs" />

@@ -133,11 +133,29 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to send the message..
+        /// </summary>
+        internal static string Exceptions_Messages_FailedToSendMessage {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FailedToSendMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A file path cannot be an empty string..
         /// </summary>
         internal static string Exceptions_Messages_FilePathCannotBeEmpty {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_FilePathCannotBeEmpty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}..
+        /// </summary>
+        internal static string Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes", resourceCulture);
             }
         }
         

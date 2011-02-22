@@ -29,15 +29,20 @@ namespace Apollo.Core.Base.Communication
         public static readonly ConfigurationKey TcpSubAddress = new ConfigurationKey();
 
         /// <summary>
-        /// The <see cref="ConfigurationKey"/> that is used to retrieve the value for the maximum
-        /// number of connections for the TCP binding .
+        /// The <see cref="ConfigurationKey"/> that is used to retrieve the named pipe sub-address (string).
         /// </summary>
-        public static readonly ConfigurationKey TcpBindingMaximumNumberOfConnections = new ConfigurationKey();
+        public static readonly ConfigurationKey NamedPipeSubAddress = new ConfigurationKey();
+
+        /// <summary>
+        /// The <see cref="ConfigurationKey"/> that is used to retrieve the value for the maximum
+        /// number of connections for the WCF binding .
+        /// </summary>
+        public static readonly ConfigurationKey BindingMaximumNumberOfConnections = new ConfigurationKey();
 
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the value for the receive timeout
-        /// for the TCP binding .
+        /// for the WCF binding .
         /// </summary>
-        public static readonly ConfigurationKey TcpBindingReceiveTimeout = new ConfigurationKey();
+        public static readonly ConfigurationKey BindingReceiveTimeout = new ConfigurationKey();
     }
 }
