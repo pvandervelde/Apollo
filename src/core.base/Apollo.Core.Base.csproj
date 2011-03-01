@@ -74,7 +74,6 @@
     <Compile Include="Communication\ChannelBuilder.cs" />
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
-    <Compile Include="Communication\ChunkArrivalInfo.cs" />
     <Compile Include="Communication\CommandProxyBuilder.cs" />
     <Compile Include="Communication\CommandSetAvailabilityEventArgs.cs" />
     <Compile Include="Communication\CommunicationChannel.cs" />

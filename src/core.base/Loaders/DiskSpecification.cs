@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Management;
+using Apollo.Core.Base.Properties;
+using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -89,13 +91,11 @@ namespace Apollo.Core.Base.Loaders
                 // Select all drives that are fixed local disks (drivetype == 3)
                 var drives = from ManagementObject queryObj in searcher.Get()
                              where ((uint)queryObj["DriveType"] == 3)
-                             select new DiskSpecification
-                                {
-                                    Name = queryObj["Caption"] as string,
-                                    SerialNumber = queryObj["VolumeSerialNumber"] as string,
-                                    TotalSpace = (ulong)queryObj["Size"],
-                                    AvailableSpace = (ulong)queryObj["FreeSpace"],
-                                };
+                             select new DiskSpecification(
+                                    queryObj["Caption"] as string,
+                                    queryObj["VolumeSerialNumber"] as string,
+                                    (ulong)queryObj["Size"],
+                                    (ulong)queryObj["FreeSpace"]);
 
                 return drives.ToArray();
             }
@@ -106,41 +106,93 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the name of the logical disk.
+        /// Initializes a new instance of the <see cref="DiskSpecification"/> class.
+        /// </summary>
+        /// <param name="serialNumber">The serial number of the disk.</param>
+        /// <param name="totalSpace">The total amount of space on the disk in bytes.</param>
+        /// <param name="availableSpace">The available space on the disk in bytes.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="serialNumber"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="serialNumber"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="totalSpace"/> is smaller than <paramref name="availableSpace"/>.
+        /// </exception>
+        [CLSCompliant(false)]
+        public DiskSpecification(string serialNumber, ulong totalSpace, ulong availableSpace)
+            : this(string.Empty, serialNumber, totalSpace, availableSpace)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DiskSpecification"/> class.
+        /// </summary>
+        /// <param name="name">The name of the disk.</param>
+        /// <param name="serialNumber">The serial number of the disk.</param>
+        /// <param name="totalSpace">The total amount of space on the disk in bytes.</param>
+        /// <param name="availableSpace">The available space on the disk in bytes.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="serialNumber"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="serialNumber"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="totalSpace"/> is smaller than <paramref name="availableSpace"/>.
+        /// </exception>
+        [CLSCompliant(false)]
+        public DiskSpecification(string name, string serialNumber, ulong totalSpace, ulong availableSpace)
+        {
+            {
+                Enforce.Argument(() => serialNumber);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(serialNumber), Resources.Exceptions_Messages_ADiskNeedsToHaveASerial);
+                Enforce.With<ArgumentException>(totalSpace >= availableSpace, Resources.Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace);
+            }
+
+            Name = name;
+            SerialNumber = serialNumber;
+            TotalSpace = totalSpace;
+            AvailableSpace = availableSpace;
+        }
+
+        /// <summary>
+        /// Gets a value indicating the name of the logical disk.
         /// </summary>
         public string Name
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the serial number of the logical disk.
+        /// Gets a value indicating the serial number of the logical disk.
         /// </summary>
         public string SerialNumber
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the total space of the logical disk.
+        /// Gets a value indicating the total space of the logical disk.
         /// </summary>
         [CLSCompliant(false)]
         public ulong TotalSpace
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the available space of the logical disk.
+        /// Gets a value indicating the available space of the logical disk.
         /// </summary>
         [CLSCompliant(false)]
         public ulong AvailableSpace
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>

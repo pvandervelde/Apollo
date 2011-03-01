@@ -9,7 +9,7 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Defines the type of a processor.
     /// </summary>
-    internal enum ProcessorArchitecture
+    public enum ProcessorArchitecture
     {
         /// <summary>
         /// There is no processor architecture. Usually not a valid value.

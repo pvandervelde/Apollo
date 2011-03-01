@@ -11,6 +11,9 @@ using MbUnit.Framework;
 
 namespace Apollo.Utils
 {
+    // Note that it is not possible to use the Gallio Comparison contract verifiers because they require that the
+    // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
+    // move all the overloads of Equals(object) and GetHashCode() to the ID derivative class).
     [TestFixture]
     [Description("Tests the Id class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

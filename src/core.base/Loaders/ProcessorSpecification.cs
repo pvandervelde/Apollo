@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Management;
+using Apollo.Core.Base.Properties;
+using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -103,15 +105,13 @@ namespace Apollo.Core.Base.Loaders
 
                 // TODO: some of these may not be available on the certain platforms (e.g. WinXp)
                 var results = from ManagementObject queryObj in searcher.Get()
-                              select new ProcessorSpecification
-                                {
-                                    Name = queryObj["Name"] as string,
-                                    AddressWidth = (ushort)queryObj["AddressWidth"],
-                                    Architecture = ProcessorArchitectureFromWimIdentifier((int)queryObj["Architecture"]),
-                                    NumberOfCores = (uint)queryObj["NumberOfCores"],
-                                    NumberOfLogicalProcessors = (uint)queryObj["NumberOfLogicalProcessors"],
-                                    ClockSpeedInMHz = (uint)queryObj["MaxClockSpeed"],
-                                };
+                              select new ProcessorSpecification(
+                                    queryObj["Name"] as string,
+                                    (ushort)queryObj["AddressWidth"],
+                                    ProcessorArchitectureFromWimIdentifier((ushort)queryObj["Architecture"]),
+                                    (uint)queryObj["NumberOfCores"],
+                                    (uint)queryObj["NumberOfLogicalProcessors"],
+                                    (uint)queryObj["MaxClockSpeed"]);
 
                 return results.ToArray();
             }
@@ -122,58 +122,131 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the name of the processor.
+        /// Initializes a new instance of the <see cref="ProcessorSpecification"/> class.
+        /// </summary>
+        /// <param name="name">The name of the processor.</param>
+        /// <param name="addressWidth">The address width for the processor.</param>
+        /// <param name="architecture">The architecture of the processor.</param>
+        /// <param name="clockSpeed">The clock speed of the processor in MHz.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="addressWidth"/> is smaller or equal to zero.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="clockSpeed"/> is smaller or equal to zero.
+        /// </exception>
+        public ProcessorSpecification(
+            string name,
+            int addressWidth,
+            ProcessorArchitecture architecture,
+            long clockSpeed)
+            : this(name, addressWidth, architecture, 1, 1, clockSpeed)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ProcessorSpecification"/> class.
+        /// </summary>
+        /// <param name="name">The name of the processor.</param>
+        /// <param name="addressWidth">The address width for the processor.</param>
+        /// <param name="architecture">The architecture of the processor.</param>
+        /// <param name="cores">The number of physical cores in the processor.</param>
+        /// <param name="logicalProcessors">The number of logical processors in the processor.</param>
+        /// <param name="clockSpeed">The clock speed of the processor in MHz.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="addressWidth"/> is smaller or equal to zero.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="cores"/> is smaller or equal to zero.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="logicalProcessors"/> is smaller than <paramref name="cores"/>.
+        /// </exception>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="clockSpeed"/> is smaller or equal to zero.
+        /// </exception>
+        public ProcessorSpecification(
+            string name, 
+            int addressWidth, 
+            ProcessorArchitecture architecture, 
+            long cores, 
+            long logicalProcessors, 
+            long clockSpeed)
+        {
+            {
+                Enforce.Argument(() => name);
+                Enforce.With<ArgumentOutOfRangeException>(addressWidth > 0, Resources.Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero);
+                Enforce.With<ArgumentOutOfRangeException>(cores > 0, Resources.Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero);
+                Enforce.With<ArgumentOutOfRangeException>(logicalProcessors >= cores, Resources.Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores);
+                Enforce.With<ArgumentOutOfRangeException>(clockSpeed > 0, Resources.Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero);
+            }
+
+            Name = name;
+            AddressWidth = addressWidth;
+            Architecture = architecture;
+            NumberOfCores = cores;
+            NumberOfLogicalProcessors = logicalProcessors;
+            ClockSpeedInMHz = clockSpeed;
+        }
+
+        /// <summary>
+        /// Gets a value indicating the name of the processor.
         /// </summary>
         public string Name
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the address width for the processor.
+        /// Gets a value indicating the address width for the processor.
         /// </summary>
         public int AddressWidth
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the processor architecture.
+        /// Gets a value indicating the processor architecture.
         /// </summary>
         internal ProcessorArchitecture Architecture
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the number of physical cores on the processor.
+        /// Gets a value indicating the number of physical cores on the processor.
         /// </summary>
         public long NumberOfCores
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the number of logical processors for the given
+        /// Gets a value indicating the number of logical processors for the given
         /// processor.
         /// </summary>
         public long NumberOfLogicalProcessors
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the clock speed in MHz for the given processor.
+        /// Gets a value indicating the clock speed in MHz for the given processor.
         /// </summary>
         public long ClockSpeedInMHz
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>

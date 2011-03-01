@@ -130,6 +130,26 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Base\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
+    <Compile Include="Base\Communication\ChannelClosedEventArgsTest.cs" />
+    <Compile Include="Base\Communication\ChannelConnectionInformationTest.cs" />
+    <Compile Include="Base\Communication\EndpointEventArgsTest.cs" />
+    <Compile Include="Base\Communication\EndpointIdTest.cs" />
+    <Compile Include="Base\Communication\FailedToSendMessageExceptionTest.cs" />
+    <Compile Include="Base\Communication\MessageEventArgsTest.cs" />
+    <Compile Include="Base\Communication\MessageIdTest.cs" />
+    <Compile Include="Base\Communication\Messages\EndpointDisconnectMessageTest.cs" />
+    <Compile Include="Base\DatasetCannotBecomeParentExceptionTest.cs" />
+    <Compile Include="Base\DatasetIdTest.cs" />
+    <Compile Include="Base\DatasetOfflineInformationTest.cs" />
+    <Compile Include="Base\Loaders\BaseLineIdTest.cs" />
+    <Compile Include="Base\Loaders\DiskSpecificationTest.cs" />
+    <Compile Include="Base\Loaders\HardwareSpecificationTest.cs" />
+    <Compile Include="Base\Loaders\MachineDistributionRangeTest.cs" />
+    <Compile Include="Base\Loaders\MachineTest.cs" />
+    <Compile Include="Base\Loaders\NetworkIdentifierTest.cs" />
+    <Compile Include="Base\Loaders\NetworkSpecificationTest.cs" />
+    <Compile Include="Base\Loaders\ProcessorSpecificationTest.cs" />
     <Compile Include="Core\CannotUninstallNonequivalentServiceExceptionTest.cs" />
     <Compile Include="Core\CoreProxyTest.cs" />
     <Compile Include="Core\KernelNotInInstallReadyStateExceptionTest.cs" />
@@ -144,15 +164,11 @@
     <Compile Include="Core\Logging\LogSinkTest.cs" />
     <Compile Include="Core\MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="Core\NotificationNameTest.cs" />
-    <Compile Include="Core\Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Core\Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Core\Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Core\Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Core\Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
-    <Compile Include="Core\Projects\DatasetCannotBecomeParentExceptionTest.cs" />
-    <Compile Include="Core\Projects\DatasetIdTest.cs" />
     <Compile Include="Core\Projects\DatasetLoadEventArgsTest.cs" />
-    <Compile Include="Core\Projects\DatasetOfflineInformationTest.cs" />
     <Compile Include="Core\Projects\DatasetProxyTest.cs" />
     <Compile Include="Core\Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Core\Projects\ProjectBuilderTest.cs" />

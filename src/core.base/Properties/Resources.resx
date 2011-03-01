@@ -120,6 +120,12 @@
   <data name="Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType" xml:space="preserve">
     <value>A channel type must inherit from IChannelType.</value>
   </data>
+  <data name="Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace" xml:space="preserve">
+    <value>A disk cannot have more free space than total space.</value>
+  </data>
+  <data name="Exceptions_Messages_ADiskNeedsToHaveASerial" xml:space="preserve">
+    <value>A disk needs to have a serial number.</value>
+  </data>
   <data name="Exceptions_Messages_AMachineNeedsAtLeastOneDisk" xml:space="preserve">
     <value>A machine needs at least one disk.</value>
   </data>
@@ -128,6 +134,9 @@
   </data>
   <data name="Exceptions_Messages_AMessageNeedsToHaveAnId" xml:space="preserve">
     <value>A message must have an ID number. It cannot have the None ID as ID.</value>
+  </data>
+  <data name="Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress" xml:space="preserve">
+    <value>A network connection needs to have a valid MAC address.</value>
   </data>
   <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
     <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
@@ -158,5 +167,17 @@
   </data>
   <data name="Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue" xml:space="preserve">
     <value>The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores" xml:space="preserve">
+    <value>The number of logical processors in a CPU must be equal or larger than the number of physical cores.</value>
+  </data>
+  <data name="Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero" xml:space="preserve">
+    <value>The number of physical cores in a CPU must be larger than zero.</value>
+  </data>
+  <data name="Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero" xml:space="preserve">
+    <value>The address width of a CPU needs to be larger than zero. Most common values are 32 for x86 and 64 for x64.</value>
+  </data>
+  <data name="Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero" xml:space="preserve">
+    <value>The clock speed of a CPU must be larger than zero.</value>
   </data>
 </root>

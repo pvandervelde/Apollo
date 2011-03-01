@@ -9,6 +9,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Management;
+using Apollo.Core.Base.Properties;
+using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -90,13 +92,11 @@ namespace Apollo.Core.Base.Loaders
 
                 var networks = from ManagementObject queryObj in searcher.Get()
                                where ((bool)queryObj["PhysicalAdapter"])
-                               select new NetworkSpecification
-                                    {
-                                        Name = queryObj["Name"] as string,
-                                        MacAddress = queryObj["MACAddress"] as string,
-                                        IsConnected = (bool)queryObj["NetEnabled"],
-                                        SpeedInBitsPerSecond = (uint)queryObj["Speed"],
-                                    };
+                               select new NetworkSpecification(
+                                    queryObj["Name"] as string,
+                                    queryObj["MACAddress"] as string,
+                                    (bool)queryObj["NetEnabled"],
+                                    (ulong)queryObj["Speed"]);
 
                 return networks.ToArray();
             }
@@ -107,40 +107,92 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets the name of the physical network connector.
+        /// Initializes a new instance of the <see cref="NetworkSpecification"/> class.
+        /// </summary>
+        /// <param name="macAddress">The MAC address of the network card.</param>
+        /// <param name="isConnected"><see langword="true" /> if the card is connected to a physical network; otherwise, <see langword="false" />.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="macAddress"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="macAddress"/> is an empty string.
+        /// </exception>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public NetworkSpecification(string macAddress, bool isConnected)
+            : this(string.Empty, macAddress, isConnected, 0)
+        { 
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NetworkSpecification"/> class.
+        /// </summary>
+        /// <param name="name">The name of the network connection.</param>
+        /// <param name="macAddress">The MAC address of the network card.</param>
+        /// <param name="isConnected"><see langword="true" /> if the card is connected to a physical network; otherwise, <see langword="false" />.</param>
+        /// <param name="speed">The speed of the network in bits per second.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="macAddress"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="macAddress"/> is an empty string.
+        /// </exception>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        [CLSCompliant(false)]
+        public NetworkSpecification(string name, string macAddress, bool isConnected, ulong speed)
+        {
+            {
+                Enforce.Argument(() => name);
+                Enforce.Argument(() => macAddress);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(macAddress), Resources.Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress);
+            }
+
+            Name = name;
+            MacAddress = macAddress;
+            IsConnected = isConnected;
+            SpeedInBitsPerSecond = speed;
+        }
+
+        /// <summary>
+        /// Gets the name of the physical network connector.
         /// </summary>
         public string Name
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets the MAC address of the physical network connector.
+        /// Gets the MAC address of the physical network connector.
         /// </summary>
         public string MacAddress
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether if the connector is actually
+        /// Gets a value indicating whether if the connector is actually
         /// connected to an external network.
         /// </summary>
         public bool IsConnected
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>
-        /// Gets or sets the speed of the network in bits per second.
+        /// Gets the speed of the network in bits per second.
         /// </summary>
-        public long SpeedInBitsPerSecond
+        [CLSCompliant(false)]
+        public ulong SpeedInBitsPerSecond
         {
             get;
-            set;
+            private set;
         }
 
         /// <summary>

@@ -5,21 +5,21 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.Projects
+namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the DatasetCannotBecomeParentException class.")]
+    [Description("Tests the FailedToSendMessageException class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class DatasetCannotBecomeParentExceptionTest
+    public sealed class FailedToSendMessageExceptionTest
     {
         [VerifyContract]
         [Description("Tests the exception class for the default constructors and serialization capabilities.")]
-        public readonly IContract ExceptionTests = new ExceptionContract<DatasetCannotBecomeParentException>
+        public readonly IContract ExceptionTests = new ExceptionContract<FailedToSendMessageException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

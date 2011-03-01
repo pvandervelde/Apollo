@@ -9,6 +9,7 @@ using System.Runtime.Serialization;
 using System.ServiceModel.Channels;
 using System.ServiceModel.Description;
 using System.ServiceModel.Dispatcher;
+using Apollo.Utils;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -16,6 +17,7 @@ namespace Apollo.Core.Base.Communication
     /// The data contract attribute that should be applied when using the 
     /// <see cref="NetDataContractSerializer"/>.
     /// </summary>
+    [ExcludeFromCoverage("Attributes cannot be tested.")]
     [AttributeUsage(AttributeTargets.Method)]
     internal sealed class UseNetDataContractSerializerAttribute : Attribute, IOperationBehavior
     {

@@ -148,6 +148,15 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
+        /// Returns the collection of baseline results for the given machine.
+        /// </summary>
+        /// <returns>The collection of baseline results for the given machine.</returns>
+        public IEnumerable<BaseLineResult> BaseLines()
+        {
+            return m_Baselines.Values;
+        }
+
+        /// <summary>
         /// Determines whether the specified <see cref="Machine"/> is equal to this instance.
         /// </summary>
         /// <param name="other">The <see cref="Machine"/> to compare with this instance.</param>

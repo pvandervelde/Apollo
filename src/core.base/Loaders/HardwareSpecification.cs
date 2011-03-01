@@ -90,13 +90,13 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="processors"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="processors"/> an empty array.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="disks"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentOutOfRangeException">
+        /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="disks"/> is an empty array.
         /// </exception>
         /// <exception cref="ArgumentNullException">
@@ -111,10 +111,10 @@ namespace Apollo.Core.Base.Loaders
         {
             {
                 Enforce.Argument(() => processors);
-                Enforce.With<ArgumentOutOfRangeException>(processors.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneProcessor);
+                Enforce.With<ArgumentException>(processors.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneProcessor);
 
                 Enforce.Argument(() => disks);
-                Enforce.With<ArgumentOutOfRangeException>(disks.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneDisk);
+                Enforce.With<ArgumentException>(disks.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneDisk);
 
                 Enforce.Argument(() => networks);
             }

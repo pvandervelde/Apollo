@@ -604,27 +604,28 @@ task runUnitTests -depends buildBinaries -action{
         Invoke-Expression $writerCommand
         if ($LastExitCode -ne 0)
         {
-            throw 'PartCoverExclusionWriter failed on Apollo with return code: $LastExitCode'
+           throw 'PartCoverExclusionWriter failed on Apollo with return code: $LastExitCode'
         }
         
-        $partCoverExe = Join-Path $dirPartCover 'PartCover.x86.exe'
+        $partCoverExe = Join-Path $dirPartCover 'PartCover.exe'
         $command += '& "' + "$partCoverExe" + '" --register' 
-        $command += ' --settings "' + $partCoverConfigFile + '"'
+        $command += ' --settings "' + $partCoverConfigFile + '" '
         
         # run the tests
         $command
         
-        Invoke-Expression $command
+        #Invoke-Expression $command | out-null
+        & $partCoverExe --register --settings $partCoverConfigFile
         "" # Add an extra line because PartCover is retarded and doesn't do a writeline at the end
         if ($LastExitCode -ne 0)
         {
-            throw "MbUnit failed on Apollo.Utils with return code: $LastExitCode"
+            throw "MbUnit failed on Apollo with return code: $LastExitCode"
         }
         
         $transformExe = Join-Path (Join-Path $dirSandcastle "ProductionTools")"xsltransform.exe"
         $partCoverXslt = Join-Path (Join-Path $dirPartCover 'xslt') "partcoverfullreport.xslt"
         $partCoverHtml = Join-Path $dirReports $logPartCoverHtml
-        $command = '& "' + $transformExe + '" "' + $reportFile + '" /xsl:"' + $partCoverXslt + '" /out:"' + $partCoverHtml + '" '
+        $command = '& "' + $transformExe + '" "' + $reportFile + '" /xsl:"' + $partCoverXslt + '" /out:"' + $partCoverHtml + '"'
         
         $command
         Invoke-Expression $command
@@ -645,7 +646,7 @@ task runUnitTests -depends buildBinaries -action{
         $command += "/r:IsolatedProcess " 
         
         # add the files.
-        $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
+        $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml /rt:Xml-inline ' + $files
         
         # run the tests
         $command

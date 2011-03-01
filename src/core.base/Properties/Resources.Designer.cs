@@ -70,6 +70,24 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A disk cannot have more free space than total space..
+        /// </summary>
+        internal static string Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A disk needs to have a serial number..
+        /// </summary>
+        internal static string Exceptions_Messages_ADiskNeedsToHaveASerial {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ADiskNeedsToHaveASerial", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A machine needs at least one disk..
         /// </summary>
         internal static string Exceptions_Messages_AMachineNeedsAtLeastOneDisk {
@@ -93,6 +111,15 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_AMessageNeedsToHaveAnId {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_AMessageNeedsToHaveAnId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A network connection needs to have a valid MAC address..
+        /// </summary>
+        internal static string Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress", resourceCulture);
             }
         }
         
@@ -183,6 +210,43 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of logical processors in a CPU must be equal or larger than the number of physical cores..
+        /// </summary>
+        internal static string Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysica" +
+                        "lCores", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The number of physical cores in a CPU must be larger than zero..
+        /// </summary>
+        internal static string Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The address width of a CPU needs to be larger than zero. Most common values are 32 for x86 and 64 for x64..
+        /// </summary>
+        internal static string Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The clock speed of a CPU must be larger than zero..
+        /// </summary>
+        internal static string Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero", resourceCulture);
             }
         }
     }

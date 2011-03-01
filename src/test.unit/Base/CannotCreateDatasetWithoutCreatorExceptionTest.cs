@@ -5,11 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.Projects
+namespace Apollo.Core.Base
 {
     [TestFixture]
     [Description("Tests the CannotCreateDatasetWithoutCreatorException class.")]

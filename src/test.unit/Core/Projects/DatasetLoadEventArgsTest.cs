@@ -19,11 +19,16 @@ namespace Apollo.Core.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetLoadEventArgsTest
     {
+        /// <summary>
+        /// Store a link to a machine here so that we only need to build it once.
+        /// </summary>
+        private readonly Machine m_Machine = new Machine(new Dictionary<BaseLineId, BaseLineResult>());
+
         [Test]
         [Description("Checks that an object cannot be created with a null ID object.")]
         public void CreateWithNullId()
         {
-            var machines = new List<Machine> { new Machine(new Dictionary<BaseLineId, BaseLineResult>()) };
+            var machines = new List<Machine> { m_Machine };
             Assert.Throws<ArgumentNullException>(() => new DatasetLoadEventArgs(null, machines));
         }
 
@@ -49,7 +54,7 @@ namespace Apollo.Core.Projects
         public void Create()
         {
             var id = new DatasetId();
-            var machines = new List<Machine> { new Machine(new Dictionary<BaseLineId, BaseLineResult>()) };
+            var machines = new List<Machine> { m_Machine };
 
             var args = new DatasetLoadEventArgs(id, machines);
             Assert.AreSame(id, args.Id);

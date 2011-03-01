@@ -6,12 +6,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Base;
 using Apollo.Utils;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Projects
+namespace Apollo.Core.Base
 {
     [TestFixture]
     [Description("Tests the DatasetOfflineInformation class.")]
