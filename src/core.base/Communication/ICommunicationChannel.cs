@@ -69,7 +69,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
-        /// <param name="file">The file stream that contains the file that should be transferred.</param>
+        /// <param name="filePath">The file path to the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -78,7 +78,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token);
+        Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token);
 
         /// <summary>
         /// Sends the given message to the receiving endpoint.

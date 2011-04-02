@@ -44,7 +44,7 @@ namespace Apollo.Core.Base.Communication
             // No events other than the ones on ICommandSet
 
             // Check for each command method:
-            // - Return value is one of void / Task / IObservable
+            // - Return value is one of void / Task
             // - All parameters are serializable
             throw new NotImplementedException();
         }

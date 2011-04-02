@@ -4,12 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using MbUnit.Framework;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Communication.Messages;
+using MbUnit.Framework;
 
 namespace Apollo.Base.Communication.Messages
 {
@@ -19,5 +17,19 @@ namespace Apollo.Base.Communication.Messages
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointDisconnectMessageTest
     {
+        [Test]
+        [Description("Checks that the message serialises and deserialises correctly.")]
+        public void RoundTripSerialise()
+        {
+            var id = new EndpointId("endpoint");
+            var reason = "reason";
+            var msg = new EndpointDisconnectMessage(id, reason);
+            var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
+
+            Assert.AreEqual(id, otherMsg.OriginatingEndpoint);
+            Assert.AreEqual(reason, otherMsg.ClosingReason);
+            Assert.AreEqual(msg.Id, otherMsg.Id);
+            Assert.AreEqual(MessageId.None, otherMsg.InResponseTo);
+        }
     }
 }

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -16,6 +17,7 @@ using System.ServiceModel.Channels;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
+using Apollo.Utils;
 using Apollo.Utils.Configuration;
 using Lokad;
 
@@ -25,6 +27,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines a <see cref="IChannelType"/> that uses TCP/IP connections for communication between
     /// applications different machines.
     /// </summary>
+    [ExcludeFromCoverage("To test a TCP connection we'll have to have another machine. Not useful in unit testing.")]
     internal sealed class TcpChannelType : IChannelType
     {
         /// <summary>
@@ -41,18 +44,6 @@ namespace Apollo.Core.Base.Communication
             try
             {
                 var searcher = new ManagementObjectSearcher(
-                    "root\\CIMV2",
-                    "SELECT * FROM Win32_NetworkAdapter WHERE NetEnabled = True AND PhysicalAdapter = True");
-
-                string deviceCaption = (from ManagementObject queryObj in searcher.Get() 
-                                        select queryObj["Caption"] as string).FirstOrDefault();
-
-                if (string.IsNullOrWhiteSpace(deviceCaption))
-                {
-                    return Environment.MachineName;
-                }
-
-                searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
                     "SELECT * FROM Win32_NetworkAdapterConfiguration WHERE ServiceName = 'tunnel'");
 
@@ -85,6 +76,19 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// Returns the process ID of the process that is currently executing
+        /// this code.
+        /// </summary>
+        /// <returns>
+        /// The ID number of the current process.
+        /// </returns>
+        private static int GetCurrentProcessId()
+        {
+            var process = Process.GetCurrentProcess();
+            return process.Id;
+        }
+
+        /// <summary>
         /// The object that stores the configuration values for the
         /// named pipe WCF connection.
         /// </summary>
@@ -93,17 +97,17 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="TcpChannelType"/> class.
         /// </summary>
-        /// <param name="namedPipeConfiguration">The configuration for the WCF named pipe channel.</param>
+        /// <param name="tcpConfiguration">The configuration for the WCF tcp channel.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="namedPipeConfiguration"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="tcpConfiguration"/> is <see langword="null" />.
         /// </exception>
-        public TcpChannelType(IConfiguration namedPipeConfiguration)
+        public TcpChannelType(IConfiguration tcpConfiguration)
         {
             {
-                Enforce.Argument(() => namedPipeConfiguration);
+                Enforce.Argument(() => tcpConfiguration);
             }
 
-            m_Configuration = namedPipeConfiguration;
+            m_Configuration = tcpConfiguration;
         }
 
         /// <summary>
@@ -134,8 +138,8 @@ namespace Apollo.Core.Base.Communication
         public string GenerateNewAddress()
         {
             return m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpSubAddress) ? 
-                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubAddress) : 
-                "ApolloThroughTcp";
+                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubAddress) :
+                string.Format("{0}_{1}", "ApolloThroughTcp", GetCurrentProcessId());
         }
 
         /// <summary>
@@ -190,7 +194,6 @@ namespace Apollo.Core.Base.Communication
 
             var tcpListener = new TcpListener(IPAddress.Any, 0);
             var endpoint = tcpListener.LocalEndpoint as IPEndPoint;
-
             var info = new TcpStreamTransferInformation
                 {
                     StartPosition = File.Exists(localFile) ? new FileInfo(localFile).Length : 0,
@@ -206,13 +209,34 @@ namespace Apollo.Core.Base.Communication
                     {
                         using (var file = new FileStream(localFile, FileMode.Append, FileAccess.Write, FileShare.None))
                         {
+                            tcpListener.Start();
+
+                            // Wait for some connection to appear but don't block so that we can
+                            // check if the transfer should be cancelled.
+                            while (!tcpListener.Pending())
+                            {
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+
+                                Thread.Sleep(10);
+                            }
+
+                            // There should be a connection now so connect to it and then
+                            // extract the data from the network stream
                             using (TcpClient client = tcpListener.AcceptTcpClient())
                             {
                                 NetworkStream clientStream = client.GetStream();
 
                                 byte[] message = new byte[ReadBufferSize];
-                                while (!token.IsCancellationRequested)
+                                while (true)
                                 {
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        token.ThrowIfCancellationRequested();
+                                    }
+
                                     int bytesRead = clientStream.Read(message, 0, message.Length);
                                     if (bytesRead == 0)
                                     {
@@ -241,7 +265,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
-        /// <param name="file">The file stream that contains the file that should be transferred.</param>
+        /// <param name="filePath">The file path to the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -251,15 +275,25 @@ namespace Apollo.Core.Base.Communication
         /// An task that indicates when the transfer is complete.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="file"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
         /// </exception>
-        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="transferInformation"/> is not a <see cref="NamedPipeStreamTransferInformation"/> object.
+        /// </exception>
+        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
         {
             {
-                Enforce.Argument(() => file);
+                Enforce.Argument(() => filePath);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(filePath),
+                    Resources.Exceptions_Messages_FilePathCannotBeEmpty);
+
                 Enforce.Argument(() => transferInformation);
                 Enforce.With<ArgumentException>(
                     transferInformation is TcpStreamTransferInformation, 
@@ -278,15 +312,20 @@ namespace Apollo.Core.Base.Communication
                         var serverEndPoint = new IPEndPoint(transfer.IPAddress, transfer.Port);
 
                         client.Connect(serverEndPoint);
-                        using (NetworkStream clientStream = client.GetStream())
+                        using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                         {
-                            using (file)
+                            using (NetworkStream clientStream = client.GetStream())
                             {
                                 file.Position = transferInformation.StartPosition;
 
                                 byte[] buffer = new byte[ReadBufferSize];
-                                while (!token.IsCancellationRequested)
+                                while (true)
                                 {
+                                    if (token.IsCancellationRequested)
+                                    {
+                                        token.ThrowIfCancellationRequested();
+                                    }
+
                                     int bytesRead = file.Read(buffer, 0, ReadBufferSize);
                                     if (bytesRead == 0)
                                     {
@@ -299,7 +338,10 @@ namespace Apollo.Core.Base.Communication
                             }
                         }
                     }
-                });
+                },
+                token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
 
             return result;
         }

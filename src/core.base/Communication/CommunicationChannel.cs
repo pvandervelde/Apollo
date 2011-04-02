@@ -203,6 +203,8 @@ namespace Apollo.Core.Base.Communication
             if (m_Host != null)
             {
                 m_Host.Close();
+                m_Host.Faulted -= m_HostFaultingHandler;
+                m_HostFaultingHandler = null;
                 m_Host = null;
             }
 
@@ -287,7 +289,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
-        /// <param name="file">The file stream that contains the file that should be transferred.</param>
+        /// <param name="filePath">The file path to the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -297,19 +299,23 @@ namespace Apollo.Core.Base.Communication
         /// An task that indicates when the transfer is complete.
         /// </returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="file"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
         /// </exception>
-        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
         {
             {
-                Enforce.Argument(() => file);
+                Enforce.Argument(() => filePath);
+                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(filePath), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
                 Enforce.Argument(() => transferInformation);
             }
 
-            return m_Type.TransferData(file, transferInformation, token);
+            return m_Type.TransferData(filePath, transferInformation, token);
         }
 
         /// <summary>
@@ -342,7 +348,7 @@ namespace Apollo.Core.Base.Communication
         {
             Debug.Assert(m_ChannelConnectionMap.ContainsKey(id), "Trying to send a message to an unknown endpoint.");
             var connectionInfo = m_ChannelConnectionMap[id];
-            var uri = string.Format(CultureInfo.InvariantCulture, "{0}{1}", connectionInfo.ChannelBaseUri, connectionInfo.EndpointSubAddress);
+            var uri = string.Format(CultureInfo.InvariantCulture, "{0}/{1}", connectionInfo.ChannelBaseUri, connectionInfo.EndpointSubAddress);
             var endpoint = new EndpointAddress(uri);
 
             Debug.Assert(m_Type.GetType().Equals(connectionInfo.ChannelType), "Trying to connect to a channel with a different binding type.");

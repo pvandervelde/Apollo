@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.Pipes;
 using System.ServiceModel;
@@ -27,6 +28,19 @@ namespace Apollo.Core.Base.Communication
         /// Defines the default buffer size used for reading and writing.
         /// </summary>
         private const int ReadBufferSize = 4096;
+
+        /// <summary>
+        /// Returns the process ID of the process that is currently executing
+        /// this code.
+        /// </summary>
+        /// <returns>
+        /// The ID number of the current process.
+        /// </returns>
+        private static int GetCurrentProcessId()
+        {
+            var process = Process.GetCurrentProcess();
+            return process.Id;
+        }
 
         /// <summary>
         /// The object that stores the configuration values for the
@@ -58,7 +72,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Uri GenerateNewChannelUri()
         {
-            var channelUri = "net.pipe://localhost/pipe";
+            var channelUri = "net.pipe://localhost/apollo/pipe";
             return new Uri(channelUri);
         }
 
@@ -72,7 +86,7 @@ namespace Apollo.Core.Base.Communication
         {
             return m_Configuration.HasValueFor(CommunicationConfigurationKeys.NamedPipeSubAddress) ?
                 m_Configuration.Value<string>(CommunicationConfigurationKeys.NamedPipeSubAddress) :
-                "ApolloThroughNamedPipe";
+                string.Format("{0}_{1}", "ApolloThroughNamedPipe", GetCurrentProcessId());
         }
 
         /// <summary>
@@ -101,8 +115,17 @@ namespace Apollo.Core.Base.Communication
         /// the connection information and the task responsible for handling the data reception.
         /// </summary>
         /// <remarks>
+        /// <para>
         /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
-        /// it does exist then the data will be appended to it.
+        /// it does exist then the data will be appended to it. This means that if the transfer is interupted
+        /// for some reason then it is possible to call this method again on the half-finished file. In that case only the 
+        /// missing bit of the file will be transferred.
+        /// </para>
+        /// <para>
+        /// Note that this method is not able to tell the difference between a transfer that is finished or one where the
+        /// other side of the pipe disappears. This is due to the fact that the named pipe implementation does not
+        /// provide methods to detect if the other side of the pipe still exists.
+        /// </para>
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
@@ -110,6 +133,12 @@ namespace Apollo.Core.Base.Communication
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="localFile"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="localFile"/> is an empty string.
+        /// </exception>
         public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
         {
             {
@@ -137,10 +166,18 @@ namespace Apollo.Core.Base.Communication
                             pipe.WaitForConnection();
 
                             byte[] message = new byte[ReadBufferSize];
-                            while (!token.IsCancellationRequested)
+                            while (true)
                             {
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+
                                 // In theory we could just write the file name to the pipe
                                 // and then read that on the other side ...
+                                // Note that there is no way to detect if the client is still
+                                // pushing data into the pipe or not. So from here we cannot 
+                                // determine if the file transfer has completed!
                                 int bytesRead = pipe.Read(message, 0, message.Length);
                                 if (bytesRead == 0)
                                 {
@@ -164,7 +201,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Transfers the data to the receiving endpoint.
         /// </summary>
-        /// <param name="file">The file stream that contains the file that should be transferred.</param>
+        /// <param name="filePath">The file path to the file that should be transferred.</param>
         /// <param name="transferInformation">
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
@@ -173,10 +210,26 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        public Task TransferData(FileStream file, StreamTransferInformation transferInformation, CancellationToken token)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="filePath"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="transferInformation"/> is not a <see cref="NamedPipeStreamTransferInformation"/> object.
+        /// </exception>
+        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
         {
             {
-                Enforce.Argument(() => file);
+                Enforce.Argument(() => filePath);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(filePath),
+                    Resources.Exceptions_Messages_FilePathCannotBeEmpty);
+
                 Enforce.Argument(() => transferInformation);
                 Enforce.With<ArgumentException>(
                     transferInformation is NamedPipeStreamTransferInformation,
@@ -193,13 +246,18 @@ namespace Apollo.Core.Base.Communication
                     using (NamedPipeClientStream pipe = new NamedPipeClientStream(transfer.Name))
                     {
                         pipe.Connect();
-                        using (file)
+                        using (var file = new FileStream(filePath, FileMode.Open, FileAccess.Read))
                         {
                             file.Position = transferInformation.StartPosition;
 
                             byte[] buffer = new byte[ReadBufferSize];
-                            while (!token.IsCancellationRequested)
+                            while (true)
                             {
+                                if (token.IsCancellationRequested)
+                                {
+                                    token.ThrowIfCancellationRequested();
+                                }
+
                                 int bytesRead = file.Read(buffer, 0, ReadBufferSize);
                                 if (bytesRead == 0)
                                 {
@@ -211,7 +269,10 @@ namespace Apollo.Core.Base.Communication
                             }
                         }
                     }
-                });
+                },
+                token,
+                TaskCreationOptions.LongRunning,
+                TaskScheduler.Default);
 
             return result;
         }

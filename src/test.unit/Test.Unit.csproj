@@ -106,6 +106,7 @@
       <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\common\Apollo.UI.Common.csproj">
@@ -139,6 +140,10 @@
     <Compile Include="Base\Communication\MessageEventArgsTest.cs" />
     <Compile Include="Base\Communication\MessageIdTest.cs" />
     <Compile Include="Base\Communication\Messages\EndpointDisconnectMessageTest.cs" />
+    <Compile Include="Base\Communication\NamedPipeChannelTypeTest.cs" />
+    <Compile Include="Base\Communication\ReceivingEndpointTest.cs" />
+    <Compile Include="Base\Communication\SelfResurrectingSendingEndpointTest.cs" />
+    <Compile Include="Base\Communication\SendingEndpointTest.cs" />
     <Compile Include="Base\DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="Base\DatasetIdTest.cs" />
     <Compile Include="Base\DatasetOfflineInformationTest.cs" />

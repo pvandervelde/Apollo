@@ -19,6 +19,12 @@ namespace Apollo.Core.Base.Communication
         /// Accepts the messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        /// <design>
+        /// At the moment we use a binary serializer. At some point we should switch this over to 
+        /// use the 'Protocol Buffers' approach provided here: http://code.google.com/p/protobuf-net/
+        /// Using the Protocol Buffers should provide us with a better way of providing versioning
+        /// etc. of messages and data.
+        /// </design>
         [UseNetDataContractSerializer]
         [OperationContract(
             IsOneWay = true, 

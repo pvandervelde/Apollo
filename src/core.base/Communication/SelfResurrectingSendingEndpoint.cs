@@ -80,10 +80,16 @@ namespace Apollo.Core.Base.Communication
             }
             catch (FaultException e)
             {
-                // The receiving end threw an exception.
                 if (e.InnerException != null)
                 {
                     throw new FailedToSendMessageException(Resources.Exceptions_Messages_FailedToSendMessage, e.InnerException);
+                }
+                else 
+                {
+                    // There is no point in keeping the original call stack. The original
+                    // exception orginates on the other side of the channel. There is no
+                    // useful stack trace to keep!
+                    throw new FailedToSendMessageException();
                 }
             }
             catch (CommunicationException e)
