@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -35,47 +34,6 @@ namespace Apollo.Utils.Applications
         /// Defines the error code for an application exit with an unhandled exception.
         /// </summary>
         public const int UnhandledExceptionApplicationExitcode = 1;
-
-        /// <summary>
-        /// The table that maps an exception type to an event ID.
-        /// </summary>
-        private static readonly Dictionary<Type, int> m_ExceptionTypeToEventIdMap =
-            new Dictionary<Type, int> 
-                { 
-                    // Runtime errors
-                    { typeof(OutOfMemoryException), 0 },
-                    { typeof(StackOverflowException), 1 },
-                    { typeof(AccessViolationException), 2 },
-                    
-                    // Standard errors
-                    { typeof(AppDomainUnloadedException), 50 },
-                    { typeof(ArgumentException), 51 },
-                    { typeof(ArgumentNullException), 52 },
-                    { typeof(ArgumentOutOfRangeException), 53 },
-                    
-                    // I/O
-                    { typeof(IOException), 100 },
-                    { typeof(DirectoryNotFoundException), 101 },
-                    { typeof(DriveNotFoundException), 102 },
-                    { typeof(EndOfStreamException), 103 },
-                    { typeof(FileLoadException), 104 },
-                    { typeof(FileNotFoundException), 105 },
-                    { typeof(InternalBufferOverflowException), 106 },
-                    { typeof(InvalidDataException), 107 },
-                    { typeof(PathTooLongException), 108 },
-
-                    // Exception, used in case nothing else fits
-                    { typeof(Exception), int.MaxValue }
-                };
-
-        /// <summary>
-        /// The table that maps an event type to an event category.
-        /// </summary>
-        private static readonly Dictionary<EventType, short> m_EventTypeToEventCategoryMap =
-            new Dictionary<EventType, short> 
-                { 
-                    { EventType.Exception, 0 }
-                };
 
         /// <summary>
         /// The main entry point for the dataset application.
@@ -148,27 +106,13 @@ namespace Apollo.Utils.Applications
         public static void WriteExceptionToEventLog(Exception exception)
         {
             WriteToEventLog(
-                EventLogEntryType.Error, 
-                EventIdForException(exception),
+                EventLogEntryType.Error,
+                ExceptionTypeToEventIdMap.EventIdForException(exception),
                 EventType.Exception,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Fatal exception occurred during application execution",
                     exception));
-        }
-
-        private static int EventIdForException(Exception exception)
-        {
-            var exceptionType = exception.GetType();
-            while (!m_ExceptionTypeToEventIdMap.ContainsKey(exceptionType))
-            {
-                exceptionType = exceptionType.BaseType;
-            }
-
-            // If we get here then:
-            // a) we found our exception type
-            // b) we fell all the way through and found Exception as the type
-            return m_ExceptionTypeToEventIdMap[exceptionType];
         }
 
         /// <summary>
@@ -179,23 +123,13 @@ namespace Apollo.Utils.Applications
         /// <param name="eventId">The application specific identifier for the event.</param>
         /// <param name="category">The category type for the event.</param>
         /// <param name="text">The text which should be recorded in the event entry.</param>
-        public static void WriteToEventLog(EventLogEntryType entryType, int eventId, EventType category, string text)
+        private static void WriteToEventLog(EventLogEntryType entryType, int eventId, EventType category, string text)
         {
             if (EventLog.Exists(ApplicationEventLog))
             {
                 var log = new EventLog(ApplicationEventLog);
-                log.WriteEntry(text, entryType, eventId, EventCategory(category));
+                log.WriteEntry(text, entryType, eventId, EventTypeToEventCategoryMap.EventCategory(category));
             }
-        }
-
-        /// <summary>
-        /// Returns the event category for the given <see cref="EventType"/> value.
-        /// </summary>
-        /// <param name="type">The type of the event.</param>
-        /// <returns>The requested category ID.</returns>
-        private static short EventCategory(EventType type)
-        {
-            return m_EventTypeToEventCategoryMap[type];
         }
 
         private static void WriteExceptionToFile(string fileName, Exception exception)

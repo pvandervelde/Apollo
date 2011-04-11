@@ -7,11 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.ServiceModel;
+using System.ServiceModel.Discovery;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Lokad;
@@ -136,14 +137,11 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Opens the channel and provides information on how to connect to the given channel.
         /// </summary>
-        /// <returns>
-        /// The information describing how to connect to the current channel.
-        /// </returns>
-        public ChannelConnectionInformation OpenChannel()
+        public void OpenChannel()
         {
             if (m_Receiver != null)
             {
-                Close();
+                CloseChannel();
             }
 
             m_Receiver = m_ReceiverBuilder();
@@ -153,8 +151,6 @@ namespace Apollo.Core.Base.Communication
             var uri = m_Type.GenerateNewChannelUri();
             var address = m_Type.GenerateNewAddress();
             ReopenChannel(uri, address);
-
-            return new ChannelConnectionInformation(Id, m_Type.GetType(), uri, address);
         }
 
         private void ReopenChannel(Uri uri, string address)
@@ -171,8 +167,21 @@ namespace Apollo.Core.Base.Communication
             m_Host = new ServiceHost(m_Receiver, uri);
             m_Host.Faulted += m_HostFaultingHandler;
 
+            // Add the discovery elements
+            var discoveryBehavior = new ServiceDiscoveryBehavior();
+            discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
+            m_Host.Description.Behaviors.Add(discoveryBehavior);
+            m_Host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
+
+            // Add the normal endpoint
             var binding = m_Type.GenerateBinding();
-            m_Host.AddServiceEndpoint(typeof(IReceivingEndpoint), binding, address);
+            var endpoint = m_Host.AddServiceEndpoint(typeof(IReceivingEndpoint), binding, address);
+
+            // As additional information add the EndpointId of the current endpoint.
+            var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
+            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", Id.ToString())));
+            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", m_Type.GetType().FullName)));
+            endpoint.Behaviors.Add(endpointDiscoveryBehavior);
 
             m_Host.Open();
         }
@@ -180,7 +189,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Closes the current channel.
         /// </summary>
-        public void Close()
+        public void CloseChannel()
         {
             if (m_Sender != null)
             {
@@ -348,8 +357,7 @@ namespace Apollo.Core.Base.Communication
         {
             Debug.Assert(m_ChannelConnectionMap.ContainsKey(id), "Trying to send a message to an unknown endpoint.");
             var connectionInfo = m_ChannelConnectionMap[id];
-            var uri = string.Format(CultureInfo.InvariantCulture, "{0}/{1}", connectionInfo.ChannelBaseUri, connectionInfo.EndpointSubAddress);
-            var endpoint = new EndpointAddress(uri);
+            var endpoint = new EndpointAddress(connectionInfo.Address);
 
             Debug.Assert(m_Type.GetType().Equals(connectionInfo.ChannelType), "Trying to connect to a channel with a different binding type.");
             var binding = m_Type.GenerateBinding();

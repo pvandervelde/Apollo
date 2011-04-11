@@ -39,6 +39,12 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutofacContrib.Startable">
+      <HintPath>..\..\lib\autofac\AutofacContrib.Startable.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
@@ -57,6 +63,9 @@
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
@@ -71,7 +80,7 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="Communication\ChannelBuilder.cs" />
+    <Compile Include="BaseModule.cs" />
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
     <Compile Include="Communication\CommandProxyBuilder.cs" />
@@ -80,9 +89,10 @@
     <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
     <Compile Include="Communication\CommunicationLayer.cs" />
     <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
-    <Compile Include="Communication\EndpointAvailabilityEventArgs.cs" />
+    <Compile Include="Communication\DiscoveryChannel.cs" />
     <Compile Include="Communication\EndpointEventArgs.cs" />
     <Compile Include="Communication\EndpointId.cs" />
+    <Compile Include="Communication\EndpointNotContactableException.cs" />
     <Compile Include="Communication\FailedToSendMessageException.cs" />
     <Compile Include="Communication\IChannelProxy.cs" />
     <Compile Include="Communication\IChannelType.cs" />
@@ -91,12 +101,20 @@
     <Compile Include="Communication\ICommunicationChannelCommands.cs" />
     <Compile Include="Communication\ICommunicationLayer.cs" />
     <Compile Include="Communication\ICommunicationMessage.cs" />
+    <Compile Include="Communication\IDirectIncomingMessages.cs" />
     <Compile Include="Communication\IDiscoverOtherServices.cs" />
+    <Compile Include="Communication\IMessageProcessAction.cs" />
+    <Compile Include="Communication\IProcessIncomingMessages.cs" />
     <Compile Include="Communication\IMachineCommands.cs" />
+    <Compile Include="Communication\IMessageFilter.cs" />
     <Compile Include="Communication\IMessagePipe.cs" />
     <Compile Include="Communication\IReceivingEndpoint.cs" />
     <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
     <Compile Include="Communication\ISendingEndpoint.cs" />
+    <Compile Include="Communication\MessageHandler.cs" />
+    <Compile Include="Communication\Messages\MessageKindFilter.cs" />
+    <Compile Include="Communication\MissingBindingTypeException.cs" />
+    <Compile Include="Communication\MissingEndpointIdException.cs" />
     <Compile Include="Communication\NamedPipeChannelType.cs" />
     <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
     <Compile Include="Communication\StreamTransferInformation.cs" />
@@ -161,7 +179,9 @@
       <Name>Apollo.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Communication\Messages\Processors\" />
+  </ItemGroup>
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>

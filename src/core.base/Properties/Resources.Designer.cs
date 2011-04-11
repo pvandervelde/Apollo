@@ -160,6 +160,24 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The endpoint cannot be contacted. No connection information for this endpoint is available..
+        /// </summary>
+        internal static string Exceptions_Messages_EndpointNotContactable {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_EndpointNotContactable", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The endpoint [{0}] cannot be contacted. No connection information for this endpoint is available..
+        /// </summary>
+        internal static string Exceptions_Messages_EndpointNotContactable_WithEndpoint {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_EndpointNotContactable_WithEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to send the message..
         /// </summary>
         internal static string Exceptions_Messages_FailedToSendMessage {
@@ -205,11 +223,38 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to In order to filter on a given message kind the message class must implement the ICommunicationMessage interface..
+        /// </summary>
+        internal static string Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}..
         /// </summary>
         internal static string Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The endpoint discovery message did not provide a binding type. Contact information for the endpoint is incomplete without the binding information..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingBindingType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingBindingType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID..
+        /// </summary>
+        internal static string Exceptions_Messages_MissingEndpointId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MissingEndpointId", resourceCulture);
             }
         }
         

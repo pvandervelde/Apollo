@@ -24,8 +24,7 @@ namespace Apollo.Core.Base.Communication
         ///     The type of the <see cref="IChannelType"/> which indicates which kind of channel this connection
         ///     information describes.
         /// </param>
-        /// <param name="channelBaseUri">The base URI for the channel.</param>
-        /// <param name="endpointSubAddress">The sub address for the given endpoint. May be empty.</param>
+        /// <param name="address">The full URI for the channel.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="endpoint"/> is <see langword="null" />.
         /// </exception>
@@ -36,12 +35,9 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="channelType"/> does not inherit from <see cref="IChannelType"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="channelBaseUri"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="address"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="endpointSubAddress"/> is <see langword="null" />.
-        /// </exception>
-        public ChannelConnectionInformation(EndpointId endpoint, Type channelType, Uri channelBaseUri, string endpointSubAddress)
+        public ChannelConnectionInformation(EndpointId endpoint, Type channelType, Uri address)
         {
             {
                 Enforce.Argument(() => endpoint);
@@ -49,14 +45,12 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => channelType);
                 Enforce.With<ArgumentException>(typeof(IChannelType).IsAssignableFrom(channelType), Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
 
-                Enforce.Argument(() => channelBaseUri);
-                Enforce.Argument(() => endpointSubAddress);
+                Enforce.Argument(() => address);
             }
 
             Id = endpoint;
             ChannelType = channelType;
-            ChannelBaseUri = channelBaseUri;
-            EndpointSubAddress = endpointSubAddress;
+            Address = address;
         }
 
         /// <summary>
@@ -82,16 +76,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Gets a value indicating the URI of the channel.
         /// </summary>
-        public Uri ChannelBaseUri
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the endpoint sub-address. May be an empty string.
-        /// </summary>
-        public string EndpointSubAddress
+        public Uri Address
         {
             get;
             private set;

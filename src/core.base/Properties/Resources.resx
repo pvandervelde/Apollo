@@ -150,6 +150,12 @@
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
   </data>
+  <data name="Exceptions_Messages_EndpointNotContactable" xml:space="preserve">
+    <value>The endpoint cannot be contacted. No connection information for this endpoint is available.</value>
+  </data>
+  <data name="Exceptions_Messages_EndpointNotContactable_WithEndpoint" xml:space="preserve">
+    <value>The endpoint [{0}] cannot be contacted. No connection information for this endpoint is available.</value>
+  </data>
   <data name="Exceptions_Messages_FailedToSendMessage" xml:space="preserve">
     <value>Failed to send the message.</value>
   </data>
@@ -165,8 +171,17 @@
   <data name="Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues" xml:space="preserve">
     <value>The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}.</value>
   </data>
+  <data name="Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage" xml:space="preserve">
+    <value>In order to filter on a given message kind the message class must implement the ICommunicationMessage interface.</value>
+  </data>
   <data name="Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue" xml:space="preserve">
     <value>The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingBindingType" xml:space="preserve">
+    <value>The endpoint discovery message did not provide a binding type. Contact information for the endpoint is incomplete without the binding information.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingEndpointId" xml:space="preserve">
+    <value>The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID.</value>
   </data>
   <data name="Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores" xml:space="preserve">
     <value>The number of logical processors in a CPU must be equal or larger than the number of physical cores.</value>

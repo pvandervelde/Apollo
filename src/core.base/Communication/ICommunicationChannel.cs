@@ -27,15 +27,12 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Opens the channel and provides information on how to connect to the given channel.
         /// </summary>
-        /// <returns>
-        /// The information describing how to connect to the current channel.
-        /// </returns>
-        ChannelConnectionInformation OpenChannel();
+        void OpenChannel();
 
         /// <summary>
         /// Closes the current channel.
         /// </summary>
-        void Close();
+        void CloseChannel();
 
         /// <summary>
         /// Connects to a channel by using the information provided in the connection information

@@ -98,6 +98,8 @@
     </Compile>
     <Compile Include="Applications\EventType.cs" />
     <Compile Include="Applications\CommandLineProgram.cs" />
+    <Compile Include="Applications\EventTypeToEventCategoryMap.cs" />
+    <Compile Include="Applications\ExceptionTypeToEventIdMap.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="AssemblyNameElements.cs" />
     <Compile Include="FusionHelper.cs" />

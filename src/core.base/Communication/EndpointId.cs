@@ -45,10 +45,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public override string ToString()
         {
-            return string.Format(
-                CultureInfo.InvariantCulture,
-                "Endpoint ID: [{0}]",
-                InternalValue);
+            return InternalValue;
         }
     }
 }

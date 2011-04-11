@@ -24,13 +24,13 @@ namespace Apollo.Core.Base.Communication
         event EventHandler<EndpointEventArgs> OnEndpointBecomingUnavailable;
 
         /// <summary>
-        /// Announces to the network that the current endpoint is available.
+        /// Starts the endpoint discovery process.
         /// </summary>
-        void AnnounceLogOn();
+        void StartDiscovery();
 
         /// <summary>
-        /// Announces to the network that the current endpoint is not available.
+        /// Ends the endpoint discovery process.
         /// </summary>
-        void AnnounceLogOff();
+        void EndDiscovery();
     }
 }

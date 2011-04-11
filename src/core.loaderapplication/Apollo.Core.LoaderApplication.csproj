@@ -118,6 +118,12 @@
     <Compile Include="..\utils.srconly\Applications\EventType.cs">
       <Link>EventType.cs</Link>
     </Compile>
+    <Compile Include="..\utils.srconly\Applications\EventTypeToEventCategoryMap.cs">
+      <Link>EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Applications\ExceptionTypeToEventIdMap.cs">
+      <Link>ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">

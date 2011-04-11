@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -15,25 +16,37 @@ namespace Apollo.Core.Base.Communication
     internal interface ICommunicationLayer
     {
         /// <summary>
-        /// An event raised when the availability of an endpoint changes.
+        /// Connects to the network and broadcasts a sign on message.
         /// </summary>
-        event EventHandler<EndpointAvailabilityEventArgs> OnAvailabilityChange;
+        void SignOn();
 
         /// <summary>
-        /// An event raised when an endpoint goes offline permanently.
+        /// Broadcasts a sign off message and disconnects from the network.
         /// </summary>
-        event EventHandler<EndpointEventArgs> OnTerminate;
+        void SignOff();
 
         /// <summary>
-        /// Returns a value indicating if the given endpoint is available on the network.
+        /// An event raised when an endpoint has joined the network.
+        /// </summary>
+        event EventHandler<EndpointEventArgs> OnEndpointSignedOn;
+
+        /// <summary>
+        /// An event raised when an endpoint has left the network.
+        /// </summary>
+        event EventHandler<EndpointEventArgs> OnEndpointSignedOff;
+
+        /// <summary>
+        /// Returns a value indicating if the given endpoint has provided the information required to
+        /// contact it if it isn't offline.
         /// </summary>
         /// <param name="endpoint">The ID number of the endpoint.</param>
         /// <returns>
-        ///     <see langword="true" /> if the endpoint can be reached over the network. Otherwise; <see langword="false" />.
+        ///     <see langword="true" /> if the endpoint has provided the information necessary to contact 
+        ///     it over the network. Otherwise; <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        bool IsEndpointAvailable(EndpointId endpoint);
+        bool IsEndpointContactable(EndpointId endpoint);
 
         /// <summary>
         /// Connects to the given endpoint.
@@ -47,5 +60,14 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpoint">The endpoint to which the message has to be send.</param>
         /// <param name="message">The message that has to be send.</param>
         void SendMessageTo(EndpointId endpoint, ICommunicationMessage message);
+
+        /// <summary>
+        /// Sends the given message to the specified endpoint and returns a task that
+        /// will eventually contain the return message.
+        /// </summary>
+        /// <param name="endpoint">The endpoint to which the message has to be send.</param>
+        /// <param name="message">The message that has to be send.</param>
+        /// <returns>A task object that will eventually contain the response message.</returns>
+        Task<ICommunicationMessage> SendMessageAndWaitForRespone(EndpointId endpoint, ICommunicationMessage message);
     }
 }
