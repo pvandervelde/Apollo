@@ -20,7 +20,8 @@ function Build-DebugDev{
 
     'Running debug developer build'
     "Running script from: $script"
-    & invoke-psake $script debug,build,unittest,spectest,verify,package 4.0x86
+    
+    & invoke-psake $script -properties @{ "incremental"=$false;"coverage"=$false;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify 4.0x86
     if (!$psake.build_success)
     {
         throw "Apollo build failed with return code: $LastExitCode"
@@ -33,7 +34,7 @@ function Build-ReleaseDev{
 
     'Running release developer build'
     'Running script from: $script'
-    & invoke-psake $script release,build,unittest,spectest,verify,package 4.0x86
+    & invoke-psake $script -properties @{ "incremental"=$false;"coverage"=$false;"configuration"="release";"platform"="Any CPU" } clean,build,unittest,spectest,verify 4.0x86
     if (!$psake.build_success)
     {
         throw "Apollo build failed with return code: $LastExitCode"
@@ -46,7 +47,7 @@ function Build-DebugFull{
 
     'Running debug full build'
     'Running script from: $script'
-    & invoke-psake $script coverage,debug,clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0x86
+    & invoke-psake $script -properties @{ "incremental"=$false;"coverage"=$true;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0x86
     if (!$psake.build_success)
     {
         throw "Apollo build failed with return code: $LastExitCode"
@@ -59,7 +60,7 @@ function Build-ReleaseFull{
 
     'Running release full build'
     'Running script from: $script'
-    & invoke-psake $script coverage,release,clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0x86
+    & invoke-psake $script -properties @{ "incremental"=$false;"coverage"=$true;"configuration"="release";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0x86
     if (!$psake.build_success)
     {
         throw "Apollo build failed with return code: $LastExitCode"
