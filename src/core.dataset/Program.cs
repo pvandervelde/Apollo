@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Windows.Forms;
 using Apollo.Utils.Applications;
 
@@ -56,7 +57,8 @@ namespace Apollo.Core.Dataset
                     return CommandLineProgram.NormalApplicationExitCode;
                 };
 
-            return CommandLineProgram.EntryPoint(applicationLogic, s_DefaultErrorFileName);
+            var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
+            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, s_DefaultErrorFileName);
         }
     }
 }

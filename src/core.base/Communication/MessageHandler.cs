@@ -27,6 +27,12 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The collection of filters that should be used more than once.
         /// </summary>
+        /// <design>
+        /// Could improve this if we store filters based on the type of messag they work on. All filters that work
+        /// on the same type get placed in a collection (with their connected actions). That way the look-up will
+        /// be pretty quick. On the other hand we'll be storing a collection for each message type we filter on
+        /// which may mean we're storing an entire Collection object for a single filter.
+        /// </design>
         private readonly Dictionary<IMessageFilter, IMessageProcessAction> m_MultiUseFilters
             = new Dictionary<IMessageFilter, IMessageProcessAction>();
 
@@ -110,7 +116,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             // First check that the message isn't a response
-            if (message.InResponseTo != null)
+            if (!message.InResponseTo.Equals(MessageId.None))
             {
                 TaskCompletionSource<ICommunicationMessage> source = null;
                 lock (m_Lock)

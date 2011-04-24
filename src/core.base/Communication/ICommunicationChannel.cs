@@ -17,9 +17,9 @@ namespace Apollo.Core.Base.Communication
     internal interface ICommunicationChannel
     {
         /// <summary>
-        /// Gets a value indicating the ID number of the channel.
+        /// Gets the connection information that describes the local endpoint.
         /// </summary>
-        EndpointId Id
+        ChannelConnectionInformation LocalConnectionPoint
         {
             get;
         }

@@ -375,7 +375,6 @@
     <None Include="..\utils.srconly\Licensing\LicenseValidator.ttinclude">
       <Link>Utils\Licensing\LicenseValidator.ttinclude</Link>
     </None>
-    <None Include="App.config" />
     <None Include="Utils\Licensing\LicenseValidationCache.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>LicenseValidationCache.txt</LastGenOutput>

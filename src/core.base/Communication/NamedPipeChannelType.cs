@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Pipes;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
@@ -22,6 +23,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines a <see cref="IChannelType"/> that uses named pipes for communication between
     /// applications on the same local machine.
     /// </summary>
+    [ChannelRelativePerformanceAttribute(1)]
     internal sealed class NamedPipeChannelType : IChannelType
     {
         /// <summary>
@@ -72,7 +74,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Uri GenerateNewChannelUri()
         {
-            var channelUri = "net.pipe://localhost/apollo/pipe";
+            var channelUri = string.Format("net.pipe://localhost/apollo/pipe_{0}", GetCurrentProcessId());
             return new Uri(channelUri);
         }
 
@@ -108,6 +110,18 @@ namespace Apollo.Core.Base.Communication
                 };
 
             return binding;
+        }
+
+        /// <summary>
+        /// Attaches a new endpoint to the given host.
+        /// </summary>
+        /// <param name="host">The host to which the endpoint should be attached.</param>
+        /// <param name="implementedContract">The contract implemented by the endpoint.</param>
+        /// <param name="localEndpoint">The ID of the local endpoint, to be used in the endpoint metadata.</param>
+        /// <returns>The newly attached endpoint.</returns>
+        public ServiceEndpoint AttachEndpoint(ServiceHost host, Type implementedContract, EndpointId localEndpoint)
+        {
+            return host.AddServiceEndpoint(implementedContract, GenerateBinding(), GenerateNewAddress());
         }
 
         /// <summary>

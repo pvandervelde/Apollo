@@ -9,10 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.ServiceModel;
-using System.ServiceModel.Discovery;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Xml.Linq;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Lokad;
@@ -86,6 +84,11 @@ namespace Apollo.Core.Base.Communication
         private EventHandler<MessageEventArgs> m_MessageReceivingHandler;
 
         /// <summary>
+        /// The connection information for the current channel.
+        /// </summary>
+        private ChannelConnectionInformation m_LocalConnection;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommunicationChannel"/> class.
         /// </summary>
         /// <param name="id">The ID number of the current endpoint.</param>
@@ -124,13 +127,13 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Gets a value indicating the ID number of the channel.
+        /// Gets the connection information that describes the local endpoint.
         /// </summary>
-        public EndpointId Id
+        public ChannelConnectionInformation LocalConnectionPoint
         {
             get
             {
-                return m_Id;
+                return m_LocalConnection;
             }
         }
 
@@ -149,39 +152,29 @@ namespace Apollo.Core.Base.Communication
             m_Receiver.OnNewMessage += m_MessageReceivingHandler;
 
             var uri = m_Type.GenerateNewChannelUri();
-            var address = m_Type.GenerateNewAddress();
-            ReopenChannel(uri, address);
+            ReopenChannel(uri);
         }
 
-        private void ReopenChannel(Uri uri, string address)
+        private void ReopenChannel(Uri uri)
         {
             // Clear the old host
-            m_Host.Faulted -= m_HostFaultingHandler;
-            m_Host = null;
+            if (m_Host != null)
+            {
+                m_Host.Close();
+                m_Host.Faulted -= m_HostFaultingHandler;
+                m_HostFaultingHandler = null;
+                m_Host = null;
+            }
 
             // Create the new host
             m_HostFaultingHandler = (s, e) =>
                 {
-                    ReopenChannel(uri, address);
+                    ReopenChannel(uri);
                 };
             m_Host = new ServiceHost(m_Receiver, uri);
             m_Host.Faulted += m_HostFaultingHandler;
-
-            // Add the discovery elements
-            var discoveryBehavior = new ServiceDiscoveryBehavior();
-            discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
-            m_Host.Description.Behaviors.Add(discoveryBehavior);
-            m_Host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
-
-            // Add the normal endpoint
-            var binding = m_Type.GenerateBinding();
-            var endpoint = m_Host.AddServiceEndpoint(typeof(IReceivingEndpoint), binding, address);
-
-            // As additional information add the EndpointId of the current endpoint.
-            var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", Id.ToString())));
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", m_Type.GetType().FullName)));
-            endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+            var endpoint = m_Type.AttachEndpoint(m_Host, typeof(IReceivingEndpoint), m_Id);
+            m_LocalConnection = new ChannelConnectionInformation(m_Id, m_Type.GetType(), endpoint.Address.Uri);
 
             m_Host.Open();
         }
@@ -197,8 +190,16 @@ namespace Apollo.Core.Base.Communication
                 var knownEndpoints = new List<EndpointId>(m_Sender.KnownEndpoints());
                 foreach (var key in knownEndpoints)
                 {
-                    var msg = new EndpointDisconnectMessage(Id);
-                    m_Sender.Send(key, msg);
+                    var msg = new EndpointDisconnectMessage(m_Id);
+                    try
+                    {
+                        m_Sender.Send(key, msg);
+                    }
+                    catch (FailedToSendMessageException)
+                    {
+                        // For some reason the message didn't arrive. Honestly we don't
+                        // care, we're about to quit, not our problem anymore.
+                    }
                 }
 
                 // Then close the channel. We'll do this in a different
@@ -223,6 +224,8 @@ namespace Apollo.Core.Base.Communication
                 m_Receiver = null;
             }
 
+            m_LocalConnection = null;
+
             RaiseOnClosed();
         }
 
@@ -246,6 +249,12 @@ namespace Apollo.Core.Base.Communication
             }
 
             m_ChannelConnectionMap[connection.Id] = connection;
+            Send(
+                connection.Id, 
+                new EndpointConnectMessage(
+                    m_Id, 
+                    m_LocalConnection.Address.AbsoluteUri, 
+                    m_Type.GetType()));
         }
 
         /// <summary>
@@ -256,6 +265,8 @@ namespace Apollo.Core.Base.Communication
         {
             if (m_ChannelConnectionMap.ContainsKey(endpoint))
             {
+                Send(endpoint, new EndpointDisconnectMessage(m_Id));
+
                 if (m_Sender != null)
                 {
                     m_Sender.CloseChannelTo(endpoint);
@@ -390,7 +401,7 @@ namespace Apollo.Core.Base.Communication
             var local = OnClosed;
             if (local != null)
             {
-                local(this, new ChannelClosedEventArgs(Id));
+                local(this, new ChannelClosedEventArgs(m_Id));
             }
         }
     }

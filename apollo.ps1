@@ -56,6 +56,9 @@ function global:Get-BzrExe{
 }
 
 function global:Get-BzrVersion{
+    # NOTE: Do not put output text in this method because it will be appended
+    # to the return value, which is very unhelpful
+    
     $bzrPath = Get-BzrExe
     
     # Get the bzr output in xml format
@@ -84,6 +87,9 @@ function global:Get-BzrVersion{
 
 function global:Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
 {
+    # NOTE: Do not put output text in this method because it will be appended
+    # to the return value, which is very unhelpful
+    
     $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
     $publicKeyFile = Join-Path $tempDir ([System.IO.Path]::GetRandomFileName())
 
@@ -114,6 +120,9 @@ function global:Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pat
 
 function global:Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
 {
+    # NOTE: Do not put output text in this method because it will be appended
+    # to the return value, which is very unhelpful
+    
     $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
 
     # use snk to get the public key bit
@@ -335,6 +344,7 @@ properties{
     # assembly names
     $assemblyNameUnitTest = 'Test.Unit, PublicKey='
     #$assemblyNameSpecTest = 'Test.Spec, PublicKey='
+    $assemblyNameManualTest = 'Test.Manual.Console, PublicKey='
     $assemblyNameDynamicProxy = 'DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7'
     $assemblyNameMoq = 'Moq, PublicKey='
     
@@ -440,7 +450,7 @@ task getVersion -action{
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
     $build = $xmlFile.version | %{$_.build} | Select-Object -Unique
     $revision = Get-BzrVersion
-
+    
     $version = New-Object -TypeName System.Version -ArgumentList "$major.$minor.$build.$revision"
     "version is: $version"
     
@@ -537,20 +547,25 @@ task buildBinaries -depends runInit, getVersion -action{
     "Building Apollo..."
     
     # Set the version numbers
+    "Creating version info file ..."
     Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile $versionNumber
     
     # Set the configuration
+    "Creating configuration info file ..."
     Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
     
     # Set the InternalsVisibleTo attribute
+    "Creating internals visible to file ..."
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
     $unitTestAssemblyName = $assemblyNameUnitTest + $publicKeyToken
+    $manualTestAssemblyName = $assemblyNameManualTest + $publicKeyToken
     
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $dirMoq 'Moq.dll')
     $moqAssemblyName = $assemblyNameMoq + $publicKeyToken
-    Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile ($unitTestAssemblyName, $moqAssemblyName, $assemblyNameDynamicProxy)
+    Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile ($unitTestAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $assemblyNameDynamicProxy)
     
     # Create the license verification sequence file
+    "Creating license verification file ..."
     Create-LicenseVerificationSequencesFile $licenseVerificationSequencesTemplateFile $licenseVerificationSequencesYieldTemplateFile $licenseVerificationSequencesFile
 
     $logPath = Join-Path $dirLogs $logMsBuild
@@ -824,11 +839,11 @@ task buildPackage -depends buildBinaries -action{
     $nlog = 'NLog.dll'
     Copy-Item (Join-Path $dirOutput $nlog) -Destination (Join-Path $dirTempZip $nlog)    
     
-    $prismFile = 'Microsoft.Practices.Composite.dll'
+    $prismFile = 'Microsoft.Practices.Prism.dll'
     Copy-Item (Join-Path $dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
     
-    $prismPresentationFile = 'Microsoft.Practices.Composite.Presentation.dll'
-    Copy-Item (Join-Path $dirOutput $prismPresentationFile) -Destination (Join-Path $dirTempZip $prismPresentationFile)
+    $prismInteractivityFile = 'Microsoft.Practices.Prism.Interactivity.dll'
+    Copy-Item (Join-Path $dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
     
     $serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
     Copy-Item (Join-Path $dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)

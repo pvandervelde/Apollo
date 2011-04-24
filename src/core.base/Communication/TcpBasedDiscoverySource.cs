@@ -17,7 +17,7 @@ namespace Apollo.Core.Base.Communication
     /// Handles the discovery of endpoints on other computers to which a connection can be 
     /// made via the TCP protocol.
     /// </summary>
-    internal sealed class DiscoveryChannel : IDiscoverOtherServices
+    internal sealed class TcpBasedDiscoverySource : IDiscoverOtherServices
     {
         /// <summary>
         /// The service that handles the detection of discovery announcements.

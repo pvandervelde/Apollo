@@ -14,8 +14,11 @@ using System.Net;
 using System.Net.Sockets;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
+using System.ServiceModel.Discovery;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Apollo.Core.Base.Properties;
 using Apollo.Utils;
 using Apollo.Utils.Configuration;
@@ -27,6 +30,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines a <see cref="IChannelType"/> that uses TCP/IP connections for communication between
     /// applications different machines.
     /// </summary>
+    [ChannelRelativePerformanceAttribute(2)]
     [ExcludeFromCoverage("To test a TCP connection we'll have to have another machine. Not useful in unit testing.")]
     internal sealed class TcpChannelType : IChannelType
     {
@@ -130,19 +134,6 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Generates a new address for the channel endpoint.
-        /// </summary>
-        /// <returns>
-        /// The newly generated address for the channel endpoint.
-        /// </returns>
-        public string GenerateNewAddress()
-        {
-            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpSubAddress) ? 
-                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubAddress) :
-                string.Format("{0}_{1}", "ApolloThroughTcp", GetCurrentProcessId());
-        }
-
-        /// <summary>
         /// Generates a new binding object for the channel.
         /// </summary>
         /// <returns>
@@ -151,16 +142,55 @@ namespace Apollo.Core.Base.Communication
         public Binding GenerateBinding()
         {
             var binding = new NetTcpBinding(SecurityMode.None, false)
-                {
-                    MaxConnections = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) ?
-                        m_Configuration.Value<int>(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) :
-                        25,
-                    ReceiveTimeout = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingReceiveTimeout) ?
-                        m_Configuration.Value<TimeSpan>(CommunicationConfigurationKeys.BindingReceiveTimeout) :
-                        new TimeSpan(0, 30, 00),
-                };
+            {
+                MaxConnections = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) ?
+                    m_Configuration.Value<int>(CommunicationConfigurationKeys.BindingMaximumNumberOfConnections) :
+                    25,
+                ReceiveTimeout = m_Configuration.HasValueFor(CommunicationConfigurationKeys.BindingReceiveTimeout) ?
+                    m_Configuration.Value<TimeSpan>(CommunicationConfigurationKeys.BindingReceiveTimeout) :
+                    new TimeSpan(0, 30, 00),
+            };
 
             return binding;
+        }
+
+        /// <summary>
+        /// Attaches a new endpoint to the given host.
+        /// </summary>
+        /// <param name="host">The host to which the endpoint should be attached.</param>
+        /// <param name="implementedContract">The contract implemented by the endpoint.</param>
+        /// <param name="localEndpoint">The ID of the local endpoint, to be used in the endpoint metadata.</param>
+        /// <returns>The newly attached endpoint.</returns>
+        public ServiceEndpoint AttachEndpoint(ServiceHost host, Type implementedContract, EndpointId localEndpoint)
+        {
+            var discoveryBehavior = new ServiceDiscoveryBehavior();
+            discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
+            host.Description.Behaviors.Add(discoveryBehavior);
+            host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
+
+            // Add the normal endpoint
+            var endpoint = host.AddServiceEndpoint(implementedContract, GenerateBinding(), GenerateNewAddress());
+
+            // As additional information add the EndpointId of the current endpoint.
+            var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
+            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", localEndpoint.ToString())));
+            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", GetType().FullName)));
+            endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+
+            return endpoint;
+        }
+
+        /// <summary>
+        /// Generates a new address for the channel endpoint.
+        /// </summary>
+        /// <returns>
+        /// The newly generated address for the channel endpoint.
+        /// </returns>
+        public string GenerateNewAddress()
+        {
+            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpSubAddress) ?
+                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubAddress) :
+                string.Format("{0}_{1}", "ApolloThroughTcp", GetCurrentProcessId());
         }
 
         /// <summary>

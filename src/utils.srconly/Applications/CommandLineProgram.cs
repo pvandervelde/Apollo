@@ -11,6 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
+using System.Security;
 using System.Text;
 
 namespace Apollo.Utils.Applications
@@ -39,9 +40,10 @@ namespace Apollo.Utils.Applications
         /// The main entry point for the dataset application.
         /// </summary>
         /// <param name="applicationMethod">The function that runs the application logic.</param>
+        /// <param name="eventLogSource">The name of the event log source.</param>
         /// <param name="errorLogFileName">The name of the file that contains the error log.</param>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
-        public static int EntryPoint(Func<int> applicationMethod, string errorLogFileName)
+        public static int EntryPoint(Func<int> applicationMethod, string eventLogSource, string errorLogFileName)
         {
             try
             {
@@ -66,22 +68,20 @@ namespace Apollo.Utils.Applications
                 // We'll try to log to the event log.
                 try
                 {
-                    WriteExceptionToEventLog(e);
+                    WriteExceptionToEventLog(eventLogSource, e);
                 }
                 catch (ArgumentException)
                 {
-                    // Failed to write to the event log. Nothing we can do about it
-                    // Simply bail.
+                    // One of the arguments was incorrect. Oh well
                 }
                 catch (InvalidOperationException)
                 {
-                    // Failed to write to the event log. Nothing we can do about it
-                    // Simply bail.
+                    // Could not open the registry key for the event log
                 }
                 catch (Win32Exception)
                 {
-                    // Failed to write to the event log. Nothing we can do about it
-                    // Simply bail.
+                    // The operating system reported an error without 
+                    // an error code.
                 }
 
                 try
@@ -102,10 +102,12 @@ namespace Apollo.Utils.Applications
         /// <summary>
         /// Writes the given exception to the event log.
         /// </summary>
+        /// <param name="eventLogSource">The name of the event log source.</param>
         /// <param name="exception">The exception.</param>
-        public static void WriteExceptionToEventLog(Exception exception)
+        public static void WriteExceptionToEventLog(string eventLogSource, Exception exception)
         {
             WriteToEventLog(
+                eventLogSource,
                 EventLogEntryType.Error,
                 ExceptionTypeToEventIdMap.EventIdForException(exception),
                 EventType.Exception,
@@ -119,15 +121,20 @@ namespace Apollo.Utils.Applications
         /// Writes the given text to the Application event log and records the event ID and category ID in the
         /// event log entry.
         /// </summary>
+        /// <param name="eventLogSource">The name of the event log source.</param>
         /// <param name="entryType">The kind of event log entry that should be generated.</param>
         /// <param name="eventId">The application specific identifier for the event.</param>
         /// <param name="category">The category type for the event.</param>
         /// <param name="text">The text which should be recorded in the event entry.</param>
-        private static void WriteToEventLog(EventLogEntryType entryType, int eventId, EventType category, string text)
+        private static void WriteToEventLog(string eventLogSource, EventLogEntryType entryType, int eventId, EventType category, string text)
         {
+            // If the source does not exist we're stuffed. Normal users can't create an event log source
+            // and they can't even check whether the source does exist so we'll just pretend that the 
+            // installer has done it's job by creating the event source for us.
             if (EventLog.Exists(ApplicationEventLog))
             {
                 var log = new EventLog(ApplicationEventLog);
+                log.Source = eventLogSource;
                 log.WriteEntry(text, entryType, eventId, EventTypeToEventCategoryMap.EventCategory(category));
             }
         }
@@ -139,7 +146,7 @@ namespace Apollo.Utils.Applications
             // loading. If an exception happens that is not handled then we might be having
             // loader issues. These are probably due to us trying to load some of our code or
             // one of it's dependencies. Given that this is causing a problem it seems wise to not
-            // try to use our code to find an assembly file path ...
+            // try to use our (external) code to find an assembly file path ...
             var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             if (localAppDataPath == null)
             {

@@ -6,7 +6,9 @@
 
 using System;
 using System.IO;
+using System.ServiceModel;
 using System.ServiceModel.Channels;
+using System.ServiceModel.Description;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,20 +29,21 @@ namespace Apollo.Core.Base.Communication
         Uri GenerateNewChannelUri();
 
         /// <summary>
-        /// Generates a new address for the channel endpoint.
-        /// </summary>
-        /// <returns>
-        /// The newly generated address for the channel endpoint.
-        /// </returns>
-        string GenerateNewAddress();
-
-        /// <summary>
         /// Generates a new binding object for the channel.
         /// </summary>
         /// <returns>
         /// The newly generated binding.
         /// </returns>
         Binding GenerateBinding();
+
+        /// <summary>
+        /// Attaches a new endpoint to the given host.
+        /// </summary>
+        /// <param name="host">The host to which the endpoint should be attached.</param>
+        /// <param name="implementedContract">The contract implemented by the endpoint.</param>
+        /// <param name="localEndpoint">The ID of the local endpoint, to be used in the endpoint metadata.</param>
+        /// <returns>The newly attached endpoint.</returns>
+        ServiceEndpoint AttachEndpoint(ServiceHost host, Type implementedContract, EndpointId localEndpoint);
 
         /// <summary>
         /// Creates the required channel(s) to receive a data stream across the network and returns

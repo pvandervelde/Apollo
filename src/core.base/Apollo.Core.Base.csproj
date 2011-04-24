@@ -89,11 +89,11 @@
     <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
     <Compile Include="Communication\CommunicationLayer.cs" />
     <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
-    <Compile Include="Communication\DiscoveryChannel.cs" />
     <Compile Include="Communication\EndpointEventArgs.cs" />
     <Compile Include="Communication\EndpointId.cs" />
     <Compile Include="Communication\EndpointNotContactableException.cs" />
     <Compile Include="Communication\FailedToSendMessageException.cs" />
+    <Compile Include="Communication\IAcceptExternalEndpointInformation.cs" />
     <Compile Include="Communication\IChannelProxy.cs" />
     <Compile Include="Communication\IChannelType.cs" />
     <Compile Include="Communication\ICommandSet.cs" />
@@ -112,11 +112,14 @@
     <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
     <Compile Include="Communication\ISendingEndpoint.cs" />
     <Compile Include="Communication\MessageHandler.cs" />
+    <Compile Include="Communication\Messages\EndpointConnectMessage.cs" />
     <Compile Include="Communication\Messages\MessageKindFilter.cs" />
+    <Compile Include="Communication\Messages\Processors\EndpointConnectProcessAction.cs" />
     <Compile Include="Communication\MissingBindingTypeException.cs" />
     <Compile Include="Communication\MissingEndpointIdException.cs" />
     <Compile Include="Communication\NamedPipeChannelType.cs" />
     <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
+    <Compile Include="Communication\ChannelRelativePerformanceAttribute.cs" />
     <Compile Include="Communication\StreamTransferInformation.cs" />
     <Compile Include="Communication\MessageEventArgs.cs" />
     <Compile Include="Communication\MessageHub.cs" />
@@ -127,6 +130,7 @@
     <Compile Include="Communication\ReceivingEndpoint.cs" />
     <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
     <Compile Include="Communication\SendingEndpoint.cs" />
+    <Compile Include="Communication\TcpBasedDiscoverySource.cs" />
     <Compile Include="Communication\TcpChannelType.cs" />
     <Compile Include="Communication\TcpStreamTransferInformation.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
@@ -145,6 +149,7 @@
     <Compile Include="Loaders\NetworkSpecification.cs" />
     <Compile Include="Loaders\ProcessorArchitecture.cs" />
     <Compile Include="Loaders\ProcessorSpecification.cs" />
+    <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -179,9 +184,7 @@
       <Name>Apollo.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Communication\Messages\Processors\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <ProjectPath>$(MSBuildProjectDirectory)</ProjectPath>
     <BasePath>$(ProjectPath)\..\..</BasePath>

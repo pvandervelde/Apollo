@@ -56,7 +56,7 @@ namespace Apollo.Core.Base.Communication.Messages
               Justification = "Documentation can start with a language keyword")]
         public bool PassThrough(ICommunicationMessage message)
         {
-            return (message != null) && message.GetType().Equals(m_MessageType);
+            return (message != null) && m_MessageType.IsAssignableFrom(message.GetType());
         }
     }
 }

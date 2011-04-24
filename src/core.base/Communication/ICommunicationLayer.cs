@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
@@ -15,6 +16,31 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal interface ICommunicationLayer
     {
+        /// <summary>
+        /// Gets the endpoint ID of the local endpoint.
+        /// </summary>
+        EndpointId Id
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the communication layer has signed on with
+        /// the network.
+        /// </summary>
+        bool IsSignedOn
+        { 
+            get; 
+        }
+
+        /// <summary>
+        /// Returns a collection containing information about the local connection points.
+        /// </summary>
+        /// <returns>
+        /// The collection that describes the local connection points.
+        /// </returns>
+        IEnumerable<ChannelConnectionInformation> LocalConnectionPoints();
+
         /// <summary>
         /// Connects to the network and broadcasts a sign on message.
         /// </summary>
@@ -28,7 +54,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// An event raised when an endpoint has joined the network.
         /// </summary>
-        event EventHandler<EndpointEventArgs> OnEndpointSignedOn;
+        event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedOn;
 
         /// <summary>
         /// An event raised when an endpoint has left the network.
@@ -69,5 +95,11 @@ namespace Apollo.Core.Base.Communication
         /// <param name="message">The message that has to be send.</param>
         /// <returns>A task object that will eventually contain the response message.</returns>
         Task<ICommunicationMessage> SendMessageAndWaitForRespone(EndpointId endpoint, ICommunicationMessage message);
+
+        /// <summary>
+        /// Disconnects from the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The endpoint.</param>
+        void DisconnectFromEndpoint(EndpointId endpoint);
     }
 }

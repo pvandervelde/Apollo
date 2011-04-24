@@ -6,8 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Core.Base.Communication.Messages.Processors;
 using Apollo.Utils;
 using Apollo.Utils.Configuration;
 using Autofac;
@@ -33,11 +35,11 @@ namespace Apollo.Core.Base
             }
         }
 
-        private static void ConnectToCommunicationChannel(IActivatedEventArgs<MessageHandler> a, Type key)
+        private static void ConnectToMessageHandler(IActivatedEventArgs<ICommunicationChannel> a, Type key)
         {
-            var channel = a.Context.ResolveKeyed<ICommunicationChannel>(key);
-            channel.OnReceive += (s, e) => a.Instance.ProcessMessage(e.Message);
-            channel.OnClosed += (s, e) => a.Instance.OnLocalChannelClosed();
+            var handler = a.Context.ResolveKeyed<IProcessIncomingMessages>(key);
+            a.Instance.OnReceive += (s, e) => handler.ProcessMessage(e.Message);
+            a.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
         /// <summary>
@@ -62,15 +64,28 @@ namespace Apollo.Core.Base
             builder.Register(c => new CommandProxyBuilder());
 
             builder.Register(c => new CommunicationLayer(
-                    c.Resolve<IDiscoverOtherServices>(),
-                    (Type t) => 
+                    c.Resolve<IEnumerable<IDiscoverOtherServices>>(),
+                    (Type t, EndpointId id) => 
                     { 
-                        return Tuple.Create(c.ResolveKeyed<ICommunicationChannel>(t), c.ResolveKeyed<IDirectIncomingMessages>(t)); 
+                        return Tuple.Create(
+                            c.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
+                            c.ResolveKeyed<IDirectIncomingMessages>(t)); 
                     }))
-                .As<ICommunicationLayer>();
+                .As<ICommunicationLayer>()
+                .SingleInstance();
 
-            builder.Register(c => new object())
+            builder.Register(c => new TcpBasedDiscoverySource())
                 .As<IDiscoverOtherServices>();
+
+            // For now we're marking this as a single instance because
+            // we want it to be linked to the CommunicationLayer at all times
+            // and yet we want to be able to give it out to users without 
+            // having to worry if we have given out the correct instance. Maybe
+            // there is a cleaner solution to this problem though ...
+            builder.Register(c => new ManualDiscoverySource())
+                .As<IDiscoverOtherServices>()
+                .As<IAcceptExternalEndpointInformation>()
+                .SingleInstance();
 
             // MessageHandler
             // Note that there is no direct relation between the IChannelType and the MessageHandler
@@ -80,25 +95,31 @@ namespace Apollo.Core.Base
                     .OnActivated(a =>
                     {
                         AttachMessageProcessingActions(a);
-                        ConnectToCommunicationChannel(a, typeof(NamedPipeChannelType));
                     })
-                    .AsImplementedInterfaces()
-                    .Keyed<ICommunicationChannel>(typeof(NamedPipeChannelType))
+                    .Keyed<IProcessIncomingMessages>(typeof(NamedPipeChannelType))
+                    .Keyed<IDirectIncomingMessages>(typeof(NamedPipeChannelType))
                     .SingleInstance();
 
                 builder.Register(c => new MessageHandler())
                     .OnActivated(a =>
                         {
                             AttachMessageProcessingActions(a);
-                            ConnectToCommunicationChannel(a, typeof(TcpChannelType));
                         })
-                    .AsImplementedInterfaces()
-                    .Keyed<ICommunicationChannel>(typeof(TcpChannelType))
+                    .Keyed<IProcessIncomingMessages>(typeof(TcpChannelType))
+                    .Keyed<IDirectIncomingMessages>(typeof(TcpChannelType))
                     .SingleInstance();
             }
 
             // IMessageProcessAction(s)
-            //
+            // For now we'll just create two extra objects only to get their types
+            // and then throw those objects away. If this turns out to be too expensive
+            // or the list becomes too long then we can do something cunning with the 
+            // use of Autofac Metadata.
+            builder.Register(c => new EndpointConnectProcessAction(
+                    c.Resolve<IAcceptExternalEndpointInformation>(),
+                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType()))
+                .As<IMessageProcessAction>();
+            
             // CommunicationChannel.
             // Register one channel for each communication type. At the moment
             // that is only named pipe and TCP.
@@ -114,6 +135,10 @@ namespace Apollo.Core.Base
                                     typeof(Func<EndpointId, IChannelProxy>),
                                     endpointToProxy));
                         }))
+                    .OnActivated(a =>
+                        {
+                            ConnectToMessageHandler(a, typeof(NamedPipeChannelType));
+                        })
                     .Keyed<ICommunicationChannel>(typeof(NamedPipeChannelType))
                     .SingleInstance();
 
@@ -128,6 +153,10 @@ namespace Apollo.Core.Base
                                     typeof(Func<EndpointId, IChannelProxy>),
                                     endpointToProxy));
                         }))
+                    .OnActivated(a =>
+                        {
+                            ConnectToMessageHandler(a, typeof(TcpChannelType));
+                        })
                     .Keyed<ICommunicationChannel>(typeof(TcpChannelType))
                     .SingleInstance();
             }
@@ -141,17 +170,18 @@ namespace Apollo.Core.Base
 
             builder.Register(c => new NamedPipeChannelType(
                     c.Resolve<IConfiguration>()))
+                .As<IChannelType>()
                 .As<NamedPipeChannelType>();
 
             builder.Register(c => new TcpChannelType(
                     c.Resolve<IConfiguration>()))
+                .As<IChannelType>()
                 .As<TcpChannelType>();
         }
 
         private void RegisterLoaderComponents(ContainerBuilder builder)
         {
             // DatasetLoader
-            throw new NotImplementedException();
         }
     }
 }

@@ -45,7 +45,10 @@ namespace Apollo.Utils.Applications
                     { typeof(PathTooLongException), 108 },
 
                     // Exception, used in case nothing else fits
-                    { typeof(Exception), int.MaxValue }
+                    //
+                    // The maximum value of an EventID is defined as UInt16.MaxValue
+                    // (i.e. 65535) here: http://msdn.microsoft.com/en-us/library/ysx54zda.aspx
+                    { typeof(Exception), ushort.MaxValue }
                 };
 
         /// <summary>
