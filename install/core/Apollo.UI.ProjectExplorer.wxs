@@ -79,7 +79,6 @@
             </Component>
 
             <!-- Microsoft.Practices.Prism.dll -->
-            <!--
             <Component Id="C.Microsoft.Practices.Prism.dll"
                        Guid="{5BD306B0-29E2-4641-A057-2AE3770F8B2B}">
                 <File Id="File.Microsoft.Practices.Prism.dll"
@@ -88,10 +87,8 @@
                       Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.dll"
                       KeyPath="yes" />
             </Component>
-            -->
 
             <!-- Microsoft.Practices.Prism.Interactivity.dll -->
-            <!--
             <Component Id="C.Microsoft.Practices.Prism.Interactivity.dll"
                        Guid="{5D517577-799F-4F0A-882A-8F4998735C78}">
                 <File Id="File.Microsoft.Practices.Prism.Interactivity.dll"
@@ -100,7 +97,6 @@
                       Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.Interactivity.dll"
                       KeyPath="yes" />
             </Component>
-            -->
 
             <!-- Microsoft.Practices.ServiceLocation.dll -->
             <Component Id="C.Microsoft.Practices.ServiceLocation.dll"
@@ -153,15 +149,7 @@
             </Component>
         </DirectoryRef>
 
-        <!-- 
-            Define where we get the icon from. This is used for the start-menu and
-            desktop items. We could point to the Roads exe but then the icon won't 
-            show up until the first time we run the application. This is because we 
-            advertise the shortcuts. 
-            Un-advertised shortcuts are advised against by the powers-that-be.
-        -->
-        <Icon Id="Icon.Apollo.ico"
-              SourceFile="$(var.Apollo_ResourceFolder)\icons\apollo.ico" />
+        
 
         <!-- The feature for the main program. -->
         <Feature Id="F.Apollo.UI.ProjectExplorer"
@@ -175,10 +163,8 @@
             <ComponentRef Id="C.GraphSharp.Controls.dll" />
             <ComponentRef Id="C.GraphSharp.dll" />
             <ComponentRef Id="C.GreyableImage.dll" />
-            <!-- 
-                <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
-                <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
-            -->
+            <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
+            <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
             
             <ComponentRef Id="C.Microsoft.Practices.ServiceLocation.dll" />
             <ComponentRef Id="C.PixelLab.Common.dll" />

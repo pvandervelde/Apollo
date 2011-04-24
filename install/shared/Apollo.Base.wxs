@@ -42,16 +42,14 @@
             </Component>
 
             <!-- AutofacContrib.Startable.dll -->
-            <!--
-            <Component Id="C.Autofac.Startable.dll"
+            <Component Id="C.AutofacContrib.Startable.dll"
                        Guid="{F569B2AE-FD34-47F7-951E-E886524EB7A8}">
-                <File Id="File.Autofac.Startable.dll"
-                      Name="Autofac.Startable.dll"
+                <File Id="File.AutofacContrib.Startable.dll"
+                      Name="AutofacContrib.Startable.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Autofac.Startable.dll"
+                      Source="$(var.Apollo_BinFolder)\AutofacContrib.Startable.dll"
                       KeyPath="yes" />
             </Component>
-            -->
 
             <!-- Lokad.Shared.dll -->
             <Component Id="C.Lokad.Shared.dll"
@@ -64,6 +62,16 @@
             </Component>
         </DirectoryRef>
 
+        <!-- 
+            Define where we get the icon from. This is used for the start-menu and
+            desktop items. We could point to the Apollo exe but then the icon won't 
+            show up until the first time we run the application. This is because we 
+            advertise the shortcuts. 
+            Un-advertised shortcuts are advised against by the powers-that-be.
+        -->
+        <Icon Id="Icon.Apollo.ico"
+              SourceFile="$(var.Apollo_ResourceFolder)\icons\apollo.ico" />
+
         <!-- The feature for the main program. -->
         <Feature Id="F.Apollo.Base"
                  Title="$(var.Apollo_ProductName)"
@@ -73,7 +81,7 @@
             <ComponentRef Id="C.Apollo.Core.Base.dll" />
             <ComponentRef Id="C.Apollo.Utils.dll" />
             <ComponentRef Id="C.Autofac.dll" />
-            <!-- <ComponentRef Id="C.Autofac.Startable.dll" /> -->
+            <ComponentRef Id="C.AutofacContrib.Startable.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
         </Feature>
     </Fragment>
