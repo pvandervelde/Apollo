@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>    <ProjectGuid>{df61935e-3097-417b-ae02-e8ed9dc4e843}</ProjectGuid>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{df61935e-3097-417b-ae02-e8ed9dc4e843}</ProjectGuid>
     <ProjectGuid>{b8de1df9-52c3-4ea2-af76-f45b35befebc}</ProjectGuid>
     <OutputName>Apollo</OutputName>
     <OutputType>Package</OutputType>
