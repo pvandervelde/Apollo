@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi"
+     xmlns:util="http://schemas.microsoft.com/wix/UtilExtension "
+     xmlns:netfx="http://schemas.microsoft.com/wix/NetFxExtension">
+
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.Core.Dataset.exe -->
+            <Component Id="C.Apollo.Core.Dataset.Exe"
+                       Guid="{BCB6762B-3F74-41A7-A45F-7C664E9ED425}">
+                <File Id="File.Apollo.Core.Dataset.Exe"
+                      Name="Apollo.Core.Dataset.exe"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe"
+                      KeyPath="yes" />
+
+                <!-- EventLog -->
+                <!--
+                <?if $(var.Platform) = x64 ?>
+                    <util:EventSource Log="Application"
+                                      Name="Apollo.Core.Dataset"
+                                      EventMessageFile="[NETFRAMEWORK40FULLINSTALLROOTDIR64]EventLogMessages.dll" />
+                <?else ?>
+                    <util:EventSource Log="Application"
+                                      Name="Apollo.Core.Dataset"
+                                      EventMessageFile="[NETFRAMEWORK40FULLINSTALLROOTDIR]EventLogMessages.dll" />
+                <?endif ?>
+                -->
+            </Component>
+
+            <!-- Apollo.Core.Dataset.exe.config -->
+            <Component Id="C.Apollo.Core.Dataset.Exe.Config"
+                       Guid="{10BA503D-2995-4486-9885-1AB014895FA3}">
+                <File Id="File.Apollo.Core.Dataset.Exe.Config"
+                      Name="Apollo.Core.Dataset.exe.config"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe.config"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <!-- The feature for the main program. -->
+        <ComponentGroup Id="CGroup.Apollo.Core.Dataset">
+            <ComponentRef Id="C.Apollo.Core.Dataset.Exe" />
+            <ComponentRef Id="C.Apollo.Core.Dataset.Exe.Config" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

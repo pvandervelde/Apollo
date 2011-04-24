@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include $(var.CurrentProjectDir)\includes.wxi ?>
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <!--
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!- Apollo.Core.BatchService.exe ->
+            <Component Id="C.Apollo.Core.BatchService.exe"
+                       Guid="{D1467434-2A3B-419F-83D6-D207FAF344BA}">
+                <File Id="File.Apollo.Core.BatchService.exe"
+                      Name="Apollo.Core.BatchService.exe"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.BatchService.exe"
+                      KeyPath="yes" />
+
+                <!- Start service ->
+                <ServiceInstall Id="SI.Apollo.Core.BatchService.exe"
+                                Type="ownProcess"
+                                Vital="yes"
+                                Name="Apollo.Core.BatchService"
+                                DisplayName="Apollo cluster service"
+                                Description="Processes projects and datasets on a set of networked computers."
+                                Start="auto"
+                                Account="NetworkService"
+                                ErrorControl="ignore"
+                                Interactive="no" />
+                <ServiceControl Id="SC.Apollo.Core.BatchService.exe"
+                                Stop="both"
+                                Remove="uninstall"
+                                Name="Apollo.Core.BatchService"
+                                Wait="yes" />
+            </Component>
+        </DirectoryRef>
+        
+
+        <Feature Id="F.Apollo.BatchService"
+                 Title="$(var.Apollo_ProductName)"
+                 Description="The binaries for $(var.Apollo_ProductName)."
+                 Absent="disallow"
+                 Level="1">
+            <ComponentRef Id="C.Apollo.Core.BatchService.exe" />
+        </Feature>
+        -->
+    </Fragment>
+</Wix>

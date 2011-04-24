@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.Core.dll -->
+            <Component Id="C.Apollo.Core.dll"
+                       Guid="{5BFBBC07-ED98-4EEA-BB28-527693AEC44E}">
+                <File Id="File.Apollo.Core.dll"
+                      Name="Apollo.Core.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- NLog.dll -->
+            <Component Id="C.NLog.dll"
+                       Guid="{81F63D98-CB9B-446F-B599-BAA6E996B1F9}">
+                <File Id="File.NLog.dll"
+                      Name="NLog.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\NLog.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- QuickGraph.dll -->
+            <Component Id="C.QuickGraph.dll"
+                       Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
+                <File Id="File.QuickGraph.dll"
+                      Name="QuickGraph.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Apollo.Core.LoaderApplication.exe -->
+            <!-- Apollo.Core.LoaderApplication.exe.config -->
+        </DirectoryRef>
+
+        <ComponentGroup Id="CGroup.Apollo.Core">
+            <ComponentRef Id="C.Apollo.Core.dll" />
+            <ComponentRef Id="C.NLog.dll" />
+            <ComponentRef Id="C.QuickGraph.dll" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>
