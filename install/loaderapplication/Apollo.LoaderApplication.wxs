@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include $(var.CurrentProjectDir)\includes.wxi ?>
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.Core.BatchService.exe -->
+            <Component Id="C.Apollo.Core.LoaderApplication.exe"
+                       Guid="{53FC3CF7-1850-4F9C-9E44-6936E291BD39}">
+                <File Id="File.Apollo.Core.LoaderApplication.exe"
+                      Name="Apollo.Core.LoaderApplication.exe"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.LoaderApplication.exe"
+                      KeyPath="yes">
+                    <Shortcut Id="ShortCut.StartMenu.Apollo.LoaderApplication"
+                              Directory="Dir.Menu.Apollo"
+                              Name="$(var.Apollo_ProductName)"
+                              Icon="Icon.Apollo.ico"
+                              IconIndex="0"
+                              WorkingDirectory="INSTALLLOCATION"
+                              Advertise="yes" />
+                </File>
+            </Component>
+
+            <!-- Apollo.Core.BatchService.exe.config -->
+            <Component Id="C.Apollo.Core.LoaderApplication.exe.config"
+                       Guid="{F2D6A151-CC63-47B5-882F-F0F67097AD1B}">
+                <File Id="File.Apollo.Core.LoaderApplication.exe.config"
+                      Name="Apollo.Core.LoaderApplication.exe.config"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.LoaderApplication.exe.config"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <Feature Id="F.Apollo.LoaderService"
+                 Title="$(var.Apollo_ProductName)"
+                 Description="The binaries for $(var.Apollo_ProductName)."
+                 Absent="disallow"
+                 Level="1">
+            <ComponentRef Id="C.Apollo.Core.LoaderApplication.exe" />
+            <ComponentRef Id="C.Apollo.Core.LoaderApplication.exe.config" />
+            
+            <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />
+        </Feature>
+    </Fragment>
+</Wix>
