@@ -384,7 +384,13 @@ namespace Apollo.Core.Base.Communication
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
             var pair = m_OpenConnections[connection.ChannelType];
-            pair.Item1.Send(endpoint, message);
+            var channel = pair.Item1;
+            if (!channel.HasConnectionTo(endpoint))
+            {
+                channel.ConnectTo(connection);
+            }
+            
+            channel.Send(endpoint, message);
         }
 
         /// <summary>

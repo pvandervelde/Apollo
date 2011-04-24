@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -33,6 +34,17 @@ namespace Apollo.Core.Base.Communication
         /// Closes the current channel.
         /// </summary>
         void CloseChannel();
+
+        /// <summary>
+        /// Returns a value indicating if a connection to the given endpoint has been made.
+        /// </summary>
+        /// <param name="endpoint">The ID of the endpoint.</param>
+        /// <returns>
+        ///     <see langword="true"/> if a connection to the endpoint has been made; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool HasConnectionTo(EndpointId endpoint);
 
         /// <summary>
         /// Connects to a channel by using the information provided in the connection information

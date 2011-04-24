@@ -9,7 +9,9 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Forms;
+using System.Windows.Forms.Integration;
 using Apollo.Core.Base.Communication;
 using Apollo.Utils.Applications;
 using Autofac;
@@ -71,7 +73,7 @@ namespace Test.Manual.Console
                     // Prepare the application for running. This includes setting up the communication channel etc.
                     // Then once that is done we can start with the message processing loop and then we 
                     // wait for it to either get terminated or until we kill ourselves.
-                    Application.Run(context);
+                    System.Windows.Forms.Application.Run(context);
                     return CommandLineProgram.NormalApplicationExitCode;
                 };
 
@@ -106,6 +108,7 @@ namespace Test.Manual.Console
             }
 
             var window = s_Container.Resolve<IInteractiveWindow>();
+            ElementHost.EnableModelessKeyboardInterop(window as Window);
             window.Show();
         }
     }

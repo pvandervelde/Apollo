@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 
@@ -12,6 +13,7 @@ namespace Test.Manual.Console
     /// <summary>
     /// Defines a message that carries a simple text string.
     /// </summary>
+    [Serializable]
     internal sealed class EchoMessage : CommunicationMessage
     {
         /// <summary>

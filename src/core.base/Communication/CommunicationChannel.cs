@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.ServiceModel;
 using System.Threading;
@@ -227,6 +228,20 @@ namespace Apollo.Core.Base.Communication
             m_LocalConnection = null;
 
             RaiseOnClosed();
+        }
+
+        /// <summary>
+        /// Returns a value indicating if a connection to the given endpoint has been made.
+        /// </summary>
+        /// <param name="endpoint">The ID of the endpoint.</param>
+        /// <returns>
+        ///     <see langword="true"/> if a connection to the endpoint has been made; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool HasConnectionTo(EndpointId endpoint)
+        {
+            return m_ChannelConnectionMap.ContainsKey(endpoint);
         }
 
         /// <summary>
