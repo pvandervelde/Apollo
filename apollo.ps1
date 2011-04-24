@@ -1,13 +1,12 @@
-# Globals
-function global:Get-ScriptLocation{
+function Get-ScriptLocation{
     Split-Path $MyInvocation.ScriptName
 }
 
-function global:Print-PrettyPrintHeader([string]$value){
+function Print-PrettyPrintHeader([string]$value){
     "=" * 15 + " " + $value + " " + "="*15
 }
 
-function global:Invoke-PsakeScript([string]$script, [String[]]$targets){
+function Invoke-PsakeScript([string]$script, [String[]]$targets){
 
     Print-PrettyPrintHeader "Starting $script"
     ""
@@ -21,44 +20,51 @@ function global:Invoke-PsakeScript([string]$script, [String[]]$targets){
     ""
 }
 
-function global:Get-MsBuildExe
+function Get-MsBuildExe
 {
     'msbuild'
 }
 
-function global:Invoke-MsBuild([string]$solution, [string]$configuration, [string]$logPath, [string]$verbosity, [string[]]$parameters){
-    $msbuildExe = Get-MsBuildExe
-    $msBuildParameters = "/p:Configuration=$configuration"
-    if ($parameters.Length -ne 0)
-    {
-        $msBuildParameters += ' /p:' +  ([string]::Join(" /p:", ( $parameters )))
-    }
-    
-    $command = "$msbuildExe"
-    $command += " '"
-    $command += "$solution"
-    $command += "'"
-    $command += " $msbuildParameters"
+function Invoke-MsBuild([string]$solution, [string]$configuration, [string]$logPath, [string]$verbosity, [string[]]$parameters, [bool]$incremental){
+	$msbuildExe = Get-MsBuildExe
+	$msBuildParameters = "/p:Configuration=$configuration"
+	if ($parameters.Length -ne 0)
+	{
+		$msBuildParameters += ' /p:' +  ([string]::Join(" /p:", ( $parameters )))
+	}
+	
+	# for the moment we will not be using the /m switch because that creates
+	# problems in several projects (with random linker errors etc.)
+	$command = "$msbuildExe"
+	$command += " '"
+	$command += "$solution"
+	$command += "'"
+	$command += " $msbuildParameters"
     $command += " /m"
-    $command += " /clp:Verbosity=$verbosity /clp:Summary /clp:NoItemAndPropertyList /clp:ShowTimestamp"
-    $command += " /flp:LogFile='$logPath' /flp:verbosity=$verbosity /flp:Summary /flp:ShowTimestamp"
+	
+	if (!$incremental){
+		$command += " /t:rebuild"
+	}
+	
+	$command += " /clp:Verbosity=$verbosity /clp:Summary /clp:NoItemAndPropertyList /clp:ShowTimestamp"
+	$command += " /flp:LogFile='$logPath' /flp:verbosity=$verbosity /flp:Summary /flp:ShowTimestamp"
 
-    "Building $solution with command: $command"
-    Invoke-Expression $command
-    if ($LastExitCode -ne 0)
-    {
-        throw "$solution build failed with return code: $LastExitCode"
-    }
+	"Building $solution with command: $command"
+	Invoke-Expression $command
+	if ($LastExitCode -ne 0)
+	{
+		throw "$solution build failed with return code: $LastExitCode"
+	}
 }
 
-function global:Get-BzrExe{
+function Get-BzrExe{
     'bzr'
 }
 
-function global:Get-BzrVersion{
+function Get-BzrVersion{
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
-    
+
     $bzrPath = Get-BzrExe
     
     # Get the bzr output in xml format
@@ -85,7 +91,7 @@ function global:Get-BzrVersion{
     $versionInfo.SubString(0, $index)
 }
 
-function global:Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
+function Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
 {
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
@@ -118,7 +124,7 @@ function global:Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pat
     $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
 }
 
-function global:Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
+function Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
 {
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
@@ -149,7 +155,7 @@ function global:Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
     $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
 }
 
-function global:Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
+function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@MAJOR@', $versionNumber.Major
     $text = $text -replace '@MINOR@', $versionNumber.Minor
@@ -159,7 +165,7 @@ function global:Create-VersionResourceFile([string]$path, [string]$newPath, [Sys
     Set-Content -Path $newPath -Value $text
 }
 
-function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
     
@@ -171,7 +177,7 @@ function global:Create-ConfigurationResourceFile([string]$path, [string]$newPath
     Set-Content -Path $newPath -Value $text
 }
 
-function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string[]]$assemblyNames){
+function Create-InternalsVisibleToFile([string]$path, [string]$newPath, [string[]]$assemblyNames){
     $attribute = '[assembly: InternalsVisibleTo("@ASSEMBLYNAME@")]'
     
     $inputText = ''
@@ -186,14 +192,14 @@ function global:Create-InternalsVisibleToFile([string]$path, [string]$newPath, [
     Set-Content $newPath $text
 }
 
-function global:Create-ConcordionConfigFile([string]$path, [string]$newPath, [string]$concordionOutputPath){
+function Create-ConcordionConfigFile([string]$path, [string]$newPath, [string]$concordionOutputPath){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@OUTPUT_DIR@', $concordionOutputPath
     
     Set-Content $newPath $text
 }
 
-function global:Create-SandcastleConfigFile([string]$path, [string]$newPath, [string]$dirTools, [string]$dirDoc, [string]$dirLogs, [string]$dirBin){
+function Create-SandcastleConfigFile([string]$path, [string]$newPath, [string]$dirTools, [string]$dirDoc, [string]$dirLogs, [string]$dirBin){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     
     $text = $text -replace '@TOOLS_DIR@', $dirTools
@@ -205,7 +211,7 @@ function global:Create-SandcastleConfigFile([string]$path, [string]$newPath, [st
     Set-Content $newPath $text
 }
 
-function global:Create-PartCoverConfigFile(
+function Create-PartCoverConfigFile(
     [string]$path, 
     [string]$newPath,
     [string]$dirGallio,
@@ -232,7 +238,7 @@ function global:Create-PartCoverConfigFile(
 	Set-Content $newPath $text
 }
 
-function global:Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
+function Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
     $yieldText = [string]::Join([Environment]::NewLine, (Get-Content -Path $yieldTemplate))
     
     # generate the sequences
@@ -305,116 +311,148 @@ function global:Create-LicenseVerificationSequencesFile([string]$generatorTempla
     Set-Content $newPath $text
 }
 
-# Properties
+# Create the dependecy.wxs file. This file contains all the
+# directory paths for the binaries, documentation etc. etc.
+function Create-InstallerDependencyFile(
+    [string]$path,
+    [string]$newPath,
+    [string]$binFolder,
+    [string]$resourceFolder,
+    [string]$setupFolder)
+{
+    # Store the text that is displayed at the top of the file
+    # to notify users that the file is generated
+    $warningText = 
+@"
+   <!--
+      This is a generated file.
+      Do NOT make changes to this file.
+      They will be undone next time the file is generated.
+   -->
+"@
+
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+    
+    $text = $text -replace '@WARNINGTEXT@', $warningText
+    
+    $text = $text -replace '@APOLLO_BINFOLDER@', $binFolder
+    $text = $text -replace '@APOLLO_RESOURCEFOLDER@', $resourceFolder
+    $text = $text -replace '@APOLLO_SETUPFOLDER@', $setupFolder
+
+    Set-Content -Path $newPath -Value $text
+}
+
 properties{
-    $dirBase = Get-ScriptLocation
+    # Define a hashtable that will be used to store all the build information
+    # like the configuration, platform and all the directory paths etc.
+    $props = @{}
+    
+    # define variables for the commandline properties. These provide
+    # the default values which will be used in case the user doesn't 
+    # provide a value.
+    $coverage = $false
+    $incremental = $false
+    $configuration = 'debug'
+    $platform = 'Any CPU'
+    
+    # Store the defaults in the hashtable for later use
+    $props.coverage = $coverage
+    $props.incremental = $incremental
+    $props.configuration = $configuration
+    $props.platform = $platform
 
     # solution directories
-    $dirBin = Join-Path $dirBase 'bin'
-    $dirBuild = Join-Path $dirBin 'build'
-    $dirDeploy = Join-Path $dirBin 'deploy'
-    $dirLogs = Join-Path $dirBin "logs"
-    $dirReports = Join-Path $dirBin 'reports'
-    $dirTemp = Join-Path $dirBin 'temp'
-    $dirDoc = Join-Path $dirBin 'doc'
-
+    $props.dirBase = Get-ScriptLocation
+    $props.dirBuild = Join-Path $props.dirBase 'build'
+    $props.dirBin = Join-Path $props.dirBuild 'bin'
+    $props.dirDeploy = Join-Path $props.dirBuild 'deploy'
+    $props.dirLogs = Join-Path $props.dirBuild "logs"
+    $props.dirReports = Join-Path $props.dirBuild 'reports'
+    $props.dirTemp = Join-Path $props.dirBuild 'temp'
+    $props.dirDoc = Join-Path $props.dirBuild 'doc'
+    
     # contents directories
-    $dirInstall = Join-Path $dirBase 'install'
-    $dirResource = Join-Path $dirBase 'resource'
-    $dirTemplates = Join-Path $dirBase 'templates'
-    $dirConfiguration = Join-Path $dirBase 'config'
-    $dirSrc = Join-Path $dirBase 'src'
+    $props.dirInstall = Join-Path $props.dirBase 'install'
+    $props.dirResource = Join-Path $props.dirBase 'resource'
+    $props.dirTemplates = Join-Path $props.dirBase 'templates'
+    $props.dirConfiguration = Join-Path $props.dirBase 'config'
+    $props.dirSrc = Join-Path $props.dirBase 'src'
+    
+    $props.dirBinInstall = Join-Path $props.dirInstall 'bin'
    
     # tools directories
-    $dirTools = Join-Path $dirBase 'tools'
-    $dirBabel = Join-Path $dirTools 'babel'
-    $dirMbunit = Join-Path $dirTools 'mbunit'
-    $dirNCoverExplorer = Join-Path $dirTools 'ncoverexplorer'
-    $dirSandcastle = Join-Path $dirTools 'sandcastle'
-    $dirFxCop = Join-Path $dirTools 'FxCop'
-    $dirMoq = Join-Path $dirTools 'Moq'
-    $dirConcordion = Join-Path $dirTools 'Concordion'
-    $dirPartCover = Join-Path $dirTools 'PartCover'
-    $dirPartCoverExclusionWriter = Join-Path $dirTools 'partcoverexclusionwriter'
+    $props.dirTools = Join-Path $props.dirBase 'tools'
+    $props.dirBabel = Join-Path $props.dirTools 'babel'
+    $props.dirMbunit = Join-Path $props.dirTools 'mbunit'
+    $props.dirNCoverExplorer = Join-Path $props.dirTools 'ncoverexplorer'
+    $props.dirSandcastle = Join-Path $props.dirTools 'sandcastle'
+    $props.dirFxCop = Join-Path $props.dirTools 'FxCop'
+    $props.dirMoq = Join-Path $props.dirTools 'Moq'
+    $props.dirConcordion = Join-Path $props.dirTools 'Concordion'
+    $props.dirPartCover = Join-Path $props.dirTools 'PartCover'
+    $props.dirPartCoverExclusionWriter = Join-Path $props.dirTools 'partcoverexclusionwriter'
     
     # solutions
-    $slnApollo = Join-Path $dirSrc 'Apollo.sln'
-    $msbuildSandcastleReferenceData = Join-Path $dirSandcastle 'fxReflection.proj'
+    $props.slnApollo = Join-Path $props.dirSrc 'Apollo.sln'
+    $props.slnApolloWix = Join-Path $props.dirInstall 'Apollo.sln'
+    $props.msbuildSandcastleReferenceData = Join-Path $props.dirSandcastle 'fxReflection.proj'
     
     # assembly names
-    $assemblyNameUnitTest = 'Test.Unit, PublicKey='
-    #$assemblyNameSpecTest = 'Test.Spec, PublicKey='
-    $assemblyNameManualTest = 'Test.Manual.Console, PublicKey='
-    $assemblyNameDynamicProxy = 'DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7'
-    $assemblyNameMoq = 'Moq, PublicKey='
+    $props.assemblyNameUnitTest = 'Test.Unit, PublicKey='
+    #$props.assemblyNameSpecTest = 'Test.Spec, PublicKey='
+    $props.assemblyNameManualTest = 'Test.Manual.Console, PublicKey='
+    $props.assemblyNameDynamicProxy = 'DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7'
+    $props.assemblyNameMoq = 'Moq, PublicKey='
+
     
     # file templates
-    $versionFile = Join-Path $dirBase 'Version.xml'
-    $versionTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
-    $versionAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.VersionNumber.cs'
+    $props.versionFile = Join-Path $props.dirBase 'Version.xml'
+    $props.versionTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.VersionNumber.cs.in'
+    $props.versionAssemblyFile = Join-Path $props.dirSrc 'AssemblyInfo.VersionNumber.cs'
     
-    $configurationTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.BuildInformation.cs.in'
-    $configurationAssemblyFile = Join-Path $dirSrc 'AssemblyInfo.BuildInformation.cs'
+    $props.configurationTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.BuildInformation.cs.in'
+    $props.configurationAssemblyFile = Join-Path $props.dirSrc 'AssemblyInfo.BuildInformation.cs'
     
-    $internalsVisibleToTemplateFile = Join-Path $dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
-    $internalsVisibleToFile = Join-Path $dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
+    $props.internalsVisibleToTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
+    $props.internalsVisibleToFile = Join-Path $props.dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
     
-    $licenseVerificationSequencesTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.cs.in'
-    $licenseVerificationSequencesYieldTemplateFile = Join-Path $dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
-    $licenseVerificationSequencesFile = Join-Path $dirSrc 'ValidationSequenceGenerator.cs'
+    $props.licenseVerificationSequencesTemplateFile = Join-Path $props.dirTemplates 'ValidationSequenceGenerator.cs.in'
+    $props.licenseVerificationSequencesYieldTemplateFile = Join-Path $props.dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
+    $props.licenseVerificationSequencesFile = Join-Path $props.dirSrc 'ValidationSequenceGenerator.cs'
     
-    $partCoverConfigTemplateFile = Join-Path $dirTemplates 'PartCover.Settings.xml.in'
-    $partCoverConfigFile = Join-Path $dirTemp 'PartCover.Settings.xml'
+    $props.partCoverConfigTemplateFile = Join-Path $props.dirTemplates 'PartCover.Settings.xml.in'
+    $props.partCoverConfigFile = Join-Path $props.dirTemp 'PartCover.Settings.xml'
     
-    $concordionConfigTemplateFile = Join-Path $dirTemplates 'concordion.config.in'
-    $sandcastleTemplateFile = Join-Path $dirTemplates 'sandcastle.shfbproj.in'
+    $props.concordionConfigTemplateFile = Join-Path $props.dirTemplates 'concordion.config.in'
+    $props.sandcastleTemplateFile = Join-Path $props.dirTemplates 'sandcastle.shfbproj.in'
+    
+    $props.wixVersionTemplateFile = Join-Path $props.dirInstall 'VersionNumber.wxi.in'
+    $props.wixVersionFile = Join-Path $props.dirInstall 'VersionNumber.wxi'
+    
+    $props.dependenciesTemplateFile = Join-Path $props.dirInstall 'Dependencies.wxi.in'
+    $props.dependenciesFile = Join-Path $props.dirInstall 'Dependencies.wxi'
     
     # output files
-    $logMsiBuild = 'msi.log'
-    $logMsBuild = 'msbuild.log'
-    $logFxCop = 'fxcop.xml'
-    $logPartCover = 'partcover.xml'
-    $logPartCoverHtml = 'partcover.html'
+    $props.logMsiBuild = 'msi.log'
+    $props.logMsBuild = 'msbuild.log'
+    $props.logFxCop = 'fxcop.xml'
+    $props.logPartCover = 'partcover.xml'
+    $props.logPartCoverHtml = 'partcover.html'
     
     # output directories
-    $dirPartCoverHtml = 'partcoverhtml'
+    $props.dirPartCoverHtml = 'partcoverhtml'
     
     # settings
-    $levelMinCoverage = 85
+    $props.levelMinCoverage = 85
     
     # Version number
-    $versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
-    $versionFile = Join-Path $dirBase 'Version.xml' 
-    
-    # script-wide variables
-    $shouldCheckCoverage = $false
-    $shouldClean = $true
-    $configuration = 'debug'
-    $dirOutput = ''
+    $props.versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
+    $props.versionFile = Join-Path $props.dirBase 'Version.xml' 
 }
 
 # The default task doesn't do anything. This just calls the help function. Useful
 #   for new people
 task default -depends Help
-
-# Configuration tasks
-task Incremental -action{
-    Set-Variable -Name shouldClean -Value $true -Scope 2
-}
-
-task Coverage -action{
-    Set-Variable -Name shouldCheckCoverage -Value $true -Scope 2
-}
-
-task Debug -action{
-    Set-Variable -Name configuration -Value 'debug' -Scope 2
-    Set-Variable -Name dirOutput -Value (Join-Path $dirBuild 'debug') -Scope 2
-}
-
-task Release -action{
-    Set-Variable -Name configuration -Value 'release' -Scope 2
-    Set-Variable -Name dirOutput -Value (Join-Path $dirBuild 'release') -Scope 2
-}
 
 # Cleans all the generated files
 task Clean -depends runClean
@@ -445,16 +483,13 @@ task Package -depends buildPackage, assembleInstaller
 
 task getVersion -action{
     #Get the file version from the version.xml file
-    [xml]$xmlFile = Get-Content $versionFile
+    [xml]$xmlFile = Get-Content $props.versionFile
     $major = $xmlFile.version | %{$_.major} | Select-Object -Unique
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
     $build = $xmlFile.version | %{$_.build} | Select-Object -Unique
     $revision = Get-BzrVersion
-    
-    $version = New-Object -TypeName System.Version -ArgumentList "$major.$minor.$build.$revision"
-    "version is: $version"
-    
-    Set-Variable -Name versionNumber -Value $version -Scope 2
+    $props.versionNumber = New-Object -TypeName System.Version -ArgumentList "$major.$minor.$build.$revision"
+    ("version is: " + $props.versionNumber )
 }
 
 ###############################################################################
@@ -462,13 +497,18 @@ task getVersion -action{
 
 # The Help task displays the available commandline arguments
 task Help -action{
+    # because powershell is being cunning we define two strings for the $true and $false boolean values
+    $trueText = '$true' # note the use of the single quotes to stop powershell from expanding the 'variable'
+    $falseText = '$false'
 @"
 In order to run this build script please call a specific target.
+The following build properties are available:
+    'incremental':      Turns on or off the incremental building of the binaries. Default is off.
+    'coverage':         Turns on or off the unit testing coverage check. Default is off.
+    'configuration':    Defines the configuration for the build. Valid values are 'debug' and 'release', default value is 'debug'.
+    'platform':         Defines the platform for the build. Valid values are 'Any CPU', default value is 'Any CPU'.
+
 The following build tasks are available
-    'incremental':      Turns on the incremental building of the binaries
-    'coverage':         Turns on the code coverage for the unit tests
-    'debug':            Runs the script in debug mode. Mutually exclusive with the 'release' task
-    'release':          Runs the script in release mode. Mutually exclusive with the 'debug' task
     'clean':            Cleans the output directory
     'build':            Builds the binaries
     'unittest':         Runs the unit tests
@@ -477,101 +517,121 @@ The following build tasks are available
     'verify':           Runs the source and binary verification. Returning one or more reports
                         describing the flaws in the source / binaries.
     'doc':              Runs the documentation build
-    'package':          Packages the deliverables into a single zip file
+    'package':          Packages the deliverables into a single zip file and into an MSI installer file
 
-    ./build.ps1 <TARGET>
-Multiple build tasks can be specified separated by a comma. Also build tasks can be combined 
-in any order. In most cases the build script will ensure that the tasks are executed in the
-correct order. Note that this is NOT the case for the 'incremental', 'debug' and 'release' tasks.
-In order to get a correct effect these tasks need to be the first tasks being called!
+Multiple build tasks can be specified separated by a comma. 
        
 In order to run this build script please call this script via PSAKE like:
-    invoke-psake apollo.ps1 incremental,debug,clean,build,unittest,verify,doc,package 4.0
+    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0
 "@
 }
 
-task runClean  -precondition{ $shouldClean } -action{
-    "Cleaning..."
+task runInit -action{
+    $props.incremental = $incremental
+    $props.coverage = $coverage
+    $props.configuration = $configuration
+    $props.platform = $platform
+    
+    $props.platformForPaths = $props.platform.Replace(" ", "")
+    $props.dirOutput = Join-Path (Join-Path $props.dirBin $props.platformForPaths) $props.configuration    
+}
 
+# Displays the starting information for the build, including the start time
+task displayInfo -depends runInit -action{
+    $date = [System.DateTime]::Now
+    $user = [Security.Principal.WindowsIdentity]::GetCurrent().Name
+
+    ""
+    $date
+    "Starting build of Apollo"
+    "Running as user: $user"
+    ("Configuration:   " + $props.configuration)
+    ("Platform:        " + $props.platform)
+    ""
+}
+
+# Note that the precondition is defined based on the $incremental property because
+# it seems that psake determines the values of these preconditions based on values 
+# available when the script is started, not values becoming available later on.
+task runClean -depends displayInfo -precondition{ !$incremental } -action{
     $msbuildExe = Get-MsbuildExe
-    & $msbuildExe $slnApollo /t:Clean /verbosity:minimal
     
-    # Clean the bin dir
-    if (Test-Path -Path $dirBin -PathType Container)
+    "Cleaning the apollo solution directories..."
+    & $msbuildExe $props.slnApollo /t:Clean /verbosity:minimal
+    
+    "Cleaning the installer solution directories..."
+    & $msbuildExe $props.slnApolloWix /t:Clean /verbosity:minimal
+    
+    if (Test-Path -Path $props.dirBuild -PathType Container)
     {
-        "Removing the bin directory..."
-        Remove-Item $dirBin -Force -Recurse
+        Remove-Item $props.dirBuild -Force -Recurse
     }
 }
 
-task runInit -depends runClean -action{
+task runPrepareDisk -depends displayInfo,runClean -action{
     "Initializing build..."
-    
-    if (!(Test-Path -Path $dirBin -PathType Container))
+
+    if (!(Test-Path -Path $props.dirBuild -PathType Container))
     {
-        New-Item $dirBin -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirBuild -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirBuild -PathType Container))
+    if (!(Test-Path -Path $props.dirBin -PathType Container))
     {
-        New-Item $dirBuild -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirBin -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirTemp -PathType Container))
+    if (!(Test-Path -Path $props.dirTemp -PathType Container))
     {
-        New-Item $dirTemp -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirTemp -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirLogs -PathType Container))
+    if (!(Test-Path -Path $props.dirLogs -PathType Container))
     {
-        New-Item $dirLogs -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirLogs -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirReports -PathType Container))
+    if (!(Test-Path -Path $props.dirReports -PathType Container))
     {
-        New-Item $dirReports -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirReports -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirDeploy -PathType Container))
+    if (!(Test-Path -Path $props.dirDeploy -PathType Container))
     {
-        New-Item $dirDeploy -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirDeploy -ItemType directory | Out-Null
     }
     
-    if (!(Test-Path -Path $dirDoc -PathType Container))
+    if (!(Test-Path -Path $props.dirDoc -PathType Container))
     {
-        New-Item $dirDoc -ItemType directory | Out-Null # Don't display the directory information
+        New-Item $props.dirDoc -ItemType directory | Out-Null
     }
 }
 
-task buildBinaries -depends runInit, getVersion -action{
+task buildBinaries -depends runPrepareDisk, getVersion -action{
     "Building Apollo..."
     
     # Set the version numbers
-    "Creating version info file ..."
-    Create-VersionResourceFile $versionTemplateFile $versionAssemblyFile $versionNumber
+    Create-VersionResourceFile $props.versionTemplateFile $props.versionAssemblyFile $props.versionNumber
     
     # Set the configuration
-    "Creating configuration info file ..."
-    Create-ConfigurationResourceFile $configurationTemplateFile $configurationAssemblyFile $configuration
+    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration
     
     # Set the InternalsVisibleTo attribute
-    "Creating internals visible to file ..."
-    $publicKeyToken = Get-PublicKeySignatureFromKeyFile $dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
-    $unitTestAssemblyName = $assemblyNameUnitTest + $publicKeyToken
-    $manualTestAssemblyName = $assemblyNameManualTest + $publicKeyToken
+    $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
+    $unitTestAssemblyName = $props.assemblyNameUnitTest + $publicKeyToken
+    $manualTestAssemblyName = $props.assemblyNameManualTest + $publicKeyToken
     
-    $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $dirMoq 'Moq.dll')
-    $moqAssemblyName = $assemblyNameMoq + $publicKeyToken
-    Create-InternalsVisibleToFile $internalsVisibleToTemplateFile $internalsVisibleToFile ($unitTestAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $assemblyNameDynamicProxy)
+    $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
+    $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
+    Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($unitTestAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
     
     # Create the license verification sequence file
-    "Creating license verification file ..."
-    Create-LicenseVerificationSequencesFile $licenseVerificationSequencesTemplateFile $licenseVerificationSequencesYieldTemplateFile $licenseVerificationSequencesFile
+    Create-LicenseVerificationSequencesFile $props.licenseVerificationSequencesTemplateFile $props.licenseVerificationSequencesYieldTemplateFile $props.licenseVerificationSequencesFile
 
-    $logPath = Join-Path $dirLogs $logMsBuild
+    $logPath = Join-Path $props.dirLogs $props.logMsBuild
     
     $msbuildExe = Get-MsbuildExe
-    Invoke-MsBuild $slnApollo $configuration $logPath 'minimal' ("platform='Any CPU'")
+    Invoke-MsBuild $props.slnApollo $props.configuration $logPath 'minimal' (("platform='" + $props.Platform+ "'")) $props.incremental
     if ($LastExitCode -ne 0)
     {
         throw "Apollo build failed with return code: $LastExitCode"
@@ -584,34 +644,31 @@ task runUnitTests -depends buildBinaries -action{
     $gallioExe = 'Gallio.Echo.x86.exe'
     
     $files = ""
-    $assemblies = Get-ChildItem -path $dirOutput -Filter "*.dll" | 
+    $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | 
         Where-Object { (( $_.Name -like "*Test*") -and `
                         ( $_.Name -like "*Unit*"))}
     $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
     
     $command = ""
-    if ($shouldCheckCoverage)
+    if ($props.Coverage)
     {
         $coverageFiles = ""
-        $coverageAssemblies = Get-ChildItem -path $dirOutput |
+        $coverageAssemblies = Get-ChildItem -path $props.dirOutput |
             Where-Object { ((($_.Name -like "*Apollo*") -and `
                             !( $_.Name -like "*Test.*") -and `
                             !($_.Name -like "*vshost*")) -and `
                             (($_.Extension -match ".dll") -or `
                              ($_.Extension -match ".exe")))}
                              
-        $coverageAssemblies
         $coverageAssemblies | ForEach-Object -Process { $coverageFiles += '"' + [System.IO.Path]::GetFullPath($_.FullName) + '" '}
-        $coverageFiles
-        
-        $reportFile = Join-Path $dirReports $logPartCover
+        $reportFile = Join-Path $props.dirReports $props.logPartCover
         
         # Create the config file
-        Create-PartCoverConfigFile $partCoverConfigTemplateFile $partCoverConfigFile $dirMbUnit $gallioExe $dirOutput $dirReports $files $reportFile
+        Create-PartCoverConfigFile $props.partCoverConfigTemplateFile $props.partCoverConfigFile $props.dirMbUnit $gallioExe $props.dirOutput $props.dirReports $files $reportFile
 
         # Add the exclusions
-        $writer = Join-Path $dirPartCoverExclusionWriter 'partcoverexclusionwriter.exe'
-        $writerCommand = '& "' + $writer + '" ' + "/i " + '"' + $partCoverConfigFile + '" ' + "/o " + '"' + $partCoverConfigFile + '"'
+        $writer = Join-Path $props.dirPartCoverExclusionWriter 'partcoverexclusionwriter.exe'
+        $writerCommand = '& "' + $writer + '" ' + "/i " + '"' + $props.partCoverConfigFile + '" ' + "/o " + '"' + $props.partCoverConfigFile + '"'
         $writerCommand += " /e Apollo.Utils.ExcludeFromCoverageAttribute System.Runtime.CompilerServices.CompilerGeneratedAttribute"
         $writerCommand += " /a " + $coverageFiles
         
@@ -622,9 +679,9 @@ task runUnitTests -depends buildBinaries -action{
            throw 'PartCoverExclusionWriter failed on Apollo with return code: $LastExitCode'
         }
         
-        $partCoverExe = Join-Path $dirPartCover 'PartCover.exe'
+        $partCoverExe = Join-Path $props.dirPartCover 'PartCover.x86.exe'
         $command += '& "' + "$partCoverExe" + '" --register' 
-        $command += ' --settings "' + $partCoverConfigFile + '" '
+        $command += ' --settings "' + $props.partCoverConfigFile + '"'
         
         # run the tests
         $command
@@ -637,10 +694,10 @@ task runUnitTests -depends buildBinaries -action{
             throw "MbUnit failed on Apollo with return code: $LastExitCode"
         }
         
-        $transformExe = Join-Path (Join-Path $dirSandcastle "ProductionTools")"xsltransform.exe"
-        $partCoverXslt = Join-Path (Join-Path $dirPartCover 'xslt') "partcoverfullreport.xslt"
-        $partCoverHtml = Join-Path $dirReports $logPartCoverHtml
-        $command = '& "' + $transformExe + '" "' + $reportFile + '" /xsl:"' + $partCoverXslt + '" /out:"' + $partCoverHtml + '"'
+        $transformExe = Join-Path (Join-Path $props.dirSandcastle "ProductionTools")"xsltransform.exe"
+        $partCoverXslt = Join-Path (Join-Path $props.dirPartCover 'xslt') "partcoverfullreport.xslt"
+        $partCoverHtml = Join-Path $props.dirReports $props.logPartCoverHtml
+        $command = '& "' + $transformExe + '" "' + $reportFile + '" /xsl:"' + $partCoverXslt + '" /out:"' + $partCoverHtml + '" '
         
         $command
         Invoke-Expression $command
@@ -651,9 +708,9 @@ task runUnitTests -depends buildBinaries -action{
     }
     else
     {
-        $mbunitExe = Join-Path $dirMbUnit $gallioExe
+        $mbunitExe = Join-Path $props.dirMbUnit $gallioExe
         
-        $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc '
+        $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $props.dirMbUnit + '" /sc '
     
         # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
         #   process. This means we can't load explicit 32-bit binaries. However using the 
@@ -661,7 +718,7 @@ task runUnitTests -depends buildBinaries -action{
         $command += "/r:IsolatedProcess " 
         
         # add the files.
-        $command += ' /rd:"' + $dirReports + '" /v:Verbose /rt:XHtml /rt:Xml-inline ' + $files
+        $command += ' /rd:"' + $props.dirReports + '" /v:Verbose /rt:XHtml-Condensed /rt:Xml-inline ' + $files
         
         # run the tests
         $command
@@ -680,18 +737,18 @@ task runSpecificationTests -depends buildBinaries -action{
     
     # Start the integration tests. First setup the commandline for
     # Concordion
-    $mbunitExe = Join-Path $dirMbUnit 'Gallio.Echo.exe'
+    $mbunitExe = Join-Path $props.dirMbUnit 'Gallio.Echo.exe'
     
     $files = ""
-    $assemblies = Get-ChildItem -path $dirOutput -Filter "*.dll" | Where-Object { ((( $_.Name -like "*Test*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
+    $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | Where-Object { ((( $_.Name -like "*Test*") -and ( $_.Name -like "*Spec*") -and !($_.Name -like "*vshost*")))}
 
     # Create the concordion config file and copy it
     $specAssembly = $assemblies | select -First 1
-    $configFile = Join-Path $dirOutput ([System.IO.Path]::GetFileNameWithoutExtension($specAssembly.FullName) + '.config')
-    Create-ConcordionConfigFile $concordionConfigTemplateFile $configFile $dirReports    
+    $configFile = Join-Path $props.dirOutput ([System.IO.Path]::GetFileNameWithoutExtension($specAssembly.FullName) + '.config')
+    Create-ConcordionConfigFile $props.concordionConfigTemplateFile $configFile $props.dirReports    
     
     $assemblies | ForEach-Object -Process { $files += '"' + $_.FullName + '" '}
-    $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $dirMbUnit + '" /sc /pd:"' + $dirConcordion + '" '
+    $command = '& "' + "$mbunitExe" + '" ' + '/hd:"' + $props.dirMbUnit + '" /sc /pd:"' + $props.dirConcordion + '" '
     
     # Run mbunit in an isolated process. On a 64-bit machine gallio ALWAYS starts as a 64-bit
     #   process. This means we can't load explicit 32-bit binaries. However using the 
@@ -721,11 +778,11 @@ task runFxCop -depends buildBinaries -action{
     # - skip some rules if in debug mode
     # - fail if in release mode
     
-    $fxcopExe = Join-Path $dirFxCop 'FxCopcmd.exe'
-    $rulesDir = Join-Path $dirFxCop 'Rules'
-    $outFile = Join-Path $dirReports $logFxCop
+    $fxcopExe = Join-Path $props.dirFxCop 'FxCopcmd.exe'
+    $rulesDir = Join-Path $props.dirFxCop 'Rules'
+    $outFile = Join-Path $props.dirReports $props.logFxCop
     
-    $assemblies = Get-ChildItem -path $dirOutput -Filter "*.dll" | 
+    $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | 
         Where-Object { ((($_.Name -like "*Apollo*") -and `
                         !( $_.Name -like "*Test.*") -and `
                         !($_.Name -like "*vshost*")) -and `
@@ -754,20 +811,20 @@ task buildApiDocs -depends buildBinaries -action{
     "Build the API docs..."
     
     # generate the sandcastle file
-    $sandcastleFile = Join-Path $dirTemp 'apollo.shfbproj'
-    Create-SandcastleConfigFile $sandcastleTemplateFile $sandcastleFile $dirTools $dirDoc $dirLogs $dirOutput
+    $sandcastleFile = Join-Path $props.dirTemp 'apollo.shfbproj'
+    Create-SandcastleConfigFile $props.sandcastleTemplateFile $sandcastleFile $props.dirTools $props.dirDoc $props.dirLogs $props.dirOutput
     
     # Set the DXROOT Environment variable
-    $Env:DXROOT = $dirSandcastle
+    $Env:DXROOT = $props.dirSandcastle
     
     $msbuildExe = "c:\windows\Microsoft.NET\Framework\v3.5\MSBuild.exe"
     
     # See if we need to create the reference data.
-    $dirSandcastleReference = Join-Path $dirSandcastle 'Data'
+    $dirSandcastleReference = Join-Path $props.dirSandcastle 'Data'
     if (!(Test-Path -Path $dirSandcastleReference -PathType Container))
     {
         "Building the Sandcastle reference data. This may take a while ... "
-        & $msbuildExe $msbuildSandcastleReferenceData
+        & $msbuildExe $props.msbuildSandcastleReferenceData
         if ($LastExitCode -ne 0)
         {
             throw "Could not generate the Sandcastle reference data. Return code from MsBuild: $LastExitCode"
@@ -780,7 +837,7 @@ task buildApiDocs -depends buildBinaries -action{
         throw "Sandcastle help file builder failed on Apollo with return code: $LastExitCode"
     }
     
-    if( $configuration -eq 'release')
+    if( $props.configuration -eq 'release')
     {
         # Should fail are release build if there's anything missing?
     }
@@ -794,10 +851,10 @@ task buildUserDoc -depends buildBinaries -action{
 task buildPackage -depends buildBinaries -action{
     "Packaging the files into a zip ..."
     
-    $dirTempZip = Join-Path $dirTemp 'zip'
+    $dirTempZip = Join-Path $props.dirTemp 'zip'
     if((Test-Path -Path $dirTempZip -PathType Container))
     {
-        Remove-Item $dirTempZip -Force
+        Remove-Item $dirTempZip -Force -Recurse
     }
     
     # The directory does not exist. Create it
@@ -808,7 +865,7 @@ task buildPackage -depends buildBinaries -action{
     # - Are DLL, EXE or config files
     # - Have the term Sherlock in their name
     # - Don't have the terms 'Test' or 'vshost' in their name
-    $assemblies = Get-ChildItem -path $dirOutput | 
+    $assemblies = Get-ChildItem -path $props.dirOutput | 
         Where-Object { ((($_.Name -like "*Apollo*") -and `
                         !( $_.Name -like "*SrcOnly.*") -and `
                         !( $_.Name -like "*Test.*") -and `
@@ -825,53 +882,53 @@ task buildPackage -depends buildBinaries -action{
     
     # Copy the dependencies
     $lokadFile = 'Lokad.Shared.dll'
-    Copy-Item (Join-Path $dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
+    Copy-Item (Join-Path $props.dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
    
     $autofacFile = 'Autofac.dll'
-    Copy-Item (Join-Path $dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
+    Copy-Item (Join-Path $props.dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
     
     $autofacStartableFile = 'AutofacContrib.Startable.dll'
-    Copy-Item (Join-Path $dirOutput $autofacStartableFile) -Destination (Join-Path $dirTempZip $autofacStartableFile)
+    Copy-Item (Join-Path $props.dirOutput $autofacStartableFile) -Destination (Join-Path $dirTempZip $autofacStartableFile)
     
     $quickgraph = 'QuickGraph.dll'
-    Copy-Item (Join-Path $dirOutput $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)    
+    Copy-Item (Join-Path $props.dirOutput $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)    
     
     $nlog = 'NLog.dll'
-    Copy-Item (Join-Path $dirOutput $nlog) -Destination (Join-Path $dirTempZip $nlog)    
+    Copy-Item (Join-Path $props.dirOutput $nlog) -Destination (Join-Path $dirTempZip $nlog)    
     
     $prismFile = 'Microsoft.Practices.Prism.dll'
-    Copy-Item (Join-Path $dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
+    Copy-Item (Join-Path $props.dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
     
     $prismInteractivityFile = 'Microsoft.Practices.Prism.Interactivity.dll'
-    Copy-Item (Join-Path $dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
+    Copy-Item (Join-Path $props.dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
     
     $serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
-    Copy-Item (Join-Path $dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
+    Copy-Item (Join-Path $props.dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
     
     $graphSharpFile = 'GraphSharp.dll'
-    Copy-Item (Join-Path $dirOutput $graphSharpFile) -Destination (Join-Path $dirTempZip $graphSharpFile)
+    Copy-Item (Join-Path $props.dirOutput $graphSharpFile) -Destination (Join-Path $dirTempZip $graphSharpFile)
     
     $graphSharpControlsFile = 'GraphSharp.Controls.dll'
-    Copy-Item (Join-Path $dirOutput $graphSharpControlsFile) -Destination (Join-Path $dirTempZip $graphSharpControlsFile)
+    Copy-Item (Join-Path $props.dirOutput $graphSharpControlsFile) -Destination (Join-Path $dirTempZip $graphSharpControlsFile)
     
     $wpfExtensionsFile = 'WPFExtensions.dll'
-    Copy-Item (Join-Path $dirOutput $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
+    Copy-Item (Join-Path $props.dirOutput $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
     
     $greyableImageFile = 'GreyableImage.dll'
-    Copy-Item (Join-Path $dirOutput $greyableImageFile) -Destination (Join-Path $dirTempZip $greyableImageFile)
+    Copy-Item (Join-Path $props.dirOutput $greyableImageFile) -Destination (Join-Path $dirTempZip $greyableImageFile)
     
     $pixelLabCommonFile = 'PixelLab.Common.dll'
-    Copy-Item (Join-Path $dirOutput $pixelLabCommonFile) -Destination (Join-Path $dirTempZip $pixelLabCommonFile)
+    Copy-Item (Join-Path $props.dirOutput $pixelLabCommonFile) -Destination (Join-Path $dirTempZip $pixelLabCommonFile)
     
     $pixelLabWpfFile = 'PixelLab.Wpf.dll'
-    Copy-Item (Join-Path $dirOutput $pixelLabWpfFile) -Destination (Join-Path $dirTempZip $pixelLabWpfFile)
+    Copy-Item (Join-Path $props.dirOutput $pixelLabWpfFile) -Destination (Join-Path $dirTempZip $pixelLabWpfFile)
     
     $wpfLocalizationFile = 'WPFLocalizeExtension.dll'
-    Copy-Item (Join-Path $dirOutput $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
+    Copy-Item (Join-Path $props.dirOutput $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
     
     # zip them
     # Name the zip: Apollo_<DATE>
-    $output = Join-Path $dirDeploy ("Apollo_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
+    $output = Join-Path $props.dirDeploy ("Apollo_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
 
     "Compressing..."
 
@@ -885,9 +942,31 @@ task buildPackage -depends buildBinaries -action{
 }
 
 task assembleInstaller -depends buildBinaries -action{
-    "Assembling installer..."
+    $versionString = [string]::Format('{0}.{1}.{2}.{3}', $props.versionNumber.Major, $props.versionNumber.Minor, $props.versionNumber.Build, $props.versionNumber.Revision)
+    $props.versionNumber
     
-    # Grab all the merge modules and make them into a single installer
-    # Installers are created per UI. Each UI will have a different installer?
+    "Setting the version number..."
+    Create-VersionResourceFile $props.wixVersionTemplateFile $props.wixVersionFile $props.versionNumber
     
+    "Creating the dependencies file..."
+    Create-InstallerDependencyFile $props.dependenciesTemplateFile $props.dependenciesFile $props.dirOutput $props.dirResource $props.dirInstall
+    
+    $logPath = Join-Path $props.dirLogs $props.logMsiBuild
+    
+    #"Building 32-bit Apollo installer"
+    $msbuildExe = Get-MsbuildExe
+    Invoke-MsBuild $props.slnApolloWix 'release' $logPath 'normal' ("platform='x86'") $false
+
+    $dirBinConfig = Join-Path (Join-Path $props.dirBinInstall 'x86') 'release'
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x86 - $versionString.msi")
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x86 - $versionString.msi")
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x86 - $versionString.msi")
+
+    "Building 64-bit Apollo installer"
+    Invoke-MsBuild $props.slnApolloWix 'release' $logPath 'normal' ("platform='x64'") $false
+    
+    $dirBinConfig = Join-Path (Join-Path $props.dirBinInstall 'x64') 'release'
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x64 - $versionString.msi")
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x64 - $versionString.msi")
+    Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x64 - $versionString.msi")
 }

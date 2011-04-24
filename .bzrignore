@@ -5,6 +5,7 @@ design/Thumbs.db
 *.pdb
 bin
 obj
+build
 *.suo
 *.user
 *.backup
@@ -26,3 +27,5 @@ StyleCop.Cache
 AssemblyInfo.BuildInformation.cs
 ValidationSequenceGenerator.cs
 partcover.driver.log
+./install/Dependencies.wxi
+./install/VersionNumber.wxi

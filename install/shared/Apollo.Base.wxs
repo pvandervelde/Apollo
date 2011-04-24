@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include $(var.CurrentProjectDir)\includes.wxi ?>
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.Core.Base.dll -->
+            <Component Id="C.Apollo.Core.Base.dll"
+                       Guid="{BCC2B8E6-29EA-4B5D-B63C-01401FE221DE}">
+                <File Id="File.Apollo.Core.Base.dll"
+                      Name="Apollo.Core.Base.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Base.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Apollo.Utils.dll -->
+            <Component Id="C.Apollo.Utils.dll"
+                       Guid="{01941790-8814-48BA-BA0C-E0CB8FF8577A}">
+                <File Id="File.Apollo.Utils.dll"
+                      Name="Apollo.Utils.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Utils.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Autofac.dll -->
+            <Component Id="C.Autofac.dll"
+                       Guid="{19E59680-6E63-4E5E-89F0-B3123D127932}">
+                <File Id="File.Autofac.dll"
+                      Name="Autofac.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Autofac.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- AutofacContrib.Startable.dll -->
+            <!--
+            <Component Id="C.Autofac.Startable.dll"
+                       Guid="{F569B2AE-FD34-47F7-951E-E886524EB7A8}">
+                <File Id="File.Autofac.Startable.dll"
+                      Name="Autofac.Startable.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Autofac.Startable.dll"
+                      KeyPath="yes" />
+            </Component>
+            -->
+
+            <!-- Lokad.Shared.dll -->
+            <Component Id="C.Lokad.Shared.dll"
+                       Guid="{1861906E-662C-405F-845E-0F1BD130B0A5}">
+                <File Id="File.Lokad.Shared.dll"
+                      Name="Lokad.Shared.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Lokad.Shared.dll"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <!-- The feature for the main program. -->
+        <Feature Id="F.Apollo.Base"
+                 Title="$(var.Apollo_ProductName)"
+                 Description="The base main binaries for $(var.Apollo_ProductName)."
+                 Absent="disallow"
+                 Level="1">
+            <ComponentRef Id="C.Apollo.Core.Base.dll" />
+            <ComponentRef Id="C.Apollo.Utils.dll" />
+            <ComponentRef Id="C.Autofac.dll" />
+            <!-- <ComponentRef Id="C.Autofac.Startable.dll" /> -->
+            <ComponentRef Id="C.Lokad.Shared.dll" />
+        </Feature>
+    </Fragment>
+</Wix>
