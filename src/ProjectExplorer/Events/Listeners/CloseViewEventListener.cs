@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common;
@@ -16,6 +17,8 @@ namespace Apollo.ProjectExplorer.Events.Listeners
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for closing views.
     /// </summary>
+    [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses",
+        Justification = "Instantiated by the IOC container.")]
     internal sealed class CloseViewEventListener : EventListener
     {
         /// <summary>

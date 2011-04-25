@@ -11,7 +11,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
-using System.Security;
 using System.Text;
 
 namespace Apollo.Utils.Applications
@@ -34,7 +33,7 @@ namespace Apollo.Utils.Applications
         /// <summary>
         /// Defines the error code for an application exit with an unhandled exception.
         /// </summary>
-        public const int UnhandledExceptionApplicationExitcode = 1;
+        public const int UnhandledExceptionApplicationExitCode = 1;
 
         /// <summary>
         /// The main entry point for the dataset application.
@@ -43,6 +42,8 @@ namespace Apollo.Utils.Applications
         /// <param name="eventLogSource">The name of the event log source.</param>
         /// <param name="errorLogFileName">The name of the file that contains the error log.</param>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catching an Exception object here because this is the top-level exception handler.")]
         public static int EntryPoint(Func<int> applicationMethod, string eventLogSource, string errorLogFileName)
         {
             try
@@ -95,7 +96,7 @@ namespace Apollo.Utils.Applications
                     // We're really screwed now. Nothing we can do anymore ... just exit
                 }
 
-                return UnhandledExceptionApplicationExitcode;
+                return UnhandledExceptionApplicationExitCode;
             }
         }
 

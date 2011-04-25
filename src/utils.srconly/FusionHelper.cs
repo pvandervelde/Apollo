@@ -175,8 +175,6 @@ namespace Apollo.Utils
         /// <summary>
         /// The delegate which is used to return a file enumerator based on a specific directory.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "Use of nested generic signatures is ok for core internal use.")]
         private readonly Func<IEnumerable<string>> m_FileEnumerator;
 
         /// <summary>
@@ -200,8 +198,6 @@ namespace Apollo.Utils
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
         /// </exception>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "The use of the Func<> delegate is the most efficient way to pass a lazy evaluation of the enumerable.")]
         public FusionHelper(Func<IEnumerable<string>> fileEnumerator, IFileConstants fileConstants)
         {
             {
@@ -216,8 +212,6 @@ namespace Apollo.Utils
         /// <summary>
         /// Gets the file enumerator which is used to enumerate the files in a specific directory. 
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "Property is used internally only.")]
         private Func<IEnumerable<string>> FileEnumerator
         {
             get 

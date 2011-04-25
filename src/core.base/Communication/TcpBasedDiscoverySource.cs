@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.ServiceModel;
@@ -19,6 +20,33 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class TcpBasedDiscoverySource : IDiscoverOtherServices
     {
+        // Note that the EndpointId meta data is defined by the TcpChannelType
+        private static EndpointId GetEndpointId(EndpointDiscoveryMetadata metadata)
+        {
+            XElement endpointElement = metadata.Extensions.Elements("EndpointId").FirstOrDefault();
+            if (endpointElement == null)
+            {
+                throw new MissingEndpointIdException();
+            }
+
+            return new EndpointId(endpointElement.Value);
+        }
+
+        // Note that the BindingType meta data is defined by the TcpChannelType
+        private static Type GetBindingType(EndpointDiscoveryMetadata metadata)
+        {
+            XElement bindingTypeElement = metadata.Extensions.Elements("BindingType").FirstOrDefault();
+            if (bindingTypeElement == null)
+            {
+                throw new MissingBindingTypeException();
+            }
+
+            var type = Type.GetType(bindingTypeElement.Value, true, false);
+
+            Debug.Assert(typeof(IChannelType).IsAssignableFrom(type), "Found an incorrect binding type.");
+            return type;
+        }
+
         /// <summary>
         /// The service that handles the detection of discovery announcements.
         /// </summary>
@@ -64,7 +92,7 @@ namespace Apollo.Core.Base.Communication
         public void StartDiscovery()
         {
             var service = new AnnouncementService();
-            service.OnlineAnnouncementReceived += (s, e) => HandleOnlineAnnoucementReceived(e.EndpointDiscoveryMetadata);
+            service.OnlineAnnouncementReceived += (s, e) => HandleOnlineAnnouncementReceived(e.EndpointDiscoveryMetadata);
             service.OfflineAnnouncementReceived += (se, e) => HandleOfflineAnnouncementReceived(e.EndpointDiscoveryMetadata);
 
             m_Host = new ServiceHost(service);
@@ -76,7 +104,7 @@ namespace Apollo.Core.Base.Communication
             LocateExistingEndpoints();
         }
 
-        private void HandleOnlineAnnoucementReceived(EndpointDiscoveryMetadata metadata)
+        private void HandleOnlineAnnouncementReceived(EndpointDiscoveryMetadata metadata)
         {
             // Only acknowledge service contracts that we actually know about.
             if (metadata.ContractTypeNames.FirstOrDefault(x => x.Name == typeof(IReceivingEndpoint).Name) != null)
@@ -87,31 +115,6 @@ namespace Apollo.Core.Base.Communication
 
                 RaiseOnEndpointBecomingAvailable(new ChannelConnectionInformation(id, bindingType, address));
             }
-        }
-
-        private EndpointId GetEndpointId(EndpointDiscoveryMetadata metadata)
-        {
-            XElement endpointElement = metadata.Extensions.Elements("EndpointId").FirstOrDefault();
-            if (endpointElement == null)
-            {
-                throw new MissingEndpointIdException();
-            }
-
-            return new EndpointId(endpointElement.Value);
-        }
-
-        private Type GetBindingType(EndpointDiscoveryMetadata metadata)
-        {
-            XElement bindingTypeElement = metadata.Extensions.Elements("BindingType").FirstOrDefault();
-            if (bindingTypeElement == null)
-            {
-                throw new MissingBindingTypeException();
-            }
-
-            var type = Type.GetType(bindingTypeElement.Value, true, false);
-
-            Debug.Assert(typeof(IChannelType).IsAssignableFrom(type), "Found an incorrect binding type.");
-            return type;
         }
 
         private void HandleOfflineAnnouncementReceived(EndpointDiscoveryMetadata metadata)
@@ -127,13 +130,13 @@ namespace Apollo.Core.Base.Communication
         private void LocateExistingEndpoints()
         {
             m_DiscoveryClient = new DiscoveryClient(new UdpDiscoveryEndpoint());
-            m_DiscoveryClient.FindProgressChanged += (s, e) => HandleOnlineAnnoucementReceived(e.EndpointDiscoveryMetadata);
+            m_DiscoveryClient.FindProgressChanged += (s, e) => HandleOnlineAnnouncementReceived(e.EndpointDiscoveryMetadata);
             m_DiscoveryClient.FindCompleted += new EventHandler<FindCompletedEventArgs>(OnFindCompleted);
 
             m_DiscoveryClient.FindAsync(new FindCriteria(typeof(IReceivingEndpoint)));
         }
 
-        private void OnFindCompleted(object sender, FindCompletedEventArgs e)
+        private void OnFindCompleted(object sender, AsyncCompletedEventArgs e)
         {
             try
             {

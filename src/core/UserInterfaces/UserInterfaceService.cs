@@ -29,8 +29,6 @@ namespace Apollo.Core.UserInterfaces
         /// <summary>
         /// The collection of notifications that must be passed on to the user interface.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need to store the action somehow ...")]
         private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications =
             new Dictionary<NotificationName, Action<INotificationArguments>>();
 

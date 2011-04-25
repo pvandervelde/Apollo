@@ -7,6 +7,9 @@
     <RootNamespace>Apollo.ProjectExplorer</RootNamespace>
     <AssemblyName>Apollo.ProjectExplorer</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
     <Reference Include="Autofac">

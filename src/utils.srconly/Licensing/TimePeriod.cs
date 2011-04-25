@@ -27,8 +27,6 @@ namespace Apollo.Utils.Licensing
         /// <summary>
         /// Maps a <c>RepeatPeriod</c> to a function that can be used to calculate the next validation time.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "This maps between a period and a function used to calculate the next date & time for that period. Nesting is a nessecary evil.")]
         private static readonly Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>> s_NextDateTimeMap =
             new Dictionary<RepeatPeriod, Func<sbyte, DateTimeOffset, DateTimeOffset>>
             {

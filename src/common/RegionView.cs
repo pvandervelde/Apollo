@@ -97,8 +97,6 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Shown"/> event.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
         public void RaiseShown()
         {
             var handler = Shown;
@@ -111,8 +109,6 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Closed"/> event.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
         public void RaiseClosed()
         {
             var handler = Closed;
@@ -130,8 +126,6 @@ namespace Apollo.UI.Common
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
         public bool RaiseClosing()
         {
             var handler = Closing;
@@ -147,8 +141,6 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Activated"/> event.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
         public void RaiseActivated()
         {
             var handler = Activated;
@@ -161,8 +153,6 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Deactivated"/> event.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
         public void RaiseDeactivated()
         {
             var handler = Deactivated;

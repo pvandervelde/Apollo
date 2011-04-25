@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
@@ -28,7 +29,12 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         private static EndpointId CreateEndpointIdForCurrentProcess()
         {
-            return new EndpointId(string.Format("{0}:{1}", Environment.MachineName, Process.GetCurrentProcess().Id));
+            return new EndpointId(
+                string.Format(
+                    CultureInfo.InvariantCulture, 
+                    "{0}:{1}", 
+                    Environment.MachineName, 
+                    Process.GetCurrentProcess().Id));
         }
 
         /// <summary>
@@ -105,7 +111,7 @@ namespace Apollo.Core.Base.Communication
         /// Gets a value indicating whether the communication layer has signed on with
         /// the network.
         /// </summary>
-        public bool IsSignedOn
+        public bool IsSignedIn
         {
             get
             {
@@ -134,7 +140,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Connects to the network and broadcasts a sign on message.
         /// </summary>
-        public void SignOn()
+        public void SignIn()
         {
             if (m_AlreadySignedOn)
             {
@@ -162,15 +168,15 @@ namespace Apollo.Core.Base.Communication
             // remote machine.
             foreach (var source in m_DiscoverySources)
             {
-                source.OnEndpointBecomingAvailable += HandleEndpointSignOn;
-                source.OnEndpointBecomingUnavailable += HandleEndpointSignedOff;
+                source.OnEndpointBecomingAvailable += HandleEndpointSignIn;
+                source.OnEndpointBecomingUnavailable += HandleEndpointSignedOut;
                 source.StartDiscovery();
             }
 
             m_AlreadySignedOn = true;
         }
 
-        private void HandleEndpointSignOn(object sender, ConnectionInformationEventArgs args)
+        private void HandleEndpointSignIn(object sender, ConnectionInformationEventArgs args)
         {
             var info = args.ConnectionInformation;
             if (m_Id.Equals(info.Id))
@@ -192,7 +198,7 @@ namespace Apollo.Core.Base.Communication
                 list.Add(order, info);
 
                 // Notify the world
-                RaiseOnEndpointSignOn(info.Id, info.ChannelType, info.Address);
+                RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
             }
         }
 
@@ -204,7 +210,7 @@ namespace Apollo.Core.Base.Communication
         // Also note that it is quite easily possible to fake being another endpoint. All you have
         // to do is send a message saying that you're a different endpoint and then the evil is
         // done. Not quite sure how to make that not happen though ...
-        private void HandleEndpointSignedOff(object sender, EndpointEventArgs args)
+        private void HandleEndpointSignedOut(object sender, EndpointEventArgs args)
         {
             if (m_Id.Equals(args.Endpoint))
             {
@@ -215,7 +221,7 @@ namespace Apollo.Core.Base.Communication
             if (m_PotentialEndpoints.ContainsKey(args.Endpoint))
             {
                 // notify the outside world
-                RaiseOnEndpointSignedOff(args.Endpoint);
+                RaiseOnEndpointSignedOut(args.Endpoint);
 
                 var list = m_PotentialEndpoints[args.Endpoint];
                 m_PotentialEndpoints.Remove(args.Endpoint);
@@ -236,7 +242,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Broadcasts a sign off message and disconnects from the network.
         /// </summary>
-        public void SignOff()
+        public void SignOut()
         {
             if (!m_AlreadySignedOn)
             {
@@ -247,8 +253,8 @@ namespace Apollo.Core.Base.Communication
             foreach (var source in m_DiscoverySources)
             {
                 source.EndDiscovery();
-                source.OnEndpointBecomingAvailable -= HandleEndpointSignOn;
-                source.OnEndpointBecomingUnavailable -= HandleEndpointSignedOff;
+                source.OnEndpointBecomingAvailable -= HandleEndpointSignIn;
+                source.OnEndpointBecomingUnavailable -= HandleEndpointSignedOut;
             }
 
             // There may be a race condition here. We could be disconnecting while
@@ -271,11 +277,11 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// An event raised when an endpoint joined the network.
         /// </summary>
-        public event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedOn;
+        public event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedIn;
 
-        private void RaiseOnEndpointSignOn(EndpointId id, Type channelType, Uri address)
+        private void RaiseOnEndpointSignIn(EndpointId id, Type channelType, Uri address)
         {
-            var local = OnEndpointSignedOn;
+            var local = OnEndpointSignedIn;
             if (local != null)
             {
                 local(this, new ConnectionInformationEventArgs(new ChannelConnectionInformation(id, channelType, address)));
@@ -285,11 +291,11 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// An event raised when an endpoint has left the network.
         /// </summary>
-        public event EventHandler<EndpointEventArgs> OnEndpointSignedOff;
+        public event EventHandler<EndpointEventArgs> OnEndpointSignedOut;
 
-        private void RaiseOnEndpointSignedOff(EndpointId endpoint)
+        private void RaiseOnEndpointSignedOut(EndpointId endpoint)
         {
-            var local = OnEndpointSignedOff;
+            var local = OnEndpointSignedOut;
             if (local != null)
             {
                 local(this, new EndpointEventArgs(endpoint));
@@ -409,7 +415,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="message"/> is <see langword="null" />.
         /// </exception>
-        public Task<ICommunicationMessage> SendMessageAndWaitForRespone(EndpointId endpoint, ICommunicationMessage message)
+        public Task<ICommunicationMessage> SendMessageAndWaitForResponse(EndpointId endpoint, ICommunicationMessage message)
         {
             {
                 Enforce.Argument(() => endpoint);

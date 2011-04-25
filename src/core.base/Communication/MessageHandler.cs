@@ -19,6 +19,11 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class MessageHandler : IDirectIncomingMessages, IProcessIncomingMessages
     {
+        private static bool IsMessageIndicatingEndpointDisconnect(ICommunicationMessage message)
+        {
+            return message.GetType().Equals(typeof(EndpointDisconnectMessage));
+        }
+
         /// <summary>
         /// The object used to lock on.
         /// </summary>
@@ -168,11 +173,6 @@ namespace Apollo.Core.Base.Communication
             {
                 TerminateWaitingResponsesForEndpoint(message.OriginatingEndpoint);
             }
-        }
-
-        private bool IsMessageIndicatingEndpointDisconnect(ICommunicationMessage message)
-        {
-            return message.GetType().Equals(typeof(EndpointDisconnectMessage));
         }
 
         private void TerminateWaitingResponsesForEndpoint(EndpointId endpointId)

@@ -37,12 +37,12 @@ namespace Apollo.Base.Loaders
             DistinctInstances =
                 new List<Machine> 
                         {
-                            new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                            new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                            new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                            new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                            new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                            new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
+                            new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
                         },
         };
 
@@ -53,12 +53,12 @@ namespace Apollo.Base.Loaders
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                        new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                        new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                        new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                        new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
-                        new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()),
+                        new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
                     },
         };
 
@@ -66,14 +66,14 @@ namespace Apollo.Base.Loaders
         [Description("Checks that an object cannot be constructed with a null network identifier.")]
         public void CreateWithNullIdentifier()
         {
-            Assert.Throws<ArgumentNullException>(() => new Machine(null, m_HardwareForLocalMachine, new Dictionary<BaseLineId, BaseLineResult>()));
+            Assert.Throws<ArgumentNullException>(() => new Machine(null, m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()));
         }
 
         [Test]
         [Description("Checks that an object cannot be constructed with a null hardware specification.")]
         public void CreateWithNullHardwareSpecification()
         {
-            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), null, new Dictionary<BaseLineId, BaseLineResult>()));
+            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), null, new Dictionary<BaselineId, BaselineResult>()));
         }
 
         [Test]
@@ -89,7 +89,7 @@ namespace Apollo.Base.Loaders
         {
             var id = new NetworkIdentifier("a");
             var hardware = m_HardwareForLocalMachine;
-            var baselines = new Dictionary<BaseLineId, BaseLineResult>();
+            var baselines = new Dictionary<BaselineId, BaselineResult>();
             var machine = new Machine(id, hardware, baselines);
 
             Assert.AreEqual(id, machine.Location);

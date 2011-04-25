@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using Apollo.UI.Common;
 using Microsoft.Practices.Prism.Regions;
 

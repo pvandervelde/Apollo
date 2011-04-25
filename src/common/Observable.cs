@@ -6,7 +6,6 @@
 
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -26,8 +25,6 @@ namespace Apollo.UI.Common
         /// Notifies listeners about a change.
         /// </summary>
         /// <param name="property">The property that changed.</param>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need the expresion bit to determine the property name programatically.")]
         protected void Notify(Expression<Func<object>> property)
         {
             if (PropertyChanged == null)
@@ -51,8 +48,6 @@ namespace Apollo.UI.Common
             RaisePropertyChanged(propertyInfo.Name);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaisePropertyChanged(string name)
         {
             var local = PropertyChanged;

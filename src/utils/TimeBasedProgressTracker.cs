@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Utils.Properties;
 using Lokad;
@@ -209,8 +208,6 @@ namespace Apollo.Utils
         /// Raises the mark added event.
         /// </summary>
         /// <param name="mark">The progress mark.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method raises the MarkAdded event.")]
         private void RaiseMarkAdded(IProgressMark mark)
         {
             var local = MarkAdded;
@@ -231,8 +228,6 @@ namespace Apollo.Utils
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
             var local = StartupProgress;

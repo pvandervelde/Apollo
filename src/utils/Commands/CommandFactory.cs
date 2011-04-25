@@ -19,8 +19,6 @@ namespace Apollo.Utils.Commands
         /// <summary>
         /// The collection that holds the command activators.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "Command invokations need unique objedcts for undo/redo purposes. Thus use a Func<ICommand>")]
         private readonly Dictionary<CommandId, Func<ICommand>> m_Commands = new Dictionary<CommandId, Func<ICommand>>();
 
         #region Implementation of ICommandContainer

@@ -35,8 +35,6 @@ namespace Apollo.Core
         /// <summary>
         /// The collection which tracks the connections between a service and it's dependencies.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "The storage requires that we link an object to a list of objects. Nested generics is an easy way to achieve this.")]
         private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = 
             new Dictionary<KernelService, List<ConnectionMap>>();
 
@@ -72,8 +70,6 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="progress">The progress percentage.</param>
         /// <param name="mark">The progress mark.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark mark)
         {
             var local = StartupProgress;
@@ -372,8 +368,6 @@ namespace Apollo.Core
         /// Note that the current connection strategy only works if there are no demands for duplicates OR 
         /// services with the same interfaces.
         /// </design>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need to return a mapping between a Type and a KernelService. The KeyValuePair<T,K> class is the simplest solution.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetInstalledDependencies(IEnumerable<Type> demandedServices)
         {
             // Create a copy of the available service list. Then when we 
@@ -419,8 +413,6 @@ namespace Apollo.Core
         /// A collection containing a mapping between the demanded dependency and the service that would
         /// serve for this dependency.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "This internal method needs to return a collection of Type - KernelService mappings.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetDependentServices(KernelService service)
         {
             var result = new List<KeyValuePair<Type, KernelService>>();

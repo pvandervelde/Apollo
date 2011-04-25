@@ -23,10 +23,10 @@ namespace Apollo.Core.Base
     [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
     public sealed class BaseModule : Module
     {
-        private static void AttachMessageProcessingActions(IActivatedEventArgs<MessageHandler> a)
+        private static void AttachMessageProcessingActions(IActivatedEventArgs<MessageHandler> args)
         {
-            var handler = (MessageHandler)a.Instance;
-            var filterActions = a.Context.Resolve<IEnumerable<IMessageProcessAction>>();
+            var handler = (MessageHandler)args.Instance;
+            var filterActions = args.Context.Resolve<IEnumerable<IMessageProcessAction>>();
             foreach (var action in filterActions)
             {
                 handler.ActOnArrival(
@@ -35,26 +35,14 @@ namespace Apollo.Core.Base
             }
         }
 
-        private static void ConnectToMessageHandler(IActivatedEventArgs<ICommunicationChannel> a, Type key)
+        private static void ConnectToMessageHandler(IActivatedEventArgs<ICommunicationChannel> args, Type key)
         {
-            var handler = a.Context.ResolveKeyed<IProcessIncomingMessages>(key);
-            a.Instance.OnReceive += (s, e) => handler.ProcessMessage(e.Message);
-            a.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
+            var handler = args.Context.ResolveKeyed<IProcessIncomingMessages>(key);
+            args.Instance.OnReceive += (s, e) => handler.ProcessMessage(e.Message);
+            args.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
-        /// <summary>
-        /// Override to add registrations to the container.
-        /// </summary>
-        /// <param name="builder">The builder through which components can be registered.</param>
-        protected override void Load(ContainerBuilder builder)
-        {
-            base.Load(builder);
-
-            RegisterCommunicationComponents(builder);
-            RegisterLoaderComponents(builder);
-        }
-
-        private void RegisterCommunicationComponents(ContainerBuilder builder)
+        private static void RegisterCommunicationComponents(ContainerBuilder builder)
         {
             builder.Register(c => new MessageHub(
                     c.Resolve<ICommunicationLayer>(),
@@ -179,9 +167,21 @@ namespace Apollo.Core.Base
                 .As<TcpChannelType>();
         }
 
-        private void RegisterLoaderComponents(ContainerBuilder builder)
+        private static void RegisterLoaderComponents(ContainerBuilder builder)
         {
             // DatasetLoader
+        }
+
+        /// <summary>
+        /// Override to add registrations to the container.
+        /// </summary>
+        /// <param name="builder">The builder through which components can be registered.</param>
+        protected override void Load(ContainerBuilder builder)
+        {
+            base.Load(builder);
+
+            RegisterCommunicationComponents(builder);
+            RegisterLoaderComponents(builder);
         }
     }
 }

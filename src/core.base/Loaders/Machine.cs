@@ -74,8 +74,8 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The collection of baselines for the current machine.
         /// </summary>
-        private readonly Dictionary<BaseLineId, BaseLineResult> m_Baselines
-            = new Dictionary<BaseLineId, BaseLineResult>();
+        private readonly Dictionary<BaselineId, BaselineResult> m_Baselines
+            = new Dictionary<BaselineId, BaselineResult>();
 
         /// <summary>
         /// Defines the location of the machine through the 
@@ -96,7 +96,7 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="baselines"/> is <see langword="null" />.
         /// </exception>
-        public Machine(IDictionary<BaseLineId, BaseLineResult> baselines)
+        public Machine(IDictionary<BaselineId, BaselineResult> baselines)
             : this(NetworkIdentifier.ForLocalMachine(), HardwareSpecification.ForLocalMachine(), baselines)
         { 
         }
@@ -111,7 +111,7 @@ namespace Apollo.Core.Base.Loaders
         public Machine(
             NetworkIdentifier location, 
             HardwareSpecification specification, 
-            IDictionary<BaseLineId, BaseLineResult> baselines)
+            IDictionary<BaselineId, BaselineResult> baselines)
         {
             {
                 Enforce.Argument(() => location);
@@ -151,7 +151,7 @@ namespace Apollo.Core.Base.Loaders
         /// Returns the collection of baseline results for the given machine.
         /// </summary>
         /// <returns>The collection of baseline results for the given machine.</returns>
-        public IEnumerable<BaseLineResult> BaseLines()
+        public IEnumerable<BaselineResult> Baselines()
         {
             return m_Baselines.Values;
         }

@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.ServiceModel;
@@ -38,7 +39,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The ID number of the current process.
         /// </returns>
-        private static int GetCurrentProcessId()
+        private static int CurrentProcessId()
         {
             var process = Process.GetCurrentProcess();
             return process.Id;
@@ -74,7 +75,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public Uri GenerateNewChannelUri()
         {
-            var channelUri = string.Format("net.pipe://localhost/apollo/pipe_{0}", GetCurrentProcessId());
+            var channelUri = string.Format(CultureInfo.InvariantCulture, "net.pipe://localhost/apollo/pipe_{0}", CurrentProcessId());
             return new Uri(channelUri);
         }
 
@@ -86,9 +87,9 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public string GenerateNewAddress()
         {
-            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.NamedPipeSubAddress) ?
-                m_Configuration.Value<string>(CommunicationConfigurationKeys.NamedPipeSubAddress) :
-                string.Format("{0}_{1}", "ApolloThroughNamedPipe", GetCurrentProcessId());
+            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.NamedPipeSubaddress) ?
+                m_Configuration.Value<string>(CommunicationConfigurationKeys.NamedPipeSubaddress) :
+                string.Format(CultureInfo.InvariantCulture, "{0}_{1}", "ApolloThroughNamedPipe", CurrentProcessId());
         }
 
         /// <summary>

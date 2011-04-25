@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using Apollo.Core.Base.Properties;
@@ -100,6 +101,8 @@ namespace Apollo.Core.Base.Communication
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "It is unknown what kind of exceptions a channel will throw so we'll catch an Exception and deal with our inability to process all different kinds of exceptions.")]
         private void EnsureChannelIsAvailable()
         {
             if (ShouldCreateChannel)
@@ -118,6 +121,7 @@ namespace Apollo.Core.Base.Communication
                             catch (Exception)
                             {
                                 // Just ignore anything. We're ditching the channel anyway.
+                                // Note that if 
                             }
                         }
 

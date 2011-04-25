@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Timers;
 using Apollo.Utils.Properties;
 using Lokad;
@@ -66,8 +65,6 @@ namespace Apollo.Utils
         /// Raises the elapsed event.
         /// </summary>
         /// <param name="signalTime">The signal time.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseElapsed(DateTime signalTime)
         {
             var local = Elapsed;

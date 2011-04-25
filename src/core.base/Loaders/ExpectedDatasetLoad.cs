@@ -38,7 +38,7 @@ namespace Apollo.Core.Base.Loaders
         /// Gets or sets a value indicating the ID number of the baseline with
         /// which the current dataset is comparable.
         /// </summary>
-        public BaseLineId BaseLine
+        public BaselineId Baseline
         {
             get;
             set;

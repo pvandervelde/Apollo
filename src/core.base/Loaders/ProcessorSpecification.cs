@@ -74,7 +74,7 @@ namespace Apollo.Core.Base.Loaders
             return !nonNullObject.Equals(possibleNullObject);
         }
 
-        private static ProcessorArchitecture ProcessorArchitectureFromWimIdentifier(int architectureNumber)
+        private static ProcessorArchitecture ProcessorArchitectureFromWmiIdentifier(int architectureNumber)
         {
             switch (architectureNumber)
             {
@@ -108,7 +108,7 @@ namespace Apollo.Core.Base.Loaders
                               select new ProcessorSpecification(
                                     queryObj["Name"] as string,
                                     (ushort)queryObj["AddressWidth"],
-                                    ProcessorArchitectureFromWimIdentifier((ushort)queryObj["Architecture"]),
+                                    ProcessorArchitectureFromWmiIdentifier((ushort)queryObj["Architecture"]),
                                     (uint)queryObj["NumberOfCores"],
                                     (uint)queryObj["NumberOfLogicalProcessors"],
                                     (uint)queryObj["MaxClockSpeed"]);

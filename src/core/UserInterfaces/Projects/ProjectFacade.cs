@@ -6,10 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
-using System.Security.Permissions;
 using Apollo.Core.Projects;
-using Apollo.Core.Utils;
 using Apollo.Utils;
 using Lokad;
 
@@ -70,8 +67,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectClosed;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectClosed()
         {
             var local = OnProjectClosed;
@@ -102,8 +97,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectNameUpdated;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectNameUpdated()
         {
             var local = OnProjectNameUpdated;
@@ -134,8 +127,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectSummaryUpdated;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnProjectSummaryUpdated()
         {
             var local = OnProjectSummaryUpdated;
@@ -209,8 +200,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetCreated;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -225,8 +214,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;

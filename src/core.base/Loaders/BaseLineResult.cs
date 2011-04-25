@@ -14,7 +14,7 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Describes the results of a given baseline calculation for a specific machine.
     /// </summary>
-    public sealed class BaseLineResult
+    public sealed class BaselineResult
     {
     }
 }

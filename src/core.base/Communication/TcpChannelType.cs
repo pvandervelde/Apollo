@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The number of the port.
         /// </returns>
-        private static int GetAvailablePort()
+        private static int DetermineNextAvailablePort()
         {
             var endPoint = new IPEndPoint(IPAddress.Any, 0);
             using (var socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp))
@@ -86,7 +86,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The ID number of the current process.
         /// </returns>
-        private static int GetCurrentProcessId()
+        private static int CurrentProcessId()
         {
             var process = Process.GetCurrentProcess();
             return process.Id;
@@ -124,7 +124,7 @@ namespace Apollo.Core.Base.Communication
         {
             int port = m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpPort) ?
                 m_Configuration.Value<int>(CommunicationConfigurationKeys.TcpPort) : 
-                GetAvailablePort();
+                DetermineNextAvailablePort();
             string address = m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpBaseAddress) ? 
                 m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpBaseAddress) : 
                 MachineDnsName();
@@ -188,9 +188,9 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public string GenerateNewAddress()
         {
-            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpSubAddress) ?
-                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubAddress) :
-                string.Format("{0}_{1}", "ApolloThroughTcp", GetCurrentProcessId());
+            return m_Configuration.HasValueFor(CommunicationConfigurationKeys.TcpSubaddress) ?
+                m_Configuration.Value<string>(CommunicationConfigurationKeys.TcpSubaddress) :
+                string.Format(CultureInfo.InvariantCulture, "{0}_{1}", "ApolloThroughTcp", CurrentProcessId());
         }
 
         /// <summary>

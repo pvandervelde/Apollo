@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.Core.Base.Properties;
 
@@ -30,7 +31,7 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         /// <param name="endpoint">The ID number of the endpoint.</param>
         public EndpointNotContactableException(EndpointId endpoint)
-            : this(string.Format(Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint, endpoint))
+            : this(string.Format(CultureInfo.InvariantCulture, Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint, endpoint))
         {
         }
 

@@ -12,39 +12,39 @@ using Apollo.Utils;
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
-    /// Defines an ID number for base line calculations.
+    /// Defines an ID number for baseline calculations.
     /// </summary>
     /// <remarks>
-    /// A base line calculation is a calculation which consists of a known
-    /// set of elements. By comparing a new calculation to the base line it
+    /// A baseline calculation is a calculation which consists of a known
+    /// set of elements. By comparing a new calculation to the baseline it
     /// is possible to establish a rough estimate for the demands placed on
     /// a machine by the unknown calculation.
     /// </remarks>
     [Serializable]
-    public sealed class BaseLineId : Id<BaseLineId, int>
+    public sealed class BaselineId : Id<BaselineId, int>
     {
         /// <summary>
-        /// Defines the ID number for an unknown base line.
+        /// Defines the ID number for an unknown baseline.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private const int UnknownBaseLineId = -1;
+        private const int UnknownBaselineId = -1;
 
         /// <summary>
-        /// Gets a value indicating the ID number for an unknown base line.
+        /// Gets a value indicating the ID number for an unknown baseline.
         /// </summary>
-        public static BaseLineId Unknown
+        public static BaselineId Unknown
         {
             get
             {
-                return new BaseLineId(UnknownBaseLineId);
+                return new BaselineId(UnknownBaselineId);
             }
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BaseLineId"/> class with the given integer as ID number.
+        /// Initializes a new instance of the <see cref="BaselineId"/> class with the given integer as ID number.
         /// </summary>
-        /// <param name="id">The ID number. Any value smaller than 0 indicates that the ID points to an unknown base line.</param>
-        public BaseLineId(int id)
+        /// <param name="id">The ID number. Any value smaller than 0 indicates that the ID points to an unknown baseline.</param>
+        public BaselineId(int id)
             : base(id)
         {
         }
@@ -56,9 +56,9 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// A copy of the current ID number.
         /// </returns>
-        protected override BaseLineId Clone(int value)
+        protected override BaselineId Clone(int value)
         {
-            return new BaseLineId(value);
+            return new BaselineId(value);
         }
 
         /// <summary>

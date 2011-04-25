@@ -37,7 +37,7 @@ namespace Test.Manual.Console.Views
         {
             get
             {
-                return m_Layer.IsSignedOn;
+                return m_Layer.IsSignedIn;
             }
         }
 
@@ -90,7 +90,7 @@ namespace Test.Manual.Console.Views
         /// </summary>
         public void Close()
         {
-            m_Layer.SignOff();
+            m_Layer.SignOut();
         }
     }
 }

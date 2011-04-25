@@ -23,8 +23,6 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// The graph that describes the relations between the different datasets.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "This is the way the QuickGraph API works.")]
         private readonly BidirectionalGraph<DatasetId, Edge<DatasetId>> m_Graph;
 
         /// <summary>

@@ -104,13 +104,13 @@
     <Compile Include="Communication\TcpChannelType.cs" />
     <Compile Include="Communication\TcpStreamTransferInformation.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
-    <Compile Include="Loaders\BaseLineResult.cs" />
+    <Compile Include="Loaders\BaselineId.cs" />
+    <Compile Include="Loaders\BaselineResult.cs" />
     <Compile Include="Loaders\DiskSpecification.cs" />
     <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
     <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="DatasetCreationInformation.cs" />
-    <Compile Include="Loaders\BaseLineId.cs" />
     <Compile Include="Loaders\DatasetLoader.cs" />
     <Compile Include="Loaders\IDatasetLoaderCommands.cs" />
     <Compile Include="Loaders\ILoadDatasets.cs" />

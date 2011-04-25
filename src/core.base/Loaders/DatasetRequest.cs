@@ -30,12 +30,19 @@ namespace Apollo.Core.Base.Loaders
     public sealed class DatasetRequest
     {
         /// <summary>
-        /// Gets or sets a value indicating which datasets should be loaded.
+        /// The collection that holds the information about all the datasets that should be loaded.
+        /// </summary>
+        private readonly List<DatasetOfflineInformation> m_DatasetsToLoad = new List<DatasetOfflineInformation>();
+
+        /// <summary>
+        /// Gets the collection that holds the information about all the datasets should be loaded.
         /// </summary>
         public IList<DatasetOfflineInformation> DatasetsToLoad
         {
-            get;
-            set;
+            get
+            {
+                return m_DatasetsToLoad;
+            }
         }
 
         /// <summary>

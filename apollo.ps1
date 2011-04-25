@@ -780,19 +780,25 @@ task runFxCop -depends buildBinaries -action{
     
     $fxcopExe = Join-Path $props.dirFxCop 'FxCopcmd.exe'
     $rulesDir = Join-Path $props.dirFxCop 'Rules'
+    $dictionaryFile = Join-Path $props.dirBase 'CustomDictionary.xml'
     $outFile = Join-Path $props.dirReports $props.logFxCop
     
-    $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | 
+    $assemblies = Get-ChildItem -path $props.dirOutput | 
         Where-Object { ((($_.Name -like "*Apollo*") -and `
                         !( $_.Name -like "*Test.*") -and `
                         !($_.Name -like "*vshost*")) -and `
-                        (($_.Extension -match ".dll") -or `
-                        ($_.Extension -match ".exe")))}
+                        (($_.Extension -like ".dll") -or `
+                        ($_.Extension -like ".exe")))}
 
     $files = ""
     $assemblies | ForEach-Object -Process { $files += "/file:" + '"' + $_.FullName + '" '}
     
-    $command = "& '" + "$fxcopExe" + "' " + "$files /rule:" + "'" + "$rulesDir" + "'" + " /out:" + "'" + "$outFile" + "'"
+    # exclude the fxcop rules we don't want to use.
+    # 1006: do not nest generic types in member signatures
+    # 1030: use events where appropriate
+    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1030"
+    
+    $command = "& '" + "$fxcopExe" + "' " + "$files /rule:+" + "'" + "$rulesDir" + "'" + $excludedRules + " /out:" + "'" + "$outFile" + "' /forceoutput /dictionary:'" + "$dictionaryFile" + "'"
     $command
     Invoke-Expression $command
     if ($LastExitCode -ne 0)

@@ -34,8 +34,8 @@ namespace Test.Manual.Console
         public ApplicationCentral(ICommunicationLayer communicationLayer, ConnectionViewModel connectionStateInformation)
         {
             m_CommunicationLayer = communicationLayer;
-            m_CommunicationLayer.OnEndpointSignedOn += (s, e) => OnEndpointSignedOn(e.ConnectionInformation);
-            m_CommunicationLayer.OnEndpointSignedOff += (s, e) => OnEndpointSignedOff(e.Endpoint);
+            m_CommunicationLayer.OnEndpointSignedIn += (s, e) => OnEndpointSignedOn(e.ConnectionInformation);
+            m_CommunicationLayer.OnEndpointSignedOut += (s, e) => OnEndpointSignedOff(e.Endpoint);
 
             m_ConnectionStateInformation = connectionStateInformation;
         }
@@ -59,7 +59,7 @@ namespace Test.Manual.Console
         /// </summary>
         public void Initialize()
         {
-            m_CommunicationLayer.SignOn();
+            m_CommunicationLayer.SignIn();
 
             var localEndpoints = m_CommunicationLayer.LocalConnectionPoints();
             foreach (var endpoint in localEndpoints)

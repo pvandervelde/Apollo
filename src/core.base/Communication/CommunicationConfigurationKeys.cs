@@ -28,12 +28,12 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the TCP sub-address (string).
         /// </summary>
-        public static readonly ConfigurationKey TcpSubAddress = new ConfigurationKey();
+        public static readonly ConfigurationKey TcpSubaddress = new ConfigurationKey();
 
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the named pipe sub-address (string).
         /// </summary>
-        public static readonly ConfigurationKey NamedPipeSubAddress = new ConfigurationKey();
+        public static readonly ConfigurationKey NamedPipeSubaddress = new ConfigurationKey();
 
         /// <summary>
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the value for the maximum

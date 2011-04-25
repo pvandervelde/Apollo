@@ -22,7 +22,7 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Store a link to a machine here so that we only need to build it once.
         /// </summary>
-        private readonly Machine m_Machine = new Machine(new Dictionary<BaseLineId, BaseLineResult>());
+        private readonly Machine m_Machine = new Machine(new Dictionary<BaselineId, BaselineResult>());
 
         [Test]
         [Description("Checks that an object cannot be created with a null ID object.")]

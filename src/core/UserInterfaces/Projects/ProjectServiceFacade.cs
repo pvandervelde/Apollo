@@ -7,8 +7,6 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.Remoting;
-using Apollo.Core.Projects;
 using Apollo.Utils;
 using Lokad;
 
@@ -121,8 +119,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnNewProjectLoaded;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnNewProjectLoaded()
         {
             var local = OnNewProjectLoaded;
@@ -212,8 +208,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnProjectUnloaded;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to raise an event, hence the naming.")]
         private void RaiseOnProjectUnloaded()
         {
             var local = OnProjectUnloaded;

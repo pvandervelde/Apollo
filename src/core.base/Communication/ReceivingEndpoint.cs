@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 
 namespace Apollo.Core.Base.Communication
@@ -26,6 +27,8 @@ namespace Apollo.Core.Base.Communication
         /// Accepts the messages.
         /// </summary>
         /// <param name="message">The message.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't really want the channel to die just because the other side didn't behave properly.")]
         public void AcceptMessage(ICommunicationMessage message)
         {
             try

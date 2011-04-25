@@ -24,7 +24,7 @@ namespace Apollo.Base.Loaders
     {
         [VerifyContract]
         [Description("Checks that the GetHashCode() contract is implemented correctly.")]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<BaseLineId>
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<BaselineId>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -33,38 +33,38 @@ namespace Apollo.Base.Loaders
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<BaseLineId> 
+                new List<BaselineId> 
                         {
-                            new BaseLineId(0),
-                            new BaseLineId(1),
-                            new BaseLineId(2),
-                            new BaseLineId(3),
-                            new BaseLineId(4),
-                            new BaseLineId(5),
-                            new BaseLineId(6),
-                            new BaseLineId(7),
-                            new BaseLineId(8),
-                            new BaseLineId(9),
+                            new BaselineId(0),
+                            new BaselineId(1),
+                            new BaselineId(2),
+                            new BaselineId(3),
+                            new BaselineId(4),
+                            new BaselineId(5),
+                            new BaselineId(6),
+                            new BaselineId(7),
+                            new BaselineId(8),
+                            new BaselineId(9),
                         },
         };
 
         [VerifyContract]
         [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
-        public readonly IContract EqualityVerification = new EqualityContract<BaseLineId>
+        public readonly IContract EqualityVerification = new EqualityContract<BaselineId>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new BaseLineId(0),
-                        new BaseLineId(1),
-                        new BaseLineId(2),
-                        new BaseLineId(3),
-                        new BaseLineId(4),
-                        new BaseLineId(5),
-                        new BaseLineId(6),
-                        new BaseLineId(7),
-                        new BaseLineId(8),
-                        new BaseLineId(9),
+                        new BaselineId(0),
+                        new BaselineId(1),
+                        new BaselineId(2),
+                        new BaselineId(3),
+                        new BaselineId(4),
+                        new BaselineId(5),
+                        new BaselineId(6),
+                        new BaselineId(7),
+                        new BaselineId(8),
+                        new BaselineId(9),
                     },
         };
 
@@ -72,8 +72,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns false if the first object is null.")]
         public void LargerThanOperatorWithFirstObjectNull()
         {
-            BaseLineId first = null;
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = null;
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -82,8 +82,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns true if the second object is null.")]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            BaseLineId first = new BaseLineId(10);
-            BaseLineId second = null;
+            BaselineId first = new BaselineId(10);
+            BaselineId second = null;
 
             Assert.IsTrue(first > second);
         }
@@ -92,8 +92,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns false if both objects are null.")]
         public void LargerThanOperatorWithBothObjectsNull()
         {
-            BaseLineId first = null;
-            BaseLineId second = null;
+            BaselineId first = null;
+            BaselineId second = null;
 
             Assert.IsFalse(first > second);
         }
@@ -102,8 +102,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns false if both objects are equal.")]
         public void LargerThanOperatorWithEqualObjects()
         {
-            BaseLineId first = new BaseLineId(10);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(10);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -112,8 +112,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns true if the first object is larger than the second.")]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            BaseLineId first = new BaseLineId(11);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(11);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsTrue(first > second);
         }
@@ -122,8 +122,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the > operator returns false if the first object is smaller than the second.")]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            BaseLineId first = new BaseLineId(9);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(9);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first > second);
         }
@@ -132,8 +132,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns false if the first object is null.")]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
-            BaseLineId first = null;
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = null;
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first < second);
         }
@@ -142,8 +142,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns false if the second object is null.")]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            BaseLineId first = new BaseLineId(10);
-            BaseLineId second = null;
+            BaselineId first = new BaselineId(10);
+            BaselineId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -152,8 +152,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns false if both objects are null.")]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
-            BaseLineId first = null;
-            BaseLineId second = null;
+            BaselineId first = null;
+            BaselineId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -162,8 +162,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns false if both objects are equal.")]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            BaseLineId first = new BaseLineId(10);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(10);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first < second);
         }
@@ -172,8 +172,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns false if the first object is larger than the second.")]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            BaseLineId first = new BaseLineId(11);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(11);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsFalse(first < second);
         }
@@ -182,8 +182,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the < operator returns true if the first object is smaller than the second.")]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            BaseLineId first = new BaseLineId(9);
-            BaseLineId second = new BaseLineId(10);
+            BaselineId first = new BaselineId(9);
+            BaselineId second = new BaselineId(10);
 
             Assert.IsTrue(first < second);
         }
@@ -192,8 +192,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
-            BaseLineId first = new BaseLineId(10);
-            BaseLineId second = first.Clone();
+            BaselineId first = new BaselineId(10);
+            BaselineId second = first.Clone();
 
             Assert.AreEqual(first, second);
         }
@@ -202,7 +202,7 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the CompareTo method returns 1 if the second objects is null.")]
         public void CompareToWithNullObject()
         {
-            BaseLineId first = new BaseLineId(10);
+            BaselineId first = new BaselineId(10);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -212,8 +212,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the CompareTo method returns 0 if the second object is equal to the first.")]
         public void CompareToOperatorWithEqualObjects()
         {
-            BaseLineId first = new BaseLineId(10);
-            object second = new BaseLineId(10);
+            BaselineId first = new BaselineId(10);
+            object second = new BaselineId(10);
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -222,8 +222,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the CompareTo method returns a postive number if the first objects is larger than the second.")]
         public void CompareToWithLargerFirstObject()
         {
-            BaseLineId first = new BaseLineId(11);
-            object second = new BaseLineId(10);
+            BaselineId first = new BaselineId(11);
+            object second = new BaselineId(10);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -232,8 +232,8 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the CompareTo method returns a negative number if the first objects is larger than the second.")]
         public void CompareToWithSmallerFirstObject()
         {
-            BaseLineId first = new BaseLineId(10);
-            object second = new BaseLineId(11);
+            BaselineId first = new BaselineId(10);
+            object second = new BaselineId(11);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -242,7 +242,7 @@ namespace Apollo.Base.Loaders
         [Description("Checks that the CompareTo method throws an exception if the second objects type is not equal to the first.")]
         public void CompareToWithUnequalObjectTypes()
         {
-            BaseLineId first = new BaseLineId(10);
+            BaselineId first = new BaselineId(10);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

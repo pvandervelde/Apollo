@@ -28,7 +28,7 @@ namespace Apollo.Core.Base.Communication
         /// Gets a value indicating whether the communication layer has signed on with
         /// the network.
         /// </summary>
-        bool IsSignedOn
+        bool IsSignedIn
         { 
             get; 
         }
@@ -44,22 +44,22 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Connects to the network and broadcasts a sign on message.
         /// </summary>
-        void SignOn();
+        void SignIn();
 
         /// <summary>
         /// Broadcasts a sign off message and disconnects from the network.
         /// </summary>
-        void SignOff();
+        void SignOut();
 
         /// <summary>
         /// An event raised when an endpoint has joined the network.
         /// </summary>
-        event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedOn;
+        event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedIn;
 
         /// <summary>
         /// An event raised when an endpoint has left the network.
         /// </summary>
-        event EventHandler<EndpointEventArgs> OnEndpointSignedOff;
+        event EventHandler<EndpointEventArgs> OnEndpointSignedOut;
 
         /// <summary>
         /// Returns a value indicating if the given endpoint has provided the information required to
@@ -94,7 +94,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpoint">The endpoint to which the message has to be send.</param>
         /// <param name="message">The message that has to be send.</param>
         /// <returns>A task object that will eventually contain the response message.</returns>
-        Task<ICommunicationMessage> SendMessageAndWaitForRespone(EndpointId endpoint, ICommunicationMessage message);
+        Task<ICommunicationMessage> SendMessageAndWaitForResponse(EndpointId endpoint, ICommunicationMessage message);
 
         /// <summary>
         /// Disconnects from the given endpoint.
