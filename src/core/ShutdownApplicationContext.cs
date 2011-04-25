@@ -11,7 +11,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines an <see cref="ICommandContext"/> for the <see cref="ShutdownApplicationCommand"/>.
     /// </summary>
-    public sealed class ShutdownApplicationContext : ICommandContext
+    internal sealed class ShutdownApplicationContext : ICommandContext
     {
     }
 }

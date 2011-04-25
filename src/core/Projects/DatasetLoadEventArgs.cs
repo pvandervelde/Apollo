@@ -17,7 +17,7 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Stores event arguments used when a dataset load is complete.
     /// </summary>
-    public sealed class DatasetLoadEventArgs : EventArgs
+    internal sealed class DatasetLoadEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetLoadEventArgs"/> class.

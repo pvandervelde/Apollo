@@ -12,7 +12,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// <summary>
     /// Defines an <see cref="ICommandContext"/> for the <see cref="UnloadProjectCommand"/>.
     /// </summary>
-    public sealed class UnloadProjectContext : ICommandContext
+    internal sealed class UnloadProjectContext : ICommandContext
     {
         /// <summary>
         /// Gets or sets the <see cref="Task"/> that is currently handling the

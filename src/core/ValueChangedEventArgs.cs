@@ -12,7 +12,7 @@ namespace Apollo.Core
     /// An <see cref="EventArgs"/> class that indicates that some value was changed.
     /// </summary>
     /// <typeparam name="T">The type of the value that was changed.</typeparam>
-    public sealed class ValueChangedEventArgs<T> : EventArgs
+    internal sealed class ValueChangedEventArgs<T> : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ValueChangedEventArgs{T}"/> class.

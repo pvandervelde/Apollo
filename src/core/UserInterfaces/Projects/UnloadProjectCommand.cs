@@ -17,7 +17,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// <summary>
     /// Defines a command that unloads the current project.
     /// </summary>
-    public sealed class UnloadProjectCommand : ICommand
+    internal sealed class UnloadProjectCommand : ICommand
     {
         #region Static members
 
