@@ -9,6 +9,14 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -34,19 +42,53 @@
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="..\utils.srconly\Applications\CommandLineProgram.cs">
-      <Link>CommandLineProgram.cs</Link>
+      <Link>Utils\CommandLineProgram.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Applications\EventType.cs">
-      <Link>EventType.cs</Link>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventType.cs">
+      <Link>Utils\EventType.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Applications\EventTypeToEventCategoryMap.cs">
-      <Link>EventTypeToEventCategoryMap.cs</Link>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>Utils\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Applications\ExceptionTypeToEventIdMap.cs">
-      <Link>ExceptionTypeToEventIdMap.cs</Link>
+    <Compile Include="..\utils.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>Utils\ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>Utils\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
+      <Link>Utils\TopLevelExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>Utils\AdditionalLogMessageProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
+      <Link>Utils\DebugLogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
+      <Link>Utils\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
+      <Link>Utils\ILogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
+      <Link>Utils\ILogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
+      <Link>Utils\LevelToLog.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\Logger.cs">
+      <Link>Utils\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
+      <Link>Utils\LoggerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
+      <Link>Utils\LogMessage.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\SrcOnlyResources.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

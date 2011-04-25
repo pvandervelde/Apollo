@@ -398,7 +398,9 @@ properties{
     $props.msbuildSandcastleReferenceData = Join-Path $props.dirSandcastle 'fxReflection.proj'
     
     # assembly names
-    $props.assemblyNameUnitTest = 'Test.Unit, PublicKey='
+    $props.assemblyNameTestUnitCore = 'Test.Unit.Core, PublicKey='
+    $props.assemblyNameTestUnitDataset = 'Test.Unit.Dataset, PublicKey='
+    
     #$props.assemblyNameSpecTest = 'Test.Spec, PublicKey='
     $props.assemblyNameManualTest = 'Test.Manual.Console, PublicKey='
     $props.assemblyNameDynamicProxy = 'DynamicProxyGenAssembly2, PublicKey=0024000004800000940000000602000000240000525341310004000001000100c547cac37abd99c8db225ef2f6c8a3602f3b3606cc9891605d02baa56104f4cfc0734aa39b93bf7852f7d9266654753cc297e7d2edfe0bac1cdcf9f717241550e0a7b191195b7667bb4f64bcb8e2121380fd1d9d46ad2d92d2d15605093924cceaf74c4861eff62abf69b9291ed0a340e113be11e6a7d3113e92484cf7045cc7'
@@ -618,12 +620,14 @@ task buildBinaries -depends runPrepareDisk, getVersion -action{
     
     # Set the InternalsVisibleTo attribute
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
-    $unitTestAssemblyName = $props.assemblyNameUnitTest + $publicKeyToken
+    $testUnitCoreAssemblyName = $props.assemblyNameTestUnitCore + $publicKeyToken
+    $testUnitDatasetAssemblyName = $props.assemblyNameTestUnitDataset + $publicKeyToken
+    
     $manualTestAssemblyName = $props.assemblyNameManualTest + $publicKeyToken
     
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
-    Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($unitTestAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
+    Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitCoreAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
     
     # Create the license verification sequence file
     Create-LicenseVerificationSequencesFile $props.licenseVerificationSequencesTemplateFile $props.licenseVerificationSequencesYieldTemplateFile $props.licenseVerificationSequencesFile
@@ -679,15 +683,14 @@ task runUnitTests -depends buildBinaries -action{
            throw 'PartCoverExclusionWriter failed on Apollo with return code: $LastExitCode'
         }
         
-        $partCoverExe = Join-Path $props.dirPartCover 'PartCover.x86.exe'
+        $partCoverExe = Join-Path $props.dirPartCover 'PartCover.exe'
         $command += '& "' + "$partCoverExe" + '" --register' 
         $command += ' --settings "' + $props.partCoverConfigFile + '"'
         
         # run the tests
         $command
         
-        #Invoke-Expression $command | out-null
-        & $partCoverExe --register --settings $partCoverConfigFile
+        Invoke-Expression $command
         "" # Add an extra line because PartCover is retarded and doesn't do a writeline at the end
         if ($LastExitCode -ne 0)
         {

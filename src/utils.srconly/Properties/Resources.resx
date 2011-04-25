@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Exceptions_Messages_VerificationFailure" xml:space="preserve">
     <value>The license verification has failed. Please contact your vendor.</value>
@@ -128,5 +128,8 @@
   </data>
   <data name="Exception_Messages_InternalError_WithCode" xml:space="preserve">
     <value>An internal error occurred. The error code is: {0}. Please contact your vendor.</value>
+  </data>
+  <data name="Exception_Messages_CannotLogMessageWithLogLevelSetToNone" xml:space="preserve">
+    <value>It is not possible to log a message if the LogLevel is set to None.</value>
   </data>
 </root>

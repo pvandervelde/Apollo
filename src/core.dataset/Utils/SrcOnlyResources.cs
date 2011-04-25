@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Properties;
+using Apollo.Core.Dataset.Properties;
 using Apollo.Utils.Logging;
 
 namespace Apollo.Utils
@@ -30,7 +30,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange;
+                return Resources.Exception_Messages_ArgumentOutOfRange;
             }
         }
 
@@ -42,7 +42,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange_WithArgument;
+                return Resources.Exception_Messages_ArgumentOutOfRange_WithArgument;
             }
         }
 
@@ -54,7 +54,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
+                return Resources.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
             }
         }
 
@@ -68,7 +68,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_InternalError_WithCode;
+                return Resources.Exception_Messages_InternalError_WithCode;
             }
         }
 
@@ -82,7 +82,7 @@ namespace Apollo.Utils
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_VerificationFailure;
+                return Resources.Exception_Messages_VerificationFailure;
             }
         }
     }

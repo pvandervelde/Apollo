@@ -37,7 +37,6 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
-    <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="ExcludeFromCoverageAttribute.cs" />
     <Compile Include="IApplicationConstants.cs" />
     <Compile Include="ICompanyConstants.cs" />

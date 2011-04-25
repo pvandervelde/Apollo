@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Logging;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils.Commands;
+using Apollo.Utils.Logging;
 using Autofac.Core;
 using Lokad;
 
@@ -31,6 +31,11 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications =
             new Dictionary<NotificationName, Action<INotificationArguments>>();
+
+        /// <summary>
+        /// The logger that logs the debug information.
+        /// </summary>
+        private readonly ILogger m_Logger;
 
         /// <summary>
         /// The container that stores all the commands for this service.
@@ -58,11 +63,6 @@ namespace Apollo.Core.UserInterfaces
         private CoreProxy m_Core;
 
         /// <summary>
-        /// The service which handles all the log requests.
-        /// </summary>
-        private LogSink m_Logger;
-
-        /// <summary>
         /// The service which handles all the project requests.
         /// </summary>
         private ProjectService m_Projects;
@@ -73,6 +73,7 @@ namespace Apollo.Core.UserInterfaces
         /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
         /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
+        /// <param name="logger">The <see cref="ILogger"/> that logs the debug information for the current service.</param>
         /// <param name="onStartService">The method that provides the DI module.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
@@ -84,12 +85,16 @@ namespace Apollo.Core.UserInterfaces
         /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
         public UserInterfaceService(
             ICommandContainer commands,
             INotificationNameConstants notificationNames,
             IValidationResultStorage licenseValidationStorage,
+            ILogger logger,
             Action<IModule> onStartService)
             : base()
         {
@@ -97,12 +102,14 @@ namespace Apollo.Core.UserInterfaces
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => notificationNames);
                 Enforce.Argument(() => licenseValidationStorage);
+                Enforce.Argument(() => logger);
                 Enforce.Argument(() => onStartService);
             }
 
             m_NotificationNames = notificationNames;
             m_LicenseValidationStorage = licenseValidationStorage;
             m_OnStartService = onStartService;
+            m_Logger = logger;
 
             m_Commands = commands;
             {
@@ -234,7 +241,6 @@ namespace Apollo.Core.UserInterfaces
             return new Type[] 
                 { 
                     typeof(CoreProxy),
-                    typeof(LogSink),
                     typeof(ProjectService),
                 };
         }
@@ -250,12 +256,6 @@ namespace Apollo.Core.UserInterfaces
             {
                 m_Core = core;
                 m_Core.OnStartupComplete += OnStartupComplete;
-            }
-
-            var logger = dependency as LogSink;
-            if (logger != null)
-            {
-                m_Logger = logger;
             }
 
             var projects = dependency as ProjectService;
@@ -308,7 +308,7 @@ namespace Apollo.Core.UserInterfaces
         {
             get
             {
-                return (m_Logger != null) && (m_Projects != null);
+                return m_Projects != null;
             }
         }
 
@@ -355,7 +355,6 @@ namespace Apollo.Core.UserInterfaces
         private void LogMessage(LevelToLog level, string message)
         {
             m_Logger.Log(
-                LogType.Debug,
                 new LogMessage(
                     GetType().FullName,
                     level,

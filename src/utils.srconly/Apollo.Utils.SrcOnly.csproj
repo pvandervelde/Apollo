@@ -12,12 +12,15 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
-    <Compile Include="Applications\EventType.cs" />
     <Compile Include="Applications\CommandLineProgram.cs" />
-    <Compile Include="Applications\EventTypeToEventCategoryMap.cs" />
-    <Compile Include="Applications\ExceptionTypeToEventIdMap.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="AssemblyNameElements.cs" />
+    <Compile Include="ExceptionHandling\EventType.cs" />
+    <Compile Include="ExceptionHandling\EventTypeToEventCategoryMap.cs" />
+    <Compile Include="ExceptionHandling\TopLevelExceptionHandler.cs" />
+    <Compile Include="ExceptionHandling\ExceptionTypeToEventIdMap.cs" />
+    <Compile Include="ExceptionHandling\GuardResult.cs" />
+    <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="FusionHelper.cs" />
     <Compile Include="Licensing\Checksum.cs" />
     <Compile Include="Licensing\Checksum.HashCalculation.cs">
@@ -48,6 +51,15 @@
     <Compile Include="Licensing\TimePeriod.cs" />
     <Compile Include="Licensing\ValidationService.cs" />
     <Compile Include="Licensing\ValidationSequence.cs" />
+    <Compile Include="Logging\AdditionalLogMessageProperties.cs" />
+    <Compile Include="Logging\DebugLogTemplate.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\ILogMessage.cs" />
+    <Compile Include="Logging\ILogTemplate.cs" />
+    <Compile Include="Logging\LevelToLog.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Logging\LoggerBuilder.cs" />
+    <Compile Include="Logging\LogMessage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -60,6 +72,10 @@
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -97,6 +113,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Readme.txt" />
   </ItemGroup>
   <!--
     <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\TextTemplating\v10.0\Microsoft.TextTemplating.targets" />

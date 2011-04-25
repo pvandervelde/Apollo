@@ -38,6 +38,9 @@
     <Compile Include="..\utils.srconly\ErrorCodes.cs">
       <Link>Utils\ErrorCodes.cs</Link>
     </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\IExceptionHandler.cs">
+      <Link>Utils\IExceptionHandler.cs</Link>
+    </Compile>
     <Compile Include="..\utils.srconly\FusionHelper.cs">
       <Link>Utils\FusionHelper.cs</Link>
     </Compile>
@@ -115,6 +118,33 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>Utils\Logging\AdditionalLogMessageProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
+      <Link>Utils\Logging\DebugLogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
+      <Link>Utils\Logging\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
+      <Link>Utils\Logging\ILogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
+      <Link>Utils\Logging\ILogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
+      <Link>Utils\Logging\LevelToLog.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\Logger.cs">
+      <Link>Utils\Logging\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
+      <Link>Utils\Logging\LoggerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
+      <Link>Utils\Logging\LogMessage.cs</Link>
+    </Compile>
     <Compile Include="..\ValidationSequenceGenerator.cs">
       <Link>Utils\Licensing\ValidationSequenceGenerator.cs</Link>
       <SubType>Code</SubType>
@@ -162,20 +192,6 @@
     <Compile Include="KernelServiceStartupFailedException.cs" />
     <Compile Include="KernelStartInfo.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
-    <Compile Include="Logging\CommandLogTemplate.cs" />
-    <Compile Include="Logging\DebugLogTemplate.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\ILoggerConfiguration.cs" />
-    <Compile Include="Logging\ILogMessage.cs" />
-    <Compile Include="Logging\ILogSink.cs" />
-    <Compile Include="Logging\ILogTemplate.cs" />
-    <Compile Include="Logging\LevelToLog.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\LoggerConfiguration.cs" />
-    <Compile Include="Logging\LoggerModule.cs" />
-    <Compile Include="Logging\LogMessage.cs" />
-    <Compile Include="Logging\LogSink.cs" />
-    <Compile Include="Logging\LogType.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="NotificationNameConstants.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
