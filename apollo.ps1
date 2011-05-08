@@ -697,6 +697,12 @@ task runUnitTests -depends buildBinaries -action{
             throw "MbUnit failed on Apollo with return code: $LastExitCode"
         }
         
+        $partCoverLogFile = Join-Path $props.dirBase 'partcover.driver.log'
+        if (Test-Path -Path $partCoverLogFile)
+        {
+            Remove-Item $partCoverLogFile -Force
+        }
+        
         $transformExe = Join-Path (Join-Path $props.dirSandcastle "ProductionTools")"xsltransform.exe"
         $partCoverXslt = Join-Path (Join-Path $props.dirPartCover 'xslt') "partcoverfullreport.xslt"
         $partCoverHtml = Join-Path $props.dirReports $props.logPartCoverHtml

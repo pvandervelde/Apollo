@@ -10,7 +10,7 @@ namespace Apollo.Utils.ExceptionHandling
     /// Defines a set of event category types used to indicate what category
     /// an event log entry belongs to.
     /// </summary>
-    public enum EventType
+    internal enum EventType
     {
         /// <summary>
         /// The event log entry belongs to the exception category.

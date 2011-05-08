@@ -38,13 +38,17 @@ namespace Apollo.Core.Base.Communication
         /// be pretty quick. On the other hand we'll be storing a collection for each message type we filter on
         /// which may mean we're storing an entire Collection object for a single filter.
         /// </design>
-        private readonly Dictionary<IMessageFilter, IMessageProcessAction> m_MultiUseFilters
+        private readonly Dictionary<IMessageFilter, IMessageProcessAction> m_MultiuseFilters
             = new Dictionary<IMessageFilter, IMessageProcessAction>();
 
         /// <summary>
         /// The collection that maps the ID numbers of the messages that are waiting for a response
         /// message to the endpoint.
         /// </summary>
+        /// <remarks>
+        /// We track the endpoint from which we're expecting a response in case we get an <c>EndpointDisconnectMessage</c>.
+        /// In that case we need to know if we just lost the source of our potential answer or not.
+        /// </remarks>
         private readonly Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
             = new Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
 
@@ -102,9 +106,9 @@ namespace Apollo.Core.Base.Communication
 
             lock (m_Lock)
             {
-                if (!m_MultiUseFilters.ContainsKey(messageFilter))
+                if (!m_MultiuseFilters.ContainsKey(messageFilter))
                 {
-                    m_MultiUseFilters.Add(messageFilter, notifyAction);
+                    m_MultiuseFilters.Add(messageFilter, notifyAction);
                 }
             }
         }
@@ -155,7 +159,7 @@ namespace Apollo.Core.Base.Communication
             Dictionary<IMessageFilter, IMessageProcessAction> localCollection = null;
             lock (m_Lock)
             {
-                localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_MultiUseFilters);
+                localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_MultiuseFilters);
             }
 
             foreach (var pair in localCollection)

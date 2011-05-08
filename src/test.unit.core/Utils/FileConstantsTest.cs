@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using Apollo.Utils;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Utils

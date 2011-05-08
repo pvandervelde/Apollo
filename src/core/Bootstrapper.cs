@@ -15,7 +15,6 @@ using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Apollo.Utils.ExceptionHandling;
-using Apollo.Utils.Logging;
 using Autofac;
 using Autofac.Core;
 using AutofacContrib.Startable;
@@ -269,7 +268,7 @@ namespace Apollo.Core
                 s_Container.Resolve<ICommandContainer>(),
                 s_Container.Resolve<INotificationNameConstants>(),
                 s_Container.Resolve<IValidationResultStorage>(),
-                s_Container.Resolve<ILogger>(),
+                s_Container.Resolve<Action<LogSeverityProxy, string>>(),
                 StoreContainer);
 
             return userInterface;

@@ -19,6 +19,13 @@ namespace Apollo.ProjectExplorer
     internal partial class App
     {
         // WHERE IN THE HELL DOES ALL OF THIS COME FROM? PRISM?
+        //
+        // Note that it's going to be tricky to put a try..catch around the run-loop of this thing
+        // 1) We don't have easy access to the code because that is generated
+        // 2) There is the damn message loop which complicates things
+        // Not entirely sure how to deal with that yet.
+        // Eventually we want to hook up the exception handler that is also used for the 
+        // command line apps.
 
         /// <summary>
         /// Initializes the environment for use. Currently sets Environment Variables and 

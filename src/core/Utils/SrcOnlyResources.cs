@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Properties;
-using Apollo.Utils.Logging;
 
 namespace Apollo.Utils
 {
@@ -48,7 +47,7 @@ namespace Apollo.Utils
 
         /// <summary>
         /// Gets the string resource for an <see cref="Exception"/> that is thrown if a user tries to set
-        /// the <see cref="ILogMessage.Level"/> to <see cref="LevelToLog.None"/>.
+        /// the log level to <see cref="LogSeverityProxy.None"/>.
         /// </summary>
         public static string ExceptionMessagesCannotLogMessageWithLogLevelSetToNone
         {

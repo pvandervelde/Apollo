@@ -243,6 +243,8 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Gets a value indicating the clock speed in MHz for the given processor.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Hz",
+            Justification = "Hz is the correct casing for Hertz.")]
         public long ClockSpeedInMHz
         {
             get;

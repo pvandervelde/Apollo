@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using Apollo.Utils;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Utils
@@ -21,7 +22,7 @@ namespace Apollo.Core.Utils
         [Description("Checks that the CompanyName property returns the correct value.")]
         public void CompanyName()
         {
-            var assembly = typeof(ApplicationConstants).Assembly;
+            var assembly = Assembly.GetEntryAssembly();
             var attribute = assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0] as AssemblyCompanyAttribute;
 
             var constants = new ApplicationConstants();
@@ -32,7 +33,7 @@ namespace Apollo.Core.Utils
         [Description("Checks that the ApplicationName property returns the correct value.")]
         public void ApplicationName()
         {
-            var assembly = typeof(ApplicationConstants).Assembly;
+            var assembly = Assembly.GetEntryAssembly();
             var attribute = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0] as AssemblyProductAttribute;
 
             var constants = new ApplicationConstants();
@@ -43,7 +44,7 @@ namespace Apollo.Core.Utils
         [Description("Checks that the ApplicationVersion property returns the correct value.")]
         public void ApplicationVersion()
         {
-            var assembly = typeof(ApplicationConstants).Assembly;
+            var assembly = Assembly.GetEntryAssembly();
             var version = assembly.GetName().Version;
 
             var constants = new ApplicationConstants();
@@ -54,7 +55,7 @@ namespace Apollo.Core.Utils
         [Description("Checks that the ApplicationCompatibilityVersion property returns the correct value.")]
         public void ApplicationCompatibilityVersion()
         {
-            var assembly = typeof(ApplicationConstants).Assembly;
+            var assembly = Assembly.GetEntryAssembly();
             var version = assembly.GetName().Version;
 
             var constants = new ApplicationConstants();

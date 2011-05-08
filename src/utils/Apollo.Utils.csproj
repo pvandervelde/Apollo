@@ -21,6 +21,7 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="ApplicationConstants.cs" />
     <Compile Include="AssemblyBuildTimeAttribute.cs" />
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="Commands\EmptyCommandContext.cs" />
@@ -38,6 +39,7 @@
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="ExcludeFromCoverageAttribute.cs" />
+    <Compile Include="FileConstants.cs" />
     <Compile Include="IApplicationConstants.cs" />
     <Compile Include="ICompanyConstants.cs" />
     <Compile Include="Id.cs" />
@@ -50,8 +52,10 @@
     <Compile Include="IProgressTimer.cs" />
     <Compile Include="ITrackProgress.cs" />
     <Compile Include="LockObject.cs" />
+    <Compile Include="LogSeverityProxy.cs" />
     <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
+    <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="StartupProgressEventArgs.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -120,6 +120,9 @@
   <data name="Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType" xml:space="preserve">
     <value>A channel type must inherit from IChannelType.</value>
   </data>
+  <data name="Exceptions_Messages_ACommandSetTypeMustDeriveFromICommandSet" xml:space="preserve">
+    <value>A command set type must inherit from ICommandSet.</value>
+  </data>
   <data name="Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace" xml:space="preserve">
     <value>A disk cannot have more free space than total space.</value>
   </data>
@@ -146,6 +149,18 @@
   </data>
   <data name="Exceptions_Messages_ChannelAddresssMustBeDefined" xml:space="preserve">
     <value>The address of a communication channel must be defined in order to connect to the channel.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandAlreadyRegistered" xml:space="preserve">
+    <value>The given command interface has already been registered.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandNotSupported" xml:space="preserve">
+    <value>The requested command is not supported by the endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandNotSupported_WithCommand" xml:space="preserve">
+    <value>The command of type {0} is not supported by the endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandObjectMustImplementCommandInterface" xml:space="preserve">
+    <value>The provided command object must implement the provided command interface.</value>
   </data>
   <data name="Exceptions_Messages_DatasetCannotBecomeParent" xml:space="preserve">
     <value>The given dataset cannot be made a parent.</value>
@@ -197,5 +212,44 @@
   </data>
   <data name="Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero" xml:space="preserve">
     <value>The clock speed of a CPU must be larger than zero.</value>
+  </data>
+  <data name="Exceptions_Messages_RemoteOperationFailed" xml:space="preserve">
+    <value>A remote operation failed.</value>
+  </data>
+  <data name="Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend" xml:space="preserve">
+    <value>There should be at least one command to make it useful to send the command information to the desired endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet" xml:space="preserve">
+    <value>The given type is not a valid command set interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains additional events on top of those defined by ICommandSet.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains properties.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains at least one method with one or more generic parameters.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains at least one method which does not return a void, a Task or a Task&lt;T&gt;.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains at least one method which has an out parameter, a ref parameter or a non-serializable parameter.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet" xml:space="preserve">
+    <value>The given type does not derive from ICommandSet.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface" xml:space="preserve">
+    <value>The given type is not a valid command set because it is not an interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed" xml:space="preserve">
+    <value>The given type is not a valid command set because it contains open generic parameters.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadCommandSetType" xml:space="preserve">
+    <value>An ICommandSet type could not be loaded.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName" xml:space="preserve">
+    <value>An ICommandSet of type {0} could not be loaded.</value>
   </data>
 </root>

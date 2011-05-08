@@ -8,12 +8,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.ServiceModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication
@@ -29,7 +31,7 @@ namespace Apollo.Core.Base.Communication
     /// be one. If there are multiple communication channels sharing the receiving endpoint then
     /// we don't know which channel should get the messages.
     /// </remarks>
-    internal sealed class CommunicationChannel : ICommunicationChannel
+    internal sealed class CommunicationChannel : ICommunicationChannel, IDisposable
     {
         /// <summary>
         /// Maps the endpoint to the connection information.
@@ -57,6 +59,11 @@ namespace Apollo.Core.Base.Communication
         /// The function that generates sending endpoints.
         /// </summary>
         private readonly Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> m_SenderBuilder;
+
+        /// <summary>
+        /// The function used to write messages to the log.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
         /// The object used to receive messages over the network.
@@ -96,6 +103,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="channelType">The type of channel, e.g. TCP.</param>
         /// <param name="receiverBuilder">The function that builds receiving endpoints.</param>
         /// <param name="senderBuilder">The function that builds sending endpoints.</param>
+        /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
         /// </exception>
@@ -108,23 +116,29 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="senderBuilder"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
         public CommunicationChannel(
             EndpointId id, 
             IChannelType channelType, 
             Func<IMessagePipe> receiverBuilder,
-            Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> senderBuilder)
+            Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> senderBuilder,
+            Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => channelType);
                 Enforce.Argument(() => receiverBuilder);
                 Enforce.Argument(() => senderBuilder);
+                Enforce.Argument(() => logger);
             }
 
             m_Id = id;
             m_Type = channelType;
             m_ReceiverBuilder = receiverBuilder;
             m_SenderBuilder = senderBuilder;
+            m_Logger = logger;
         }
 
         /// <summary>
@@ -159,13 +173,7 @@ namespace Apollo.Core.Base.Communication
         private void ReopenChannel(Uri uri)
         {
             // Clear the old host
-            if (m_Host != null)
-            {
-                m_Host.Close();
-                m_Host.Faulted -= m_HostFaultingHandler;
-                m_HostFaultingHandler = null;
-                m_Host = null;
-            }
+            CleanupHost();
 
             // Create the new host
             m_HostFaultingHandler = (s, e) =>
@@ -178,6 +186,31 @@ namespace Apollo.Core.Base.Communication
             m_LocalConnection = new ChannelConnectionInformation(m_Id, m_Type.GetType(), endpoint.Address.Uri);
 
             m_Host.Open();
+
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Opened channel on address: {0}.",
+                    uri));
+        }
+
+        private void CleanupHost()
+        {
+            if (m_Host != null)
+            {
+                m_Host.Close();
+                m_Host.Faulted -= m_HostFaultingHandler;
+                m_HostFaultingHandler = null;
+
+                var disposable = m_Host as IDisposable;
+                if (disposable != null)
+                {
+                    disposable.Dispose();
+                }
+
+                m_Host = null;
+            }
         }
 
         /// <summary>
@@ -211,13 +244,7 @@ namespace Apollo.Core.Base.Communication
                 }
             }
 
-            if (m_Host != null)
-            {
-                m_Host.Close();
-                m_Host.Faulted -= m_HostFaultingHandler;
-                m_HostFaultingHandler = null;
-                m_Host = null;
-            }
+            CleanupHost();
 
             if (m_Receiver != null)
             {
@@ -227,6 +254,7 @@ namespace Apollo.Core.Base.Communication
 
             m_LocalConnection = null;
 
+            m_Logger(LogSeverityProxy.Trace, "Closed channel");
             RaiseOnClosed();
         }
 
@@ -389,7 +417,7 @@ namespace Apollo.Core.Base.Communication
             var binding = m_Type.GenerateBinding();
 
             var factory = new ChannelFactory<IReceivingWcfEndpointProxy>(binding, endpoint);
-            return new SelfResurrectingSendingEndpoint(factory);
+            return new SelfResurrectingSendingEndpoint(factory, m_Logger);
         }
 
         /// <summary>
@@ -418,6 +446,15 @@ namespace Apollo.Core.Base.Communication
             {
                 local(this, new ChannelClosedEventArgs(m_Id));
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            CleanupHost();
         }
     }
 }

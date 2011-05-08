@@ -12,6 +12,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication
@@ -67,6 +68,11 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
 
         /// <summary>
+        /// The function used to write messages to the log.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
+
+        /// <summary>
         /// Indicates if the layer is signed on or not.
         /// </summary>
         private volatile bool m_AlreadySignedOn;
@@ -79,21 +85,30 @@ namespace Apollo.Core.Base.Communication
         ///     The function that returns a tuple of a <see cref="ICommunicationChannel"/> and a <see cref="IDirectIncomingMessages"/>
         ///     based on the type of the <see cref="IChannelType"/> that is related to the channel.
         /// </param>
+        /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="discoverySources"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="channelBuilder"/> is <see langword="null" />.
         /// </exception>
-        public CommunicationLayer(IEnumerable<IDiscoverOtherServices> discoverySources, Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        public CommunicationLayer(
+            IEnumerable<IDiscoverOtherServices> discoverySources, 
+            Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
+            Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => discoverySources);
                 Enforce.Argument(() => channelBuilder);
+                Enforce.Argument(() => logger);
             }
 
             m_ChannelBuilder = channelBuilder;
             m_DiscoverySources = discoverySources;
+            m_Logger = logger;
         }
 
         /// <summary>
@@ -173,6 +188,7 @@ namespace Apollo.Core.Base.Communication
                 source.StartDiscovery();
             }
 
+            m_Logger(LogSeverityProxy.Trace, "Sign on process finished.");
             m_AlreadySignedOn = true;
         }
 
@@ -198,6 +214,14 @@ namespace Apollo.Core.Base.Communication
                 list.Add(order, info);
 
                 // Notify the world
+                m_Logger(
+                    LogSeverityProxy.Trace, 
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "New endpoint ({0}) signed in via the {1} channel. Endpoint URL: {2}.",
+                        info.Id,
+                        info.ChannelType,
+                        info.Address));
                 RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
             }
         }
@@ -271,6 +295,7 @@ namespace Apollo.Core.Base.Communication
             // Clear all connections
             m_OpenConnections.Clear();
 
+            m_Logger(LogSeverityProxy.Trace, "Sign off process finished.");
             m_AlreadySignedOn = false;
         }
 
@@ -343,6 +368,14 @@ namespace Apollo.Core.Base.Communication
 
             var pair = m_OpenConnections[connection.ChannelType];
             pair.Item1.ConnectTo(connection);
+
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Connected to endpoint ({0}) signed in via the {1} channel",
+                    endpoint,
+                    connection.ChannelType));
         }
 
         private ChannelConnectionInformation SelectMostAppropriateConnection(EndpointId endpoint)
@@ -395,7 +428,16 @@ namespace Apollo.Core.Base.Communication
             {
                 channel.ConnectTo(connection);
             }
-            
+
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Sending msg of type {0} to endpoint ({1}) via the {2} channel without waiting for the response.",
+                    message.GetType(),
+                    endpoint,
+                    connection.ChannelType));
+
             channel.Send(endpoint, message);
         }
 
@@ -433,6 +475,15 @@ namespace Apollo.Core.Base.Communication
             var pair = m_OpenConnections[connection.ChannelType];
             var result = pair.Item2.ForwardResponse(endpoint, message.Id);
 
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Sending msg of type {0} to endpoint ({1}) via the {2} channel while waiting for the response.",
+                    message.GetType(),
+                    endpoint,
+                    connection.ChannelType));
+
             pair.Item1.Send(endpoint, message);
             return result;
         }
@@ -456,6 +507,17 @@ namespace Apollo.Core.Base.Communication
                         channel.Item1.DisconnectFrom(endpoint);
                     }
                 }
+
+                m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Disconnecting from endpoint ({0}).",
+                    endpoint));
+
+                // Technically the endpoint hasn't signed out, however we have told it
+                // we are going to and so it comes down to the same thing.
+                RaiseOnEndpointSignedOut(endpoint);
             }
         }
     }

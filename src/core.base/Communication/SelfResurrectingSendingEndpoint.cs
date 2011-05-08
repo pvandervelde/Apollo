@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using Apollo.Core.Base.Properties;
@@ -33,6 +34,11 @@ namespace Apollo.Core.Base.Communication
         private readonly ChannelFactory<IReceivingWcfEndpointProxy> m_Factory;
 
         /// <summary>
+        /// The function used to write messages to the log.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
+
+        /// <summary>
         /// The service on the other side of the channel.
         /// </summary>
         private IReceivingEndpoint m_Service; // @TODO: should this be marked volatile?
@@ -51,16 +57,24 @@ namespace Apollo.Core.Base.Communication
         /// Initializes a new instance of the <see cref="SelfResurrectingSendingEndpoint"/> class.
         /// </summary>
         /// <param name="channelFactory">The factory that is used to create new channels.</param>
+        /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="channelFactory"/> is <see langword="null" />.
         /// </exception>
-        public SelfResurrectingSendingEndpoint(ChannelFactory<IReceivingWcfEndpointProxy> channelFactory)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        public SelfResurrectingSendingEndpoint(
+            ChannelFactory<IReceivingWcfEndpointProxy> channelFactory,
+            Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => channelFactory);
+                Enforce.Argument(() => logger);
             }
 
             m_Factory = channelFactory;
+            m_Logger = logger;
         }
 
         /// <summary>
@@ -125,6 +139,7 @@ namespace Apollo.Core.Base.Communication
                             }
                         }
 
+                        m_Logger(LogSeverityProxy.Info, "Channel faulted. Rebuilding.");
                         m_Service = m_Factory.CreateChannel();
                         m_Channel = (IChannel)m_Service;
                     }
@@ -166,16 +181,28 @@ namespace Apollo.Core.Base.Communication
                 {
                     local.Close();
                 }
-                catch (CommunicationObjectAbortedException)
+                catch (CommunicationObjectAbortedException e)
                 {
                     // The channel is now faulted but there is nothing
                     // we can do about that so just ignore it.
+                    m_Logger(
+                        LogSeverityProxy.Debug,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel failed to close normally. Exception was: {0}",
+                            e));
                 }
-                catch (TimeoutException)
+                catch (TimeoutException e)
                 { 
                     // The default close timeout elapsed before we were 
                     // finished closing the channel. So the channel
                     // is aborted. Nothing we can do, just ignore it.
+                    m_Logger(
+                        LogSeverityProxy.Debug,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel failed to close normally. Exception was: {0}",
+                            e));
                 }
             }
         }

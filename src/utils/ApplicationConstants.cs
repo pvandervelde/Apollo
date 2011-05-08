@@ -8,15 +8,14 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Apollo.Utils;
 
-namespace Apollo.Core.Utils
+namespace Apollo.Utils
 {
     /// <summary>
     /// Holds a set of constants that apply to the application.
     /// </summary>
     [Serializable]
-    internal sealed class ApplicationConstants : IApplicationConstants, ICompanyConstants
+    public sealed class ApplicationConstants : IApplicationConstants, ICompanyConstants
     {
         /// <summary>
         /// Gets the assembly that called into this assembly.
@@ -28,7 +27,7 @@ namespace Apollo.Core.Utils
             Justification = "This member is potentially expensive to invoke and should thus be a method, not a property.")]
         private static Assembly GetAssembly()
         {
-            return Assembly.GetExecutingAssembly();
+            return Assembly.GetEntryAssembly();
         }
 
         /// <summary>

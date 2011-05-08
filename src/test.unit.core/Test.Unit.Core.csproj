@@ -160,8 +160,6 @@
     </Compile>
     <Compile Include="Utils\Licensing\ValidationServiceRunnerTest.cs" />
     <Compile Include="Utils\Licensing\ValidationServiceTest.cs" />
-    <Compile Include="Utils\Logging\DebugLogTemplateTest.cs" />
-    <Compile Include="Utils\Logging\LogMessageTest.cs" />
     <Compile Include="Utils\TimeBasedProgressTrackerTest.cs" />
   </ItemGroup>
   <ItemGroup>

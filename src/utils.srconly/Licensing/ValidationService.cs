@@ -184,7 +184,7 @@ namespace Apollo.Utils.Licensing
             }
 
             // Run through all the invokations and invoke them when required. 
-            // If an invokation fails then reschedule it to be done
+            // If an invocation fails then reschedule it to be done
             // the next time we pass through the loop
             var index = 0;
             var nextValidationTime = m_VerificationOrder.Keys[index];

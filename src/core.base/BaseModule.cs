@@ -44,12 +44,22 @@ namespace Apollo.Core.Base
 
         private static void RegisterCommunicationComponents(ContainerBuilder builder)
         {
-            builder.Register(c => new MessageHub(
+            builder.Register(c => new RemoteCommandHub(
                     c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<CommandProxyBuilder>()))
+                    c.Resolve<CommandProxyBuilder>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .SingleInstance();
 
-            builder.Register(c => new CommandProxyBuilder());
+            builder.Register(c => new CommandProxyBuilder(
+                c.Resolve<ICommunicationLayer>().Id,
+                (endpoint, msg) =>
+                    {
+                        return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
+                    }));
+
+            builder.Register(c => new LocalCommandCollection())
+                .As<ICommandCollection>()
+                .SingleInstance();
 
             builder.Register(c => new CommunicationLayer(
                     c.Resolve<IEnumerable<IDiscoverOtherServices>>(),
@@ -58,7 +68,8 @@ namespace Apollo.Core.Base
                         return Tuple.Create(
                             c.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
                             c.ResolveKeyed<IDirectIncomingMessages>(t)); 
-                    }))
+                    },
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<ICommunicationLayer>()
                 .SingleInstance();
 
@@ -78,6 +89,7 @@ namespace Apollo.Core.Base
             // MessageHandler
             // Note that there is no direct relation between the IChannelType and the MessageHandler
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
+            // we pretend that there is a connection between IChannelType and the MessageHandler.
             {
                 builder.Register(c => new MessageHandler())
                     .OnActivated(a =>
@@ -99,13 +111,29 @@ namespace Apollo.Core.Base
             }
 
             // IMessageProcessAction(s)
+            //
             // For now we'll just create two extra objects only to get their types
             // and then throw those objects away. If this turns out to be too expensive
             // or the list becomes too long then we can do something cunning with the 
             // use of Autofac Metadata.
             builder.Register(c => new EndpointConnectProcessAction(
                     c.Resolve<IAcceptExternalEndpointInformation>(),
-                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType()))
+                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new CommandInvokedProcessAction(
+                    c.Resolve<ICommunicationLayer>().Id,
+                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                    c.Resolve<ICommandCollection>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new EndpointInformationRequestProcessAction(
+                    c.Resolve<ICommunicationLayer>().Id,
+                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                    c.Resolve<ICommandCollection>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
             
             // CommunicationChannel.
@@ -122,7 +150,8 @@ namespace Apollo.Core.Base
                                 new TypedParameter(
                                     typeof(Func<EndpointId, IChannelProxy>),
                                     endpointToProxy));
-                        }))
+                        },
+                        c.Resolve<Action<LogSeverityProxy, string>>()))
                     .OnActivated(a =>
                         {
                             ConnectToMessageHandler(a, typeof(NamedPipeChannelType));
@@ -140,7 +169,8 @@ namespace Apollo.Core.Base
                                 new TypedParameter(
                                     typeof(Func<EndpointId, IChannelProxy>),
                                     endpointToProxy));
-                        }))
+                        },
+                        c.Resolve<Action<LogSeverityProxy, string>>()))
                     .OnActivated(a =>
                         {
                             ConnectToMessageHandler(a, typeof(TcpChannelType));

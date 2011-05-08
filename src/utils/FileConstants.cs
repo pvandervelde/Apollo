@@ -6,16 +6,15 @@
 
 using System;
 using System.IO;
-using Apollo.Utils;
 using Lokad;
 
-namespace Apollo.Core.Utils
+namespace Apollo.Utils
 {
     /// <summary>
     /// Defines a set of values related to files and file paths.
     /// </summary>
     [Serializable]
-    internal sealed class FileConstants : IFileConstants
+    public sealed class FileConstants : IFileConstants
     {
         /// <summary>
         /// The object that stores constant values for the application.

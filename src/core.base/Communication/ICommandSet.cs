@@ -10,10 +10,10 @@ namespace Apollo.Core.Base.Communication
 {
     /// <summary>
     /// Defines the base methods for classes that implement a set of commands 
-    /// that can be invoked remotely through a <see cref="MessageHub"/>.
+    /// that can be invoked remotely through a <see cref="RemoteCommandHub"/>.
     /// </summary>
     /// <design>
-    /// The <see cref="MessageHub"/> will generate a proxy object for all the command sets
+    /// The <see cref="RemoteCommandHub"/> will generate a proxy object for all the command sets
     /// available on a given endpoint.
     /// </design>
     public interface ICommandSet
@@ -33,6 +33,6 @@ namespace Apollo.Core.Base.Communication
         /// An event raised when the endpoint to which the command set belongs
         /// becomes invalid.
         /// </summary>
-        event EventHandler<EventArgs> OnInvalidate;
+        event EventHandler<EventArgs> OnTerminated;
     }
 }

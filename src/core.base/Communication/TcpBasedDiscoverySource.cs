@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Communication
     /// Handles the discovery of endpoints on other computers to which a connection can be 
     /// made via the TCP protocol.
     /// </summary>
-    internal sealed class TcpBasedDiscoverySource : IDiscoverOtherServices
+    internal sealed class TcpBasedDiscoverySource : IDiscoverOtherServices, IDisposable
     {
         // Note that the EndpointId meta data is defined by the TcpChannelType
         private static EndpointId GetEndpointId(EndpointDiscoveryMetadata metadata)
@@ -165,6 +165,12 @@ namespace Apollo.Core.Base.Communication
                     m_DiscoveryClient.Close();
                 }
 
+                var disposable = m_DiscoveryClient as IDisposable;
+                if (disposable != null)
+                {
+                    disposable.Dispose();
+                }
+
                 m_DiscoveryClient = null;
             }
         }
@@ -174,15 +180,34 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         public void EndDiscovery()
         {
-            AbortDiscovery();
-
-            m_Host.Close();
-            m_Host = null;
+            CloseDiscoveryClient();
+            CleanupHost();
         }
 
-        private void AbortDiscovery()
+        private void CleanupHost()
+        {
+            if (m_Host != null)
+            {
+                m_Host.Close();
+
+                var disposable = m_Host as IDisposable;
+                if (disposable != null)
+                {
+                    disposable.Dispose();
+                }
+
+                m_Host = null;
+            }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
         {
             CloseDiscoveryClient();
+            CleanupHost();
         }
     }
 }

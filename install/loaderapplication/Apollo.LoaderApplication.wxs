@@ -40,13 +40,30 @@
             </Component>
         </DirectoryRef>
 
-        <Feature Id="F.Apollo.LoaderService"
+        <!--
+            Define the exe in a seperate feature because the shortcut links are defined
+            as advertised shortcuts. This means that after the product is installed
+            it is possible for a different user to log on and see the installer run.
+            At this point the installer is creating all the correct links for the
+            shortcuts. This is done by re-running the feature that holds the shortcuts.
+            In order to make sure that we don't rerun all of the features (and thus
+            maybe lose registry settings etc.) we pack the exe in separate feature.
+        -->
+        <Feature Id="F.Apollo.LoaderService.Exe"
                  Title="$(var.Apollo_ProductName)"
                  Description="The binaries for $(var.Apollo_ProductName)."
                  Absent="disallow"
                  Level="1">
             <ComponentRef Id="C.Apollo.Core.LoaderApplication.exe" />
             <ComponentRef Id="C.Apollo.Core.LoaderApplication.exe.config" />
+        </Feature>
+
+        <Feature Id="F.Apollo.LoaderService"
+                 Title="$(var.Apollo_ProductName)"
+                 Description="The support binaries for $(var.Apollo_ProductName)."
+                 Absent="disallow"
+                 Level="1">
+            <FeatureRef Id="F.Apollo.LoaderService.Exe" />
             
             <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />
         </Feature>

@@ -70,6 +70,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A command set type must inherit from ICommandSet..
+        /// </summary>
+        internal static string Exceptions_Messages_ACommandSetTypeMustDeriveFromICommandSet {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ACommandSetTypeMustDeriveFromICommandSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to A disk cannot have more free space than total space..
         /// </summary>
         internal static string Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace {
@@ -147,6 +156,42 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_ChannelAddresssMustBeDefined {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_ChannelAddresssMustBeDefined", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given command interface has already been registered..
+        /// </summary>
+        internal static string Exceptions_Messages_CommandAlreadyRegistered {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CommandAlreadyRegistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The requested command is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_CommandNotSupported {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CommandNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The command of type {0} is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_CommandNotSupported_WithCommand {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CommandNotSupported_WithCommand", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided command object must implement the provided command interface..
+        /// </summary>
+        internal static string Exceptions_Messages_CommandObjectMustImplementCommandInterface {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CommandObjectMustImplementCommandInterface", resourceCulture);
             }
         }
         
@@ -301,6 +346,124 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A remote operation failed..
+        /// </summary>
+        internal static string Exceptions_Messages_RemoteOperationFailed {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_RemoteOperationFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There should be at least one command to make it useful to send the command information to the desired endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set interface..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains additional events on top of those defined by ICommandSet..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains properties..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method with one or more generic parameters..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method which does not return a void, a Task or a Task&lt;T&gt;..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectRet" +
+                        "urnType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method which has an out parameter, a ref parameter or a non-serializable parameter..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type does not derive from ICommandSet..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it is not an interface..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given type is not a valid command set because it contains open generic parameters..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An ICommandSet type could not be loaded..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToLoadCommandSetType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadCommandSetType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An ICommandSet of type {0} could not be loaded..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName", resourceCulture);
             }
         }
     }

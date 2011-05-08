@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.IO;
 using Apollo.Utils;
-using Apollo.Utils.Logging;
 using Autofac;
 
 namespace Apollo.Core.Utils
@@ -44,12 +42,6 @@ namespace Apollo.Core.Utils
                         p.TypedAs<TimeSpan>()))
                     .As<IProgressTimer>()
                     .InstancePerDependency();
-
-                builder.Register(c => LoggerBuilder.ForFile(
-                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), c.Resolve<IApplicationConstants>().ApplicationName + c.Resolve<IFileConstants>().LogExtension),
-                        new DebugLogTemplate(() => DateTimeOffset.Now)))
-                    .As<ILogger>()
-                    .SingleInstance();
             }
         }
     }
