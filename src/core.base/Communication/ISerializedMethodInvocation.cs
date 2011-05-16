@@ -13,7 +13,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines the interface for objects that carry information, in serialized form, about 
     /// a method call.
     /// </summary>
-    internal interface ISerializedMethodInvocation
+    internal interface ISerializedMethodInvocation : IEquatable<ISerializedMethodInvocation>
     {
         /// <summary>
         /// Gets the command set on which the method was invoked.

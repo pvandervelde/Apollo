@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
@@ -51,48 +52,87 @@ namespace Apollo.Core.Base.Communication
         /// </list>
         /// </para>
         /// </remarks>
-        /// <param name="commandSet">The object that has implemented the command set.</param>
+        /// <param name="commandSet">The type that has implemented the command set interface.</param>
         /// <exception cref="TypeIsNotAValidCommandSetException">
         ///     If the given type is not a valid <see cref="ICommandSet"/> interface.
         /// </exception>
-        public static void VerifyThatObjectIsACorrectCommandSet(Type commandSet)
+        public static void VerifyThatTypetIsACorrectCommandSet(Type commandSet)
         {
             if (!typeof(ICommandSet).IsAssignableFrom(commandSet))
             {
-                throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet);
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet,
+                        commandSet));
             }
 
             if (!commandSet.IsInterface)
             {
-                throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface);
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface,
+                        commandSet));
             }
 
             if (commandSet.ContainsGenericParameters)
             {
-                throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed);
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed,
+                        commandSet));
             }
 
             if (commandSet.GetProperties().Length > 0)
             {
-                throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties);
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties,
+                        commandSet));
             }
 
             if (commandSet.GetEvents().Length > typeof(ICommandSet).GetEvents().Length)
             {
-                throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents);
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents,
+                        commandSet));
             }
 
             var methods = commandSet.GetMethods();
+            if (methods.Length == 0)
+            {
+                throw new TypeIsNotAValidCommandSetException(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMustHaveMethods,
+                        commandSet));
+            }
+
             foreach (var method in methods)
             {
                 if (method.IsGenericMethodDefinition)
                 {
-                    throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric);
+                    throw new TypeIsNotAValidCommandSetException(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric,
+                            commandSet,
+                            method));
                 }
 
                 if (!HasCorrectReturnType(method.ReturnType))
                 {
-                    throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType);
+                    throw new TypeIsNotAValidCommandSetException(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType,
+                            commandSet,
+                            method));
                 }
 
                 var parameters = method.GetParameters();
@@ -100,39 +140,19 @@ namespace Apollo.Core.Base.Communication
                 {
                     if (!IsParameterValid(parameter))
                     {
-                        throw new TypeIsNotAValidCommandSetException(Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid);
+                        throw new TypeIsNotAValidCommandSetException(
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid,
+                                commandSet,
+                                method));
                     }
                 }
             }
         }
 
-        private static bool IsParameterValid(ParameterInfo parameter)
-        {
-            if (parameter.ParameterType.ContainsGenericParameters)
-            {
-                return false;
-            }
-
-            if (parameter.IsOut || parameter.ParameterType.IsByRef)
-            {
-                return false;
-            }
-
-            if (!IsTypeSerializable(parameter.ParameterType))
-            {
-                return false;
-            }
-
-            return true;
-        }
-
         private static bool HasCorrectReturnType(Type type)
         {
-            if (type.Equals(typeof(void)))
-            {
-                return true;
-            }
-
             if (type.Equals(typeof(Task)))
             {
                 return true;
@@ -162,6 +182,26 @@ namespace Apollo.Core.Base.Communication
         private static bool IsTypeSerializable(Type type)
         {
             return Attribute.IsDefined(type, typeof(DataContractAttribute)) || typeof(ISerializable).IsAssignableFrom(type) || type.IsSerializable;
+        }
+
+        private static bool IsParameterValid(ParameterInfo parameter)
+        {
+            if (parameter.ParameterType.ContainsGenericParameters)
+            {
+                return false;
+            }
+
+            if (parameter.IsOut || parameter.ParameterType.IsByRef)
+            {
+                return false;
+            }
+
+            if (!IsTypeSerializable(parameter.ParameterType))
+            {
+                return false;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -246,8 +286,6 @@ namespace Apollo.Core.Base.Communication
             // - Every method either returns nothing (void) or returns a Task<T> object.
             // All these checks should have been done when the interface was registered
             // at the remote endpoint.
-            var baseObject = new CommandSetProxy();
-
             var selfReference = new CommandSetProxySelfReferenceInterceptor();
             var methodWithoutResult = new CommandSetMethodWithoutResultInterceptor(
                 methodInvocation =>
@@ -265,11 +303,11 @@ namespace Apollo.Core.Base.Communication
             var options = new ProxyGenerationOptions
                 {
                     Selector = new CommandSetInterceptorSelector(),
+                    BaseTypeForInterfaceProxy = typeof(CommandSetProxy),
                 };
 
-            var proxy = m_Generator.CreateInterfaceProxyWithTarget(
+            var proxy = m_Generator.CreateInterfaceProxyWithoutTarget(
                 interfaceType,
-                baseObject,
                 options,
                 new IInterceptor[] { selfReference, methodWithoutResult, methodWithResult });
 

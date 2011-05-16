@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Threading.Tasks;
 using Apollo.Utils;
 using Lokad;
 
@@ -19,6 +21,44 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
     /// </summary>
     internal sealed class CommandInvokedProcessAction : IMessageProcessAction
     {
+        /// <summary>
+        /// An internal class that holds the method used to process <see cref="Task{T}"/> objects at runtime.
+        /// </summary>
+        /// <remarks>
+        /// The method is wrapped in a class so that we can assign it to a variable typed as <c>dynamic</c>.
+        /// By using that kind of typing we don't need to specify the exact method signature, which we don't
+        /// know at compile time due to the missing information about the generic type.
+        /// </remarks>
+        private sealed class TaskReturn
+        {
+            /// <summary>
+            /// Provides a typed way of creating a return message based on the outcome of the invocation of a given command. This method 
+            /// will only be invoked through reflection.
+            /// </summary>
+            /// <param name="local">The endpoint ID of the local endpoint.</param>
+            /// <param name="originalMsg">The message that was send to invoke a given command.</param>
+            /// <param name="returnValue">The task that will, eventually, return the desired result.</param>
+            /// <returns>The communication message that should be send if the task finishes successfully.</returns>
+            public ICommunicationMessage HandleTaskReturnValue(EndpointId local, ICommunicationMessage originalMsg, Task returnValue)
+            {
+                return new SuccessMessage(local, originalMsg.Id);
+            }
+
+            /// <summary>
+            /// Provides a typed way of creating a return message based on the outcome of the invocation of a given command. This method 
+            /// will only be invoked through reflection.
+            /// </summary>
+            /// <typeparam name="T">The type of the return value.</typeparam>
+            /// <param name="local">The endpoint ID of the local endpoint.</param>
+            /// <param name="originalMsg">The message that was send to invoke a given command.</param>
+            /// <param name="returnValue">The task that will, eventually, return the desired result.</param>
+            /// <returns>The communication message that should be send if the task finishes successfully.</returns>
+            public ICommunicationMessage HandleTypedTaskReturnValue<T>(EndpointId local, ICommunicationMessage originalMsg, Task<T> returnValue)
+            {
+                return new CommandInvokedResponseMessage(local, originalMsg.Id, returnValue.Result);
+            }
+        }
+
         /// <summary>
         /// The collection that holds all the registered commands.
         /// </summary>
@@ -98,15 +138,14 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as CommandInvokedMessage;
-            Debug.Assert(msg != null, "The message is of the incorrect type.");
+            if (msg == null)
+            {
+                Debug.Assert(false, "The message is of the incorrect type.");
+                return;
+            }
 
-            // Do we want to flog all of this off on a Task? 
-            //   --> seems wise because that way we can
-            //       return the current thread to the 
-            //       WCF message handler? 
-            //       --> Does that matter though, it's 
-            //           all threadpool stuff anyway
             var invocation = msg.Invocation;
+            Task result = null;
             try
             {
                 var type = CommandSetProxyExtensions.ToType(invocation.CommandSet);
@@ -118,34 +157,83 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 
                 var parameterValues = from pair in invocation.Parameters
                                       select pair.Item2;
-                var result = method.Invoke(commandSet, parameterValues.ToArray());
-                var returnMsg = (result == null)
-                    ? new SuccessMessage(m_Current, msg.Id) as ICommunicationMessage
-                    : new CommandInvokedResponseMessage(m_Current, msg.Id, result) as ICommunicationMessage;
+                result = method.Invoke(commandSet, parameterValues.ToArray()) as Task;
+                
+                Debug.Assert(result != null, "The command return result was not a Task or Task<T>.");
+                result.ContinueWith(t => ProcessTaskReturnResult(msg, t));
+            }
+            catch (Exception e)
+            {
+                HandleCommandExecutionFailure(msg, e);
+            }
+        }
+
+        private void ProcessTaskReturnResult(CommandInvokedMessage msg, Task result)
+        {
+            try
+            {
+                ICommunicationMessage returnMsg = null;
+                if ((result == null) || result.IsCanceled || result.IsFaulted)
+                {
+                    returnMsg = new FailureMessage(m_Current, msg.Id);
+                }
+                else
+                {
+                    // The resulting type can either be Task or Task<T>
+                    var resultType = result.GetType();
+                    Debug.Assert(!resultType.ContainsGenericParameters, "The return type should be a closed constructed type.");
+
+                    var genericArguments = resultType.GetGenericArguments();
+                    Debug.Assert(genericArguments.Length == 0 || genericArguments.Length == 1, "There should either be zero or one generic argument.");
+                    if (genericArguments.Length == 0)
+                    {
+                        returnMsg = new TaskReturn().HandleTaskReturnValue(m_Current, msg, result);
+                    }
+                    else
+                    {
+                        // The result is Task<T>. This is where things are about to get very messy
+                        // We need to use the HandleTaskReturnValue(EndpointId, MessageId, Task<T>) method to get our message
+                        //
+                        // So 'build' a method that can process the Task<T> object. We can do this with the 'dynamic
+                        // keyword because the generic parameters for the method are determined by the input parameters
+                        // so if we create a 'dynamic' object and call the method with the desired name then the runtime
+                        // will determine what the type parameter has to be.
+                        dynamic taskBuilder = new TaskReturn();
+
+                        // Call the desired method, making sure that we force the runtime to use the runtime type of the result
+                        // variable, not the compile time one.
+                        returnMsg = (ICommunicationMessage)taskBuilder.HandleTypedTaskReturnValue(m_Current, msg, (dynamic)result);
+                    }
+                }
 
                 m_SendMessage(msg.OriginatingEndpoint, returnMsg);
             }
             catch (Exception e)
             {
-                try
-                {
-                    m_Logger(
-                        LogSeverityProxy.Error,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Error while sending endpoint information. Exception is: {0}",
-                            e));
-                    m_SendMessage(msg.OriginatingEndpoint, new FailureMessage(m_Current, msg.Id));
-                }
-                catch (Exception errorSendingException)
-                {
-                    m_Logger(
-                        LogSeverityProxy.Error,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Error while trying to send process failure. Exception is: {0}",
-                            errorSendingException));
-                }
+                HandleCommandExecutionFailure(msg, e);
+            }
+        }
+
+        private void HandleCommandExecutionFailure(CommandInvokedMessage msg, Exception e)
+        {
+            try
+            {
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Error while sending endpoint information. Exception is: {0}",
+                        e));
+                m_SendMessage(msg.OriginatingEndpoint, new FailureMessage(m_Current, msg.Id));
+            }
+            catch (Exception errorSendingException)
+            {
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Error while trying to send process failure. Exception is: {0}",
+                        errorSendingException));
             }
         }
     }

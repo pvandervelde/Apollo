@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
-using Apollo.Utils;
 
 namespace Apollo.UI.Common.Views.Datasets
 {
@@ -14,7 +14,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// Interaction logic for DatasetGraphView.xaml.
     /// </summary>
     [CLSCompliant(false)]
-    [ExcludeFromCoverage("Views will not be unit tested. They will be tested in the UI tests.")]
+    [ExcludeFromCodeCoverage()]
     public partial class DatasetGraphView : UserControl, IDatasetGraphView
     {
         /// <summary>

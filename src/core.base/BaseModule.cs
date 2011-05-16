@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
@@ -20,7 +21,7 @@ namespace Apollo.Core.Base
     /// <summary>
     /// Handles the component registrations for the communication and loader components.
     /// </summary>
-    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class BaseModule : Module
     {
         private static void AttachMessageProcessingActions(IActivatedEventArgs<MessageHandler> args)

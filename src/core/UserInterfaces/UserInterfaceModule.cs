@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.Utils;
 using Autofac;
 using Lokad;
 
@@ -16,7 +16,7 @@ namespace Apollo.Core.UserInterfaces
     /// Handles the component registrations for the User Interface part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class UserInterfaceModule : Module
     {
         /// <summary>

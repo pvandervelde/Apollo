@@ -115,8 +115,6 @@ namespace Apollo.Core.Base.Communication
             }
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "It is unknown what kind of exceptions a channel will throw so we'll catch an Exception and deal with our inability to process all different kinds of exceptions.")]
         private void EnsureChannelIsAvailable()
         {
             if (ShouldCreateChannel)
@@ -127,16 +125,8 @@ namespace Apollo.Core.Base.Communication
                     {
                         if (m_Channel != null)
                         { 
-                            try
-                            {
-                                // The channel is probably faulted so terminate it.
-                                m_Channel.Abort();
-                            }
-                            catch (Exception)
-                            {
-                                // Just ignore anything. We're ditching the channel anyway.
-                                // Note that if 
-                            }
+                            // The channel is probably faulted so terminate it.
+                            m_Channel.Abort();
                         }
 
                         m_Logger(LogSeverityProxy.Info, "Channel faulted. Rebuilding.");

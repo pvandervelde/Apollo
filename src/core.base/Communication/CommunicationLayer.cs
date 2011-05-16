@@ -20,6 +20,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Defines the methods needed to communicate with one or more remote applications.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class CommunicationLayer : ICommunicationLayer
     {
         /// <summary>
@@ -32,9 +33,9 @@ namespace Apollo.Core.Base.Communication
         {
             return new EndpointId(
                 string.Format(
-                    CultureInfo.InvariantCulture, 
-                    "{0}:{1}", 
-                    Environment.MachineName, 
+                    CultureInfo.InvariantCulture,
+                    "{0}:{1}",
+                    Environment.MachineName,
                     Process.GetCurrentProcess().Id));
         }
 
@@ -96,7 +97,7 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         public CommunicationLayer(
-            IEnumerable<IDiscoverOtherServices> discoverySources, 
+            IEnumerable<IDiscoverOtherServices> discoverySources,
             Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
             Action<LogSeverityProxy, string> logger)
         {
@@ -146,7 +147,7 @@ namespace Apollo.Core.Base.Communication
             {
                 var info = tuple.Item1.LocalConnectionPoint;
                 if (info != null)
-                { 
+                {
                     yield return info;
                 }
             }
@@ -200,30 +201,40 @@ namespace Apollo.Core.Base.Communication
                 return;
             }
 
-            // Add to the available list
+            // If we don't know the endpoint at all then add a collection for it.
             if (!m_PotentialEndpoints.ContainsKey(info.Id))
             {
                 m_PotentialEndpoints.Add(info.Id, new SortedList<int, ChannelConnectionInformation>());
             }
 
             var list = m_PotentialEndpoints[info.Id];
-            if (!list.Values.Exists(m => m.ChannelType.Equals(info.ChannelType) && string.Equals(m.Address.AbsoluteUri, info.Address.AbsoluteUri, StringComparison.OrdinalIgnoreCase)))
-            {
-                var attributes = info.ChannelType.GetCustomAttributes(typeof(ChannelRelativePerformanceAttribute), false);
-                int order = (attributes.Length > 0) ? (attributes[0] as ChannelRelativePerformanceAttribute).RelativeOrder : int.MaxValue;
-                list.Add(order, info);
 
-                // Notify the world
-                m_Logger(
-                    LogSeverityProxy.Trace, 
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "New endpoint ({0}) signed in via the {1} channel. Endpoint URL: {2}.",
-                        info.Id,
-                        info.ChannelType,
-                        info.Address));
-                RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
+            // Remove all the known connections for the endpoint with the same channel type
+            // that way we always have the latest channel information. Which is useful if the
+            // channel changes due to outages.
+            var matchingItems = list.Where(p => p.Value.ChannelType.Equals(info.ChannelType));
+            if (matchingItems.Exists())
+            {
+                foreach (var item in matchingItems)
+                {
+                    list.Remove(item.Key);
+                }
             }
+
+            var attributes = info.ChannelType.GetCustomAttributes(typeof(ChannelRelativePerformanceAttribute), false);
+            int order = (attributes.Length > 0) ? (attributes[0] as ChannelRelativePerformanceAttribute).RelativeOrder : int.MaxValue;
+            list.Add(order, info);
+
+            // Notify the world
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "New endpoint ({0}) signed in via the {1} channel. Endpoint URL: {2}.",
+                    info.Id,
+                    info.ChannelType,
+                    info.Address));
+            RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
         }
 
         // How do we handle endpoints disappearing and then reappearing. If the remote process
@@ -385,7 +396,7 @@ namespace Apollo.Core.Base.Communication
             {
                 return null;
             }
-            else 
+            else
             {
                 // If there is an item in the list then we can just return the first one because that 
                 // will be the fastest connection.

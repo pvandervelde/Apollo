@@ -4,14 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utils;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Describes the expected load a dataset will put on a given machine.
     /// </summary>
-    [ExcludeFromCoverage("Simple data storage classes don't need to be tested.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class ExpectedDatasetLoad
     {
         /// <summary>

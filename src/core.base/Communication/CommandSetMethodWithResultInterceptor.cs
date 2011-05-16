@@ -7,8 +7,10 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Utils;
 using Castle.DynamicProxy;
 using Lokad;
 
@@ -48,7 +50,6 @@ namespace Apollo.Core.Base.Communication
                     return default(T);
                 }
 
-                // var failureMsg = inputTask.Result as FailureMessage;
                 throw new RemoteOperationFailedException();
             };
 
@@ -100,9 +101,19 @@ namespace Apollo.Core.Base.Communication
             Debug.Assert(genericArguments.Length == 1, "There should be exactly one generic argument.");
 
             // Now 'build' a method that can create the Task<T> object. We'll have to do this
-            // through reflection because we don't know the typeof(T) at compile time
+            // through reflection because we don't know the typeof(T) at compile time.
+            // Unfortunatly we can't do this with the 'dynamic
+            // keyword because the generic parameters for the method are NOT determined by the input parameters
+            // so if we create a 'dynamic' object and call the method with the desired name then the runtime
+            // won't be able to figure out what the typed parameter has to be. So we'll do it the 
+            // old-fashioned way, with reflection.
             var taskBuilder = GetType()
-                .GetMethod("CreateTask")
+                .GetMethod(
+                    "CreateTask", 
+                    BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic,
+                    null,
+                    new Type[] { typeof(Task<ICommunicationMessage>) },
+                    null)
                 .MakeGenericMethod(genericArguments[0]);
 
             // Create the return value. This is invoking a MethodInfo object which is

@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Apollo.Utils;
 using Castle.DynamicProxy;
 
@@ -34,7 +35,7 @@ namespace Apollo.Core.Base.Communication
                 return interceptors.Where(i => i is CommandSetProxySelfReferenceInterceptor).ToArray();
             }
 
-            if (method.ReturnType == typeof(void))
+            if (method.ReturnType == typeof(Task))
             {
                 return interceptors.Where(i => i is CommandSetMethodWithoutResultInterceptor).ToArray();
             }

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Apollo.Utils;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Loaders
     /// troublesome because of the untrustworthiness of the network etc.
     /// </para>
     /// </design>
-    [ExcludeFromCoverage("Simple data storage classes don't need to be tested.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class DatasetRequest
     {
         /// <summary>

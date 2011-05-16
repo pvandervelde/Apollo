@@ -6,10 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using System.ServiceModel.Description;
 using System.Xml;
-using Apollo.Utils;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Communication
     /// <source>
     /// http://lunaverse.wordpress.com/2007/05/09/remoting-using-wcf-and-nhibernate/
     /// </source>
-    [ExcludeFromCoverage("This class is for WCF usage and cannot be tested easily.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class NetDataContractOperationBehavior : DataContractSerializerOperationBehavior
     {
         /// <summary>

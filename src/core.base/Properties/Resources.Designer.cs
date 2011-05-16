@@ -377,7 +377,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains additional events on top of those defined by ICommandSet..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains additional events on top of those defined by ICommandSet..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents {
             get {
@@ -386,7 +386,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains properties..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains properties..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties {
             get {
@@ -395,7 +395,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method with one or more generic parameters..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the method {1} with one or more generic parameters..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric {
             get {
@@ -404,7 +404,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method which does not return a void, a Task or a Task&lt;T&gt;..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the method {1} which does not return a void, a Task or a Task&lt;T&gt;..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType {
             get {
@@ -414,7 +414,16 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains at least one method which has an out parameter, a ref parameter or a non-serializable parameter..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it does not have any methods..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMustHaveMethods {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMustHaveMethods", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a non-serializable parameter..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid {
             get {
@@ -423,7 +432,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type does not derive from ICommandSet..
+        ///   Looks up a localized string similar to The type {0} does not derive from ICommandSet..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet {
             get {
@@ -432,7 +441,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it is not an interface..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it is not an interface..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface {
             get {
@@ -441,7 +450,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given type is not a valid command set because it contains open generic parameters..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains open generic parameters..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed {
             get {

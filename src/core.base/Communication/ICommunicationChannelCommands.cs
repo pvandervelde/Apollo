@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.IO;
 using System.Net.NetworkInformation;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -21,7 +21,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An observable containing the new ID number of the endpoint.
         /// </returns>
-        IObservable<EndpointId> Reconnect();
+        Task<EndpointId> Reconnect();
 
         /// <summary>
         /// Pings an endpoint to establish that it is reachable and able to respond to messages.
@@ -29,7 +29,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An observable containing the ping result.
         /// </returns>
-        IObservable<PingReply> Ping();
+        Task<PingReply> Ping();
 
         /// <summary>
         /// Transfers the given stream across the network to the given endpoint.
@@ -39,6 +39,6 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An observable indicating the success or failure of the operation.
         /// </returns>
-        IObservable<object> Transfer(long size, Stream data);
+        Task Transfer(long size, Stream data);
     }
 }

@@ -38,7 +38,6 @@
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
-    <Compile Include="ExcludeFromCoverageAttribute.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="IApplicationConstants.cs" />
     <Compile Include="ICompanyConstants.cs" />
@@ -66,6 +65,8 @@
     </Compile>
     <Compile Include="ProgressTimer.cs" />
     <Compile Include="TimerElapsedEventArgs.cs" />
+    <Compile Include="TypeComparer.cs" />
+    <Compile Include="TypeEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared">

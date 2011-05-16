@@ -97,7 +97,11 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as EndpointConnectMessage;
-            Debug.Assert(msg != null, "The message is of the incorrect type.");
+            if (msg == null)
+            {
+                Debug.Assert(false, "The message is of the incorrect type.");
+                return;
+            }
 
             Type channelType = m_ConnectedChannelTypes.Find(t => string.Equals(t.FullName, msg.ChannelType, StringComparison.Ordinal));
             m_Logger(

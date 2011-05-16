@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utils;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils.Configuration;
 
 namespace Apollo.Core.Base.Communication
@@ -12,7 +12,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Defines the <see cref="ConfigurationKey"/> objects for the communication layers.
     /// </summary>
-    [ExcludeFromCoverage("The configuration keys will be tested in the integration tests.")]
+    [ExcludeFromCodeCoverage()]
     internal static class CommunicationConfigurationKeys
     {
         /// <summary>

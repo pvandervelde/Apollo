@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -23,7 +23,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An observable containing the names of all the assemblies that are either missing or incorrect.
         /// </returns>
-        IObservable<string> DetermineMissingOrIncorrectAssemblies(IEnumerable<AssemblyName> requiredAssemblies);
+        Task<string> DetermineMissingOrIncorrectAssemblies(IEnumerable<AssemblyName> requiredAssemblies);
 
         /// <summary>
         /// Transfers an assembly.
@@ -32,6 +32,6 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// An observable indicating if the transfer was successful.
         /// </returns>
-        IObservable<object> TransferAssembly(string assemblyPath);
+        Task TransferAssembly(string assemblyPath);
     }
 }

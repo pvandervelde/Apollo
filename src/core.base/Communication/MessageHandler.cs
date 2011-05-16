@@ -33,12 +33,12 @@ namespace Apollo.Core.Base.Communication
         /// The collection of filters that should be used more than once.
         /// </summary>
         /// <design>
-        /// Could improve this if we store filters based on the type of messag they work on. All filters that work
+        /// Could improve this if we store filters based on the type of message they work on. All filters that work
         /// on the same type get placed in a collection (with their connected actions). That way the look-up will
         /// be pretty quick. On the other hand we'll be storing a collection for each message type we filter on
         /// which may mean we're storing an entire Collection object for a single filter.
         /// </design>
-        private readonly Dictionary<IMessageFilter, IMessageProcessAction> m_MultiuseFilters
+        private readonly Dictionary<IMessageFilter, IMessageProcessAction> m_Filters
             = new Dictionary<IMessageFilter, IMessageProcessAction>();
 
         /// <summary>
@@ -83,7 +83,7 @@ namespace Apollo.Core.Base.Communication
             {
                 if (!m_TasksWaitingForResponse.ContainsKey(inResponseTo))
                 {
-                    var source = new TaskCompletionSource<ICommunicationMessage>(TaskCreationOptions.LongRunning);
+                    var source = new TaskCompletionSource<ICommunicationMessage>(TaskCreationOptions.None);
                     m_TasksWaitingForResponse.Add(inResponseTo, Tuple.Create(messageReceiver, source));
                 }
 
@@ -106,9 +106,9 @@ namespace Apollo.Core.Base.Communication
 
             lock (m_Lock)
             {
-                if (!m_MultiuseFilters.ContainsKey(messageFilter))
+                if (!m_Filters.ContainsKey(messageFilter))
                 {
-                    m_MultiuseFilters.Add(messageFilter, notifyAction);
+                    m_Filters.Add(messageFilter, notifyAction);
                 }
             }
         }
@@ -159,7 +159,7 @@ namespace Apollo.Core.Base.Communication
             Dictionary<IMessageFilter, IMessageProcessAction> localCollection = null;
             lock (m_Lock)
             {
-                localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_MultiuseFilters);
+                localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_Filters);
             }
 
             foreach (var pair in localCollection)

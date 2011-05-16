@@ -4,8 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Apollo.Utils;
@@ -21,7 +21,7 @@ namespace Apollo.Core
     /// The reason is that there is no guarantuee that other collections
     /// will be used to provide assembly references.
     /// </design>
-    [ExcludeFromCoverage("This class is ment to be used by the bootstrapper. Thus it can only be integration tested.")]
+    [ExcludeFromCodeCoverage()]
     public abstract class KernelStartInfo
     {
         /// <summary>

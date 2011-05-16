@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Apollo.Core.Projects;
@@ -54,7 +55,7 @@ namespace Apollo.Core
     /// </item>
     /// </list>
     /// </design>
-    [ExcludeFromCoverage("This class is used to handle startup for Apollo. Integration testing is more suitable.")]
+    [ExcludeFromCodeCoverage()]
     public abstract class Bootstrapper
     {
         /// <summary>

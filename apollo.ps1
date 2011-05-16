@@ -673,7 +673,7 @@ task runUnitTests -depends buildBinaries -action{
         # Add the exclusions
         $writer = Join-Path $props.dirPartCoverExclusionWriter 'partcoverexclusionwriter.exe'
         $writerCommand = '& "' + $writer + '" ' + "/i " + '"' + $props.partCoverConfigFile + '" ' + "/o " + '"' + $props.partCoverConfigFile + '"'
-        $writerCommand += " /e Apollo.Utils.ExcludeFromCoverageAttribute System.Runtime.CompilerServices.CompilerGeneratedAttribute"
+        $writerCommand += " /e System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute System.Runtime.CompilerServices.CompilerGeneratedAttribute"
         $writerCommand += " /a " + $coverageFiles
         
         $writerCommand

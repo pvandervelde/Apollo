@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Lokad;
 
@@ -42,7 +43,7 @@ namespace Apollo.Utils
         /// <value>The extension for an assembly file.</value>
         public string AssemblyExtension
         {
-            [ExcludeFromCoverage("Simple property getters do not need to be tested")]
+            [ExcludeFromCodeCoverage()]
             get
             {
                 return ".dll";
@@ -55,7 +56,7 @@ namespace Apollo.Utils
         /// <value>The extension for a log file.</value>
         public string LogExtension
         {
-            [ExcludeFromCoverage("Simple property getters do not need to be tested")]
+            [ExcludeFromCodeCoverage()]
             get
             {
                 return ".log";

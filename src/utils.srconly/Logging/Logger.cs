@@ -15,7 +15,7 @@ namespace Apollo.Utils.Logging
     /// Defines a logging object that translates <see cref="ILogMessage"/> objects and
     /// writes them to a log.
     /// </summary>
-    [ExcludeFromCoverage("Depends on NLog which makes it only suitable for integration testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class Logger : ILogger
     {
         /// <summary>
@@ -202,7 +202,6 @@ namespace Apollo.Utils.Logging
         /// Stops the logger and ensures that all log messages have been 
         /// saved to the log.
         /// </summary>
-        [ExcludeFromCoverage("Depends on NLog which makes it only suitable for integration testing.")]
         public void Close()
         {
             m_Logger.Factory.Flush();

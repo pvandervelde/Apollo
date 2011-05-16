@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Communication.Messages
     [Serializable]
     internal sealed class EndpointInformationResponseMessage : CommunicationMessage
     {
-        private readonly IList<ISerializedType> m_AvailableCommands =
+        private readonly List<ISerializedType> m_AvailableCommands =
             new List<ISerializedType>();
 
         /// <summary>

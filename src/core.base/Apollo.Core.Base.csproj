@@ -22,6 +22,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">

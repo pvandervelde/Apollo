@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -22,7 +21,7 @@ namespace Apollo.Core
         /// <summary>
         /// Stores a link between a requested type and the KernelService which fullfills this request.
         /// </summary>
-        [ExcludeFromCoverage("This class is used internally only. Integration testing is more suitable.")]
+        [ExcludeFromCodeCoverage()]
         private sealed class ConnectionMap
         {
             /// <summary>

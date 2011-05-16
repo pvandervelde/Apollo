@@ -9,6 +9,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
+using Apollo.Utils;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication
@@ -22,7 +23,7 @@ namespace Apollo.Core.Base.Communication
         /// The collection of registered commands.
         /// </summary>
         private readonly SortedList<Type, ICommandSet> m_Commands
-            = new SortedList<Type, ICommandSet>();
+            = new SortedList<Type, ICommandSet>(new TypeComparer());
 
         /// <summary>
         /// Registers a <see cref="ICommandSet"/> object.
@@ -80,7 +81,7 @@ namespace Apollo.Core.Base.Communication
                     Resources.Exceptions_Messages_CommandObjectMustImplementCommandInterface);
             }
 
-            CommandProxyBuilder.VerifyThatObjectIsACorrectCommandSet(commandType);
+            CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(commandType);
             if (m_Commands.ContainsKey(commandType))
             {
                 throw new CommandAlreadyRegisteredException();
@@ -102,7 +103,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public ICommandSet CommandsFor(Type interfaceType)
         {
-            if (m_Commands.ContainsKey(interfaceType))
+            if (!m_Commands.ContainsKey(interfaceType))
             {
                 return null;
             }

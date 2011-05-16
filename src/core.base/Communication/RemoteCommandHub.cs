@@ -132,6 +132,7 @@ namespace Apollo.Core.Base.Communication
 
         private void ProcessInformationResponse(Task<ICommunicationMessage> task, EndpointId endpoint)
         {
+            bool haveStoredCommandInformation = false;
             try
             {
                 if (task.IsCompleted)
@@ -153,7 +154,6 @@ namespace Apollo.Core.Base.Communication
                         return;
                     }
 
-                    bool haveStoredCommandInformation = false;
                     lock (m_Lock)
                     {
                         // Only push the changes in to the collection if we
@@ -169,7 +169,7 @@ namespace Apollo.Core.Base.Communication
                             // needs to travel to another application and come back (possibly over the network). it seems the
                             // sorted list is the best trade-off (memory vs performance) in this case.
                             var commands = msg.Commands;
-                            m_RemoteCommands.Add(endpoint, new SortedList<Type, CommandSetProxy>(commands.Count));
+                            m_RemoteCommands.Add(endpoint, new SortedList<Type, CommandSetProxy>(commands.Count, new TypeComparer()));
                             
                             var list = m_RemoteCommands[endpoint];
                             foreach (var command in commands)
@@ -200,14 +200,6 @@ namespace Apollo.Core.Base.Communication
                             haveStoredCommandInformation = true;
                         }
                     }
-
-                    // Notify the outside world that we have more commands. Do this outside
-                    // the lock because a) the notification may take a while and b) it 
-                    // may trigger all kinds of other mayhem.
-                    if (haveStoredCommandInformation)
-                    {
-                        RaiseOnEndpointSignedIn();
-                    }
                 }
             }
             catch (AggregateException)
@@ -215,6 +207,7 @@ namespace Apollo.Core.Base.Communication
                 // We don't really care about any exceptions that were thrown
                 // If there was a problem we just remove the endpoint from the
                 // 'waiting list' and move on.
+                haveStoredCommandInformation = false;
             }
             finally 
             {
@@ -226,12 +219,18 @@ namespace Apollo.Core.Base.Communication
                     }
                 }
             }
+
+            // Notify the outside world that we have more commands. Do this outside
+            // the lock because a) the notification may take a while and b) it 
+            // may trigger all kinds of other mayhem.
+            if (haveStoredCommandInformation)
+            {
+                RaiseOnEndpointSignedIn();
+            }
         }
 
         private void HandleEndpointSignOut(EndpointId endpoint)
         {
-            RaiseOnEndpointSignedOff(endpoint);
-
             IDictionary<Type, CommandSetProxy> commands = null;
             lock (m_Lock)
             {
@@ -254,6 +253,8 @@ namespace Apollo.Core.Base.Communication
                     pair.Value.EndpointHasSignedOff();
                 }
             }
+
+            RaiseOnEndpointSignedOff(endpoint);
         }
 
         /// <summary>

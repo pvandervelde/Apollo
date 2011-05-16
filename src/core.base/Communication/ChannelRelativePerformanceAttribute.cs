@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -14,6 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// versus other channel types.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    [ExcludeFromCodeCoverage()]
     internal sealed class ChannelRelativePerformanceAttribute : Attribute
     {
         /// <summary>

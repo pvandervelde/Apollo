@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,7 +21,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Apollo.Core.Base.Properties;
-using Apollo.Utils;
 using Apollo.Utils.Configuration;
 using Lokad;
 
@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Communication
     /// applications different machines.
     /// </summary>
     [ChannelRelativePerformanceAttribute(2)]
-    [ExcludeFromCoverage("To test a TCP connection we'll have to have another machine. Not useful in unit testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class TcpChannelType : IChannelType
     {
         /// <summary>

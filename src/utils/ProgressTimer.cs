@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Timers;
 using Apollo.Utils.Properties;
 using Lokad;
@@ -14,7 +15,7 @@ namespace Apollo.Utils
     /// <summary>
     /// Defines the default <see cref="IProgressTimer"/> object.
     /// </summary>
-    [ExcludeFromCoverage("ProgressTimer relies on a System.Timers.Timer which is hard to test.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class ProgressTimer : IProgressTimer, IDisposable
     {
         /// <summary>

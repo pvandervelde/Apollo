@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 
 namespace Apollo.Core.Base
@@ -13,7 +14,7 @@ namespace Apollo.Core.Base
     /// Stores information used in the creation of a new dataset.
     /// </summary>
     [Serializable]
-    [ExcludeFromCoverage("This class only has compiler generated setting methods.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class DatasetCreationInformation
     {
         /// <summary>

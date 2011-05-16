@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Net;
 
 namespace Apollo.Core.Base.Communication
@@ -14,6 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// be transferred over a TCP connection.
     /// </summary>
     [Serializable]
+    [ExcludeFromCodeCoverage()]
     internal sealed class TcpStreamTransferInformation : StreamTransferInformation
     {
         /// <summary>

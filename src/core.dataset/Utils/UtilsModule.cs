@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.Utils;
 using Apollo.Utils.Logging;
@@ -16,7 +17,7 @@ namespace Apollo.Core.Utils
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed partial class UtilsModule : Module
     {
         /// <summary>

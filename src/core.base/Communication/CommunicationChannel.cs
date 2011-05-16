@@ -31,6 +31,7 @@ namespace Apollo.Core.Base.Communication
     /// be one. If there are multiple communication channels sharing the receiving endpoint then
     /// we don't know which channel should get the messages.
     /// </remarks>
+    [ExcludeFromCodeCoverage()]
     internal sealed class CommunicationChannel : ICommunicationChannel, IDisposable
     {
         /// <summary>

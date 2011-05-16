@@ -99,7 +99,11 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as EndpointInformationRequestMessage;
-            Debug.Assert(msg != null, "The message is of the incorrect type.");
+            if (msg == null)
+            {
+                Debug.Assert(false, "The message is of the incorrect type.");
+                return;
+            }
 
             var commands = new List<Type>(m_Commands.Select(p => p.Key));
             try
