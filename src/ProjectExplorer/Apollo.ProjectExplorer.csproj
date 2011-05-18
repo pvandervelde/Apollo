@@ -7,6 +7,12 @@
     <RootNamespace>Apollo.ProjectExplorer</RootNamespace>
     <AssemblyName>Apollo.ProjectExplorer</AssemblyName>
   </PropertyGroup>
+  <PropertyGroup>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>Apollo.ProjectExplorer.App</StartupObject>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
     <Reference Include="Autofac">
@@ -15,11 +21,15 @@
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Composite">
-      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Practices.Composite.Presentation">
-      <HintPath>..\..\lib\prism\Microsoft.Practices.Composite.Presentation.dll</HintPath>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\..\lib\prism\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Xaml" />
@@ -44,9 +54,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ApplicationDefinition Include="App.xaml">
+    <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
-    </ApplicationDefinition>
+    </Page>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
@@ -58,6 +68,54 @@
     </Compile>
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventType.cs">
+      <Link>Utils\EventType.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>Utils\EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>Utils\ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>Utils\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\IExceptionHandler.cs">
+      <Link>Utils\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
+      <Link>Utils\TopLevelExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>Utils\AdditionalLogMessageProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
+      <Link>Utils\DebugLogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
+      <Link>Utils\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
+      <Link>Utils\ILogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
+      <Link>Utils\ILogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
+      <Link>Utils\LevelToLog.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\Logger.cs">
+      <Link>Utils\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
+      <Link>Utils\LoggerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
+      <Link>Utils\LogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
@@ -76,6 +134,8 @@
     <Compile Include="Events\ShowViewRequest.cs" />
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Utils\SrcOnlyResources.cs" />
+    <Compile Include="Utils\UtilsModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
     <Compile Include="Views\About\AboutParameter.cs" />
     <Compile Include="Views\About\AboutPresenter.cs" />
@@ -85,7 +145,6 @@
     <Compile Include="Views\About\IAboutView.cs" />
     <Compile Include="Views\Shell\IShellView.cs" />
     <Compile Include="KernelBootstrapper.cs" />
-    <Compile Include="MockExceptionHandler.cs" />
     <Compile Include="ProjectExplorerModule.cs" />
     <Compile Include="Views\Shell\ShellModel.cs" />
     <Compile Include="StartupTimeStorage.cs" />

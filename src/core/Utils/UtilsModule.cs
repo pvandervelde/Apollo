@@ -5,11 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.Utils.Licensing;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
-using Apollo.Utils.Licensing;
 using Autofac;
-using AutofacContrib.Startable;
 
 namespace Apollo.Core.Utils
 {
@@ -17,7 +15,7 @@ namespace Apollo.Core.Utils
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed partial class UtilsModule : Module
     {
         /// <summary>

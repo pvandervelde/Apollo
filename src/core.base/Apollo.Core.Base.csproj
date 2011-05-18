@@ -9,13 +9,37 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutofacContrib.Startable">
+      <HintPath>..\..\lib\autofac\AutofacContrib.Startable.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Core">
+      <HintPath>..\..\lib\castle\Castle.Core.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Discovery" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
@@ -30,10 +54,99 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="BaseModule.cs" />
+    <Compile Include="Communication\ChannelClosedEventArgs.cs" />
+    <Compile Include="Communication\ChannelConnectionInformation.cs" />
+    <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
+    <Compile Include="Communication\CommandNotSupportedException.cs" />
+    <Compile Include="Communication\CommandProxyBuilder.cs" />
+    <Compile Include="Communication\CommandSetAvailabilityEventArgs.cs" />
+    <Compile Include="Communication\CommandSetInterceptorSelector.cs" />
+    <Compile Include="Communication\CommandSetMethodWithoutResultInterceptor.cs" />
+    <Compile Include="Communication\CommandSetMethodWithResultInterceptor.cs" />
+    <Compile Include="Communication\CommandSetProxy.cs" />
+    <Compile Include="Communication\CommandSetProxySelfReferenceInterceptor.cs" />
+    <Compile Include="Communication\CommunicationChannel.cs" />
+    <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
+    <Compile Include="Communication\CommunicationLayer.cs" />
+    <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
+    <Compile Include="Communication\EndpointEventArgs.cs" />
+    <Compile Include="Communication\EndpointId.cs" />
+    <Compile Include="Communication\ICommandCollection.cs" />
+    <Compile Include="Communication\LocalCommandCollection.cs" />
+    <Compile Include="Communication\Messages\CommandInvokedResponseMessage.cs" />
+    <Compile Include="Communication\Messages\EndpointInformationRequestMessage.cs" />
+    <Compile Include="Communication\EndpointNotContactableException.cs" />
+    <Compile Include="Communication\FailedToSendMessageException.cs" />
+    <Compile Include="Communication\IAcceptExternalEndpointInformation.cs" />
+    <Compile Include="Communication\IChannelProxy.cs" />
+    <Compile Include="Communication\IChannelType.cs" />
+    <Compile Include="Communication\ICommandSet.cs" />
+    <Compile Include="Communication\ICommunicationChannel.cs" />
+    <Compile Include="Communication\ICommunicationChannelCommands.cs" />
+    <Compile Include="Communication\ICommunicationLayer.cs" />
+    <Compile Include="Communication\ICommunicationMessage.cs" />
+    <Compile Include="Communication\IDirectIncomingMessages.cs" />
+    <Compile Include="Communication\IDiscoverOtherServices.cs" />
+    <Compile Include="Communication\IMessageProcessAction.cs" />
+    <Compile Include="Communication\IProcessIncomingMessages.cs" />
+    <Compile Include="Communication\IMachineCommands.cs" />
+    <Compile Include="Communication\IMessageFilter.cs" />
+    <Compile Include="Communication\IMessagePipe.cs" />
+    <Compile Include="Communication\IReceivingEndpoint.cs" />
+    <Compile Include="Communication\IReceivingWcfEndpointProxy.cs" />
+    <Compile Include="Communication\ISendingEndpoint.cs" />
+    <Compile Include="Communication\ISerializedMethodInvocation.cs" />
+    <Compile Include="Communication\MessageHandler.cs" />
+    <Compile Include="Communication\Messages\CommandInvokedMessage.cs" />
+    <Compile Include="Communication\Messages\EndpointConnectMessage.cs" />
+    <Compile Include="Communication\Messages\EndpointInformationResponseMessage.cs" />
+    <Compile Include="Communication\ISerializedType.cs" />
+    <Compile Include="Communication\Messages\FailureMessage.cs" />
+    <Compile Include="Communication\Messages\MessageKindFilter.cs" />
+    <Compile Include="Communication\Messages\Processors\CommandInvokedProcessAction.cs" />
+    <Compile Include="Communication\Messages\Processors\EndpointConnectProcessAction.cs" />
+    <Compile Include="Communication\CommandSetProxyExtensions.cs" />
+    <Compile Include="Communication\Messages\Processors\EndpointInformationRequestProcessAction.cs" />
+    <Compile Include="Communication\Messages\SuccessMessage.cs" />
+    <Compile Include="Communication\MissingBindingTypeException.cs" />
+    <Compile Include="Communication\MissingEndpointIdException.cs" />
+    <Compile Include="Communication\NamedPipeChannelType.cs" />
+    <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
+    <Compile Include="Communication\ChannelRelativePerformanceAttribute.cs" />
+    <Compile Include="Communication\RemoteCommandHub.cs" />
+    <Compile Include="Communication\RemoteOperationFailedException.cs" />
+    <Compile Include="Communication\StreamTransferInformation.cs" />
+    <Compile Include="Communication\MessageEventArgs.cs" />
+    <Compile Include="Communication\MessageId.cs" />
+    <Compile Include="Communication\Messages\CommunicationMessage.cs" />
+    <Compile Include="Communication\Messages\EndpointDisconnectMessage.cs" />
+    <Compile Include="Communication\NetDataContractOperationBehavior.cs" />
+    <Compile Include="Communication\ReceivingEndpoint.cs" />
+    <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
+    <Compile Include="Communication\SendingEndpoint.cs" />
+    <Compile Include="Communication\TcpBasedDiscoverySource.cs" />
+    <Compile Include="Communication\TcpChannelType.cs" />
+    <Compile Include="Communication\TcpStreamTransferInformation.cs" />
+    <Compile Include="Communication\TypeIsNotAValidCommandSetException.cs" />
+    <Compile Include="Communication\UnableToLoadCommandSetTypeException.cs" />
+    <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
+    <Compile Include="Loaders\BaselineId.cs" />
+    <Compile Include="Loaders\BaselineResult.cs" />
+    <Compile Include="Loaders\DiskSpecification.cs" />
+    <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
-    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
-    <Compile Include="Projects\DatasetCreationInformation.cs" />
-    <Compile Include="Projects\MockDatasetDistributor.cs" />
+    <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
+    <Compile Include="DatasetCreationInformation.cs" />
+    <Compile Include="Loaders\DatasetLoader.cs" />
+    <Compile Include="Loaders\IDatasetLoaderCommands.cs" />
+    <Compile Include="Loaders\ILoadDatasets.cs" />
+    <Compile Include="Loaders\MockDatasetDistributor.cs" />
+    <Compile Include="Loaders\NetworkIdentifier.cs" />
+    <Compile Include="Loaders\NetworkSpecification.cs" />
+    <Compile Include="Loaders\ProcessorArchitecture.cs" />
+    <Compile Include="Loaders\ProcessorSpecification.cs" />
+    <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -42,18 +155,18 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-    <Compile Include="Projects\DatasetCannotBecomeParentException.cs" />
-    <Compile Include="Projects\DatasetCreator.cs" />
-    <Compile Include="Projects\DatasetId.cs" />
-    <Compile Include="Projects\DatasetOfflineInformation.cs" />
-    <Compile Include="Projects\DatasetOnlineInformation.cs" />
-    <Compile Include="Projects\DatasetRequest.cs" />
-    <Compile Include="Projects\DistributionPlan.cs" />
-    <Compile Include="Projects\ExpectedDatasetLoad.cs" />
-    <Compile Include="Projects\IHelpDistributingDatasets.cs" />
-    <Compile Include="Projects\LoadingLocation.cs" />
-    <Compile Include="Projects\Machine.cs" />
-    <Compile Include="Projects\MachineDistributionRange.cs" />
+    <Compile Include="DatasetCannotBecomeParentException.cs" />
+    <Compile Include="DatasetCreator.cs" />
+    <Compile Include="DatasetId.cs" />
+    <Compile Include="DatasetOfflineInformation.cs" />
+    <Compile Include="DatasetOnlineInformation.cs" />
+    <Compile Include="Loaders\DatasetRequest.cs" />
+    <Compile Include="Loaders\DistributionPlan.cs" />
+    <Compile Include="Loaders\ExpectedDatasetLoad.cs" />
+    <Compile Include="Loaders\IHelpDistributingDatasets.cs" />
+    <Compile Include="Loaders\LoadingLocation.cs" />
+    <Compile Include="Loaders\Machine.cs" />
+    <Compile Include="Loaders\MachineDistributionRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

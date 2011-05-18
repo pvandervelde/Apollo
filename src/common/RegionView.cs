@@ -9,14 +9,13 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
-using Apollo.Utils;
 
 namespace Apollo.UI.Common
 {
     /// <summary>
     /// A view that is shown in a region.
     /// </summary>
-    [ExcludeFromCoverage("Views will not be unit tested. They will be tested in the UI tests.")]
+    [ExcludeFromCodeCoverage()]
     public class RegionView : UserControl, IRegionView
     {
         /// <summary>
@@ -98,8 +97,8 @@ namespace Apollo.UI.Common
         /// Raises the <see cref="Shown"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
-        public void RaiseShown()
+            Justification = "This method raises an event.")]
+        protected void RaiseShown()
         {
             var handler = Shown;
             if (handler != null)
@@ -112,8 +111,8 @@ namespace Apollo.UI.Common
         /// Raises the <see cref="Closed"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
-        public void RaiseClosed()
+            Justification = "This method raises an event.")]
+        protected void RaiseClosed()
         {
             var handler = Closed;
             if (handler != null)
@@ -128,11 +127,11 @@ namespace Apollo.UI.Common
         /// <returns>
         ///     <see langword="true" /> if the <see cref="Closing"/> event was cancelled; otherwise <see langword="false" />.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
-        public bool RaiseClosing()
+        protected bool RaiseClosing()
         {
             var handler = Closing;
             var args = new CancelEventArgs();
@@ -148,8 +147,8 @@ namespace Apollo.UI.Common
         /// Raises the <see cref="Activated"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
-        public void RaiseActivated()
+            Justification = "This method raises an event.")]
+        protected void RaiseActivated()
         {
             var handler = Activated;
             if (handler != null)
@@ -162,8 +161,8 @@ namespace Apollo.UI.Common
         /// Raises the <see cref="Deactivated"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This is a method that raises an event.")]
-        public void RaiseDeactivated()
+            Justification = "This method raises an event.")]
+        protected void RaiseDeactivated()
         {
             var handler = Deactivated;
             if (handler != null)

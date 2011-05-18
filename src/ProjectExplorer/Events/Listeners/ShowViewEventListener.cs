@@ -9,8 +9,7 @@ using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common;
 using Autofac;
-using Microsoft.Practices.Composite.Presentation.Regions;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.ProjectExplorer.Events.Listeners
 {
@@ -56,13 +55,11 @@ namespace Apollo.ProjectExplorer.Events.Listeners
                 }
             }
 
-            // Resolve the presenter and view
             var presenter = (IPresenter)Container.Resolve(request.PresenterType);
             var view = Container.Resolve(presenter.ViewType);
             presenter.Initialize(view, request.Parameter);
             RegionManager.SetRegionManager((DependencyObject) view, regionManager);
 
-            // Show the view
             var viewWindow = view as Window;
             if (viewWindow != null)
             {

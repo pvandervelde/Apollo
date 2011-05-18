@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Utils.Properties;
 using Lokad;
@@ -106,18 +105,12 @@ namespace Apollo.Utils
                 Enforce.With<CurrentProgressMarkNotSetException>(m_CurrentMark != null, Resources.Exceptions_Messages_CurrentProgressMarkNotSet);
             }
 
-            // Capture the time at which the timer was started
             var startTime = DateTime.Now;
             m_ElapsedTime = time => time - startTime;
 
-            // Initialize the timer
             m_ProgressTimer.Elapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
-
-            // Fire the first event. If all is well we have at least one mark
-            // And we'll assume there is no progress yet.
             RaiseStartupProgress(s_StartingProgress, m_CurrentMark);
 
-            // Start the timer
             m_ProgressTimer.Start();
         }
 
@@ -161,9 +154,6 @@ namespace Apollo.Utils
             // set syncPoint to -1, the current event is skipped. 
             if (Interlocked.CompareExchange(ref m_SyncPoint, 1, 0) == 0)
             {
-                // No other event was executing.
-                // Note that the only other event that could be
-                // executing, is us.
                 ThreadPool.QueueUserWorkItem(state =>
                     {
                         try
@@ -171,15 +161,10 @@ namespace Apollo.Utils
                             var elapsedTime = m_ElapsedTime(time);
                             var estimatedTime = m_MarkerTimers.TotalTime;
 
-                            // If there is no known time then we return
-                            // a special progress count.
                             int progress = m_UnknownProgressValue;
                             if (estimatedTime != TimeSpan.Zero)
                             {
                                 progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
-
-                                // Progress can never be larger as 100% so if it is then we just
-                                // assume we're at 100%
                                 if (progress > s_FinishingProgress)
                                 {
                                     progress = s_FinishingProgress;
@@ -223,8 +208,6 @@ namespace Apollo.Utils
         /// Raises the mark added event.
         /// </summary>
         /// <param name="mark">The progress mark.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method raises the MarkAdded event.")]
         private void RaiseMarkAdded(IProgressMark mark)
         {
             var local = MarkAdded;
@@ -245,8 +228,6 @@ namespace Apollo.Utils
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
             var local = StartupProgress;
@@ -261,10 +242,7 @@ namespace Apollo.Utils
         /// </summary>
         public void StopTracking()
         {
-            // Stop the progress timing. 
             StopProgressTimer();
-
-            // Indicate that we got to the end.
             RaiseStartupProgress(s_FinishingProgress, m_CurrentMark);
         }
 
@@ -277,7 +255,6 @@ namespace Apollo.Utils
         /// </source>
         private void StopProgressTimer()
         {
-            // Stop the timer
             m_ProgressTimer.Stop();
 
             // Ensure that if an event is currently executing,

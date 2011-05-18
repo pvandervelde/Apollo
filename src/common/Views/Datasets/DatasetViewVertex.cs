@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 using Lokad;
 
 namespace Apollo.UI.Common.Views.Datasets

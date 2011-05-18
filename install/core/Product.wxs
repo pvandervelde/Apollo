@@ -43,14 +43,14 @@
 
         <!--
             Define the package information.
-            - We demand version 4.5 of the installer (i.e. InstallerVersion=450)
+            - We demand version 3.0 of the installer (i.e. InstallerVersion=300)
             - We demand an elevated install
             - We always install per machine (not per user)
             - we do not specify a Platform attribute, in which case it should use whatever the current configuration is.
               (to specify it explicitly, we would have to set it to $(var.Platform) which produces spurious warnings when
                VS fails to validate that against the schema)
         -->
-        <Package InstallerVersion="405"
+        <Package InstallerVersion="300"
                  Compressed="yes"
                  InstallPrivileges="elevated"
                  InstallScope="perMachine"
@@ -123,11 +123,11 @@
                         <RemoveFolder Id="Dir.Menu.Apollo"
                                       On="uninstall" />
                         <!-- 
-                     Remove the registry key. Roads doesn't create this 
-                     but we do install to the Users start menu folder, so we
-                     must wipe the key from there. Again the installer will
-                     complain if we don't set this action.
-                  -->
+                             Remove the registry key. Apollo doesn't create this 
+                             but we do install to the Users start menu folder, so we
+                             must wipe the key from there. Again the installer will
+                             complain if we don't set this action.
+                        -->
                         <RegistryValue Root='HKCU'
                                        Key='Software\[Manufacturer]\[ProductName]'
                                        Type='string'
@@ -166,7 +166,7 @@
         <!-- URL for general information about the product -->
         <Property Id='ARPURLINFOABOUT'>$(var.Company_HelpUrl)</Property>
         <!-- Icon -->
-        <!-- <Property Id='ARPPRODUCTICON'>Icon.Roads.ico</Property> -->
+        <Property Id='ARPPRODUCTICON'>Icon.Apollo.ico</Property>
 
         <!-- Installer UI -->
         <!-- 
@@ -200,7 +200,7 @@
         <?else ?>
             <PropertyRef Id="NETFRAMEWORK40FULLINSTALLROOTDIR"/>
         <?endif ?>
-        <Condition Message="...">
+        <Condition Message="Version 4.0 of the .NET framework is required for the setup to continue.">
             <![CDATA[Installed OR NETFRAMEWORK40FULL]]>
         </Condition>
 

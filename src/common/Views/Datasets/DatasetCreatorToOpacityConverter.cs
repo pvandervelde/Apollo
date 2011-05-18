@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Data;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 
 namespace Apollo.UI.Common.Views.Datasets
 {

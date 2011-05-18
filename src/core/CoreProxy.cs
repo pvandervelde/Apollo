@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Lokad;
 
@@ -66,8 +65,6 @@ namespace Apollo.Core
         /// </summary>
         public event EventHandler<ApplicationStartupEventArgs> OnStartupComplete;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnStartupComplete()
         {
             var local = OnStartupComplete;

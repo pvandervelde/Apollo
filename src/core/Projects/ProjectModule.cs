@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Base.Projects;
+using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Utils.Licensing;
-using Apollo.Utils;
 using Autofac;
 
 namespace Apollo.Core.Projects
@@ -15,7 +15,7 @@ namespace Apollo.Core.Projects
     /// Handles the component registrations for the project part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCoverage("Modules are used for dependency injection purposes. Testing is done through integration testing.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class ProjectModule : Module
     {
         /// <summary>

@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils;
 using Apollo.Utils.Licensing;
 using Microsoft.Win32;
 
@@ -17,7 +16,7 @@ namespace Apollo.Core.Utils.Licensing
     /// <remarks>
     /// This class should only be used for debugging.
     /// </remarks>
-    [ExcludeFromCoverage("This class interacts with the registry. Integration testing is more suitable.")]
+    [ExcludeFromCodeCoverage()]
     internal sealed class RegistryKeyValidator : IValidator
     {
         /// <summary>

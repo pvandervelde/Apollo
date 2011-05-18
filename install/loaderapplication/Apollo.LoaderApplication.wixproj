@@ -1,7 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>    <ProjectGuid>{df61935e-3097-417b-ae02-e8ed9dc4e843}</ProjectGuid>  
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{df61935e-3097-417b-ae02-e8ed9dc4e843}</ProjectGuid>
     <ProjectGuid>{accc71d3-1fde-47fa-8eb0-6c49dde897ec}</ProjectGuid>
     <OutputName>Apollo.LoaderApplication</OutputName>
     <OutputType>Package</OutputType>
@@ -26,6 +27,7 @@
     <Compile Include="..\shared\Apollo.Dataset.wxs">
       <Link>Apollo.Dataset.wxs</Link>
     </Compile>
+    <Compile Include="Apollo.LoaderApplication.wxs" />
     <Compile Include="Product.wxs" />
     <Compile Include="Product.Generated.wxs">
       <DependentUpon>Product.wxs</DependentUpon>

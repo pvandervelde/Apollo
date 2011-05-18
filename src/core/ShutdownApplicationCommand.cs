@@ -16,7 +16,7 @@ namespace Apollo.Core
     /// <summary>
     /// A command used to request a shut down from the application.
     /// </summary>
-    public sealed class ShutdownApplicationCommand : ICommand
+    internal sealed class ShutdownApplicationCommand : ICommand
     {
         #region Static members
 

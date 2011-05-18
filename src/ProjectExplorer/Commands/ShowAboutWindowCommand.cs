@@ -4,10 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Views.About;
-using Microsoft.Practices.Composite.Events;
-using Microsoft.Practices.Composite.Presentation.Commands;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.ProjectExplorer.Commands
 {
@@ -29,6 +30,8 @@ namespace Apollo.ProjectExplorer.Commands
         /// Initializes a new instance of the <see cref="ShowAboutWindowCommand"/> class.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
+        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+            Justification = "The constructor is called via the IOC container.")]
         public ShowAboutWindowCommand(IEventAggregator eventAggregator)
             : base(obj => OnExecute(eventAggregator))
         {

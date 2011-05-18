@@ -35,8 +35,6 @@ namespace Apollo.Core
         /// <summary>
         /// The collection which tracks the connections between a service and it's dependencies.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "The storage requires that we link an object to a list of objects. Nested generics is an easy way to achieve this.")]
         private readonly Dictionary<KernelService, List<ConnectionMap>> m_Connections = 
             new Dictionary<KernelService, List<ConnectionMap>>();
 
@@ -72,8 +70,6 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="progress">The progress percentage.</param>
         /// <param name="mark">The progress mark.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseStartupProgress(int progress, IProgressMark mark)
         {
             var local = StartupProgress;
@@ -105,14 +101,12 @@ namespace Apollo.Core
         /// </design>
         public void Start()
         {
-            // Indicate that the kernel is booting.
             m_State = StartupState.Starting;
 
             // In order to keep this flexible we will need to sort the services
             // so that the startup order guarantuees that each service will have 
             // its dependencies and requirements running before it does.
             // Obviously this is prone to cyclic loops ...
-            // Using full trust permissions here because Quick-Graph needs them.
             var startupOrder = DetermineServiceStartupOrder();
             foreach (var service in startupOrder)
             {
@@ -120,11 +114,9 @@ namespace Apollo.Core
                 // lambda expression without having it wiped or replaced on us
                 var currentService = service;
 
-                // See if the service is complete
                 var dependencyHolder = currentService as IHaveServiceDependencies;
                 if (dependencyHolder != null)
                 {
-                    // See if all the dependencies are there.
                     if (!dependencyHolder.IsConnectedToAllDependencies)
                     {
                         throw new KernelStartupFailedException(
@@ -143,19 +135,11 @@ namespace Apollo.Core
                     // So this means that all dependencies must be running.
                 }
 
-                // Only start the service if it hasn't already been started
                 if (currentService.StartupState != StartupState.Started)
                 {
                     EventHandler<StartupProgressEventArgs> handler = (s, e) =>
                         {
-                            // There are serviceIndex number of services that have finished
-                            // their startup process.
                             var finishedPercentage = (double)startupOrder.IndexOf(currentService) / startupOrder.Count;
-
-                            // The current service is progress percentage finished. That
-                            // translates to:
-                            //   (percentage quantity for one service) * (progress in current service)
-                            //   which is: (1 / serviceCount) * progress / 100
                             var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
                             var total = finishedPercentage + currentPercentage;
 
@@ -165,10 +149,7 @@ namespace Apollo.Core
                     currentService.StartupProgress += handler;
                     try
                     {
-                        // Start the service
                         currentService.Start();
-
-                        // Check that that start was successful
                         if (currentService.StartupState != StartupState.Started)
                         {
                             throw new KernelServiceStartupFailedException(
@@ -185,11 +166,7 @@ namespace Apollo.Core
                 }
             }
 
-            // If we get here then we have to have finished the
-            // startup process, which means we're actually running.
             m_State = StartupState.Started;
-
-            // Notify all services that we're done with the start-up process.
             SendStartupCompleteMessage();
         }
 
@@ -201,10 +178,8 @@ namespace Apollo.Core
         /// </returns>
         private List<KernelService> DetermineServiceStartupOrder()
         {
-            // Define the result collection
             var graph = new AdjacencyGraph<ServiceVertex, Edge<ServiceVertex>>();
             {
-                // create the vertices
                 var typedCollection = new Dictionary<Type, ServiceVertex>();
                 foreach (var pair in m_Services)
                 {
@@ -213,14 +188,12 @@ namespace Apollo.Core
                     typedCollection.Add(pair.Key, vertex);
                 }
 
-                // create the edges. They point from a dependency to the
-                // dependent vertex
+                // The edges point from a dependency to the dependent vertex
                 foreach (var pair in typedCollection)
                 {
                     var target = pair.Value;
                     if (target.HasDependencies)
                     {
-                        // Handle the connections
                         var dependencies = m_Connections[target.Service];
                         foreach (var dependent in dependencies)
                         {
@@ -243,7 +216,6 @@ namespace Apollo.Core
         /// </summary>
         private void SendStartupCompleteMessage()
         {
-            // Check all services
             var coreProxy = m_Services[typeof(CoreProxy)] as CoreProxy;
             Debug.Assert(coreProxy != null, "Stored an incorrect service under the CoreProxy type.");
 
@@ -275,7 +247,6 @@ namespace Apollo.Core
             Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
         public void Shutdown()
         {
-            // Indicate that the kernel is stopping.
             m_State = StartupState.Stopping;
 
             // In order to keep this flexible we will need to sort the services
@@ -288,14 +259,10 @@ namespace Apollo.Core
             // to least dependent
             startupOrder.Reverse();
 
-            // Stop all the services and disconnect them.
             foreach (var service in startupOrder)
             {
-                // Grab the actual current service so that we can put it in the
-                // lambda expression without having it wiped or replaced on us
                 try
                 {
-                    // Start the service
                     service.Stop();
                 }
                 catch
@@ -305,8 +272,6 @@ namespace Apollo.Core
                 }
             }
 
-            // If we get here then we have to have finished the
-            // startup process, which means we're actually finished.
             m_State = StartupState.Stopped;
         }
 
@@ -334,8 +299,6 @@ namespace Apollo.Core
                 Enforce.Argument(() => service);
             }
 
-            // We can only install when we are not started or started. No other 
-            // state is condusive to installation.
             if ((m_State != StartupState.NotStarted) && (m_State != StartupState.Started))
             {
                 throw new KernelNotInInstallReadyStateException();
@@ -343,12 +306,9 @@ namespace Apollo.Core
 
             if (m_Services.ContainsKey(service.GetType()))
             {
-                // The service already exists, or an equivalent
-                // service already exists. So stop now.
                 throw new ServiceTypeAlreadyInstalledException();
             }
 
-            // Check for dependencies
             var dependencyHolder = service as IHaveServiceDependencies;
             if (dependencyHolder != null)
             {
@@ -376,8 +336,6 @@ namespace Apollo.Core
                 }
             }
 
-            // Then check all the existing ones and see what we can add 
-            // there.
             var selectedServices = GetDependentServices(service);
             foreach (var map in selectedServices)
             {
@@ -395,7 +353,6 @@ namespace Apollo.Core
                 dependent.ConnectTo(service);
             }
             
-            // Finally add the service
             m_Services.Add(service.GetType(), service);
         }
 
@@ -411,8 +368,6 @@ namespace Apollo.Core
         /// Note that the current connection strategy only works if there are no demands for duplicates OR 
         /// services with the same interfaces.
         /// </design>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need to return a mapping between a Type and a KernelService. The KeyValuePair<T,K> class is the simplest solution.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetInstalledDependencies(IEnumerable<Type> demandedServices)
         {
             // Create a copy of the available service list. Then when we 
@@ -458,8 +413,6 @@ namespace Apollo.Core
         /// A collection containing a mapping between the demanded dependency and the service that would
         /// serve for this dependency.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "This internal method needs to return a collection of Type - KernelService mappings.")]
         private IEnumerable<KeyValuePair<Type, KernelService>> GetDependentServices(KernelService service)
         {
             var result = new List<KeyValuePair<Type, KernelService>>();

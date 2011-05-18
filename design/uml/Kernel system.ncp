@@ -1,6 +1,6 @@
 <Project>
   <Name>Kernel system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Kernel - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -29,7 +29,7 @@
         <Text>Services can also specify LoadBefore information. This indicates before which services they need to be loaded. 
 
 Note that most system services are always loaded in a specific order / time. e.g. logging, messages, license</Text>
-        <Location left="1026" top="1616" />
+        <Location left="1056" top="1458" />
         <Size width="190" height="76" />
       </Entity>
       <Entity type="Comment">
@@ -40,7 +40,7 @@ Note that most system services are always loaded in a specific order / time. e.g
       <Entity type="Interface">
         <Name>INeedStartup</Name>
         <Access>Internal</Access>
-        <Location left="865" top="1260" />
+        <Location left="901" top="1044" />
         <Size width="354" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Event">event EventHandler&lt;StartupProgressEventArgs&gt; StartupProgress</Member>
@@ -52,17 +52,12 @@ Note that most system services are always loaded in a specific order / time. e.g
 - error stuff
 - async stuff
 - Indicate complete</Text>
-        <Location left="939" top="1054" />
+        <Location left="975" top="838" />
         <Size width="206" height="102" />
       </Entity>
       <Entity type="Comment">
         <Text>Forms the front end of the project sub-system</Text>
-        <Location left="2818" top="762" />
-        <Size width="162" height="72" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>All communication between services runs through the message pipeline</Text>
-        <Location left="2788" top="498" />
+        <Location left="2321" top="502" />
         <Size width="162" height="72" />
       </Entity>
       <Entity type="Comment">
@@ -70,12 +65,12 @@ Note that most system services are always loaded in a specific order / time. e.g
 
 A service is not normally running. Once a message for the service arrives it will be loaded and the message can be processed. 
 Some services will be started on application start up.</Text>
-        <Location left="1012" top="1421" />
+        <Location left="1042" top="1260" />
         <Size width="187" height="160" />
       </Entity>
       <Entity type="Comment">
         <Text>Timeline service will have to track blocking events (e.g. removal of a plug-in, replacement of a plug-in, loading a new project etc.) because these events make it impossible to follow the timeline backwards or forwards</Text>
-        <Location left="3154" top="1584" />
+        <Location left="2948" top="664" />
         <Size width="300" height="87" />
       </Entity>
       <Entity type="Comment">
@@ -86,7 +81,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>KernelService</Name>
         <Access>Internal</Access>
-        <Location left="1930" top="1230" />
+        <Location left="1635" top="1018" />
         <Size width="302" height="153" />
         <Collapsed>False</Collapsed>
         <Member type="Method">protected abstract void StartService()</Member>
@@ -96,17 +91,9 @@ Some services will be started on application start up.</Text>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>MarshalByRefObject</Name>
-        <Access>Public</Access>
-        <Location left="1672" top="1120" />
-        <Size width="162" height="82" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Abstract</Modifier>
-      </Entity>
-      <Entity type="Class">
         <Name>UserInterfaceService</Name>
         <Access>Internal</Access>
-        <Location left="3598" top="1639" />
+        <Location left="2555" top="1018" />
         <Size width="162" height="96" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -114,7 +101,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>ProjectService</Name>
         <Access>Internal</Access>
-        <Location left="2788" top="885" />
+        <Location left="2093" top="678" />
         <Size width="162" height="92" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -122,23 +109,15 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>TimelineService</Name>
         <Access>Internal</Access>
-        <Location left="3233" top="1440" />
+        <Location left="2863" top="1018" />
         <Size width="162" height="85" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>MessagePipeline</Name>
-        <Access>Internal</Access>
-        <Location left="2788" top="631" />
-        <Size width="162" height="84" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>LogSink</Name>
         <Access>Internal</Access>
-        <Location left="1686" top="1489" />
+        <Location left="1398" top="1286" />
         <Size width="162" height="90" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -146,7 +125,7 @@ Some services will be started on application start up.</Text>
       <Entity type="Class">
         <Name>PluginRepository</Name>
         <Access>Internal</Access>
-        <Location left="1450" top="978" />
+        <Location left="1915" top="456" />
         <Size width="162" height="122" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -184,26 +163,16 @@ Probably no service, however all AppDomains / Threads / Services will have to be
       <Entity type="Class">
         <Name>PersistenceService</Name>
         <Access>Internal</Access>
-        <Location left="2953" top="1753" />
+        <Location left="2209" top="1018" />
         <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Interface">
-        <Name>IProcessMessages</Name>
-        <Access>Internal</Access>
-        <Location left="1644" top="215" />
-        <Size width="338" height="112" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">DnsName DnsName { get; }</Member>
-        <Member type="Method">void ProcessMessages(IMessage message)</Member>
-        <Member type="Method">void ProcessMessages(IEnumerator&lt;IMessage&gt; messages)</Member>
-      </Entity>
-      <Entity type="Interface">
         <Name>IHaveServiceDependencies</Name>
         <Access>Internal</Access>
-        <Location left="1644" top="60" />
-        <Size width="286" height="146" />
+        <Location left="1653" top="143" />
+        <Size width="295" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;Type&gt; ServicesToBeAvailable()</Member>
         <Member type="Method">IEnumerable&lt;Type&gt; ServicesToConnectTo()</Member>
@@ -211,43 +180,15 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Member type="Method">void DisconnectFrom(KernelService dependency)</Member>
         <Member type="Property">bool IsConnectedToAllDependencies { get; }</Member>
       </Entity>
-      <Entity type="Class">
-        <Name>LicenseService</Name>
-        <Access>Internal</Access>
-        <Location left="2315" top="1076" />
-        <Size width="162" height="105" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
       <Entity type="Comment">
         <Text>how to deal with configurations? Where do we store the default config file. And how do we write the config files.</Text>
-        <Location left="3049" top="2065" />
+        <Location left="2209" top="1166" />
         <Size width="202" height="86" />
       </Entity>
       <Entity type="Comment">
-        <Text>Could we do something with hashkeys to verify that the answers coming from the license service are correct?
-Obvious problem is that all data runs on the users machine so they have full access to the system.</Text>
-        <Location left="2289" top="1197" />
-        <Size width="280" height="103" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Services should be able to register scanners / filters etc.?</Text>
-        <Location left="1716" top="978" />
+        <Location left="1664" top="375" />
         <Size width="162" height="72" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Can we do the license system so that we store some code / IL in an encrypted part of the application. The license key is then used to unencrypt that code. The code can then be 'compiled' and passed on to the different services. That way we can extract different parts of the project / UI / persistence service into an encrypted part of the application (private key encrypted, decrypt with the public key).</Text>
-        <Location left="2289" top="1315" />
-        <Size width="340" height="118" />
-      </Entity>
-      <Entity type="Interface">
-        <Name>ISendMessages</Name>
-        <Access>Internal</Access>
-        <Location left="1644" top="342" />
-        <Size width="390" height="95" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">DnsName DnsName { get; }</Member>
-        <Member type="Method">void OnMessageDeliveryFailure(object sender, MessageEventArgs e)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IBootstrapper</Name>
@@ -261,7 +202,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       <Entity type="Enum">
         <Name>StartupState</Name>
         <Access>Internal</Access>
-        <Location left="526" top="1231" />
+        <Location left="562" top="1015" />
         <Size width="163" height="180" />
         <Collapsed>False</Collapsed>
         <Value>Unknown</Value>
@@ -290,206 +231,141 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1042</X>
-          <Y>1220</Y>
+          <X>1078</X>
+          <Y>1004</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="11" second="4">
+      <Relationship type="Realization" first="10" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1891</X>
-          <Y>1313</Y>
+          <X>1602</X>
+          <Y>1097</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1248</X>
-          <Y>1313</Y>
+          <X>1284</X>
+          <Y>1097</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="11" second="12">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1869</X>
-          <Y>1170</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="8" second="11">
+      <Relationship type="Comment" first="7" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1247</X>
-          <Y>1522</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1336</X>
-          <Y>1326</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="2" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1243</X>
-          <Y>1640</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1406</X>
-          <Y>1344</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="9" second="15">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="6" second="14">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="14" second="15">
-        <Label>Depends on</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2978</X>
-          <Y>941</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3177</X>
-          <Y>1468</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="13" second="15">
-        <Label>Depends on</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3573</X>
-          <Y>1667</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3420</X>
-          <Y>1488</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="13" second="16">
-        <Label>Depends on</Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3629</X>
-          <Y>1586</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3427</X>
-          <Y>685</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Generalization" first="13" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3524</X>
-          <Y>1703</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2144</X>
-          <Y>1502</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="14" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2753</X>
-          <Y>922</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2133</X>
-          <Y>1188</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="15" second="16">
-        <Label>Depends on</Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3292</X>
-          <Y>1377</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2975</X>
-          <Y>700</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="14" second="16">
-        <Label>Depends on</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2685</X>
-          <Y>906</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2752</X>
-          <Y>704</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Generalization" first="15" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3206</X>
-          <Y>1495</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2186</X>
-          <Y>1444</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="16" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2763</X>
-          <Y>691</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2095</X>
-          <Y>1205</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="17" second="11">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1901</X>
+          <X>1277</X>
           <Y>1361</Y>
         </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1317</X>
+          <Y>1116</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="18" second="11">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Comment" first="2" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1561</X>
-          <Y>1185</Y>
+          <X>1273</X>
+          <Y>1482</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1905</X>
-          <Y>1274</Y>
+          <X>1376</X>
+          <Y>1132</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="19" second="11">
+      <Relationship type="Comment" first="8" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="6" second="12">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="12" second="13">
+        <Label>Depends on</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2283</X>
+          <Y>734</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2894</X>
+          <Y>990</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="11" second="13">
+        <Label>Depends on</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2744</X>
+          <Y>1058</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2830</X>
+          <Y>1058</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="11" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2630</X>
+          <Y>1155</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1849</X>
+          <Y>1290</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="12" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2058</X>
+          <Y>715</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1838</X>
+          <Y>976</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="13" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2943</X>
+          <Y>1128</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1794</X>
+          <Y>1346</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="14" second="10">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1606</X>
+          <Y>1149</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="15" second="10">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1874</X>
+          <Y>554</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1707</X>
+          <Y>993</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="16" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -497,49 +373,15 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>768</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1896</X>
-          <Y>1293</Y>
+          <X>1601</X>
+          <Y>1081</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="18" second="16">
-        <Label>Depends on</Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1529</X>
-          <Y>920</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2750</X>
-          <Y>681</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="19" second="16">
-        <Label>Depends on</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1516</X>
-          <Y>649</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2640</X>
-          <Y>649</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="16">
+      <Relationship type="Comment" first="9" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="10" second="19">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="20" second="4">
+      <Relationship type="Realization" first="17" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -547,18 +389,16 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>630</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>823</X>
-          <Y>1315</Y>
+          <X>859</X>
+          <Y>1099</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="20" second="19">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="17" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
           <X>1186</X>
-          <Y>632</Y>
+          <Y>631</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1267</X>
@@ -567,9 +407,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="0" second="20">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="0" second="17">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -583,7 +421,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="21" second="20">
+      <Relationship type="Comment" first="18" second="17">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -595,142 +433,65 @@ Obvious problem is that all data runs on the users machine so they have full acc
           <Y>619</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="22" second="11">
+      <Relationship type="Generalization" first="19" second="10">
         <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2902</X>
-          <Y>1798</Y>
+          <X>2158</X>
+          <Y>1063</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2114</X>
-          <Y>1426</Y>
+          <X>2022</X>
+          <Y>1063</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="13" second="22">
+      <Relationship type="Association" first="11" second="19">
+        <Label>Depends on</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2530</X>
+          <Y>1073</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="12" second="19">
         <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3664</X>
-          <Y>1778</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="14" second="22">
-        <Label>Depends on</Label>
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2872</X>
-          <Y>1008</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2923</X>
-          <Y>1777</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="18" second="22">
-        <Label>Uses</Label>
-        <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1536</X>
-          <Y>1182</Y>
+          <X>2177</X>
+          <Y>801</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3004</X>
-          <Y>1909</Y>
+          <X>2291</X>
+          <Y>981</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="25" second="11">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2268</X>
-          <Y>1118</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2188</X>
-          <Y>1205</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="14" second="25">
-        <Label>Uses</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2744</X>
-          <Y>960</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="22" second="25">
-        <Label>Uses</Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2928</X>
-          <Y>1786</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2590</X>
-          <Y>1110</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="26" second="22">
+      <Relationship type="Comment" first="21" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3078</X>
-          <Y>1872</Y>
+          <X>2292</X>
+          <Y>1137</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="27" second="25">
+      <Relationship type="Comment" first="22" second="15">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2596</X>
-          <Y>1250</Y>
+          <X>1867</X>
+          <Y>416</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2502</X>
-          <Y>1167</Y>
+          <X>1885</X>
+          <Y>525</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="28" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1794</X>
-          <Y>922</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1572</X>
-          <Y>953</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="29" second="25">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2654</X>
-          <Y>1366</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2620</X>
-          <Y>1142</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="0" second="31">
+      <Relationship type="Realization" first="0" second="23">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -743,6 +504,8 @@ Obvious problem is that all data runs on the users machine so they have full acc
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -754,7 +517,7 @@ Obvious problem is that all data runs on the users machine so they have full acc
       </Relationship>
     </Relationships>
   </ProjectItem>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.2.1174.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
     <Name>Kernel</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -822,12 +585,16 @@ Obvious problem is that all data runs on the users machine so they have full acc
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>

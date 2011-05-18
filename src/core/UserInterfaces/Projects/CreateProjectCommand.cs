@@ -18,7 +18,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// <summary>
     /// Defines a command that creates a new project.
     /// </summary>
-    public sealed class CreateProjectCommand : ICommand
+    internal sealed class CreateProjectCommand : ICommand
     {
         #region Static members
 

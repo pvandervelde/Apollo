@@ -10,9 +10,8 @@
             The user may decide to install in a different location which will be
             reflected in a change to the value of the INSTALLLOCATION directory.
         -->
-        <!--
         <DirectoryRef Id="INSTALLLOCATION">
-            <!- Apollo.Core.BatchService.exe ->
+            <!-- Apollo.Core.BatchService.exe -->
             <Component Id="C.Apollo.Core.BatchService.exe"
                        Guid="{D1467434-2A3B-419F-83D6-D207FAF344BA}">
                 <File Id="File.Apollo.Core.BatchService.exe"
@@ -21,7 +20,7 @@
                       Source="$(var.Apollo_BinFolder)\Apollo.Core.BatchService.exe"
                       KeyPath="yes" />
 
-                <!- Start service ->
+                <!-- Start service -->
                 <ServiceInstall Id="SI.Apollo.Core.BatchService.exe"
                                 Type="ownProcess"
                                 Vital="yes"
@@ -39,7 +38,6 @@
                                 Wait="yes" />
             </Component>
         </DirectoryRef>
-        
 
         <Feature Id="F.Apollo.BatchService"
                  Title="$(var.Apollo_ProductName)"
@@ -48,6 +46,5 @@
                  Level="1">
             <ComponentRef Id="C.Apollo.Core.BatchService.exe" />
         </Feature>
-        -->
     </Fragment>
 </Wix>

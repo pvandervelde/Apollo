@@ -15,7 +15,7 @@ namespace Apollo.Utils
     /// <summary>
     /// Defines the default <see cref="IProgressTimer"/> object.
     /// </summary>
-    [ExcludeFromCoverage("ProgressTimer relies on a System.Timers.Timer which is hard to test.")]
+    [ExcludeFromCodeCoverage()]
     public sealed class ProgressTimer : IProgressTimer, IDisposable
     {
         /// <summary>
@@ -66,8 +66,6 @@ namespace Apollo.Utils
         /// Raises the elapsed event.
         /// </summary>
         /// <param name="signalTime">The signal time.</param>
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to fire an event.")]
         private void RaiseElapsed(DateTime signalTime)
         {
             var local = Elapsed;

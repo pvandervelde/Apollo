@@ -46,6 +46,18 @@ namespace Apollo.Utils
         }
 
         /// <summary>
+        /// Gets the string resource for an <see cref="Exception"/> that is thrown if a user tries to set
+        /// the log level to <see cref="LogSeverityProxy.None"/>.
+        /// </summary>
+        public static string ExceptionMessagesCannotLogMessageWithLogLevelSetToNone
+        {
+            get
+            {
+                return Resources_NonTranslatable.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
+            }
+        }
+
+        /// <summary>
         /// Gets the string resource for an internal error with an error code formatter.
         /// </summary>
         /// <value>

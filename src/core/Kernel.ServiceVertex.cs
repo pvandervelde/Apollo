@@ -7,7 +7,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Utils;
 
 namespace Apollo.Core
 {
@@ -19,7 +18,7 @@ namespace Apollo.Core
         /// <summary>
         /// A vertex class which stores an <see cref="KernelService"/> object.
         /// </summary>
-        [ExcludeFromCoverage("This class is used internally only. Integration testing is more suitable.")]
+        [ExcludeFromCodeCoverage()]
         private sealed class ServiceVertex
         {
             /// <summary>

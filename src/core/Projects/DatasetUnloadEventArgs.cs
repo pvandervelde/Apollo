@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base;
 using Lokad;
 
 namespace Apollo.Core.Projects
@@ -13,7 +13,7 @@ namespace Apollo.Core.Projects
     /// <summary>
     /// Stores event arguments used when a dataset unload is complete.
     /// </summary>
-    public sealed class DatasetUnloadEventArgs : EventArgs
+    internal sealed class DatasetUnloadEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetUnloadEventArgs"/> class.

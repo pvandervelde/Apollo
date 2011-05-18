@@ -75,7 +75,7 @@ namespace Apollo.UI.Common.Bootstrappers
         /// the service instance.</exception>
         public object GetInstance(Type serviceType, string key)
         {
-            return m_AutofacContainer.Resolve(key, serviceType);
+            return m_AutofacContainer.ResolveNamed(key, serviceType);
         }
 
         /// <summary>
@@ -116,7 +116,7 @@ namespace Apollo.UI.Common.Bootstrappers
             Justification = "Use of a generic parameter provides strongly typed methods.")]
         public TService GetInstance<TService>(string key)
         {
-            return m_AutofacContainer.Resolve<TService>(key);
+            return m_AutofacContainer.ResolveNamed<TService>(key);
         }
 
         /// <summary>

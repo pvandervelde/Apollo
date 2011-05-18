@@ -32,14 +32,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utils.srconly\AssemblyNameElements.cs">
+      <Link>Utils\AssemblyNameElements.cs</Link>
+    </Compile>
     <Compile Include="..\utils.srconly\ErrorCodes.cs">
       <Link>Utils\ErrorCodes.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Fusion\AssemblyNameElements.cs">
-      <Link>Utils\Fusion\AssemblyNameElements.cs</Link>
-    </Compile>
-    <Compile Include="..\utils.srconly\Fusion\FusionHelper.cs">
-      <Link>Utils\Fusion\FusionHelper.cs</Link>
+    <Compile Include="..\utils.srconly\FusionHelper.cs">
+      <Link>Utils\FusionHelper.cs</Link>
     </Compile>
     <Compile Include="..\utils.srconly\Licensing\Checksum.cs">
       <Link>Utils\Licensing\Checksum.cs</Link>
@@ -162,20 +162,6 @@
     <Compile Include="KernelServiceStartupFailedException.cs" />
     <Compile Include="KernelStartInfo.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
-    <Compile Include="Logging\CommandLogTemplate.cs" />
-    <Compile Include="Logging\DebugLogTemplate.cs" />
-    <Compile Include="Logging\ILogger.cs" />
-    <Compile Include="Logging\ILoggerConfiguration.cs" />
-    <Compile Include="Logging\ILogMessage.cs" />
-    <Compile Include="Logging\ILogSink.cs" />
-    <Compile Include="Logging\ILogTemplate.cs" />
-    <Compile Include="Logging\LevelToLog.cs" />
-    <Compile Include="Logging\Logger.cs" />
-    <Compile Include="Logging\LoggerConfiguration.cs" />
-    <Compile Include="Logging\LoggerModule.cs" />
-    <Compile Include="Logging\LogMessage.cs" />
-    <Compile Include="Logging\LogSink.cs" />
-    <Compile Include="Logging\LogType.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="NotificationNameConstants.cs" />
     <Compile Include="ProgressMarkerTypeAttribute.cs" />
@@ -229,8 +215,6 @@
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
-    <Compile Include="Utils\ApplicationConstants.cs" />
-    <Compile Include="Utils\FileConstants.cs" />
     <Compile Include="Utils\ILoadOnApplicationStartup.cs" />
     <Compile Include="Utils\Licensing\IValidationResultStorage.cs">
       <SubType>Code</SubType>

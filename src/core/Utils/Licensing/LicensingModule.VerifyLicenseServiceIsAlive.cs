@@ -67,13 +67,9 @@ namespace Apollo.Core.Utils.Licensing
                 lastHeartbeat = m_TimeOfLastHeartbeat;
             }
 
-            // Calculate the maximum allowable interval
             var maximumInterval = new TimeSpan(0, 0, 0, 0, LicensingConstants.MaximumNumberOfSequentialValidationFailures * LicensingConstants.LicenseWatchdogIntervalInMilliseconds);
-
-            // Calculate the interval between the current time and the last update
             var interval = DateTimeOffset.Now - lastHeartbeat;
 
-            // If we have surpassed the maximum time interval then we exit immediately
             if (interval > maximumInterval)
             { 
                 // If we aren't in deploy mode then we simply throw an exception. 

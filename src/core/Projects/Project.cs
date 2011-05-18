@@ -5,9 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
-using Apollo.Core.Base.Projects;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
 using Apollo.Utils;
 using Lokad;
@@ -32,7 +31,7 @@ namespace Apollo.Core.Projects
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
         /// </summary>
-        private readonly Func<DatasetRequest, DistributionPlan> m_DatasetDistributor;
+        private readonly Func<DatasetRequest, IObservable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
         /// A flag that indicates if the project has been closed.
@@ -81,7 +80,7 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, DistributionPlan> distributor)
+        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor)
             : this(distributor, null)
         {
         }
@@ -99,14 +98,12 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, DistributionPlan> distributor, IPersistenceInformation persistenceInfo)
+        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor, IPersistenceInformation persistenceInfo)
         {
             {
                 Enforce.Argument(() => distributor);
             }
 
-            // Create the graph. This must be done in an elevated state because that is 
-            // what quickgraph wants.
             m_Graph = new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false);
 
             m_DatasetDistributor = distributor;
@@ -130,7 +127,6 @@ namespace Apollo.Core.Projects
                             CanBeAdopted = false,
                         });
 
-                // Set the standard name and summary for the root
                 var dataset = m_Datasets[m_RootDataset];
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
@@ -172,8 +168,6 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnClosed;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnClosed()
         {
             var local = OnClosed;
@@ -206,12 +200,8 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// An event raised when the name of a project is changed.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
         public event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnNameChanged(string newName)
         {
             var local = OnNameChanged;
@@ -244,12 +234,8 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// An event raised when the summary of a project is changed.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-                Justification = "There is no point in implementing a specific EventArgs class for this event.")]
         public event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnSummaryChanged(string newSummary)
         {
             var local = OnSummaryChanged;
@@ -275,8 +261,6 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetCreated;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetCreated()
         {
             var local = OnDatasetCreated;
@@ -291,8 +275,6 @@ namespace Apollo.Core.Projects
         /// </summary>
         public event EventHandler<EventArgs> OnDatasetDeleted;
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaiseOnDatasetDeleted()
         {
             var local = OnDatasetDeleted;

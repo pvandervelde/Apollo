@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Logging;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.Core.Utils.Licensing;
+using Apollo.Utils;
 using Apollo.Utils.Commands;
 using Autofac.Core;
 using Lokad;
@@ -29,10 +29,13 @@ namespace Apollo.Core.UserInterfaces
         /// <summary>
         /// The collection of notifications that must be passed on to the user interface.
         /// </summary>
-        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need to store the action somehow ...")]
         private readonly Dictionary<NotificationName, Action<INotificationArguments>> m_Notifications =
             new Dictionary<NotificationName, Action<INotificationArguments>>();
+
+        /// <summary>
+        /// The function used to write messages to the log.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
         /// The container that stores all the commands for this service.
@@ -60,11 +63,6 @@ namespace Apollo.Core.UserInterfaces
         private CoreProxy m_Core;
 
         /// <summary>
-        /// The service which handles all the log requests.
-        /// </summary>
-        private LogSink m_Logger;
-
-        /// <summary>
         /// The service which handles all the project requests.
         /// </summary>
         private ProjectService m_Projects;
@@ -75,7 +73,12 @@ namespace Apollo.Core.UserInterfaces
         /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
         /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
-        /// <param name="onStartService">The method that provides the DI module.</param>
+        /// <param name="logger">The object that logs the debug information for the current service.</param>
+        /// <param name="onStartService">
+        ///     The method that stores the IOC module that will be used by the User Interface to refer
+        ///     to the core User Interface objects. This module contains for instance the
+        ///     UserInterfaceService itself.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
         /// </exception>
@@ -86,12 +89,16 @@ namespace Apollo.Core.UserInterfaces
         /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
         /// </exception>
         public UserInterfaceService(
             ICommandContainer commands,
             INotificationNameConstants notificationNames,
             IValidationResultStorage licenseValidationStorage,
+            Action<LogSeverityProxy, string> logger,
             Action<IModule> onStartService)
             : base()
         {
@@ -99,12 +106,14 @@ namespace Apollo.Core.UserInterfaces
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => notificationNames);
                 Enforce.Argument(() => licenseValidationStorage);
+                Enforce.Argument(() => logger);
                 Enforce.Argument(() => onStartService);
             }
 
             m_NotificationNames = notificationNames;
             m_LicenseValidationStorage = licenseValidationStorage;
             m_OnStartService = onStartService;
+            m_Logger = logger;
 
             m_Commands = commands;
             {
@@ -236,7 +245,6 @@ namespace Apollo.Core.UserInterfaces
             return new Type[] 
                 { 
                     typeof(CoreProxy),
-                    typeof(LogSink),
                     typeof(ProjectService),
                 };
         }
@@ -252,12 +260,6 @@ namespace Apollo.Core.UserInterfaces
             {
                 m_Core = core;
                 m_Core.OnStartupComplete += OnStartupComplete;
-            }
-
-            var logger = dependency as LogSink;
-            if (logger != null)
-            {
-                m_Logger = logger;
             }
 
             var projects = dependency as ProjectService;
@@ -290,12 +292,10 @@ namespace Apollo.Core.UserInterfaces
             }
             catch (Exception e)
             {
-                // Log the fact that we failed
-                LogMessage(
-                    LevelToLog.Error,
+                m_Logger(
+                    LogSeverityProxy.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, e));
 
-                // Now get the hell out of here.
                 throw;
             }
         }
@@ -312,7 +312,7 @@ namespace Apollo.Core.UserInterfaces
         {
             get
             {
-                return (m_Logger != null) && (m_Projects != null);
+                return m_Projects != null;
             }
         }
 
@@ -341,31 +341,14 @@ namespace Apollo.Core.UserInterfaces
             }
             catch (Exception e)
             {
-                // Log the fact that we failed
-                LogMessage(
-                    LevelToLog.Error,
+                m_Logger(
+                    LogSeverityProxy.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 
-                // Now get the hell out of here.
                 throw;
             }
         }
 
         #endregion
-
-        /// <summary>
-        /// Logs the messages coming from the service.
-        /// </summary>
-        /// <param name="level">The log level.</param>
-        /// <param name="message">The message that should be logged.</param>
-        private void LogMessage(LevelToLog level, string message)
-        {
-            m_Logger.Log(
-                LogType.Debug,
-                new LogMessage(
-                    GetType().FullName,
-                    level,
-                    message));
-        }
     }
 }

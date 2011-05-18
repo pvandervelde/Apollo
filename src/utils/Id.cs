@@ -230,7 +230,9 @@ namespace Apollo.Utils
         /// </exception>
         public int CompareTo(object obj)
         {
-            if (obj == null)
+            // We don't strictly need to use the ReferenceEquals method but
+            // it seems more consistent to use it.
+            if (ReferenceEquals(obj, null))
             {
                 return 1;
             }

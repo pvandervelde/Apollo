@@ -27,16 +27,14 @@ namespace Apollo.UI.Common
         /// </summary>
         /// <param name="property">The property that changed.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
-            Justification = "We need the expresion bit to determine the property name programatically.")]
+            Justification = "The generic expression makes it possible to get the property name which we need to raise the PropertyChanged event.")]
         protected void Notify(Expression<Func<object>> property)
         {
-            // Check for null
             if (PropertyChanged == null)
             {
                 return;
             }
 
-            // Get property name
             var lambda = property as LambdaExpression;
             MemberExpression memberExpression;
             if (lambda.Body is UnaryExpression)
@@ -53,8 +51,6 @@ namespace Apollo.UI.Common
             RaisePropertyChanged(propertyInfo.Name);
         }
 
-        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
-            Justification = "This method is used to call said event.")]
         private void RaisePropertyChanged(string name)
         {
             var local = PropertyChanged;

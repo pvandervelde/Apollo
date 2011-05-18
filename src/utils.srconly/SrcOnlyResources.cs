@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utils.Logging;
 using Apollo.Utils.Properties;
 
 namespace Apollo.Utils
@@ -40,6 +41,18 @@ namespace Apollo.Utils
             get
             {
                 return Resources.Exception_Messages_ArgumentOutOfRange_WithArgument;
+            }
+        }
+
+        /// <summary>
+        /// Gets the string resource for an <see cref="Exception"/> that is thrown if a user tries to set
+        /// the <see cref="ILogMessage.Level"/> to <see cref="LevelToLog.None"/>.
+        /// </summary>
+        public static string ExceptionMessagesCannotLogMessageWithLogLevelSetToNone
+        {
+            get
+            {
+                return Resources.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
             }
         }
 

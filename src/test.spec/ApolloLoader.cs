@@ -40,7 +40,6 @@ namespace Test.Spec
         {
             var bootstrapper = new KernelBootstrapper(
                 new BootstrapperStartInfo(),
-                () => new MockExceptionHandler(),
                 progressTracker,
                 onKernelLoad);
 

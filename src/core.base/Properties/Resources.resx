@@ -112,18 +112,147 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType" xml:space="preserve">
+    <value>A channel type must inherit from IChannelType.</value>
+  </data>
+  <data name="Exceptions_Messages_ACommandSetTypeMustDeriveFromICommandSet" xml:space="preserve">
+    <value>A command set type must inherit from ICommandSet.</value>
+  </data>
+  <data name="Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace" xml:space="preserve">
+    <value>A disk cannot have more free space than total space.</value>
+  </data>
+  <data name="Exceptions_Messages_ADiskNeedsToHaveASerial" xml:space="preserve">
+    <value>A disk needs to have a serial number.</value>
+  </data>
+  <data name="Exceptions_Messages_AMachineNeedsAtLeastOneDisk" xml:space="preserve">
+    <value>A machine needs at least one disk.</value>
+  </data>
+  <data name="Exceptions_Messages_AMachineNeedsAtLeastOneProcessor" xml:space="preserve">
+    <value>A machine needs at least one processor.</value>
+  </data>
+  <data name="Exceptions_Messages_AMessageNeedsToHaveAnId" xml:space="preserve">
+    <value>A message must have an ID number. It cannot have the None ID as ID.</value>
+  </data>
+  <data name="Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress" xml:space="preserve">
+    <value>A network connection needs to have a valid MAC address.</value>
+  </data>
+  <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
+    <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
+  </data>
   <data name="Exceptions_Messages_CannotCreateDatasetWithoutCreator" xml:space="preserve">
     <value>A dataset cannot be created without a creator.</value>
+  </data>
+  <data name="Exceptions_Messages_ChannelAddresssMustBeDefined" xml:space="preserve">
+    <value>The address of a communication channel must be defined in order to connect to the channel.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandAlreadyRegistered" xml:space="preserve">
+    <value>The given command interface has already been registered.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandNotSupported" xml:space="preserve">
+    <value>The requested command is not supported by the endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandNotSupported_WithCommand" xml:space="preserve">
+    <value>The command of type {0} is not supported by the endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_CommandObjectMustImplementCommandInterface" xml:space="preserve">
+    <value>The provided command object must implement the provided command interface.</value>
   </data>
   <data name="Exceptions_Messages_DatasetCannotBecomeParent" xml:space="preserve">
     <value>The given dataset cannot be made a parent.</value>
   </data>
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
+  </data>
+  <data name="Exceptions_Messages_EndpointNotContactable" xml:space="preserve">
+    <value>The endpoint cannot be contacted. No connection information for this endpoint is available.</value>
+  </data>
+  <data name="Exceptions_Messages_EndpointNotContactable_WithEndpoint" xml:space="preserve">
+    <value>The endpoint [{0}] cannot be contacted. No connection information for this endpoint is available.</value>
+  </data>
+  <data name="Exceptions_Messages_FailedToSendMessage" xml:space="preserve">
+    <value>Failed to send the message.</value>
+  </data>
+  <data name="Exceptions_Messages_FilePathCannotBeEmpty" xml:space="preserve">
+    <value>A file path cannot be an empty string.</value>
+  </data>
+  <data name="Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes" xml:space="preserve">
+    <value>Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_MachineDomainNameMustNotBeEmpty" xml:space="preserve">
+    <value>The domain name of a machine must not be an empty string.</value>
+  </data>
+  <data name="Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues" xml:space="preserve">
+    <value>The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage" xml:space="preserve">
+    <value>In order to filter on a given message kind the message class must implement the ICommunicationMessage interface.</value>
+  </data>
+  <data name="Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue" xml:space="preserve">
+    <value>The minimum of a dataset distribution range must be equal or larger than one. The given value is {0}.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingBindingType" xml:space="preserve">
+    <value>The endpoint discovery message did not provide a binding type. Contact information for the endpoint is incomplete without the binding information.</value>
+  </data>
+  <data name="Exceptions_Messages_MissingEndpointId" xml:space="preserve">
+    <value>The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID.</value>
+  </data>
+  <data name="Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores" xml:space="preserve">
+    <value>The number of logical processors in a CPU must be equal or larger than the number of physical cores.</value>
+  </data>
+  <data name="Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero" xml:space="preserve">
+    <value>The number of physical cores in a CPU must be larger than zero.</value>
+  </data>
+  <data name="Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero" xml:space="preserve">
+    <value>The address width of a CPU needs to be larger than zero. Most common values are 32 for x86 and 64 for x64.</value>
+  </data>
+  <data name="Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero" xml:space="preserve">
+    <value>The clock speed of a CPU must be larger than zero.</value>
+  </data>
+  <data name="Exceptions_Messages_RemoteOperationFailed" xml:space="preserve">
+    <value>A remote operation failed.</value>
+  </data>
+  <data name="Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend" xml:space="preserve">
+    <value>There should be at least one command to make it useful to send the command information to the desired endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet" xml:space="preserve">
+    <value>The given type is not a valid command set interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains additional events on top of those defined by ICommandSet.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains properties.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains the method {1} with one or more generic parameters.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains the method {1} which does not return a void, a Task or a Task&lt;T&gt;.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMustHaveMethods" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it does not have any methods.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a parameter that cannot be serialized.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet" xml:space="preserve">
+    <value>The type {0} does not derive from ICommandSet.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it is not an interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed" xml:space="preserve">
+    <value>The type {0} is not a valid command set because it contains open generic parameters.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadCommandSetType" xml:space="preserve">
+    <value>An ICommandSet type could not be loaded.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName" xml:space="preserve">
+    <value>An ICommandSet of type {0} could not be loaded.</value>
   </data>
 </root>

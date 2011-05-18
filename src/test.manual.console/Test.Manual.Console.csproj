@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{F04CC16B-8422-403E-919B-1189D0C637CD}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Test.Manual.Console</RootNamespace>
+    <AssemblyName>Test.Manual.Console</AssemblyName>
+    <ShouldDoDocumentation>false</ShouldDoDocumentation>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <PropertyGroup>
+    <NoWarn>1685</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="AutofacContrib.Startable, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\autofac\AutofacContrib.Startable.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="WindowsFormsIntegration" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Applications\CommandLineProgram.cs">
+      <Link>Utils\CommandLineProgram.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventType.cs">
+      <Link>Utils\EventType.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>Utils\EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>Utils\ExceptionTypeToEventIdMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>Utils\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
+      <Link>Utils\TopLevelExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>Utils\AdditionalLogMessageProperties.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
+      <Link>Utils\DebugLogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
+      <Link>Utils\ILogger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
+      <Link>Utils\ILogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
+      <Link>Utils\ILogTemplate.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
+      <Link>Utils\LevelToLog.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\Logger.cs">
+      <Link>Utils\Logger.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
+      <Link>Utils\LoggerBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
+      <Link>Utils\LogMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
+    </Compile>
+    <Compile Include="AllMessageProcessingAction.cs" />
+    <Compile Include="ApplicationCentral.cs" />
+    <Compile Include="EchoMessageProcessingAction.cs" />
+    <Compile Include="IFormTheApplicationCenter.cs" />
+    <Compile Include="Models\ConnectionViewModel.cs" />
+    <Compile Include="Models\ConnectionInformationViewModel.cs" />
+    <Compile Include="Utils\SrcOnlyResources.cs" />
+    <Compile Include="Utils\UtilsModule.cs" />
+    <Compile Include="Views\CommunicationPassThrough.cs" />
+    <Compile Include="DependencyInjection.cs" />
+    <Compile Include="FakeConfiguration.cs" />
+    <Compile Include="IInteractiveWindow.cs" />
+    <Compile Include="ILoadOnApplicationStartup.cs" />
+    <Compile Include="Models\EndpointMessagesViewModel.cs" />
+    <Compile Include="EchoMessage.cs" />
+    <Compile Include="Views\IHandleCommunication.cs" />
+    <Compile Include="Views\InteractiveWindow.xaml.cs">
+      <DependentUpon>InteractiveWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\MessageSendParameterMultiConverter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utils\Apollo.Utils.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\InteractiveWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

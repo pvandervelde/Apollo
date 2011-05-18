@@ -11,9 +11,9 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Lokad;
-using Microsoft.Practices.Composite.Logging;
-using Microsoft.Practices.Composite.Presentation.Regions.Behaviors;
-using Microsoft.Practices.Composite.Regions;
+using Microsoft.Practices.Prism.Logging;
+using Microsoft.Practices.Prism.Regions;
+using Microsoft.Practices.Prism.Regions.Behaviors;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Apollo.UI.Common.Bootstrappers

@@ -14,6 +14,17 @@ namespace Apollo.Utils.Configuration
     public interface IConfiguration
     {
         /// <summary>
+        /// Returns a value indicating if there is a value for the given key or not.
+        /// </summary>
+        /// <param name="key">The configuration key.</param>
+        /// <returns>
+        /// <see langword="true" /> if there is a value for the given key; otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool HasValueFor(ConfigurationKey key);
+
+        /// <summary>
         /// Returns the value for the given configuration key.
         /// </summary>
         /// <typeparam name="T">The type of the return value.</typeparam>
@@ -23,6 +34,6 @@ namespace Apollo.Utils.Configuration
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
             Justification = "The use of the generic return parameter allows strong typing.")]
-        T Value<T>(IConfigurationKey key);
+        T Value<T>(ConfigurationKey key);
     }
 }

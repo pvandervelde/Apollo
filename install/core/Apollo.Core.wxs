@@ -39,9 +39,6 @@
                       Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
                       KeyPath="yes" />
             </Component>
-
-            <!-- Apollo.Core.LoaderApplication.exe -->
-            <!-- Apollo.Core.LoaderApplication.exe.config -->
         </DirectoryRef>
 
         <ComponentGroup Id="CGroup.Apollo.Core">

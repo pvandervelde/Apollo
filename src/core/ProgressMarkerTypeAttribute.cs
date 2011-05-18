@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utils;
 using Lokad;
 
@@ -14,7 +15,7 @@ namespace Apollo.Core
     /// An attribute which is placed on <see cref="KernelService"/> classes to indicate which 
     /// <see cref="IProgressMark"/> type belongs to the given service.
     /// </summary>
-    [ExcludeFromCoverage("Attributes do not need to be tested")]
+    [ExcludeFromCodeCoverage()]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
     public sealed class ProgressMarkerTypeAttribute : Attribute
     {

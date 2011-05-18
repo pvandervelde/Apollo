@@ -5,15 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using Apollo.Utils;
 
 namespace Apollo.UI.Common
 {
     /// <summary>
     /// A view that is encapsulated in a window.
     /// </summary>
-    [ExcludeFromCoverage("Views will not be unit tested. They will be tested in the UI tests.")]
+    [ExcludeFromCodeCoverage()]
     public class WindowView : Window, IStandardView
     {
         /// <summary>

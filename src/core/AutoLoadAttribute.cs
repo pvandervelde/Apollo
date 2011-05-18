@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Utils;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core
 {
@@ -13,7 +13,7 @@ namespace Apollo.Core
     /// Defines an attribute that is placed on <c>KernelService</c> classes to indicate
     /// that the specific service type is automatically loaded.
     /// </summary>
-    [ExcludeFromCoverage("Attributes do not need to be tested")]
+    [ExcludeFromCodeCoverage()]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     internal sealed class AutoLoadAttribute : Attribute
     {
