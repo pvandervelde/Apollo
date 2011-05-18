@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -25,6 +26,8 @@ namespace Apollo.UI.Common
         /// Notifies listeners about a change.
         /// </summary>
         /// <param name="property">The property that changed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The generic expression makes it possible to get the property name which we need to raise the PropertyChanged event.")]
         protected void Notify(Expression<Func<object>> property)
         {
             if (PropertyChanged == null)

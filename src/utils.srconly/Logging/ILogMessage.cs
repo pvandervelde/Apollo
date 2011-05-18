@@ -14,16 +14,6 @@ namespace Apollo.Utils.Logging
     internal interface ILogMessage
     {
         /// <summary>
-        /// Gets the origin of the message. The origin can for instance be the
-        /// type from which the message came.
-        /// </summary>
-        /// <value>The type of the owner.</value>
-        string Origin
-        {
-            get;
-        }
-
-        /// <summary>
         /// Gets the desired log level for this message.
         /// </summary>
         /// <value>The desired level.</value>

@@ -5,7 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Apollo.Core;
@@ -18,6 +21,8 @@ using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Projects;
+using Apollo.Utils;
+using Apollo.Utils.Logging;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
@@ -26,10 +31,20 @@ namespace Apollo.ProjectExplorer
 {
     /// <summary>
     /// Defines a <see cref="IModule"/> which handles the registrations for 
-    /// the ProjectExplorer application.
+    /// the UI portion of the ProjectExplorer application.
     /// </summary>
+    /// <remarks>
+    /// Note that this module only contains the UI controls and UI related classes,
+    /// e.g. ViewModels etc.. All core related elements need to be injected via 
+    /// the <see cref="KernelBootstrapper"/>.
+    /// </remarks>
     internal sealed class ProjectExplorerModule : IModule
     {
+        /// <summary>
+        /// The default name for the error log.
+        /// </summary>
+        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
+
         /// <summary>
         /// The IOC container that holds the references.
         /// </summary>
@@ -62,11 +77,21 @@ namespace Apollo.ProjectExplorer
             ActivateRegions();
         }
 
+        /// <summary>
+        /// Updates the existing container with the additional UI references.
+        /// </summary>
+        /// <remarks>
+        /// Note that this method only adds references to UI controls and UI
+        /// related classes / interfaces. Additional references for the 
+        /// core needs to be added via a different path.
+        /// </remarks>
+        /// <seealso cref="UserInterfaceBootstrapper"/>
+        /// <seealso cref="KernelBootstrapper"/>
         private void UpdateContainer()
         {
-            // Get all the registrations from Apollo.UI.Common
             var builder = new ContainerBuilder();
             {
+                // Get all the registrations from Apollo.UI.Common
                 var commonUiAssembly = typeof(Observable).Assembly;
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                    .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
@@ -80,6 +105,7 @@ namespace Apollo.ProjectExplorer
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
 
+                // Get the registrations from the current assembly
                 var localAssembly = GetType().Assembly;
                 builder.RegisterAssemblyTypes(localAssembly)
                     .Where(t => t.FullName.EndsWith("Presenter", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)

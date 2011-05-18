@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Apollo.Utils;
 using Apollo.Utils.Logging;
 using Autofac;
 
@@ -24,7 +25,7 @@ namespace Apollo.Utils
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "loaderapplication.error.log";
+        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
 
         /// <summary>
         /// Override to add registrations to the container.
@@ -55,29 +56,23 @@ namespace Apollo.Utils
                     .As<ILogger>()
                     .SingleInstance();
 
-                builder.Register(c => LoggerBuilder.ForEventLog(
-                        Assembly.GetExecutingAssembly().GetName().Name,
-                        new DebugLogTemplate(() => DateTimeOffset.Now)))
-                    .As<ILogger>()
-                    .SingleInstance();
-
                 builder.Register<Action<LogSeverityProxy, string>>(c =>
+                {
+                    var loggers = c.Resolve<IEnumerable<ILogger>>();
+                    Action<LogSeverityProxy, string> action = (p, s) =>
+                    {
+                        var msg = new LogMessage(
+                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                            s);
+
+                        foreach (var logger in loggers)
                         {
-                            var loggers = c.Resolve<IEnumerable<ILogger>>();
-                            Action<LogSeverityProxy, string> action = (p, s) =>
-                            {
-                                var msg = new LogMessage(
-                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                                    s);
+                            logger.Log(msg);
+                        }
+                    };
 
-                                foreach (var logger in loggers)
-                                {
-                                    logger.Log(msg);
-                                }
-                            };
-
-                            return action;
-                        })
+                    return action;
+                })
                     .As<Action<LogSeverityProxy, string>>()
                     .SingleInstance();
             }

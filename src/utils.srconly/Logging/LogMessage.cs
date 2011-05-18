@@ -30,71 +30,42 @@ namespace Apollo.Utils.Logging
         /// <summary>
         /// Initializes a new instance of the <see cref="LogMessage"/> class.
         /// </summary>
-        /// <param name="origin">The origin of the log message.</param>
         /// <param name="level">The level of the log message.</param>
         /// <param name="text">The text for the log message.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="origin"/> is an empty string.
-        /// </exception>
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="level"/> is <see cref="LevelToLog.None"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="text"/> is <see langword="null" />.
         /// </exception>
-        public LogMessage(string origin, LevelToLog level, string text)
-            : this(origin, level, text, null)
+        public LogMessage(LevelToLog level, string text)
+            : this(level, text, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LogMessage"/> class.
         /// </summary>
-        /// <param name="origin">The origin of the log message.</param>
         /// <param name="level">The level of the log message.</param>
         /// <param name="text">The text for the log message.</param>
         /// <param name="properties">The dictionary that contains the additional properties for the current message.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="origin"/> is an empty string.
-        /// </exception>
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="level"/> is <see cref="LevelToLog.None"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="text"/> is <see langword="null" />.
         /// </exception>
-        public LogMessage(string origin, LevelToLog level, string text, IDictionary<string, object> properties)
+        public LogMessage(LevelToLog level, string text, IDictionary<string, object> properties)
         {
             {
-                Enforce.Argument(() => origin);
-                Enforce.Argument(() => origin, StringIs.NotEmpty);
-
                 Enforce.With<ArgumentException>(level != LevelToLog.None, SrcOnlyResources.ExceptionMessagesCannotLogMessageWithLogLevelSetToNone);
 
                 Enforce.Argument(() => text);
             }
 
-            Origin = origin;
             Level = level;
             m_Text = text;
             m_Properties = properties;
-        }
-
-        /// <summary>
-        /// Gets the origin of the message. The origin can for instance be the
-        /// type from which the message came.
-        /// </summary>
-        /// <value>The type of the owner.</value>
-        public string Origin
-        {
-            get;
-            private set;
         }
 
         /// <summary>

@@ -31,6 +31,8 @@ namespace Apollo.Utils
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
             Justification = "By typing it as Expression<T> it becomes possible to use the lambda syntax at the caller site.")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The generics are necessar to get the name of the method via a lambda expression.")]
         public static string MethodName<T, TResult>(Expression<Func<T, TResult>> expression)
         {
             var method = expression.Body as MemberExpression;

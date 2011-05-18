@@ -5,10 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Apollo.Core;
 using Apollo.Utils;
-using Apollo.Utils.ExceptionHandling;
-using Autofac;
 using Autofac.Core;
 using Lokad;
 
@@ -17,6 +16,16 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// Defines the bootstrapper which will initialize the kernel.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Note that this bootstrapper only takes care of the bootstrapping
+    /// of the core, not the UI. By design the core and the UI are 
+    /// running with different IOC containers / bootstrappers. This means
+    /// that we can force a code separation because the UI controls cannot
+    /// get linked to any of the internal core elements. The only way for
+    /// the core and the UI to interact is via the UserInterfaceService.
+    /// </para>
+    /// </remarks>
     internal sealed class KernelBootstrapper : Bootstrapper
     {
         /// <summary>
@@ -28,14 +37,10 @@ namespace Apollo.ProjectExplorer
         /// Initializes a new instance of the <see cref="KernelBootstrapper"/> class.
         /// </summary>
         /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
-        /// <param name="exceptionHandlerFactory">The factory used for the creation of <see cref="IExceptionHandler"/> objects.</param>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <param name="containerStorage">The function used to store the DI container which holds the kernel UI references.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="startInfo"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="exceptionHandlerFactory"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
@@ -45,10 +50,9 @@ namespace Apollo.ProjectExplorer
         /// </exception>
         public KernelBootstrapper(
             KernelStartInfo startInfo, 
-            Func<IExceptionHandler> exceptionHandlerFactory, 
             ITrackProgress progress,
             Action<IModule> containerStorage)
-            : base(startInfo, exceptionHandlerFactory, progress)
+            : base(startInfo, progress)
         {
             {
                 Enforce.Argument(() => containerStorage);
@@ -58,6 +62,22 @@ namespace Apollo.ProjectExplorer
         }
 
         #region Overrides of Bootstrapper
+
+        /// <summary>
+        /// Returns a collection containing additional IOC modules that are
+        /// required to start the core.
+        /// </summary>
+        /// <returns>
+        ///     The collection containing additional IOC modules necessary
+        ///     to start the core.
+        /// </returns>
+        protected override IEnumerable<IModule> AdditionalCoreModules()
+        {
+            return new List<IModule> 
+                { 
+                    new UtilsModule(),
+                };
+        }
 
         /// <summary>
         /// Stores the dependency injection container.

@@ -17,6 +17,16 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// The bootstrapper for the User Interface.
     /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Note that this bootstrapper only takes care of the bootstrapping
+    /// of the UI, not the core. By design the core and the UI are 
+    /// running with different IOC containers / bootstrappers. This means
+    /// that we can force a code separation because the UI controls cannot
+    /// get linked to any of the internal core elements. The only way for
+    /// the core and the UI to interact is via the UserInterfaceService.
+    /// </para>
+    /// </remarks>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "The logger doesn't die until the application is terminated. No point in having it be disposable.")]
     internal sealed class UserInterfaceBootstrapper : CompositeBootstrapper

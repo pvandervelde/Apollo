@@ -38,7 +38,7 @@ namespace Apollo.Utils
         /// <returns>A hash code for the specified object.</returns>
         public int GetHashCode(Type obj)
         {
-            throw new NotImplementedException();
+            return obj.GetHashCode();
         }
     }
 }

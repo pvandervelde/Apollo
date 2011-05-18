@@ -5,21 +5,27 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Apollo.Utils;
+using System.Reflection;
 using Apollo.Utils.Logging;
 using Autofac;
 
-namespace Apollo.Core.Utils
+namespace Apollo.Utils
 {
     /// <summary>
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
     [ExcludeFromCodeCoverage()]
-    internal sealed partial class UtilsModule : Module
+    internal sealed partial class UtilsModule : Autofac.Module
     {
+        /// <summary>
+        /// The default name for the error log.
+        /// </summary>
+        private const string s_DefaultErrorFileName = "dataset.error.log";
+
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
@@ -34,6 +40,7 @@ namespace Apollo.Core.Utils
 
             // Register the global application objects
             {
+                // Utils
                 builder.Register(c => new ApplicationConstants())
                    .As<IApplicationConstants>()
                    .As<ICompanyConstants>();
@@ -41,10 +48,37 @@ namespace Apollo.Core.Utils
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
+                // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
-                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), c.Resolve<IApplicationConstants>().ApplicationName + c.Resolve<IFileConstants>().LogExtension),
+                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), s_DefaultErrorFileName),
                         new DebugLogTemplate(() => DateTimeOffset.Now)))
                     .As<ILogger>()
+                    .SingleInstance();
+
+                builder.Register(c => LoggerBuilder.ForEventLog(
+                        Assembly.GetExecutingAssembly().GetName().Name,
+                        new DebugLogTemplate(() => DateTimeOffset.Now)))
+                    .As<ILogger>()
+                    .SingleInstance();
+
+                builder.Register<Action<LogSeverityProxy, string>>(c =>
+                        {
+                            var loggers = c.Resolve<IEnumerable<ILogger>>();
+                            Action<LogSeverityProxy, string> action = (p, s) =>
+                            {
+                                var msg = new LogMessage(
+                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                                    s);
+
+                                foreach (var logger in loggers)
+                                {
+                                    logger.Log(msg);
+                                }
+                            };
+
+                            return action;
+                        })
+                    .As<Action<LogSeverityProxy, string>>()
                     .SingleInstance();
             }
         }

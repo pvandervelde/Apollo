@@ -98,6 +98,9 @@
     <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
       <Link>Utils\LogMessage.cs</Link>
     </Compile>
+    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
+    </Compile>
     <Compile Include="AllMessageProcessingAction.cs" />
     <Compile Include="ApplicationCentral.cs" />
     <Compile Include="EchoMessageProcessingAction.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Models\ConnectionViewModel.cs" />
     <Compile Include="Models\ConnectionInformationViewModel.cs" />
     <Compile Include="Utils\SrcOnlyResources.cs" />
+    <Compile Include="Utils\UtilsModule.cs" />
     <Compile Include="Views\CommunicationPassThrough.cs" />
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="FakeConfiguration.cs" />

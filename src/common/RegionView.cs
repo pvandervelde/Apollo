@@ -96,7 +96,9 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Shown"/> event.
         /// </summary>
-        public void RaiseShown()
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
+        protected void RaiseShown()
         {
             var handler = Shown;
             if (handler != null)
@@ -108,7 +110,9 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Closed"/> event.
         /// </summary>
-        public void RaiseClosed()
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
+        protected void RaiseClosed()
         {
             var handler = Closed;
             if (handler != null)
@@ -123,9 +127,11 @@ namespace Apollo.UI.Common
         /// <returns>
         ///     <see langword="true" /> if the <see cref="Closing"/> event was cancelled; otherwise <see langword="false" />.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool RaiseClosing()
+        protected bool RaiseClosing()
         {
             var handler = Closing;
             var args = new CancelEventArgs();
@@ -140,7 +146,9 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Activated"/> event.
         /// </summary>
-        public void RaiseActivated()
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
+        protected void RaiseActivated()
         {
             var handler = Activated;
             if (handler != null)
@@ -152,7 +160,9 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Raises the <see cref="Deactivated"/> event.
         /// </summary>
-        public void RaiseDeactivated()
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method raises an event.")]
+        protected void RaiseDeactivated()
         {
             var handler = Deactivated;
             if (handler != null)

@@ -15,7 +15,6 @@ using Apollo.Core.Utils;
 using Apollo.Core.Utils.Licensing;
 using Apollo.Utils;
 using Apollo.Utils.Commands;
-using Apollo.Utils.ExceptionHandling;
 using Autofac;
 using Autofac.Core;
 using AutofacContrib.Startable;
@@ -59,11 +58,6 @@ namespace Apollo.Core
     public abstract class Bootstrapper
     {
         /// <summary>
-        /// The DI container.
-        /// </summary>
-        private static readonly IContainer s_Container = InitializeContainer();
-
-        /// <summary>
         /// Finds all the service types stored in the current assembly.
         /// </summary>
         /// <returns>
@@ -86,17 +80,29 @@ namespace Apollo.Core
         /// <summary>
         /// Builds the IOC container.
         /// </summary>
+        /// <param name="additionalModules">The additional modules that need to be registered with the container.</param>
         /// <returns>
         /// The DI container that is used to create the service.
         /// </returns>
-        private static IContainer InitializeContainer()
+        private static IContainer CreateIocContainer(IEnumerable<IModule> additionalModules)
         {
+            // Set up the IOC container for the core. This does NOT
+            // contain any of the user interface stuff, meaning that no
+            // code can easily call the user interface.
+            // Any service that needs a link to the UI service will get
+            // that link once the Kernel starts handing out references
+            // to the other services.
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new UtilsModule());
                 builder.RegisterModule(new KernelModule());
                 builder.RegisterModule(new ProjectModule());
                 builder.RegisterModule(new LicensingModule());
+
+                foreach (var module in additionalModules)
+                {
+                    builder.RegisterModule(module);
+                }
             }
 
             var container = builder.Build();
@@ -127,11 +133,6 @@ namespace Apollo.Core
         private readonly KernelStartInfo m_StartInfo;
 
         /// <summary>
-        /// The factory used to create <c>IExceptionHandler</c> objects.
-        /// </summary>
-        private readonly Func<IExceptionHandler> m_ExceptionHandlerFactory;
-
-        /// <summary>
         /// Tracks the progress of the bootstrapping process.
         /// </summary>
         private readonly ITrackProgress m_Progress;
@@ -140,30 +141,23 @@ namespace Apollo.Core
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
         /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
-        /// <param name="exceptionHandlerFactory">The factory used for the creation of <see cref="IExceptionHandler"/> objects.</param>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="startInfo"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="exceptionHandlerFactory"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
         protected Bootstrapper(
             KernelStartInfo startInfo, 
-            Func<IExceptionHandler> exceptionHandlerFactory, 
             ITrackProgress progress)
         {
             {
                 Enforce.Argument(() => startInfo);
-                Enforce.Argument(() => exceptionHandlerFactory);
                 Enforce.Argument(() => progress);
             }
 
             m_StartInfo = startInfo;
-            m_ExceptionHandlerFactory = exceptionHandlerFactory;
             m_Progress = progress;
         }
 
@@ -177,6 +171,9 @@ namespace Apollo.Core
                 m_Progress.Mark(new ApplicationStartingProgressMark());
                 m_Progress.StartTracking();
             }
+
+            // Load up the IOC container
+            var container = CreateIocContainer(AdditionalCoreModules());
 
             // Link assembly resolver to current AppDomain
             // Link exception handlers to current AppDomain
@@ -192,11 +189,11 @@ namespace Apollo.Core
             var serviceTypes = FindServiceTypes();
             foreach (var serviceType in serviceTypes)
             {
-                CreateService(serviceType, kernel);
+                CreateService(serviceType, kernel, container);
             }
 
             // Load the UI service
-            var userInterfaceService = CreateUserInterfaceService();
+            var userInterfaceService = CreateUserInterfaceService(container);
             kernel.Install(userInterfaceService);
 
             // Mark progress to starting core
@@ -229,11 +226,6 @@ namespace Apollo.Core
                     },
                 new FileConstants(new ApplicationConstants()));
             currentDomain.AssemblyResolve += fusionHelper.LocateAssemblyOnAssemblyLoadFailure;
-
-            // Set the exception handler. Adding the event ensures that
-            // the exceptionHandler cannot be collected until the AppDomain
-            // is killed.
-            currentDomain.UnhandledException += m_ExceptionHandlerFactory().OnUnhandledException;
         }
 
         /// <summary>
@@ -241,7 +233,8 @@ namespace Apollo.Core
         /// </summary>
         /// <param name="serviceType">Type of the service.</param>
         /// <param name="kernel">The kernel.</param>
-        private void CreateService(Type serviceType, IKernel kernel)
+        /// <param name="container">The IOC container that contains all the references.</param>
+        private void CreateService(Type serviceType, IKernel kernel, IContainer container)
         {
             // Mark progress for service 'serviceType'
             {
@@ -253,32 +246,46 @@ namespace Apollo.Core
                 }
             }
 
-            var service = s_Container.Resolve(serviceType) as KernelService;
+            var service = container.Resolve(serviceType) as KernelService;
             kernel.Install(service);
         }
 
         /// <summary>
         /// Creates the user interface service.
         /// </summary>
+        /// <param name="container">The IOC container that contains all the references.</param>
         /// <returns>
         /// The newly created user interface service.
         /// </returns>
-        private KernelService CreateUserInterfaceService()
+        private KernelService CreateUserInterfaceService(IContainer container)
         {
             var userInterface = new UserInterfaceService(
-                s_Container.Resolve<ICommandContainer>(),
-                s_Container.Resolve<INotificationNameConstants>(),
-                s_Container.Resolve<IValidationResultStorage>(),
-                s_Container.Resolve<Action<LogSeverityProxy, string>>(),
+                container.Resolve<ICommandContainer>(),
+                container.Resolve<INotificationNameConstants>(),
+                container.Resolve<IValidationResultStorage>(),
+                container.Resolve<Action<LogSeverityProxy, string>>(),
                 StoreContainer);
 
             return userInterface;
         }
 
         /// <summary>
-        /// Stores the dependency injection container.
+        /// Returns a collection containing additional IOC modules that are
+        /// required to start the core.
         /// </summary>
-        /// <param name="container">The DI container.</param>
+        /// <returns>
+        ///     The collection containing additional IOC modules necessary
+        ///     to start the core.
+        /// </returns>
+        protected abstract IEnumerable<IModule> AdditionalCoreModules();
+
+        /// <summary>
+        /// Stores the IOC module that contains the references that will be used by 
+        /// the User Interface.
+        /// </summary>
+        /// <param name="container">
+        ///     The IOC module that contains the references for the User Interface.
+        /// </param>
         protected abstract void StoreContainer(IModule container);
     }
 }

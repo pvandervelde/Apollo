@@ -423,7 +423,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a non-serializable parameter..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a parameter that cannot be serialized..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid {
             get {

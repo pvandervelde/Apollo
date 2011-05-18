@@ -52,23 +52,23 @@ namespace Apollo.Utils.Logging
         private static Target BuildEventLogTarget(string eventLogSource)
         {
             var eventLogTarget = new EventLogTarget()
-                {
-                    // Only write the message. The message should contain all the important 
-                    // information anyway.
-                    Layout = "${message}",
+            {
+                // Only write the message. The message should contain all the important 
+                // information anyway.
+                Layout = "${longdate}|${level:uppercase=true}|${logger}|${message}",
 
-                    // The source which has been registered to write to the event log.
-                    Source = eventLogSource,
+                // The source which has been registered to write to the event log.
+                Source = eventLogSource,
 
-                    // Always write to the application log for now.
-                    Log = "Application",
+                // Always write to the application log for now.
+                Log = "Application",
 
-                    // Define how we move the event id to the logger.
-                    EventID = string.Format(CultureInfo.InvariantCulture, "${event-context:item={0}}", AdditionalLogMessageProperties.EventId),
+                // Define how we move the event id to the logger.
+                EventID = string.Format(CultureInfo.InvariantCulture, "${{event-context:item={0}}}", AdditionalLogMessageProperties.EventId),
 
-                    // Define how we move the event category to the logger.
-                    Category = string.Format(CultureInfo.InvariantCulture, "${event-context:item={0}}", AdditionalLogMessageProperties.EventCategory),
-                };
+                // Define how we move the event category to the logger.
+                Category = string.Format(CultureInfo.InvariantCulture, "${{event-context:item={0}}}", AdditionalLogMessageProperties.EventCategory),
+            };
 
             return eventLogTarget;
         }
@@ -87,7 +87,7 @@ namespace Apollo.Utils.Logging
             return logTarget;
         }
 
-        private static LogFactory BuildLogFactory(string name, Target target)
+        private static LogFactory BuildLogFactory(string name, NLog.LogLevel minimumLevel, Target target)
         {
             var config = new LoggingConfiguration();
             {
@@ -95,7 +95,7 @@ namespace Apollo.Utils.Logging
 
                 // define only one logging rule. We log everything (*) to the this rule starting
                 // at log level TRACE and everything goes to the only target
-                config.LoggingRules.Add(new LoggingRule("*", NLog.LogLevel.Trace, target));
+                config.LoggingRules.Add(new LoggingRule("*", minimumLevel, target));
             }
             
             var result = new LogFactory(config);
@@ -116,7 +116,7 @@ namespace Apollo.Utils.Logging
         /// </returns>
         public static ILogger ForFile(string filePath, ILogTemplate template)
         {
-            var factory = BuildLogFactory(template.Name, BufferTarget(BuildFileTarget(filePath)));
+            var factory = BuildLogFactory(template.Name, NLog.LogLevel.Trace, BufferTarget(BuildFileTarget(filePath)));
             return new Logger(factory, template);
         }
 
@@ -130,7 +130,7 @@ namespace Apollo.Utils.Logging
         /// </returns>
         public static ILogger ForEventLog(string eventLogSource, ILogTemplate template)
         {
-            var factory = BuildLogFactory(template.Name, BuildEventLogTarget(eventLogSource));
+            var factory = BuildLogFactory(template.Name, NLog.LogLevel.Warn, BuildEventLogTarget(eventLogSource));
             return new Logger(factory, template);
         }
     }

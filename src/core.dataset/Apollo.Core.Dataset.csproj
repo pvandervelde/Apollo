@@ -27,6 +27,9 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
+    </Compile>
     <Compile Include="Utils\SrcOnlyResources.cs" />
     <Compile Include="Utils\UtilsModule.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

@@ -74,7 +74,11 @@ namespace Apollo.Core.UserInterfaces
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
         /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
         /// <param name="logger">The object that logs the debug information for the current service.</param>
-        /// <param name="onStartService">The method that provides the DI module.</param>
+        /// <param name="onStartService">
+        ///     The method that stores the IOC module that will be used by the User Interface to refer
+        ///     to the core User Interface objects. This module contains for instance the
+        ///     UserInterfaceService itself.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="commands"/> is <see langword="null"/>.
         /// </exception>

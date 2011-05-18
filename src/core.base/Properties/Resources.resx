@@ -238,7 +238,7 @@
     <value>The type {0} is not a valid command set because it does not have any methods.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid" xml:space="preserve">
-    <value>The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a non-serializable parameter.</value>
+    <value>The type {0} is not a valid command set because it contains the method {1} which has an out parameter, a ref parameter or a parameter that cannot be serialized.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet" xml:space="preserve">
     <value>The type {0} does not derive from ICommandSet.</value>

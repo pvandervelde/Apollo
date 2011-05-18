@@ -7,6 +7,7 @@
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
+using Apollo.Utils;
 using Apollo.Utils.Configuration;
 using Autofac;
 using AutofacContrib.Startable;
@@ -31,10 +32,12 @@ namespace Test.Manual.Console
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new BaseModule());
+                builder.RegisterModule(new UtilsModule());
 
                 builder.RegisterModule(
                   new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
 
+                // Register the elements from the current assembly
                 builder.Register(c => new InteractiveWindow(
                         context,
                         c.Resolve<IHandleCommunication>()))

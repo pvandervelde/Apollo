@@ -36,7 +36,7 @@ namespace Test.Manual.Console
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "communicationtest.error.log";
+        private const string s_DefaultErrorFileName = "communicationtest.crash.log";
 
         /// <summary>
         /// The collection of addresses for the named pipes of applications on the local

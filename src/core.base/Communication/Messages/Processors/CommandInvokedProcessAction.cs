@@ -39,8 +39,15 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             /// <param name="originalMsg">The message that was send to invoke a given command.</param>
             /// <param name="returnValue">The task that will, eventually, return the desired result.</param>
             /// <returns>The communication message that should be send if the task finishes successfully.</returns>
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+                Justification = "Will not make this method static so that the signature is consistent with HandleTypedTaskReturnValue<T>.")]
             public ICommunicationMessage HandleTaskReturnValue(EndpointId local, ICommunicationMessage originalMsg, Task returnValue)
             {
+                if (returnValue.IsCanceled || returnValue.IsFaulted)
+                {
+                    return new FailureMessage(local, originalMsg.Id);
+                }
+
                 return new SuccessMessage(local, originalMsg.Id);
             }
 
@@ -53,8 +60,17 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             /// <param name="originalMsg">The message that was send to invoke a given command.</param>
             /// <param name="returnValue">The task that will, eventually, return the desired result.</param>
             /// <returns>The communication message that should be send if the task finishes successfully.</returns>
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+                Justification = "Cannot make this method static because then we cannot use 'dynamic' anymore to get to it.")]
+            [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
+                Justification = "This code is called via reflection.")]
             public ICommunicationMessage HandleTypedTaskReturnValue<T>(EndpointId local, ICommunicationMessage originalMsg, Task<T> returnValue)
             {
+                if (returnValue.IsCanceled || returnValue.IsFaulted)
+                {
+                    return new FailureMessage(local, originalMsg.Id);
+                }
+
                 return new CommandInvokedResponseMessage(local, originalMsg.Id, returnValue.Result);
             }
         }
@@ -168,12 +184,14 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "There is no point crashing the current app without being able to notify the other side of the channel.")]
         private void ProcessTaskReturnResult(CommandInvokedMessage msg, Task result)
         {
             try
             {
                 ICommunicationMessage returnMsg = null;
-                if ((result == null) || result.IsCanceled || result.IsFaulted)
+                if (result == null)
                 {
                     returnMsg = new FailureMessage(m_Current, msg.Id);
                 }
@@ -214,6 +232,8 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "There is no point crashing the current app without being able to notify the other side of the channel.")]
         private void HandleCommandExecutionFailure(CommandInvokedMessage msg, Exception e)
         {
             try

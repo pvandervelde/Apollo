@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using Apollo.Utils.Properties;
 
 namespace Apollo.Utils
 {
@@ -29,7 +30,7 @@ namespace Apollo.Utils
         {
             if ((x == null) && (y == null))
             {
-                throw new ArgumentNullException();
+                throw new ArgumentNullException("x");
             }
 
             if (x == null)
@@ -43,7 +44,7 @@ namespace Apollo.Utils
             }
 
             // Compare by AssemblyName and FullName of the type
-            return string.Compare(x.AssemblyQualifiedName, y.AssemblyQualifiedName, false);
+            return string.Compare(x.AssemblyQualifiedName, y.AssemblyQualifiedName, StringComparison.Ordinal);
         }
     }
 }

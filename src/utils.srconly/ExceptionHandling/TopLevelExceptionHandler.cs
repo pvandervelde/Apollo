@@ -73,7 +73,6 @@ namespace Apollo.Utils.ExceptionHandling
                     e);
 
                 var msg = new LogMessage(
-                    typeof(TopLevelExceptionHandler).FullName,
                     LevelToLog.Fatal,
                     text,
                     new Dictionary<string, object>() 

@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
 using Apollo.Utils;
+using Apollo.Utils.ExceptionHandling;
 using Autofac;
 using Autofac.Core;
 
@@ -18,14 +20,45 @@ namespace Apollo.ProjectExplorer
     /// </summary>
     internal partial class App
     {
-        // WHERE IN THE HELL DOES ALL OF THIS COME FROM? PRISM?
-        //
-        // Note that it's going to be tricky to put a try..catch around the run-loop of this thing
-        // 1) We don't have easy access to the code because that is generated
-        // 2) There is the damn message loop which complicates things
-        // Not entirely sure how to deal with that yet.
-        // Eventually we want to hook up the exception handler that is also used for the 
-        // command line apps.
+        /// <summary>
+        /// Defines the error code for a normal application exit (i.e without errors).
+        /// </summary>
+        public const int NormalApplicationExitCode = 0;
+
+        /// <summary>
+        /// Defines the error code for an application exit with an unhandled exception.
+        /// </summary>
+        public const int UnhandledExceptionApplicationExitCode = 1;
+
+        /// <summary>
+        /// The default name for the error log.
+        /// </summary>
+        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
+
+        /// <summary>
+        /// Application Entry Point.
+        /// </summary>
+        /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
+        [STAThreadAttribute()]
+        public static int Main()
+        {
+            int functionReturnResult = -1;
+            Action applicationAction = 
+                () => 
+                {
+                    var app = new App();
+                    app.InitializeComponent();
+                    app.Run();
+
+                    functionReturnResult = 0;
+                };
+
+            var result = TopLevelExceptionHandler.RunGuarded(
+                applicationAction, 
+                Assembly.GetExecutingAssembly().GetName().Name, 
+                s_DefaultErrorFileName);
+            return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
+        }
 
         /// <summary>
         /// Initializes the environment for use. Currently sets Environment Variables and 
@@ -64,11 +97,12 @@ namespace Apollo.ProjectExplorer
 
             var bootstrapper = new KernelBootstrapper(
                 new BootstrapperStartInfo(),
-                () => new MockExceptionHandler(),
                 progressTracker,
                 module => LoadUserInterface(module));
 
-            // Load the kernel
+            // Load the core system. This will automatically
+            // run the Prism bootstrapper which will then
+            // load up the UI and display it.
             bootstrapper.Load();
         }
 

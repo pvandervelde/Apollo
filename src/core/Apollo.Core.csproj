@@ -38,9 +38,6 @@
     <Compile Include="..\utils.srconly\ErrorCodes.cs">
       <Link>Utils\ErrorCodes.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\IExceptionHandler.cs">
-      <Link>Utils\IExceptionHandler.cs</Link>
-    </Compile>
     <Compile Include="..\utils.srconly\FusionHelper.cs">
       <Link>Utils\FusionHelper.cs</Link>
     </Compile>
