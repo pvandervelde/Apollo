@@ -311,6 +311,23 @@ function Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [st
     Set-Content $newPath $text
 }
 
+function Create-SourceMonitorInputFile([string]$path, [string]$newPath, [string]$tempDir, [string]$srcDir, [string]$outputFile){
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+    $text = $text -replace '@PROJECT_FILE_NAME@', (Join-Path $tempDir 'apollo.smp')
+    $text = $text -replace '@SOURCE_DIR@', $srcDir
+    $text = $text -replace '@DATE@', ([System.DateTimeOffset]::Now.ToString("yyyy-MM-ddTHH:mm:ss"))
+    $text = $text -replace '@OUTPUT_FILE@', $outputFile
+    
+    Set-Content $newPath $text
+}
+
+function Create-CcmInputFile([string]$path, [string]$newPath, [string]$srcDir){
+    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
+    $text = $text -replace '@SOURCE_FOLDER_NAME@', $srcDir
+    
+    Set-Content $newPath $text
+}
+
 # Create the dependecy.wxs file. This file contains all the
 # directory paths for the binaries, documentation etc. etc.
 function Create-InstallerDependencyFile(
@@ -391,6 +408,8 @@ properties{
     $props.dirConcordion = Join-Path $props.dirTools 'Concordion'
     $props.dirPartCover = Join-Path $props.dirTools 'PartCover'
     $props.dirPartCoverExclusionWriter = Join-Path $props.dirTools 'partcoverexclusionwriter'
+    $props.dirSourceMonitor = Join-Path $props.dirTools 'SourceMonitor'
+    $props.dirCcm = Join-Path $props.dirTools 'Ccm'
     
     # solutions
     $props.slnApollo = Join-Path $props.dirSrc 'Apollo.sln'
@@ -427,6 +446,12 @@ properties{
     
     $props.concordionConfigTemplateFile = Join-Path $props.dirTemplates 'concordion.config.in'
     $props.sandcastleTemplateFile = Join-Path $props.dirTemplates 'sandcastle.shfbproj.in'
+    
+    $props.sourceMonitorTemplateFile = Join-Path $props.dirTemplates 'sourcemonitor.xml.in'
+    $props.sourceMonitorFile = Join-Path $props.dirTemp 'sherlock.sourcemonitor.xml'
+    
+    $props.ccmTemplateFile = Join-Path $props.dirTemplates 'ccm.xml.in'
+    $props.ccmFile = Join-Path $props.dirTemp 'sherlock.ccm.xml'
     
     $props.wixVersionTemplateFile = Join-Path $props.dirInstall 'VersionNumber.wxi.in'
     $props.wixVersionFile = Join-Path $props.dirInstall 'VersionNumber.wxi'
@@ -472,13 +497,16 @@ task SpecTest -depends runSpecificationTests
 task IntegrationTest -depends runIntegrationTests
 
 # Runs the verifications
-task Verify -depends runFxCop, runDuplicateFinder
+task Verify -depends runFxCop, runDuplicateFinder, runCcm
 
 # Runs the documentation build
 task Doc -depends buildApiDocs, buildUserDoc
 
 # Creates the zip file of the deliverables
 task Package -depends buildPackage, assembleInstaller
+
+# Collects the statistics of the build
+task Statistics -depends runSourceMonitor
 
 ###############################################################################
 # HELPER TASKS
@@ -520,11 +548,12 @@ The following build tasks are available
                         describing the flaws in the source / binaries.
     'doc':              Runs the documentation build
     'package':          Packages the deliverables into a single zip file and into an MSI installer file
+    'statistics':       Collects statistics of the current build.
 
 Multiple build tasks can be specified separated by a comma. 
        
 In order to run this build script please call this script via PSAKE like:
-    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package 4.0
+    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package,statistics 4.0
 "@
 }
 
@@ -984,4 +1013,75 @@ task assembleInstaller -depends buildBinaries -action{
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x64 - $versionString.msi")
+}
+
+task runCcm -depends buildBinaries -action{
+    Create-CcmInputFile $props.ccmTemplateFile $props.ccmFile $props.dirSrc
+    
+    $ccm = Join-Path $props.dirCcm 'ccm.exe'
+    & $ccm $props.ccmFile | Out-File (Join-Path $props.dirReports 'apollo.ccm.xml')
+    if ($LastExitCode -ne 0)
+    {
+        throw "Ccm failed on Apollo with return code: $LastExitCode"
+    }
+}
+
+task runSourceMonitor -depends buildBinaries -action{
+    $outputXmlFile = Join-Path $props.dirReports 'apollo.sourcemonitor.xml'
+    Create-SourceMonitorInputFile $props.sourceMonitorTemplateFile $props.sourceMonitorFile $props.dirTemp $props.dirSrc $outputXmlFile
+    
+    $sourceMonitor = Join-Path $props.dirSourceMonitor 'SourceMonitor.exe'
+    $command = ' /C "' + $props.sourceMonitorFile + '"'
+    
+    "Getting code statistics with command: SourceMonitor.exe $command"
+    $smProcess = [diagnostics.process]::start($sourceMonitor, $command)
+    
+    ""
+    ("Waiting for " + $smProcess.ProcessName + " to exit ...")
+    
+    # now wait for it to exit. Somehow when the process starts it does that asynchronously. And that screws up
+    # getting the return code. After the process completes (which happens at some point in the future that we don't know of)
+    # the $LastExitCode has value $null .... not good.
+    # So in order to combat this retardedness we do things the hard way. First we create an instance of the .NET 
+    # Diagnostics.Process class and provided that with our command line for SourceMonitor. Then we start the process and wait
+    # for it to exit. Fortunately .NET is clever enough to defeat SourceMonitor and we get an actual exit code at the end ...
+    # Victory is ours.
+    $smProcess.WaitForExit()
+    
+    $exitCode = $smProcess.ExitCode
+    if ($exitCode -ne 0)
+    {
+        throw "SourceMonitor failed on Apollo with return code: $exitCode"
+    }
+    
+    # process the output and turn it into a CSV file for Jenkins to read
+    "Writing data to CSV file"
+    [xml]$xmlFile = Get-Content $outputXmlFile
+    $metrics = $xmlFile.sourcemonitor_metrics.project.checkpoints.checkpoint.metrics.metric
+    $numberOfLines = $metrics[0].InnerText
+    $percentComments = $metrics[2].InnerText
+    $percentDocs = $metrics[3].InnerText
+    $numberOfElements = $metrics[4].InnerText
+    $methodsPerClass = $metrics[5].InnerText
+    $callsPerMethod = $metrics[6].InnerText
+    $statementsPerMethod = $metrics[7].InnerText
+    $maximumComplexity = $metrics[10].InnerText
+    $averageComplexity = $metrics[14].InnerText
+    $maximumBlockDepth = $metrics[12].InnerText
+    $averageBlockDepth = $metrics[13].InnerText
+    
+    $text = '"Number of Lines"'
+    $text += [System.Environment]::NewLine
+    $text += "$numberOfLines"
+    Set-Content (Join-Path $props.dirReports 'apollo.sourcemonitor.linecount.csv') $text
+    
+    $text = '"Percent comment lines", "Percent documentation lines"'
+    $text += [System.Environment]::NewLine
+    $text += "$percentComments, $percentDocs"
+    Set-Content (Join-Path $props.dirReports 'apollo.sourcemonitor.percentages.csv') $text
+    
+    $text = '"Methods per class", "Calls per method", "Statements per method", "Maximum complexity", "Average complexity", "Average block depth", "Maximum block depth"'
+    $text += [System.Environment]::NewLine
+    $text += "$methodsPerClass, $callsPerMethod, $statementsPerMethod, $maximumComplexity, $averageComplexity, $averageBlockDepth, $maximumBlockDepth"
+    Set-Content (Join-Path $props.dirReports 'apollo.sourcemonitor.complexity.csv') $text
 }

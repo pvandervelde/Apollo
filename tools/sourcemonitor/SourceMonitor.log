@@ -1,0 +1,15 @@
+[18May2011 23:57:38] SourceMonitor (V2.6.8.123): Begin Session
+[18May2011 23:57:38] Command File: Process Command File 'D:\documents\Petrik\documents\software\apollo\statistics\build\temp\sherlock.sourcemonitor.xml'
+[18May2011 23:57:38] Command File: Process Commands [Line 2]
+[18May2011 23:57:38] Command File: Process Command [Line 9]
+[18May2011 23:57:38] Command File: Create Project 'D:\documents\Petrik\documents\software\apollo\statistics\build\temp\apollo.smp'
+[18May2011 23:57:40] Command File: Create Checkpoint 'Baseline' dated '2011-05-18T23:57:38'
+[18May2011 23:57:40] Command File: Export Checkpoint Summary to XML
+[18May2011 23:57:40] Export Metrics: Begin XML Summary export to file 'D:\documents\Petrik\documents\software\apollo\statistics\build\reports\apollo.sourcemonitor.xml'.
+[18May2011 23:57:40] Export Metrics: Export Checkpoint 'Baseline'
+[18May2011 23:57:40] Export Metrics: End Export Checkpoint Summary to XML
+[18May2011 23:57:40] Command File: End Export
+[18May2011 23:57:40] Command File: End Command Execution
+[18May2011 23:57:40] Command File: End Commands
+[18May2011 23:57:40] Command File: End Command File Processing
+[18May2011 23:57:40] SourceMonitor (V2.6.8.123): End Session
