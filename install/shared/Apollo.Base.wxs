@@ -21,13 +21,13 @@
                       KeyPath="yes" />
             </Component>
 
-            <!-- Apollo.Utils.dll -->
-            <Component Id="C.Apollo.Utils.dll"
+            <!-- Apollo.Utilities.dll -->
+            <Component Id="C.Apollo.Utilities.dll"
                        Guid="{01941790-8814-48BA-BA0C-E0CB8FF8577A}">
-                <File Id="File.Apollo.Utils.dll"
-                      Name="Apollo.Utils.dll"
+                <File Id="File.Apollo.Utilities.dll"
+                      Name="Apollo.Utilities.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Apollo.Utils.dll"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Utilities.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -79,7 +79,7 @@
                  Absent="disallow"
                  Level="1">
             <ComponentRef Id="C.Apollo.Core.Base.dll" />
-            <ComponentRef Id="C.Apollo.Utils.dll" />
+            <ComponentRef Id="C.Apollo.Utilities.dll" />
             <ComponentRef Id="C.Autofac.dll" />
             <ComponentRef Id="C.AutofacContrib.Startable.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />

@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utils;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
 

@@ -7,9 +7,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Base", "core.ba
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Dataset", "core.dataset\Apollo.Core.Dataset.csproj", "{8ACA6AAA-889D-4358-AB8E-BEE23015D66F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utils", "utils\Apollo.Utils.csproj", "{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities", "utilities\Apollo.Utilities.csproj", "{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utils.SrcOnly", "utils.srconly\Apollo.Utils.SrcOnly.csproj", "{A4E93835-9467-48E1-BDFF-A107CF3784C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Utilities.SrcOnly", "utilities.srconly\Apollo.Utilities.SrcOnly.csproj", "{A4E93835-9467-48E1-BDFF-A107CF3784C2}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.ProjectExplorer", "ProjectExplorer\Apollo.ProjectExplorer.csproj", "{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}"
 EndProject

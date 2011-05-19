@@ -6,11 +6,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Licensing;
+using Apollo.Utilities.Licensing;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Utils.Licensing
+namespace Apollo.Core.Utilities.Licensing
 {
     [TestFixture]
     [Description("Tests the ValidationServiceRunner class.")]

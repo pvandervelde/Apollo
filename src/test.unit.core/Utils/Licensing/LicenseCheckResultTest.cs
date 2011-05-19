@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Utils.Licensing
+namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
     [Description("Tests the LicenseCheckResult struct.")]

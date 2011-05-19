@@ -12,7 +12,7 @@ using System.Linq;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Utils.Licensing
+namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
     [Description("Tests the Checksum struct.")]

@@ -18,7 +18,7 @@ using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace Apollo.Utils.Licensing
+namespace Apollo.Utilities.Licensing
 {
     /// <summary>
     /// Stores information about a checksum that is used by the verification system.

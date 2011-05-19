@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.ServiceModel;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
-using Apollo.Utils;
+using Apollo.Utilities;
 using MbUnit.Framework;
 
 namespace Apollo.Base.Communication

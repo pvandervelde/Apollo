@@ -12,7 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities.Configuration;
 using MbUnit.Framework;
 using Moq;
 

@@ -8,7 +8,7 @@ using System;
 using System.Globalization;
 using System.Runtime.Serialization;
 using Apollo.ProjectExplorer.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.ProjectExplorer
 {

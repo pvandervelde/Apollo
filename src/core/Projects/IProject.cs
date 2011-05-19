@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Base;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Projects
 {

@@ -11,7 +11,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication.Messages.Processors

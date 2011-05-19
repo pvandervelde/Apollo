@@ -1,4 +1,4 @@
-﻿<#@ include file="..\..\..\utils.srconly\Licensing\ChecksumHashCalculator.ttinclude" #><#+
+﻿<#@ include file="..\..\..\utilities.srconly\Licensing\ChecksumHashCalculator.ttinclude" #><#+
 private void WriteLicenseValidationCacheTest(string nameSpace, string className, string classUnderTest)
 {
 #>//-----------------------------------------------------------------------
@@ -19,11 +19,11 @@ private void WriteLicenseValidationCacheTest(string nameSpace, string className,
 using System;
 using System.Diagnostics.CodeAnalysis;
 <#+
-var apolloLicensingNamespace = "Apollo.Utils.Licensing";
+var apolloLicensingNamespace = "Apollo.Utilities.Licensing";
 if (!string.Equals(nameSpace, apolloLicensingNamespace))
 {
 #>
-using Apollo.Utils.Licensing;
+using Apollo.Utilities.Licensing;
 <#+
 }
 #>

@@ -12,9 +12,9 @@ using System.Globalization;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.Core.Utils.Licensing;
-using Apollo.Utils;
-using Apollo.Utils.Commands;
+using Apollo.Core.Utilities.Licensing;
+using Apollo.Utilities;
+using Apollo.Utilities.Commands;
 using Autofac.Core;
 using Lokad;
 

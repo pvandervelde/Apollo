@@ -27,11 +27,11 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
-      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
-    <Compile Include="Utils\SrcOnlyResources.cs" />
-    <Compile Include="Utils\UtilsModule.cs" />
+    <Compile Include="utilities\SrcOnlyResources.cs" />
+    <Compile Include="utilities\UtilitiesModule.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
@@ -47,50 +47,50 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Applications\CommandLineProgram.cs">
-      <Link>utils\CommandLineProgram.cs</Link>
+    <Compile Include="..\utilities.srconly\Applications\CommandLineProgram.cs">
+      <Link>utilities\CommandLineProgram.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\EventType.cs">
-      <Link>utils\EventType.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventType.cs">
+      <Link>utilities\EventType.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
-      <Link>utils\EventTypeToEventCategoryMap.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
-      <Link>utils\ExceptionTypeToEventIdMap.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>utilities\ExceptionTypeToEventIdMap.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\GuardResult.cs">
-      <Link>utils\GuardResult.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>utilities\GuardResult.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
-      <Link>utils\TopLevelExceptionHandler.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
+      <Link>utilities\TopLevelExceptionHandler.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
-      <Link>utils\AdditionalLogMessageProperties.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>utilities\AdditionalLogMessageProperties.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
-      <Link>utils\DebugLogTemplate.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\DebugLogTemplate.cs">
+      <Link>utilities\DebugLogTemplate.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
-      <Link>utils\ILogger.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogger.cs">
+      <Link>utilities\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
-      <Link>utils\ILogMessage.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogMessage.cs">
+      <Link>utilities\ILogMessage.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
-      <Link>utils\ILogTemplate.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogTemplate.cs">
+      <Link>utilities\ILogTemplate.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
-      <Link>utils\LevelToLog.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LevelToLog.cs">
+      <Link>utilities\LevelToLog.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\Logger.cs">
-      <Link>utils\Logger.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\Logger.cs">
+      <Link>utilities\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
-      <Link>utils\LoggerBuilder.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LoggerBuilder.cs">
+      <Link>utilities\LoggerBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
-      <Link>utils\LogMessage.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LogMessage.cs">
+      <Link>utilities\LogMessage.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -110,9 +110,9 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\utils\Apollo.Utils.csproj">
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
-      <Name>Apollo.Utils</Name>
+      <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

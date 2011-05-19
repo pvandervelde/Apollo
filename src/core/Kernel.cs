@@ -11,7 +11,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using Apollo.Core.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 using QuickGraph;
 using QuickGraph.Algorithms;

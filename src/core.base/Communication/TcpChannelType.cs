@@ -21,7 +21,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Apollo.Core.Base.Properties;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities.Configuration;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication

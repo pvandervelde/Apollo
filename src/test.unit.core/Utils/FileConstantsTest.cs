@@ -7,10 +7,10 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using Apollo.Utils;
+using Apollo.Utilities;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Utils
+namespace Apollo.Core.Utilities
 {
     [TestFixture]
     [Description("Tests the FusionHelper class.")]

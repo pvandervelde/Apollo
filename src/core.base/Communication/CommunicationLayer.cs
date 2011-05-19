@@ -12,7 +12,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication

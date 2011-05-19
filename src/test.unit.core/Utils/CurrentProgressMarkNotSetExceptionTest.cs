@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Utils
+namespace Apollo.Utilities
 {
     [TestFixture]
     [Description("Tests the CurrentProgressMarkNotSetException class.")]

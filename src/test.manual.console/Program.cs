@@ -13,7 +13,7 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
 using Apollo.Core.Base.Communication;
-using Apollo.Utils.Applications;
+using Apollo.Utilities.Applications;
 using Autofac;
 using AutofacContrib.Startable;
 

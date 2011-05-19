@@ -13,7 +13,7 @@ using System.Linq;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Projects

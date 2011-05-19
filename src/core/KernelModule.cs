@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 using Autofac;
 
 namespace Apollo.Core

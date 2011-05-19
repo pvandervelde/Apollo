@@ -7,7 +7,7 @@
 using System;
 using System.Runtime.Serialization;
 using Apollo.Core.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.Core
 {

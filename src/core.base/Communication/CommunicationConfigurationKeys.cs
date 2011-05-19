@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities.Configuration;
 
 namespace Apollo.Core.Base.Communication
 {

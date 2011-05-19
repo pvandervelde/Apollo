@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Globalization;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 using Lokad.Rules;
 

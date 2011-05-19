@@ -11,8 +11,8 @@ using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
-using Apollo.Utils;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Autofac;
 using Autofac.Core;
 

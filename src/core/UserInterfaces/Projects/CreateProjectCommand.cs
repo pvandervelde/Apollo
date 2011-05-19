@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 using Lokad;
-using ICommand = Apollo.Utils.Commands.ICommand;
+using ICommand = Apollo.Utilities.Commands.ICommand;
 
 namespace Apollo.Core.UserInterfaces.Projects
 {

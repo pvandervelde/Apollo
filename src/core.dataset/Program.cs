@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Forms;
-using Apollo.Utils.Applications;
+using Apollo.Utilities.Applications;
 
 namespace Apollo.Core.Dataset
 {

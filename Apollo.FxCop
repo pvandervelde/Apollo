@@ -28,7 +28,7 @@
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.LoaderApplication.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.ProjectExplorer.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utils.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -326,14 +326,14 @@
              </Message>
             </Messages>
            </Member>
-           <Member Name="#RestoreFromStore(Apollo.Utils.IPersistenceInformation)">
+           <Member Name="#RestoreFromStore(Apollo.Utilities.IPersistenceInformation)">
             <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-18 08:26:30Z" FixCategory="NonBreaking">
+             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-19 12:06:07Z" FixCategory="NonBreaking">
               <Issue>
                <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
               </Issue>
              </Message>
-             <Message Id="persistenceInfo" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-05-18 08:26:30Z" FixCategory="NonBreaking">
+             <Message Id="persistenceInfo" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-05-19 12:06:07Z" FixCategory="NonBreaking">
               <Issue>
                <Item>'persistenceInfo'</Item>
                <Item>'Project.RestoreFromStore(IPersistenceInformation)'</Item>
@@ -396,7 +396,7 @@
          </Type>
         </Types>
        </Namespace>
-       <Namespace Name="Apollo.Utils">
+       <Namespace Name="Apollo.Utilities">
         <Types>
          <Type Name="SrcOnlyResources">
           <Members>
@@ -404,7 +404,7 @@
             <Accessors>
              <Accessor Name="#get_ExceptionMessagesArgumentOutOfRange()">
               <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-19 12:06:07Z">
                 <Issue>
                  <Item>'SrcOnlyResources.ExceptionMessagesArgumentOutOfRange.get()'</Item>
                 </Issue>
@@ -417,7 +417,7 @@
             <Accessors>
              <Accessor Name="#get_ExceptionMessagesArgumentOutOfRangeWithArgument()">
               <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
+               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-19 12:06:07Z">
                 <Issue>
                  <Item>'SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument.get()'</Item>
                 </Issue>
@@ -477,15 +477,15 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utils.dll">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll">
     <Modules>
-     <Module Name="apollo.utils.dll">
+     <Module Name="apollo.utilities.dll">
       <Namespaces>
-       <Namespace Name="Apollo.Utils">
+       <Namespace Name="Apollo.Utilities">
         <Types>
          <Type Name="IPersistenceInformation">
           <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-05-18 08:26:30Z">
+           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-05-19 12:06:07Z">
             <Issue>
              <Item>'IPersistenceInformation'</Item>
             </Issue>

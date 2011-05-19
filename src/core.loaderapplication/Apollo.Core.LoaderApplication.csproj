@@ -45,58 +45,58 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Applications\CommandLineProgram.cs">
-      <Link>Utils\CommandLineProgram.cs</Link>
+    <Compile Include="..\utilities.srconly\Applications\CommandLineProgram.cs">
+      <Link>Utilities\CommandLineProgram.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\EventType.cs">
-      <Link>Utils\EventType.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventType.cs">
+      <Link>Utilities\EventType.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
-      <Link>Utils\EventTypeToEventCategoryMap.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
+      <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
-      <Link>Utils\ExceptionTypeToEventIdMap.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
+      <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\GuardResult.cs">
-      <Link>Utils\GuardResult.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
+      <Link>Utilities\GuardResult.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
-      <Link>Utils\TopLevelExceptionHandler.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
+      <Link>Utilities\TopLevelExceptionHandler.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\AdditionalLogMessageProperties.cs">
-      <Link>Utils\AdditionalLogMessageProperties.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
+      <Link>Utilities\AdditionalLogMessageProperties.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\DebugLogTemplate.cs">
-      <Link>Utils\DebugLogTemplate.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\DebugLogTemplate.cs">
+      <Link>Utilities\DebugLogTemplate.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogger.cs">
-      <Link>Utils\ILogger.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogger.cs">
+      <Link>Utilities\ILogger.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogMessage.cs">
-      <Link>Utils\ILogMessage.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogMessage.cs">
+      <Link>Utilities\ILogMessage.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\ILogTemplate.cs">
-      <Link>Utils\ILogTemplate.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\ILogTemplate.cs">
+      <Link>Utilities\ILogTemplate.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LevelToLog.cs">
-      <Link>Utils\LevelToLog.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LevelToLog.cs">
+      <Link>Utilities\LevelToLog.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\Logger.cs">
-      <Link>Utils\Logger.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\Logger.cs">
+      <Link>Utilities\Logger.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LoggerBuilder.cs">
-      <Link>Utils\LoggerBuilder.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LoggerBuilder.cs">
+      <Link>Utilities\LoggerBuilder.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LogMessage.cs">
-      <Link>Utils\LogMessage.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LogMessage.cs">
+      <Link>Utilities\LogMessage.cs</Link>
     </Compile>
-    <Compile Include="..\utils.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
-      <Link>Utils\LogSeverityProxyToLogLevelMap.cs</Link>
+    <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
+      <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utils\SrcOnlyResources.cs" />
-    <Compile Include="Utils\UtilsModule.cs" />
+    <Compile Include="Utilities\SrcOnlyResources.cs" />
+    <Compile Include="Utilities\UtilitiesModule.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -120,9 +120,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\utils\Apollo.Utils.csproj">
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
-      <Name>Apollo.Utils</Name>
+      <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

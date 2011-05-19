@@ -7,8 +7,8 @@
 using System;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Utils.Licensing;
-using Apollo.Utils;
+using Apollo.Core.Utilities.Licensing;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Projects

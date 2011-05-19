@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core

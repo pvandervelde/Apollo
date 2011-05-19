@@ -6,7 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Utils.Licensing;
+using Apollo.Core.Utilities.Licensing;
 using Autofac;
 
 namespace Apollo.Core.Projects

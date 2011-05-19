@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Autofac.Core;
 
 namespace Test.Spec
@@ -60,7 +60,7 @@ namespace Test.Spec
         {
             return new List<IModule> 
                 { 
-                    new UtilsModule(),
+                    new UtilitiesModule(),
                 };
         }
 

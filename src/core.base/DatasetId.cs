@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 // Surpressing the message could not be done on the constructor or the field so we'll do a module 
 // level supressing of this warning.

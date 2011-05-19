@@ -11,10 +11,10 @@ using System.Linq;
 using System.Reflection;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
-using Apollo.Core.Utils;
-using Apollo.Core.Utils.Licensing;
-using Apollo.Utils;
-using Apollo.Utils.Commands;
+using Apollo.Core.Utilities;
+using Apollo.Core.Utilities.Licensing;
+using Apollo.Utilities;
+using Apollo.Utilities.Commands;
 using Autofac;
 using Autofac.Core;
 using AutofacContrib.Startable;
@@ -94,7 +94,7 @@ namespace Apollo.Core
             // to the other services.
             var builder = new ContainerBuilder();
             {
-                builder.RegisterModule(new UtilsModule());
+                builder.RegisterModule(new UtilitiesModule());
                 builder.RegisterModule(new KernelModule());
                 builder.RegisterModule(new ProjectModule());
                 builder.RegisterModule(new LicensingModule());

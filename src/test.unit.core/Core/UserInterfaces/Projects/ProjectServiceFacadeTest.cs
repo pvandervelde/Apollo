@@ -8,8 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
-using Apollo.Utils;
-using Apollo.Utils.Commands;
+using Apollo.Utilities;
+using Apollo.Utilities.Commands;
 using MbUnit.Framework;
 using Moq;
 

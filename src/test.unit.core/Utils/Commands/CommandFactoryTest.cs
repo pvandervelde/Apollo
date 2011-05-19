@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Utils.Commands
+namespace Apollo.Utilities.Commands
 {
     [TestFixture]
     [Description("Tests the CommandFactory class.")]

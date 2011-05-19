@@ -18,10 +18,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
-using Apollo.Utils;
-using Apollo.Utils.Licensing;
+using Apollo.Utilities;
+using Apollo.Utilities.Licensing;
 
-namespace Apollo.Core.Utils.Licensing
+namespace Apollo.Core.Utilities.Licensing
 {
     /// <summary>
     /// A helper class that provides methods for generating validation sequences.

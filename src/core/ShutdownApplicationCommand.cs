@@ -7,9 +7,9 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 using Lokad;
-using ICommand = Apollo.Utils.Commands.ICommand;
+using ICommand = Apollo.Utilities.Commands.ICommand;
 
 namespace Apollo.Core
 {

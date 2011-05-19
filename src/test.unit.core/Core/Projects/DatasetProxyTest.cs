@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utils;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;

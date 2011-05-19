@@ -8,8 +8,8 @@ using System;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Threading;
-using Apollo.Utils;
-using Apollo.Utils.ExceptionHandling;
+using Apollo.Utilities;
+using Apollo.Utilities.ExceptionHandling;
 using Autofac;
 using Autofac.Core;
 

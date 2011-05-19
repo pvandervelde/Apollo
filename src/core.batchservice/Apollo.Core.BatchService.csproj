@@ -42,7 +42,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\utils\Apollo.Utils.csproj">
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utils</Name>
     </ProjectReference>

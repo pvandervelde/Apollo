@@ -48,8 +48,8 @@
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.WindowsXP.xml" />
             -->
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utils.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utils.xml" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.dll" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.xml" />
         </DocumentationSources>
         <FeedbackEMailAddress>petrikvandervelde+apollofeedback%40gmail.com</FeedbackEMailAddress>
         <FeedbackEMailLinkText>Send feedback</FeedbackEMailLinkText>

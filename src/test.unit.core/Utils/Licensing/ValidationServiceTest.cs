@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Utils.Licensing
+namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
     [Description("Tests the ValidationService class.")]

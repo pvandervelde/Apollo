@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Utils.Logging;
+using Apollo.Utilities.Logging;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Logging

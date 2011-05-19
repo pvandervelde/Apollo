@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Castle.DynamicProxy;
 using Lokad;
 

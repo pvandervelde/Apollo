@@ -6,7 +6,7 @@
 
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 
 namespace Apollo.Core.UserInterfaces.Projects
 {

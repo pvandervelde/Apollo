@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Autofac.Core;
 using Lokad;
 
@@ -75,7 +75,7 @@ namespace Apollo.ProjectExplorer
         {
             return new List<IModule> 
                 { 
-                    new UtilsModule(),
+                    new UtilitiesModule(),
                 };
         }
 
