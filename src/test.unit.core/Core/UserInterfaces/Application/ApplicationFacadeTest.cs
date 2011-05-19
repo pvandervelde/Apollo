@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 using MbUnit.Framework;
 using Moq;
 

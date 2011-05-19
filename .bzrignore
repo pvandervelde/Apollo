@@ -29,3 +29,4 @@ ValidationSequenceGenerator.cs
 partcover.driver.log
 ./install/Dependencies.wxi
 ./install/VersionNumber.wxi
+tools/sourcemonitor/sourcemonitor.log

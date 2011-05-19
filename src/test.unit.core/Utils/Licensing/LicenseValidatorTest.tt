@@ -1,9 +1,9 @@
 ﻿<#@ template language="C#" hostspecific="True" #>
-<#@ include file="..\..\..\core\Utils\Licensing\Manager.ttinclude" #>
+<#@ include file="..\..\..\core\Utilities\Licensing\Manager.ttinclude" #>
 <#@ output extension=".txt" #>
 <#@ include file="LicenseValidatorTest.ttinclude" #>
 <# var manager = Manager.Create(Host, GenerationEnvironment); #>
 <# manager.StartNewFile("ValidationServiceLicenseValidatorTest.cs"); #>
-<# WriteLicenseValidatorTest("Apollo.Core.Utils.Licensing", "ValidationServiceLicenseValidatorTest", "ValidationServiceLicenseValidator");#>
+<# WriteLicenseValidatorTest("Apollo.Core.Utilities.Licensing", "ValidationServiceLicenseValidatorTest", "ValidationServiceLicenseValidator");#>
 <# manager.EndBlock(); #>
 <# manager.Process(true); #>

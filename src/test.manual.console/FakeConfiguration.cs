@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities.Configuration;
 
 namespace Test.Manual.Console
 {

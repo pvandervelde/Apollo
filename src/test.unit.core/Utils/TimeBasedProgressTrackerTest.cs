@@ -10,7 +10,7 @@ using System.Threading;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Utils
+namespace Apollo.Utilities
 {
     [TestFixture]
     [Description("Tests the Id class.")]

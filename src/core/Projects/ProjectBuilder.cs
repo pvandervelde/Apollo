@@ -8,7 +8,7 @@ using System;
 using System.IO;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Projects

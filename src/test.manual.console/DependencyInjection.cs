@@ -7,8 +7,8 @@
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
-using Apollo.Utils;
-using Apollo.Utils.Configuration;
+using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Autofac;
 using AutofacContrib.Startable;
 using Test.Manual.Console.Models;
@@ -32,7 +32,7 @@ namespace Test.Manual.Console
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new BaseModule());
-                builder.RegisterModule(new UtilsModule());
+                builder.RegisterModule(new UtilitiesModule());
 
                 builder.RegisterModule(
                   new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));

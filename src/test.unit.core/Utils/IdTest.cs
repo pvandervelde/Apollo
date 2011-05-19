@@ -11,7 +11,7 @@ using System.Globalization;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Utils
+namespace Apollo.Utilities
 {
     // Note that it is not possible to use the Gallio Comparison contract verifiers because they require that the
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we

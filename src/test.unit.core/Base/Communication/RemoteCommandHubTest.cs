@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
-using Apollo.Utils;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
 

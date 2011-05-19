@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utils.Commands;
+using Apollo.Utilities.Commands;
 
 namespace Apollo.Core
 {

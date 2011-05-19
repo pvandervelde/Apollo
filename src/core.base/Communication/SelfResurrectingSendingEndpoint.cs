@@ -10,7 +10,7 @@ using System.Globalization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
 using Apollo.Core.Base.Properties;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication

@@ -7,7 +7,7 @@
 using System;
 using System.IO;
 using Apollo.Core.Base.Loaders;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Projects
 {

@@ -8,7 +8,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Utils.Commands
+namespace Apollo.Utilities.Commands
 {
     [TestFixture]
     [Description("Tests the DuplicateCommandException class.")]

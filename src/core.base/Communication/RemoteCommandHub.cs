@@ -12,7 +12,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication

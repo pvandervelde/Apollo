@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.Core
 {
@@ -57,7 +57,7 @@ namespace Apollo.Core
                     // Apollo.Core
                     DetermineAssemblyPath(typeof(KernelStartInfo).Assembly),
 
-                    // Apollo.Utils
+                    // Apollo.Utilities
                     DetermineAssemblyPath(typeof(ILockObject).Assembly),
 
                     // Autofac

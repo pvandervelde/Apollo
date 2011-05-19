@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Autofac;
 using Autofac.Core;
 using Concordion.Integration;

@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using MbUnit.Framework;
 
-namespace Apollo.Utils
+namespace Apollo.Utilities
 {
     [TestFixture]
     [Description("Tests the AssemblyExtensions class.")]

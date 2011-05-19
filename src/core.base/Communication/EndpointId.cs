@@ -6,7 +6,7 @@
 
 using System;
 using System.Globalization;
-using Apollo.Utils;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Base.Communication
 {

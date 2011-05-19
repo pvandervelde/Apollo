@@ -13,7 +13,7 @@ using System.Reflection;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Utils
+namespace Apollo.Utilities
 {
     [TestFixture]
     [Description("Tests the FusionHelper class.")]

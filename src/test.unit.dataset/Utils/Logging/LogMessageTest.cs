@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 
-namespace Apollo.Utils.Logging
+namespace Apollo.Utilities.Logging
 {
     [TestFixture]
     [Description("Tests the LogMessage class.")]

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Autofac.Core;
 
 namespace Test.Spec

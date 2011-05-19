@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.ProjectExplorer

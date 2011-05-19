@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
-using Apollo.Utils;
+using Apollo.Utilities;
 using Castle.DynamicProxy;
 
 namespace Apollo.Core.Base.Communication
