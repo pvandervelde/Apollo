@@ -20,6 +20,31 @@ function Invoke-PsakeScript([string]$script, [String[]]$targets){
     ""
 }
 
+function Create-GeneratedItemsList([string]$path) {
+    $startingDirectory = Split-Path $path -Parent
+    $paths = New-Object System.Collections.Generic.List``1[System.String]
+    Get-Content -Path $path | ForEach-Object {
+        if ($_.StartsWith("**\"))
+        {
+            $filter = $_.Trim("**\")
+            Get-ChildItem -Path $startingDirectory -Filter $filter -Recurse | ForEach-Object { $paths.Add($_.FullName) }
+        }
+        else
+        {
+            if ($_ -ne "")
+            {
+                $generatedItem = Join-Path $startingDirectory $_
+                if (Test-Path -Path $generatedItem)
+                {
+                    $paths.Add($generatedItem)
+                }
+            }
+        }
+    }
+    
+    return $paths
+}
+
 function Get-MsBuildExe
 {
     'msbuild'
@@ -585,17 +610,21 @@ task displayInfo -depends runInit -action{
 # it seems that psake determines the values of these preconditions based on values 
 # available when the script is started, not values becoming available later on.
 task runClean -depends displayInfo -precondition{ !$incremental } -action{
-    $msbuildExe = Get-MsbuildExe
-    
-    "Cleaning the apollo solution directories..."
-    & $msbuildExe $props.slnApollo /t:Clean /verbosity:minimal
-    
-    "Cleaning the installer solution directories..."
-    & $msbuildExe $props.slnApolloWix /t:Clean /verbosity:minimal
-    
     if (Test-Path -Path $props.dirBuild -PathType Container)
     {
         Remove-Item $props.dirBuild -Force -Recurse
+    }
+    
+    "Removing generated items ..."
+    $itemsToRemove = Create-GeneratedItemsList (Join-Path $props.dirbase 'generateditems.txt')
+    if ($itemsToRemove -ne $null)
+    {
+        $itemsToRemove | foreach {
+            if (Test-Path $_)
+            {
+                Remove-Item $_ -Force -Recurse
+            }
+        }
     }
 }
 

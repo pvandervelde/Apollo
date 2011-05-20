@@ -1,0 +1,8 @@
+build
+**\obj
+install\bin
+src\AssemblyInfo.BuildInformation.cs
+src\AssemblyInfo.InternalsVisibleTo.cs
+src\AssemblyInfo.VersionNumber.cs
+src\ValidationSequenceGenerator.cs
+tools\sourcemonitor\SourceMonitor.log

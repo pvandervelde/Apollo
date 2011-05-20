@@ -63,12 +63,14 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var endpoint = new EndpointId("id");
 
+            AutoResetEvent resetEvent = new AutoResetEvent(false);
             EndpointId storedEndpoint = null;
             ICommunicationMessage storedMsg = null;
             Action<EndpointId, ICommunicationMessage> sendAction = (e, m) =>
                 {
                     storedEndpoint = e;
                     storedMsg = m;
+                    resetEvent.Set();
                 };
             var commands = new Mock<ICommandCollection>();
             {
@@ -87,6 +89,10 @@ namespace Apollo.Base.Communication.Messages.Processors
                     CommandSetProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
 
             actionObject.Verify(a => a.MethodWithoutReturnValue(It.IsAny<int>()), Times.Once());
+
+            // For some reason the processing of a task with a return value takes a non-trivial amount
+            // of time, so we put in a wait event and wait for it to finish.
+            resetEvent.WaitOne();
             Assert.IsInstanceOfType(typeof(SuccessMessage), storedMsg);
         }
 
