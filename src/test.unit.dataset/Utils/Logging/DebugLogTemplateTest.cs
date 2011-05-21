@@ -79,7 +79,7 @@ namespace Apollo.Core.Logging
 
         [Test]
         [Description("Checks that a null ILogTemplate is not equal to a given template.")]
-        public void EqualsWithNullILogTemplate()
+        public void EqualsWithNullLogTemplate()
         {
             var template = new DebugLogTemplate(GetDefaultDateTime);
             Assert.IsFalse(template.Equals((ILogTemplate)null));
@@ -87,7 +87,7 @@ namespace Apollo.Core.Logging
 
         [Test]
         [Description("Checks that an equal IlogTemplate is considered equal to a given template.")]
-        public void EqualsWithEqualILogTemplate()
+        public void EqualsWithEqualLogTemplate()
         {
             var template = new DebugLogTemplate(GetDefaultDateTime);
             Assert.IsTrue(template.Equals((ILogTemplate)new DebugLogTemplate(GetDefaultDateTime)));
@@ -95,7 +95,7 @@ namespace Apollo.Core.Logging
 
         [Test]
         [Description("Checks that an equal IlogTemplate is considered equal to itself.")]
-        public void EqualsWithSameILogTemplate()
+        public void EqualsWithSameLogTemplate()
         {
             var template = new DebugLogTemplate(GetDefaultDateTime);
             Assert.IsTrue(template.Equals((ILogTemplate)template));

@@ -110,7 +110,10 @@ namespace Apollo.Core.Base.Loaders
         /// Initializes a new instance of the <see cref="NetworkSpecification"/> class.
         /// </summary>
         /// <param name="macAddress">The MAC address of the network card.</param>
-        /// <param name="isConnected"><see langword="true" /> if the card is connected to a physical network; otherwise, <see langword="false" />.</param>
+        /// <param name="isConnected">
+        ///     <see langword="true" /> if the card is connected to a physical network;
+        ///     otherwise, <see langword="false" />.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="macAddress"/> is <see langword="null" />.
         /// </exception>
@@ -129,7 +132,10 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="name">The name of the network connection.</param>
         /// <param name="macAddress">The MAC address of the network card.</param>
-        /// <param name="isConnected"><see langword="true" /> if the card is connected to a physical network; otherwise, <see langword="false" />.</param>
+        /// <param name="isConnected">
+        ///     <see langword="true" /> if the card is connected to a physical network;
+        ///     otherwise, <see langword="false" />.
+        /// </param>
         /// <param name="speed">The speed of the network in bits per second.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="name"/> is <see langword="null" />.
@@ -148,7 +154,9 @@ namespace Apollo.Core.Base.Loaders
             {
                 Enforce.Argument(() => name);
                 Enforce.Argument(() => macAddress);
-                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(macAddress), Resources.Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(macAddress),
+                    Resources.Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress);
             }
 
             Name = name;
@@ -200,7 +208,8 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="other">The <see cref="NetworkSpecification"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="NetworkSpecification"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="NetworkSpecification"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -223,7 +232,8 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -246,7 +256,8 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

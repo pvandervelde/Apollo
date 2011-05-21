@@ -118,14 +118,14 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <value>The model.</value>
         public MenuModel Model
         {
-            get 
-            { 
-                return (MenuModel) DataContext; 
+            get
+            {
+                return (MenuModel)DataContext;
             }
 
-            set 
-            { 
-                DataContext = value; 
+            set
+            {
+                DataContext = value;
             }
         }
 

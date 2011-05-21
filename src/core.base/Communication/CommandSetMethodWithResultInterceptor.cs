@@ -25,8 +25,12 @@ namespace Apollo.Core.Base.Communication
         /// Returns a task with a specific return type based on an expected <see cref="CommandInvokedResponseMessage"/> object
         /// which is delivered by another task.
         /// </summary>
-        /// <typeparam name="T">The type of the object carried by the <see cref="CommandInvokedResponseMessage"/> object in the input task.</typeparam>
-        /// <param name="inputTask">The task which will deliver the <see cref="ICommunicationMessage"/> that contains the return value.</param>
+        /// <typeparam name="T">
+        ///     The type of the object carried by the <see cref="CommandInvokedResponseMessage"/> object in the input task.
+        /// </typeparam>
+        /// <param name="inputTask">
+        ///     The task which will deliver the <see cref="ICommunicationMessage"/> that contains the return value.
+        /// </param>
         /// <returns>
         /// A task returning the desired return type.
         /// </returns>
@@ -64,11 +68,15 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandSetMethodWithResultInterceptor"/> class.
         /// </summary>
-        /// <param name="sendMessageWithResponse">The function used to send the information about the method invocation to the owning endpoint.</param>
+        /// <param name="sendMessageWithResponse">
+        ///     The function used to send the information about the method invocation to the owning endpoint.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
-        public CommandSetMethodWithResultInterceptor(Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> sendMessageWithResponse)
+        public CommandSetMethodWithResultInterceptor(
+            Func<ISerializedMethodInvocation, 
+            Task<ICommunicationMessage>> sendMessageWithResponse)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);

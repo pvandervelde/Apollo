@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Communication
     /// applications different machines.
     /// </summary>
     [ChannelRelativePerformanceAttribute(2)]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class TcpChannelType : IChannelType
     {
         /// <summary>

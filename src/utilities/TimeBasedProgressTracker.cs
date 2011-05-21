@@ -20,12 +20,12 @@ namespace Apollo.Utilities
         /// <summary>
         /// The progress at the start of the event.
         /// </summary>
-        private const int s_StartingProgress = 0;
+        private const int StartingProgress = 0;
 
         /// <summary>
         /// The progress at the end of the event.
         /// </summary>
-        private const int s_FinishingProgress = 100;
+        private const int FinishingProgress = 100;
 
         /// <summary>
         /// The timer which is used to fire the progress event.
@@ -86,7 +86,10 @@ namespace Apollo.Utilities
         {
             {
                 Enforce.Argument(() => timer);
-                Enforce.With<ArgumentOutOfRangeException>((unknownProgressValue < 0) || (unknownProgressValue > 100), Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument, unknownProgressValue);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    (unknownProgressValue < 0) || (unknownProgressValue > 100), 
+                    Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument, 
+                    unknownProgressValue);
                 Enforce.Argument(() => markerTimes);
             }
 
@@ -108,8 +111,8 @@ namespace Apollo.Utilities
             var startTime = DateTime.Now;
             m_ElapsedTime = time => time - startTime;
 
-            m_ProgressTimer.Elapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
-            RaiseStartupProgress(s_StartingProgress, m_CurrentMark);
+            m_ProgressTimer.OnElapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
+            RaiseOnStartupProgress(StartingProgress, m_CurrentMark);
 
             m_ProgressTimer.Start();
         }
@@ -165,13 +168,13 @@ namespace Apollo.Utilities
                             if (estimatedTime != TimeSpan.Zero)
                             {
                                 progress = (int)Math.Round(elapsedTime.Ticks * 100.0 / estimatedTime.Ticks, MidpointRounding.ToEven);
-                                if (progress > s_FinishingProgress)
+                                if (progress > FinishingProgress)
                                 {
-                                    progress = s_FinishingProgress;
+                                    progress = FinishingProgress;
                                 }
                             }
 
-                            RaiseStartupProgress(progress, m_CurrentMark);
+                            RaiseOnStartupProgress(progress, m_CurrentMark);
                         }
                         catch (Exception)
                         {
@@ -196,21 +199,21 @@ namespace Apollo.Utilities
         public void Mark(IProgressMark progressMark)
         {
             m_CurrentMark = progressMark;
-            RaiseMarkAdded(progressMark);
+            RaiseOnMarkAdded(progressMark);
         }
 
         /// <summary>
         /// Occurs when a new mark is provided to the tracker.
         /// </summary>
-        public event EventHandler<ProgressMarkEventArgs> MarkAdded;
+        public event EventHandler<ProgressMarkEventArgs> OnMarkAdded;
 
         /// <summary>
         /// Raises the mark added event.
         /// </summary>
         /// <param name="mark">The progress mark.</param>
-        private void RaiseMarkAdded(IProgressMark mark)
+        private void RaiseOnMarkAdded(IProgressMark mark)
         {
-            var local = MarkAdded;
+            var local = OnMarkAdded;
             if (local != null)
             { 
                 local(this, new ProgressMarkEventArgs(mark));
@@ -221,16 +224,16 @@ namespace Apollo.Utilities
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        public event EventHandler<StartupProgressEventArgs> StartupProgress;
+        public event EventHandler<StartupProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Raises the startup progress event with the specified values.
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        private void RaiseStartupProgress(int progress, IProgressMark currentlyProcessing)
+        private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
-            var local = StartupProgress;
+            var local = OnStartupProgress;
             if (local != null)
             { 
                 local(this, new StartupProgressEventArgs(progress, currentlyProcessing));
@@ -243,7 +246,7 @@ namespace Apollo.Utilities
         public void StopTracking()
         {
             StopProgressTimer();
-            RaiseStartupProgress(s_FinishingProgress, m_CurrentMark);
+            RaiseOnStartupProgress(FinishingProgress, m_CurrentMark);
         }
 
         /// <summary>

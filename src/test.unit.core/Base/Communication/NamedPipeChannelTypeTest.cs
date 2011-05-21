@@ -43,10 +43,10 @@ namespace Apollo.Base.Communication
         private static bool AreStreamsEqual(Stream stream1, Stream stream2)
         {
             // Take a random buffer size. For now we use 4Kb.
-            const int BufferSize = 4096;
+            const int bufferSize = 4096;
 
-            var buffer1 = new byte[BufferSize];
-            var buffer2 = new byte[BufferSize];
+            var buffer1 = new byte[bufferSize];
+            var buffer2 = new byte[bufferSize];
             while (true)
             {
                 int count1 = stream1.Read(buffer1, 0, buffer1.Length);

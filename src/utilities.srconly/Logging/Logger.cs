@@ -15,7 +15,7 @@ namespace Apollo.Utilities.Logging
     /// Defines a logging object that translates <see cref="ILogMessage"/> objects and
     /// writes them to a log.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class Logger : ILogger
     {
         /// <summary>

@@ -76,7 +76,9 @@ namespace Apollo.Utilities
             Debug.Assert(!string.IsNullOrEmpty(input), "The input should not be empty.");
 
             return input
-                .Substring(input.IndexOf(AssemblyNameElements.KeyValueSeparator, StringComparison.OrdinalIgnoreCase) + AssemblyNameElements.KeyValueSeparator.Length)
+                .Substring(
+                    input.IndexOf(AssemblyNameElements.KeyValueSeparator, StringComparison.OrdinalIgnoreCase) 
+                    + AssemblyNameElements.KeyValueSeparator.Length)
                 .Trim();
         }
 
@@ -161,10 +163,14 @@ namespace Apollo.Utilities
                     }
                 }
 
-                if ((!string.IsNullOrEmpty(publicKey)) && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
+                if ((!string.IsNullOrEmpty(publicKey)) 
+                    && (!publicKey.Equals(AssemblyNameElements.NullString, StringComparison.OrdinalIgnoreCase)))
                 {
                     var actualPublicKeyToken = assemblyName.GetPublicKeyToken();
-                    var str = actualPublicKeyToken.Aggregate(string.Empty, (current, value) => current + value.ToString("x2", CultureInfo.InvariantCulture));
+                    var str = actualPublicKeyToken.Aggregate(
+                        string.Empty, 
+                        (current, value) => current + value.ToString("x2", CultureInfo.InvariantCulture));
+                    
                     return str.Equals(publicKey, StringComparison.OrdinalIgnoreCase);
                 }
             }

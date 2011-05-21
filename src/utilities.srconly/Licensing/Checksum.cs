@@ -92,12 +92,27 @@ namespace Apollo.Utilities.Licensing
                 Enforce.Argument(() => validationResult);
                 Enforce.Argument(() => validationResult, StringIs.NotEmpty);
 
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !generationTime.Equals(DateTimeOffset.MinValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !generationTime.Equals(DateTimeOffset.MaxValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    generationTime);
 
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !expirationTime.Equals(DateTimeOffset.MinValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !expirationTime.Equals(DateTimeOffset.MaxValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    generationTime < expirationTime, 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
             }
 
             m_Base64Hash = ComputeHash(validationResult, generationTime, expirationTime);
@@ -129,7 +144,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="other">The <see cref="Checksum"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="Checksum"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="Checksum"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -143,7 +159,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

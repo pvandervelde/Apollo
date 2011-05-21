@@ -150,7 +150,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// </summary>
         /// <param name="message">The message upon which the action acts.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "There is no point in letting the exception escape. It'll just kill the channel but we still won't know how that happened, so we log and move on.")]
+            Justification = "Letting the exception escape will just kill the channel then we won't know what happened, so we log and move on.")]
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as CommandInvokedMessage;
@@ -202,7 +202,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     Debug.Assert(!resultType.ContainsGenericParameters, "The return type should be a closed constructed type.");
 
                     var genericArguments = resultType.GetGenericArguments();
-                    Debug.Assert(genericArguments.Length == 0 || genericArguments.Length == 1, "There should either be zero or one generic argument.");
+                    Debug.Assert(
+                        genericArguments.Length == 0 || genericArguments.Length == 1, 
+                        "There should either be zero or one generic argument.");
                     if (genericArguments.Length == 0)
                     {
                         returnMsg = new TaskReturn().HandleTaskReturnValue(m_Current, msg, result);

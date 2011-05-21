@@ -45,7 +45,8 @@ namespace Apollo.Utilities
         [Description("Checks that an object cannot be created with an unknownprogress value between 0 and 100.")]
         public void CreateWithIncorrectProgressValue()
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new TimeBasedProgressTracker(new Mock<IProgressTimer>().Object, 10, new Mock<IStoreMarkerTimes>().Object));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new TimeBasedProgressTracker(new Mock<IProgressTimer>().Object, 10, new Mock<IStoreMarkerTimes>().Object));
         }
 
         [Test]
@@ -61,7 +62,7 @@ namespace Apollo.Utilities
         {
             IProgressMark storedMark = null;
             var tracker = new TimeBasedProgressTracker(new Mock<IProgressTimer>().Object, -1, new Mock<IStoreMarkerTimes>().Object);
-            tracker.MarkAdded += (s, e) => 
+            tracker.OnMarkAdded += (s, e) => 
                 {
                     storedMark = e.Mark;
                 };
@@ -89,7 +90,7 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the StartupProgress event correctly indicates maximum progress if the actual progress is higher than the maximum.")]
+        [Description("Checks that the StartupProgress event correctly indicates progress if the actual progress is higher than the maximum.")]
         public void StartupProgress()
         {
             var store = new Mock<IStoreMarkerTimes>();
@@ -103,7 +104,7 @@ namespace Apollo.Utilities
             IProgressMark storedMark = null;
             int storedProgress = 0;
             var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
-            tracker.StartupProgress += (s, e) =>
+            tracker.OnStartupProgress += (s, e) =>
                 {
                     storedMark = e.CurrentlyProcessing;
                     storedProgress = e.Progress;
@@ -116,7 +117,7 @@ namespace Apollo.Utilities
             tracker.Mark(mark1);
             tracker.StartTracking();
 
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);
@@ -126,7 +127,7 @@ namespace Apollo.Utilities
 
             tracker.Mark(mark2);
 
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(30.0)));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(now.AddSeconds(30.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);
@@ -152,7 +153,7 @@ namespace Apollo.Utilities
             IProgressMark storedMark = null;
             int storedProgress = 0;
             var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
-            tracker.StartupProgress += (s, e) =>
+            tracker.OnStartupProgress += (s, e) =>
             {
                 storedMark = e.CurrentlyProcessing;
                 storedProgress = e.Progress;
@@ -164,7 +165,7 @@ namespace Apollo.Utilities
             tracker.Mark(mark1);
             tracker.StartTracking();
 
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(now.AddSeconds(10.0)));
 
             // wait for a bit so that the threadpool can catch up ...
             Thread.Sleep(20);

@@ -15,7 +15,7 @@ namespace Apollo.UI.Common
     /// <summary>
     /// A view that is shown in a region.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public class RegionView : UserControl, IRegionView
     {
         /// <summary>
@@ -71,36 +71,36 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Occurs when  the regrion is shown.
         /// </summary>
-        public event EventHandler Shown;
+        public event EventHandler OnShown;
 
         /// <summary>
         /// Occurs when the region is activated.
         /// </summary>
-        public event EventHandler Activated;
+        public event EventHandler OnActivated;
 
         /// <summary>
         /// Occurs when the region is deactivated.
         /// </summary>
-        public event EventHandler Deactivated;
+        public event EventHandler OnDeactivated;
 
         /// <summary>
         /// Occurs when the region is closing.
         /// </summary>
-        public event CancelEventHandler Closing;
+        public event CancelEventHandler OnClosing;
 
         /// <summary>
         /// Occurs when the region is closed.
         /// </summary>
-        public event EventHandler Closed;
+        public event EventHandler OnClosed;
 
         /// <summary>
-        /// Raises the <see cref="Shown"/> event.
+        /// Raises the <see cref="OnShown"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method raises an event.")]
         protected void RaiseShown()
         {
-            var handler = Shown;
+            var handler = OnShown;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -108,13 +108,13 @@ namespace Apollo.UI.Common
         }
 
         /// <summary>
-        /// Raises the <see cref="Closed"/> event.
+        /// Raises the <see cref="OnClosed"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method raises an event.")]
         protected void RaiseClosed()
         {
-            var handler = Closed;
+            var handler = OnClosed;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -122,10 +122,10 @@ namespace Apollo.UI.Common
         }
 
         /// <summary>
-        /// Raises the <see cref="Closing"/> event.
+        /// Raises the <see cref="OnClosing"/> event.
         /// </summary>
         /// <returns>
-        ///     <see langword="true" /> if the <see cref="Closing"/> event was cancelled; otherwise <see langword="false" />.
+        ///     <see langword="true" /> if the <see cref="OnClosing"/> event was cancelled; otherwise <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method raises an event.")]
@@ -133,7 +133,7 @@ namespace Apollo.UI.Common
             Justification = "Documentation can start with a language keyword")]
         protected bool RaiseClosing()
         {
-            var handler = Closing;
+            var handler = OnClosing;
             var args = new CancelEventArgs();
             if (handler != null)
             {
@@ -144,13 +144,13 @@ namespace Apollo.UI.Common
         }
 
         /// <summary>
-        /// Raises the <see cref="Activated"/> event.
+        /// Raises the <see cref="OnActivated"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method raises an event.")]
         protected void RaiseActivated()
         {
-            var handler = Activated;
+            var handler = OnActivated;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);
@@ -158,13 +158,13 @@ namespace Apollo.UI.Common
         }
 
         /// <summary>
-        /// Raises the <see cref="Deactivated"/> event.
+        /// Raises the <see cref="OnDeactivated"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method raises an event.")]
         protected void RaiseDeactivated()
         {
-            var handler = Deactivated;
+            var handler = OnDeactivated;
             if (handler != null)
             {
                 handler(this, EventArgs.Empty);

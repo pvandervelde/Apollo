@@ -15,7 +15,7 @@ namespace Apollo.Core.Projects
     /// Handles the component registrations for the project part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class ProjectModule : Module
     {
         /// <summary>

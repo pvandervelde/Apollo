@@ -63,16 +63,16 @@ namespace Apollo.Core
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
-        public event EventHandler<StartupProgressEventArgs> StartupProgress;
+        public event EventHandler<StartupProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Raises the startup progress event.
         /// </summary>
         /// <param name="progress">The progress percentage.</param>
         /// <param name="mark">The progress mark.</param>
-        private void RaiseStartupProgress(int progress, IProgressMark mark)
+        private void RaiseOnStartupProgress(int progress, IProgressMark mark)
         {
-            var local = StartupProgress;
+            var local = OnStartupProgress;
             if (local != null)
             {
                 local(this, new StartupProgressEventArgs(progress, mark));
@@ -143,10 +143,10 @@ namespace Apollo.Core
                             var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
                             var total = finishedPercentage + currentPercentage;
 
-                            RaiseStartupProgress((int)Math.Floor(total * 100), e.CurrentlyProcessing);
+                            RaiseOnStartupProgress((int)Math.Floor(total * 100), e.CurrentlyProcessing);
                         };
 
-                    currentService.StartupProgress += handler;
+                    currentService.OnStartupProgress += handler;
                     try
                     {
                         currentService.Start();
@@ -161,7 +161,7 @@ namespace Apollo.Core
                     }
                     finally
                     {
-                        currentService.StartupProgress -= handler;
+                        currentService.OnStartupProgress -= handler;
                     }
                 }
             }

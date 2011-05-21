@@ -33,13 +33,13 @@ namespace Apollo.ProjectExplorer
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "projectexplorer.error.log";
 
         /// <summary>
         /// Application Entry Point.
         /// </summary>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
-        [STAThreadAttribute()]
+        [STAThreadAttribute]
         public static int Main()
         {
             int functionReturnResult = -1;
@@ -56,7 +56,7 @@ namespace Apollo.ProjectExplorer
             var result = TopLevelExceptionHandler.RunGuarded(
                 applicationAction, 
                 Assembly.GetExecutingAssembly().GetName().Name, 
-                s_DefaultErrorFileName);
+                DefaultErrorFileName);
             return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
         }
 
@@ -128,7 +128,10 @@ namespace Apollo.ProjectExplorer
         /// Called when an unhandled exception takes place.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.Threading.DispatcherUnhandledExceptionEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.Windows.Threading.DispatcherUnhandledExceptionEventArgs"/> instance 
+        ///     containing the event data.
+        /// </param>
         private void HandleUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
         {
             // Unhandled exceptions go here..
@@ -145,7 +148,9 @@ namespace Apollo.ProjectExplorer
         /// Called when the application is about to shut down.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.ExitEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.Windows.ExitEventArgs"/> instance containing the event data.
+        /// </param>
         private void HandleApplicationShutdown(object sender, ExitEventArgs e)
         {
             // At this point we are committed to a shutdown. There is
@@ -156,7 +161,9 @@ namespace Apollo.ProjectExplorer
         /// Called when the windows session is about to end.
         /// </summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="System.Windows.SessionEndingCancelEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">
+        ///     The <see cref="System.Windows.SessionEndingCancelEventArgs"/> instance containing the event data.
+        /// </param>
         private void HandleSessionEnding(object sender, SessionEndingCancelEventArgs e)
         {
             // Check if there is unsaved data

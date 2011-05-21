@@ -17,7 +17,7 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <summary>
         /// The table that maps an event type to an event category.
         /// </summary>
-        private static readonly Dictionary<EventType, short> m_EventTypeToEventCategoryMap =
+        private static readonly Dictionary<EventType, short> s_EventTypeToEventCategoryMap =
             new Dictionary<EventType, short> 
                 { 
                     { EventType.Exception, 0 }
@@ -30,7 +30,7 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <returns>The requested category ID.</returns>
         public static short EventCategory(EventType type)
         {
-            return m_EventTypeToEventCategoryMap[type];
+            return s_EventTypeToEventCategoryMap[type];
         }
     }
 }

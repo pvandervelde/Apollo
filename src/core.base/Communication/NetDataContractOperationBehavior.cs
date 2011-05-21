@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Communication
     /// <source>
     /// http://lunaverse.wordpress.com/2007/05/09/remoting-using-wcf-and-nhibernate/
     /// </source>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class NetDataContractOperationBehavior : DataContractSerializerOperationBehavior
     {
         /// <summary>
@@ -39,12 +39,15 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Creates an instance of a class that inherits from <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> for serialization and deserialization operations.
+        /// Creates an instance of a class that inherits from <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> for 
+        /// serialization and deserialization operations.
         /// </summary>
         /// <param name="type">The <see cref="T:System.Type"/> to create the serializer for.</param>
         /// <param name="name">The name of the generated type.</param>
         /// <param name="ns">The namespace of the generated type.</param>
-        /// <param name="knownTypes">An <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.Type"/> that contains known types.</param>
+        /// <param name="knownTypes">
+        ///     An <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.Type"/> that contains known types.
+        /// </param>
         /// <returns>
         /// An instance of a class that inherits from the <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> class.
         /// </returns>
@@ -58,12 +61,15 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Creates an instance of a class that inherits from <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> for serialization and deserialization operations.
+        /// Creates an instance of a class that inherits from <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> for
+        /// serialization and deserialization operations.
         /// </summary>
         /// <param name="type">The <see cref="T:System.Type"/> to create the serializer for.</param>
         /// <param name="name">The name of the generated type.</param>
         /// <param name="ns">The namespace of the generated type.</param>
-        /// <param name="knownTypes">An <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.Type"/> that contains known types.</param>
+        /// <param name="knownTypes">
+        ///     An <see cref="T:System.Collections.Generic.IList`1"/> of <see cref="T:System.Type"/> that contains known types.
+        /// </param>
         /// <returns>
         /// An instance of a class that inherits from the <see cref="T:System.Runtime.Serialization.XmlObjectSerializer"/> class.
         /// </returns>

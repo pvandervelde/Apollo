@@ -113,19 +113,20 @@ namespace Apollo.Core.Projects
             var dataset = project.BaseDataset();
             project.Close();
 
-            Assert.Throws<CannotUseProjectAfterClosingItException>(() => project.Export(dataset.Id, false, new Mock<IPersistenceInformation>().Object));
+            Assert.Throws<CannotUseProjectAfterClosingItException>(
+                () => project.Export(dataset.Id, false, new Mock<IPersistenceInformation>().Object));
         }
 
         [Test]
         [Description("Checks that a dataset can be persisted.")]
-        [Ignore("Not implemented yet.")]
+        [Ignore("Export is not implemented yet.")]
         public void ExportWithoutChildren()
         { 
         }
 
         [Test]
         [Description("Checks that a dataset and its children can be persisted.")]
-        [Ignore("Not implemented yet.")]
+        [Ignore("Export is not implemented yet.")]
         public void ExportWithChildren()
         { 
         }

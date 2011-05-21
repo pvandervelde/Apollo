@@ -17,16 +17,16 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Occurs when the view is shown.
         /// </summary>
-        event EventHandler Shown;
+        event EventHandler OnShown;
 
         /// <summary>
         /// Occurs when the view is closing.
         /// </summary>
-        event CancelEventHandler Closing;
+        event CancelEventHandler OnClosing;
 
         /// <summary>
         /// Occurs when the view is closed.
         /// </summary>
-        event EventHandler Closed;
+        event EventHandler OnClosed;
     }
 }
