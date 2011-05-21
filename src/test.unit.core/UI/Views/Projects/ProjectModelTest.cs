@@ -17,13 +17,6 @@ namespace Apollo.UI.Common.Views.Projects
     public sealed class ProjectModelTest
     {
         [Test]
-        [Description("Checks that the model cannot be created without a facade.")]
-        public void CreateWithNullFacade()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectModel(null));
-        }
-
-        [Test]
         [Description("Checks that the model can be created.")]
         [Ignore("Not implemented yet")]
         public void Create()

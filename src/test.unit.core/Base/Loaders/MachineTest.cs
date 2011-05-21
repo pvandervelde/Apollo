@@ -63,27 +63,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a null network identifier.")]
-        public void CreateWithNullIdentifier()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Machine(null, s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a null hardware specification.")]
-        public void CreateWithNullHardwareSpecification()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), null, new Dictionary<BaselineId, BaselineResult>()));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a null collection of baselines.")]
-        public void CreateWithNullBaseLineCollection()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, null));
-        }
-
-        [Test]
         [Description("Checks that an object can be constructed.")]
         public void Create()
         {

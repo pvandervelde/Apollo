@@ -20,14 +20,6 @@ namespace Apollo.Core.Projects
     public sealed class ProjectBuilderTest
     {
         [Test]
-        [Description("Checks that it is not possible to build a project with a null distributor.")]
-        public void BuildWithNullDistributor()
-        {
-            var builder = new ProjectBuilder();
-            Assert.Throws<ArgumentNullException>(() => builder.WithDatasetDistributor(null));
-        }
-
-        [Test]
         [Description("Checks that it is not possible to build a project without a distributor.")]
         public void BuildWithoutDistributor()
         {
@@ -46,14 +38,6 @@ namespace Apollo.Core.Projects
                 .Build();
 
             Assert.IsNotNull(project);
-        }
-
-        [Test]
-        [Description("Checks that it is not possible to build a project with a null storage object.")]
-        public void BuildWithNullStorage()
-        {
-            var builder = new ProjectBuilder();
-            Assert.Throws<ArgumentNullException>(() => builder.FromStorage(null));
         }
 
         [Test]

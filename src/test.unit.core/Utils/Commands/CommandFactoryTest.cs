@@ -18,22 +18,6 @@ namespace Apollo.Utilities.Commands
     public sealed class CommandFactoryTest
     {
         [Test]
-        [Description("Checks that a command cannot be added without a name.")]
-        public void AddWithNullName()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Add(null, () => new Mock<ICommand>().Object));
-        }
-
-        [Test]
-        [Description("Checks that a command cannot be added without an activator.")]
-        public void AddWithNullActivator()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Add(new CommandId("name"), null));
-        }
-
-        [Test]
         [Description("Checks that a command cannot be added with a duplicate name.")]
         public void AddWithDuplicateName()
         {
@@ -60,14 +44,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command cannot be removed without a name.")]
-        public void RemoveWithNullName()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Remove(null));
-        }
-
-        [Test]
         [Description("Checks that a command cannot be removed with an unknown name.")]
         public void RemoveWithUnknownName()
         {
@@ -87,14 +63,6 @@ namespace Apollo.Utilities.Commands
             factory.Add(name, activator);
             factory.Remove(name);
             Assert.IsFalse(factory.Contains(name));
-        }
-
-        [Test]
-        [Description("Checks that a command cannot be invoked without a name.")]
-        public void InvokeWithoutContextWithNullName()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Invoke(null));
         }
 
         [Test]
@@ -122,22 +90,6 @@ namespace Apollo.Utilities.Commands
             factory.Add(name, () => commandMock.Object);
             factory.Invoke(name);
             Assert.IsNotNull(storedContext);
-        }
-
-        [Test]
-        [Description("Checks that a command cannot be invoked without a name.")]
-        public void InvokeWithNullName()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Invoke(null, new Mock<ICommandContext>().Object));
-        }
-
-        [Test]
-        [Description("Checks that a command cannot be invoked without a context.")]
-        public void InvokeWithNullContext()
-        {
-            var factory = new CommandFactory();
-            Assert.Throws<ArgumentNullException>(() => factory.Invoke(new CommandId("name"), null));
         }
 
         [Test]

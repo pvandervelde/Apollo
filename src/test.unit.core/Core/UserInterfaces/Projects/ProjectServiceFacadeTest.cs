@@ -22,13 +22,6 @@ namespace Apollo.Core.UserInterfaces.Projects
     public sealed class ProjectServiceFacadeTest
     {
         [Test]
-        [Description("Checks a service cannot be created with a null service reference.")]
-        public void CreateWithNullService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectServiceFacade(null));
-        }
-
-        [Test]
         [Description("Checks the failure to create a new project results in the correct exception being thrown.")]
         public void CreateNewProjectWithLoadingFailure()
         {

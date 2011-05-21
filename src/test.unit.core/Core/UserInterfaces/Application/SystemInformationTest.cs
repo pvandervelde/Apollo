@@ -17,20 +17,6 @@ namespace Apollo.Core.UserInterfaces.Application
     public sealed class SystemInformationTest
     {
         [Test]
-        [Description("Checks that it is not possible to create an object without a current time function.")]
-        public void CreateWithoutCurrentTimeFunction()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SystemInformation(null, () => new SystemInformationStorage()));
-        }
-
-        [Test]
-        [Description("Checks that it is not possible to create an object without a refresh function.")]
-        public void CreateWithoutRefreshFunction()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SystemInformation(() => DateTimeOffset.Now, null));
-        }
-
-        [Test]
         [Description("Checks that it is possible to create an object.")]
         public void Create()
         {

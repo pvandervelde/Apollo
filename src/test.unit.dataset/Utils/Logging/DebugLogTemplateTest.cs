@@ -26,14 +26,6 @@ namespace Apollo.Core.Logging
         }
 
         [Test]
-        [Description("Checks that a null message cannot be translated.")]
-        public void TranslateWithNullMessage()
-        {
-            var template = new DebugLogTemplate(GetDefaultDateTime);
-            Assert.Throws<ArgumentNullException>(() => template.Translate(null));
-        }
-
-        [Test]
         [Description("Checks that a message is translated correctly.")]
         public void Translate()
         {

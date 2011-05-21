@@ -19,28 +19,6 @@ namespace Apollo.Core.Base
     public sealed class DatasetOfflineInformationTest
     {
         [Test]
-        [Description("Checks that an object cannot be created with a null ID object.")]
-        public void CreateWithNullId()
-        {
-            var persistence = new Mock<IPersistenceInformation>();
-            var reason = new DatasetCreationInformation() 
-                { 
-                    CreatedOnRequestOf = DatasetCreator.User,
-                    LoadFrom = persistence.Object,
-                };
-
-            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(null, reason));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with a null DatasetCreationInformation object.")]
-        public void CreateWithNullCreationInformation()
-        {
-            var id = new DatasetId();
-            Assert.Throws<ArgumentNullException>(() => new DatasetOfflineInformation(id, null));
-        }
-
-        [Test]
         [Description("Checks that an object can be initialized correctly.")]
         public void Create()
         {

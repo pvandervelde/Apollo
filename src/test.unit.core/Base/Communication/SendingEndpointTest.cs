@@ -21,13 +21,6 @@ namespace Apollo.Base.Communication
     public sealed class SendingEndpointTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without a builder.")]
-        public void CreateWithNullBuilder()
-        {
-            Assert.Throws<ArgumentNullException>(() => new SendingEndpoint(null));
-        }
-
-        [Test]
         [Description("Checks that a message can be send to an unknown receiver.")]
         public void SendToUnknownReceiver()
         {

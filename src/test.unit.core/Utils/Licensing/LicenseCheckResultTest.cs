@@ -35,50 +35,5 @@ namespace Apollo.Utilities.Licensing
                   CreateLicenseCheckResultWithDates(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(2)),
                },
         };
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult cannot be created a generation time equal to DateTimeOffset.MinValue.")]
-        public void CreateWithGenerationTimeAtMinimum()
-        {
-            var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new LicenseCheckResult(DateTimeOffset.MinValue, DateTimeOffset.Now.AddDays(1), checksum));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult cannot be created a generation time equal to DateTimeOffset.MaxValue.")]
-        public void CreateWithGenerationTimeAtMaximum()
-        {
-            var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new LicenseCheckResult(DateTimeOffset.MaxValue, DateTimeOffset.Now.AddDays(1), checksum));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult cannot be created an expiration time equal to DateTimeOffset.MinValue.")]
-        public void CreateWithExpirationTimeAtMinimum()
-        {
-            var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MinValue, checksum));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult cannot be created an expiration time equal to DateTimeOffset.MaxValue.")]
-        public void CreateWithExpirationTimeAtMaximum()
-        {
-            var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MaxValue, checksum));
-        }
-
-        [Test]
-        [Description("Checks that a LicenseCheckResult cannot be created an expiration time that is earlier than the generation time.")]
-        public void CreateWithExpirationTimeEarlierThanGenerationTime()
-        {
-            var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(-1), checksum));
-        }
     }
 }

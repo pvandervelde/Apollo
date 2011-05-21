@@ -81,55 +81,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [Test]
-        [Description("Checks that a Checksum cannot be created with a null validation result.")]
-        public void CreateWithNullValidationResult()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Checksum(null, DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1)));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created with an empty validation result.")]
-        public void CreateWithEmptyValidationResult()
-        {
-            Assert.Throws<ArgumentException>(() => new Checksum(string.Empty, DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1)));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created a generation time equal to DateTimeOffset.MinValue.")]
-        public void CreateWithGenerationTimeAtMinimum()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Checksum("text", DateTimeOffset.MinValue, DateTimeOffset.Now.AddDays(1)));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created a generation time equal to DateTimeOffset.MaxValue.")]
-        public void CreateWithGenerationTimeAtMaximum()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Checksum("text", DateTimeOffset.MaxValue, DateTimeOffset.Now.AddDays(1)));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created an expiration time equal to DateTimeOffset.MinValue.")]
-        public void CreateWithExpirationTimeAtMinimum()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Checksum("text", DateTimeOffset.Now, DateTimeOffset.MinValue));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created an expiration time equal to DateTimeOffset.MaxValue.")]
-        public void CreateWithExpirationTimeAtMaximum()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Checksum("text", DateTimeOffset.Now, DateTimeOffset.MaxValue));
-        }
-
-        [Test]
-        [Description("Checks that a Checksum cannot be created an expiration time that is earlier than the generation time.")]
-        public void CreateWithExpirationTimeEarlierThanGenerationTime()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(-1)));
-        }
-
-        [Test]
         [Description("Checks that a Checksum is created with the correct hash value.")]
         public void Create()
         {

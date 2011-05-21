@@ -23,41 +23,6 @@ namespace Apollo.Base.Loaders
         private static readonly NetworkSpecification[] s_Networks = NetworkSpecification.ForLocalMachine();
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a null processors collection.")]
-        public void CreateWithNullProcessorsCollection()
-        {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, null, s_Disks, s_Networks));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an empty processors collection.")]
-        public void CreateWithEmptyProcessorsCollection()
-        {
-            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, new ProcessorSpecification[0], s_Disks, s_Networks));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a null disks collection.")]
-        public void CreateWithNullDisksCollection()
-        {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, s_Processors, null, s_Networks));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an empty disk collection.")]
-        public void CreateWithEmptyDisksCollection()
-        {
-            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, s_Processors, new DiskSpecification[0], s_Networks));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a null network collection.")]
-        public void CreateWithNullNetworkCollection()
-        {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, s_Processors, s_Disks, null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created.")]
         public void Create()
         {

@@ -25,22 +25,6 @@ namespace Apollo.Core.Projects
         private readonly Machine m_Machine = new Machine(new Dictionary<BaselineId, BaselineResult>());
 
         [Test]
-        [Description("Checks that an object cannot be created with a null ID object.")]
-        public void CreateWithNullId()
-        {
-            var machines = new List<Machine> { m_Machine };
-            Assert.Throws<ArgumentNullException>(() => new DatasetLoadEventArgs(null, machines));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with a null machines collection.")]
-        public void CreateWithNullMachinesCollection()
-        {
-            var id = new DatasetId();
-            Assert.Throws<ArgumentNullException>(() => new DatasetLoadEventArgs(id, null));
-        }
-
-        [Test]
         [Description("Checks that an object cannot be created with an empty machines collection.")]
         public void CreateWithEmptyMachinesCollection()
         {

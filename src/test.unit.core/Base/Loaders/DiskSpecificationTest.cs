@@ -56,27 +56,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed without a serial number.")]
-        public void CreateWithNullSerial()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DiskSpecification(null, 10, 5));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an empty string as serial number.")]
-        public void CreateWithEmptySerial()
-        {
-            Assert.Throws<ArgumentException>(() => new DiskSpecification(string.Empty, 10, 5));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with more free space than total space.")]
-        public void CreateWithMoreFreeSpacenThanTotalSpace()
-        {
-            Assert.Throws<ArgumentException>(() => new DiskSpecification("a", 5, 10));
-        }
-
-        [Test]
         [Description("Checks that an object can be constructed.")]
         public void Create()
         {

@@ -39,27 +39,6 @@ namespace <#= nameSpace #>
     public sealed class <#= className #>
     {
         [Test]
-        [Description("Checks that an object cannot be created with a null validator reference.")]
-        public void CreateWithNullValidator()
-        { 
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(null, () => DateTimeOffset.Now, () => 42.0));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with a null time function reference.")]
-        public void CreateWithNullTimeFunction()
-        {
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<IValidator>().Object, null, () => 42.0));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with a null randomizer reference.")]
-        public void CreateWithNullRandomizer()
-        {
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<IValidator>().Object, () => DateTimeOffset.Now, null));
-        }
-
-        [Test]
         [Description("Checks that the constructor sets the LatestResult to the correct value.")]
         public void Create()
         {
