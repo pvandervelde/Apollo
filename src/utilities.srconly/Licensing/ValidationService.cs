@@ -70,7 +70,12 @@ namespace Apollo.Utilities.Licensing
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sequences"/> is <see langword="null" />.
         /// </exception>
-        public ValidationService(Func<DateTimeOffset> now, Action<DateTimeOffset> onIsAlive, IProgressTimer timer, ILicenseValidator validator, IEnumerable<ValidationSequence> sequences)
+        public ValidationService(
+            Func<DateTimeOffset> now, 
+            Action<DateTimeOffset> onIsAlive, 
+            IProgressTimer timer, 
+            ILicenseValidator validator, 
+            IEnumerable<ValidationSequence> sequences)
         {
             {
                 Enforce.Argument(() => now);
@@ -93,7 +98,7 @@ namespace Apollo.Utilities.Licensing
                 // the compiler hoists it in the lambda class. No need to make it a 
                 // member variable because we don't need external access.
                 int sequentialFailedValidationCount = 0;
-                m_ValidationTimer.Elapsed += 
+                m_ValidationTimer.OnElapsed += 
                     (s, e) => 
                         {
                             Validate(ref sequentialFailedValidationCount);

@@ -71,8 +71,14 @@ namespace Apollo.Utilities.Licensing
         public ValidationSequence(TimePeriod period, DateTimeOffset startDate)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(!startDate.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, startDate);
-                Enforce.With<ArgumentOutOfRangeException>(!startDate.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, startDate);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !startDate.Equals(DateTimeOffset.MinValue),
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    startDate);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !startDate.Equals(DateTimeOffset.MaxValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    startDate);
             }
 
             m_Period = period;
@@ -106,7 +112,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="other">The <see cref="ValidationSequence"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="ValidationSequence"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="ValidationSequence"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -120,7 +127,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -147,7 +155,8 @@ namespace Apollo.Utilities.Licensing
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

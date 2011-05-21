@@ -180,10 +180,18 @@ namespace Apollo.Core.Base.Loaders
         {
             {
                 Enforce.Argument(() => name);
-                Enforce.With<ArgumentOutOfRangeException>(addressWidth > 0, Resources.Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero);
-                Enforce.With<ArgumentOutOfRangeException>(cores > 0, Resources.Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero);
-                Enforce.With<ArgumentOutOfRangeException>(logicalProcessors >= cores, Resources.Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores);
-                Enforce.With<ArgumentOutOfRangeException>(clockSpeed > 0, Resources.Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    addressWidth > 0, 
+                    Resources.Exceptions_Messages_ProcessorAddressWidthMustBeLargerThanZero);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    cores > 0, 
+                    Resources.Exceptions_Messages_NumberOfPhysicalCoresMustBeLargerThanZero);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    logicalProcessors >= cores, 
+                    Resources.Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    clockSpeed > 0, 
+                    Resources.Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero);
             }
 
             Name = name;
@@ -245,6 +253,8 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         [SuppressMessage("Microsoft.Naming", "CA1709:IdentifiersShouldBeCasedCorrectly", MessageId = "Hz",
             Justification = "Hz is the correct casing for Hertz.")]
+        [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
+            Justification = "MHz is the correct spelling.")]
         public long ClockSpeedInMHz
         {
             get;
@@ -256,7 +266,8 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="other">The <see cref="ProcessorSpecification"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="ProcessorSpecification"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="ProcessorSpecification"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -307,7 +318,8 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

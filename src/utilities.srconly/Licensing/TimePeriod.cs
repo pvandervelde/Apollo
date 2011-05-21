@@ -22,7 +22,7 @@ namespace Apollo.Utilities.Licensing
         /// <summary>
         /// The number of days in a week.
         /// </summary>
-        private const int s_NumberOfDaysPerWeek = 7;
+        private const int NumberOfDaysPerWeek = 7;
 
         /// <summary>
         /// Maps a <c>RepeatPeriod</c> to a function that can be used to calculate the next validation time.
@@ -89,7 +89,7 @@ namespace Apollo.Utilities.Licensing
         private static DateTimeOffset CalculateNextValidationTimePerWeek(sbyte weeks, DateTimeOffset last)
         {
             int weeksAsInteger = weeks;
-            return last.AddDays(weeksAsInteger * s_NumberOfDaysPerWeek);
+            return last.AddDays(weeksAsInteger * NumberOfDaysPerWeek);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Apollo.Utilities.Licensing
         private static DateTimeOffset CalculateNextValidationTimePerFortnight(sbyte fortnights, DateTimeOffset last)
         {
             int fortnightsAsInteger = fortnights;
-            return last.AddDays(2 * s_NumberOfDaysPerWeek * fortnightsAsInteger);
+            return last.AddDays(2 * NumberOfDaysPerWeek * fortnightsAsInteger);
         }
 
         /// <summary>
@@ -320,7 +320,8 @@ namespace Apollo.Utilities.Licensing
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

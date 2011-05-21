@@ -19,7 +19,7 @@ namespace Apollo.Core.Base.Communication
     /// Handles the discovery of endpoints on other computers to which a connection can be 
     /// made via the TCP protocol.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class TcpBasedDiscoverySource : IDiscoverOtherServices, IDisposable
     {
         // Note that the EndpointId meta data is defined by the TcpChannelType

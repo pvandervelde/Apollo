@@ -43,7 +43,7 @@ namespace Apollo.ProjectExplorer
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "projectexplorer.error.log";
 
         /// <summary>
         /// The IOC container that holds the references.
@@ -98,7 +98,10 @@ namespace Apollo.ProjectExplorer
                    .InstancePerDependency()
                    .PropertiesAutowired();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
-                    .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
+                    .Where(
+                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal))
+                            && t.IsClass 
+                            && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
@@ -112,7 +115,10 @@ namespace Apollo.ProjectExplorer
                     .InstancePerDependency()
                     .PropertiesAutowired();
                 builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) && t.IsClass && !t.IsAbstract)
+                    .Where(
+                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) 
+                            && t.IsClass 
+                            && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
                 builder.RegisterAssemblyTypes(localAssembly)
@@ -155,8 +161,12 @@ namespace Apollo.ProjectExplorer
         private void ActivateRegions()
         {
             m_Container.Resolve<ShowViewEventListener>().Start();
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
-            m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
+            m_Container.Resolve<IEventAggregator>()
+                .GetEvent<ShowViewEvent>()
+                .Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
+            m_Container.Resolve<IEventAggregator>()
+                .GetEvent<ShowViewEvent>()
+                .Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
 
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             projectFacade.OnNewProjectLoaded +=

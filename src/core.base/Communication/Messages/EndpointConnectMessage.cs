@@ -49,10 +49,14 @@ namespace Apollo.Core.Base.Communication.Messages
         {
             {
                 Enforce.Argument(() => originatingAddress);
-                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(originatingAddress), Resources.Exceptions_Messages_ChannelAddresssMustBeDefined);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(originatingAddress), 
+                    Resources.Exceptions_Messages_ChannelAddresssMustBeDefined);
 
                 Enforce.Argument(() => channelType);
-                Enforce.With<ArgumentException>(typeof(IChannelType).IsAssignableFrom(channelType), Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
+                Enforce.With<ArgumentException>(
+                    typeof(IChannelType).IsAssignableFrom(channelType), 
+                    Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
             }
 
             Address = originatingAddress;

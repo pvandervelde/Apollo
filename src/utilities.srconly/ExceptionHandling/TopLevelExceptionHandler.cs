@@ -43,8 +43,12 @@ namespace Apollo.Utilities.ExceptionHandling
             // Pre allocate these so that we actually have them.
             var loggers = new ILogger[] 
                 { 
-                    LoggerBuilder.ForFile(Path.Combine(CreateProductSpecificApplicationDataDirectory(), errorLogFileName), new DebugLogTemplate(() => DateTimeOffset.Now)),
-                    LoggerBuilder.ForEventLog(eventLogSource, new DebugLogTemplate(() => DateTimeOffset.Now)),
+                    LoggerBuilder.ForFile(
+                        Path.Combine(CreateProductSpecificApplicationDataDirectory(), errorLogFileName), 
+                        new DebugLogTemplate(() => DateTimeOffset.Now)),
+                    LoggerBuilder.ForEventLog(
+                        eventLogSource, 
+                        new DebugLogTemplate(() => DateTimeOffset.Now)),
                 };
 
             try

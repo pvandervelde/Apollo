@@ -107,7 +107,7 @@ namespace Apollo.Utilities.Licensing
             var service = new ValidationService(datetime, isAlive, timer.Object, validator.Object, sequences);
             service.StartValidation();
 
-            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
         }
 
         [Test]
@@ -140,7 +140,7 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(61);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(1));
 
             // Rerun the validation. This should hit the
@@ -151,12 +151,12 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
         }
 
         [Test]
-        [Description("Checks that running the verification with sequential failing verifications can be successful if there are fewer exceptions than the maximum.")]
+        [Description("Checks that a failed verification does not throw an exception if there are fewer sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresBelowMaximumForSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -194,12 +194,12 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
         }
 
         [Test]
-        [Description("Checks that running the verification with non-sequential failing verifications can be successful if there are fewer exceptions than the maximum.")]
+        [Description("Checks that a failed verification does not throw an exception if there are fewer sequential non-exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresBelowMaximumForNonSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -237,19 +237,19 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(2));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(5));
         }
 
         [Test]
-        [Description("Checks that running the verification with a failing verification throws an exception if there are more exceptions than the maximum.")]
+        [Description("Checks that a failed verification throws an exception if there are more sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresAboveMaximumForSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -288,12 +288,12 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(301);
-            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(4));
         }
 
         [Test]
-        [Description("Checks that running the verification with a failing verification throws an exception if there are more exceptions than the maximum.")]
+        [Description("Checks that a failed verification throws an exception if there are more non-sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresAboveMaximumForNonSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -332,14 +332,14 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(2));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(241);
-            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
+            Assert.Throws<LicenseValidationFailedException>(() => timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now)));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(4));
         }
 
@@ -374,21 +374,21 @@ namespace Apollo.Utilities.Licensing
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(61);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(1));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(121);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(3));
 
             // Make sure we don't match the time exactly, otherwise if we're off by
             // 1 tick, then we don't match. By adding an extra minute we are safe-guarding
             // against near-misses or near-hits
             now = DateTimeOffset.Now.AddMinutes(481);
-            timer.Raise(t => t.Elapsed += null, new TimerElapsedEventArgs(DateTime.Now));
+            timer.Raise(t => t.OnElapsed += null, new TimerElapsedEventArgs(DateTime.Now));
             validator.Verify(v => v.Verify(It.IsAny<TimePeriod>()), Times.Exactly(7));
         }
     }

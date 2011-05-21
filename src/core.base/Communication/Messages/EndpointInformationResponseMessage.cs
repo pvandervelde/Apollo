@@ -27,8 +27,12 @@ namespace Apollo.Core.Base.Communication.Messages
         /// <param name="origin">
         /// The ID of the endpoint that send the message.
         /// </param>
-        /// <param name="inResponseTo">The ID number of the message to which the current message is a response.</param>
-        /// <param name="availableCommands">The array that contains the type information for all available <see cref="ICommandSet"/> interfaces.</param>
+        /// <param name="inResponseTo">
+        ///     The ID number of the message to which the current message is a response.
+        /// </param>
+        /// <param name="availableCommands">
+        ///     The array that contains the type information for all available <see cref="ICommandSet"/> interfaces.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
         /// </exception>

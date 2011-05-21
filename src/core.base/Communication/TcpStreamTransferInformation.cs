@@ -15,7 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// be transferred over a TCP connection.
     /// </summary>
     [Serializable]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class TcpStreamTransferInformation : StreamTransferInformation
     {
         /// <summary>

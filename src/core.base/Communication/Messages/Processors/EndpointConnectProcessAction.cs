@@ -68,7 +68,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 Enforce.Argument(() => connectionInformationSink);
 
                 Enforce.Argument(() => channelTypes);
-                Enforce.With<ArgumentException>(channelTypes.All(t => typeof(IChannelType).IsAssignableFrom(t)), Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
+                Enforce.With<ArgumentException>(
+                    channelTypes.All(t => typeof(IChannelType).IsAssignableFrom(t)),
+                    Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
 
                 Enforce.Argument(() => logger);
             }

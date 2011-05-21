@@ -41,7 +41,8 @@ namespace Apollo.Utilities.Licensing
         public void CreateWithGenerationTimeAtMinimum()
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.MinValue, DateTimeOffset.Now.AddDays(1), checksum));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new LicenseCheckResult(DateTimeOffset.MinValue, DateTimeOffset.Now.AddDays(1), checksum));
         }
 
         [Test]
@@ -49,7 +50,8 @@ namespace Apollo.Utilities.Licensing
         public void CreateWithGenerationTimeAtMaximum()
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.MaxValue, DateTimeOffset.Now.AddDays(1), checksum));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new LicenseCheckResult(DateTimeOffset.MaxValue, DateTimeOffset.Now.AddDays(1), checksum));
         }
 
         [Test]
@@ -57,7 +59,8 @@ namespace Apollo.Utilities.Licensing
         public void CreateWithExpirationTimeAtMinimum()
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MinValue, checksum));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MinValue, checksum));
         }
 
         [Test]
@@ -65,7 +68,8 @@ namespace Apollo.Utilities.Licensing
         public void CreateWithExpirationTimeAtMaximum()
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MaxValue, checksum));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.MaxValue, checksum));
         }
 
         [Test]
@@ -73,7 +77,8 @@ namespace Apollo.Utilities.Licensing
         public void CreateWithExpirationTimeEarlierThanGenerationTime()
         {
             var checksum = new Checksum("text", DateTimeOffset.Now, DateTimeOffset.Now.AddDays(1));
-            Assert.Throws<ArgumentOutOfRangeException>(() => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(-1), checksum));
+            Assert.Throws<ArgumentOutOfRangeException>(
+                () => new LicenseCheckResult(DateTimeOffset.Now, DateTimeOffset.Now.AddDays(-1), checksum));
         }
     }
 }

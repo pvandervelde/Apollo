@@ -15,7 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// versus other channel types.
     /// </summary>
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class ChannelRelativePerformanceAttribute : Attribute
     {
         /// <summary>

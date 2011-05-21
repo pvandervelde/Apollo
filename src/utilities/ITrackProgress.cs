@@ -27,13 +27,13 @@ namespace Apollo.Utilities
         /// <summary>
         /// Occurs when a new mark is provided to the tracker.
         /// </summary>
-        event EventHandler<ProgressMarkEventArgs> MarkAdded;
+        event EventHandler<ProgressMarkEventArgs> OnMarkAdded;
 
         /// <summary>
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        event EventHandler<StartupProgressEventArgs> StartupProgress;
+        event EventHandler<StartupProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Stops the tracking of the progress.

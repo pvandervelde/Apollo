@@ -51,7 +51,10 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
             
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             hub.OnEndpointSignedIn += (s, e) => 
                 {
                     Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
@@ -85,7 +88,10 @@ namespace Apollo.Base.Communication
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
             // Now wait for everything to sort itself out
@@ -118,11 +124,16 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var resetEvent = new AutoResetEvent(false);
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             hub.OnEndpointSignedIn += (s, e) =>
                 {
                     Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                     Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                    resetEvent.Set();
                 };
             hub.OnEndpointSignedOff += (s, e) =>
                 {
@@ -132,7 +143,7 @@ namespace Apollo.Base.Communication
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(connectionInfo.Id));
         }
 
@@ -162,16 +173,21 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var resetEvent = new AutoResetEvent(false);
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             hub.OnEndpointSignedIn += (s, e) =>
             {
                 Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IMachineCommands>(connectionInfo.Id));
         }
 
@@ -199,10 +215,16 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var resetEvent = new AutoResetEvent(false);
+            hub.OnEndpointSignedIn += (s, e) => { resetEvent.Set(); };
+
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             var proxy = hub.CommandsFor<IMockCommandSetWithTaskReturn>(connectionInfo.Id);
             Assert.IsNotNull(proxy);
             Assert.IsInstanceOfType(typeof(CommandSetProxy), proxy);
@@ -235,24 +257,30 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var resetEvent = new AutoResetEvent(false);
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             hub.OnEndpointSignedIn += (s, e) =>
             {
                 Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
             };
             hub.OnEndpointSignedOff += (s, e) =>
             {
                 Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             hub.CloseConnectionTo(connectionInfo.Id);
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
         }
 
@@ -282,24 +310,30 @@ namespace Apollo.Base.Communication
 
             var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
-            var connectionInfo = new ChannelConnectionInformation(new EndpointId("other"), typeof(NamedPipeChannelType), new Uri("net.pipe://localhost/apollo_test"));
+            var resetEvent = new AutoResetEvent(false);
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"), 
+                typeof(NamedPipeChannelType), 
+                new Uri("net.pipe://localhost/apollo_test"));
             hub.OnEndpointSignedIn += (s, e) =>
             {
                 Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
             };
             hub.OnEndpointSignedOff += (s, e) =>
             {
                 Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             hub.CloseConnections();
 
-            Thread.Sleep(50);
+            resetEvent.WaitOne();
             Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
         }
     }

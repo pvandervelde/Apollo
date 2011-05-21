@@ -293,7 +293,9 @@ namespace Apollo.Core.Projects
         public IProxyDataset BaseDataset()
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.With<CannotUseProjectAfterClosingItException>(
+                    !IsClosed, 
+                    Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
             }
 
             return ObtainProxyFor(m_RootDataset);
@@ -317,7 +319,9 @@ namespace Apollo.Core.Projects
         public void Save(IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.With<CannotUseProjectAfterClosingItException>(
+                    !IsClosed, 
+                    Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => persistenceInfo);
             }
 
@@ -346,9 +350,14 @@ namespace Apollo.Core.Projects
         public void Export(DatasetId datasetToExport, bool shouldIncludeChildren, IPersistenceInformation persistenceInfo)
         {
             {
-                Enforce.With<CannotUseProjectAfterClosingItException>(!IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                Enforce.With<CannotUseProjectAfterClosingItException>(
+                    !IsClosed, 
+                    Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
-                Enforce.With<UnknownDatasetException>(m_Datasets.ContainsKey(datasetToExport), Resources_NonTranslatable.Exception_Messages_UnknownDataset_WithId, datasetToExport);
+                Enforce.With<UnknownDatasetException>(
+                    m_Datasets.ContainsKey(datasetToExport), 
+                    Resources_NonTranslatable.Exception_Messages_UnknownDataset_WithId, 
+                    datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
             }
 

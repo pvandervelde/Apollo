@@ -22,7 +22,8 @@ namespace Apollo.ProjectExplorer.Events.Listeners
         /// Initializes a new instance of the <see cref="ShowViewEventListener"/> class.
         /// </summary>
         /// <param name="container">The IOC container.</param>
-        public ShowViewEventListener(IContainer container) : base(container)
+        public ShowViewEventListener(IContainer container)
+            : base(container)
         {
         }
 
@@ -42,7 +43,7 @@ namespace Apollo.ProjectExplorer.Events.Listeners
         {
             var region = null as IRegion;
             var regionManager = request.RegionManager ?? MainRegionManager;
-            
+
             // If the view already exists, re-activate it instead - this way we only resolve and initialise 
             // the presenter if we actually need it.
             if (regionManager.Regions.ContainsRegionWithName(request.RegionName))
@@ -58,7 +59,7 @@ namespace Apollo.ProjectExplorer.Events.Listeners
             var presenter = (IPresenter)Container.Resolve(request.PresenterType);
             var view = Container.Resolve(presenter.ViewType);
             presenter.Initialize(view, request.Parameter);
-            RegionManager.SetRegionManager((DependencyObject) view, regionManager);
+            RegionManager.SetRegionManager((DependencyObject)view, regionManager);
 
             var viewWindow = view as Window;
             if (viewWindow != null)
@@ -69,7 +70,11 @@ namespace Apollo.ProjectExplorer.Events.Listeners
             {
                 if (region == null)
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "The region '{0}' does not exist.", request.RegionName));
+                    throw new InvalidOperationException(
+                        string.Format(
+                            CultureInfo.InvariantCulture, 
+                            "The region '{0}' does not exist.", 
+                            request.RegionName));
                 }
 
                 region.AddAndActivateWithParameter(view, request.Parameter);

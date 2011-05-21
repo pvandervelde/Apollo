@@ -22,7 +22,7 @@ namespace Apollo.Base.Loaders
         /// <summary>
         /// Store the hardware specs for the current machine so that we only have to load them once.
         /// </summary>
-        private static readonly HardwareSpecification m_HardwareForLocalMachine = HardwareSpecification.ForLocalMachine();
+        private static readonly HardwareSpecification s_HardwareForLocalMachine = HardwareSpecification.ForLocalMachine();
 
         [VerifyContract]
         [Description("Checks that the GetHashCode() contract is implemented correctly.")]
@@ -37,12 +37,12 @@ namespace Apollo.Base.Loaders
             DistinctInstances =
                 new List<Machine> 
                         {
-                            new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
                         },
         };
 
@@ -53,12 +53,12 @@ namespace Apollo.Base.Loaders
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("b"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("c"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("d"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("e"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("f"), m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
                     },
         };
 
@@ -66,7 +66,7 @@ namespace Apollo.Base.Loaders
         [Description("Checks that an object cannot be constructed with a null network identifier.")]
         public void CreateWithNullIdentifier()
         {
-            Assert.Throws<ArgumentNullException>(() => new Machine(null, m_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()));
+            Assert.Throws<ArgumentNullException>(() => new Machine(null, s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()));
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace Apollo.Base.Loaders
         [Description("Checks that an object cannot be constructed with a null collection of baselines.")]
         public void CreateWithNullBaseLineCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), m_HardwareForLocalMachine, null));
+            Assert.Throws<ArgumentNullException>(() => new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, null));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Apollo.Base.Loaders
         public void Create()
         {
             var id = new NetworkIdentifier("a");
-            var hardware = m_HardwareForLocalMachine;
+            var hardware = s_HardwareForLocalMachine;
             var baselines = new Dictionary<BaselineId, BaselineResult>();
             var machine = new Machine(id, hardware, baselines);
 

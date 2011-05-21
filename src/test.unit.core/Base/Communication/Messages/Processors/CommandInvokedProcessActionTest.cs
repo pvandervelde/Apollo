@@ -63,7 +63,7 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var endpoint = new EndpointId("id");
 
-            AutoResetEvent resetEvent = new AutoResetEvent(false);
+            var resetEvent = new AutoResetEvent(false);
             EndpointId storedEndpoint = null;
             ICommunicationMessage storedMsg = null;
             Action<EndpointId, ICommunicationMessage> sendAction = (e, m) =>
@@ -114,7 +114,7 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var endpoint = new EndpointId("id");
 
-            AutoResetEvent resetEvent = new AutoResetEvent(false);
+            var resetEvent = new AutoResetEvent(false);
             EndpointId storedEndpoint = null;
             ICommunicationMessage storedMsg = null;
             Action<EndpointId, ICommunicationMessage> sendAction = (e, m) =>
@@ -169,7 +169,7 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var endpoint = new EndpointId("id");
 
-            AutoResetEvent resetEvent = new AutoResetEvent(false);
+            var resetEvent = new AutoResetEvent(false);
             int count = 0;
             ICommunicationMessage storedMsg = null;
             Action<EndpointId, ICommunicationMessage> sendAction = (e, m) =>

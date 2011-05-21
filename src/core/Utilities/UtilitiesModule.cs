@@ -15,7 +15,7 @@ namespace Apollo.Core.Utilities
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed partial class UtilitiesModule : Module
     {
         /// <summary>

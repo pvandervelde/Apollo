@@ -494,8 +494,13 @@ namespace Apollo.Core.Projects
             public IProxyDataset CreateNewChild(DatasetCreationInformation newChild)
             {
                 {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                    Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
+                    Enforce.With<ArgumentException>(
+                        !m_Owner.IsClosed, 
+                        Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<DatasetCannotBecomeParentException>(
+                        CanBecomeParent, 
+                        Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, 
+                        m_IdOfDataset);
                     Enforce.Argument(() => newChild);
                 }
 
@@ -514,10 +519,17 @@ namespace Apollo.Core.Projects
             public IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
             {
                 {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
-                    Enforce.With<DatasetCannotBecomeParentException>(CanBecomeParent, Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, m_IdOfDataset);
+                    Enforce.With<ArgumentException>(
+                        !m_Owner.IsClosed, 
+                        Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<DatasetCannotBecomeParentException>(
+                        CanBecomeParent, 
+                        Resources_NonTranslatable.Exception_Messages_DatasetCannotBecomeParent_WithId, 
+                        m_IdOfDataset);
                     Enforce.Argument(() => newChildren);
-                    Enforce.With<ArgumentException>(newChildren.Any(), Resources_NonTranslatable.Exception_Messages_MissingCreationInformation);
+                    Enforce.With<ArgumentException>(
+                        newChildren.Any(), 
+                        Resources_NonTranslatable.Exception_Messages_MissingCreationInformation);
                 }
 
                 var result = from child in newChildren

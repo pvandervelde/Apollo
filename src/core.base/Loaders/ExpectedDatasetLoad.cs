@@ -11,7 +11,7 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Describes the expected load a dataset will put on a given machine.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class ExpectedDatasetLoad
     {
         /// <summary>

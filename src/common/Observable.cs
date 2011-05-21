@@ -20,6 +20,8 @@ namespace Apollo.UI.Common
         /// <summary>
         /// The event that is fired when a property changes.
         /// </summary>
+        [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
+            Justification = "Event is inherited from the INotifyProperyChanged interface.")]
         public event PropertyChangedEventHandler PropertyChanged;
 
         /// <summary>

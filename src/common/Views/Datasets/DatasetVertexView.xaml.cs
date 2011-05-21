@@ -13,7 +13,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <summary>
     /// Interaction logic for DatasetVertexView.xaml.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public partial class DatasetVertexView : UserControl, IDatasetView
     {
         /// <summary>

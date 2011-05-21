@@ -147,8 +147,12 @@ namespace Apollo.Core.Base.Loaders
         {
             {
                 Enforce.Argument(() => serialNumber);
-                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(serialNumber), Resources.Exceptions_Messages_ADiskNeedsToHaveASerial);
-                Enforce.With<ArgumentException>(totalSpace >= availableSpace, Resources.Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(serialNumber), 
+                    Resources.Exceptions_Messages_ADiskNeedsToHaveASerial);
+                Enforce.With<ArgumentException>(
+                    totalSpace >= availableSpace, 
+                    Resources.Exceptions_Messages_ADiskCannotHaveMoreFreeSpaceThanTotalSpace);
             }
 
             Name = name;
@@ -246,7 +250,8 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

@@ -78,12 +78,27 @@ namespace Apollo.Utilities.Licensing
         public LicenseCheckResult(DateTimeOffset generationTime, DateTimeOffset expirationTime, Checksum checksum)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!generationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !generationTime.Equals(DateTimeOffset.MinValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    generationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !generationTime.Equals(DateTimeOffset.MaxValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    generationTime);
 
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MinValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(!expirationTime.Equals(DateTimeOffset.MaxValue), SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
-                Enforce.With<ArgumentOutOfRangeException>(generationTime < expirationTime, SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !expirationTime.Equals(DateTimeOffset.MinValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    !expirationTime.Equals(DateTimeOffset.MaxValue), 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    generationTime < expirationTime, 
+                    SrcOnlyResources.ExceptionMessagesArgumentOutOfRangeWithArgument, 
+                    expirationTime);
             }
 
             m_GenerationTime = generationTime;
@@ -132,7 +147,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="other">The <see cref="LicenseCheckResult"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="LicenseCheckResult"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="LicenseCheckResult"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -148,7 +164,8 @@ namespace Apollo.Utilities.Licensing
         /// </summary>
         /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -175,7 +192,8 @@ namespace Apollo.Utilities.Licensing
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to: 
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap
@@ -201,7 +219,11 @@ namespace Apollo.Utilities.Licensing
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "License validated at {0}. Validation expires: {1}.", m_GenerationTime, m_ExpirationTime);
+            return string.Format(
+                CultureInfo.InvariantCulture, 
+                "License validated at {0}. Validation expires: {1}.", 
+                m_GenerationTime, 
+                m_ExpirationTime);
         }
     }
 }

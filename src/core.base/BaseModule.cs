@@ -21,7 +21,7 @@ namespace Apollo.Core.Base
     /// <summary>
     /// Handles the component registrations for the communication and loader components.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class BaseModule : Module
     {
         private static void AttachMessageProcessingActions(IActivatedEventArgs<MessageHandler> args)
@@ -45,6 +45,18 @@ namespace Apollo.Core.Base
 
         private static void RegisterCommunicationComponents(ContainerBuilder builder)
         {
+            RegisterCommandHub(builder);
+            RegisterCommunicationLayer(builder);
+            RegisterDiscoverySources(builder);
+            RegisterMessageHandler(builder);
+            RegisterMessageProcessingActions(builder);
+            RegisterCommunicationChannel(builder);
+            RegisterEndpoints(builder);
+            RegisterChannelTypes(builder);
+        }
+
+        private static void RegisterCommandHub(ContainerBuilder builder)
+        {
             builder.Register(c => new RemoteCommandHub(
                     c.Resolve<ICommunicationLayer>(),
                     c.Resolve<CommandProxyBuilder>(),
@@ -54,26 +66,32 @@ namespace Apollo.Core.Base
             builder.Register(c => new CommandProxyBuilder(
                 c.Resolve<ICommunicationLayer>().Id,
                 (endpoint, msg) =>
-                    {
-                        return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                    }));
+                {
+                    return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
+                }));
 
             builder.Register(c => new LocalCommandCollection())
                 .As<ICommandCollection>()
                 .SingleInstance();
+        }
 
+        private static void RegisterCommunicationLayer(ContainerBuilder builder)
+        {
             builder.Register(c => new CommunicationLayer(
                     c.Resolve<IEnumerable<IDiscoverOtherServices>>(),
-                    (Type t, EndpointId id) => 
-                    { 
+                    (Type t, EndpointId id) =>
+                    {
                         return Tuple.Create(
                             c.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
-                            c.ResolveKeyed<IDirectIncomingMessages>(t)); 
+                            c.ResolveKeyed<IDirectIncomingMessages>(t));
                     },
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<ICommunicationLayer>()
                 .SingleInstance();
+        }
 
+        private static void RegisterDiscoverySources(ContainerBuilder builder)
+        {
             builder.Register(c => new TcpBasedDiscoverySource())
                 .As<IDiscoverOtherServices>();
 
@@ -86,33 +104,34 @@ namespace Apollo.Core.Base
                 .As<IDiscoverOtherServices>()
                 .As<IAcceptExternalEndpointInformation>()
                 .SingleInstance();
+        }
 
-            // MessageHandler
+        private static void RegisterMessageHandler(ContainerBuilder builder)
+        {
             // Note that there is no direct relation between the IChannelType and the MessageHandler
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
             // we pretend that there is a connection between IChannelType and the MessageHandler.
-            {
-                builder.Register(c => new MessageHandler())
-                    .OnActivated(a =>
-                    {
-                        AttachMessageProcessingActions(a);
-                    })
-                    .Keyed<IProcessIncomingMessages>(typeof(NamedPipeChannelType))
-                    .Keyed<IDirectIncomingMessages>(typeof(NamedPipeChannelType))
-                    .SingleInstance();
+            builder.Register(c => new MessageHandler())
+                .OnActivated(a =>
+                {
+                    AttachMessageProcessingActions(a);
+                })
+                .Keyed<IProcessIncomingMessages>(typeof(NamedPipeChannelType))
+                .Keyed<IDirectIncomingMessages>(typeof(NamedPipeChannelType))
+                .SingleInstance();
 
-                builder.Register(c => new MessageHandler())
-                    .OnActivated(a =>
-                        {
-                            AttachMessageProcessingActions(a);
-                        })
-                    .Keyed<IProcessIncomingMessages>(typeof(TcpChannelType))
-                    .Keyed<IDirectIncomingMessages>(typeof(TcpChannelType))
-                    .SingleInstance();
-            }
+            builder.Register(c => new MessageHandler())
+                .OnActivated(a =>
+                {
+                    AttachMessageProcessingActions(a);
+                })
+                .Keyed<IProcessIncomingMessages>(typeof(TcpChannelType))
+                .Keyed<IDirectIncomingMessages>(typeof(TcpChannelType))
+                .SingleInstance();
+        }
 
-            // IMessageProcessAction(s)
-            //
+        private static void RegisterMessageProcessingActions(ContainerBuilder builder)
+        {
             // For now we'll just create two extra objects only to get their types
             // and then throw those objects away. If this turns out to be too expensive
             // or the list becomes too long then we can do something cunning with the 
@@ -136,57 +155,64 @@ namespace Apollo.Core.Base
                     c.Resolve<ICommandCollection>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
-            
+        }
+
+        private static void RegisterCommunicationChannel(ContainerBuilder builder)
+        {
             // CommunicationChannel.
             // Register one channel for each communication type. At the moment
             // that is only named pipe and TCP.
-            {
-                builder.Register((c, p) => new CommunicationChannel(
-                        p.TypedAs<EndpointId>(),
-                        c.Resolve<NamedPipeChannelType>(),
-                        () => c.Resolve<IMessagePipe>(),
-                        endpointToProxy =>
-                        {
-                            return c.Resolve<ISendingEndpoint>(
-                                new TypedParameter(
-                                    typeof(Func<EndpointId, IChannelProxy>),
-                                    endpointToProxy));
-                        },
-                        c.Resolve<Action<LogSeverityProxy, string>>()))
-                    .OnActivated(a =>
-                        {
-                            ConnectToMessageHandler(a, typeof(NamedPipeChannelType));
-                        })
-                    .Keyed<ICommunicationChannel>(typeof(NamedPipeChannelType))
-                    .SingleInstance();
+            builder.Register((c, p) => new CommunicationChannel(
+                    p.TypedAs<EndpointId>(),
+                    c.Resolve<NamedPipeChannelType>(),
+                    () => c.Resolve<IMessagePipe>(),
+                    endpointToProxy =>
+                    {
+                        return c.Resolve<ISendingEndpoint>(
+                            new TypedParameter(
+                                typeof(Func<EndpointId, IChannelProxy>),
+                                endpointToProxy));
+                    },
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .OnActivated(a =>
+                {
+                    ConnectToMessageHandler(a, typeof(NamedPipeChannelType));
+                })
+                .Keyed<ICommunicationChannel>(typeof(NamedPipeChannelType))
+                .SingleInstance();
 
-                builder.Register((c, p) => new CommunicationChannel(
-                        p.TypedAs<EndpointId>(),
-                        c.Resolve<TcpChannelType>(),
-                        () => c.Resolve<IMessagePipe>(),
-                        endpointToProxy =>
-                        {
-                            return c.Resolve<ISendingEndpoint>(
-                                new TypedParameter(
-                                    typeof(Func<EndpointId, IChannelProxy>),
-                                    endpointToProxy));
-                        },
-                        c.Resolve<Action<LogSeverityProxy, string>>()))
-                    .OnActivated(a =>
-                        {
-                            ConnectToMessageHandler(a, typeof(TcpChannelType));
-                        })
-                    .Keyed<ICommunicationChannel>(typeof(TcpChannelType))
-                    .SingleInstance();
-            }
+            builder.Register((c, p) => new CommunicationChannel(
+                    p.TypedAs<EndpointId>(),
+                    c.Resolve<TcpChannelType>(),
+                    () => c.Resolve<IMessagePipe>(),
+                    endpointToProxy =>
+                    {
+                        return c.Resolve<ISendingEndpoint>(
+                            new TypedParameter(
+                                typeof(Func<EndpointId, IChannelProxy>),
+                                endpointToProxy));
+                    },
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .OnActivated(a =>
+                {
+                    ConnectToMessageHandler(a, typeof(TcpChannelType));
+                })
+                .Keyed<ICommunicationChannel>(typeof(TcpChannelType))
+                .SingleInstance();
+        }
 
+        private static void RegisterEndpoints(ContainerBuilder builder)
+        {
             builder.Register((c, p) => new SendingEndpoint(
                     p.TypedAs<Func<EndpointId, IChannelProxy>>()))
                 .As<ISendingEndpoint>();
 
             builder.Register(c => new ReceivingEndpoint())
                 .As<IMessagePipe>();
+        }
 
+        private static void RegisterChannelTypes(ContainerBuilder builder)
+        {
             builder.Register(c => new NamedPipeChannelType(
                     c.Resolve<IConfiguration>()))
                 .As<IChannelType>()

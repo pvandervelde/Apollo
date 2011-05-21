@@ -134,7 +134,8 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
-            Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(() => dataset.LoadOntoMachine(LoadingLocation.None, new MachineDistributionRange()));
+            Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
+                () => dataset.LoadOntoMachine(LoadingLocation.None, new MachineDistributionRange()));
         }
 
         [Test]

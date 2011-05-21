@@ -54,8 +54,8 @@ namespace Test.Spec.System
         public void StartApollo()
         {
             var tracker = CreateTracker();
-            tracker.MarkAdded += new EventHandler<ProgressMarkEventArgs>(OnTrackerMarkAdded);
-            tracker.StartupProgress += new EventHandler<StartupProgressEventArgs>(OnTrackerStartupProgress);
+            tracker.OnMarkAdded += new EventHandler<ProgressMarkEventArgs>(OnTrackerMarkAdded);
+            tracker.OnStartupProgress += new EventHandler<StartupProgressEventArgs>(OnTrackerStartupProgress);
 
             // Load the core
             ApolloLoader.Load(ConnectToKernel, tracker);

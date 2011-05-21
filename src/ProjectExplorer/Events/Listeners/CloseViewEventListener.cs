@@ -64,7 +64,11 @@ namespace Apollo.ProjectExplorer.Events.Listeners
                     {
                         if (region == null)
                         {
-                            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "The region '{0}' does not exist.", request.RegionName));
+                            throw new InvalidOperationException(
+                                string.Format(
+                                    CultureInfo.InvariantCulture, 
+                                    "The region '{0}' does not exist.", 
+                                    request.RegionName));
                         }
 
                         region.Deactivate(view);

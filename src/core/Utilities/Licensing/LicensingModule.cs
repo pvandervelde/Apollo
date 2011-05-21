@@ -19,7 +19,7 @@ namespace Apollo.Core.Utilities.Licensing
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "This class never goes out of scope so there's no real need to dispose of it.")]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed partial class LicensingModule : Module
     {
         /// <summary>

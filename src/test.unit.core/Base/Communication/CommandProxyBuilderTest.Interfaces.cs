@@ -55,7 +55,7 @@ namespace Apollo.Base.Communication
 
         public interface IMockCommandSetWithEvents : ICommandSet
         {
-            event EventHandler<EventArgs> MyEvent;
+            event EventHandler<EventArgs> OnMyEvent;
         }
 
         public interface IMockCommandSetWithoutMethods : ICommandSet

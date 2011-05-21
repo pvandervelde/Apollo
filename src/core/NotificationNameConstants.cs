@@ -11,7 +11,7 @@ namespace Apollo.Core
     /// <summary>
     /// Stores the <see cref="NotificationName"/> objects in use by the core.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class NotificationNameConstants : INotificationNameConstants
     {
         /// <summary>
