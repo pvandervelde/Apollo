@@ -19,66 +19,6 @@ namespace Apollo.Utilities.Licensing
     public sealed class ValidationServiceTest
     {
         [Test]
-        [Description("Checks that an ValidationService instance cannot be created with a null Date delegate reference.")]
-        public void CreateWithNullDateDelegate()
-        { 
-            Action<DateTimeOffset> isAlive = time => { };
-            var timer = new Mock<IProgressTimer>();
-            var validator = new Mock<ILicenseValidator>();
-            var sequences = new List<ValidationSequence>();
-
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(null, isAlive, timer.Object, validator.Object, sequences));
-        }
-
-        [Test]
-        [Description("Checks that an ValidationService instance cannot be created with a null IsAlive delegate reference.")]
-        public void CreateWithNullIsAliveDelegate()
-        {
-            Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
-            var timer = new Mock<IProgressTimer>();
-            var validator = new Mock<ILicenseValidator>();
-            var sequences = new List<ValidationSequence>();
-
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, null, timer.Object, validator.Object, sequences));
-        }
-
-        [Test]
-        [Description("Checks that an ValidationService instance cannot be created with a null timer reference.")]
-        public void CreateWithNullTimer()
-        {
-            Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
-            Action<DateTimeOffset> isAlive = time => { };
-            var validator = new Mock<ILicenseValidator>();
-            var sequences = new List<ValidationSequence>();
-
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, null, validator.Object, sequences));
-        }
-
-        [Test]
-        [Description("Checks that an ValidationService instance cannot be created with a null license validator reference.")]
-        public void CreateWithNullLicenseValidator()
-        {
-            Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
-            Action<DateTimeOffset> isAlive = time => { };
-            var timer = new Mock<IProgressTimer>();
-            var sequences = new List<ValidationSequence>();
-
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer.Object, null, sequences));
-        }
-
-        [Test]
-        [Description("Checks that an ValidationService instance cannot be created with a null reference to period collection.")]
-        public void CreateWithNullPeriodCollection()
-        {
-            Func<DateTimeOffset> datetime = () => DateTimeOffset.Now;
-            Action<DateTimeOffset> isAlive = time => { };
-            var timer = new Mock<IProgressTimer>();
-            var validator = new Mock<ILicenseValidator>();
-
-            Assert.Throws<ArgumentNullException>(() => new ValidationService(datetime, isAlive, timer.Object, validator.Object, null));
-        }
-
-        [Test]
         [Description("Checks that starting the verification without any verification periods leads to an exception.")]
         public void StartValidationWithoutVerificationPeriods()
         {

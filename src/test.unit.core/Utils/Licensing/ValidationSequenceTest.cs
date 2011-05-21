@@ -68,19 +68,5 @@ namespace Apollo.Utilities.Licensing
                     new ValidationSequence(new TimePeriod(RepeatPeriod.Daily), DateTimeOffset.Now.AddMinutes(1)),
                 },
         };
-
-        [Test]
-        [Description("Checks that a ValidationSequence cannot be created with a start date that is equal to DateTimeOffset.MaxValue.")]
-        public void CreateWithStartDateTooLarge()
-        { 
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ValidationSequence(new TimePeriod(), DateTimeOffset.MaxValue));
-        }
-
-        [Test]
-        [Description("Checks that a ValidationSequence cannot be created with a start date that is equal to DateTimeOffset.MinValue.")]
-        public void CreateWithStartDateTooSmall()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ValidationSequence(new TimePeriod(), DateTimeOffset.MinValue));
-        }
     }
 }

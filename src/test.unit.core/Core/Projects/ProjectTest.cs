@@ -21,13 +21,6 @@ namespace Apollo.Core.Projects
     public sealed class ProjectTest
     {
         [Test]
-        [Description("Checks that an object cannot be created with a null distributor function.")]
-        public void CreateWithNullDistributor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new Project(null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created with only a distribution function.")]
         public void Create()
         {

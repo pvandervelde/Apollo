@@ -29,26 +29,5 @@ namespace Apollo.Core
             Assert.AreEqual<int>(progress, args.Progress);
             Assert.AreEqual<IProgressMark>(progressMock.Object, args.CurrentlyProcessing);
         }
-
-        [Test]
-        [Description("Checks that it is not possible to create progress event arguments without a mark.")]
-        public void CreateWithNullMarker()
-        {
-            Assert.Throws<ArgumentNullException>(() => new StartupProgressEventArgs(10, null));
-        }
-
-        [Test]
-        [Description("Checks that it is not possible to create progress event arguments with negative progress.")]
-        public void CreateWithTooLowNumber()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new StartupProgressEventArgs(-10, new Mock<IProgressMark>().Object));
-        }
-
-        [Test]
-        [Description("Checks that it is not possible to create progress event arguments with more than 100% progress.")]
-        public void CreateWithTooHighNumber()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new StartupProgressEventArgs(110, new Mock<IProgressMark>().Object));
-        }
     }
 }

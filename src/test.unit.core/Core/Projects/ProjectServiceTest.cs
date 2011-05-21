@@ -22,36 +22,6 @@ namespace Apollo.Core.Projects
     public sealed class ProjectServiceTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without an IValidationResultStorage object.")]
-        public void CreateWithNullValidationResultStorage()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectService(
-                null,
-                new Mock<IHelpDistributingDatasets>().Object,
-                new Mock<IBuildProjects>().Object));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created without an IHelpDistributionDatasets object.")]
-        public void CreateWithNullDatasetDistributor()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectService(
-                new LicenseValidationResultStorage(),
-                null,
-                new Mock<IBuildProjects>().Object));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created without an IBuildProjects object.")]
-        public void CreateWithNullProjectBuilder()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectService(
-                new LicenseValidationResultStorage(),
-                new Mock<IHelpDistributingDatasets>().Object,
-                null));
-        }
-
-        [Test]
         [Description("Checks that the service can stop successfully.")]
         public void Stop()
         {

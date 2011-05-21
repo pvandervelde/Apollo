@@ -340,14 +340,6 @@ namespace Apollo.Core
         #endregion
 
         [Test]
-        [Description("Checks that a service cannot be installed with a null reference.")]
-        public void InstallServiceWithNullObject()
-        {
-            var kernel = new Kernel();
-            Assert.Throws<ArgumentNullException>(() => kernel.Install(null));
-        }
-
-        [Test]
         [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {

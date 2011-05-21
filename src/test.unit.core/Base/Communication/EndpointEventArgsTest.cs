@@ -18,13 +18,6 @@ namespace Apollo.Base.Communication
     public sealed class EndpointEventArgsTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without an endpoint ID.")]
-        public void CreateWithNullId()
-        {
-            Assert.Throws<ArgumentNullException>(() => new EndpointEventArgs(null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created.")]
         public void Create()
         {

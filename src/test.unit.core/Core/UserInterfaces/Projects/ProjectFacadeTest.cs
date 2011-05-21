@@ -20,13 +20,6 @@ namespace Apollo.Core.UserInterfaces.Projects
     public sealed class ProjectFacadeTest
     {
         [Test]
-        [Description("Checks an object cannot be created with a null project reference.")]
-        public void CreateWithNullProject()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProjectFacade(null));
-        }
-
-        [Test]
         [Description("Checks that updates to the project name pass the new name on to the project object.")]
         public void Name()
         {

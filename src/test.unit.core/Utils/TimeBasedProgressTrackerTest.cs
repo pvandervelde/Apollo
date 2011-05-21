@@ -35,28 +35,6 @@ namespace Apollo.Utilities
         #endregion
 
         [Test]
-        [Description("Checks that an object cannot be created with a null timer.")]
-        public void CreateWithNullTimer()
-        {
-            Assert.Throws<ArgumentNullException>(() => new TimeBasedProgressTracker(null, -1, new Mock<IStoreMarkerTimes>().Object));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created with an unknownprogress value between 0 and 100.")]
-        public void CreateWithIncorrectProgressValue()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(
-                () => new TimeBasedProgressTracker(new Mock<IProgressTimer>().Object, 10, new Mock<IStoreMarkerTimes>().Object));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created without an IStoreMarkerTimes object.")]
-        public void CreateWithNullMarkerStore()
-        {
-            Assert.Throws<ArgumentNullException>(() => new TimeBasedProgressTracker(new Mock<IProgressTimer>().Object, -1, null));
-        }
-
-        [Test]
         [Description("Checks that the MarkAdded event is raised correctly.")]
         public void MarkRaised()
         {

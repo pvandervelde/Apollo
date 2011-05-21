@@ -58,41 +58,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a null Name.")]
-        public void CreateWithNullName()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ProcessorSpecification(null, 32, ProcessorArchitecture.x86, 1, 1, 10));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an invalid address width.")]
-        public void CreateWithInvalidAddressWidth()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProcessorSpecification("a", 0, ProcessorArchitecture.x86, 1, 1, 10));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an invalid number of cores.")]
-        public void CreateWithInvalidNumberOfCores()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProcessorSpecification("a", 32, ProcessorArchitecture.x86, 0, 1, 10));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an invalid number of logical processors.")]
-        public void CreateWithInvalidNumberOfLogicalProcessors()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProcessorSpecification("a", 32, ProcessorArchitecture.x86, 2, 1, 10));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an invalid clock speed.")]
-        public void CreateWithInvalidClockSpeed()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new ProcessorSpecification("a", 32, ProcessorArchitecture.x86, 1, 1, 0));
-        }
-
-        [Test]
         [Description("Checks that an object can be constructed.")]
         public void Create()
         {

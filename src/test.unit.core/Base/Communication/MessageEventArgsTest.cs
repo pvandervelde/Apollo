@@ -19,13 +19,6 @@ namespace Apollo.Base.Communication
     public sealed class MessageEventArgsTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without a message.")]
-        public void CreateWithNullMessage()
-        {
-            Assert.Throws<ArgumentNullException>(() => new MessageEventArgs(null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created.")]
         public void Create()
         {

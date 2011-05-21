@@ -18,20 +18,6 @@ namespace Apollo.Utilities.Logging
     public sealed class LogMessageTest
     {
         [Test]
-        [Description("Checks a LogMessage cannot be created with a log level set to None.")]
-        public void CreateWithLogLevelNone()
-        {
-            Assert.Throws<ArgumentException>(() => new LogMessage(LevelToLog.None, "Dummy text"));
-        }
-
-        [Test]
-        [Description("Checks a LogMessage cannot be created with a null text.")]
-        public void CreateWithNullText()
-        {
-            Assert.Throws<ArgumentNullException>(() => new LogMessage(LevelToLog.Debug, null));
-        }
-
-        [Test]
         [Description("Checks a LogMessage can be created.")]
         public void Create()
         {

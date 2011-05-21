@@ -19,13 +19,6 @@ namespace Apollo.Core.Utilities
     public sealed class FileConstantsTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without an ApplicationConstants object.")]
-        public void CreateWithNullApplicationConstants()
-        {
-            Assert.Throws<ArgumentNullException>(() => new FileConstants(null));
-        }
-
-        [Test]
         [Description("Checks that the ProductSettingsPath method returns the correct path.")]
         public void ProductSettingsPath()
         {

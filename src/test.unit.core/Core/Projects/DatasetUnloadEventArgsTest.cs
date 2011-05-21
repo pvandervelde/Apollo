@@ -18,13 +18,6 @@ namespace Apollo.Core.Projects
     public sealed class DatasetUnloadEventArgsTest
     {
         [Test]
-        [Description("Checks that an object cannot be created with a null ID object.")]
-        public void CreateWithNullId()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DatasetUnloadEventArgs(null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created correctly.")]
         public void Create()
         {

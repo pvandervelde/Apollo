@@ -39,28 +39,6 @@ namespace <#= nameSpace #>
     public sealed class <#= className #>
     {
         [Test]
-        [Description("Checks that an object cannot be created without a validation cache.")]
-        public void CreateWithNullCache()
-        {
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(null, (sum, generated, expires) => { }, () => DateTimeOffset.Now));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created without a validation result function.")]
-        public void CreateWithNullValidationResult()
-        {
-
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<ILicenseValidationCache>().Object, null, () => DateTimeOffset.Now));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be created without a current date/time function.")]
-        public void CreateWithNullDateTimeFunction()
-        {
-            Assert.Throws<ArgumentNullException>(() => new <#= classUnderTest #>(new Mock<ILicenseValidationCache>().Object, (sum, generated, expires) => { }, null));
-        }
-
-        [Test]
         [Description("Checks that the validation fails when a validation result is from the future, even if the invalidation of the cache fails.")]
         public void VerifyWithGeneratedResultInTheFutureAndFailingCacheInvalidate()
         { 

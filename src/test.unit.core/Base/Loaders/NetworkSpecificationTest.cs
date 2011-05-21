@@ -56,27 +56,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a null Name.")]
-        public void CreateWithNullName()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NetworkSpecification(null, "Mac", true, 5));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a null MAC address.")]
-        public void CreateWithNullMacAddress()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NetworkSpecification(null, true));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an empty string as MAC address.")]
-        public void CreateWithEmptyMacAddress()
-        {
-            Assert.Throws<ArgumentException>(() => new NetworkSpecification(string.Empty, true));
-        }
-
-        [Test]
         [Description("Checks that an object can be constructed.")]
         public void Create()
         {

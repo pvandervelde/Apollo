@@ -91,20 +91,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the TimePeriod struct cannot be created with a negative modifier.")]
-        public void CreateWithNegativeModifier()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new TimePeriod(RepeatPeriod.Daily, -1));
-        }
-
-        [Test]
-        [Description("Checks that the TimePeriod struct cannot be created with a zero modifier.")]
-        public void CreateWithModifierAtZero()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new TimePeriod(RepeatPeriod.Daily, 0));
-        }
-
-        [Test]
         [Description("Checks that the TimePeriod struct can be created with a modifier.")]
         public void CreateWithModifier()
         {

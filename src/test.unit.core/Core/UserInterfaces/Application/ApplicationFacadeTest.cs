@@ -19,13 +19,6 @@ namespace Apollo.Core.UserInterfaces.Application
     public sealed class ApplicationFacadeTest
     {
         [Test]
-        [Description("Checks that an object cannot be created without the user interface service.")]
-        public void CreateWithNullService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ApplicationFacade(null));
-        }
-
-        [Test]
         [Description("Checks that the shutdown command is correctly given.")]
         public void Shutdown()
         {

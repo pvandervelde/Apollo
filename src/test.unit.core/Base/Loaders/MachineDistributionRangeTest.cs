@@ -52,20 +52,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a minimum value that is too low.")]
-        public void CreateWithMinimumToLow()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new MachineDistributionRange(0, 1));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with a maximum value that is too low.")]
-        public void CreateWithMaximumToLow()
-        {
-            Assert.Throws<ArgumentOutOfRangeException>(() => new MachineDistributionRange(5, 4));
-        }
-
-        [Test]
         [Description("Checks that an object can be constructed with the standard values.")]
         public void CreateDefault()
         {

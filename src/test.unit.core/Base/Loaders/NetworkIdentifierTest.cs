@@ -66,20 +66,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object cannot be constructed with a null domain name.")]
-        public void CreateWithNullDomainName()
-        {
-            Assert.Throws<ArgumentNullException>(() => new NetworkIdentifier(null));
-        }
-
-        [Test]
-        [Description("Checks that an object cannot be constructed with an empty domain name.")]
-        public void CreateWithEmptyDomainName()
-        {
-            Assert.Throws<ArgumentException>(() => new NetworkIdentifier(string.Empty));
-        }
-
-        [Test]
         [Description("Checks that an object can be created.")]
         public void Create()
         {

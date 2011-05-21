@@ -19,13 +19,6 @@ namespace Apollo.Core.Utilities.Licensing
     public sealed class ValidationServiceRunnerTest
     {
         [Test]
-        [Description("Checks that a service runner cannot be created with a null service reference.")]
-        public void CreateWithNullService()
-        {
-            Assert.Throws<ArgumentNullException>(() => new ValidationServiceRunner(null));
-        }
-
-        [Test]
         [Description("Checks that the service is correctly started.")]
         public void Initialize()
         {

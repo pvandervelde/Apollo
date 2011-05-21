@@ -143,13 +143,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that an object cannot be created with a null read-only dataset.")]
-        public void CreateWithNullDataset()
-        {
-            Assert.Throws<ArgumentNullException>(() => new DatasetFacade(null));
-        }
-
-        [Test]
         [Description("Checks that an object can be created.")]
         public void Create()
         { 
