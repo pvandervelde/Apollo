@@ -29,6 +29,6 @@ namespace Apollo.Utilities
         /// <summary>
         /// Raised when the timer interval is elapsed.
         /// </summary>
-        event EventHandler<TimerElapsedEventArgs> Elapsed;
+        event EventHandler<TimerElapsedEventArgs> OnElapsed;
     }
 }

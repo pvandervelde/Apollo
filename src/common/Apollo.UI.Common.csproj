@@ -156,7 +156,6 @@
     <Compile Include="Views\Projects\ProjectParameter.cs" />
     <Compile Include="Views\Projects\ProjectPresenter.cs" />
     <Compile Include="WindowsVersionNumbers.cs" />
-    <Compile Include="WindowView.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

@@ -1,6 +1,6 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <!-- Specify where tasks are implemented. -->
-  <UsingTask AssemblyFile="Microsoft.StyleCop.dll" TaskName="StyleCopTask"/>
+  <UsingTask AssemblyFile="StyleCop.dll" TaskName="StyleCopTask"/>
 
   <PropertyGroup>
     <BuildDependsOn>$(BuildDependsOn);StyleCop</BuildDependsOn>
@@ -88,11 +88,15 @@
       <Output TaskParameter="Include" ItemName="StyleCopExcludedFiles"/>
     </CreateItem>
 
+    <ItemGroup>
+       <StyleCopFiles Remove="@(ExcludeFromStyleCop)" />    
+    </ItemGroup>
+
     <Message Text="Excluding @(StyleCopExcludedFiles)" Importance="Normal" />
 
     <!-- Run the StyleCop MSBuild task. -->
     <StyleCopTask
-      ProjectFullPath="$(MSBuildProjectFile)"
+      ProjectFullPath="$(MSBuildProjectDirectory)"
       SourceFiles="@(StyleCopFiles)"
       AdditionalAddinPaths="@(StyleCopAdditionalAddinPaths)"
       ForceFullAnalysis="$(StyleCopForceFullAnalysis)"

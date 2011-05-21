@@ -43,7 +43,9 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => endpoint);
 
                 Enforce.Argument(() => channelType);
-                Enforce.With<ArgumentException>(typeof(IChannelType).IsAssignableFrom(channelType), Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
+                Enforce.With<ArgumentException>(
+                    typeof(IChannelType).IsAssignableFrom(channelType), 
+                    Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
 
                 Enforce.Argument(() => address);
             }

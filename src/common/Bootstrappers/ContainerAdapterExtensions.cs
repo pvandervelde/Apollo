@@ -129,7 +129,7 @@ namespace Apollo.UI.Common.Bootstrappers
         public static void TypeMappingAlreadyRegistered(ILoggerFacade logger, Type type)
         {
             logger.Log(
-                String.Format(
+                string.Format(
                     CultureInfo.CurrentCulture,
                     "Type mapping already registered {0}",
                     type.Name), 

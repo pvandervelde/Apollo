@@ -14,7 +14,7 @@ namespace Apollo.Core
     /// Handles the component registrations for the kernel part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class KernelModule : Module
     {
         /// <summary>

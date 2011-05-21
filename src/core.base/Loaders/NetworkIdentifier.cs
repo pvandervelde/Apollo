@@ -113,7 +113,9 @@ namespace Apollo.Core.Base.Loaders
         {
             {
                 Enforce.Argument(() => domainName);
-                Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(domainName), Resources.Exceptions_Messages_MachineDomainNameMustNotBeEmpty);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(domainName),
+                    Resources.Exceptions_Messages_MachineDomainNameMustNotBeEmpty);
             }
 
             DomainName = domainName;
@@ -215,7 +217,8 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

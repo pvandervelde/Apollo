@@ -147,7 +147,11 @@ namespace Apollo.Utilities
         {
             var helper = InitializeFusionHelper();
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
-            var name = CreateFullAssemblyName(assemblyName.Name, new Version(0, 0, 0, 0), assemblyName.CultureInfo, new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
+            var name = CreateFullAssemblyName(
+                assemblyName.Name, 
+                new Version(0, 0, 0, 0), 
+                assemblyName.CultureInfo, 
+                new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }
@@ -158,7 +162,11 @@ namespace Apollo.Utilities
         {
             var helper = InitializeFusionHelper();
             var assemblyName = typeof(TestAttribute).Assembly.GetName();
-            var name = CreateFullAssemblyName(assemblyName.Name, assemblyName.Version, new CultureInfo("en-US"), new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
+            var name = CreateFullAssemblyName(
+                assemblyName.Name, 
+                assemblyName.Version, 
+                new CultureInfo("en-US"), 
+                new System.Text.ASCIIEncoding().GetString(assemblyName.GetPublicKeyToken()));
             var result = ExecuteLoadAssembly(helper, name);
             Assert.IsNull(result);
         }

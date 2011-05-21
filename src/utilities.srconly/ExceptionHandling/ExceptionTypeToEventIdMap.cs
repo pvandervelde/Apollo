@@ -19,7 +19,7 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <summary>
         /// The table that maps an exception type to an event ID.
         /// </summary>
-        private static readonly Dictionary<Type, int> m_ExceptionTypeToEventIdMap =
+        private static readonly Dictionary<Type, int> s_ExceptionTypeToEventIdMap =
             new Dictionary<Type, int> 
                 { 
                     // Runtime errors
@@ -61,7 +61,7 @@ namespace Apollo.Utilities.ExceptionHandling
         public static int EventIdForException(Exception exception)
         {
             var exceptionType = exception.GetType();
-            while (!m_ExceptionTypeToEventIdMap.ContainsKey(exceptionType))
+            while (!s_ExceptionTypeToEventIdMap.ContainsKey(exceptionType))
             {
                 exceptionType = exceptionType.BaseType;
             }
@@ -69,7 +69,7 @@ namespace Apollo.Utilities.ExceptionHandling
             // If we get here then:
             // a) we found our exception type
             // b) we fell all the way through and found Exception as the type
-            return m_ExceptionTypeToEventIdMap[exceptionType];
+            return s_ExceptionTypeToEventIdMap[exceptionType];
         }
     }
 }

@@ -6,7 +6,20 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-// Design supress messages
-[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "Apollo.Utilities.Licensing")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Apollo.Core.Logging.Logger.#TranslateToNlogLevel(Apollo.Core.Logging.LevelToLog)", MessageId = "Nlog")]
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "member", Target = "Apollo.Core.Logging.Logger.#TranslateFromNlogLevel(NLog.Logger)", MessageId = "Nlog")]
+[module: SuppressMessage(
+    "Microsoft.Design", 
+    "CA1020:AvoidNamespacesWithFewTypes", 
+    Scope = "namespace", 
+    Target = "Apollo.Utilities.Licensing")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1704:IdentifiersShouldBeSpelledCorrectly", 
+    Scope = "member", 
+    Target = "Apollo.Core.Logging.Logger.#TranslateToNlogLevel(Apollo.Core.Logging.LevelToLog)", 
+    MessageId = "Nlog")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1704:IdentifiersShouldBeSpelledCorrectly", 
+    Scope = "member", 
+    Target = "Apollo.Core.Logging.Logger.#TranslateFromNlogLevel(NLog.Logger)", 
+    MessageId = "Nlog")]

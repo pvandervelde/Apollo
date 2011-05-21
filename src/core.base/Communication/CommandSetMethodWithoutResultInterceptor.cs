@@ -52,11 +52,15 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandSetMethodWithoutResultInterceptor"/> class.
         /// </summary>
-        /// <param name="sendMessageWithResponse">The function used to send the information about the method invocation to the owning endpoint.</param>
+        /// <param name="sendMessageWithResponse">
+        ///     The function used to send the information about the method invocation to the owning endpoint.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
-        public CommandSetMethodWithoutResultInterceptor(Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> sendMessageWithResponse)
+        public CommandSetMethodWithoutResultInterceptor(
+            Func<ISerializedMethodInvocation, 
+            Task<ICommunicationMessage>> sendMessageWithResponse)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);

@@ -198,7 +198,13 @@ namespace Apollo.UI.Common.Bootstrappers
         {
             if (Container.IsRegistered<TFrom>())
             {
-                Logger.Log(string.Format(CultureInfo.InvariantCulture, "Type is already registered: {0}", typeof(TFrom).Name), Category.Warn, Priority.Medium);
+                Logger.Log(
+                    string.Format(
+                        CultureInfo.InvariantCulture, 
+                        "Type is already registered: {0}", 
+                        typeof(TFrom).Name), 
+                        Category.Warn, 
+                        Priority.Medium);
                 ContainerAdapterExtensions.TypeMappingAlreadyRegistered<TFrom>(Logger);
             }
             else

@@ -19,13 +19,13 @@ namespace Apollo.Utilities
     /// Handles the component registrations for the utilities part 
     /// of the core.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed partial class UtilitiesModule : Autofac.Module
     {
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "projectexplorer.error.log";
 
         /// <summary>
         /// Override to add registrations to the container.
@@ -51,7 +51,7 @@ namespace Apollo.Utilities
 
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
-                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), s_DefaultErrorFileName),
+                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
                         new DebugLogTemplate(() => DateTimeOffset.Now)))
                     .As<ILogger>()
                     .SingleInstance();

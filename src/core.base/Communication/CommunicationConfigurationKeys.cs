@@ -12,7 +12,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Defines the <see cref="ConfigurationKey"/> objects for the communication layers.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal static class CommunicationConfigurationKeys
     {
         /// <summary>

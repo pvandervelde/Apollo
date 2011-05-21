@@ -14,7 +14,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// Interaction logic for DatasetGraphView.xaml.
     /// </summary>
     [CLSCompliant(false)]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public partial class DatasetGraphView : UserControl, IDatasetGraphView
     {
         /// <summary>

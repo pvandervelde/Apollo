@@ -36,5 +36,11 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Src")]
-[assembly: SuppressMessage("Microsoft.Design", "CA2210:AssembliesShouldHaveValidStrongNames")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1704:IdentifiersShouldBeSpelledCorrectly", 
+    MessageId = "Src")]
+
+[assembly: SuppressMessage(
+    "Microsoft.Design", 
+    "CA2210:AssembliesShouldHaveValidStrongNames")]

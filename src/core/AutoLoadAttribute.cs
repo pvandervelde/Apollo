@@ -13,7 +13,7 @@ namespace Apollo.Core
     /// Defines an attribute that is placed on <c>KernelService</c> classes to indicate
     /// that the specific service type is automatically loaded.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = true)]
     internal sealed class AutoLoadAttribute : Attribute
     {

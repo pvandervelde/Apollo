@@ -18,43 +18,43 @@ namespace Apollo.Base.Loaders
     public sealed class HardwareSpecificationTest
     {
         // Cache the WMI values for better performance
-        private static readonly ProcessorSpecification[] m_Processors = ProcessorSpecification.ForLocalMachine();
-        private static readonly DiskSpecification[] m_Disks = DiskSpecification.ForLocalMachine();
-        private static readonly NetworkSpecification[] m_Networks = NetworkSpecification.ForLocalMachine();
+        private static readonly ProcessorSpecification[] s_Processors = ProcessorSpecification.ForLocalMachine();
+        private static readonly DiskSpecification[] s_Disks = DiskSpecification.ForLocalMachine();
+        private static readonly NetworkSpecification[] s_Networks = NetworkSpecification.ForLocalMachine();
 
         [Test]
         [Description("Checks that an object cannot be constructed with a null processors collection.")]
         public void CreateWithNullProcessorsCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, null, m_Disks, m_Networks));
+            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, null, s_Disks, s_Networks));
         }
 
         [Test]
         [Description("Checks that an object cannot be constructed with an empty processors collection.")]
         public void CreateWithEmptyProcessorsCollection()
         {
-            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, new ProcessorSpecification[0], m_Disks, m_Networks));
+            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, new ProcessorSpecification[0], s_Disks, s_Networks));
         }
 
         [Test]
         [Description("Checks that an object cannot be constructed with a null disks collection.")]
         public void CreateWithNullDisksCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, m_Processors, null, m_Networks));
+            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, s_Processors, null, s_Networks));
         }
 
         [Test]
         [Description("Checks that an object cannot be constructed with an empty disk collection.")]
         public void CreateWithEmptyDisksCollection()
         {
-            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, m_Processors, new DiskSpecification[0], m_Networks));
+            Assert.Throws<ArgumentException>(() => new HardwareSpecification(10, s_Processors, new DiskSpecification[0], s_Networks));
         }
 
         [Test]
         [Description("Checks that an object cannot be constructed with a null network collection.")]
         public void CreateWithNullNetworkCollection()
         {
-            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, m_Processors, m_Disks, null));
+            Assert.Throws<ArgumentNullException>(() => new HardwareSpecification(10, s_Processors, s_Disks, null));
         }
 
         [Test]
@@ -62,9 +62,9 @@ namespace Apollo.Base.Loaders
         public void Create()
         {
             ulong memory = 10;
-            var processors = m_Processors;
-            var disks = m_Disks;
-            var network = m_Networks;
+            var processors = s_Processors;
+            var disks = s_Disks;
+            var network = s_Networks;
 
             var hardware = new HardwareSpecification(memory, processors, disks, network);
 

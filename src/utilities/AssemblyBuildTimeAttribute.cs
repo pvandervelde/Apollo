@@ -18,7 +18,7 @@ namespace Apollo.Utilities
     [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = false, Inherited = false)]
     [SuppressMessage("Microsoft.Design", "CA1019:DefineAccessorsForAttributeArguments",
         Justification = "There is an accessor, it just changes the type to a DateTimeOffset.")]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class AssemblyBuildTimeAttribute : Attribute
     {
         /// <summary>

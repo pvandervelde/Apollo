@@ -36,7 +36,7 @@ namespace Test.Manual.Console
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "communicationtest.crash.log";
+        private const string DefaultErrorFileName = "communicationtest.crash.log";
 
         /// <summary>
         /// The collection of addresses for the named pipes of applications on the local
@@ -78,7 +78,7 @@ namespace Test.Manual.Console
                 };
 
             var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
-            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, s_DefaultErrorFileName);
+            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, DefaultErrorFileName);
         }
 
         private static void RunApplication(string[] args, ApplicationContext context)

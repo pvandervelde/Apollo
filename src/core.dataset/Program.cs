@@ -23,7 +23,7 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string s_DefaultErrorFileName = "dataset.error.log";
+        private const string DefaultErrorFileName = "dataset.error.log";
 
         /// <summary>
         /// The main entry point for the dataset application.
@@ -58,7 +58,7 @@ namespace Apollo.Core.Dataset
                 };
 
             var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
-            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, s_DefaultErrorFileName);
+            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, DefaultErrorFileName);
         }
     }
 }

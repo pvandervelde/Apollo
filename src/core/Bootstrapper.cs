@@ -54,7 +54,7 @@ namespace Apollo.Core
     /// </item>
     /// </list>
     /// </design>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public abstract class Bootstrapper
     {
         /// <summary>

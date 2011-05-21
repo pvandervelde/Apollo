@@ -16,11 +16,11 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Occurs when the view is activated.
         /// </summary>
-        event EventHandler Activated;
+        event EventHandler OnActivated;
 
         /// <summary>
         /// Occurs when the view is deactivated.
         /// </summary>
-        event EventHandler Deactivated;
+        event EventHandler OnDeactivated;
     }
 }

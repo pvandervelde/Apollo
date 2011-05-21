@@ -12,7 +12,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Defines the methods for receiving messages on the receiving side of the communication channel.
     /// </summary>
-    [ServiceContract()]
+    [ServiceContract]
     internal interface IReceivingEndpoint
     {
         /// <summary>

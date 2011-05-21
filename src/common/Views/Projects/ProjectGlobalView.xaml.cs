@@ -12,7 +12,7 @@ namespace Apollo.UI.Common.Views.Projects
     /// <summary>
     /// Interaction logic for ProjectGlobalView.xaml.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public partial class ProjectGlobalView : UserControl, IProjectView
     {
         /// <summary>

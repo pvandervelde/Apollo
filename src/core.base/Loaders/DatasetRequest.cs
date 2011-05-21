@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Loaders
     /// troublesome because of the untrustworthiness of the network etc.
     /// </para>
     /// </design>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class DatasetRequest
     {
         /// <summary>

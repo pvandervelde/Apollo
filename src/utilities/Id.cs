@@ -167,11 +167,14 @@ namespace Apollo.Utilities
         protected abstract TId Clone(TInternalValue value);
 
         /// <summary>
-        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// Compares the current instance with another object of the same type and returns an integer that
+        /// indicates whether the current instance precedes, follows, or occurs in the same position in the
+        /// sort order as the other object.
         /// </summary>
         /// <param name="other">An object to compare with this instance.</param>
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// A 32-bit signed integer that indicates the relative order of the objects being compared.
+        /// The return value has these meanings:
         /// Value
         /// Meaning
         /// Less than zero
@@ -190,12 +193,15 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
-        /// Compares the values.
+        /// Compares the current instance with another object of the same type and returns an integer that
+        /// indicates whether the current instance precedes, follows, or occurs in the same position in the
+        /// sort order as the other object.
         /// </summary>
         /// <param name="ourValue">The value of the current object.</param>
         /// <param name="theirValue">The value of the object with which the current object is being compared.</param>
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// A 32-bit signed integer that indicates the relative order of the objects being compared.
+        /// The return value has these meanings:
         /// Value
         /// Meaning
         /// Less than zero
@@ -211,11 +217,14 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
-        /// Compares the current instance with another object of the same type and returns an integer that indicates whether the current instance precedes, follows, or occurs in the same position in the sort order as the other object.
+        /// Compares the current instance with another object of the same type and returns an integer that
+        /// indicates whether the current instance precedes, follows, or occurs in the same position in the
+        /// sort order as the other object.
         /// </summary>
         /// <param name="obj">An object to compare with this instance.</param>
         /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the objects being compared. The return value has these meanings:
+        /// A 32-bit signed integer that indicates the relative order of the objects being compared.
+        /// The return value has these meanings:
         /// Value
         /// Meaning
         /// Less than zero
@@ -260,7 +269,8 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="other">The <see cref="Id&lt;TId, TInternalValue&gt;"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="Id&lt;TId, TInternalValue&gt;"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="Id&lt;TId, TInternalValue&gt;"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -283,7 +293,8 @@ namespace Apollo.Utilities
         /// <param name="ourValue">The value owned by the current ID.</param>
         /// <param name="theirValue">The value owned by the other ID.</param>
         /// <returns>
-        ///     <see langword="true"/> if <paramref name="theirValue"/> is equal to the value owned by this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if <paramref name="theirValue"/> is equal to the value owned by this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

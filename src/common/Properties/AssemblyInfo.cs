@@ -40,9 +40,38 @@ using System.Windows;
     ResourceDictionaryLocation.SourceAssembly)]
 
 // Suppress messages
-[module: SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", Scope = "namespace", Target = "Apollo.UI.Common.Eventing", MessageId = "Eventing")]
-[module: SuppressMessage("Microsoft.Design", "CA1020:AvoidNamespacesWithFewTypes", Scope = "namespace", Target = "XamlGeneratedNamespace")]
-[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "type", Target = "Apollo.UI.Common.Views.Datasets.DatasetViewGraph", MessageId = "ViewGraph")]
-[module: SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", Scope = "member", Target = "Apollo.UI.Common.Bootstrapper.CompositeBootstrapper.#m_UseDefaultConfiguration", MessageId = "mUse")]
-[module: SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Apollo.UI.Common.Views.Datasets.DatasetVertexView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)", Justification = "Generated code")]
-[module: SuppressMessage("Microsoft.Naming", "CA1707:IdentifiersShouldNotContainUnderscores", Scope = "member", Target = "Apollo.UI.Common.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)", Justification = "Generated code")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1704:IdentifiersShouldBeSpelledCorrectly", 
+    Scope = "namespace", 
+    Target = "Apollo.UI.Common.Eventing", 
+    MessageId = "Eventing")]
+[module: SuppressMessage(
+    "Microsoft.Design", 
+    "CA1020:AvoidNamespacesWithFewTypes", 
+    Scope = "namespace", 
+    Target = "XamlGeneratedNamespace")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1702:CompoundWordsShouldBeCasedCorrectly", 
+    Scope = "type", 
+    Target = "Apollo.UI.Common.Views.Datasets.DatasetViewGraph", 
+    MessageId = "ViewGraph")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1702:CompoundWordsShouldBeCasedCorrectly", 
+    Scope = "member", 
+    Target = "Apollo.UI.Common.Bootstrapper.CompositeBootstrapper.#m_UseDefaultConfiguration", 
+    MessageId = "mUse")]
+[module: SuppressMessage(
+    "Microsoft.Performance", 
+    "CA1800:DoNotCastUnnecessarily", 
+    Scope = "member", 
+    Target = "Apollo.UI.Common.Views.Datasets.DatasetVertexView.#System.Windows.Markup.IComponentConnector.Connect(System.Int32,System.Object)", 
+    Justification = "Generated code")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1707:IdentifiersShouldNotContainUnderscores", 
+    Scope = "member", 
+    Target = "Apollo.UI.Common.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)", 
+    Justification = "Generated code")]

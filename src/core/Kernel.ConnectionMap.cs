@@ -21,7 +21,7 @@ namespace Apollo.Core
         /// <summary>
         /// Stores a link between a requested type and the KernelService which fullfills this request.
         /// </summary>
-        [ExcludeFromCodeCoverage()]
+        [ExcludeFromCodeCoverage]
         private sealed class ConnectionMap
         {
             /// <summary>

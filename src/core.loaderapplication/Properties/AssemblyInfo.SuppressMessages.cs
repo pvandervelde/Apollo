@@ -5,5 +5,3 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-
-// Design supress messages

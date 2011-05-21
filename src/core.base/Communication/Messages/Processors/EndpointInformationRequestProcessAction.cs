@@ -95,7 +95,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// </summary>
         /// <param name="message">The message upon which the action acts.</param>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
-            Justification = "There is no point in letting the exception escape. It'll just kill the channel but we still won't know how that happened, so we log and move on.")]
+            Justification = "If the exception escapes then the channel dies but we won't know what happened, so we log and move on.")]
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as EndpointInformationRequestMessage;

@@ -23,21 +23,33 @@ namespace Apollo.Base.Communication
         public void CreateWithNullId()
         {
             var channelType = new Mock<IChannelType>().Object;
-            Assert.Throws<ArgumentNullException>(() => new ChannelConnectionInformation(null, channelType.GetType(), new Uri("net.pipe://localhost/pipe/endpoint")));
+            Assert.Throws<ArgumentNullException>(
+                () => new ChannelConnectionInformation(
+                    null, 
+                    channelType.GetType(), 
+                    new Uri("net.pipe://localhost/pipe/endpoint")));
         }
 
         [Test]
         [Description("Checks that an object cannot be created without a channel type.")]
         public void CreateWithNullChannelType()
         {
-            Assert.Throws<ArgumentNullException>(() => new ChannelConnectionInformation(new EndpointId("a"), null, new Uri("net.pipe://localhost/pipe/endpoint")));
+            Assert.Throws<ArgumentNullException>(
+                () => new ChannelConnectionInformation(
+                    new EndpointId("a"), 
+                    null, 
+                    new Uri("net.pipe://localhost/pipe/endpoint")));
         }
 
         [Test]
         [Description("Checks that an object cannot be created with an incorrect channel type.")]
         public void CreateWithIncorrectChannelType()
         {
-            Assert.Throws<ArgumentException>(() => new ChannelConnectionInformation(new EndpointId("a"), typeof(object), new Uri("net.pipe://localhost/pipe/endpoint")));
+            Assert.Throws<ArgumentException>(
+                () => new ChannelConnectionInformation(
+                    new EndpointId("a"), 
+                    typeof(object), 
+                    new Uri("net.pipe://localhost/pipe/endpoint")));
         }
 
         [Test]
@@ -45,7 +57,11 @@ namespace Apollo.Base.Communication
         public void CreateWithNullUri()
         {
             var channelType = new Mock<IChannelType>().Object;
-            Assert.Throws<ArgumentNullException>(() => new ChannelConnectionInformation(new EndpointId("a"), channelType.GetType(), null));
+            Assert.Throws<ArgumentNullException>(
+                () => new ChannelConnectionInformation(
+                    new EndpointId("a"), 
+                    channelType.GetType(), 
+                    null));
         }
 
         [Test]

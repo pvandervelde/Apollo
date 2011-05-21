@@ -108,8 +108,15 @@ namespace Apollo.Core.Base.Loaders
         public MachineDistributionRange(int minimum, int maximum)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(minimum > 0, Resources.Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue, minimum);
-                Enforce.With<ArgumentOutOfRangeException>(maximum >= minimum, Resources.Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues, minimum, maximum);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    minimum > 0, 
+                    Resources.Exceptions_Messages_MimimumDistributionRangeMustBeLargerThanOne_WithValue, 
+                    minimum);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    maximum >= minimum, 
+                    Resources.Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues, 
+                    minimum, 
+                    maximum);
             }
 
             Minimum = minimum;
@@ -141,7 +148,8 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="other">The <see cref="MachineDistributionRange"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="MachineDistributionRange"/> is equal to this instance; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the specified <see cref="MachineDistributionRange"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -188,7 +196,8 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override int GetHashCode()
         {
-            // As obtained from the Jon Skeet answer to:  http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
             // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
             //
             // Overflow is fine, just wrap

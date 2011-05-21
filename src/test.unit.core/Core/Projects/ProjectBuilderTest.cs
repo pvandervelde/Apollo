@@ -61,7 +61,8 @@ namespace Apollo.Core.Projects
         public void BuildWithWithStorageOnly()
         {
             var builder = new ProjectBuilder();
-            Assert.Throws<CannotCreateProjectWithoutDatasetDistributorException>(() => builder.FromStorage(new Mock<IPersistenceInformation>().Object).Build());
+            Assert.Throws<CannotCreateProjectWithoutDatasetDistributorException>(
+                () => builder.FromStorage(new Mock<IPersistenceInformation>().Object).Build());
         }
 
         [Test]

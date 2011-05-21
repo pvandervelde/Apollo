@@ -20,17 +20,20 @@ namespace Test.Manual.Console.Models
         /// <summary>
         /// The collection of endpoints that can be contacted.
         /// </summary>
-        private readonly ObservableCollection<ConnectionInformationViewModel> m_KnownEndpoints = new ObservableCollection<ConnectionInformationViewModel>();
+        private readonly ObservableCollection<ConnectionInformationViewModel> m_KnownEndpoints 
+            = new ObservableCollection<ConnectionInformationViewModel>();
 
         /// <summary>
         /// The collection of endpoints for the application.
         /// </summary>
-        private readonly ObservableCollection<ConnectionInformationViewModel> m_LocalEndpoints = new ObservableCollection<ConnectionInformationViewModel>();
+        private readonly ObservableCollection<ConnectionInformationViewModel> m_LocalEndpoints 
+            = new ObservableCollection<ConnectionInformationViewModel>();
 
         /// <summary>
         /// The collection of messages that have been received from the active endpoints.
         /// </summary>
-        private readonly ObservableCollection<EndpointMessagesViewModel> m_Messages = new ObservableCollection<EndpointMessagesViewModel>();
+        private readonly ObservableCollection<EndpointMessagesViewModel> m_Messages 
+            = new ObservableCollection<EndpointMessagesViewModel>();
 
         /// <summary>
         /// The thread dispatcher that is connected to the window.

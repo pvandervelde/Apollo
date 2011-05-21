@@ -16,7 +16,7 @@ namespace Apollo.Core.Utilities.Licensing
     /// <remarks>
     /// This class should only be used for debugging.
     /// </remarks>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     internal sealed class RegistryKeyValidator : IValidator
     {
         /// <summary>

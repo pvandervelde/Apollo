@@ -14,7 +14,7 @@ namespace Apollo.Core.Base
     /// Stores information used in the creation of a new dataset.
     /// </summary>
     [Serializable]
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class DatasetCreationInformation
     {
         /// <summary>

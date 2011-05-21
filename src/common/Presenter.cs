@@ -49,10 +49,10 @@ namespace Apollo.UI.Common
         /// Gets or sets the event aggregator.
         /// </summary>
         /// <value>The event aggregator.</value>
-        public IEventAggregator EventAggregator 
-        { 
-            get; 
-            set; 
+        public IEventAggregator EventAggregator
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -108,9 +108,9 @@ namespace Apollo.UI.Common
             Justification = "These methods should not be overriden in child classes.")]
         Type IPresenter.ViewType
         {
-            get 
-            { 
-                return typeof(TView); 
+            get
+            {
+                return typeof(TView);
             }
         }
 
@@ -123,22 +123,22 @@ namespace Apollo.UI.Common
             Justification = "These methods should not be overriden in child classes.")]
         void IPresenter.Initialize(object view, Parameter parameter)
         {
-            View = (TView) view;
-            Parameter = (TParameter) parameter;
+            View = (TView)view;
+            Parameter = (TParameter)parameter;
 
             var standardView = View as IStandardView;
             if (standardView != null)
             {
-                standardView.Closed += (x, y) => OnViewClosed();
-                standardView.Closing += (x, y) => OnViewClosing(y);
-                standardView.Shown += (x, y) => OnViewShown();
+                standardView.OnClosed += (x, y) => OnViewClosed();
+                standardView.OnClosing += (x, y) => OnViewClosing(y);
+                standardView.OnShown += (x, y) => OnViewShown();
             }
 
             var regionView = View as IRegionView;
             if (regionView != null)
             {
-                regionView.Activated += (x, y) => OnViewActivated();
-                regionView.Deactivated += (x, y) => OnViewDeactivated();
+                regionView.OnActivated += (x, y) => OnViewActivated();
+                regionView.OnDeactivated += (x, y) => OnViewDeactivated();
             }
 
             Initialize();
@@ -152,9 +152,9 @@ namespace Apollo.UI.Common
             Justification = "These methods should not be overriden in child classes.")]
         object IPresenter.View
         {
-            get 
-            { 
-                return View; 
+            get
+            {
+                return View;
             }
         }
 
@@ -166,9 +166,9 @@ namespace Apollo.UI.Common
             Justification = "These methods should not be overriden in child classes.")]
         Parameter IPresenter.Parameter
         {
-            get 
-            { 
-                return Parameter; 
+            get
+            {
+                return Parameter;
             }
         }
 

@@ -15,7 +15,7 @@ namespace Apollo.Utilities
     /// <summary>
     /// Defines the default <see cref="IProgressTimer"/> object.
     /// </summary>
-    [ExcludeFromCodeCoverage()]
+    [ExcludeFromCodeCoverage]
     public sealed class ProgressTimer : IProgressTimer, IDisposable
     {
         /// <summary>
@@ -33,12 +33,15 @@ namespace Apollo.Utilities
         public ProgressTimer(TimeSpan updateInterval)
         {
             {
-                Enforce.With<ArgumentOutOfRangeException>(updateInterval > TimeSpan.Zero, Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument, updateInterval);
+                Enforce.With<ArgumentOutOfRangeException>(
+                    updateInterval > TimeSpan.Zero, 
+                    Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument, 
+                    updateInterval);
             }
 
             m_ProgressTimer.AutoReset = true;
             m_ProgressTimer.Interval = updateInterval.TotalMilliseconds;
-            m_ProgressTimer.Elapsed += (s, e) => RaiseElapsed(e.SignalTime);
+            m_ProgressTimer.Elapsed += (s, e) => RaiseOnElapsed(e.SignalTime);
         }
 
         /// <summary>
@@ -60,15 +63,15 @@ namespace Apollo.Utilities
         /// <summary>
         /// Raised when the timer interval is elapsed.
         /// </summary>
-        public event EventHandler<TimerElapsedEventArgs> Elapsed;
+        public event EventHandler<TimerElapsedEventArgs> OnElapsed;
 
         /// <summary>
         /// Raises the elapsed event.
         /// </summary>
         /// <param name="signalTime">The signal time.</param>
-        private void RaiseElapsed(DateTime signalTime)
+        private void RaiseOnElapsed(DateTime signalTime)
         {
-            var local = Elapsed;
+            var local = OnElapsed;
             if (local != null)
             {
                 local(this, new TimerElapsedEventArgs(signalTime));
