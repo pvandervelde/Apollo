@@ -152,7 +152,7 @@
     <Compile Include="Core\UserInterfaces\Projects\LoadProjectCommandTest.cs" />
     <Compile Include="Core\UserInterfaces\Projects\NoCurrentProjectExceptionTest.cs" />
     <Compile Include="Core\UserInterfaces\Projects\ProjectFacadeTest.cs" />
-    <Compile Include="Core\UserInterfaces\Projects\ProjectServiceFacadeTest.cs" />
+    <Compile Include="Core\UserInterfaces\Projects\ProjectHubTest.cs" />
     <Compile Include="Core\UserInterfaces\Projects\UnloadProjectCommandTest.cs" />
     <Compile Include="Core\UserInterfaces\UserInterfaceServiceTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

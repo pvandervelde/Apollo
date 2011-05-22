@@ -57,7 +57,7 @@ namespace Apollo.Core.UserInterfaces
                 .As<IAbstractApplications>()
                 .SingleInstance();
 
-            builder.Register(c => new ProjectServiceFacade(c.Resolve<IUserInterfaceService>()))
+            builder.Register(c => new ProjectHub(c.Resolve<IUserInterfaceService>()))
                 .As<ILinkToProjects>()
                 .SingleInstance();
 

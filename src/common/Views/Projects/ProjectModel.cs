@@ -34,8 +34,8 @@ namespace Apollo.UI.Common.Views.Projects
             }
 
             m_Project = facade;
-            m_Project.OnProjectNameUpdated += (s, e) => Notify(() => Name);
-            m_Project.OnProjectSummaryUpdated += (s, e) => Notify(() => Summary);
+            m_Project.OnNameChanged += (s, e) => Notify(() => Name);
+            m_Project.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Project.OnDatasetCreated += (s, e) => Notify(() => NumberOfDatasets);
             m_Project.OnDatasetDeleted += (s, e) => Notify(() => NumberOfDatasets);
         }

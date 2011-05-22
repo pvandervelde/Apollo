@@ -19,7 +19,7 @@ namespace Apollo.Core.UserInterfaces.Projects
     [Description("Tests the ProjectFacade class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
-    public sealed class ProjectServiceFacadeTest
+    public sealed class ProjectHubTest
     {
         [Test]
         [Description("Checks the failure to create a new project results in the correct exception being thrown.")]

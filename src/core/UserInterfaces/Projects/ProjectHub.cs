@@ -13,13 +13,13 @@ using Lokad;
 namespace Apollo.Core.UserInterfaces.Projects
 {
     /// <summary>
-    /// Defines a facade for a project.
+    /// Defines the hub for all project related controls.
     /// </summary>
     /// <design>
     /// There should really only be one of these. If there are more then we could end up in the situation where
     /// one facade creates a new project but the other facade(s) don't get the new project. 
     /// </design>
-    public sealed class ProjectServiceFacade : ILinkToProjects
+    internal sealed class ProjectHub : ILinkToProjects
     {
         /// <summary>
         /// The UI service that handles the communication with the rest of the system.
@@ -32,7 +32,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         private ProjectFacade m_Facade;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ProjectServiceFacade"/> class.
+        /// Initializes a new instance of the <see cref="ProjectHub"/> class.
         /// </summary>
         /// <param name="service">
         /// The user interface service that handles the communication with the rest of the system.
@@ -40,7 +40,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="service"/> is <see langword="null" />.
         /// </exception>
-        internal ProjectServiceFacade(IUserInterfaceService service)
+        internal ProjectHub(IUserInterfaceService service)
         {
             {
                 Enforce.Argument(() => service);
