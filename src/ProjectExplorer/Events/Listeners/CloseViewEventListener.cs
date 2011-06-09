@@ -35,20 +35,19 @@ namespace Apollo.ProjectExplorer.Events.Listeners
         /// </summary>
         protected override void Subscribe()
         {
-            EventAggregator.GetEvent<CloseViewEvent>().Subscribe(ShowView);
+            EventAggregator.GetEvent<CloseViewEvent>().Subscribe(CloseView);
         }
 
         /// <summary>
-        /// Shows the selected view.
+        /// Closes the selected view.
         /// </summary>
-        /// <param name="request">The request which indicates which view to show.</param>
-        private void ShowView(CloseViewRequest request)
+        /// <param name="request">The request which indicates which view to close.</param>
+        private void CloseView(CloseViewRequest request)
         {
             var region = null as IRegion;
             var regionManager = request.RegionManager ?? MainRegionManager;
             
-            // If the view already exists, re-activate it instead - this way we only resolve and initialise 
-            // the presenter if we actually need it.
+            // Only deactivate the view if it exists
             if (regionManager.Regions.ContainsRegionWithName(request.RegionName))
             {
                 region = regionManager.Regions[request.RegionName];
@@ -71,7 +70,7 @@ namespace Apollo.ProjectExplorer.Events.Listeners
                                     request.RegionName));
                         }
 
-                        region.Deactivate(view);
+                        region.Remove(view);
                     }
                 }
             }

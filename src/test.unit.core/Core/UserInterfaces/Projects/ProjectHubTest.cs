@@ -40,7 +40,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             Assert.Throws<FailedToCreateProjectException>(() => facade.NewProject());
             service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<CreateProjectContext>()), Times.Exactly(1));
         }
@@ -66,7 +66,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             facade.NewProject();
 
             Assert.IsTrue(facade.HasActiveProject());
@@ -94,7 +94,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             Assert.Throws<FailedToLoadProjectException>(() => facade.LoadProject(persistence.Object));
             service.Verify(s => s.Invoke(It.IsAny<CommandId>(), It.IsAny<ICommandContext>()), Times.Exactly(1));
         }
@@ -122,7 +122,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                     .Verifiable();
             }
 
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             facade.LoadProject(persistence.Object);
 
             Assert.IsTrue(facade.HasActiveProject());
@@ -134,7 +134,7 @@ namespace Apollo.Core.UserInterfaces.Projects
         public void UnloadProjectWithoutCurrentProject()
         {
             var service = new Mock<IUserInterfaceService>();
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             Assert.Throws<CannotUnloadProjectException>(() => facade.UnloadProject());
         }
 
@@ -158,7 +158,7 @@ namespace Apollo.Core.UserInterfaces.Projects
                         });
             }
 
-            var facade = new ProjectServiceFacade(service.Object);
+            var facade = new ProjectHub(service.Object);
             facade.NewProject();
             Assert.IsTrue(facade.HasActiveProject());
 

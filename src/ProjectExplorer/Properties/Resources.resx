@@ -186,4 +186,10 @@
   <data name="Exception_Messages_InternalError_WithCode" xml:space="preserve">
     <value>An internal error occurred. The error code is: {0}. Please contact your vendor.</value>
   </data>
+  <data name="MainWindow_Menu_View_Projects" xml:space="preserve">
+    <value>_Project</value>
+  </data>
+  <data name="MainWindow_Menu_View_Script" xml:space="preserve">
+    <value>_Script</value>
+  </data>
 </root>

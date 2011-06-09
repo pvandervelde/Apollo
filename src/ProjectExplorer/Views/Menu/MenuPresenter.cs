@@ -42,6 +42,8 @@ namespace Apollo.ProjectExplorer.Views.Menu
             View.Model.CloseProjectCommand = m_Container.Resolve<CloseProjectCommand>();
 
             View.Model.ExitCommand = m_Container.Resolve<ExitCommand>();
+            View.Model.ShowProjectsCommand = m_Container.Resolve<ShowProjectsTabCommand>();
+            View.Model.ShowScriptsCommand = m_Container.Resolve<ShowScriptsTabCommand>();
             View.Model.AboutCommand = m_Container.Resolve<ShowAboutWindowCommand>();
         }
     }

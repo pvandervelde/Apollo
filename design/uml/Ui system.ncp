@@ -112,8 +112,18 @@
         <Name>ILinkToProjects</Name>
         <Access>Public</Access>
         <Location left="2637" top="694" />
-        <Size width="162" height="216" />
+        <Size width="381" height="231" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">bool HasActiveProject()</Member>
+        <Member type="Method">ProjectFacade ActiveProject()</Member>
+        <Member type="Method">bool CanCreateNewProject()</Member>
+        <Member type="Method">void NewProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnNewProjectLoaded</Member>
+        <Member type="Method">bool CanLoadProject()</Member>
+        <Member type="Method">void LoadProject(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">bool CanUnloadProject()</Member>
+        <Member type="Method">void UnloadProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnProjectUnloaded</Member>
       </Entity>
       <Entity type="Class">
         <Name>DependencyInjection</Name>
@@ -173,7 +183,7 @@
         <Modifier>None</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ProjectFacade</Name>
+        <Name>ProjectHub</Name>
         <Access>Internal</Access>
         <Location left="2276" top="694" />
         <Size width="162" height="216" />
@@ -190,7 +200,7 @@
       </Entity>
       <Entity type="Comment">
         <Text>This will need to know about timelines!</Text>
-        <Location left="2637" top="486" />
+        <Location left="2442" top="513" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
@@ -209,6 +219,57 @@ Some will probably come from the plugins, others we'll have to put in there some
         <Text>Need to handle the licensing information.</Text>
         <Location left="731" top="1757" />
         <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>ProjectFacade</Name>
+        <Access>Public</Access>
+        <Location left="2637" top="228" />
+        <Size width="390" height="298" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public bool IsClosed { get; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnProjectClosed</Member>
+        <Member type="Property">public string Name { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">public string Summary { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">public int NumberOfDatasets { get; set; }</Member>
+        <Member type="Property">public bool HasProjectChanged { get; }</Member>
+        <Member type="Method">public bool ShouldSaveProject()</Member>
+        <Member type="Method">public void SaveProject(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">public DatasetFacade Root()</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnDatasetCreated</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnDatasetDeleted</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DatasetFacade</Name>
+        <Access>Public</Access>
+        <Location left="3314" top="160" />
+        <Size width="432" height="451" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string Name { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">public string Summary { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">public bool IsValid { get; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnInvalidate</Member>
+        <Member type="Property">public bool CanBeDeleted { get; }</Member>
+        <Member type="Method">public void Delete()</Member>
+        <Member type="Property">public bool CanBeAdopted { get; }</Member>
+        <Member type="Property">public bool CanBeCopied { get; }</Member>
+        <Member type="Property">public DatasetCreator CreatedBy { get; }</Member>
+        <Member type="Property">public bool IsLoaded { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;Machine&gt; RunsOn()</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnLoaded</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnUnloaded</Member>
+        <Member type="Property">public bool CanBecomeParent { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;DatasetFacade&gt; Children()</Member>
+        <Member type="Method">public DatasetFacade AddChild()</Member>
+        <Member type="Method">public DatasetFacade AddChild(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">public override bool Equals(object obj)</Member>
+        <Member type="Method">public override int GetHashCode()</Member>
+        <Member type="Method">public override string ToString()</Member>
+        <Modifier>None</Modifier>
       </Entity>
     </Entities>
     <Relationships>
@@ -395,7 +456,15 @@ Some will probably come from the plugins, others we'll have to put in there some
       </Relationship>
       <Relationship type="Comment" first="24" second="14">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2522</X>
+          <Y>613</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2607</X>
+          <Y>745</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="25" second="21">
         <StartOrientation>Horizontal</StartOrientation>
@@ -408,6 +477,654 @@ Some will probably come from the plugins, others we'll have to put in there some
       <Relationship type="Comment" first="27" second="5">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="14" second="28">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="28" second="29">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
+    <Name>UI - scripting</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Class">
+        <Name>DatasetFacade</Name>
+        <Access>Public</Access>
+        <Location left="3374" top="271" />
+        <Size width="432" height="451" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string Name { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">public string Summary { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">public bool IsValid { get; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnInvalidate</Member>
+        <Member type="Property">public bool CanBeDeleted { get; }</Member>
+        <Member type="Method">public void Delete()</Member>
+        <Member type="Property">public bool CanBeAdopted { get; }</Member>
+        <Member type="Property">public bool CanBeCopied { get; }</Member>
+        <Member type="Property">public DatasetCreator CreatedBy { get; }</Member>
+        <Member type="Property">public bool IsLoaded { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;Machine&gt; RunsOn()</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnLoaded</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnUnloaded</Member>
+        <Member type="Property">public bool CanBecomeParent { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;DatasetFacade&gt; Children()</Member>
+        <Member type="Method">public DatasetFacade AddChild()</Member>
+        <Member type="Method">public DatasetFacade AddChild(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">public override bool Equals(object obj)</Member>
+        <Member type="Method">public override int GetHashCode()</Member>
+        <Member type="Method">public override string ToString()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProjectFacade</Name>
+        <Access>Public</Access>
+        <Location left="2697" top="339" />
+        <Size width="390" height="298" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public bool IsClosed { get; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnProjectClosed</Member>
+        <Member type="Property">public string Name { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">public string Summary { get; set; }</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">public int NumberOfDatasets { get; set; }</Member>
+        <Member type="Property">public bool HasProjectChanged { get; }</Member>
+        <Member type="Method">public bool ShouldSaveProject()</Member>
+        <Member type="Method">public void SaveProject(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">public DatasetFacade Root()</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnDatasetCreated</Member>
+        <Member type="Event">public event EventHandler&lt;EventArgs&gt; OnDatasetDeleted</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ILinkToProjects</Name>
+        <Access>Public</Access>
+        <Location left="2069" top="375" />
+        <Size width="381" height="231" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">bool HasActiveProject()</Member>
+        <Member type="Method">ProjectFacade ActiveProject()</Member>
+        <Member type="Method">bool CanCreateNewProject()</Member>
+        <Member type="Method">void NewProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnNewProjectLoaded</Member>
+        <Member type="Method">bool CanLoadProject()</Member>
+        <Member type="Method">void LoadProject(IPersistenceInformation persistenceInformation)</Member>
+        <Member type="Method">bool CanUnloadProject()</Member>
+        <Member type="Method">void UnloadProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnProjectUnloaded</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHoldSystemInformation</Name>
+        <Access>Public</Access>
+        <Location left="1178" top="1004" />
+        <Size width="333" height="146" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Refresh()</Member>
+        <Member type="Property">DateTimeOffset LastUpdateTime { get; }</Member>
+        <Member type="Method">IEnumerable&lt;IServiceInformation&gt; ServiceInformation()</Member>
+        <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
+        <Member type="Property">TimeSpan Uptime { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IServiceInformation</Name>
+        <Access>Public</Access>
+        <Location left="1219" top="1344" />
+        <Size width="227" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; }</Member>
+        <Member type="Property">DateTimeOffset StartupTime { get; }</Member>
+        <Member type="Property">TimeSpan Uptime { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IHostScripts</Name>
+        <Access>Public</Access>
+        <Location left="194" top="1689" />
+        <Size width="355" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">IExecuteScripts LoadScriptRunner(ScriptLanguage language)</Member>
+        <Member type="Method">void UnloadScriptRunner()</Member>
+        <Member type="Property">IExecuteScripts ScriptRunner { get; }</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Execute scripts in a different AppDomain so that we can unload after we're done.</Text>
+        <Location left="1366" top="1769" />
+        <Size width="160" height="106" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Set the variables that allow you to interact with the system. If possible we throw in only one variable which is an object that holds everything.</Text>
+        <Location left="1829" top="2063" />
+        <Size width="189" height="106" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>These objects shadow the real facades so that the script is unable to pass anything across the remoting boundary that is not defined by Apollo itself. This means we only push primitives and known objects / structs across the boundary.</Text>
+        <Location left="2564" top="719" />
+        <Size width="192" height="149" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IExecuteScripts</Name>
+        <Access>Internal</Access>
+        <Location left="1185" top="2003" />
+        <Size width="335" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">string Execute(string scriptCode)</Member>
+        <Member type="Method">IList&lt;Tuple&lt;int,string&gt;&gt; VerifySyntax(string scriptCode)</Member>
+        <Member type="Method">void Dispose()</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>How do we decide on an engine?</Text>
+        <Location left="1589" top="2015" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>IronPythonScriptRunner</Name>
+        <Access>Internal</Access>
+        <Location left="1185" top="2539" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>IronRubyScriptRunner</Name>
+        <Access>Internal</Access>
+        <Location left="1366" top="2539" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScriptHost</Name>
+        <Access>Internal</Access>
+        <Location left="637" top="1689" />
+        <Size width="364" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public IExecuteScripts LoadScriptRunner(ScriptLanguage language)</Member>
+        <Member type="Method">public void UnloadScriptRunner()</Member>
+        <Member type="Property">public IExecuteScripts ScriptRunner { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="1635" top="2178" />
+        <Size width="134" height="50" />
+      </Entity>
+      <Entity type="Class">
+        <Name>RemoteScriptRunner</Name>
+        <Access>Internal</Access>
+        <Location left="1185" top="2198" />
+        <Size width="341" height="128" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public string Execute(string scriptCode)</Member>
+        <Member type="Method">public IList&lt;Tuple&lt;int,string&gt;&gt; VerifySyntax(string scriptCode)</Member>
+        <Member type="Method">public void Dispose()</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProjectFacadeForScripts</Name>
+        <Access>Public</Access>
+        <Location left="2828" top="1057" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>DatasetFacadeForScripts</Name>
+        <Access>Public</Access>
+        <Location left="3508" top="1071" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>ProjectHubForScripts</Name>
+        <Access>Public</Access>
+        <Location left="2091" top="1038" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="2277" top="915" />
+        <Size width="128" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="2918" top="897" />
+        <Size width="128" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="3395" top="852" />
+        <Size width="128" height="50" />
+      </Entity>
+      <Entity type="Class">
+        <Name>ScriptDomainLauncher</Name>
+        <Access>Internal</Access>
+        <Location left="624" top="2198" />
+        <Size width="347" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public IExecuteScripts Launch(ProjectHubForScripts projectHub)</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="624" top="2070" />
+        <Size width="134" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>How to cancel the running of the current script? Use a task?</Text>
+        <Location left="950" top="2011" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need to create a facade for machines etc. as well.</Text>
+        <Location left="3856" top="1150" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Lives in the Apollo AppDomain</Text>
+        <Location left="719" top="1514" />
+        <Size width="139" height="57" />
+      </Entity>
+      <Entity type="Class">
+        <Name>UserInterfaceHubForScripts</Name>
+        <Access>Public</Access>
+        <Location left="2682" top="2004" />
+        <Size width="222" height="214" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>MarshalByRefObject</Text>
+        <Location left="2720" top="1888" />
+        <Size width="128" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>- Allow access to the currently open controls?
+- Allow access to the data structures?
+- Provide access so the UI commands?</Text>
+        <Location left="2669" top="2323" />
+        <Size width="280" height="105" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Implements IDisposable</Text>
+        <Location left="1592" top="1882" />
+        <Size width="160" height="50" />
+      </Entity>
+      <Entity type="Enum">
+        <Name>ScriptLanguage</Name>
+        <Access>Public</Access>
+        <Location left="295" top="1422" />
+        <Size width="163" height="112" />
+        <Collapsed>False</Collapsed>
+        <Value>Python</Value>
+        <Value>Ruby</Value>
+        <Value>PowerShell</Value>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ILinkScriptsToProjects</Name>
+        <Access>Public</Access>
+        <Location left="2106" top="1476" />
+        <Size width="296" height="231" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">bool HasActiveProject()</Member>
+        <Member type="Method">IProjectScriptFacade ActiveProject()</Member>
+        <Member type="Method">bool CanCreateNewProject()</Member>
+        <Member type="Method">void NewProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnNewProjectLoaded</Member>
+        <Member type="Method">bool CanLoadProject()</Member>
+        <Member type="Method">void LoadProject(string filePath)</Member>
+        <Member type="Method">bool CanUnloadProject()</Member>
+        <Member type="Method">void UnloadProject()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnProjectUnloaded</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScriptProjectFacade</Name>
+        <Access>Public</Access>
+        <Location left="2739" top="1449" />
+        <Size width="296" height="282" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">bool IsClosed { get; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnProjectClosed</Member>
+        <Member type="Property">string Name { get; set; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">string Summary { get; set; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">int NumberOfDatasets { get; }</Member>
+        <Member type="Property">bool HasProjectChanged { get; }</Member>
+        <Member type="Method">bool ShouldSaveProject()</Member>
+        <Member type="Method">void SaveProject(string filePath)</Member>
+        <Member type="Method">IScriptDatasetFacade Root()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnDatasetCreated</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnDatasetDeleted</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScriptDatasetFacade</Name>
+        <Access>Public</Access>
+        <Location left="3468" top="1449" />
+        <Size width="306" height="384" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; set; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnNameChanged</Member>
+        <Member type="Property">string Summary { get; set; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnSummaryChanged</Member>
+        <Member type="Property">bool IsValid { get; }</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnInvalidate</Member>
+        <Member type="Property">bool CanBeDeleted { get; }</Member>
+        <Member type="Method">void Delete()</Member>
+        <Member type="Property">bool CanBeAdopted { get; }</Member>
+        <Member type="Property">bool CanBeCopied { get; }</Member>
+        <Member type="Property">DatasetCreator CreatedBy { get; }</Member>
+        <Member type="Property">bool IsLoaded { get; }</Member>
+        <Member type="Method">IEnumerable&lt;Machine&gt; RunsOn()</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnLoaded</Member>
+        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnUnloaded</Member>
+        <Member type="Property">bool CanBecomeParent { get; }</Member>
+        <Member type="Method">IEnumerable&lt;DatasetFacadeForScripts&gt; Children()</Member>
+        <Member type="Method">IScriptDatasetFacade AddChild()</Member>
+        <Member type="Method">IScriptDatasetFacade AddChild(string filePath)</Member>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Association" first="2" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2520</X>
+          <Y>481</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2590</X>
+          <Y>481</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="1" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="3" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1347</X>
+          <Y>1175</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1347</X>
+          <Y>1307</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="6" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1444</X>
+          <Y>1900</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1444</X>
+          <Y>1965</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="10" second="9">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1564</X>
+          <Y>2049</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1545</X>
+          <Y>2050</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="13" second="5">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="15" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="11" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1265</X>
+          <Y>2352</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="12" second="15">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1443</X>
+          <Y>2351</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="15">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="13" second="9">
+        <Label>As Proxy</Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1085</X>
+          <Y>1742</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1292</X>
+          <Y>1978</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="16" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="17" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="19" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2208</X>
+          <Y>1013</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="20" second="16">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="21" second="17">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>3537</X>
+          <Y>1046</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="18">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2606</X>
+          <Y>893</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2321</X>
+          <Y>1086</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="16">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2660</X>
+          <Y>893</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2803</X>
+          <Y>1082</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2798</X>
+          <Y>783</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3457</X>
+          <Y>1098</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="23" second="22">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>701</X>
+          <Y>2145</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>701</X>
+          <Y>2170</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="13" second="22">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="22" second="15">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="24" second="9">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="25" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="26" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="28" second="27">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="29" second="27">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="30" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1476</X>
+          <Y>1976</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="5" second="31">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="18" second="32">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="32" second="33">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="16" second="33">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="17" second="34">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="18" second="2">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="33" second="34">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="15" second="32">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1786</X>
+          <Y>2255</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="15" second="27">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2018</X>
+          <Y>2282</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
       </Relationship>
     </Relationships>
   </ProjectItem>

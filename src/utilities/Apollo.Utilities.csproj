@@ -21,6 +21,7 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="AppDomainPaths.cs" />
     <Compile Include="ApplicationConstants.cs" />
     <Compile Include="AssemblyBuildTimeAttribute.cs" />
     <Compile Include="AssemblyExtensions.cs" />

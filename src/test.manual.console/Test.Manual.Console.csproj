@@ -10,6 +10,9 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <PropertyGroup>
+    <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>

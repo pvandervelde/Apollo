@@ -13,6 +13,9 @@
   <PropertyGroup>
     <StartupObject>Apollo.ProjectExplorer.App</StartupObject>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>..\..\resource\icons\Apollo.ico</ApplicationIcon>
+  </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
     <Reference Include="Autofac">
@@ -50,7 +53,7 @@
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
     <Reference Include="WPFLocalizeExtension">
-      <HintPath>..\..\lib\wpflocalizationextension\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\..\lib\wpflocalizeextension\WPFLocalizeExtension.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -66,8 +69,26 @@
     <Compile Include="..\AssemblyInfo.BuildInformation.cs">
       <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
     </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.cs">
+      <Link>Utilities\AppDomainBuilder.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.DirectoryBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.DirectoryBasedResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainBuilder.FileBasedResolver.cs">
+      <Link>Utilities\AppDomainBuilder.FileBasedResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AppDomainResolutionPaths.cs">
+      <Link>Utilities\AppDomainResolutionPaths.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\AssemblyNameElements.cs">
+      <Link>Utilities\AssemblyNameElements.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventType.cs">
       <Link>Utilities\EventType.cs</Link>
@@ -86,6 +107,12 @@
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
       <Link>Utilities\TopLevelExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\FusionHelper.cs">
+      <Link>Utilities\FusionHelper.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\IAppDomainAssemblyResolver.cs">
+      <Link>Utilities\IAppDomainAssemblyResolver.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
       <Link>Utilities\AdditionalLogMessageProperties.cs</Link>
@@ -121,6 +148,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Commands\ShowProjectsTabCommand.cs" />
+    <Compile Include="Commands\ShowScriptsTabCommand.cs" />
+    <Compile Include="Converters\ContentToMarginConverter.cs" />
+    <Compile Include="Converters\ContentToPathConverter.cs" />
     <Compile Include="DispatcherContextWrapper.cs" />
     <Compile Include="Events\CloseViewEvent.cs" />
     <Compile Include="Events\CloseViewRequest.cs" />
@@ -134,6 +165,7 @@
     <Compile Include="Events\ShowViewRequest.cs" />
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Utilities\MockExceptionHandler.cs" />
     <Compile Include="Utilities\SrcOnlyResources.cs" />
     <Compile Include="Utilities\UtilitiesModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
@@ -189,6 +221,10 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Styles\TabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Views\About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

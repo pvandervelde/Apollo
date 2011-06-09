@@ -37,8 +37,13 @@
         </MenuItem>
 
         <!-- View -->
-        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_View, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_View}"
-                  IsEnabled="False">
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_View, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_View}">
+            <MenuItem x:Name="miViewProjects"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_View_Projects, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Projects}" />
+            <MenuItem x:Name="miViewScript"
+                      x:FieldModifier="private"
+                      Header="{lex:LocText Key=MainWindow_Menu_View_Script, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Script}" />
         </MenuItem>
 
         <!-- Run -->

@@ -250,6 +250,24 @@ namespace Apollo.ProjectExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to _Project.
+        /// </summary>
+        internal static string MainWindow_Menu_View_Projects {
+            get {
+                return ResourceManager.GetString("MainWindow_Menu_View_Projects", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Script.
+        /// </summary>
+        internal static string MainWindow_Menu_View_Script {
+            get {
+                return ResourceManager.GetString("MainWindow_Menu_View_Script", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Window.
         /// </summary>
         internal static string MainWindow_Menu_Window {

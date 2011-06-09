@@ -125,26 +125,6 @@ namespace Apollo.ProjectExplorer
         }
 
         /// <summary>
-        /// Called when an unhandled exception takes place.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">
-        ///     The <see cref="System.Windows.Threading.DispatcherUnhandledExceptionEventArgs"/> instance 
-        ///     containing the event data.
-        /// </param>
-        private void HandleUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            // Unhandled exceptions go here..
-            // Refer to the unhandled exception handler --> nSarrac to the rescue
-
-            // Indicate that we have handled the exception.
-            e.Handled = true;
-
-            // Bail!
-            // Exit-Fast
-        }
-
-        /// <summary>
         /// Called when the application is about to shut down.
         /// </summary>
         /// <param name="sender">The sender.</param>

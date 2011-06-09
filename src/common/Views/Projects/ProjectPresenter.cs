@@ -4,8 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.UI.Common.Commands;
 using Autofac;
 
 namespace Apollo.UI.Common.Views.Projects
@@ -23,7 +22,7 @@ namespace Apollo.UI.Common.Views.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectPresenter"/> class.
         /// </summary>
-        /// <param name="container">The IOC container that is used to retrieve the commands for the menu.</param>
+        /// <param name="container">The IOC container that is used to retrieve the project facade.</param>
         public ProjectPresenter(IContainer container)
         {
             m_Container = container;
@@ -34,11 +33,8 @@ namespace Apollo.UI.Common.Views.Projects
         /// </summary>
         protected override void Initialize()
         {
-            var serviceFacade = m_Container.Resolve<ILinkToProjects>();
-            var project = serviceFacade.ActiveProject();
-
-            Debug.Assert(project != null, "There should be an active project.");
-            View.Model = new ProjectModel(project);
+            var command = m_Container.Resolve<CloseProjectCommand>();
+            View.Model = new ProjectModel(command);
         }
     }
 }

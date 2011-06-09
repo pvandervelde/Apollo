@@ -32,14 +32,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utilities.srconly\AssemblyNameElements.cs">
-      <Link>Utilities\AssemblyNameElements.cs</Link>
-    </Compile>
     <Compile Include="..\utilities.srconly\ErrorCodes.cs">
       <Link>Utilities\ErrorCodes.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\FusionHelper.cs">
-      <Link>Utilities\FusionHelper.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Licensing\Checksum.cs">
       <Link>Utilities\Licensing\Checksum.cs</Link>

@@ -93,7 +93,7 @@ namespace Apollo.UI.Common
         {
             unchecked
             {
-                var result = 0;
+                var result = GetType().GetHashCode();
                 foreach (var property in m_Properties)
                 {
                     var value = property();

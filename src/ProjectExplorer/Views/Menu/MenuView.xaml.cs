@@ -40,6 +40,16 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private static readonly RoutedCommand s_ExitCommand = new RoutedCommand();
 
         /// <summary>
+        /// The routed command used to show the projects tab.
+        /// </summary>
+        private static readonly RoutedCommand s_ShowProjectsCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to show the scripts tab.
+        /// </summary>
+        private static readonly RoutedCommand s_ShowScriptsCommand = new RoutedCommand();
+
+        /// <summary>
         /// The routed command used to display the about box.
         /// </summary>
         private static readonly RoutedCommand s_AboutCommand = new RoutedCommand();
@@ -58,7 +68,11 @@ namespace Apollo.ProjectExplorer.Views.Menu
 
                 InputBindings.Add(new InputBinding(s_NewProjectCommand, new KeyGesture(Key.N, ModifierKeys.Control)));
 
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
                 miFileNewProject.Command = s_NewProjectCommand;
+                miFileNewProject.CommandTarget = this;
             }
 
             // Bind the load project command
@@ -69,6 +83,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 InputBindings.Add(new InputBinding(s_OpenProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
 
                 miFileOpenProject.Command = s_OpenProjectCommand;
+                miFileOpenProject.CommandTarget = this;
             }
 
             // Bind the save project command
@@ -79,6 +94,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 InputBindings.Add(new InputBinding(s_SaveProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
 
                 miFileSaveProject.Command = s_SaveProjectCommand;
+                miFileSaveProject.CommandTarget = this;
             }
 
             // Bind the close project command
@@ -89,6 +105,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 InputBindings.Add(new InputBinding(s_CloseProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
 
                 miFileCloseProject.Command = s_CloseProjectCommand;
+                miFileCloseProject.CommandTarget = this;
             }
 
             // Bind the exit command
@@ -99,6 +116,25 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 InputBindings.Add(new InputBinding(s_ExitCommand, new KeyGesture(Key.F4, ModifierKeys.Alt)));
 
                 miFileExit.Command = s_ExitCommand;
+                miFileExit.CommandTarget = this;
+            }
+
+            // Bind the projects command
+            {
+                var cb = new CommandBinding(s_ShowProjectsCommand, CommandShowProjectsExecuted, CommandShowProjectsCanExecute);
+                CommandBindings.Add(cb);
+
+                miViewProjects.Command = s_ShowProjectsCommand;
+                miViewProjects.CommandTarget = this;
+            }
+
+            // Bind the scripts command
+            {
+                var cb = new CommandBinding(s_ShowScriptsCommand, CommandShowScriptsExecuted, CommandShowScriptsCanExecute);
+                CommandBindings.Add(cb);
+
+                miViewScript.Command = s_ShowScriptsCommand;
+                miViewScript.CommandTarget = this;
             }
 
             // Bind the About command
@@ -109,6 +145,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 InputBindings.Add(new InputBinding(s_AboutCommand, new KeyGesture(Key.F1, ModifierKeys.Alt)));
 
                 miHelpAbout.Command = s_AboutCommand;
+                miHelpAbout.CommandTarget = this;
             }
         }
 
@@ -207,6 +244,38 @@ namespace Apollo.ProjectExplorer.Views.Menu
         {
             e.Handled = true;
             Model.ExitCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandShowProjectsCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.ShowProjectsCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandShowProjectsExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.ShowProjectsCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandShowScriptsCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.ShowScriptsCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandShowScriptsExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.ShowScriptsCommand.Execute(null);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",

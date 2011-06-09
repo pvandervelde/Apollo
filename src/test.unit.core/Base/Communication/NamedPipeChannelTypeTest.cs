@@ -12,6 +12,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
+using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using MbUnit.Framework;
 using Moq;
@@ -26,9 +27,15 @@ namespace Apollo.Base.Communication
     {
         private static readonly int s_Pattern = int.Parse("ABCD", NumberStyles.HexNumber);
 
+        private static string GetRandomFileName()
+        {
+            var assemblyPath = typeof(NamedPipeChannelType).Assembly.LocalFilePath();
+            return Path.Combine(Path.GetDirectoryName(assemblyPath), Path.GetRandomFileName());
+        }
+
         private static FileInfo CreateRandomFile(long fileSize)
         {
-            var fileName = Path.GetTempFileName();
+            var fileName = GetRandomFileName();
             using (var writer = new BinaryWriter(new FileStream(fileName, FileMode.OpenOrCreate, FileAccess.Write)))
             {
                 while (writer.BaseStream.Length < fileSize)
@@ -86,27 +93,28 @@ namespace Apollo.Base.Communication
             var sender = new NamedPipeChannelType(config.Object);
             var recipient = new NamedPipeChannelType(config.Object);
 
-            var outputPath = Path.GetTempFileName();
+            var outputPath = GetRandomFileName();
             var pair = recipient.PrepareForDataReception(outputPath, new CancellationToken());
 
             Task sendingTask = null;
             var file = CreateRandomFile(1 * 1024 * 1024);
             sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken());
-            sendingTask.ContinueWith(
+            pair.Item2.ContinueWith(
                 t =>
                 {
                     Assert.IsTrue(t.IsCompleted);
                     Assert.IsFalse(t.IsFaulted);
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                    using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
                     {
-                        Assert.IsTrue(AreStreamsEqual(fileStream, new FileStream(outputPath, FileMode.Open, FileAccess.Read)));
+                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream));
                     }
                 })
                 .Wait();
 
             // Check that nothing went wrong on the other task
-            pair.Item2.Wait();
+            sendingTask.Wait();
         }
 
         [Test]
@@ -122,7 +130,7 @@ namespace Apollo.Base.Communication
             var sender = new NamedPipeChannelType(config.Object);
             var recipient = new NamedPipeChannelType(config.Object);
 
-            var outputPath = Path.GetTempFileName();
+            var outputPath = GetRandomFileName();
             var pair = recipient.PrepareForDataReception(outputPath, new CancellationTokenSource().Token);
 
             long size = 1 * 1024 * 1024;
@@ -162,21 +170,22 @@ namespace Apollo.Base.Communication
             // Restart the operation.
             pair = recipient.PrepareForDataReception(outputPath, new CancellationToken());
             sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken());
-            sendingTask.ContinueWith(
+            pair.Item2.ContinueWith(
                 t =>
                 {
                     Assert.IsTrue(t.IsCompleted);
                     Assert.IsFalse(t.IsFaulted);
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                    using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
                     {
-                        Assert.IsTrue(AreStreamsEqual(fileStream, new FileStream(outputPath, FileMode.Open, FileAccess.Read)));
+                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream));
                     }
                 })
                 .Wait();
 
             // Check that nothing went wrong on the other task
-            pair.Item2.Wait();
+            sendingTask.Wait();
         }
 
         [Test]
@@ -192,7 +201,7 @@ namespace Apollo.Base.Communication
             var sender = new NamedPipeChannelType(config.Object);
             var recipient = new NamedPipeChannelType(config.Object);
 
-            var outputPath = Path.GetTempFileName();
+            var outputPath = GetRandomFileName();
             var token = new CancellationTokenSource();
             var pair = recipient.PrepareForDataReception(outputPath, token.Token);
 
@@ -241,21 +250,22 @@ namespace Apollo.Base.Communication
             // Restart the operation.
             pair = recipient.PrepareForDataReception(outputPath, new CancellationToken());
             sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken());
-            sendingTask.ContinueWith(
+            pair.Item2.ContinueWith(
                 t =>
                 {
                     Assert.IsTrue(t.IsCompleted);
                     Assert.IsFalse(t.IsFaulted);
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                    using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
                     {
-                        Assert.IsTrue(AreStreamsEqual(fileStream, new FileStream(outputPath, FileMode.Open, FileAccess.Read)));
+                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream));
                     }
                 })
                 .Wait();
 
             // Check that nothing went wrong on the other task
-            pair.Item2.Wait();
+            sendingTask.Wait();
         }
     }
 }

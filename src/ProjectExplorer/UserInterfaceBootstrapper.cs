@@ -91,6 +91,7 @@ namespace Apollo.ProjectExplorer
         {
             var builder = new ContainerBuilder();
             {
+                // Note that this 'module' is a Prism module, not an Autofac one!
                 builder.RegisterType<ProjectExplorerModule>();
             }
             

@@ -116,12 +116,17 @@ function Get-BzrVersion{
     $versionInfo.SubString(0, $index)
 }
 
+function Get-SnExe
+{
+	"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+}
+
 function Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
 {
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
     
-    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+    $sn = Get-SnExe
     $publicKeyFile = Join-Path $tempDir ([System.IO.Path]::GetRandomFileName())
 
     # use snk to get the public key bit
@@ -154,7 +159,7 @@ function Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
     
-    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+    $sn = Get-SnExe
 
     # use snk to get the public key bit
     $output = & $sn -Tp $pathToAssembly

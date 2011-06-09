@@ -23,7 +23,11 @@ namespace Apollo.ProjectExplorer.Commands
         /// <param name="eventAggregator">The event aggregator.</param>
         private static void OnExecute(IEventAggregator eventAggregator)
         {
-            eventAggregator.GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(AboutPresenter), "AboutWindow", new AboutParameter()));
+            eventAggregator.GetEvent<ShowViewEvent>().Publish(
+                new ShowViewRequest(
+                    typeof(AboutPresenter), 
+                    "AboutWindow", 
+                    new AboutParameter()));
         }
 
         /// <summary>

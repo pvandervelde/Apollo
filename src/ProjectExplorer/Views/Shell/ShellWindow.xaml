@@ -22,29 +22,18 @@
 
         <!-- Content -->
         <Border Grid.Row="1"
-                Background="LightSteelBlue"
+                Background="SteelBlue"
                 Margin="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <!-- Top -->
-                    <RowDefinition Height="Auto" />
-                    <!-- Content -->
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-
-                <ContentControl Grid.Row="0"
-                                Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.TopPane}"
-                                Margin="5, 5, 5, 5"
-                                Padding="5, 5, 5, 5" />
-
-                <GridSplitter Grid.Row="0"
-                              Height="5" />
-
-                <ContentControl Grid.Row="1"
-                                Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}"
-                                Margin="5, 5, 5, 5"
-                                Padding="5, 5, 5, 5" />
-            </Grid>
+            <TabControl x:Name="tabs"
+                        x:FieldModifier="private"
+                        Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}" 
+                        Width="Auto" 
+                        Height="Auto" 
+                        Style="{StaticResource TabControlStyle}"
+                        TabStripPlacement="Top"
+                        HorizontalAlignment="Stretch" 
+                        Margin="3,3,3,3"
+                        Background="LightSteelBlue"/>
         </Border>
         <!-- Status bar -->
         <StatusBar Grid.Row="2">
