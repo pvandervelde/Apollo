@@ -4,7 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Apollo.ProjectExplorer.Views.About
 {
@@ -35,6 +37,21 @@ namespace Apollo.ProjectExplorer.Views.About
             set
             {
                 DataContext = value;
+            }
+        }
+
+        /// <summary>
+        /// Handles click navigation on the hyperlink in the About dialog.
+        /// </summary>
+        /// <param name="sender">Object the sent the event.</param>
+        /// <param name="e">Navigation events arguments.</param>
+        private void OnHyperlinkRequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            if (e.Uri != null && string.IsNullOrEmpty(e.Uri.OriginalString) == false)
+            {
+                string uri = e.Uri.AbsoluteUri;
+                Process.Start(new ProcessStartInfo(uri));
+                e.Handled = true;
             }
         }
 
