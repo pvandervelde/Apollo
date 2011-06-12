@@ -60,6 +60,13 @@ namespace Apollo.ProjectExplorer.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap AboutBanner_Png {
+            get {
+                object obj = ResourceManager.GetObject("AboutBanner_Png", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         /// <summary>
         ///   Looks up a localized string similar to Close.
         /// </summary>
