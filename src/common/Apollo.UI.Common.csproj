@@ -118,6 +118,7 @@
     <Compile Include="Commands\CancelScriptRunCommand.cs" />
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\CloseScriptCommand.cs" />
+    <Compile Include="Commands\CloseViewCommand.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
     <Compile Include="Commands\NewProjectCommand.cs" />
     <Compile Include="Commands\OpenProjectCommand.cs" />
@@ -127,6 +128,14 @@
     <Compile Include="CommonRegionNames.cs" />
     <Compile Include="CommonUserInterfaceModule.cs" />
     <Compile Include="EventListener.cs" />
+    <Compile Include="Events\CloseViewEvent.cs" />
+    <Compile Include="Events\CloseViewRequest.cs" />
+    <Compile Include="Events\CloseViewRequest.Presenter.cs" />
+    <Compile Include="Events\Listeners\CloseViewEventListener.cs" />
+    <Compile Include="Events\Listeners\ShowViewEventListener.cs" />
+    <Compile Include="Events\ShowViewEvent.cs" />
+    <Compile Include="Events\ShowViewRequest.cs" />
+    <Compile Include="Events\ShowViewRequest.Presenter.cs" />
     <Compile Include="IContextAware.cs" />
     <Compile Include="Scripting\CannotInteruptRunningScriptException.cs" />
     <Compile Include="Scripting\IExecuteScripts.cs" />
@@ -203,6 +212,7 @@
     <Compile Include="Views\Projects\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Scripting\ISelectScriptLanguageView.cs" />
     <Compile Include="Views\Scripting\ScriptDescriptionModel.cs" />
     <Compile Include="Views\Scripting\ScriptModel.cs" />
     <Compile Include="Views\Scripting\IScriptView.cs" />
@@ -210,6 +220,13 @@
     <Compile Include="Views\Scripting\ScriptPresenter.cs" />
     <Compile Include="Views\Scripting\ScriptView.xaml.cs">
       <DependentUpon>ScriptView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Scripting\SelectScriptLanguageModel.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguageParameter.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguagePresenter.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguageView.xaml.cs">
+      <DependentUpon>SelectScriptLanguageView.xaml</DependentUpon>
+      <SubType>Code</SubType>
     </Compile>
     <Compile Include="WindowsVersionNumbers.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -264,6 +281,10 @@
     <Page Include="Views\Scripting\ScriptView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scripting\SelectScriptLanguageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

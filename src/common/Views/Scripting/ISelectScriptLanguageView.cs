@@ -4,14 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Microsoft.Practices.Prism.Events;
-
-namespace Apollo.ProjectExplorer.Events
+namespace Apollo.UI.Common.Views.Scripting
 {
     /// <summary>
-    /// Manages publication and subscription of the showing of a view event.
+    /// Defines the interface for objects that provide a view for a <see cref="SelectScriptLanguageModel"/>.
     /// </summary>
-    internal class ShowViewEvent : CompositePresentationEvent<ShowViewRequest>
+    public interface ISelectScriptLanguageView : IView<SelectScriptLanguageModel>
     {
     }
 }

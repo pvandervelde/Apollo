@@ -19,14 +19,9 @@ namespace Apollo.UI.Common.Views.Scripting
     public sealed class ScriptModel : Model
     {
         /// <summary>
-        /// The collection that holds all the available languages.
+        /// The description of the currently selected script language.
         /// </summary>
-        private static readonly ObservableCollection<ScriptDescriptionModel> s_AvailableLanguages
-            = new ObservableCollection<ScriptDescriptionModel> 
-                {
-                    new ScriptDescriptionModel(ScriptLanguage.IronPython),
-                    new ScriptDescriptionModel(ScriptLanguage.IronRuby),
-                };
+        private ScriptDescriptionModel m_ScriptLanguage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScriptModel"/> class.
@@ -43,7 +38,7 @@ namespace Apollo.UI.Common.Views.Scripting
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="cancelRunScript"/> is <see langword="null" />.
         /// </exception>
-        public ScriptModel(CloseScriptCommand closeScript, RunScriptCommand runScript, CancelScriptRunCommand cancelRunScript)
+        public ScriptModel(ICommand closeScript, ICommand runScript, ICommand cancelRunScript)
         {
             {
                 Lokad.Enforce.Argument(() => closeScript);
@@ -96,13 +91,22 @@ namespace Apollo.UI.Common.Views.Scripting
         }
 
         /// <summary>
-        /// Gets the collection that holds all the available languages.
+        /// Gets or sets the script language that is currently in use.
         /// </summary>
-        public ObservableCollection<ScriptDescriptionModel> AvailableLanguages
+        public ScriptDescriptionModel ScriptLanguage
         {
             get
             {
-                return s_AvailableLanguages;
+                return m_ScriptLanguage;
+            }
+
+            set
+            {
+                if (!m_ScriptLanguage.Equals(value))
+                {
+                    m_ScriptLanguage = value;
+                    Notify(() => ScriptLanguage);
+                }
             }
         }
     }

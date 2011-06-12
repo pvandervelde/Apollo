@@ -8,18 +8,18 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
-using Apollo.UI.Common;
+using Apollo.UI.Common.Events;
 using Autofac;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.ProjectExplorer.Events.Listeners
+namespace Apollo.UI.Common.Listeners
 {
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for closing views.
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses",
         Justification = "Instantiated by the IOC container.")]
-    internal sealed class CloseViewEventListener : EventListener
+    public sealed class CloseViewEventListener : EventListener
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CloseViewEventListener"/> class.

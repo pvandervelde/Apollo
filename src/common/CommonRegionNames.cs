@@ -20,5 +20,10 @@ namespace Apollo.UI.Common
         /// Defines the name of the content region of the project view.
         /// </summary>
         public const string ProjectViewContent = "Common_ProjectContent";
+
+        /// <summary>
+        /// Defines the name of the content region of the shell.
+        /// </summary>
+        public const string Content = "Content";
     }
 }

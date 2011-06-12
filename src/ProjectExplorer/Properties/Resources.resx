@@ -192,4 +192,13 @@
   <data name="MainWindow_Menu_View_Script" xml:space="preserve">
     <value>_Script</value>
   </data>
+  <data name="SelectScriptLanguageView_Cancel" xml:space="preserve">
+    <value>_Cancel</value>
+  </data>
+  <data name="SelectScriptLanguageView_Ok" xml:space="preserve">
+    <value>_Ok</value>
+  </data>
+  <data name="SelectScriptLanguageView_WindowTitle" xml:space="preserve">
+    <value>Select a script language</value>
+  </data>
 </root>

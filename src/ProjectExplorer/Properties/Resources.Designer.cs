@@ -284,5 +284,32 @@ namespace Apollo.ProjectExplorer.Properties {
                 return ResourceManager.GetString("MainWindow_Title", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Cancel.
+        /// </summary>
+        internal static string SelectScriptLanguageView_Cancel {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to _Ok.
+        /// </summary>
+        internal static string SelectScriptLanguageView_Ok {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a script language.
+        /// </summary>
+        internal static string SelectScriptLanguageView_WindowTitle {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_WindowTitle", resourceCulture);
+            }
+        }
     }
 }

@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Views.About;
+using Apollo.UI.Common.Events;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 

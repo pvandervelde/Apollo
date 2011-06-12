@@ -7,16 +7,16 @@
 using System;
 using System.Globalization;
 using System.Windows;
-using Apollo.UI.Common;
+using Apollo.UI.Common.Events;
 using Autofac;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.ProjectExplorer.Events.Listeners
+namespace Apollo.UI.Common.Listeners
 {
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for showing views.
     /// </summary>
-    internal class ShowViewEventListener : EventListener
+    public class ShowViewEventListener : EventListener
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowViewEventListener"/> class.

@@ -4,8 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Windows.Input;
 using Apollo.UI.Common.Commands;
 using Autofac;
+using Microsoft.Practices.Prism.Events;
+using Microsoft.Practices.Prism.Commands;
 
 namespace Apollo.UI.Common.Views.Scripting
 {
@@ -33,10 +36,18 @@ namespace Apollo.UI.Common.Views.Scripting
         /// </summary>
         protected override void Initialize()
         {
-            var closeCommand = m_Container.Resolve<CloseScriptCommand>();
+            var closeScriptCommand = m_Container.Resolve<CloseScriptCommand>();
+            var closeViewCommand = m_Container.Resolve<CloseViewCommand>(
+                new TypedParameter(typeof(IEventAggregator), m_Container.Resolve<IEventAggregator>()),
+                new TypedParameter(typeof(string), CommonRegionNames.Content),
+                new TypedParameter(typeof(Parameter), new ScriptParameter()));
+            var compositeCommand = new CompositeCommand();
+            compositeCommand.RegisterCommand(closeScriptCommand);
+            compositeCommand.RegisterCommand(closeViewCommand);
+
             var runScriptCommand = m_Container.Resolve<RunScriptCommand>();
             var cancelScriptCommand = m_Container.Resolve<CancelScriptRunCommand>();
-            View.Model = new ScriptModel(closeCommand, runScriptCommand, cancelScriptCommand);
+            View.Model = new ScriptModel(compositeCommand, runScriptCommand, cancelScriptCommand);
         }
     }
 }

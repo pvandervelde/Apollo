@@ -2,9 +2,10 @@
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:Regions="http://www.codeplex.com/prism"
+        xmlns:regions="http://www.codeplex.com/prism"
         xmlns:lex="http://schemas.root-project.org/xaml/presentation"
         xmlns:infrastructure="clr-namespace:Apollo.ProjectExplorer"
+        xmlns:common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common"
         Title="{lex:LocText Key=MainWindow_Title, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Window_Title}"
         Width="800"
         Height="600"
@@ -18,7 +19,7 @@
 
         <!-- Menu bar -->
         <ItemsControl Grid.Row="0"
-                      Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainMenu}" />
+                      regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.MainMenu}" />
 
         <!-- Content -->
         <Border Grid.Row="1"
@@ -26,7 +27,7 @@
                 Margin="0">
             <TabControl x:Name="tabs"
                         x:FieldModifier="private"
-                        Regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.Content}" 
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 
                         Width="Auto" 
                         Height="Auto" 
                         Style="{StaticResource TabControlStyle}"

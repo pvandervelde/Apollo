@@ -84,21 +84,17 @@
                        Width="16"
                        Height="16" />
             </Button>
-            <Separator />
-            <ComboBox x:Name="languageComboBox" 
-                      x:FieldModifier="private"
-                      SelectedIndex="0"
-                      ItemsSource="{Binding Path=AvailableLanguages}"
-                      DisplayMemberPath="Description"
-                      IsEditable="False"
-                      MinWidth="100"
-                      SelectionChanged="LanguageComboBoxSelectionChanged"/>
         </ToolBar>
-        <Grid>
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding Path=SelectedLanguage}" />
+            </StatusBarItem>
+        </StatusBar>
+        <Grid DockPanel.Dock="Left">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            
+
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>

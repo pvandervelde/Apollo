@@ -6,7 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.ProjectExplorer.Events;
+using Apollo.UI.Common;
+using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Views.Projects;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -51,7 +52,7 @@ namespace Apollo.ProjectExplorer.Commands
             eventAggregator.GetEvent<ShowViewEvent>().Publish(
                 new ShowViewRequest(
                     typeof(ProjectPresenter),
-                    RegionNames.Content,
+                    CommonRegionNames.Content,
                     new ProjectParameter()));
         }
 

@@ -4,23 +4,21 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
-
-namespace Apollo.ProjectExplorer.Events
+namespace Apollo.UI.Common.Events
 {
     /// <summary>
-    /// Handles requests to show a view.
+    /// Handles requests to close a view.
     /// </summary>
     /// <typeparam name="TPresenter">The type of the presenter.</typeparam>
-    internal class ShowViewRequest<TPresenter> : ShowViewRequest
+    public sealed class CloseViewRequest<TPresenter> : CloseViewRequest
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShowViewRequest&lt;TPresenter&gt;"/> class.
+        /// Initializes a new instance of the <see cref="CloseViewRequest&lt;TPresenter&gt;"/> class.
         /// </summary>
         /// <param name="regionName">Name of the region.</param>
         /// <param name="parameter">The parameter.</param>
-        public ShowViewRequest(string regionName, Parameter parameter)
-            : base(typeof(TPresenter), regionName, parameter)
+        public CloseViewRequest(string regionName, Parameter parameter)
+            : base(regionName, parameter)
         {
         }
     }

@@ -5,15 +5,14 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.UI.Common;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.ProjectExplorer.Events
+namespace Apollo.UI.Common.Events
 {
     /// <summary>
     /// Handles requests to show a view.
     /// </summary>
-    internal class ShowViewRequest
+    public class ShowViewRequest
     {
         /// <summary>
         /// The type of the <see cref="IPresenter"/>.

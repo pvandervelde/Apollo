@@ -4,15 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.UI.Common;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.ProjectExplorer.Events
+namespace Apollo.UI.Common.Events
 {
     /// <summary>
     /// Handles requests to close a view.
     /// </summary>
-    internal class CloseViewRequest
+    public class CloseViewRequest
     {
         /// <summary>
         /// The name of the region.

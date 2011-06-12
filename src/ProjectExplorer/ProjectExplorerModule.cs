@@ -11,14 +11,13 @@ using System.Windows.Threading;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.ProjectExplorer.Events;
-using Apollo.ProjectExplorer.Events.Listeners;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.UI.Common;
+using Apollo.UI.Common.Events;
+using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Projects;
-using Apollo.UI.Common.Views.Scripting;
 using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
@@ -110,6 +109,12 @@ namespace Apollo.ProjectExplorer
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .SingleInstance();
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency();
 
                 // Get the registrations from the current assembly
                 var localAssembly = GetType().Assembly;
@@ -124,9 +129,6 @@ namespace Apollo.ProjectExplorer
                             && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
-                builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .SingleInstance();
                 builder.RegisterAssemblyTypes(localAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
@@ -186,7 +188,7 @@ namespace Apollo.ProjectExplorer
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
                         new ShowViewRequest(
                             typeof(ProjectPresenter),
-                            RegionNames.Content,
+                            CommonRegionNames.Content,
                             new ProjectParameter()));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
@@ -217,7 +219,7 @@ namespace Apollo.ProjectExplorer
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
-                            RegionNames.Content,
+                            CommonRegionNames.Content,
                             new ProjectParameter()));
                 };
         }
