@@ -15,26 +15,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
     internal partial class MenuView : IMenuView
     {
         /// <summary>
-        /// The routed command used to create a new project.
-        /// </summary>
-        private static readonly RoutedCommand s_NewProjectCommand = new RoutedCommand();
-
-        /// <summary>
-        /// The routed command used to load a project.
-        /// </summary>
-        private static readonly RoutedCommand s_OpenProjectCommand = new RoutedCommand();
-
-        /// <summary>
-        /// The routed command used to save the current project.
-        /// </summary>
-        private static readonly RoutedCommand s_SaveProjectCommand = new RoutedCommand();
-
-        /// <summary>
-        /// The routed command used to close the current project.
-        /// </summary>
-        private static readonly RoutedCommand s_CloseProjectCommand = new RoutedCommand();
-
-        /// <summary>
         /// The routed command used to exit the application.
         /// </summary>
         private static readonly RoutedCommand s_ExitCommand = new RoutedCommand();
@@ -61,53 +41,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         {
             InitializeComponent();
 
-            // Bind the new project command
-            {
-                var cb = new CommandBinding(s_NewProjectCommand, CommandNewProjectExecuted, CommandNewProjectCanExecute);
-                CommandBindings.Add(cb);
-
-                InputBindings.Add(new InputBinding(s_NewProjectCommand, new KeyGesture(Key.N, ModifierKeys.Control)));
-
-                // Set the command and set the command target to the control so that we don't run into focus issues
-                // as given here:
-                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
-                miFileNewProject.Command = s_NewProjectCommand;
-                miFileNewProject.CommandTarget = this;
-            }
-
-            // Bind the load project command
-            {
-                var cb = new CommandBinding(s_OpenProjectCommand, CommandLoadProjectExecuted, CommandLoadProjectCanExecute);
-                CommandBindings.Add(cb);
-
-                InputBindings.Add(new InputBinding(s_OpenProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
-
-                miFileOpenProject.Command = s_OpenProjectCommand;
-                miFileOpenProject.CommandTarget = this;
-            }
-
-            // Bind the save project command
-            {
-                var cb = new CommandBinding(s_SaveProjectCommand, CommandSaveProjectExecuted, CommandSaveProjectCanExecute);
-                CommandBindings.Add(cb);
-
-                InputBindings.Add(new InputBinding(s_SaveProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
-
-                miFileSaveProject.Command = s_SaveProjectCommand;
-                miFileSaveProject.CommandTarget = this;
-            }
-
-            // Bind the close project command
-            {
-                var cb = new CommandBinding(s_CloseProjectCommand, CommandCloseProjectExecuted, CommandCloseProjectCanExecute);
-                CommandBindings.Add(cb);
-
-                InputBindings.Add(new InputBinding(s_CloseProjectCommand, new KeyGesture(Key.O, ModifierKeys.Control)));
-
-                miFileCloseProject.Command = s_CloseProjectCommand;
-                miFileCloseProject.CommandTarget = this;
-            }
-
             // Bind the exit command
             {
                 var cb = new CommandBinding(s_ExitCommand, CommandExitExecuted, CommandExitCanExecute);
@@ -115,6 +48,9 @@ namespace Apollo.ProjectExplorer.Views.Menu
 
                 InputBindings.Add(new InputBinding(s_ExitCommand, new KeyGesture(Key.F4, ModifierKeys.Alt)));
 
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
                 miFileExit.Command = s_ExitCommand;
                 miFileExit.CommandTarget = this;
             }

@@ -10,10 +10,13 @@ using System.Windows.Controls;
 namespace Apollo.UI.Common.Views.Scripting
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for MainWindow.xaml.
     /// </summary>
     public partial class SelectScriptLanguageView : Window, ISelectScriptLanguageView
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectScriptLanguageView"/> class.
+        /// </summary>
         public SelectScriptLanguageView()
         {
             InitializeComponent();
@@ -29,6 +32,7 @@ namespace Apollo.UI.Common.Views.Scripting
             {
                 return (SelectScriptLanguageModel)DataContext;
             }
+
             set
             {
                 DataContext = value;
@@ -48,6 +52,11 @@ namespace Apollo.UI.Common.Views.Scripting
                 // There can only be one ...
                 Model.SelectedLanguage = (ScriptDescriptionModel)e.AddedItems[0];
             }
+        }
+
+        private void OnOkButtonClick(object sender, RoutedEventArgs e)
+        {
+            DialogResult = true;
         }
     }
 }

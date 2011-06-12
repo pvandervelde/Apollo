@@ -135,32 +135,14 @@
   <data name="MainWindow_Menu_File" xml:space="preserve">
     <value>_File</value>
   </data>
-  <data name="MainWindow_Menu_File_CloseProject" xml:space="preserve">
-    <value>_Close</value>
-  </data>
   <data name="MainWindow_Menu_File_Exit" xml:space="preserve">
     <value>E_xit</value>
-  </data>
-  <data name="MainWindow_Menu_File_NewProject" xml:space="preserve">
-    <value>_New</value>
-  </data>
-  <data name="MainWindow_Menu_File_OpenProject" xml:space="preserve">
-    <value>_Open...</value>
-  </data>
-  <data name="MainWindow_Menu_File_SaveProject" xml:space="preserve">
-    <value>_Save</value>
-  </data>
-  <data name="MainWindow_Menu_File_SaveProjectAs" xml:space="preserve">
-    <value>Save _as...</value>
   </data>
   <data name="MainWindow_Menu_Help" xml:space="preserve">
     <value>_Help</value>
   </data>
   <data name="MainWindow_Menu_Help_About" xml:space="preserve">
     <value>_About...</value>
-  </data>
-  <data name="MainWindow_Menu_Help_Help" xml:space="preserve">
-    <value>_Help</value>
   </data>
   <data name="MainWindow_Menu_Run" xml:space="preserve">
     <value>_Run</value>
@@ -191,14 +173,5 @@
   </data>
   <data name="MainWindow_Menu_View_Script" xml:space="preserve">
     <value>_Script</value>
-  </data>
-  <data name="SelectScriptLanguageView_Cancel" xml:space="preserve">
-    <value>_Cancel</value>
-  </data>
-  <data name="SelectScriptLanguageView_Ok" xml:space="preserve">
-    <value>_Ok</value>
-  </data>
-  <data name="SelectScriptLanguageView_WindowTitle" xml:space="preserve">
-    <value>Select a script language</value>
   </data>
 </root>

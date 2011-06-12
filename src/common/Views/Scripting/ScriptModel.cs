@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Apollo.UI.Common.Commands;
 using Apollo.UI.Common.Properties;
 using Apollo.UI.Common.Scripting;
 
@@ -24,31 +22,15 @@ namespace Apollo.UI.Common.Views.Scripting
         private ScriptDescriptionModel m_ScriptLanguage;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScriptModel"/> class.
+        /// The object that performs syntax verification of the text in the
+        /// current script.
         /// </summary>
-        /// <param name="closeScript">The command that is used to close the script view.</param>
-        /// <param name="runScript">The command that is used to run the script.</param>
-        /// <param name="cancelRunScript">The command that is used to stop the running of the script.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="closeScript"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="runScript"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="cancelRunScript"/> is <see langword="null" />.
-        /// </exception>
-        public ScriptModel(ICommand closeScript, ICommand runScript, ICommand cancelRunScript)
-        {
-            {
-                Lokad.Enforce.Argument(() => closeScript);
-                Lokad.Enforce.Argument(() => runScript);
-            }
+        private ISyntaxVerifier m_SyntaxVerifier;
 
-            CloseCommand = closeScript;
-            RunCommand = runScript;
-            CancelRunCommand = cancelRunScript;
-        }
+        /// <summary>
+        /// The path of the file from which the current script was read.
+        /// </summary>
+        private string m_ScriptFilePath;
 
         /// <summary>
         /// Gets the name of the model for uses on a display.
@@ -62,32 +44,51 @@ namespace Apollo.UI.Common.Views.Scripting
         }
 
         /// <summary>
-        /// Gets the command that closes the script sub-system
+        /// Gets or sets the command that closes the script sub-system
         /// and all associated views.
         /// </summary>
         public ICommand CloseCommand
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
-        /// Gets the command that runs the current script.
+        /// Gets or sets the command that starts a new script.
+        /// </summary>
+        public ICommand NewScriptCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the command that opens an existing
+        /// script from disk.
+        /// </summary>
+        public ICommand OpenScriptCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the command that runs the current script.
         /// </summary>
         public ICommand RunCommand
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
-        /// Gets the command that stops the run of the current
+        /// Gets or sets the command that stops the run of the current
         /// script.
         /// </summary>
         public ICommand CancelRunCommand
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
@@ -102,10 +103,57 @@ namespace Apollo.UI.Common.Views.Scripting
 
             set
             {
-                if (!m_ScriptLanguage.Equals(value))
+                if ((m_ScriptLanguage == null) || (!m_ScriptLanguage.Equals(value)))
                 {
                     m_ScriptLanguage = value;
                     Notify(() => ScriptLanguage);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the object that handles the verification of the syntax
+        /// for the current script.
+        /// </summary>
+        public ISyntaxVerifier SyntaxVerifier
+        {
+            get 
+            {
+                return m_SyntaxVerifier;
+            }
+
+            set
+            {
+                if ((m_SyntaxVerifier == null) || (!m_SyntaxVerifier.Equals(value)))
+                {
+                    if (m_SyntaxVerifier != null)
+                    {
+                        m_SyntaxVerifier.Dispose();
+                    }
+
+                    m_SyntaxVerifier = value;
+                    Notify(() => SyntaxVerifier);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the path of the file from which the current script
+        /// has been read.
+        /// </summary>
+        public string ScriptFile 
+        {
+            get
+            {
+                return m_ScriptFilePath;
+            }
+
+            set
+            {
+                if (!string.Equals(m_ScriptFilePath, value, StringComparison.OrdinalIgnoreCase))
+                {
+                    m_ScriptFilePath = value;
+                    Notify(() => ScriptFile);
                 }
             }
         }

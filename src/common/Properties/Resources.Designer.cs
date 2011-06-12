@@ -151,6 +151,15 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The creation of the new script was cancelled..
+        /// </summary>
+        internal static string Exceptions_Messages_CreationOfNewScriptCancelled {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CreationOfNewScriptCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given script language is not a valid choice..
         /// </summary>
         internal static string Exceptions_Messages_InvalidScriptLanguage {
@@ -165,6 +174,15 @@ namespace Apollo.UI.Common.Properties {
         internal static string Exceptions_Messages_InvalidScriptLanguage_WithLanguage {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_InvalidScriptLanguage_WithLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the script was cancelled..
+        /// </summary>
+        internal static string Exceptions_Messages_LoadingOfScriptCancelled {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_LoadingOfScriptCancelled", resourceCulture);
             }
         }
         
@@ -1000,11 +1018,83 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to py.
+        /// </summary>
+        internal static string ScriptFileExtension_Language_IronPython {
+            get {
+                return ResourceManager.GetString("ScriptFileExtension_Language_IronPython", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to rb.
+        /// </summary>
+        internal static string ScriptFileExtension_Language_IronRuby {
+            get {
+                return ResourceManager.GetString("ScriptFileExtension_Language_IronRuby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Python Files | *.py.
+        /// </summary>
+        internal static string ScriptFileExtensionFilter_Language_IronPython {
+            get {
+                return ResourceManager.GetString("ScriptFileExtensionFilter_Language_IronPython", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ruby Files | *.rb.
+        /// </summary>
+        internal static string ScriptFileExtensionFilter_Language_IronRuby {
+            get {
+                return ResourceManager.GetString("ScriptFileExtensionFilter_Language_IronRuby", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a script file.
+        /// </summary>
+        internal static string ScriptPresenter_SelectScriptFile {
+            get {
+                return ResourceManager.GetString("ScriptPresenter_SelectScriptFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Script.
         /// </summary>
         internal static string ScriptView_ViewName {
             get {
                 return ResourceManager.GetString("ScriptView_ViewName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string SelectScriptLanguageView_Cancel {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string SelectScriptLanguageView_Ok {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a script language.
+        /// </summary>
+        internal static string SelectScriptLanguageView_WindowTitle {
+            get {
+                return ResourceManager.GetString("SelectScriptLanguageView_WindowTitle", resourceCulture);
             }
         }
     }

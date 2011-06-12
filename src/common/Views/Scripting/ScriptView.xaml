@@ -6,9 +6,21 @@
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              xmlns:lex="http://schemas.root-project.org/xaml/presentation"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
+             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="480" 
              d:DesignWidth="640">
+    <UserControl.Resources>
+        <converters:ScriptDescriptionModelToTextConverter x:Key="scriptDescriptionModelToText" />
+    </UserControl.Resources>
+    <UserControl.CommandBindings>
+        <CommandBinding Command="New"
+                        CanExecute="CommandNewScriptCanExecute"
+                        Executed="CommandNewScriptExecuted" />
+        <CommandBinding Command="Open"
+                        CanExecute="CommandOpenScriptCanExecute"
+                        Executed="CommandOpenScriptExecuted" />
+    </UserControl.CommandBindings>
     <DockPanel>
         <ToolBar DockPanel.Dock="Top">
             <Button Command="New"
@@ -87,7 +99,7 @@
         </ToolBar>
         <StatusBar DockPanel.Dock="Bottom">
             <StatusBarItem>
-                <TextBlock Text="{Binding Path=SelectedLanguage}" />
+                <TextBlock Text="{Binding Path=ScriptLanguage, Converter={StaticResource scriptDescriptionModelToText}}" />
             </StatusBarItem>
         </StatusBar>
         <Grid DockPanel.Dock="Left">

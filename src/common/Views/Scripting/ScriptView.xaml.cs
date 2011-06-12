@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Apollo.UI.Common.Commands;
 using Apollo.UI.Common.Scripting;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
@@ -89,7 +90,7 @@ namespace Apollo.UI.Common.Views.Scripting
 
         private void SetHighlightLanguage()
         {
-            var scriptDescription = languageComboBox.SelectedItem as ScriptDescriptionModel;
+            var scriptDescription = (Model != null) ? Model.ScriptLanguage : null;
             var language = (scriptDescription != null) ? scriptDescription.Language : ScriptLanguage.IronPython;
             var languageTag = s_LanguageToHighlightMap[language];
             textEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition(languageTag);
@@ -112,6 +113,7 @@ namespace Apollo.UI.Common.Views.Scripting
             set
             {
                 DataContext = value;
+                SetHighlightLanguage();
             }
         }
 
@@ -131,7 +133,7 @@ namespace Apollo.UI.Common.Views.Scripting
 
             m_ScriptRunInfo = new ScriptRunInformation 
                 {
-                    Language = ((ScriptDescriptionModel)languageComboBox.SelectedValue).Language,
+                    Language = Model.ScriptLanguage.Language,
                     Script = textEditor.Text,
                 };
             Model.RunCommand.Execute(m_ScriptRunInfo);
@@ -153,10 +155,47 @@ namespace Apollo.UI.Common.Views.Scripting
             Model.CancelRunCommand.Execute(m_ScriptRunInfo);
         }
 
-        private void LanguageComboBoxSelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CommandNewScriptCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
-            // This is kinda yucky but there doesn't seem to be a way to bind the syntax
-            // highlighting in the XAML
+            e.Handled = true;
+            e.CanExecute = (Model != null) ? Model.NewScriptCommand.CanExecute(null) : false;
+        }
+
+        private void CommandNewScriptExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            try
+            {
+                Model.NewScriptCommand.Execute(null);
+            }
+            catch (CreationOfNewScriptCancelledException)
+            {
+                return;
+            }
+
+            textEditor.Clear();
+            SetHighlightLanguage();
+        }
+
+        private void CommandOpenScriptCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = (Model != null) ? Model.OpenScriptCommand.CanExecute(null) : false;
+        }
+
+        private void CommandOpenScriptExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            try
+            {
+                Model.OpenScriptCommand.Execute(null);
+            }
+            catch (LoadingOfScriptCancelledException)
+            {
+                return;
+            }
+
+            textEditor.Load(Model.ScriptFile);
             SetHighlightLanguage();
         }
     }

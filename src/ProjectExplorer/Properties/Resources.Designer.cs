@@ -151,56 +151,11 @@ namespace Apollo.ProjectExplorer.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to _Close.
-        /// </summary>
-        internal static string MainWindow_Menu_File_CloseProject {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_File_CloseProject", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to E_xit.
         /// </summary>
         internal static string MainWindow_Menu_File_Exit {
             get {
                 return ResourceManager.GetString("MainWindow_Menu_File_Exit", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _New.
-        /// </summary>
-        internal static string MainWindow_Menu_File_NewProject {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_File_NewProject", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Open....
-        /// </summary>
-        internal static string MainWindow_Menu_File_OpenProject {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_File_OpenProject", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Save.
-        /// </summary>
-        internal static string MainWindow_Menu_File_SaveProject {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_File_SaveProject", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Save _as....
-        /// </summary>
-        internal static string MainWindow_Menu_File_SaveProjectAs {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_File_SaveProjectAs", resourceCulture);
             }
         }
         
@@ -219,15 +174,6 @@ namespace Apollo.ProjectExplorer.Properties {
         internal static string MainWindow_Menu_Help_About {
             get {
                 return ResourceManager.GetString("MainWindow_Menu_Help_About", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Help.
-        /// </summary>
-        internal static string MainWindow_Menu_Help_Help {
-            get {
-                return ResourceManager.GetString("MainWindow_Menu_Help_Help", resourceCulture);
             }
         }
         
@@ -282,33 +228,6 @@ namespace Apollo.ProjectExplorer.Properties {
         internal static string MainWindow_Title {
             get {
                 return ResourceManager.GetString("MainWindow_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Cancel.
-        /// </summary>
-        internal static string SelectScriptLanguageView_Cancel {
-            get {
-                return ResourceManager.GetString("SelectScriptLanguageView_Cancel", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to _Ok.
-        /// </summary>
-        internal static string SelectScriptLanguageView_Ok {
-            get {
-                return ResourceManager.GetString("SelectScriptLanguageView_Ok", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Select a script language.
-        /// </summary>
-        internal static string SelectScriptLanguageView_WindowTitle {
-            get {
-                return ResourceManager.GetString("SelectScriptLanguageView_WindowTitle", resourceCulture);
             }
         }
     }

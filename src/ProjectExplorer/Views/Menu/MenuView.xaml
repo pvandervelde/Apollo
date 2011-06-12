@@ -4,25 +4,30 @@
                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                    xmlns:lex="http://schemas.root-project.org/xaml/presentation"
                    xmlns:Common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
+    <Common:RegionView.CommandBindings>
+        <CommandBinding Command="New"
+                        CanExecute="CommandNewProjectCanExecute"
+                        Executed="CommandNewProjectExecuted" />
+        <CommandBinding Command="Open"
+                        CanExecute="CommandLoadProjectCanExecute"
+                        Executed="CommandLoadProjectExecuted" />
+        <CommandBinding Command="Save"
+                        CanExecute="CommandSaveProjectCanExecute"
+                        Executed="CommandSaveProjectExecuted" />
+        <CommandBinding Command="Close"
+                        CanExecute="CommandCloseProjectCanExecute"
+                        Executed="CommandCloseProjectExecuted" />
+    </Common:RegionView.CommandBindings>
     <Menu DockPanel.Dock="Top"
           IsMainMenu="True">
         <MenuItem Header="{lex:LocText Key=MainWindow_Menu_File, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_File}">
-            <MenuItem x:Name="miFileNewProject"
-                      x:FieldModifier="private"
-                      Header="{lex:LocText Key=MainWindow_Menu_File_NewProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_New}">
+            <MenuItem Command="New">
             </MenuItem>
-            <MenuItem x:Name="miFileOpenProject"
-                      x:FieldModifier="private"
-                      Header="{lex:LocText Key=MainWindow_Menu_File_OpenProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Open}" />
+            <MenuItem Command="Open" />
             <Separator />
-            <MenuItem x:Name="miFileCloseProject"
-                      x:FieldModifier="private"
-                      Header="{lex:LocText Key=MainWindow_Menu_File_CloseProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Close}" />
-            <MenuItem x:Name="miFileSaveProject"
-                      x:FieldModifier="private"
-                      Header="{lex:LocText Key=MainWindow_Menu_File_SaveProject, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Save}" />
-            <MenuItem Header="{lex:LocText Key=MainWindow_Menu_File_SaveProjectAs, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_SaveAs}"
-                      IsEnabled="False" />
+            <MenuItem Command="Close" />
+            <MenuItem Command="Save" />
+            <MenuItem Command="SaveAs" />
             <Separator />
             <!-- Recent -->
             <Separator />
@@ -57,8 +62,7 @@
 
         <!-- Help -->
         <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Help, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Help}">
-            <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Help_Help, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Help}"
-                      IsEnabled="False" />
+            <MenuItem Command="Help"/>
             <Separator />
             <MenuItem x:Name="miHelpAbout"
                       x:FieldModifier="private"

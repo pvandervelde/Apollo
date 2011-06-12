@@ -502,4 +502,34 @@
   <data name="Exceptions_Messages_CannotInteruptRunningScript" xml:space="preserve">
     <value>It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script.</value>
   </data>
+  <data name="SelectScriptLanguageView_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="SelectScriptLanguageView_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="SelectScriptLanguageView_WindowTitle" xml:space="preserve">
+    <value>Select a script language</value>
+  </data>
+  <data name="Exceptions_Messages_CreationOfNewScriptCancelled" xml:space="preserve">
+    <value>The creation of the new script was cancelled.</value>
+  </data>
+  <data name="Exceptions_Messages_LoadingOfScriptCancelled" xml:space="preserve">
+    <value>The loading of the script was cancelled.</value>
+  </data>
+  <data name="ScriptPresenter_SelectScriptFile" xml:space="preserve">
+    <value>Select a script file</value>
+  </data>
+  <data name="ScriptFileExtensionFilter_Language_IronPython" xml:space="preserve">
+    <value>Python Files | *.py</value>
+  </data>
+  <data name="ScriptFileExtensionFilter_Language_IronRuby" xml:space="preserve">
+    <value>Ruby Files | *.rb</value>
+  </data>
+  <data name="ScriptFileExtension_Language_IronPython" xml:space="preserve">
+    <value>py</value>
+  </data>
+  <data name="ScriptFileExtension_Language_IronRuby" xml:space="preserve">
+    <value>rb</value>
+  </data>
 </root>
