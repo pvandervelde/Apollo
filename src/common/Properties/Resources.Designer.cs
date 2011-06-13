@@ -1063,6 +1063,60 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string ScriptView_Command_CancelRunScript_Name {
+            get {
+                return ResourceManager.GetString("ScriptView_Command_CancelRunScript_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string ScriptView_Command_CancelRunScript_Text {
+            get {
+                return ResourceManager.GetString("ScriptView_Command_CancelRunScript_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run.
+        /// </summary>
+        internal static string ScriptView_Command_RunScript_Name {
+            get {
+                return ResourceManager.GetString("ScriptView_Command_RunScript_Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Run.
+        /// </summary>
+        internal static string ScriptView_Command_RunScript_Text {
+            get {
+                return ResourceManager.GetString("ScriptView_Command_RunScript_Text", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Script language:.
+        /// </summary>
+        internal static string ScriptView_CurrentScriptLanguage {
+            get {
+                return ResourceManager.GetString("ScriptView_CurrentScriptLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        internal static string ScriptView_Output_Menu_Clear {
+            get {
+                return ResourceManager.GetString("ScriptView_Output_Menu_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Script.
         /// </summary>
         internal static string ScriptView_ViewName {

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using Apollo.UI.Common.Scripting;
 using Microsoft.Practices.Prism.Commands;
 
@@ -43,7 +44,7 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            var result = scriptHost.Execute(info.Language, info.Script);
+            var result = scriptHost.Execute(info.Language, info.Script, info.ScriptOutput as TextWriter);
             info.ScriptRunningTask = result.Item1;
             info.CancellationToken = result.Item2;
         }

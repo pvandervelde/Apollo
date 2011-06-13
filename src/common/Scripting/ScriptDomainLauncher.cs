@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.IO;
 using IronPython.Hosting;
 
 namespace Apollo.UI.Common.Scripting
@@ -19,17 +20,18 @@ namespace Apollo.UI.Common.Scripting
         /// </summary>
         /// <param name="language">The language that the <c>IExecuteScripts</c> object should be able to process.</param>
         /// <param name="projects">The object that handles all project activities.</param>
+        /// <param name="writer">The object that writes the script output to a text stream.</param>
         /// <returns>
         ///     The object that can execute scripts.
         /// </returns>
-        public IExecuteScripts Launch(ScriptLanguage language, ILinkScriptsToProjects projects)
+        public IExecuteScripts Launch(ScriptLanguage language, ILinkScriptsToProjects projects, TextWriter writer)
         {
             switch (language)
             {
                 case ScriptLanguage.None:
                     throw new InvalidScriptLanguageException(language);
                 case ScriptLanguage.IronPython:
-                    return new RemoteScriptRunner(projects, Python.CreateEngine());
+                    return new RemoteScriptRunner(projects, writer, Python.CreateEngine());
                 case ScriptLanguage.IronRuby:
                     throw new NotImplementedException();
                 case ScriptLanguage.PowerShell:
@@ -37,6 +39,23 @@ namespace Apollo.UI.Common.Scripting
                 default:
                     throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Obtains a lifetime service object to control the lifetime policy for this instance.
+        /// </summary>
+        /// <returns>
+        ///     An object of type System.Runtime.Remoting.Lifetime.ILease used to control
+        ///     the lifetime policy for this instance. This is the current lifetime service
+        ///     object for this instance if one exists; otherwise, a new lifetime service
+        ///     object initialized to the value of the 
+        ///     System.Runtime.Remoting.Lifetime.LifetimeServices.LeaseManagerPollTime property.
+        /// </returns>
+        public override object InitializeLifetimeService()
+        {
+            // We don't allow the object to die, unless we
+            // release the references.
+            return null;
         }
     }
 }

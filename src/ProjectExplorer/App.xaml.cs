@@ -39,7 +39,7 @@ namespace Apollo.ProjectExplorer
         /// Application Entry Point.
         /// </summary>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
-        [STAThreadAttribute]
+        [STAThread]
         public static int Main()
         {
             int functionReturnResult = -1;

@@ -12,7 +12,7 @@ namespace Apollo.UI.Common.Scripting
     /// <summary>
     /// Stores information necessary to run a script.
     /// </summary>
-    public sealed class ScriptRunInformation
+    internal sealed class ScriptRunInformation
     {
         /// <summary>
         /// Gets or sets the language of the script.
@@ -49,6 +49,15 @@ namespace Apollo.UI.Common.Scripting
         { 
             get; 
             set; 
+        }
+
+        /// <summary>
+        /// Gets or sets the object that passes through the output from the script.
+        /// </summary>
+        public ISendScriptOutput ScriptOutput
+        {
+            get;
+            set;
         }
     }
 }

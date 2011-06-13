@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.UserInterfaces.Projects;
@@ -91,11 +91,13 @@ namespace Apollo.UI.Common.Scripting
         /// </summary>
         /// <param name="language">The language for the script.</param>
         /// <param name="scriptCode">The script code.</param>
+        /// <param name="outputChannel">The object that forwards messages from the script.</param>
         /// <returns>
-        /// A tuple that contains the task which is running the script and a stream that contains
-        /// the error output of the script in text format.
+        /// A tuple that contains the task which is running the script and the
+        /// <see cref="CancellationTokenSource"/> object that can be used to cancel the 
+        /// running task.
         /// </returns>
-        public Tuple<Task, CancellationTokenSource> Execute(ScriptLanguage language, string scriptCode)
+        public Tuple<Task, CancellationTokenSource> Execute(ScriptLanguage language, string scriptCode, TextWriter outputChannel)
         {
             // If there is an existing runner then nuke that one
             if (m_CurrentlyRunningScript != null)
@@ -103,15 +105,16 @@ namespace Apollo.UI.Common.Scripting
                 throw new CannotInteruptRunningScriptException();
             }
 
-            var tuple = LoadExecutor(language);
+            var tuple = LoadExecutor(language, outputChannel);
             AppDomain scriptDomain = tuple.Item1;
             IExecuteScripts executor = tuple.Item2;
 
             var source = new CancellationTokenSource();
+            var token = new CancelScriptToken(source.Token);
             var result = new Task(
                 () =>
                 {
-                    executor.Execute(scriptCode, source.Token);
+                    executor.Execute(scriptCode, token);
                 },
                 source.Token,
                 TaskCreationOptions.LongRunning);
@@ -130,7 +133,7 @@ namespace Apollo.UI.Common.Scripting
             return new Tuple<Task, CancellationTokenSource>(result, source);
         }
 
-        private Tuple<AppDomain, IExecuteScripts> LoadExecutor(ScriptLanguage language)
+        private Tuple<AppDomain, IExecuteScripts> LoadExecutor(ScriptLanguage language, TextWriter outputChannel)
         {
             // Create a new AppDomain
             var scriptDomain = m_AppDomainBuilder("ScriptDomain", AppDomainPaths.Core);
@@ -142,7 +145,7 @@ namespace Apollo.UI.Common.Scripting
                     typeof(ScriptDomainLauncher).FullName)
                 .Unwrap() as ScriptDomainLauncher;
 
-            var executor = launcher.Launch(language, m_ProjectsForScripts);
+            var executor = launcher.Launch(language, m_ProjectsForScripts, outputChannel);
             return new Tuple<AppDomain, IExecuteScripts>(scriptDomain, executor);
         }
 
@@ -155,7 +158,7 @@ namespace Apollo.UI.Common.Scripting
         /// </returns>
         public ISyntaxVerifier VerifySyntax(ScriptLanguage language)
         {
-            var tuple = LoadExecutor(language);
+            var tuple = LoadExecutor(language, new ScriptOutputPipe());
             return new SyntaxVerifier(tuple.Item1, tuple.Item2);
         }
 

@@ -5,21 +5,20 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Threading;
 
 namespace Apollo.UI.Common.Scripting
 {
     /// <summary>
     /// Defines the interface for objects that execute scripts.
     /// </summary>
-    public interface IExecuteScripts
+    internal interface IExecuteScripts
     {
         /// <summary>
         /// Executes the given script.
         /// </summary>
         /// <param name="scriptCode">The script code.</param>
         /// <param name="token">The cancellation token used to cancel the running of the script.</param>
-        void Execute(string scriptCode, CancellationToken token);
+        void Execute(string scriptCode, CancelScriptToken token);
 
         /// <summary>
         /// Verifies that the script has no syntax errors.

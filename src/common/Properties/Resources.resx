@@ -532,4 +532,22 @@
   <data name="ScriptFileExtension_Language_IronRuby" xml:space="preserve">
     <value>rb</value>
   </data>
+  <data name="ScriptView_CurrentScriptLanguage" xml:space="preserve">
+    <value>Script language:</value>
+  </data>
+  <data name="ScriptView_Output_Menu_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="ScriptView_Command_CancelRunScript_Name" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ScriptView_Command_RunScript_Name" xml:space="preserve">
+    <value>Run</value>
+  </data>
+  <data name="ScriptView_Command_CancelRunScript_Text" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ScriptView_Command_RunScript_Text" xml:space="preserve">
+    <value>Run</value>
+  </data>
 </root>

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using Apollo.UI.Common.Properties;
 using Lokad;
@@ -49,22 +50,30 @@ namespace Apollo.UI.Common.Scripting
         /// Initializes a new instance of the <see cref="RemoteScriptRunner"/> class.
         /// </summary>
         /// <param name="projects">The object that handles all the project activity.</param>
+        /// <param name="writer">The object that writes the script output to a text stream.</param>
         /// <param name="engine">The object that handles the actual execution of the script.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="projects"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="writer"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="engine"/> is <see langword="null" />.
         /// </exception>
-        public RemoteScriptRunner(ILinkScriptsToProjects projects, ScriptEngine engine)
+        public RemoteScriptRunner(ILinkScriptsToProjects projects, TextWriter writer, ScriptEngine engine)
         {
             {
                 Enforce.Argument(() => projects);
+                Enforce.Argument(() => writer);
                 Enforce.Argument(() => engine);
             }
 
             m_Projects = projects;
             m_Engine = engine;
+
+            // Should be able to do any kind of stream we like because we're not actually going to use it.
+            m_Engine.Runtime.IO.SetOutput(new MemoryStream(), writer);
         }
 
         private void CreateScriptScope()
@@ -79,7 +88,7 @@ namespace Apollo.UI.Common.Scripting
             }
         }
 
-        private void CreateScriptScope(string tokenName, CancellationToken token)
+        private void CreateScriptScope(string tokenName, CancelScriptToken token)
         {
             CreateScriptScope();
 
@@ -111,7 +120,7 @@ namespace Apollo.UI.Common.Scripting
         /// </summary>
         /// <param name="scriptCode">The script code.</param>
         /// <param name="token">A cancellation token that can be used to interupt the script.</param>
-        public void Execute(string scriptCode, CancellationToken token)
+        public void Execute(string scriptCode, CancelScriptToken token)
         {
             CreateScriptScope(ScriptCancellationToken, token);
             ExecuteScript(scriptCode);
@@ -127,7 +136,7 @@ namespace Apollo.UI.Common.Scripting
         /// </returns>
         public IEnumerable<ScriptErrorInformation> VerifySyntax(string scriptCode)
         {
-            CreateScriptScope(ScriptCancellationToken, new CancellationToken());
+            CreateScriptScope(ScriptCancellationToken, new CancelScriptToken());
             var source = m_Engine.CreateScriptSourceFromString(scriptCode, SourceCodeKind.Statements);
 
             var errors = new SourceErrorListener();
