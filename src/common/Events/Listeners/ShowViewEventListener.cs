@@ -22,8 +22,9 @@ namespace Apollo.UI.Common.Listeners
         /// Initializes a new instance of the <see cref="ShowViewEventListener"/> class.
         /// </summary>
         /// <param name="container">The IOC container.</param>
-        public ShowViewEventListener(IContainer container)
-            : base(container)
+        /// <param name="dispatcherContext">The dispatcher context.</param>
+        public ShowViewEventListener(IContainer container, IContextAware dispatcherContext)
+            : base(container, dispatcherContext)
         {
         }
 
@@ -40,6 +41,19 @@ namespace Apollo.UI.Common.Listeners
         /// </summary>
         /// <param name="request">The request which indicates which view to show.</param>
         private void ShowView(ShowViewRequest request)
+        {
+            Action action = () => ShowViewInternal(request);
+            if (DispatcherContext.IsSynchronized)
+            {
+                action();
+            }
+            else
+            {
+                DispatcherContext.Invoke(action);
+            }
+        }
+
+        private void ShowViewInternal(ShowViewRequest request)
         {
             var region = null as IRegion;
             var regionManager = request.RegionManager ?? MainRegionManager;
@@ -64,7 +78,15 @@ namespace Apollo.UI.Common.Listeners
             var viewWindow = view as Window;
             if (viewWindow != null)
             {
-                viewWindow.Show();
+                Action showWindow = () => viewWindow.Show();
+                if (viewWindow.Dispatcher.CheckAccess())
+                {
+                    showWindow();
+                }
+                else
+                {
+                    viewWindow.Dispatcher.Invoke(showWindow);
+                }
             }
             else
             {
@@ -72,8 +94,8 @@ namespace Apollo.UI.Common.Listeners
                 {
                     throw new InvalidOperationException(
                         string.Format(
-                            CultureInfo.InvariantCulture, 
-                            "The region '{0}' does not exist.", 
+                            CultureInfo.InvariantCulture,
+                            "The region '{0}' does not exist.",
                             request.RegionName));
                 }
 

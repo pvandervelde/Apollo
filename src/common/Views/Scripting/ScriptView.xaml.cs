@@ -240,7 +240,6 @@ namespace Apollo.UI.Common.Views.Scripting
             Action<string> insertText = 
                 s => 
                 {
-                    outputTextBox.Document.Insert(outputTextBox.Document.TextLength, Environment.NewLine);
                     outputTextBox.Document.Insert(outputTextBox.Document.TextLength, s);
                 };
 

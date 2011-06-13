@@ -22,12 +22,19 @@ namespace Apollo.UI.Common
         private readonly IContainer m_Container;
 
         /// <summary>
+        /// The <c>Dispatcher</c> context used to pull all actions onto the correct thread.
+        /// </summary>
+        private readonly IContextAware m_Context;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EventListener"/> class.
         /// </summary>
         /// <param name="container">The IOC container.</param>
-        public EventListener(IContainer container)
+        /// <param name="dispatcherContext">The dispatcher context.</param>
+        public EventListener(IContainer container, IContextAware dispatcherContext)
         {
             m_Container = container;
+            m_Context = dispatcherContext;
         }
 
         /// <summary>
@@ -39,6 +46,17 @@ namespace Apollo.UI.Common
             get 
             { 
                 return m_Container; 
+            }
+        }
+
+        /// <summary>
+        /// Gets the dispatcher context.
+        /// </summary>
+        public IContextAware DispatcherContext
+        {
+            get
+            {
+                return m_Context;
             }
         }
 

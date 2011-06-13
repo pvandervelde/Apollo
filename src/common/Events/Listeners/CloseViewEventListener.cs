@@ -25,8 +25,9 @@ namespace Apollo.UI.Common.Listeners
         /// Initializes a new instance of the <see cref="CloseViewEventListener"/> class.
         /// </summary>
         /// <param name="container">The IOC container.</param>
-        public CloseViewEventListener(IContainer container)
-            : base(container)
+        /// <param name="dispatcherContext">The dispatcher context.</param>
+        public CloseViewEventListener(IContainer container, IContextAware dispatcherContext)
+            : base(container, dispatcherContext)
         {
         }
 
@@ -44,9 +45,22 @@ namespace Apollo.UI.Common.Listeners
         /// <param name="request">The request which indicates which view to close.</param>
         private void CloseView(CloseViewRequest request)
         {
+            Action action = () => CloseViewInternal(request);
+            if (DispatcherContext.IsSynchronized)
+            {
+                action();
+            }
+            else
+            {
+                DispatcherContext.Invoke(action);
+            }
+        }
+
+        private void CloseViewInternal(CloseViewRequest request)
+        {
             var region = null as IRegion;
             var regionManager = request.RegionManager ?? MainRegionManager;
-            
+
             // Only deactivate the view if it exists
             if (regionManager.Regions.ContainsRegionWithName(request.RegionName))
             {
@@ -59,14 +73,14 @@ namespace Apollo.UI.Common.Listeners
                     {
                         viewWindow.Close();
                     }
-                    else 
+                    else
                     {
                         if (region == null)
                         {
                             throw new InvalidOperationException(
                                 string.Format(
-                                    CultureInfo.InvariantCulture, 
-                                    "The region '{0}' does not exist.", 
+                                    CultureInfo.InvariantCulture,
+                                    "The region '{0}' does not exist.",
                                     request.RegionName));
                         }
 
