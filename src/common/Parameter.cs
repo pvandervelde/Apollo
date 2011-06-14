@@ -13,7 +13,7 @@ namespace Apollo.UI.Common
     /// <summary>
     /// A base class for parameters, which are arguments for a presenter.
     /// </summary>
-    public abstract class Parameter : Observable
+    public abstract class Parameter : Observable, IEquatable<Parameter>
     {
         /// <summary>
         /// The collection of properties for the current parameter.

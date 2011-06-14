@@ -17,6 +17,14 @@ namespace Apollo.UI.Common.Scripting
     internal sealed class ScriptOutputPipe : TextWriter, ISendScriptOutput
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ScriptOutputPipe"/> class.
+        /// </summary>
+        public ScriptOutputPipe()
+            : base(CultureInfo.CurrentCulture)
+        { 
+        }
+
+        /// <summary>
         /// Gets the encoding of the current <see cref="TextWriter"/>.
         /// </summary>
         public override Encoding Encoding
@@ -65,7 +73,7 @@ namespace Apollo.UI.Common.Scripting
         public override void Write(char[] buffer, int index, int count)
         {
             var input = new StringBuilder();
-            for (int i = index; i <= index + count; i++)
+            for (int i = index; i < index + count; i++)
             {
                 input.Append(buffer[i]);
             }

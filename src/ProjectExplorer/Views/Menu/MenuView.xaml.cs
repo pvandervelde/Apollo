@@ -12,6 +12,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// <summary>
     /// A view for a top level menu.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class MenuView : IMenuView
     {
         /// <summary>

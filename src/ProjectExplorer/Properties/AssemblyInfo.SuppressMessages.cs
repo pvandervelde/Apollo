@@ -20,28 +20,12 @@ using System.Diagnostics.CodeAnalysis;
     "Microsoft.Performance", 
     "CA1812:AvoidUninstantiatedInternalClasses", 
     Scope = "type", 
-    Target = "Apollo.ProjectExplorer.Events.ShowViewEvent")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
-    "CA1812:AvoidUninstantiatedInternalClasses", 
-    Scope = "type", 
     Target = "Apollo.ProjectExplorer.Views.Shell.ShellModel")]
 [module: SuppressMessage(
     "Microsoft.Performance", 
     "CA1812:AvoidUninstantiatedInternalClasses", 
     Scope = "type", 
     Target = "Apollo.ProjectExplorer.Views.About.AboutWindow")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
-    "CA1812:AvoidUninstantiatedInternalClasses", 
-    Scope = "type", 
-    Target = "Apollo.ProjectExplorer.Events.Listeners.ShowViewEventListener")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
-    "CA1812:AvoidUninstantiatedInternalClasses", 
-    Scope = "type", 
-    Target = "Apollo.ProjectExplorer.Events.ShowViewRequest`1")]
-
 [module: SuppressMessage(
     "Microsoft.Performance", 
     "CA1811:AvoidUncalledPrivateCode", 

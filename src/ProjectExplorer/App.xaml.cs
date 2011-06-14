@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Threading;
 using Apollo.Utilities;
 using Apollo.Utilities.ExceptionHandling;
 using Autofac;
@@ -18,6 +18,7 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// Interaction logic for App.xaml.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class App
     {
         /// <summary>

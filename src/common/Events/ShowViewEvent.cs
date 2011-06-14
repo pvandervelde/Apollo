@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.UI.Common.Events
@@ -11,6 +12,7 @@ namespace Apollo.UI.Common.Events
     /// <summary>
     /// Manages publication and subscription of the showing of a view event.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ShowViewEvent : CompositePresentationEvent<ShowViewRequest>
     {
     }

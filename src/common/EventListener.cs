@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Regions;
@@ -13,7 +14,8 @@ namespace Apollo.UI.Common
     /// <summary>
     /// Defines methods for event handling.
     /// </summary>
-    public class EventListener
+    [ExcludeFromCodeCoverage]
+    public abstract class EventListener
     {
         /// <summary>
         /// The IOC container that is used to resolve presenters that are associated with
@@ -31,7 +33,7 @@ namespace Apollo.UI.Common
         /// </summary>
         /// <param name="container">The IOC container.</param>
         /// <param name="dispatcherContext">The dispatcher context.</param>
-        public EventListener(IContainer container, IContextAware dispatcherContext)
+        protected EventListener(IContainer container, IContextAware dispatcherContext)
         {
             m_Container = container;
             m_Context = dispatcherContext;

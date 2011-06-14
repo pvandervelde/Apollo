@@ -28,6 +28,28 @@ namespace Apollo.Utilities
         /// </summary>
         private const string DefaultErrorFileName = "projectexplorer.info.log";
 
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
+        {
+            List<string> filePaths = new List<string>();
+            List<string> directoryPaths = new List<string>();
+            if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
+            {
+                // Get the paths from the config
+                // throw new NotImplementedException();
+            }
+
+            if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
+            {
+                // Get the paths from the config
+                // throw new NotImplementedException();
+            }
+
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                filePaths,
+                directoryPaths);
+        }
+
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
@@ -102,28 +124,6 @@ namespace Apollo.Utilities
                     .As<Func<string, AppDomainPaths, AppDomain>>()
                     .SingleInstance();
             }
-        }
-
-        private AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
-        {
-            List<string> filePaths = new List<string>();
-            List<string> directoryPaths = new List<string>();
-            if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
-            {
-                // Get the paths from the config
-                // throw new NotImplementedException();
-            }
-
-            if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
-            { 
-                // Get the paths from the config
-                // throw new NotImplementedException();
-            }
-
-            return AppDomainResolutionPaths.WithFilesAndDirectories(
-                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
-                filePaths,
-                directoryPaths);
         }
     }
 }

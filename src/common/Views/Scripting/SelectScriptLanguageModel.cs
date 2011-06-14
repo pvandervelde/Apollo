@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common.Scripting;
 
 namespace Apollo.UI.Common.Views.Scripting
@@ -27,6 +28,8 @@ namespace Apollo.UI.Common.Views.Scripting
         /// <summary>
         /// Gets the collection that holds all the available languages.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public ObservableCollection<ScriptDescriptionModel> AvailableLanguages
         {
             get

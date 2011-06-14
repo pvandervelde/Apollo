@@ -22,16 +22,12 @@ namespace Apollo.ProjectExplorer.Commands
         /// <summary>
         /// Determines if the script tab can be opened.
         /// </summary>
-        /// <param name="projectFacade">
-        /// The object that contains the methods that allow interaction
-        /// with the project system.
-        /// </param>
         /// <returns>
         /// <see langword="true" /> if the tab can be opened; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private static bool CanShowTab(ILinkToProjects projectFacade)
+        private static bool CanShowTab()
         {
             // Can always open a new script
             return true;
@@ -53,15 +49,11 @@ namespace Apollo.ProjectExplorer.Commands
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowScriptsTabCommand"/> class.
         /// </summary>
-        /// <param name="projectFacade">
-        ///     The object that contains the methods that allow interaction
-        ///     with the project system.
-        /// </param>
         /// <param name="eventAggregator">The event aggregator.</param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "The constructor is called via the IOC container.")]
-        public ShowScriptsTabCommand(ILinkToProjects projectFacade, IEventAggregator eventAggregator)
-            : base(obj => ShowTab(eventAggregator), obj => CanShowTab(projectFacade))
+        public ShowScriptsTabCommand(IEventAggregator eventAggregator)
+            : base(obj => ShowTab(eventAggregator), obj => CanShowTab())
         {
         }
     }

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.Practices.Prism.Regions;
 
 namespace Apollo.UI.Common.Events
@@ -11,6 +12,7 @@ namespace Apollo.UI.Common.Events
     /// <summary>
     /// Handles requests to close a view.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class CloseViewRequest
     {
         /// <summary>

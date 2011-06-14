@@ -158,7 +158,7 @@ namespace Apollo.UI.Common.Views.Scripting
             {
                 Model.NewScriptCommand.Execute(null);
             }
-            catch (CreationOfNewScriptCancelledException)
+            catch (CreationOfNewScriptCanceledException)
             {
                 return;
             }
@@ -184,7 +184,7 @@ namespace Apollo.UI.Common.Views.Scripting
             {
                 Model.OpenScriptCommand.Execute(null);
             }
-            catch (LoadingOfScriptCancelledException)
+            catch (LoadingOfScriptCanceledException)
             {
                 return;
             }

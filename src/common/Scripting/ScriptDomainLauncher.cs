@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using IronPython.Hosting;
 
@@ -24,6 +25,8 @@ namespace Apollo.UI.Common.Scripting
         /// <returns>
         ///     The object that can execute scripts.
         /// </returns>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "This method is called via the MarshalByRefObject proxy.")]
         public IExecuteScripts Launch(ScriptLanguage language, ILinkScriptsToProjects projects, TextWriter writer)
         {
             switch (language)

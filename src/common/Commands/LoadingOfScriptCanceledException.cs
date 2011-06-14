@@ -14,37 +14,37 @@ namespace Apollo.UI.Common.Commands
     /// An exception thrown if the user cancels the loading of an existing script.
     /// </summary>
     [Serializable]
-    public sealed class LoadingOfScriptCancelledException : Exception
+    public sealed class LoadingOfScriptCanceledException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadingOfScriptCancelledException"/> class.
+        /// Initializes a new instance of the <see cref="LoadingOfScriptCanceledException"/> class.
         /// </summary>
-        public LoadingOfScriptCancelledException()
+        public LoadingOfScriptCanceledException()
             : this(Resources.Exceptions_Messages_LoadingOfScriptCancelled)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadingOfScriptCancelledException"/> class.
+        /// Initializes a new instance of the <see cref="LoadingOfScriptCanceledException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public LoadingOfScriptCancelledException(string message) 
+        public LoadingOfScriptCanceledException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadingOfScriptCancelledException"/> class.
+        /// Initializes a new instance of the <see cref="LoadingOfScriptCanceledException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public LoadingOfScriptCancelledException(string message, Exception innerException)
+        public LoadingOfScriptCanceledException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="LoadingOfScriptCancelledException"/> class.
+        /// Initializes a new instance of the <see cref="LoadingOfScriptCanceledException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -60,7 +60,7 @@ namespace Apollo.UI.Common.Commands
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private LoadingOfScriptCancelledException(SerializationInfo info, StreamingContext context)
+        private LoadingOfScriptCanceledException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

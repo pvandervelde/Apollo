@@ -6,6 +6,7 @@
 
 using System;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common.Commands;
 using Lokad;
 
@@ -14,6 +15,7 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// <summary>
     /// Interaction logic for ShellWindow.xaml.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class ShellWindow : IShellView
     {
         /// <summary>

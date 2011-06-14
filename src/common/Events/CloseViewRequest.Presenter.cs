@@ -4,12 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Apollo.UI.Common.Events
 {
     /// <summary>
     /// Handles requests to close a view.
     /// </summary>
     /// <typeparam name="TPresenter">The type of the presenter.</typeparam>
+    [ExcludeFromCodeCoverage]
     public sealed class CloseViewRequest<TPresenter> : CloseViewRequest
     {
         /// <summary>

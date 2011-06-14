@@ -15,6 +15,7 @@ namespace Apollo.UI.Common.Bootstrappers
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
+    [ExcludeFromCodeCoverage]
     internal sealed class RegionBehaviorFactoryMapper
     {
         /// <summary>

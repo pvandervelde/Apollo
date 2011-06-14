@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core;
 using Apollo.Utilities;
 using Autofac.Core;
@@ -26,6 +27,7 @@ namespace Apollo.ProjectExplorer
     /// the core and the UI to interact is via the UserInterfaceService.
     /// </para>
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     internal sealed class KernelBootstrapper : Bootstrapper
     {
         /// <summary>

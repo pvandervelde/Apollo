@@ -4,12 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
+
 namespace Apollo.UI.Common.Events
 {
     /// <summary>
     /// Handles requests to show a view.
     /// </summary>
     /// <typeparam name="TPresenter">The type of the presenter.</typeparam>
+    [ExcludeFromCodeCoverage]
     public class ShowViewRequest<TPresenter> : ShowViewRequest
     {
         /// <summary>

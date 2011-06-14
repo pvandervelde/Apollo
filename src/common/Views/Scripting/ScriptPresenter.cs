@@ -33,15 +33,15 @@ namespace Apollo.UI.Common.Views.Scripting
                     { Resources.ScriptFileExtension_Language_IronRuby, ScriptLanguage.IronRuby },
                 };
 
-        private string ScriptFileFilter()
+        private static ScriptLanguage LanguageFromFileExtension(string extension)
+        {
+            return s_FileExtensionToLanguageMap[extension];
+        }
+
+        private static string ScriptFileFilter()
         {
             return Resources.ScriptFileExtensionFilter_Language_IronPython + "|"
                 + Resources.ScriptFileExtensionFilter_Language_IronRuby;
-        }
-
-        private ScriptLanguage LanguageFromFileExtension(string extension)
-        {
-            return s_FileExtensionToLanguageMap[extension];
         }
 
         /// <summary>

@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 
@@ -18,6 +18,7 @@ namespace Apollo.ProjectExplorer.Converters
     /// <source>
     /// http://stackoverflow.com/questions/561931/how-to-create-trapezoid-tabs-in-wpf-tab-control
     /// </source>
+    [ExcludeFromCodeCoverage]
     public class ContentToPathConverter : IValueConverter
     {
         /// <summary>

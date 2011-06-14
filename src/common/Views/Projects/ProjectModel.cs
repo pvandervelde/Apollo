@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
 using Apollo.UI.Common.Properties;
 
@@ -34,6 +35,8 @@ namespace Apollo.UI.Common.Views.Projects
         /// <summary>
         /// Gets the name of the model for uses on a display.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string DisplayName
         {
             get 

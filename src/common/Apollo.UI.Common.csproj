@@ -119,9 +119,9 @@
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\CloseScriptCommand.cs" />
     <Compile Include="Commands\CloseViewCommand.cs" />
-    <Compile Include="Commands\CreationOfNewScriptCancelledException.cs" />
+    <Compile Include="Commands\CreationOfNewScriptCanceledException.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
-    <Compile Include="Commands\LoadingOfScriptCancelledException.cs" />
+    <Compile Include="Commands\LoadingOfScriptCanceledException.cs" />
     <Compile Include="Commands\NewProjectCommand.cs" />
     <Compile Include="Commands\NewScriptCommand.cs" />
     <Compile Include="Commands\OpenProjectCommand.cs" />
@@ -144,7 +144,9 @@
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
     <Compile Include="IContextAware.cs" />
     <Compile Include="Scripting\CancelScriptToken.cs" />
-    <Compile Include="Scripting\CannotInteruptRunningScriptException.cs" />
+    <Compile Include="Scripting\CannotInterruptRunningScriptException.cs" />
+    <Compile Include="Scripting\DatasetFacadeForScripts.cs" />
+    <Compile Include="Scripting\IDatasetScriptFacade.cs" />
     <Compile Include="Scripting\IExecuteScripts.cs" />
     <Compile Include="Scripting\IHostScripts.cs" />
     <Compile Include="Scripting\ILinkScriptsToProjects.cs" />
@@ -152,6 +154,7 @@
     <Compile Include="Scripting\IProjectScriptFacade.cs" />
     <Compile Include="Scripting\ISendScriptOutput.cs" />
     <Compile Include="Scripting\ISyntaxVerifier.cs" />
+    <Compile Include="Scripting\ProjectFacadeForScripts.cs" />
     <Compile Include="Scripting\ProjectHubForScripts.cs" />
     <Compile Include="Scripting\RemoteScriptRunner.cs" />
     <Compile Include="Scripting\ScriptDomainLauncher.cs" />

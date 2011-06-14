@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 using Apollo.Core;
@@ -34,6 +35,7 @@ namespace Apollo.ProjectExplorer
     /// e.g. ViewModels etc.. All core related elements need to be injected via 
     /// the <see cref="KernelBootstrapper"/>.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     internal sealed class ProjectExplorerModule : IModule
     {
         /// <summary>
@@ -176,7 +178,6 @@ namespace Apollo.ProjectExplorer
                 .Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
 
             ActivateProjectRegions();
-            ActivateScriptRegions();
         }
 
         private void ActivateProjectRegions()
@@ -222,10 +223,6 @@ namespace Apollo.ProjectExplorer
                             CommonRegionNames.Content,
                             new ProjectParameter()));
                 };
-        }
-
-        private void ActivateScriptRegions()
-        { 
         }
 
         #endregion

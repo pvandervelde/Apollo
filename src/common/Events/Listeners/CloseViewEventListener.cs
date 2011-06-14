@@ -19,6 +19,7 @@ namespace Apollo.UI.Common.Listeners
     /// </summary>
     [SuppressMessage("Microsoft.Performance", "CA1812:AvoidUninstantiatedInternalClasses",
         Justification = "Instantiated by the IOC container.")]
+    [ExcludeFromCodeCoverage]
     public sealed class CloseViewEventListener : EventListener
     {
         /// <summary>

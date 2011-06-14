@@ -20,11 +20,6 @@ namespace Apollo.UI.Common.Scripting
     internal sealed class ScriptHost : IHostScripts
     {
         /// <summary>
-        /// The object that handles the currently active project.
-        /// </summary>
-        private readonly ILinkToProjects m_Projects;
-
-        /// <summary>
         /// The object that provides the project API for scripts.
         /// </summary>
         private readonly ProjectHubForScripts m_ProjectsForScripts;
@@ -33,6 +28,12 @@ namespace Apollo.UI.Common.Scripting
         /// The function that generates a new <c>AppDomain</c> with the given name.
         /// </summary>
         private readonly Func<string, AppDomainPaths, AppDomain> m_AppDomainBuilder;
+
+        /// <summary>
+        /// The combination of the script language and the <c>AppDomain</c> that is used to run 
+        /// the current script in. AppDomains are only recycled once a new language is selected.
+        /// </summary>
+        private Tuple<ScriptLanguage, AppDomain> m_CurrentLanguageDomainPair;
 
         /// <summary>
         /// The task that running the current script. <c>null</c> if no script is running.
@@ -69,9 +70,7 @@ namespace Apollo.UI.Common.Scripting
                 Enforce.Argument(() => appdomainBuilder);
             }
 
-            m_Projects = projects;
             m_ProjectsForScripts = new ProjectHubForScripts(projects);
-
             m_AppDomainBuilder = appdomainBuilder;
         }
 
@@ -102,29 +101,41 @@ namespace Apollo.UI.Common.Scripting
             // If there is an existing runner then nuke that one
             if (m_CurrentlyRunningScript != null)
             {
-                throw new CannotInteruptRunningScriptException();
+                throw new CannotInterruptRunningScriptException();
             }
 
-            var tuple = LoadExecutor(language, outputChannel);
-            AppDomain scriptDomain = tuple.Item1;
-            IExecuteScripts executor = tuple.Item2;
+            if ((m_CurrentLanguageDomainPair != null) && (m_CurrentLanguageDomainPair.Item1 != language))
+            {
+                // Different language requested so nuke the domain
+                AppDomain.Unload(m_CurrentLanguageDomainPair.Item2);
+                m_CurrentLanguageDomainPair = null;
+            }
+
+            if (m_CurrentLanguageDomainPair == null)
+            {
+                var scriptDomain = m_AppDomainBuilder("ScriptDomain", AppDomainPaths.Core);
+                m_CurrentLanguageDomainPair = new Tuple<ScriptLanguage, AppDomain>(language, scriptDomain);
+            }
+
+            IExecuteScripts executor = LoadExecutor(language, m_CurrentLanguageDomainPair.Item2, outputChannel);
 
             var source = new CancellationTokenSource();
             var token = new CancelScriptToken(source.Token);
             var result = new Task(
                 () =>
                 {
-                    executor.Execute(scriptCode, token);
+                    try
+                    {
+                        executor.Execute(scriptCode, token);
+                    }
+                    finally
+                    {
+                        m_CurrentlyRunningScript = null;
+                        m_CurrentToken = null;
+                    }
                 },
                 source.Token,
                 TaskCreationOptions.LongRunning);
-            result.ContinueWith(
-                t =>
-                {
-                    AppDomain.Unload(scriptDomain);
-                    m_CurrentlyRunningScript = null;
-                    m_CurrentToken = null;
-                });
 
             m_CurrentlyRunningScript = result;
             m_CurrentToken = source;
@@ -133,11 +144,8 @@ namespace Apollo.UI.Common.Scripting
             return new Tuple<Task, CancellationTokenSource>(result, source);
         }
 
-        private Tuple<AppDomain, IExecuteScripts> LoadExecutor(ScriptLanguage language, TextWriter outputChannel)
+        private IExecuteScripts LoadExecutor(ScriptLanguage language, AppDomain scriptDomain, TextWriter outputChannel)
         {
-            // Create a new AppDomain
-            var scriptDomain = m_AppDomainBuilder("ScriptDomain", AppDomainPaths.Core);
-
             // Load the script runner into the AppDomain
             var launcher = Activator.CreateInstanceFrom(
                     scriptDomain,
@@ -146,7 +154,7 @@ namespace Apollo.UI.Common.Scripting
                 .Unwrap() as ScriptDomainLauncher;
 
             var executor = launcher.Launch(language, m_ProjectsForScripts, outputChannel);
-            return new Tuple<AppDomain, IExecuteScripts>(scriptDomain, executor);
+            return executor;
         }
 
         /// <summary>
@@ -158,8 +166,9 @@ namespace Apollo.UI.Common.Scripting
         /// </returns>
         public ISyntaxVerifier VerifySyntax(ScriptLanguage language)
         {
-            var tuple = LoadExecutor(language, new ScriptOutputPipe());
-            return new SyntaxVerifier(tuple.Item1, tuple.Item2);
+            var scriptDomain = m_AppDomainBuilder("ScriptVerificationDomain", AppDomainPaths.Core);
+            var executor = LoadExecutor(language, scriptDomain, new ScriptOutputPipe());
+            return new SyntaxVerifier(scriptDomain, executor);
         }
 
         /// <summary>

@@ -53,14 +53,14 @@ namespace Apollo.UI.Common.Commands
             // designer mode, or something else silly.
             if (scriptHost == null)
             {
-                throw new CreationOfNewScriptCancelledException();
+                throw new CreationOfNewScriptCanceledException();
             }
 
             var tuple = selectScriptLanguage();
             if (!tuple.Item1)
             {
                 // The user didn't select anything so just bail.
-                throw new CreationOfNewScriptCancelledException();
+                throw new CreationOfNewScriptCanceledException();
             }
             
             var verifier = scriptHost.VerifySyntax(tuple.Item2.Language);
@@ -73,6 +73,8 @@ namespace Apollo.UI.Common.Commands
         /// <param name="scriptHost">The object handles the script running.</param>
         /// <param name="selectScriptLanguage">The function that provides the selected script language.</param>
         /// <param name="storeScriptInformation">The function that stores the information about the new script.</param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "We need to return multiple values and a Tuple works just fine for that.")]
         public NewScriptCommand(
             IHostScripts scriptHost,
             Func<Tuple<bool, ScriptDescriptionModel>> selectScriptLanguage,

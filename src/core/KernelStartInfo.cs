@@ -105,7 +105,7 @@ namespace Apollo.Core
         /// assemblies.
         /// </summary>
         /// <value>The plugin directories.</value>
-        public abstract IEnumerable<DirectoryInfo> PlugInDirectories
+        public abstract IEnumerable<DirectoryInfo> PluginDirectories
         {
             get;
         }

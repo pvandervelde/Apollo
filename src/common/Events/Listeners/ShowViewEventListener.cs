@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Windows;
 using Apollo.UI.Common.Events;
@@ -16,6 +17,7 @@ namespace Apollo.UI.Common.Listeners
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for showing views.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public class ShowViewEventListener : EventListener
     {
         /// <summary>

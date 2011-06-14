@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using System.Windows.Data;
@@ -15,6 +16,7 @@ namespace Apollo.UI.Common.Converters
     /// <summary>
     /// Converts a <see cref="RoutedUICommand"/> to a tool tip text representation.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class CommandToToolTipTextConverter : IValueConverter
     {
         private static string InputGesturesToString(InputGestureCollection inputGestureCollection)

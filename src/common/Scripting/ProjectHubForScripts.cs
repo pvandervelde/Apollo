@@ -19,6 +19,11 @@ namespace Apollo.UI.Common.Scripting
         private ILinkToProjects m_Projects;
 
         /// <summary>
+        /// The current facade.
+        /// </summary>
+        private IProjectScriptFacade m_Current;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProjectHubForScripts"/> class.
         /// </summary>
         /// <param name="projects">
@@ -35,8 +40,18 @@ namespace Apollo.UI.Common.Scripting
 
             m_Projects = projects;
             {
-                m_Projects.OnNewProjectLoaded += (s, e) => RaiseOnNewProjectLoaded();
-                m_Projects.OnProjectUnloaded += (s, e) => RaiseOnProjectUnloaded();
+                m_Projects.OnNewProjectLoaded +=
+                    (s, e) =>
+                    {
+                        m_Current = null;
+                        RaiseOnNewProjectLoaded(); 
+                    };
+                m_Projects.OnProjectUnloaded +=
+                    (s, e) => 
+                    {
+                        m_Current = null;
+                        RaiseOnProjectUnloaded(); 
+                    };
             }
         }
 
@@ -61,7 +76,12 @@ namespace Apollo.UI.Common.Scripting
         /// </returns>
         public IProjectScriptFacade ActiveProject()
         {
-            throw new NotImplementedException();
+            if (m_Current == null)
+            {
+                m_Current = new ProjectFacadeForScripts(m_Projects.ActiveProject());
+            }
+
+            return m_Current;
         }
 
         /// <summary>

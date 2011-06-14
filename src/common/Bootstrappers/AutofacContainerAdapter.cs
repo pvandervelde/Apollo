@@ -26,6 +26,7 @@ namespace Apollo.UI.Common.Bootstrappers
     /// </source>
     [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Autofac",
         Justification = "The correct spelling is 'Autofac'.")]
+    [ExcludeFromCodeCoverage]
     public class AutofacContainerAdapter : IContainerAdapter
     {
         /// <summary>

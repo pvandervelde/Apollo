@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Navigation;
 
@@ -13,6 +14,7 @@ namespace Apollo.ProjectExplorer.Views.About
     /// <summary>
     /// Interaction logic for AboutWindow.xaml.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class AboutWindow : IAboutView
     {
         /// <summary>
@@ -53,12 +55,6 @@ namespace Apollo.ProjectExplorer.Views.About
                 Process.Start(new ProcessStartInfo(uri));
                 e.Handled = true;
             }
-        }
-
-        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
-        {
-            e.Handled = true;
-            Close();
         }
     }
 }

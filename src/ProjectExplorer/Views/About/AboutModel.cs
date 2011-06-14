@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using Apollo.UI.Common;
@@ -28,7 +29,7 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <param name="propertyName">Property name to use on the attribute.</param>
         /// <returns>The resulting string to use for a property.
         /// Returns null if no data could be retrieved.</returns>
-        private string CalculatePropertyValue<T>(string propertyName)
+        private static string CalculatePropertyValue<T>(string propertyName)
         {
             string result = string.Empty;
 
@@ -49,6 +50,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the title property, which is display in the About dialogs window title.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string ProductTitle
         {
             get
@@ -67,6 +70,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the application's version information to show.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string Version
         {
             get
@@ -86,6 +91,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the description about the application.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string Description
         {
             get 
@@ -97,6 +104,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         ///  Gets the product's full name.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string Product
         {
             get 
@@ -108,6 +117,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the copyright information for the product.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string Copyright
         {
             get 
@@ -119,6 +130,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the product's company name.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string Company
         {
             get 
@@ -130,6 +143,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the link text to display in the About dialog.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string LinkText
         {
             get 
@@ -141,6 +156,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// Gets the link uri that is the navigation target of the link.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
         public string LinkUri
         {
             get 
