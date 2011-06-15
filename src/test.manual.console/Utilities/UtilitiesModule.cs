@@ -24,7 +24,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "test.manual.console.error.log";
+        private const string DefaultErrorFileName = "test.manual.console.info.log";
 
         /// <summary>
         /// Override to add registrations to the container.

@@ -73,5 +73,17 @@ using System.Windows;
     "Microsoft.Naming", 
     "CA1707:IdentifiersShouldNotContainUnderscores", 
     Scope = "member", 
-    Target = "Apollo.UI.Common.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)", 
+    Target = "Apollo.UI.Common.Views.Datasets.DatasetGraphView.#_CreateDelegate(System.Type,System.String)",
     Justification = "Generated code")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
+    Scope = "resource", 
+    Target = "Apollo.UI.Common.Properties.Resources.resources", 
+    MessageId = "rb")]
+[module: SuppressMessage(
+    "Microsoft.Naming", 
+    "CA1703:ResourceStringsShouldBeSpelledCorrectly", 
+    Scope = "resource", 
+    Target = "Apollo.UI.Common.Properties.Resources.resources", 
+    MessageId = "py")]

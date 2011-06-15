@@ -5,24 +5,21 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Reflection;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Threading;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.ProjectExplorer.Events;
-using Apollo.ProjectExplorer.Events.Listeners;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.UI.Common;
+using Apollo.UI.Common.Events;
+using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Projects;
 using Apollo.Utilities;
-using Apollo.Utilities.Logging;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
@@ -38,6 +35,7 @@ namespace Apollo.ProjectExplorer
     /// e.g. ViewModels etc.. All core related elements need to be injected via 
     /// the <see cref="KernelBootstrapper"/>.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     internal sealed class ProjectExplorerModule : IModule
     {
         /// <summary>
@@ -91,6 +89,12 @@ namespace Apollo.ProjectExplorer
         {
             var builder = new ContainerBuilder();
             {
+                // Register the utilities elements. These are 'shared' with the core
+                builder.RegisterModule(new UtilitiesModule());
+
+                // Register the scripting elements
+                builder.RegisterModule(new CommonUserInterfaceModule());
+
                 // Get all the registrations from Apollo.UI.Common
                 var commonUiAssembly = typeof(Observable).Assembly;
                 builder.RegisterAssemblyTypes(commonUiAssembly)
@@ -104,6 +108,12 @@ namespace Apollo.ProjectExplorer
                             && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .InstancePerDependency();
+                builder.RegisterAssemblyTypes(commonUiAssembly)
+                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
+                    .SingleInstance();
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
@@ -121,9 +131,6 @@ namespace Apollo.ProjectExplorer
                             && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
-                builder.RegisterAssemblyTypes(localAssembly)
-                    .Where(t => t.FullName.EndsWith("EventListener", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
-                    .SingleInstance();
                 builder.RegisterAssemblyTypes(localAssembly)
                     .Where(t => t.FullName.EndsWith("Command", StringComparison.Ordinal) && t.IsClass && !t.IsAbstract)
                     .InstancePerDependency();
@@ -161,6 +168,8 @@ namespace Apollo.ProjectExplorer
         private void ActivateRegions()
         {
             m_Container.Resolve<ShowViewEventListener>().Start();
+            m_Container.Resolve<CloseViewEventListener>().Start();
+
             m_Container.Resolve<IEventAggregator>()
                 .GetEvent<ShowViewEvent>()
                 .Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
@@ -168,6 +177,11 @@ namespace Apollo.ProjectExplorer
                 .GetEvent<ShowViewEvent>()
                 .Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
 
+            ActivateProjectRegions();
+        }
+
+        private void ActivateProjectRegions()
+        {
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             projectFacade.OnNewProjectLoaded +=
                 (s, e) =>
@@ -175,13 +189,19 @@ namespace Apollo.ProjectExplorer
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
                         new ShowViewRequest(
                             typeof(ProjectPresenter),
-                            RegionNames.TopPane,
+                            CommonRegionNames.Content,
                             new ProjectParameter()));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
                         new ShowViewRequest(
+                            typeof(ProjectDescriptionPresenter),
+                            CommonRegionNames.ProjectViewTopPane,
+                            new ProjectDescriptionParameter()));
+
+                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                        new ShowViewRequest(
                             typeof(DatasetGraphPresenter),
-                            RegionNames.Content,
+                            CommonRegionNames.ProjectViewContent,
                             new DatasetGraphParameter()));
                 };
 
@@ -190,13 +210,18 @@ namespace Apollo.ProjectExplorer
                 {
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
-                            RegionNames.TopPane,
-                            new ProjectParameter()));
+                            CommonRegionNames.ProjectViewTopPane,
+                            new ProjectDescriptionParameter()));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
-                            RegionNames.Content,
+                            CommonRegionNames.ProjectViewContent,
                             new DatasetGraphParameter()));
+
+                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                        new CloseViewRequest(
+                            CommonRegionNames.Content,
+                            new ProjectParameter()));
                 };
         }
 

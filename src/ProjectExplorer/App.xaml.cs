@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Threading;
 using Apollo.Utilities;
 using Apollo.Utilities.ExceptionHandling;
 using Autofac;
@@ -18,6 +18,7 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// Interaction logic for App.xaml.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class App
     {
         /// <summary>
@@ -39,7 +40,7 @@ namespace Apollo.ProjectExplorer
         /// Application Entry Point.
         /// </summary>
         /// <returns>A value indicating if the process exited normally (0) or abnormally (&gt; 0).</returns>
-        [STAThreadAttribute]
+        [STAThread]
         public static int Main()
         {
             int functionReturnResult = -1;
@@ -122,26 +123,6 @@ namespace Apollo.ProjectExplorer
             var container = builder.Build();
             var bootstrapper = new UserInterfaceBootstrapper(container);
             bootstrapper.Run();
-        }
-
-        /// <summary>
-        /// Called when an unhandled exception takes place.
-        /// </summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">
-        ///     The <see cref="System.Windows.Threading.DispatcherUnhandledExceptionEventArgs"/> instance 
-        ///     containing the event data.
-        /// </param>
-        private void HandleUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-        {
-            // Unhandled exceptions go here..
-            // Refer to the unhandled exception handler --> nSarrac to the rescue
-
-            // Indicate that we have handled the exception.
-            e.Handled = true;
-
-            // Bail!
-            // Exit-Fast
         }
 
         /// <summary>

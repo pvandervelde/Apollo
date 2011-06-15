@@ -9,7 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Apollo.Utilities;
+using Apollo.ProjectExplorer.Utilities;
+using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
 using Autofac;
 
@@ -25,7 +26,29 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "projectexplorer.error.log";
+        private const string DefaultErrorFileName = "projectexplorer.info.log";
+
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
+        {
+            List<string> filePaths = new List<string>();
+            List<string> directoryPaths = new List<string>();
+            if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
+            {
+                // Get the paths from the config
+                // throw new NotImplementedException();
+            }
+
+            if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
+            {
+                // Get the paths from the config
+                // throw new NotImplementedException();
+            }
+
+            return AppDomainResolutionPaths.WithFilesAndDirectories(
+                Path.GetDirectoryName(new Uri(Assembly.GetExecutingAssembly().CodeBase).LocalPath),
+                filePaths,
+                directoryPaths);
+        }
 
         /// <summary>
         /// Override to add registrations to the container.
@@ -63,23 +86,42 @@ namespace Apollo.Utilities
                     .SingleInstance();
 
                 builder.Register<Action<LogSeverityProxy, string>>(c =>
-                {
-                    var loggers = c.Resolve<IEnumerable<ILogger>>();
-                    Action<LogSeverityProxy, string> action = (p, s) =>
-                    {
-                        var msg = new LogMessage(
-                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                            s);
-
-                        foreach (var logger in loggers)
                         {
-                            logger.Log(msg);
-                        }
-                    };
+                            var loggers = c.Resolve<IEnumerable<ILogger>>();
+                            Action<LogSeverityProxy, string> action = (p, s) =>
+                            {
+                                var msg = new LogMessage(
+                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                                    s);
 
-                    return action;
-                })
+                                foreach (var logger in loggers)
+                                {
+                                    logger.Log(msg);
+                                }
+                            };
+
+                            return action;
+                        })
                     .As<Action<LogSeverityProxy, string>>()
+                    .SingleInstance();
+
+                builder.Register(c => new MockExceptionHandler())
+                    .As<IExceptionHandler>();
+
+                builder.Register<Func<string, AppDomainPaths, AppDomain>>(c =>
+                        {
+                            Func<string, AppDomainPaths, AppDomain> result = (name, paths) =>
+                            {
+                                return AppDomainBuilder.Assemble(
+                                    name,
+                                    AppDomainResolutionPathsFor(paths),
+                                    c.Resolve<IExceptionHandler>(),
+                                    c.Resolve<IFileConstants>());
+                            };
+
+                            return result;
+                        })
+                    .As<Func<string, AppDomainPaths, AppDomain>>()
                     .SingleInstance();
             }
         }

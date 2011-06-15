@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Autofac.Builder;
 using Autofac.Core;
@@ -19,6 +20,7 @@ namespace Apollo.UI.Common.Bootstrappers
     /// <source>
     /// Original source obtained from: http://www.paulstovell.com/wpf-model-view-presenter
     /// </source>
+    [ExcludeFromCodeCoverage]
     public class ResolveAnythingSource : IRegistrationSource
     {
         /// <summary>

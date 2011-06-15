@@ -29,6 +29,7 @@ namespace Apollo.ProjectExplorer
     /// </remarks>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable",
         Justification = "The logger doesn't die until the application is terminated. No point in having it be disposable.")]
+    [ExcludeFromCodeCoverage]
     internal sealed class UserInterfaceBootstrapper : CompositeBootstrapper
     {
         /// <summary>
@@ -91,6 +92,7 @@ namespace Apollo.ProjectExplorer
         {
             var builder = new ContainerBuilder();
             {
+                // Note that this 'module' is a Prism module, not an Autofac one!
                 builder.RegisterType<ProjectExplorerModule>();
             }
             

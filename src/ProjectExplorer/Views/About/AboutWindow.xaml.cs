@@ -4,13 +4,17 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using System.Windows.Navigation;
 
 namespace Apollo.ProjectExplorer.Views.About
 {
     /// <summary>
     /// Interaction logic for AboutWindow.xaml.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal partial class AboutWindow : IAboutView
     {
         /// <summary>
@@ -38,10 +42,19 @@ namespace Apollo.ProjectExplorer.Views.About
             }
         }
 
-        private void OnCloseButtonClick(object sender, RoutedEventArgs e)
+        /// <summary>
+        /// Handles click navigation on the hyperlink in the About dialog.
+        /// </summary>
+        /// <param name="sender">Object the sent the event.</param>
+        /// <param name="e">Navigation events arguments.</param>
+        private void OnHyperlinkRequestNavigate(object sender, RequestNavigateEventArgs e)
         {
-            e.Handled = true;
-            Close();
+            if (e.Uri != null && string.IsNullOrEmpty(e.Uri.OriginalString) == false)
+            {
+                string uri = e.Uri.AbsoluteUri;
+                Process.Start(new ProcessStartInfo(uri));
+                e.Handled = true;
+            }
         }
     }
 }

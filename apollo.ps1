@@ -116,12 +116,17 @@ function Get-BzrVersion{
     $versionInfo.SubString(0, $index)
 }
 
+function Get-SnExe
+{
+	"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+}
+
 function Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
 {
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
     
-    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+    $sn = Get-SnExe
     $publicKeyFile = Join-Path $tempDir ([System.IO.Path]::GetRandomFileName())
 
     # use snk to get the public key bit
@@ -154,7 +159,7 @@ function Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
     # NOTE: Do not put output text in this method because it will be appended
     # to the return value, which is very unhelpful
     
-    $sn = "${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+    $sn = Get-SnExe
 
     # use snk to get the public key bit
     $output = & $sn -Tp $pathToAssembly
@@ -610,11 +615,6 @@ task displayInfo -depends runInit -action{
 # it seems that psake determines the values of these preconditions based on values 
 # available when the script is started, not values becoming available later on.
 task runClean -depends displayInfo -precondition{ !$incremental } -action{
-    if (Test-Path -Path $props.dirBuild -PathType Container)
-    {
-        Remove-Item $props.dirBuild -Force -Recurse
-    }
-    
     "Removing generated items ..."
     $itemsToRemove = Create-GeneratedItemsList (Join-Path $props.dirbase 'generateditems.txt')
     if ($itemsToRemove -ne $null)
@@ -622,10 +622,13 @@ task runClean -depends displayInfo -precondition{ !$incremental } -action{
         $itemsToRemove | foreach {
             if (Test-Path $_)
             {
+				"Removing: $_"
                 Remove-Item $_ -Force -Recurse
             }
         }
     }
+	
+	""
 }
 
 task runPrepareDisk -depends displayInfo,runClean -action{
@@ -665,6 +668,8 @@ task runPrepareDisk -depends displayInfo,runClean -action{
     {
         New-Item $props.dirDoc -ItemType directory | Out-Null
     }
+	
+	""
 }
 
 task buildBinaries -depends runPrepareDisk, getVersion -action{
@@ -698,6 +703,8 @@ task buildBinaries -depends runPrepareDisk, getVersion -action{
     {
         throw "Apollo build failed with return code: $LastExitCode"
     }
+	
+	""
 }
 
 task runUnitTests -depends buildBinaries -action{
@@ -797,6 +804,8 @@ task runUnitTests -depends buildBinaries -action{
             throw "MbUnit failed on Apollo with return code: $LastExitCode"
         }
     }
+	
+	""
 }
 
 task runSpecificationTests -depends buildBinaries -action{
@@ -832,11 +841,14 @@ task runSpecificationTests -depends buildBinaries -action{
     {
         throw "Concordion failed on Apollo.Core with return code: $LastExitCode"
     }
+	
+	""
 }
 
 task runIntegrationTests -depends buildBinaries -action{
     "Running integration tests..."
     "There are currently no integration tests. You should make some ..."
+	""
     # ???
 }
 
@@ -872,11 +884,13 @@ task runFxCop -depends buildBinaries -action{
     {
         throw "FxCop failed on Apollo.Core with return code: $LastExitCode"
     }
+	
+	""
 }
 
 task runDuplicateFinder -depends buildBinaries -action{
     "Running duplicate check ..."
-    
+    ""
     # FAIL THE BUILD IF THERE IS ANYTHING WRONG
 }
 
@@ -910,14 +924,12 @@ task buildApiDocs -depends buildBinaries -action{
         throw "Sandcastle help file builder failed on Apollo with return code: $LastExitCode"
     }
     
-    if( $props.configuration -eq 'release')
-    {
-        # Should fail are release build if there's anything missing?
-    }
+	""
 }
 
 task buildUserDoc -depends buildBinaries -action{
     "Building user docs..."
+	""
     # Build the user docs
 }
 
@@ -1012,6 +1024,8 @@ task buildPackage -depends buildBinaries -action{
     {
         throw "Failed to compress the Apollo.Core binaries."
     }
+	
+	""
 }
 
 task assembleInstaller -depends buildBinaries -action{
@@ -1042,6 +1056,8 @@ task assembleInstaller -depends buildBinaries -action{
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x64 - $versionString.msi")
+	
+	""
 }
 
 task runCcm -depends buildBinaries -action{
@@ -1053,6 +1069,8 @@ task runCcm -depends buildBinaries -action{
     {
         throw "Ccm failed on Apollo with return code: $LastExitCode"
     }
+	
+	""
 }
 
 task runSourceMonitor -depends buildBinaries -action{
@@ -1113,4 +1131,6 @@ task runSourceMonitor -depends buildBinaries -action{
     $text += [System.Environment]::NewLine
     $text += "$methodsPerClass, $callsPerMethod, $statementsPerMethod, $maximumComplexity, $averageComplexity, $averageBlockDepth, $maximumBlockDepth"
     Set-Content (Join-Path $props.dirReports 'apollo.sourcemonitor.complexity.csv') $text
+	
+	""
 }

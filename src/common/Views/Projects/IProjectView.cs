@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.UI.Common.Views.Projects
 {
@@ -15,6 +12,8 @@ namespace Apollo.UI.Common.Views.Projects
     /// The interface for objects that display information about
     /// the <c>Project</c>.
     /// </summary>
+     [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
+        Justification = "We need an interface for the view because Prism needs it.")]
     public interface IProjectView : IView<ProjectModel>
     {
     }

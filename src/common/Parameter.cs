@@ -13,7 +13,7 @@ namespace Apollo.UI.Common
     /// <summary>
     /// A base class for parameters, which are arguments for a presenter.
     /// </summary>
-    public abstract class Parameter : Observable
+    public abstract class Parameter : Observable, IEquatable<Parameter>
     {
         /// <summary>
         /// The collection of properties for the current parameter.
@@ -93,7 +93,7 @@ namespace Apollo.UI.Common
         {
             unchecked
             {
-                var result = 0;
+                var result = GetType().GetHashCode();
                 foreach (var property in m_Properties)
                 {
                     var value = property();

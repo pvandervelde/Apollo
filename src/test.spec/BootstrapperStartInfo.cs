@@ -64,7 +64,7 @@ namespace Test.Spec
         /// assemblies.
         /// </summary>
         /// <value>The plugin directories.</value>
-        public override IEnumerable<DirectoryInfo> PlugInDirectories
+        public override IEnumerable<DirectoryInfo> PluginDirectories
         {
             get
             {

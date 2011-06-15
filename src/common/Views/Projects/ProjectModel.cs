@@ -5,8 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.UserInterfaces.Projects;
-using Lokad;
+using System.Diagnostics.CodeAnalysis;
+using System.Windows.Input;
+using Apollo.UI.Common.Properties;
 
 namespace Apollo.UI.Common.Views.Projects
 {
@@ -16,71 +17,42 @@ namespace Apollo.UI.Common.Views.Projects
     public sealed class ProjectModel : Model
     {
         /// <summary>
-        /// The project that holds the data.
-        /// </summary>
-        private readonly ProjectFacade m_Project;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ProjectModel"/> class.
         /// </summary>
-        /// <param name="facade">The project that holds all the data.</param>
+        /// <param name="closeCommand">The command that closes the current project.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="closeCommand"/> is <see langword="null" />.
         /// </exception>
-        public ProjectModel(ProjectFacade facade)
+        public ProjectModel(ICommand closeCommand)
         {
             {
-                Enforce.Argument(() => facade);
+                Lokad.Enforce.Argument(() => closeCommand);
             }
 
-            m_Project = facade;
-            m_Project.OnProjectNameUpdated += (s, e) => Notify(() => Name);
-            m_Project.OnProjectSummaryUpdated += (s, e) => Notify(() => Summary);
-            m_Project.OnDatasetCreated += (s, e) => Notify(() => NumberOfDatasets);
-            m_Project.OnDatasetDeleted += (s, e) => Notify(() => NumberOfDatasets);
+            CloseCommand = closeCommand;
         }
 
         /// <summary>
-        /// Gets or sets the name of the project.
+        /// Gets the name of the model for uses on a display.
         /// </summary>
-        public string Name
-        {
-            get
-            {
-                return m_Project.Name;
-            }
-
-            set 
-            {
-                m_Project.Name = value;
-            }
-        }
-
-        /// <summary>
-        /// Gets or sets the summary for the project.
-        /// </summary>
-        public string Summary
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
+        public string DisplayName
         {
             get 
             {
-                return m_Project.Summary;
-            }
-
-            set
-            {
-                m_Project.Summary = value;
+                return Resources.ProjectView_ViewName;
             }
         }
 
         /// <summary>
-        /// Gets a value indicating the number of datasets for the current project.
+        /// Gets the command that can be used to close the current model
+        /// and all related views.
         /// </summary>
-        public int NumberOfDatasets
+        public ICommand CloseCommand
         {
-            get
-            {
-                return m_Project.NumberOfDatasets;
-            }
+            get;
+            private set;
         }
     }
 }

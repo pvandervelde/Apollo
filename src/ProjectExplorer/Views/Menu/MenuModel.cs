@@ -65,6 +65,24 @@ namespace Apollo.ProjectExplorer.Views.Menu
         }
 
         /// <summary>
+        /// Gets or sets the 'show projects' command.
+        /// </summary>
+        public ICommand ShowProjectsCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the 'show scripts' command.
+        /// </summary>
+        public ICommand ShowScriptsCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the about command.
         /// </summary>
         /// <value>The about command.</value>

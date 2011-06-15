@@ -179,6 +179,8 @@
       <Word>pdb</Word>
       <Word>persistable</Word>
       <Word>playlist</Word>
+	  <Word>plugin</Word>
+	  <Word>plugins</Word>
       <Word>pragma</Word>
       <Word>prepend</Word>
       <Word>prog</Word>

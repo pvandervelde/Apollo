@@ -1,0 +1,65 @@
+﻿<Window x:Class="Apollo.UI.Common.Views.Scripting.SelectScriptLanguageView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+        xmlns:local="clr-namespace:Apollo.UI.Common"
+        Title="{lex:LocText Key=SelectScriptLanguageView_WindowTitle, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Window_Title}" 
+        Height="200" 
+        Width="300"
+        ResizeMode="NoResize"
+        ShowInTaskbar="False"
+        WindowStartupLocation="CenterOwner"
+        WindowStyle="ThreeDBorderWindow">
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/ButtonStyles.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <Style x:Key="enableOkButton" TargetType="{x:Type Button}" BasedOn="{StaticResource standardButtonSize}">
+                <Style.Triggers>
+                    <DataTrigger Binding ="{Binding ElementName=items, Path=SelectedIndex}" 
+                                         Value="-1">
+                        <Setter Property="Button.IsEnabled"
+                                        Value="false"/>
+                    </DataTrigger>
+                </Style.Triggers>
+            </Style>
+        </ResourceDictionary>
+    </Window.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ListBox x:Name="items"
+                 x:FieldModifier="private"
+                 Grid.Row="0"
+                 SelectionMode="Single"
+                 ItemsSource="{Binding AvailableLanguages}"
+                 SelectionChanged="OnListBoxSelectionChanged">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <TextBlock Text="{Binding Path=Description}" />
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+
+        <StackPanel Grid.Row="1"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right">
+            <Button IsDefault="True"
+                    Click="OnOkButtonClick"
+                    Margin="3, 3, 3, 3"
+                    Style="{StaticResource enableOkButton}">
+                <TextBlock Text="{lex:LocText Key=SelectScriptLanguageView_Ok, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Ok}" />
+            </Button>
+            <Button IsCancel="True"
+                    Margin="3, 3 3, 3"
+                    Style="{StaticResource standardButtonSize}">
+                <TextBlock Text="{lex:LocText Key=SelectScriptLanguageView_Cancel, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Cancel}" />
+            </Button>
+        </StackPanel>
+    </Grid>
+</Window>

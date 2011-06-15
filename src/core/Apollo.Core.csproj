@@ -32,14 +32,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utilities.srconly\AssemblyNameElements.cs">
-      <Link>Utilities\AssemblyNameElements.cs</Link>
-    </Compile>
     <Compile Include="..\utilities.srconly\ErrorCodes.cs">
       <Link>Utilities\ErrorCodes.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\FusionHelper.cs">
-      <Link>Utilities\FusionHelper.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Licensing\Checksum.cs">
       <Link>Utilities\Licensing\Checksum.cs</Link>
@@ -128,6 +122,7 @@
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
     <Compile Include="Projects\IOwnedProxyDataset.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
@@ -208,7 +203,6 @@
     <Compile Include="UserInterfaces\Projects\LoadProjectContext.cs" />
     <Compile Include="UserInterfaces\Projects\NoCurrentProjectException.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ProjectServiceFacade.cs" />
     <Compile Include="UserInterfaces\Projects\UnloadProjectCommand.cs" />
     <Compile Include="UserInterfaces\Projects\UnloadProjectContext.cs" />
     <Compile Include="Utilities\Licensing\LicenseValidationResultStorage.cs" />

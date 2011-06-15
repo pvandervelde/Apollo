@@ -5,8 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.ProjectExplorer.Events;
 using Apollo.ProjectExplorer.Views.About;
+using Apollo.UI.Common.Events;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
@@ -23,7 +23,11 @@ namespace Apollo.ProjectExplorer.Commands
         /// <param name="eventAggregator">The event aggregator.</param>
         private static void OnExecute(IEventAggregator eventAggregator)
         {
-            eventAggregator.GetEvent<ShowViewEvent>().Publish(new ShowViewRequest(typeof(AboutPresenter), "AboutWindow", new AboutParameter()));
+            eventAggregator.GetEvent<ShowViewEvent>().Publish(
+                new ShowViewRequest(
+                    typeof(AboutPresenter), 
+                    "AboutWindow", 
+                    new AboutParameter()));
         }
 
         /// <summary>

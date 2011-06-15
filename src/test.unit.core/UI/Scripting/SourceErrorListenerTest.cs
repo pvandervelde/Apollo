@@ -1,0 +1,48 @@
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Apollo.UI.Common.Scripting;
+using MbUnit.Framework;
+using Microsoft.Scripting;
+
+namespace Apollo.UI.Scripting
+{
+    [TestFixture]
+    [Description("Tests the SourceErrorListener class.")]
+    [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
+                Justification = "Unit tests do not need documentation.")]
+    public sealed class SourceErrorListenerTest
+    {
+        [Test]
+        [Description("Checks that reported errors are succesfully stored.")]
+        public void ErrorReported()
+        {
+            var listener = new SourceErrorListener();
+
+            var message = "message";
+            var span = new SourceSpan(
+                new SourceLocation(1, 1, 1),
+                new SourceLocation(2, 2, 2));
+            var errorCode = 10;
+            var severity = Severity.FatalError;
+            listener.ErrorReported(null, message, span, errorCode, severity);
+
+            var list = new List<ScriptErrorInformation> 
+                {
+                    new ScriptErrorInformation
+                        {
+                            Column = span.Start.Column,
+                            Line = span.Start.Line,
+                            Message = message,
+                            Severity = SyntaxVerificationSeverity.Error,
+                        },
+                };
+            Assert.AreElementsEqualIgnoringOrder(list, listener.Errors());
+        }
+    }
+}

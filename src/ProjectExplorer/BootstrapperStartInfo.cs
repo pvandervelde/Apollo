@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.Core;
 
@@ -13,6 +14,7 @@ namespace Apollo.ProjectExplorer
     /// <summary>
     /// Defines the locations of the different system assemblies and directories.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class BootstrapperStartInfo : KernelStartInfo
     {
         /// <summary>
@@ -72,7 +74,7 @@ namespace Apollo.ProjectExplorer
         /// assemblies.
         /// </summary>
         /// <value>The plugin directories.</value>
-        public override IEnumerable<DirectoryInfo> PlugInDirectories
+        public override IEnumerable<DirectoryInfo> PluginDirectories
         {
             get
             {

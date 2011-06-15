@@ -54,8 +54,9 @@
                 <Button x:Name="deleteDatasetButton"
                         x:FieldModifier="private"
                         Margin="5">
-                    <Image Source="{lex:LocImage Key=Img_Delete_256, Dict=Resources, Assembly=Apollo.UI.Common}"
-                           gi:ImageGreyer.IsGreyable="True"
+                    <!-- Use an image that is too large so that if users zoom in, we keep fidelity of the image. -->
+                    <Image Source="{lex:LocImage Key=Img_Delete_48, Dict=Resources, Assembly=Apollo.UI.Common}"
+                           gi:ImageGreyer.IsGreyable="true"
                            Width="24"
                            Height="24"
                            Margin="3, 0, 3, 0"/>
@@ -65,8 +66,9 @@
                 <Button x:Name="addChildDatasetButton"
                         x:FieldModifier="private"
                         Margin="5">
-                    <Image Source="{lex:LocImage Key=Img_Add_256, Dict=Resources, Assembly=Apollo.UI.Common}"
-                           gi:ImageGreyer.IsGreyable="True"
+                    <!-- Use an image that is too large so that if users zoom in, we keep fidelity of the image. -->
+                    <Image Source="{lex:LocImage Key=Img_Add_48, Dict=Resources, Assembly=Apollo.UI.Common}"
+                           gi:ImageGreyer.IsGreyable="true"
                            Width="24"
                            Height="24"
                            Margin="3, 0, 3, 0" />

@@ -65,11 +65,11 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// The event raised when the project is closed.
         /// </summary>
-        public event EventHandler<EventArgs> OnProjectClosed;
+        public event EventHandler<EventArgs> OnClosed;
 
         private void RaiseOnProjectClosed()
         {
-            var local = OnProjectClosed;
+            var local = OnClosed;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -95,11 +95,11 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// An event raised when the name of the project is updated.
         /// </summary>
-        public event EventHandler<EventArgs> OnProjectNameUpdated;
+        public event EventHandler<EventArgs> OnNameChanged;
 
         private void RaiseOnProjectNameUpdated()
         {
-            var local = OnProjectNameUpdated;
+            var local = OnNameChanged;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -125,11 +125,11 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// An event raised when the summary of the project is updated.
         /// </summary>
-        public event EventHandler<EventArgs> OnProjectSummaryUpdated;
+        public event EventHandler<EventArgs> OnSummaryChanged;
 
         private void RaiseOnProjectSummaryUpdated()
         {
-            var local = OnProjectSummaryUpdated;
+            var local = OnSummaryChanged;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

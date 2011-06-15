@@ -175,10 +175,6 @@ namespace Apollo.Core
             // Load up the IOC container
             var container = CreateIocContainer(AdditionalCoreModules());
 
-            // Link assembly resolver to current AppDomain
-            // Link exception handlers to current AppDomain
-            PrepareAppDomain();
-
             // Mark progress from UI to core
             {
                 m_Progress.Mark(new CoreLoadingProgressMark());
@@ -208,24 +204,6 @@ namespace Apollo.Core
                 m_Progress.Mark(new ApplicationStartupFinishedProgressMark());
                 m_Progress.StopTracking();
             }
-        }
-
-        /// <summary>
-        /// Prepares the <c>AppDomain</c> for use.
-        /// </summary>
-        private void PrepareAppDomain()
-        {
-            var currentDomain = AppDomain.CurrentDomain;
-            var fusionHelper = new FusionHelper(
-                () =>
-                    {
-                        // Concatenate the two sequences and then turn the FileInfo objects into the
-                        // string representation of the file fullname
-                        var totalSequence = m_StartInfo.CoreAssemblies.Concat(m_StartInfo.UserInterfaceAssemblies);
-                        return from file in totalSequence select file.FullName;
-                    },
-                new FileConstants(new ApplicationConstants()));
-            currentDomain.AssemblyResolve += fusionHelper.LocateAssemblyOnAssemblyLoadFailure;
         }
 
         /// <summary>

@@ -12,6 +12,10 @@
     <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
       <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
     </Compile>
+    <Compile Include="AppDomainBuilder.cs" />
+    <Compile Include="AppDomainBuilder.DirectoryBasedResolver.cs" />
+    <Compile Include="AppDomainBuilder.FileBasedResolver.cs" />
+    <Compile Include="AppDomainResolutionPaths.cs" />
     <Compile Include="Applications\CommandLineProgram.cs" />
     <Compile Include="ErrorCodes.cs" />
     <Compile Include="AssemblyNameElements.cs" />
@@ -22,6 +26,7 @@
     <Compile Include="ExceptionHandling\GuardResult.cs" />
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="FusionHelper.cs" />
+    <Compile Include="IAppDomainAssemblyResolver.cs" />
     <Compile Include="Licensing\Checksum.cs" />
     <Compile Include="Licensing\Checksum.HashCalculation.cs">
       <AutoGen>True</AutoGen>

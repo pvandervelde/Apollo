@@ -43,7 +43,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             var facade = new ProjectFacade(project.Object);
             
             bool eventRaised = false;
-            facade.OnProjectNameUpdated += (s, e) => { eventRaised = true; };
+            facade.OnNameChanged += (s, e) => { eventRaised = true; };
 
             project.Raise(p => p.OnNameChanged += null, new ValueChangedEventArgs<string>("newName"));
             Assert.IsTrue(eventRaised);
@@ -73,7 +73,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             var facade = new ProjectFacade(project.Object);
 
             bool eventRaised = false;
-            facade.OnProjectSummaryUpdated += (s, e) => { eventRaised = true; };
+            facade.OnSummaryChanged += (s, e) => { eventRaised = true; };
 
             project.Raise(p => p.OnSummaryChanged += null, new ValueChangedEventArgs<string>("newSummary"));
             Assert.IsTrue(eventRaised);
