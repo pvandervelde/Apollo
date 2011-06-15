@@ -21,6 +21,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\tools\mbunit\Gallio.dll</HintPath>
     </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\scripting\IronPython.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
@@ -167,9 +171,14 @@
     <Compile Include="UI\ParameterTest.cs" />
     <Compile Include="UI\Scripting\CancelScriptTokenTest.cs" />
     <Compile Include="UI\Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
+    <Compile Include="UI\Scripting\DatasetFacadeForScriptsTest.cs" />
     <Compile Include="UI\Scripting\InvalidScriptLanguageExceptionTest.cs" />
+    <Compile Include="UI\Scripting\ProjectFacadeForScriptsTest.cs" />
+    <Compile Include="UI\Scripting\ProjectHubForScriptsTest.cs" />
+    <Compile Include="UI\Scripting\RemoteScriptRunnerTest.cs" />
     <Compile Include="UI\Scripting\ScriptErrorInformationTest.cs" />
     <Compile Include="UI\Scripting\ScriptExecutionFailureExceptionTest.cs" />
+    <Compile Include="UI\Scripting\ScriptHostTest.cs" />
     <Compile Include="UI\Scripting\ScriptOutputPipeTest.cs" />
     <Compile Include="UI\Scripting\SourceErrorListenerTest.cs" />
     <Compile Include="UI\Views\Projects\ProjectModelTest.cs" />

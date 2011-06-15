@@ -107,8 +107,7 @@ namespace Apollo.UI.Common.Scripting
             if ((m_CurrentLanguageDomainPair != null) && (m_CurrentLanguageDomainPair.Item1 != language))
             {
                 // Different language requested so nuke the domain
-                AppDomain.Unload(m_CurrentLanguageDomainPair.Item2);
-                m_CurrentLanguageDomainPair = null;
+                UnloadCurrentScriptDomain();
             }
 
             if (m_CurrentLanguageDomainPair == null)
@@ -142,6 +141,15 @@ namespace Apollo.UI.Common.Scripting
 
             result.Start();
             return new Tuple<Task, CancellationTokenSource>(result, source);
+        }
+
+        private void UnloadCurrentScriptDomain()
+        {
+            if (m_CurrentLanguageDomainPair != null)
+            {
+                AppDomain.Unload(m_CurrentLanguageDomainPair.Item2);
+                m_CurrentLanguageDomainPair = null;
+            }
         }
 
         private IExecuteScripts LoadExecutor(ScriptLanguage language, AppDomain scriptDomain, TextWriter outputChannel)
@@ -181,6 +189,33 @@ namespace Apollo.UI.Common.Scripting
             if (source != null)
             {
                 source.Cancel();
+            }
+
+            if (m_CurrentlyRunningScript != null)
+            {
+                try
+                {
+                    // Technically this could take a while, so we're going to
+                    // give the script 1 minute to get in gear.
+                    m_CurrentlyRunningScript.Wait(new TimeSpan(0, 1, 0));
+                }
+                catch (TimeoutException)
+                {
+                    // The script didn't quit quick enough. To bad, the AppDomain is about to disappear.
+                }
+                catch (AggregateException)
+                {
+                    // Ignore it. We just want it to go away
+                }
+            }
+
+            try
+            {
+                UnloadCurrentScriptDomain();
+            }
+            catch (CannotUnloadAppDomainException)
+            {
+                // Uh oh. we're stuffed now.
             }
         }
     }
