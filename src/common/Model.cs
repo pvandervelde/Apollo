@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.UI.Common
 {
     /// <summary>
@@ -11,5 +13,16 @@ namespace Apollo.UI.Common
     /// </summary>
     public abstract class Model : Observable
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Model"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        protected Model(IContextAware context)
+            : base(context)
+        { 
+        }
     }
 }

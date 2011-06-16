@@ -19,6 +19,7 @@ using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Projects;
+using Apollo.UI.Common.Views.Scripting;
 using Apollo.Utilities;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
@@ -69,6 +70,8 @@ namespace Apollo.ProjectExplorer
         public void Initialize()
         {
             UpdateContainer();
+
+            InitializeModels();
 
             RegisterNotifications();
 
@@ -142,6 +145,11 @@ namespace Apollo.ProjectExplorer
             builder.Update(m_Container);
         }
 
+        private void InitializeModels()
+        {
+            SelectScriptLanguageModel.StoreKnownLanguages(m_Container.Resolve<IContextAware>());
+        }
+
         private void RegisterNotifications()
         {
             // Set the shutdown action
@@ -172,16 +180,25 @@ namespace Apollo.ProjectExplorer
 
             m_Container.Resolve<IEventAggregator>()
                 .GetEvent<ShowViewEvent>()
-                .Publish(new ShowViewRequest(typeof(ShellPresenter), RegionNames.Shell, new ShellParameter()));
+                .Publish(
+                    new ShowViewRequest(
+                        typeof(ShellPresenter), 
+                        RegionNames.Shell, 
+                        new ShellParameter(m_Container.Resolve<IContextAware>())));
             m_Container.Resolve<IEventAggregator>()
                 .GetEvent<ShowViewEvent>()
-                .Publish(new ShowViewRequest(typeof(MenuPresenter), RegionNames.MainMenu, new MenuParameter()));
+                .Publish(
+                    new ShowViewRequest(
+                        typeof(MenuPresenter), 
+                        RegionNames.MainMenu, 
+                        new MenuParameter(m_Container.Resolve<IContextAware>())));
 
             ActivateProjectRegions();
         }
 
         private void ActivateProjectRegions()
         {
+            var context = m_Container.Resolve<IContextAware>();
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             projectFacade.OnNewProjectLoaded +=
                 (s, e) =>
@@ -190,19 +207,19 @@ namespace Apollo.ProjectExplorer
                         new ShowViewRequest(
                             typeof(ProjectPresenter),
                             CommonRegionNames.Content,
-                            new ProjectParameter()));
+                            new ProjectParameter(context)));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
                         new ShowViewRequest(
                             typeof(ProjectDescriptionPresenter),
                             CommonRegionNames.ProjectViewTopPane,
-                            new ProjectDescriptionParameter()));
+                            new ProjectDescriptionParameter(context)));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
                         new ShowViewRequest(
                             typeof(DatasetGraphPresenter),
                             CommonRegionNames.ProjectViewContent,
-                            new DatasetGraphParameter()));
+                            new DatasetGraphParameter(context)));
                 };
 
             projectFacade.OnProjectUnloaded +=
@@ -211,17 +228,17 @@ namespace Apollo.ProjectExplorer
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
                             CommonRegionNames.ProjectViewTopPane,
-                            new ProjectDescriptionParameter()));
+                            new ProjectDescriptionParameter(context)));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
                             CommonRegionNames.ProjectViewContent,
-                            new DatasetGraphParameter()));
+                            new DatasetGraphParameter(context)));
 
                     m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
                         new CloseViewRequest(
                             CommonRegionNames.Content,
-                            new ProjectParameter()));
+                            new ProjectParameter(context)));
                 };
         }
 

@@ -46,19 +46,21 @@ namespace Apollo.ProjectExplorer.Commands
         /// <summary>
         /// Called when the command is executed.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        private static void ShowTab(IEventAggregator eventAggregator)
+        private static void ShowTab(IContextAware context, IEventAggregator eventAggregator)
         {
             eventAggregator.GetEvent<ShowViewEvent>().Publish(
                 new ShowViewRequest(
                     typeof(ProjectPresenter),
                     CommonRegionNames.Content,
-                    new ProjectParameter()));
+                    new ProjectParameter(context)));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowProjectsTabCommand"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="projectFacade">
         ///     The object that contains the methods that allow interaction
         ///     with the project system.
@@ -66,8 +68,8 @@ namespace Apollo.ProjectExplorer.Commands
         /// <param name="eventAggregator">The event aggregator.</param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "The constructor is called via the IOC container.")]
-        public ShowProjectsTabCommand(ILinkToProjects projectFacade, IEventAggregator eventAggregator)
-            : base(obj => ShowTab(eventAggregator), obj => CanShowTab(projectFacade))
+        public ShowProjectsTabCommand(IContextAware context, ILinkToProjects projectFacade, IEventAggregator eventAggregator)
+            : base(obj => ShowTab(context, eventAggregator), obj => CanShowTab(projectFacade))
         {
         }
     }

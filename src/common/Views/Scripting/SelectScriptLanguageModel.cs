@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common.Scripting;
@@ -18,12 +19,32 @@ namespace Apollo.UI.Common.Views.Scripting
         /// <summary>
         /// The collection that holds all the available languages.
         /// </summary>
-        private static readonly ObservableCollection<ScriptDescriptionModel> s_AvailableLanguages
-            = new ObservableCollection<ScriptDescriptionModel> 
+        private static ObservableCollection<ScriptDescriptionModel> s_AvailableLanguages;
+
+        /// <summary>
+        /// Creates and stores the collection of known script languages.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        public static void StoreKnownLanguages(IContextAware context)
+        {
+            s_AvailableLanguages = new ObservableCollection<ScriptDescriptionModel> 
                 {
-                    new ScriptDescriptionModel(ScriptLanguage.IronPython),
-                    new ScriptDescriptionModel(ScriptLanguage.IronRuby),
+                    new ScriptDescriptionModel(context, ScriptLanguage.IronPython),
+                    new ScriptDescriptionModel(context, ScriptLanguage.IronRuby),
                 };
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SelectScriptLanguageModel"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public SelectScriptLanguageModel(IContextAware context)
+            : base(context)
+        { 
+        }
 
         /// <summary>
         /// Gets the collection that holds all the available languages.

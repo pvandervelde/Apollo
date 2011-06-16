@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
+using Moq;
 
 namespace Apollo.UI
 {
@@ -19,15 +20,27 @@ namespace Apollo.UI
     public sealed class ParameterTest
     {
         private sealed class MockParameter1 : Parameter 
-        { 
+        {
+            public MockParameter1(IContextAware context)
+                : base(context)
+            { 
+            }
         }
 
         private sealed class MockParameter2 : Parameter 
         { 
+            public MockParameter2(IContextAware context)
+                : base(context)
+            { 
+            }
         }
 
         private sealed class MockParameter3 : Parameter 
         { 
+            public MockParameter3(IContextAware context)
+                : base(context)
+            { 
+            }
         }
 
         [VerifyContract]
@@ -43,9 +56,9 @@ namespace Apollo.UI
             DistinctInstances =
                 new List<Parameter> 
                         {
-                            new MockParameter1(),
-                            new MockParameter2(),
-                            new MockParameter3(),
+                            new MockParameter1(new Mock<IContextAware>().Object),
+                            new MockParameter2(new Mock<IContextAware>().Object),
+                            new MockParameter3(new Mock<IContextAware>().Object),
                         },
         };
 
@@ -56,9 +69,9 @@ namespace Apollo.UI
             ImplementsOperatorOverloads = false,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new MockParameter1(),
-                        new MockParameter2(),
-                        new MockParameter3(),
+                        new MockParameter1(new Mock<IContextAware>().Object),
+                        new MockParameter2(new Mock<IContextAware>().Object),
+                        new MockParameter3(new Mock<IContextAware>().Object),
                     },
         };
     }

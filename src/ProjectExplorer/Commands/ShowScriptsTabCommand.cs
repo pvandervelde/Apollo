@@ -36,24 +36,26 @@ namespace Apollo.ProjectExplorer.Commands
         /// <summary>
         /// Called when the command is executed.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        private static void ShowTab(IEventAggregator eventAggregator)
+        private static void ShowTab(IContextAware context, IEventAggregator eventAggregator)
         {
             eventAggregator.GetEvent<ShowViewEvent>().Publish(
                 new ShowViewRequest(
                     typeof(ScriptPresenter),
                     CommonRegionNames.Content,
-                    new ScriptParameter()));
+                    new ScriptParameter(context)));
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ShowScriptsTabCommand"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "The constructor is called via the IOC container.")]
-        public ShowScriptsTabCommand(IEventAggregator eventAggregator)
-            : base(obj => ShowTab(eventAggregator), obj => CanShowTab())
+        public ShowScriptsTabCommand(IContextAware context, IEventAggregator eventAggregator)
+            : base(obj => ShowTab(context, eventAggregator), obj => CanShowTab())
         {
         }
     }

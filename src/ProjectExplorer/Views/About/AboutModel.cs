@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -45,6 +46,18 @@ namespace Apollo.ProjectExplorer.Views.About
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AboutModel"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public AboutModel(IContextAware context)
+            : base(context)
+        { 
         }
 
         /// <summary>

@@ -50,11 +50,16 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetGraphModel"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="facade">The project that holds the graph of datasets.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        public DatasetGraphModel(ProjectFacade facade)
+        public DatasetGraphModel(IContextAware context, ProjectFacade facade)
+            : base(context)
         {
             {
                 Enforce.Argument(() => facade);
@@ -85,7 +90,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(new DatasetModel(child));
+                        var vertex = new DatasetViewVertex(new DatasetModel(InternalContext, child));
                         m_VertexMap.Add(child, vertex);
 
                         graph.AddVertex(vertex);
@@ -116,7 +121,16 @@ namespace Apollo.UI.Common.Views.Datasets
                 var dataset = nodes.Dequeue();
                 foreach (var child in dataset.Children())
                 {
-                    action(m_Graph, dataset, child);
+                    if (InternalContext.IsSynchronized)
+                    {
+                        action(m_Graph, dataset, child);
+                    }
+                    else 
+                    {
+                        Action a = () => action(m_Graph, dataset, child);
+                        InternalContext.Invoke(a);
+                    }
+                    
                     nodes.Enqueue(child);
                 }
             }
@@ -140,10 +154,21 @@ namespace Apollo.UI.Common.Views.Datasets
                 };
             IterateOverGraph(action);
 
-            foreach (var dataset in datasets)
+            Action deleteAction = () =>
+                {
+                    foreach (var dataset in datasets)
+                    {
+                        m_Graph.RemoveVertex(m_VertexMap[dataset]);
+                        m_VertexMap.Remove(dataset);
+                    }
+                };
+            if (InternalContext.IsSynchronized)
             {
-                m_Graph.RemoveVertex(m_VertexMap[dataset]);
-                m_VertexMap.Remove(dataset);
+                deleteAction();
+            }
+            else
+            {
+                InternalContext.Invoke(deleteAction);
             }
 
             Notify(() => Graph);
@@ -161,7 +186,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(new DatasetModel(child));
+                        var vertex = new DatasetViewVertex(new DatasetModel(InternalContext, child));
                         m_VertexMap.Add(child, vertex);
                         graph.AddVertex(vertex);
 

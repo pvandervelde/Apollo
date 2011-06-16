@@ -33,8 +33,9 @@ namespace Apollo.UI.Common.Views.Projects
         /// </summary>
         protected override void Initialize()
         {
+            var context = m_Container.Resolve<IContextAware>();
             var command = m_Container.Resolve<CloseProjectCommand>();
-            View.Model = new ProjectModel(command);
+            View.Model = new ProjectModel(context, command);
         }
     }
 }
