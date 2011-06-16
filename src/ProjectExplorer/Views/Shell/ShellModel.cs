@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.UI.Common;
 
 namespace Apollo.ProjectExplorer.Views.Shell
@@ -13,5 +14,16 @@ namespace Apollo.ProjectExplorer.Views.Shell
     /// </summary>
     internal sealed class ShellModel : Model
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ShellModel"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public ShellModel(IContextAware context)
+            : base(context)
+        { 
+        }
     }
 }

@@ -21,6 +21,18 @@ namespace Apollo.UI.Common
         private readonly List<Func<object>> m_Properties = new List<Func<object>>();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Parameter"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        protected Parameter(IContextAware context)
+            : base(context)
+        { 
+        }
+
+        /// <summary>
         /// Reuses the view by.
         /// </summary>
         /// <param name="properties">The properties.</param>

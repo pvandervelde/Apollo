@@ -35,7 +35,8 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// </summary>
         protected override void Initialize()
         {
-            View.Model = new MenuModel();
+            var context = m_Container.Resolve<IContextAware>();
+            View.Model = new MenuModel(context);
             View.Model.NewProjectCommand = m_Container.Resolve<NewProjectCommand>();
             View.Model.OpenProjectCommand = m_Container.Resolve<OpenProjectCommand>();
             View.Model.SaveProjectCommand = m_Container.Resolve<SaveProjectCommand>();

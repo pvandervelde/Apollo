@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using Apollo.UI.Common.Properties;
 using Apollo.UI.Common.Scripting;
@@ -28,8 +29,13 @@ namespace Apollo.UI.Common.Views.Scripting
         /// <summary>
         /// Initializes a new instance of the <see cref="ScriptDescriptionModel"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="scriptLanguage">The script language that is described.</param>
-        public ScriptDescriptionModel(ScriptLanguage scriptLanguage)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public ScriptDescriptionModel(IContextAware context, ScriptLanguage scriptLanguage)
+            : base(context)
         {
             Language = scriptLanguage;
         }

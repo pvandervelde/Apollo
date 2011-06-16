@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.UI.Common.Views.Datasets
 {
     /// <summary>
@@ -11,5 +13,16 @@ namespace Apollo.UI.Common.Views.Datasets
     /// </summary>
     public sealed class DatasetGraphParameter : Parameter
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DatasetGraphParameter"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetGraphParameter(IContextAware context)
+            : base(context)
+        { 
+        }
     }
 }

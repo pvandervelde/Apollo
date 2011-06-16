@@ -63,9 +63,10 @@ namespace Apollo.UI.Common.Views.Scripting
         /// </summary>
         protected override void Initialize()
         {
-            View.Model = new ScriptModel() 
+            var context = m_Container.Resolve<IContextAware>();
+            View.Model = new ScriptModel(context) 
                 {
-                    ScriptLanguage = new ScriptDescriptionModel(ScriptLanguage.IronPython),
+                    ScriptLanguage = new ScriptDescriptionModel(context, ScriptLanguage.IronPython),
                     SyntaxVerifier = m_Container.Resolve<IHostScripts>().VerifySyntax(ScriptLanguage.IronPython),
                 };
 
@@ -82,11 +83,12 @@ namespace Apollo.UI.Common.Views.Scripting
 
         private CompositeCommand CreateCloseCommand()
         {
+            var context = m_Container.Resolve<IContextAware>();
             var closeScriptCommand = m_Container.Resolve<CloseScriptCommand>();
             var closeViewCommand = m_Container.Resolve<CloseViewCommand>(
                 new TypedParameter(typeof(IEventAggregator), m_Container.Resolve<IEventAggregator>()),
                 new TypedParameter(typeof(string), CommonRegionNames.Content),
-                new TypedParameter(typeof(Parameter), new ScriptParameter()));
+                new TypedParameter(typeof(Parameter), new ScriptParameter(context)));
             var compositeCommand = new CompositeCommand();
             compositeCommand.RegisterCommand(closeScriptCommand);
             compositeCommand.RegisterCommand(closeViewCommand);
@@ -95,12 +97,13 @@ namespace Apollo.UI.Common.Views.Scripting
 
         private NewScriptCommand CreateNewScriptCommand()
         {
+            var context = m_Container.Resolve<IContextAware>();
             Func<Tuple<bool, ScriptDescriptionModel>> selectScriptLanguage =
                 () =>
                 {
                     var presenter = (IPresenter)m_Container.Resolve(typeof(SelectScriptLanguagePresenter));
                     var view = m_Container.Resolve(presenter.ViewType) as ISelectScriptLanguageView;
-                    presenter.Initialize(view, new SelectScriptLanguageParameter());
+                    presenter.Initialize(view, new SelectScriptLanguageParameter(context));
 
                     var window = view as Window;
                     window.Owner = Application.Current.MainWindow;
@@ -130,6 +133,7 @@ namespace Apollo.UI.Common.Views.Scripting
 
         private OpenScriptCommand CreateOpenScriptCommand()
         {
+            var context = m_Container.Resolve<IContextAware>();
             Func<Tuple<FileInfo, ScriptDescriptionModel>> selectScriptLanguage =
                 () =>
                 {
@@ -148,7 +152,7 @@ namespace Apollo.UI.Common.Views.Scripting
                     {
                         return new Tuple<FileInfo, ScriptDescriptionModel>(
                             new FileInfo(dlg.FileName), 
-                            new ScriptDescriptionModel(LanguageFromFileExtension(Path.GetExtension(dlg.FileName))));
+                            new ScriptDescriptionModel(context, LanguageFromFileExtension(Path.GetExtension(dlg.FileName))));
                     }
                     else
                     {

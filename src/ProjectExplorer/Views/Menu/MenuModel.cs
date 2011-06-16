@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Windows.Input;
 using Apollo.UI.Common;
 
@@ -14,6 +15,18 @@ namespace Apollo.ProjectExplorer.Views.Menu
     /// </summary>
     internal class MenuModel : Model
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MenuModel"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public MenuModel(IContextAware context)
+            : base(context)
+        { 
+        }
+
         /// <summary>
         /// Gets or sets the new project command.
         /// </summary>

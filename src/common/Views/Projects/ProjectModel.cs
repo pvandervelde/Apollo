@@ -19,11 +19,16 @@ namespace Apollo.UI.Common.Views.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectModel"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="closeCommand">The command that closes the current project.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="closeCommand"/> is <see langword="null" />.
         /// </exception>
-        public ProjectModel(ICommand closeCommand)
+        public ProjectModel(IContextAware context, ICommand closeCommand)
+            : base(context)
         {
             {
                 Lokad.Enforce.Argument(() => closeCommand);

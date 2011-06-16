@@ -34,11 +34,13 @@ namespace Apollo.UI.Common.Views.Projects
         /// </summary>
         protected override void Initialize()
         {
+            var context = m_Container.Resolve<IContextAware>();
+
             var serviceFacade = m_Container.Resolve<ILinkToProjects>();
             var project = serviceFacade.ActiveProject();
 
             Debug.Assert(project != null, "There should be an active project.");
-            View.Model = new ProjectDescriptionModel(project);
+            View.Model = new ProjectDescriptionModel(context, project);
         }
     }
 }

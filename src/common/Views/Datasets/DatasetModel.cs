@@ -26,11 +26,16 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetModel"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="dataset">The dataset.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        public DatasetModel(DatasetFacade dataset)
+        public DatasetModel(IContextAware context, DatasetFacade dataset)
+            : base(context)
         {
             {
                 Enforce.Argument(() => dataset);

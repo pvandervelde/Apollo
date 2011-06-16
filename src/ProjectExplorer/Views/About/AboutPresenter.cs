@@ -36,9 +36,8 @@ namespace Apollo.ProjectExplorer.Views.About
         /// </summary>
         protected override void Initialize()
         {
-            View.Model = new AboutModel();
-
-            // Get the system information.
+            var context = m_Container.Resolve<IContextAware>();
+            View.Model = new AboutModel(context);
         }
     }
 }

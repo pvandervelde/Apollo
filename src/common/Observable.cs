@@ -9,6 +9,7 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
 using System.Reflection;
+using Lokad;
 
 namespace Apollo.UI.Common
 {
@@ -17,6 +18,38 @@ namespace Apollo.UI.Common
     /// </summary>
     public abstract class Observable : INotifyPropertyChanged
     {
+        /// <summary>
+        /// The context that is used to perform actions on the UI thread.
+        /// </summary>
+        private readonly IContextAware m_Context;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Observable"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        protected Observable(IContextAware context)
+        {
+            {
+                Enforce.Argument(() => context);
+            }
+
+            m_Context = context;
+        }
+
+        /// <summary>
+        /// Gets the context that is used to perform actions on the UI thread.
+        /// </summary>
+        protected IContextAware InternalContext
+        {
+            get
+            {
+                return m_Context;
+            }
+        }
+
         /// <summary>
         /// The event that is fired when a property changes.
         /// </summary>
@@ -58,7 +91,15 @@ namespace Apollo.UI.Common
             var local = PropertyChanged;
             if (local != null)
             {
-                local(this, new PropertyChangedEventArgs(name));
+                Action action = () => local(this, new PropertyChangedEventArgs(name));
+                if (m_Context.IsSynchronized)
+                {
+                    action();
+                }
+                else
+                {
+                    m_Context.Invoke(action);
+                }
             }
         }
     }

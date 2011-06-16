@@ -34,6 +34,18 @@ namespace Apollo.UI.Common.Views.Scripting
         private string m_ScriptFilePath;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ScriptModel"/> class.
+        /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public ScriptModel(IContextAware context)
+            : base(context)
+        { 
+        }
+
+        /// <summary>
         /// Gets the name of the model for uses on a display.
         /// </summary>
         [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
