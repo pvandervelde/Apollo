@@ -12,9 +12,11 @@ using System.Text;
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
-    /// Describes the results of a given baseline calculation for a specific machine.
+    /// Defines the interface for objects that load datasets into an external application
+    /// and provide the required information to the user to connect to that application
+    /// via the communication system.
     /// </summary>
-    public sealed class BaselineResult
+    internal interface IApplicationLoader
     {
     }
 }

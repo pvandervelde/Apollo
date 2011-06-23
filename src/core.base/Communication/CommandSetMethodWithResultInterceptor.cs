@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
-using Apollo.Utilities;
+using Apollo.Core.Base.Properties;
 using Castle.DynamicProxy;
 using Lokad;
 
@@ -54,7 +54,7 @@ namespace Apollo.Core.Base.Communication
                     return default(T);
                 }
 
-                throw new RemoteOperationFailedException();
+                throw new CommandInvocationFailedException();
             };
 
             return Task<T>.Factory.StartNew(action, TaskCreationOptions.LongRunning);
@@ -91,10 +91,22 @@ namespace Apollo.Core.Base.Communication
         /// <param name="invocation">Information about the call that was intercepted.</param>
         public void Intercept(IInvocation invocation)
         {
-            var result = m_SendMessageWithResponse(
-                CommandSetProxyExtensions.FromMethodInfo(
-                    invocation.Method,
-                    invocation.Arguments));
+            Task<ICommunicationMessage> result = null;
+            try
+            {
+                result = m_SendMessageWithResponse(
+                    CommandSetProxyExtensions.FromMethodInfo(
+                        invocation.Method,
+                        invocation.Arguments));
+            }
+            catch (EndpointNotContactableException e)
+            {
+                throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
+            }
+            catch (FailedToSendMessageException e)
+            {
+                throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
+            }
 
             // Now that we have the result we need to create the return value of the correct type
             // The only catch is that we don't know (at compile time) what the return value must

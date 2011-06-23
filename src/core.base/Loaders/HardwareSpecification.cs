@@ -22,27 +22,33 @@ namespace Apollo.Core.Base.Loaders
         /// Returns the amount of physical memory installed in the machine in bytes.
         /// </summary>
         /// <returns>
-        /// The amount of physical memory of the local machine in bytes.
+        /// A tuple containing the maximum amount of memory a process can use, the total
+        /// amount of physical memory available to the operating system and the total
+        /// amount of virtual memory the operating system provides.
         /// </returns>
-        private static ulong LocalMachinePhysicalMemorySize()
+        private static Tuple<ulong, ulong, ulong> LocalMachinePhysicalMemorySize()
         {
             try
             {
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
-                    "SELECT * FROM Win32_PhysicalMemory");
+                    "SELECT * FROM CIM_OperatingSystem");
 
-                ulong total = 0;
+                ulong maxPerProcess = 0;
+                ulong totalPhysical = 0;
+                ulong totalVirtual = 0;
                 foreach (ManagementObject queryObj in searcher.Get())
                 {
-                    total += (ulong)queryObj["Capacity"];
+                    maxPerProcess += (ulong)queryObj["MaxProcessMemorySize"];
+                    totalPhysical += (ulong)queryObj["TotalVisibleMemorySize"];
+                    totalVirtual += (ulong)queryObj["TotalVirtualMemorySize"];
                 }
 
-                return total;
+                return new Tuple<ulong, ulong, ulong>(maxPerProcess, totalPhysical, totalVirtual);
             }
             catch (ManagementException)
             {
-                return 0;
+                return new Tuple<ulong, ulong, ulong>(0, 0, 0);
             }
         }
 
@@ -54,19 +60,11 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public static HardwareSpecification ForLocalMachine()
         {
-            ulong memory = LocalMachinePhysicalMemorySize();
-            var processors = ProcessorSpecification.ForLocalMachine();
+            var memorySizes = LocalMachinePhysicalMemorySize();
             var disks = DiskSpecification.ForLocalMachine();
-            var networks = NetworkSpecification.ForLocalMachine();
 
-            return new HardwareSpecification(memory, processors, disks, networks);
+            return new HardwareSpecification(memorySizes.Item1, memorySizes.Item2, memorySizes.Item3, disks);
         }
-
-        /// <summary>
-        /// The objects that describe the specifications for the 
-        /// available processors.
-        /// </summary>
-        private readonly ProcessorSpecification[] m_Processors;
 
         /// <summary>
         /// The objects that describe the specification for the
@@ -75,76 +73,64 @@ namespace Apollo.Core.Base.Loaders
         private readonly DiskSpecification[] m_Disks;
 
         /// <summary>
-        /// The objects that describe the specification for the
-        /// available network connections.
-        /// </summary>
-        private readonly NetworkSpecification[] m_Networks;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="HardwareSpecification"/> class.
         /// </summary>
-        /// <param name="memoryInBytes">The amount of RAM memory in bytes.</param>
-        /// <param name="processors">The information describing the available processors.</param>
+        /// <param name="maxPerProcessMemory">The maximum amount of memory available to a process in Kb.</param>
+        /// <param name="totalPhysicalMemory">The total amount of physical memory as reported by the OS in Kb.</param>
+        /// <param name="totalVirtualMemory">The total amount of virtual memory the OS provides in Kb.</param>
         /// <param name="disks">The information describing the available disks.</param>
-        /// <param name="networks">The information describing the available networks.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="processors"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="processors"/> an empty array.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="disks"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="disks"/> is an empty array.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="networks"/> is <see langword="null" />.
-        /// </exception>
         [CLSCompliant(false)]
         public HardwareSpecification(
-            ulong memoryInBytes,
-            ProcessorSpecification[] processors,
-            DiskSpecification[] disks,
-            NetworkSpecification[] networks)
+            ulong maxPerProcessMemory,
+            ulong totalPhysicalMemory,
+            ulong totalVirtualMemory,
+            DiskSpecification[] disks)
         {
             {
-                Enforce.Argument(() => processors);
-                Enforce.With<ArgumentException>(processors.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneProcessor);
-
                 Enforce.Argument(() => disks);
                 Enforce.With<ArgumentException>(disks.Length > 0, Resources.Exceptions_Messages_AMachineNeedsAtLeastOneDisk);
-
-                Enforce.Argument(() => networks);
             }
 
-            MemoryInBytes = memoryInBytes;
-            m_Processors = processors;
+            PerProcessMemoryInKilobytes = maxPerProcessMemory;
+            TotalPhysicalMemoryInKilobytes = totalPhysicalMemory;
+            TotalVirtualMemoryInKilobytes = totalVirtualMemory;
             m_Disks = disks;
-            m_Networks = networks;
         }
 
         /// <summary>
-        /// Gets a value indicating the amount of RAM memory in bytes for the given machine.
+        /// Gets a value indicating the maximum amount of memory a process can use.
         /// </summary>
         [CLSCompliant(false)]
-        public ulong MemoryInBytes
+        public ulong PerProcessMemoryInKilobytes
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// Returns the collection of objects describing the available 
-        /// processors.
+        /// Gets a value indicating the total amount of memory the operating system reports.
         /// </summary>
-        /// <returns>
-        /// The collection describing the available processors.
-        /// </returns>
-        public IEnumerable<ProcessorSpecification> Processors()
+        [CLSCompliant(false)]
+        public ulong TotalPhysicalMemoryInKilobytes
         {
-            return m_Processors;
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating the amount of virtual memory reported by the operating system.
+        /// </summary>
+        [CLSCompliant(false)]
+        public ulong TotalVirtualMemoryInKilobytes
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -157,18 +143,6 @@ namespace Apollo.Core.Base.Loaders
         public IEnumerable<DiskSpecification> Disks()
         {
             return m_Disks;
-        }
-
-        /// <summary>
-        /// Returns the collection of objects describing the available 
-        /// network connections.
-        /// </summary>
-        /// <returns>
-        /// The collection describing the available network connections.
-        /// </returns>
-        public IEnumerable<NetworkSpecification> Network()
-        {
-            return m_Networks;
         }
     }
 }

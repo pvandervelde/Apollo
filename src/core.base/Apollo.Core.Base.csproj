@@ -58,6 +58,8 @@
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
+    <Compile Include="Communication\CommandInformationEventArgs.cs" />
+    <Compile Include="Communication\CommandInvocationFailedException.cs" />
     <Compile Include="Communication\CommandNotSupportedException.cs" />
     <Compile Include="Communication\CommandProxyBuilder.cs" />
     <Compile Include="Communication\CommandSetAvailabilityEventArgs.cs" />
@@ -70,10 +72,17 @@
     <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
     <Compile Include="Communication\CommunicationLayer.cs" />
     <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
+    <Compile Include="Communication\ConversationToken.cs" />
+    <Compile Include="Communication\ConversationTokenExtensions.cs" />
     <Compile Include="Communication\EndpointEventArgs.cs" />
     <Compile Include="Communication\EndpointId.cs" />
+    <Compile Include="Communication\EndpointIdExtensions.cs" />
+    <Compile Include="Communication\IAceptExternalCommandInformation.cs" />
     <Compile Include="Communication\ICommandCollection.cs" />
+    <Compile Include="Communication\IReportNewCommands.cs" />
+    <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />
     <Compile Include="Communication\LocalCommandCollection.cs" />
+    <Compile Include="Communication\ManualCommandRegistrationReporter.cs" />
     <Compile Include="Communication\Messages\CommandInvokedResponseMessage.cs" />
     <Compile Include="Communication\Messages\EndpointInformationRequestMessage.cs" />
     <Compile Include="Communication\EndpointNotContactableException.cs" />
@@ -104,10 +113,12 @@
     <Compile Include="Communication\ISerializedType.cs" />
     <Compile Include="Communication\Messages\FailureMessage.cs" />
     <Compile Include="Communication\Messages\MessageKindFilter.cs" />
+    <Compile Include="Communication\Messages\NewCommandRegisteredMessage.cs" />
     <Compile Include="Communication\Messages\Processors\CommandInvokedProcessAction.cs" />
     <Compile Include="Communication\Messages\Processors\EndpointConnectProcessAction.cs" />
     <Compile Include="Communication\CommandSetProxyExtensions.cs" />
     <Compile Include="Communication\Messages\Processors\EndpointInformationRequestProcessAction.cs" />
+    <Compile Include="Communication\Messages\Processors\NewCommandRegisteredProcessAction.cs" />
     <Compile Include="Communication\Messages\SuccessMessage.cs" />
     <Compile Include="Communication\MissingBindingTypeException.cs" />
     <Compile Include="Communication\MissingEndpointIdException.cs" />
@@ -115,7 +126,6 @@
     <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
     <Compile Include="Communication\ChannelRelativePerformanceAttribute.cs" />
     <Compile Include="Communication\RemoteCommandHub.cs" />
-    <Compile Include="Communication\RemoteOperationFailedException.cs" />
     <Compile Include="Communication\StreamTransferInformation.cs" />
     <Compile Include="Communication\MessageEventArgs.cs" />
     <Compile Include="Communication\MessageId.cs" />
@@ -130,23 +140,30 @@
     <Compile Include="Communication\TcpStreamTransferInformation.cs" />
     <Compile Include="Communication\TypeIsNotAValidCommandSetException.cs" />
     <Compile Include="Communication\UnableToLoadCommandSetTypeException.cs" />
+    <Compile Include="Communication\UnknownEndpointIdFormatException.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
-    <Compile Include="Loaders\BaselineId.cs" />
-    <Compile Include="Loaders\BaselineResult.cs" />
+    <Compile Include="Loaders\DatasetApplicationLoader.cs" />
+    <Compile Include="Loaders\DatasetDistributionGenerator.cs" />
+    <Compile Include="Loaders\DatasetLoadingProposal.cs" />
+    <Compile Include="Loaders\DatasetLoadingProposalExtensions.cs" />
     <Compile Include="Loaders\DiskSpecification.cs" />
+    <Compile Include="Loaders\DistributionCalculator.cs" />
+    <Compile Include="Loaders\DatasetLoadingProposalComparer.cs" />
     <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
     <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="DatasetCreationInformation.cs" />
-    <Compile Include="Loaders\DatasetLoader.cs" />
+    <Compile Include="Loaders\IApplicationLoader.cs" />
+    <Compile Include="Loaders\ICalculateDistributionParameters.cs" />
     <Compile Include="Loaders\IDatasetLoaderCommands.cs" />
+    <Compile Include="Loaders\IGenerateDistributionProposals.cs" />
     <Compile Include="Loaders\ILoadDatasets.cs" />
-    <Compile Include="Loaders\MockDatasetDistributor.cs" />
+    <Compile Include="Loaders\LoaderConfigurationKeys.cs" />
+    <Compile Include="Loaders\LoadingLocations.cs" />
+    <Compile Include="Loaders\LocalDatasetDistributor.cs" />
     <Compile Include="Loaders\NetworkIdentifier.cs" />
-    <Compile Include="Loaders\NetworkSpecification.cs" />
-    <Compile Include="Loaders\ProcessorArchitecture.cs" />
-    <Compile Include="Loaders\ProcessorSpecification.cs" />
     <Compile Include="Communication\ManualDiscoverySource.cs" />
+    <Compile Include="Loaders\RemoteDatasetDistributor.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -164,9 +181,7 @@
     <Compile Include="Loaders\DistributionPlan.cs" />
     <Compile Include="Loaders\ExpectedDatasetLoad.cs" />
     <Compile Include="Loaders\IHelpDistributingDatasets.cs" />
-    <Compile Include="Loaders\LoadingLocation.cs" />
     <Compile Include="Loaders\Machine.cs" />
-    <Compile Include="Loaders\MachineDistributionRange.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

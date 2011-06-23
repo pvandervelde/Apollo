@@ -152,15 +152,12 @@ namespace Apollo.Core.Projects
         /// <param name="preferredLocation">
         /// Indicates a preferred machine location for the dataset to be loaded onto.
         /// </param>
-        /// <param name="range">
-        /// The number of machines over which the data set should be distributed.
-        /// </param>
         /// <remarks>
-        /// Note that the <paramref name="preferredLocation"/> and the <paramref name="range"/> are
-        /// only suggestions. The loader may deside to ignore the suggestions if there is a distribution
+        /// Note that the <paramref name="preferredLocation"/> is
+        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
-        void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range);
+        void LoadOntoMachine(LoadingLocations preferredLocation);
 
         /// <summary>
         /// An event raised when the dataset is loaded onto one or more machines.

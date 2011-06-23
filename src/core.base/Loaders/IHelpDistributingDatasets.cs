@@ -4,7 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -22,10 +24,11 @@ namespace Apollo.Core.Base.Loaders
         /// The request that describes the characteristics of the dataset that 
         /// should be loaded.
         /// </param>
+        /// <param name="token">The cancellation token that can be used to terminate the proposal.</param>
         /// <returns>
         /// The distribution plan that takes into account the characteristics of
         /// the dataset and the currently available computing power.
         /// </returns>
-        IObservable<DistributionPlan> ProposeDistributionFor(DatasetRequest request);
+        Task<IEnumerable<DistributionPlan>> ProposeDistributionFor(DatasetRequest request, CancellationToken token);
     }
 }

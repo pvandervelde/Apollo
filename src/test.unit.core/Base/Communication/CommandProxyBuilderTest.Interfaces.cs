@@ -21,14 +21,14 @@ namespace Apollo.Base.Communication
             Justification = "Unit tests do not need documentation.")]
         public sealed class MockCommandSetNotAnInterface : ICommandSet
         {
-            public event EventHandler<CommandSetAvailabilityEventArgs> OnAvailabilityChange;
+            public event EventHandler<EventArgs> OnAvailabilityChange;
 
             private void RaiseOnAvailabilityChange()
             {
                 var local = OnAvailabilityChange;
                 if (local != null)
                 {
-                    local(this, new CommandSetAvailabilityEventArgs());
+                    local(this, EventArgs.Empty);
                 }
             }
 

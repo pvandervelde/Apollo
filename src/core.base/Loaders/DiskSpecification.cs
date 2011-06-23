@@ -84,6 +84,7 @@ namespace Apollo.Core.Base.Loaders
         {
             try
             {
+                // @Todo: Need to allow configurations to block out drives that we can't touch
                 ManagementObjectSearcher searcher = new ManagementObjectSearcher(
                     "root\\CIMV2",
                     "SELECT * FROM Win32_LogicalDisk");
@@ -157,8 +158,8 @@ namespace Apollo.Core.Base.Loaders
 
             Name = name;
             SerialNumber = serialNumber;
-            TotalSpace = totalSpace;
-            AvailableSpace = availableSpace;
+            TotalSpaceInBytes = totalSpace;
+            AvailableSpaceInBytes = availableSpace;
         }
 
         /// <summary>
@@ -183,7 +184,7 @@ namespace Apollo.Core.Base.Loaders
         /// Gets a value indicating the total space of the logical disk.
         /// </summary>
         [CLSCompliant(false)]
-        public ulong TotalSpace
+        public ulong TotalSpaceInBytes
         {
             get;
             private set;
@@ -193,7 +194,7 @@ namespace Apollo.Core.Base.Loaders
         /// Gets a value indicating the available space of the logical disk.
         /// </summary>
         [CLSCompliant(false)]
-        public ulong AvailableSpace
+        public ulong AvailableSpaceInBytes
         {
             get;
             private set;
@@ -280,8 +281,8 @@ namespace Apollo.Core.Base.Loaders
                 "Disk[Volume: {0}] {1}. Capacity (free / total) {2} / {3}",
                 SerialNumber,
                 Name,
-                AvailableSpace,
-                TotalSpace);
+                AvailableSpaceInBytes,
+                TotalSpaceInBytes);
         }
     }
 }

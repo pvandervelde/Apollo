@@ -27,7 +27,7 @@ namespace Apollo.Core.Base.Communication
         /// permanently been terminated (although that may be the case). It merely
         /// means that the endpoint is temporarily not available.
         /// </remarks>
-        event EventHandler<CommandSetAvailabilityEventArgs> OnAvailabilityChange;
+        event EventHandler<EventArgs> OnAvailabilityChange;
 
         /// <summary>
         /// An event raised when the endpoint to which the command set belongs

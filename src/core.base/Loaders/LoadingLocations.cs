@@ -4,34 +4,31 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Core.Base.Loaders
 {
     /// <summary>
     /// Indicates where a dataset can be loaded.
     /// </summary>
-    public enum LoadingLocation
+    [Flags]
+    public enum LoadingLocations
     {
         /// <summary>
         /// There is no loading location.
         /// </summary>
-        None,
+        None = 0,
 
         /// <summary>
         /// The dataset should be loaded onto the local machine.
         /// </summary>
-        Local,
-
-        /// <summary>
-        /// The dataset should be loaded onto a remote machine which may 
-        /// either be a P2P node or a cluster node.
-        /// </summary>
-        Distributed,
+        Local = 1,
 
         /// <summary>
         /// The dataset should be loaded onto a remote machine, using
         /// the Peer-To-Peer distribution method.
         /// </summary>
-        DistributedOnPeerToPeer,
+        DistributedOnPeerToPeer = 2,
 
         /// <summary>
         /// The datase should be loaded onto a remote machine which is 
@@ -43,6 +40,17 @@ namespace Apollo.Core.Base.Loaders
         /// On top of that the dataset may move around over time if the
         /// head node deems this useful.
         /// </remarks>
-        DistributedOnCluster,
+        DistributedOnCluster = 4,
+
+        /// <summary>
+        /// The dataset should be loaded onto a remote machine which may 
+        /// either be a P2P node or a cluster node.
+        /// </summary>
+        Distributed = DistributedOnCluster | DistributedOnPeerToPeer,
+
+        /// <summary>
+        /// The dataset can be loaded in all known locations.
+        /// </summary>
+        All = Local | Distributed,
     }
 }

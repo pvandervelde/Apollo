@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
@@ -25,7 +27,23 @@ namespace Apollo.Core.Projects
     {
         private static IProject CreateProject()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             return new Project(distributor);
         }
 
@@ -78,7 +96,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset can be obtained from the project.")]
         public void GetDataset()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -90,7 +124,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that when the name of a dataset is set a notification is send out.")]
         public void Name()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -110,7 +160,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that when the summary of a dataset is set a notification is send out.")]
         public void Summary()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -130,23 +196,28 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset cannot be loaded onto a machine with an illegal loading location.")]
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
             Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
-                () => dataset.LoadOntoMachine(LoadingLocation.None, new MachineDistributionRange()));
-        }
-
-        [Test]
-        [Description("Checks that a dataset cannot be loaded onto a machine without a distribution range.")]
-        public void LoadOntoMachineWithNullDistributionRange()
-        {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
-            var project = new Project(distributor);
-            var dataset = project.BaseDataset();
-
-            Assert.Throws<ArgumentNullException>(() => dataset.LoadOntoMachine(LoadingLocation.Local, null));
+                () => dataset.LoadOntoMachine(LoadingLocations.None));
         }
 
         [Test]
@@ -178,7 +249,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that the children of a dataset can be obtained.")]
         public void Children()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -202,7 +289,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new child cannot be created without creation information.")]
         public void CreateNewChildWithNullCreationInformation()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -213,7 +316,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new child cannot be created if the dataset is not allowed to be a parent.")]
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -232,7 +351,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new child can be created.")]
         public void CreateNewChild()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -266,7 +401,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new set of children cannot be created with a null collection reference.")]
         public void CreateNewChildrenWithNullCollection()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -277,7 +428,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new set of children cannot be created without creation information.")]
         public void CreateNewChildrenWithEmptyCollection()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -288,7 +455,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that a new set of children can be created.")]
         public void CreateNewChildren()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -317,7 +500,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that an exception is thrown when deleting a dataset after the project is closed.")]
         public void DeleteWhenClosed()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -341,7 +540,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that an exception is thrown when deleting a dataset that can't be deleted.")]
         public void DeleteUndeletableDataset()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -352,7 +567,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithUndeletableChild()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -387,7 +618,23 @@ namespace Apollo.Core.Projects
         [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithChildren()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = new Project(distributor);
             var root = project.BaseDataset();
 

@@ -24,22 +24,6 @@ namespace Apollo.Core.Base.Communication
     internal sealed class CommunicationLayer : ICommunicationLayer
     {
         /// <summary>
-        /// Creates a new <see cref="EndpointId"/> for the current process.
-        /// </summary>
-        /// <returns>
-        /// The newly created <see cref="EndpointId"/>.
-        /// </returns>
-        private static EndpointId CreateEndpointIdForCurrentProcess()
-        {
-            return new EndpointId(
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "{0}:{1}",
-                    Environment.MachineName,
-                    Process.GetCurrentProcess().Id));
-        }
-
-        /// <summary>
         /// The collection of endpoints that have been discovered.
         /// </summary>
         private readonly Dictionary<EndpointId, SortedList<int, ChannelConnectionInformation>> m_PotentialEndpoints =
@@ -54,7 +38,7 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The ID number of the current endpoint.
         /// </summary>
-        private readonly EndpointId m_Id = CreateEndpointIdForCurrentProcess();
+        private readonly EndpointId m_Id = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
 
         /// <summary>
         /// The collection of endpoint discovery objects.
@@ -175,13 +159,14 @@ namespace Apollo.Core.Base.Communication
             // Now we initiate discovery of other services. Note that discovery only works for 
             // TCP based connections. It does not work with named pipes, however we have a 
             // discovery source that can manually be controlled. This source will be able
-            // to provide the named pipe discoveries. Also note that in our case
-            // we don't need it to work with named pipes because the current application is 
-            // responsible for the creation of all apps that it communicates with through
-            // a named pipe, i.e. we never need to discover anything on a named pipe.
-            // Also note that the only thing we discover on a TCP connection is the
-            // application that is in control of creating dataset applications on the
-            // remote machine.
+            // to provide the named pipe discoveries. 
+            //
+            // NOTE: in our case we don't need it to work with named pipes because the current 
+            // application is responsible for the creation of all apps that it communicates with 
+            // through a named pipe, i.e. we never need to discover anything on a named pipe.
+            //
+            // NOTE: the only thing we discover on a TCP connection is the application that is in 
+            // control of creating dataset applications on the remote machine.
             foreach (var source in m_DiscoverySources)
             {
                 source.OnEndpointBecomingAvailable += HandleEndpointSignIn;

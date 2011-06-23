@@ -47,7 +47,8 @@ namespace Apollo.Core.Base
         {
             RegisterCommandHub(builder);
             RegisterCommunicationLayer(builder);
-            RegisterDiscoverySources(builder);
+            RegisterEndpointDiscoverySources(builder);
+            RegisterCommandDiscoverySources(builder);
             RegisterMessageHandler(builder);
             RegisterMessageProcessingActions(builder);
             RegisterCommunicationChannel(builder);
@@ -59,8 +60,10 @@ namespace Apollo.Core.Base
         {
             builder.Register(c => new RemoteCommandHub(
                     c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<IReportNewCommands>(),
                     c.Resolve<CommandProxyBuilder>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<ISendCommandsToRemoteEndpoints>()
                 .SingleInstance();
 
             builder.Register(c => new CommandProxyBuilder(
@@ -70,7 +73,8 @@ namespace Apollo.Core.Base
                     return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
                 }));
 
-            builder.Register(c => new LocalCommandCollection())
+            builder.Register(c => new LocalCommandCollection(
+                    c.Resolve<ICommunicationLayer>()))
                 .As<ICommandCollection>()
                 .SingleInstance();
         }
@@ -90,7 +94,7 @@ namespace Apollo.Core.Base
                 .SingleInstance();
         }
 
-        private static void RegisterDiscoverySources(ContainerBuilder builder)
+        private static void RegisterEndpointDiscoverySources(ContainerBuilder builder)
         {
             builder.Register(c => new TcpBasedDiscoverySource())
                 .As<IDiscoverOtherServices>();
@@ -103,6 +107,19 @@ namespace Apollo.Core.Base
             builder.Register(c => new ManualDiscoverySource())
                 .As<IDiscoverOtherServices>()
                 .As<IAcceptExternalEndpointInformation>()
+                .SingleInstance();
+        }
+
+        private static void RegisterCommandDiscoverySources(ContainerBuilder builder)
+        {
+            // For now we're marking this as a single instance because
+            // we want it to be linked to the RemoteCommandHub at all times
+            // and yet we want to be able to give it out to users without 
+            // having to worry if we have given out the correct instance. Maybe
+            // there is a cleaner solution to this problem though ...
+            builder.Register(c => new ManualCommandRegistrationReporter())
+                .As<IAceptExternalCommandInformation>()
+                .As<IReportNewCommands>()
                 .SingleInstance();
         }
 
@@ -153,6 +170,11 @@ namespace Apollo.Core.Base
                     c.Resolve<ICommunicationLayer>().Id,
                     (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                     c.Resolve<ICommandCollection>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new NewCommandRegisteredProcessAction(
+                    c.Resolve<IAceptExternalCommandInformation>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
         }

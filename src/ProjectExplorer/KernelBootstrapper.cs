@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core;
+using Apollo.Core.Base;
 using Apollo.Utilities;
 using Autofac.Core;
 using Lokad;
@@ -78,6 +79,7 @@ namespace Apollo.ProjectExplorer
             return new List<IModule> 
                 { 
                     new UtilitiesModule(),
+                    new BaseModule(),
                 };
         }
 

@@ -5,7 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using MbUnit.Framework;
@@ -33,8 +37,25 @@ namespace Apollo.Core.Projects
         {
             var builder = new ProjectBuilder();
 
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
             var project = builder.Define()
-                .WithDatasetDistributor(r => new Mock<IObservable<DistributionPlan>>().Object)
+                .WithDatasetDistributor(distributor)
                 .Build();
 
             Assert.IsNotNull(project);
@@ -55,8 +76,26 @@ namespace Apollo.Core.Projects
         {
             var builder = new ProjectBuilder();
 
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
+                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+
             var project = builder.Define()
-                .WithDatasetDistributor(r => new Mock<IObservable<DistributionPlan>>().Object)
+                .WithDatasetDistributor(distributor)
                 .FromStorage(new Mock<IPersistenceInformation>().Object)
                 .Build();
 

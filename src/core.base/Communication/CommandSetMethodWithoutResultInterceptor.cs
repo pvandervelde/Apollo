@@ -7,6 +7,7 @@
 using System;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Core.Base.Properties;
 using Castle.DynamicProxy;
 using Lokad;
 
@@ -38,7 +39,7 @@ namespace Apollo.Core.Base.Communication
                 }
 
                 // var failureMsg = inputTask.Result as FailureMessage;
-                throw new RemoteOperationFailedException();
+                throw new CommandInvocationFailedException();
             };
 
             return Task.Factory.StartNew(action, TaskCreationOptions.LongRunning);
@@ -75,10 +76,22 @@ namespace Apollo.Core.Base.Communication
         /// <param name="invocation">Information about the call that was intercepted.</param>
         public void Intercept(IInvocation invocation)
         {
-            var result = m_SendMessageWithResponse(
-                CommandSetProxyExtensions.FromMethodInfo(
-                    invocation.Method,
-                    invocation.Arguments));
+            Task<ICommunicationMessage> result = null;
+            try
+            {
+                result = m_SendMessageWithResponse(
+                    CommandSetProxyExtensions.FromMethodInfo(
+                        invocation.Method,
+                        invocation.Arguments));
+            }
+            catch (EndpointNotContactableException e)
+            {
+                throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
+            }
+            catch (FailedToSendMessageException e)
+            {
+                throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
+            }
 
             invocation.ReturnValue = CreateTask(result);
         }

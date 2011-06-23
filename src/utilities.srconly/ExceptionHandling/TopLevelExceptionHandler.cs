@@ -90,6 +90,7 @@ namespace Apollo.Utilities.ExceptionHandling
                     try
                     {
                         logger.Log(msg);
+                        logger.Close();
                     }
                     catch (Exception)
                     {

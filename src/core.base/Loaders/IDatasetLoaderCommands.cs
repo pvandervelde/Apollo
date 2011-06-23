@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 
 namespace Apollo.Core.Base.Loaders
@@ -16,9 +13,17 @@ namespace Apollo.Core.Base.Loaders
     /// Defines the methods for an <see cref="ICommandSet"/> that provides commands for
     /// dataset loading.
     /// </summary>
-    public interface IDatasetLoaderCommands : ICommandSet
+    internal interface IDatasetLoaderCommands : ICommandSet
     {
-        // Proposal
-        // load data?
+        /// <summary>
+        /// Generates a loading proposal for the given dataset.
+        /// </summary>
+        /// <param name="expectedLoad">The expected load the dataset will place on the machine.</param>
+        /// <returns>
+        ///     A proposal for loading the given dataset on the current machine.
+        /// </returns>
+        Task<DatasetLoadingProposal> ProposeFor(ExpectedDatasetLoad expectedLoad);
+
+        Task<ChannelConnectionInformation> Load(DatasetId dataset);
     }
 }

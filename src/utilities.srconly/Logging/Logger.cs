@@ -206,5 +206,14 @@ namespace Apollo.Utilities.Logging
         {
             m_Logger.Factory.Flush();
         }
+
+        /// <summary>
+        ///  Performs application-defined tasks associated with freeing, releasing, or
+        ///  resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            Close();
+        }
     }
 }

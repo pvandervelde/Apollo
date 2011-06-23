@@ -67,8 +67,8 @@ namespace Apollo.Base.Loaders
 
             Assert.AreEqual(name, disk.Name);
             Assert.AreEqual(serial, disk.SerialNumber);
-            Assert.AreEqual(totalSpace, disk.TotalSpace);
-            Assert.AreEqual(freeSpace, disk.AvailableSpace);
+            Assert.AreEqual(totalSpace, disk.TotalSpaceInBytes);
+            Assert.AreEqual(freeSpace, disk.AvailableSpaceInBytes);
         }
     }
 }

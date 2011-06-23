@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.Logging
@@ -11,7 +12,7 @@ namespace Apollo.Utilities.Logging
     /// <summary>
     /// Defines the interface for objects that log information.
     /// </summary>
-    internal interface ILogger
+    internal interface ILogger : IDisposable
     {
         /// <summary>
         /// Gets or sets the current <see cref="LevelToLog"/>.

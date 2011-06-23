@@ -362,22 +362,24 @@ namespace Apollo.Core.Projects
             /// <param name="preferredLocation">
             /// Indicates a preferred machine location for the dataset to be loaded onto.
             /// </param>
-            /// <param name="range">
-            /// The number of machines over which the data set should be distributed.
-            /// </param>
             /// <remarks>
-            /// Note that the <paramref name="preferredLocation"/> and the <paramref name="range"/> are
-            /// only suggestions. The loader may deside to ignore the suggestions if there is a distribution
+            /// Note that the <paramref name="preferredLocation"/> is
+            /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
             /// plan that is better suited to the contents of the dataset.
             /// </remarks>
-            public void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range)
+            /// <exception cref="ArgumentException">
+            ///     Thrown when the project that owns this dataset has been closed.
+            /// </exception>
+            /// <exception cref="CannotLoadDatasetWithoutLoadingLocationException">
+            ///     Thrown when the <paramref name="preferredLocation"/> is <see cref="LoadingLocations.None"/>.
+            /// </exception>
+            public void LoadOntoMachine(LoadingLocations preferredLocation)
             {
                 {
                     Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
-                        preferredLocation != LoadingLocation.None, 
+                        preferredLocation != LoadingLocations.None, 
                         Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation);
-                    Enforce.Argument(() => range);
                 }
 
                 if (IsLoaded)
@@ -385,7 +387,7 @@ namespace Apollo.Core.Projects
                     return;
                 }
 
-                m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
+                m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation);
             }
 
             /// <summary>

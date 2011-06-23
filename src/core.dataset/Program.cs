@@ -9,7 +9,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Forms;
+using Apollo.Core.Base.Communication;
 using Apollo.Utilities.Applications;
+using Mono.Options;
 
 namespace Apollo.Core.Dataset
 {
@@ -42,23 +44,57 @@ namespace Apollo.Core.Dataset
             Func<int> applicationLogic =
                 () =>
                 {
-                    var context = new ApplicationContext()
-                        {
-                            Tag = args
-                        };
-
-                    // To stop the application from running use the ApplicationContext
-                    // and call context.ExitThread();
-                    //
-                    // Prepare the application for running. This includes setting up the communication channel etc.
-                    // Then once that is done we can start with the message processing loop and then we 
-                    // wait for it to either get terminated or until we kill ourselves.
-                    Application.Run(context);
-                    return CommandLineProgram.NormalApplicationExitCode;
+                    var context = new ApplicationContext();
+                    return RunApplication(args, context);
                 };
 
             var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
             return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, DefaultErrorFileName);
+        }
+
+        private static int RunApplication(string[] arguments, ApplicationContext context)
+        {
+            EndpointId creatorId = null;
+            Uri channel = null;
+            ConversationToken token = null;
+
+            // Parse the command line options
+            var options = new OptionSet 
+                {
+                    { 
+                        "p|parent", 
+                        "The {ENDPOINTID} of the application that started this application.", 
+                        v => creatorId = EndpointIdExtensions.Deserialize(v)
+                    },
+                    {
+                        "c|channel",
+                        "The {URI} of the named pipe connection that can be used to connect to the parent application.",
+                        v => channel = new Uri(v)
+                    },
+                    {
+                        "t|token",
+                        "The {TOKEN} that is used to communicate with the parent application.",
+                        v => token = ConversationTokenExtensions.Deserialize(v)
+                    }
+                };
+
+            options.Parse(arguments);
+            if ((creatorId == null) || (channel == null) || (token == null))
+            {
+                throw new InvalidCommandLineArgumentsException();
+            }
+
+            // To stop the application from running use the ApplicationContext
+            // and call context.ExitThread();
+            var container = DependencyInjection.Load(context);
+            
+            // Prepare the application for running. This includes setting up the communication channel etc.
+            // - Create the entry point class
+
+            // Start with the message processing loop and then we 
+            // wait for it to either get terminated or until we kill ourselves.
+            Application.Run(context);
+            return CommandLineProgram.NormalApplicationExitCode;
         }
     }
 }

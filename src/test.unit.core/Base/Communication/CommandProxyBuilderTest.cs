@@ -169,7 +169,7 @@ namespace Apollo.Base.Communication
             Assert.IsTrue(result.IsCompleted);
             Assert.IsFalse(result.IsCanceled);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsAssignableFrom(typeof(RemoteOperationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
+            Assert.IsAssignableFrom(typeof(CommandInvocationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
 
             Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn)), intermediateMsg.Invocation.CommandSet);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);
@@ -231,7 +231,7 @@ namespace Apollo.Base.Communication
             Assert.IsTrue(result.IsCompleted);
             Assert.IsFalse(result.IsCanceled);
             Assert.IsTrue(result.IsFaulted);
-            Assert.IsAssignableFrom(typeof(RemoteOperationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
+            Assert.IsAssignableFrom(typeof(CommandInvocationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
 
             Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn)), intermediateMsg.Invocation.CommandSet);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);

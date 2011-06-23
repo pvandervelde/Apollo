@@ -27,7 +27,7 @@ namespace Apollo.Core.Base
             }
         }
 
-        // Channel
+        // Channel --> endpoint
 
         // Commands
     }

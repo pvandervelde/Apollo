@@ -14,37 +14,37 @@ namespace Apollo.Core.Base.Communication
     /// An exception thrown when a remote operation fails for some reason.
     /// </summary>
     [Serializable]
-    public sealed class RemoteOperationFailedException : Exception
+    public sealed class CommandInvocationFailedException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteOperationFailedException"/> class.
+        /// Initializes a new instance of the <see cref="CommandInvocationFailedException"/> class.
         /// </summary>
-        public RemoteOperationFailedException()
-            : this(Resources.Exceptions_Messages_RemoteOperationFailed)
+        public CommandInvocationFailedException()
+            : this(Resources.Exceptions_Messages_CommandInvocationFailed)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteOperationFailedException"/> class.
+        /// Initializes a new instance of the <see cref="CommandInvocationFailedException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public RemoteOperationFailedException(string message) 
+        public CommandInvocationFailedException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteOperationFailedException"/> class.
+        /// Initializes a new instance of the <see cref="CommandInvocationFailedException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public RemoteOperationFailedException(string message, Exception innerException)
+        public CommandInvocationFailedException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RemoteOperationFailedException"/> class.
+        /// Initializes a new instance of the <see cref="CommandInvocationFailedException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -60,7 +60,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private RemoteOperationFailedException(SerializationInfo info, StreamingContext context)
+        private CommandInvocationFailedException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

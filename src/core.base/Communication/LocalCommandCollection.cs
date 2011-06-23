@@ -8,6 +8,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Lokad;
@@ -24,6 +25,30 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         private readonly SortedList<Type, ICommandSet> m_Commands
             = new SortedList<Type, ICommandSet>(new TypeComparer());
+
+        /// <summary>
+        /// The communication layer that is used to send out messages about newly
+        /// registered commands.
+        /// </summary>
+        private readonly ICommunicationLayer m_Layer;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LocalCommandCollection"/> class.
+        /// </summary>
+        /// <param name="layer">
+        ///     The communication layer that is used to send out messages about newly registered commands.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        /// </exception>
+        public LocalCommandCollection(ICommunicationLayer layer)
+        {
+            {
+                Enforce.Argument(() => layer);
+            }
+
+            m_Layer = layer;
+        }
 
         /// <summary>
         /// Registers a <see cref="ICommandSet"/> object.
@@ -87,11 +112,14 @@ namespace Apollo.Core.Base.Communication
                 throw new CommandAlreadyRegisteredException();
             }
 
-            // @Todo: At some point we should probably send out notifications of 
-            //   added command sets. And send these notifications to the nodes that
-            //   we're connected to as well.
-            // For now we can't be bothered though.
             m_Commands.Add(commandType, commands);
+            if (m_Layer.IsSignedIn)
+            {
+                foreach (var endpoint in m_Layer.LocalConnectionPoints())
+                {
+                    m_Layer.SendMessageTo(endpoint.Id, new NewCommandRegisteredMessage(m_Layer.Id, commandType));
+                }
+            }
         }
 
         /// <summary>

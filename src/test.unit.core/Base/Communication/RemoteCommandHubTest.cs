@@ -27,6 +27,11 @@ namespace Apollo.Base.Communication
             Task MyMethod(int input);
         }
 
+        public interface IMockCommandSetWithTypedTaskReturn : ICommandSet
+        {
+            Task<int> MyMethod(int input);
+        }
+
         [Test]
         [Description("Checks that endpoint sign in is correctly handled.")]
         public void HandleEndpointSignInWithSuccessfulTransfer()
@@ -45,11 +50,12 @@ namespace Apollo.Base.Communication
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = 
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
             
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -81,11 +87,12 @@ namespace Apollo.Base.Communication
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
             var connectionInfo = new ChannelConnectionInformation(
@@ -101,8 +108,8 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that endpoint sign off is correctly handled.")]
-        public void HandleEndpointSignOff()
+        [Description("Checks that endpoint sign out is correctly handled.")]
+        public void HandleEndpointSignOut()
         {
             var localEndpoint = new EndpointId("local");
             var layer = new Mock<ICommunicationLayer>();
@@ -118,11 +125,12 @@ namespace Apollo.Base.Communication
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
             var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(
@@ -148,6 +156,145 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
+        [Description("Checks that new commands can be reported even if there are no other registered commands for the given endpoint.")]
+        public void HandleNewCommandReportedWithoutCommands()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, null));
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+
+            var otherId = new EndpointId("other");
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    otherId, 
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(otherId));
+            Assert.IsTrue(hub.HasCommandFor(otherId, typeof(IMockCommandSetWithTaskReturn)));
+        }
+
+        [Test]
+        [Description("Checks that new commands can be reported at any time.")]
+        public void HandleNewCommandReportedWithCommands()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+
+            var resetEvent = new AutoResetEvent(false);
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/apollo_test"));
+            hub.OnEndpointSignedIn += (s, e) =>
+            {
+                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                resetEvent.Set();
+            };
+
+            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
+            resetEvent.WaitOne();
+
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    connectionInfo.Id,
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+        }
+
+        [Test]
+        [Description("Checks that new commands can be reported at any time.")]
+        public void HandleNewCommandReportedWithoutCommandsRegisteringDuplicate()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/apollo_test"));
+            hub.OnEndpointSignedIn += (s, e) =>
+            {
+                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+            };
+
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    connectionInfo.Id,
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+            Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+
+            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
+
+            // Now wait for everything to sort itself out
+            Thread.Sleep(50);
+        }
+
+        [Test]
         [Description("Checks that getting access to an unknown command set throws an exception.")]
         public void CommandsForWithUnknownCommand()
         {
@@ -167,11 +314,12 @@ namespace Apollo.Base.Communication
                     .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
             var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(
@@ -209,11 +357,12 @@ namespace Apollo.Base.Communication
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
             var resetEvent = new AutoResetEvent(false);
             hub.OnEndpointSignedIn += (s, e) => { resetEvent.Set(); };
@@ -251,11 +400,12 @@ namespace Apollo.Base.Communication
                     .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
             var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(
@@ -304,11 +454,12 @@ namespace Apollo.Base.Communication
                     .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
 
             var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(

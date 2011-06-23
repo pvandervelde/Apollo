@@ -88,7 +88,7 @@ namespace Apollo.Core.Projects
             lock (m_Lock)
             {
                 m_Current = m_Builder.Define()
-                    .WithDatasetDistributor(request => m_DatasetDistributor.ProposeDistributionFor(request))
+                    .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .Build();
             }
         }
@@ -115,7 +115,7 @@ namespace Apollo.Core.Projects
             lock (m_Lock)
             {
                 m_Current = m_Builder.Define()
-                    .WithDatasetDistributor(request => m_DatasetDistributor.ProposeDistributionFor(request))
+                    .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .FromStorage(persistenceInfo)
                     .Build();
             }

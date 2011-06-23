@@ -272,8 +272,7 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <param name="preferredLocation">The preferred loading location.</param>
-        /// <param name="range">The minimum and maximum number of machines over which the dataset should be distributed.</param>
-        private void LoadOntoMachine(DatasetId id, LoadingLocation preferredLocation, MachineDistributionRange range)
+        private void LoadOntoMachine(DatasetId id, LoadingLocations preferredLocation)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to load a dataset onto a machine.");

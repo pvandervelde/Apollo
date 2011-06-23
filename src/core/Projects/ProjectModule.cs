@@ -34,9 +34,6 @@ namespace Apollo.Core.Projects
 
             builder.Register(c => new ProjectBuilder())
                 .As<IBuildProjects>();
-
-            builder.Register(c => new MockDatasetDistributor())
-                .As<IHelpDistributingDatasets>();
         }
     }
 }

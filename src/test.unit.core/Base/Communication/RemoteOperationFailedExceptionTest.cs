@@ -19,7 +19,7 @@ namespace Apollo.Base.Communication
     {
         [VerifyContract]
         [Description("Tests the exception class for the default constructors and serialization capabilities.")]
-        public readonly IContract ExceptionTests = new ExceptionContract<RemoteOperationFailedException>
+        public readonly IContract ExceptionTests = new ExceptionContract<CommandInvocationFailedException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

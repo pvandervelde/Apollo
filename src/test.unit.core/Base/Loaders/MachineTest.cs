@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
@@ -37,12 +36,12 @@ namespace Apollo.Base.Loaders
             DistinctInstances =
                 new List<Machine> 
                         {
-                            new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine),
                         },
         };
 
@@ -53,12 +52,12 @@ namespace Apollo.Base.Loaders
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine),
                     },
         };
 
@@ -68,8 +67,7 @@ namespace Apollo.Base.Loaders
         {
             var id = new NetworkIdentifier("a");
             var hardware = s_HardwareForLocalMachine;
-            var baselines = new Dictionary<BaselineId, BaselineResult>();
-            var machine = new Machine(id, hardware, baselines);
+            var machine = new Machine(id, hardware);
 
             Assert.AreEqual(id, machine.Location);
             Assert.AreEqual(hardware, machine.Specification);

@@ -37,7 +37,7 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Indicates that the endpoitn to which the current proxy is connected
+        /// Indicates that the endpoint to which the current proxy is connected
         /// has signed off from the network.
         /// </summary>
         public void EndpointHasSignedOff()
@@ -54,14 +54,14 @@ namespace Apollo.Core.Base.Communication
         /// permanently been terminated (although that may be the case). It merely
         /// means that the endpoint is temporarily not available.
         /// </remarks>
-        public event EventHandler<CommandSetAvailabilityEventArgs> OnAvailabilityChange;
+        public event EventHandler<EventArgs> OnAvailabilityChange;
 
         private void RaiseOnAvailabilityChange()
         {
             var local = OnAvailabilityChange;
             if (local != null)
             {
-                local(SelfReference(), new CommandSetAvailabilityEventArgs());
+                local(SelfReference(), EventArgs.Empty);
             }
         }
 
