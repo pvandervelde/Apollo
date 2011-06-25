@@ -39,6 +39,7 @@ namespace Apollo.Core.Dataset
         {
             var builder = new ContainerBuilder();
             {
+                // @todo: we don't want to register ourselves for discovery
                 builder.RegisterModule(new BaseModule());
 
                 builder.Register(c => context)

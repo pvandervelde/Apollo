@@ -155,6 +155,7 @@
     <Compile Include="DatasetCreationInformation.cs" />
     <Compile Include="Loaders\IApplicationLoader.cs" />
     <Compile Include="Loaders\ICalculateDistributionParameters.cs" />
+    <Compile Include="Loaders\IDatasetApplicationLoadCommands.cs" />
     <Compile Include="Loaders\IDatasetLoaderCommands.cs" />
     <Compile Include="Loaders\IGenerateDistributionProposals.cs" />
     <Compile Include="Loaders\ILoadDatasets.cs" />

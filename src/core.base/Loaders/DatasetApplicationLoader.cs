@@ -8,9 +8,12 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
+using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -28,39 +31,32 @@ namespace Apollo.Core.Base.Loaders
         private static Process StartDatasetApplication(EndpointId localEndpoint, Uri localConnection, ConversationToken token)
         {
             var fullFilePath = Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), DatasetApplicationFileName);
-            
-            // The arguments are:
-            // - The endpoint ID of the current application
-            // - The URL of the named pipe for the current application
-            // - The string version of the token that is used to start a 'conversation'
             var arguments = string.Format(
-                CultureInfo.InvariantCulture, 
-                "--parent={0} --channel={1} --token={2}", 
-                localEndpoint, 
-                localConnection, 
+                CultureInfo.InvariantCulture,
+                "--parent={0} --channel={1} --token={2}",
+                localEndpoint,
+                localConnection,
                 token);
-            
-            var startInfo = new ProcessStartInfo 
+
+            var startInfo = new ProcessStartInfo
                 {
                     FileName = fullFilePath,
-                    
-                    // For now no arguments .. there should be though ...
                     Arguments = arguments,
-                    
+
                     // Create no window for the process. It doesn't need one
                     // and we don't want the user to have a window they can 
                     // kill. If the process has to die then the user will have
                     // to put in some effort.
                     CreateNoWindow = true,
-                    
+
                     // Do not use the shell to create the application
                     // This means we can only start executables.
                     UseShellExecute = false,
-                    
+
                     // Do not display an error dialog if startup fails
                     // We'll deal with that ourselves
                     ErrorDialog = false,
-                    
+
                     // Do not redirect any of the input or output streams
                     // We don't really care about them because we won't be using
                     // them anyway.
@@ -81,39 +77,97 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
+        /// The function which returns the URI of the named pipe connection on which the current 
+        /// application is listening for new connections.
+        /// </summary>
+        private readonly Func<Uri> m_NamedPipeConnection;
+
+        /// <summary>
+        /// The object that handles the remote commands.
+        /// </summary>
+        private readonly ISendCommandsToRemoteEndpoints m_Hub;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DatasetApplicationLoader"/> class.
+        /// </summary>
+        /// <param name="namedPipeChannel">
+        ///     The function which returns the URI of the named pipe connection on which the current application is listening.
+        /// </param>
+        /// <param name="hub">The object that handles the remote commands.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="namedPipeChannel"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetApplicationLoader(Func<Uri> namedPipeChannel, ISendCommandsToRemoteEndpoints hub)
+        {
+            {
+                Enforce.Argument(() => namedPipeChannel);
+                Enforce.Argument(() => hub);
+            }
+
+            m_NamedPipeConnection = namedPipeChannel;
+            m_Hub = hub;
+        }
+
+        /// <summary>
         /// Loads the dataset into an external application and returns the requested communication
         /// information.
         /// </summary>
-        /// <returns>The information describing the channel on which the new dataset application can be contacted.</returns>
-        public ChannelConnectionInformation LoadDataset()
+        /// <param name="ownerConnection">
+        ///     The channel connection information for the owner.
+        /// </param>
+        /// <param name="ownerToken">
+        ///     The conversation token that the application which requested the loading of the dataset 
+        ///     has provided.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="ownerConnection"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="ownerToken"/> is <see langword="null" />.
+        /// </exception>
+        public void LoadDataset(ChannelConnectionInformation ownerConnection, ConversationToken ownerToken)
         {
-            // Load a dataset application
-            // Need to:
-            // - pass a connection to the loader app so that we can provide it 
-            //   with the info it needs?
-            // - Start info includes:
-            //   - The dataset it wants to load
-            //   - The connection parameters to the app that requested the load
-            //   - ??
+            {
+                Enforce.Argument(() => ownerConnection);
+                Enforce.Argument(() => ownerToken);
+            }
 
             // Start the application
             var localEndpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
+            var uri = m_NamedPipeConnection();
             var token = new ConversationToken(localEndpoint);
             var datasetApp = StartDatasetApplication(
-                localEndpoint, 
-                null, 
+                localEndpoint,
+                uri,
                 token);
 
-            // Wait for it to connect
-            // Once it connects we need to provided it with:
-            // - The connection information for the application that asked for the dataset to be 
-            //   loaded (note that this may be us in a local loading situation)
-            // - The token that can be used to talk to the remote app regarding the dataset that must
-            //   be loaded
-            //
-            // The app needs to provide us with
-            // - The connection info so that we can send that back
-            return new ChannelConnectionInformation(datasetApp.CreateEndpointIdForProcess(), null, null);
+            // We expect that the loading of the application is slower enough
+            // so that our already running process can calculate the ID quicker 
+            // than that the dataset app can come online and start sending out messages
+            var datasetEndpoint = datasetApp.CreateEndpointIdForProcess();
+
+            // Wait for the commands to be registered?
+            var resetEvent = new AutoResetEvent(false);
+            Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                    h => m_Hub.OnEndpointSignedIn += h,
+                    h => m_Hub.OnEndpointSignedIn -= h)
+                .Where(args => args.EventArgs.Endpoint.Equals(datasetEndpoint))
+                .Take(1)
+                .Subscribe(
+                    args =>
+                    {
+                        resetEvent.Set();
+                    });
+            resetEvent.WaitOne();
+
+            // The commands have been registered. Invoke the correct command
+            var command = m_Hub.CommandsFor<IDatasetApplicationLoadCommands>(datasetEndpoint);
+            var resultTask = command.ConnectToOwner(ownerConnection, ownerToken);
+
+            resultTask.Wait();
         }
     }
 }
