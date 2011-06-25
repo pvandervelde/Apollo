@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using Apollo.Core.Base.Communication;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -18,5 +15,17 @@ namespace Apollo.Core.Base.Loaders
     /// </summary>
     internal interface IApplicationLoader
     {
+        /// <summary>
+        /// Loads the dataset into an external application and returns the requested communication
+        /// information.
+        /// </summary>
+        /// <param name="ownerConnection">
+        ///     The channel connection information for the owner.
+        /// </param>
+        /// <param name="ownerToken">
+        ///     The conversation token that the application which requested the loading of the dataset 
+        ///     has provided.
+        /// </param>
+        void LoadDataset(ChannelConnectionInformation ownerConnection, ConversationToken ownerToken);
     }
 }
