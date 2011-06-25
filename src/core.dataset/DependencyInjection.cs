@@ -39,8 +39,11 @@ namespace Apollo.Core.Dataset
         {
             var builder = new ContainerBuilder();
             {
-                // @todo: we don't want to register ourselves for discovery
-                builder.RegisterModule(new BaseModule());
+                // Don't allow discovery on the dataset application because:
+                // - The dataset application wouldn't know what to do with it anyway
+                // - We don't want anybody talking to the application except for the
+                //   application that started it.
+                builder.RegisterModule(new BaseModule(false));
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()

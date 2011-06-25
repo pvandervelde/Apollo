@@ -99,19 +99,29 @@ namespace Apollo.Core.Base.Communication
         private readonly IConfiguration m_Configuration;
 
         /// <summary>
+        /// A flag that indicates if the TCP channel should participate in the UDP 
+        /// discovery or not.
+        /// </summary>
+        private readonly bool m_ShouldProvideDiscovery;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TcpChannelType"/> class.
         /// </summary>
         /// <param name="tcpConfiguration">The configuration for the WCF tcp channel.</param>
+        /// <param name="shouldProvideDiscovery">
+        ///     A flag that indicates if the TCP channels should participate in the UDP discovery.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="tcpConfiguration"/> is <see langword="null" />.
         /// </exception>
-        public TcpChannelType(IConfiguration tcpConfiguration)
+        public TcpChannelType(IConfiguration tcpConfiguration, bool shouldProvideDiscovery)
         {
             {
                 Enforce.Argument(() => tcpConfiguration);
             }
 
             m_Configuration = tcpConfiguration;
+            m_ShouldProvideDiscovery = shouldProvideDiscovery;
         }
 
         /// <summary>
@@ -163,19 +173,21 @@ namespace Apollo.Core.Base.Communication
         /// <returns>The newly attached endpoint.</returns>
         public ServiceEndpoint AttachEndpoint(ServiceHost host, Type implementedContract, EndpointId localEndpoint)
         {
-            var discoveryBehavior = new ServiceDiscoveryBehavior();
-            discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
-            host.Description.Behaviors.Add(discoveryBehavior);
-            host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
-
             // Add the normal endpoint
             var endpoint = host.AddServiceEndpoint(implementedContract, GenerateBinding(), GenerateNewAddress());
+            if (m_ShouldProvideDiscovery)
+            {
+                var discoveryBehavior = new ServiceDiscoveryBehavior();
+                discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
+                host.Description.Behaviors.Add(discoveryBehavior);
+                host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
 
-            // As additional information add the EndpointId of the current endpoint.
-            var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", localEndpoint.ToString())));
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", GetType().FullName)));
-            endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+                // As additional information add the EndpointId of the current endpoint.
+                var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
+                endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", localEndpoint.ToString())));
+                endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", GetType().FullName)));
+                endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+            }
 
             return endpoint;
         }

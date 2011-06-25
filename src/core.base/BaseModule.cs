@@ -43,17 +43,17 @@ namespace Apollo.Core.Base
             args.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
-        private static void RegisterCommunicationComponents(ContainerBuilder builder)
+        private static void RegisterCommunicationComponents(ContainerBuilder builder, bool allowChannelDiscovery)
         {
             RegisterCommandHub(builder);
             RegisterCommunicationLayer(builder);
-            RegisterEndpointDiscoverySources(builder);
+            RegisterEndpointDiscoverySources(builder, allowChannelDiscovery);
             RegisterCommandDiscoverySources(builder);
             RegisterMessageHandler(builder);
             RegisterMessageProcessingActions(builder);
             RegisterCommunicationChannel(builder);
             RegisterEndpoints(builder);
-            RegisterChannelTypes(builder);
+            RegisterChannelTypes(builder, allowChannelDiscovery);
         }
 
         private static void RegisterCommandHub(ContainerBuilder builder)
@@ -94,10 +94,13 @@ namespace Apollo.Core.Base
                 .SingleInstance();
         }
 
-        private static void RegisterEndpointDiscoverySources(ContainerBuilder builder)
+        private static void RegisterEndpointDiscoverySources(ContainerBuilder builder, bool allowChannelDiscovery)
         {
-            builder.Register(c => new TcpBasedDiscoverySource())
-                .As<IDiscoverOtherServices>();
+            if (allowChannelDiscovery)
+            {
+                builder.Register(c => new TcpBasedDiscoverySource())
+                    .As<IDiscoverOtherServices>();
+            }
 
             // For now we're marking this as a single instance because
             // we want it to be linked to the CommunicationLayer at all times
@@ -233,7 +236,7 @@ namespace Apollo.Core.Base
                 .As<IMessagePipe>();
         }
 
-        private static void RegisterChannelTypes(ContainerBuilder builder)
+        private static void RegisterChannelTypes(ContainerBuilder builder, bool allowChannelDiscovery)
         {
             builder.Register(c => new NamedPipeChannelType(
                     c.Resolve<IConfiguration>()))
@@ -241,7 +244,8 @@ namespace Apollo.Core.Base
                 .As<NamedPipeChannelType>();
 
             builder.Register(c => new TcpChannelType(
-                    c.Resolve<IConfiguration>()))
+                    c.Resolve<IConfiguration>(),
+                    allowChannelDiscovery))
                 .As<IChannelType>()
                 .As<TcpChannelType>();
         }
@@ -252,6 +256,24 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
+        /// Indicates if the communication channels are allowed to provide discovery.
+        /// </summary>
+        private readonly bool m_AllowChannelDiscovery;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseModule"/> class.
+        /// </summary>
+        /// <param name="allowChannelDiscovery">
+        ///     A flag that indicates if the communication channels are allowed to provide
+        ///     discovery.
+        /// </param>
+        public BaseModule(bool allowChannelDiscovery)
+            : base()
+        {
+            m_AllowChannelDiscovery = allowChannelDiscovery;
+        }
+
+        /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
         /// <param name="builder">The builder through which components can be registered.</param>
@@ -259,7 +281,7 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            RegisterCommunicationComponents(builder);
+            RegisterCommunicationComponents(builder, m_AllowChannelDiscovery);
             RegisterLoaderComponents(builder);
         }
     }
