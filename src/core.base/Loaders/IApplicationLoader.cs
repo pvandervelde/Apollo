@@ -16,16 +16,13 @@ namespace Apollo.Core.Base.Loaders
     internal interface IApplicationLoader
     {
         /// <summary>
-        /// Loads the dataset into an external application and returns the requested communication
-        /// information.
+        /// Loads the dataset into an external application and returns when the dataset is completely loaded.
         /// </summary>
         /// <param name="ownerConnection">
         ///     The channel connection information for the owner.
         /// </param>
-        /// <param name="ownerToken">
-        ///     The conversation token that the application which requested the loading of the dataset 
-        ///     has provided.
-        /// </param>
-        void LoadDataset(ChannelConnectionInformation ownerConnection, ConversationToken ownerToken);
+        /// <param name="dataset">The ID of the dataset that should be loaded.</param>
+        /// <returns>The ID number of the newly created endpoint.</returns>
+        EndpointId LoadDataset(ChannelConnectionInformation ownerConnection, DatasetId dataset);
     }
 }

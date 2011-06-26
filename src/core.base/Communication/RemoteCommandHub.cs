@@ -364,6 +364,28 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// Returns a collection describing all the known commands for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint.</param>
+        /// <returns>
+        ///     The collection describing all the known commands for the given endpoint.
+        /// </returns>
+        public IEnumerable<Type> AvailableCommandsFor(EndpointId endpoint)
+        {
+            var result = new List<Type>();
+            lock (m_Lock)
+            {
+                if (m_RemoteCommands.ContainsKey(endpoint))
+                {
+                    var list = m_RemoteCommands[endpoint];
+                    result.AddRange(list.Keys);
+                }
+            }
+
+            return result;
+        }
+
+        /// <summary>
         /// An event raised when an endpoint signs on and provides a set of commands.
         /// </summary>
         public event EventHandler<CommandSetAvailabilityEventArgs> OnEndpointSignedIn;
@@ -440,19 +462,30 @@ namespace Apollo.Core.Base.Communication
         /// <returns>The requested command set.</returns>
         public TCommand CommandsFor<TCommand>(EndpointId endpoint) where TCommand : class, ICommandSet
         {
+            return CommandsFor(endpoint, typeof(TCommand)) as TCommand;
+        }
+
+        /// <summary>
+        /// Returns the command proxy for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint for which the commands should be returned.</param>
+        /// <param name="commandType">The type of the command.</param>
+        /// <returns>The requested command set.</returns>
+        public ICommandSet CommandsFor(EndpointId endpoint, Type commandType)
+        {
             if (!m_RemoteCommands.ContainsKey(endpoint))
             {
                 return null;
             }
 
             var commandSets = m_RemoteCommands[endpoint];
-            if (!commandSets.ContainsKey(typeof(TCommand)))
+            if (!commandSets.ContainsKey(commandType))
             {
-                throw new CommandNotSupportedException(typeof(TCommand));
+                throw new CommandNotSupportedException(commandType);
             }
 
-            var result = commandSets[typeof(TCommand)];
-            return result as TCommand;
+            var result = commandSets[commandType];
+            return result as ICommandSet;
         }
 
         /// <summary>

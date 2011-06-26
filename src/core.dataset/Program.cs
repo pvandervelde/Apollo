@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Forms;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities.Applications;
 using Mono.Options;
@@ -54,32 +55,38 @@ namespace Apollo.Core.Dataset
 
         private static int RunApplication(string[] arguments, ApplicationContext context)
         {
-            EndpointId creatorId = null;
-            Uri channel = null;
-            ConversationToken token = null;
+            EndpointId hostId = null;
+            Type channelType = null;
+            Uri channelUri = null;
+            DatasetId dataset = null;
 
             // Parse the command line options
             var options = new OptionSet 
                 {
                     { 
-                        "p|parent", 
-                        "The {ENDPOINTID} of the application that started this application.", 
-                        v => creatorId = EndpointIdExtensions.Deserialize(v)
+                        "h|host", 
+                        "The {ENDPOINTID} of the host application that requested the start of this application.", 
+                        v => hostId = EndpointIdExtensions.Deserialize(v)
                     },
                     {
-                        "c|channel",
-                        "The {URI} of the named pipe connection that can be used to connect to the parent application.",
-                        v => channel = new Uri(v)
+                        "t|channeltype",
+                        "The {TYPE} of the channel over which the connection should be made.",
+                        v => channelType = Type.GetType(v, null, null, true, false)
                     },
                     {
-                        "t|token",
-                        "The {TOKEN} that is used to communicate with the parent application.",
-                        v => token = ConversationTokenExtensions.Deserialize(v)
+                        "u|channeluri",
+                        "The {URI} of the connection that can be used to connect to the host application.",
+                        v => channelUri = new Uri(v)
+                    },
+                    {
+                        "d|dataset",
+                        "The {DATASET} that is used to communicate with the parent application.",
+                        v => dataset = DatasetIdExtensions.Deserialize(v)
                     }
                 };
 
             options.Parse(arguments);
-            if ((creatorId == null) || (channel == null) || (token == null))
+            if ((hostId == null) || (channelType == null) || (channelUri == null) || (dataset == null))
             {
                 throw new InvalidCommandLineArgumentsException();
             }

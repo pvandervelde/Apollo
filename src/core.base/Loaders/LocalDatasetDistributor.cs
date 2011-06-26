@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
@@ -24,19 +25,56 @@ namespace Apollo.Core.Base.Loaders
         private readonly ICalculateDistributionParameters m_LocalDistributor;
 
         /// <summary>
+        /// The object that handles the actual starting of the dataset application.
+        /// </summary>
+        private readonly IApplicationLoader m_Loader;
+
+        /// <summary>
+        /// The object that handles the communication between applications.
+        /// </summary>
+        private readonly ICommunicationLayer m_Layer;
+
+        /// <summary>
+        /// The object that sends commands to remote endpoints.
+        /// </summary>
+        private readonly ISendCommandsToRemoteEndpoints m_Hub;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LocalDatasetDistributor"/> class.
         /// </summary>
         /// <param name="localDistributor">The object that handles distribution proposals for the local machine.</param>
+        /// <param name="loader">The object that handles the actual starting of the dataset application.</param>
+        /// <param name="layer">The object that handles the communication between applications.</param>
+        /// <param name="hub">The object that sends commands to remote endpoints.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localDistributor"/> is <see langword="null" />.
         /// </exception>
-        public LocalDatasetDistributor(ICalculateDistributionParameters localDistributor)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="loader"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
+        /// </exception>
+        public LocalDatasetDistributor(
+            ICalculateDistributionParameters localDistributor,
+            IApplicationLoader loader,
+            ICommunicationLayer layer,
+            ISendCommandsToRemoteEndpoints hub)
         {
             {
                 Enforce.Argument(() => localDistributor);
+                Enforce.Argument(() => loader);
+                Enforce.Argument(() => layer);
+                Enforce.Argument(() => hub);
             }
 
             m_LocalDistributor = localDistributor;
+            m_Loader = loader;
+            m_Layer = layer;
+            m_Hub = hub;
         }
 
         /// <summary>
@@ -71,11 +109,43 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token)
         {
-            // Call the local loader to start the loading process
-            // - Need to somehow transfer the file
-            // - Might need to transfer assemblies (or do we let other parts figure that out)
-            // - Returns channel connection information which needs to be passed on somehow
-            throw new NotImplementedException();
+            Func<DatasetOnlineInformation> result =
+                () =>
+                {
+                    var connection = (from i in m_Layer.LocalConnectionPoints()
+                                      where i.ChannelType.Equals(typeof(NamedPipeChannelType))
+                                      select i).First();
+                    var endpoint = m_Loader.LoadDataset(connection, planToImplement.DistributionFor.Id);
+                    
+                    // Wait for the application to start up and register itself with our command hub.
+                    var resetEvent = new AutoResetEvent(false);
+                    Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                            h => m_Hub.OnEndpointSignedIn += h,
+                            h => m_Hub.OnEndpointSignedIn -= h)
+                        .Where(args => args.EventArgs.Endpoint.Equals(endpoint))
+                        .Take(1)
+                        .Subscribe(
+                            args =>
+                            {
+                                resetEvent.Set();
+                            });
+
+                    if (!m_Hub.HasCommandsFor(endpoint))
+                    {
+                        resetEvent.WaitOne();
+                    }
+
+                    // The commands have been registered, so now wait for the 
+                    // dataset to be loaded.
+                    //
+                    // Now the dataset loading is complete
+                    return new DatasetOnlineInformation(
+                        planToImplement.DistributionFor.Id, 
+                        planToImplement.Proposal.Endpoint,
+                        m_Hub);
+                };
+
+            return Task<DatasetOnlineInformation>.Factory.StartNew(result, token);
         }
     }
 }

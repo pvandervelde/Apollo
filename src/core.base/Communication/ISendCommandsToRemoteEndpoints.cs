@@ -25,6 +25,15 @@ namespace Apollo.Core.Base.Communication
         IEnumerable<Tuple<EndpointId, IEnumerable<Type>>> AvailableCommands();
 
         /// <summary>
+        /// Returns a collection describing all the known commands for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint.</param>
+        /// <returns>
+        ///     The collection describing all the known commands for the given endpoint.
+        /// </returns>
+        IEnumerable<Type> AvailableCommandsFor(EndpointId endpoint);
+
+        /// <summary>
         /// An event raised when an endpoint signs on and provides a set of commands.
         /// </summary>
         event EventHandler<CommandSetAvailabilityEventArgs> OnEndpointSignedIn;
@@ -64,6 +73,14 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpoint">The ID number of the endpoint for which the commands should be returned.</param>
         /// <returns>The requested command set.</returns>
         TCommand CommandsFor<TCommand>(EndpointId endpoint) where TCommand : class, ICommandSet;
+
+        /// <summary>
+        /// Returns the command proxy for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint for which the commands should be returned.</param>
+        /// <param name="commandType">The type of the command.</param>
+        /// <returns>The requested command set.</returns>
+        ICommandSet CommandsFor(EndpointId endpoint, Type commandType);
 
         /// <summary>
         /// Closes the connection to the given endpoint.

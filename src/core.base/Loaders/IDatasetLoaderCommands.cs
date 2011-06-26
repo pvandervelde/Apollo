@@ -24,6 +24,14 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         Task<DatasetLoadingProposal> ProposeFor(ExpectedDatasetLoad expectedLoad);
 
-        Task<ChannelConnectionInformation> Load(DatasetId dataset);
+        /// <summary>
+        /// Loads the dataset into an external application and returns when the dataset is completely loaded.
+        /// </summary>
+        /// <param name="ownerConnection">
+        ///     The channel connection information for the owner.
+        /// </param>
+        /// <param name="dataset">The ID of the dataset that should be loaded.</param>
+        /// <returns>The connection information for the newly created application.</returns>
+        Task<EndpointId> Load(ChannelConnectionInformation ownerConnection, DatasetId dataset);
     }
 }

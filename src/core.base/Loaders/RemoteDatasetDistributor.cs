@@ -157,9 +157,14 @@ namespace Apollo.Core.Base.Loaders
             new Dictionary<EndpointId, IDatasetLoaderCommands>();
 
         /// <summary>
+        /// The object that handles the communication between applications.
+        /// </summary>
+        private readonly ICommunicationLayer m_Layer;
+
+        /// <summary>
         /// The object that manages the remote command proxies.
         /// </summary>
-        private readonly ISendCommandsToRemoteEndpoints m_CommandHub;
+        private readonly ISendCommandsToRemoteEndpoints m_Hub;
 
         /// <summary>
         /// The object that stores the configuration for the current application.
@@ -169,25 +174,40 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteDatasetDistributor"/> class.
         /// </summary>
+        /// <param name="layer">The object that handles the communication between applications.</param>
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
         /// <param name="configuration">The application specific configuration.</param>
-        public RemoteDatasetDistributor(ISendCommandsToRemoteEndpoints commandHub, IConfiguration configuration)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="commandHub"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
+        /// </exception>
+        public RemoteDatasetDistributor(
+            ICommunicationLayer layer,
+            ISendCommandsToRemoteEndpoints commandHub, 
+            IConfiguration configuration)
         {
             {
+                Enforce.Argument(() => layer);
                 Enforce.Argument(() => commandHub);
                 Enforce.Argument(() => configuration);
             }
 
+            m_Layer = layer;
             m_Configuration = configuration;
-            m_CommandHub = commandHub;
+            m_Hub = commandHub;
             {
                 // Note that the events may come in on a different thread than the one
                 // we're normally accessed on. This is because adding an enpoint is usually 
                 // a result of a WCF message being received, on the WCF message thread.
-                m_CommandHub.OnEndpointSignedIn += (s, e) => AddNewEndpoint(e.Endpoint, e.Commands);
-                m_CommandHub.OnEndpointSignedOff += (s, e) => RemoveEndpoint(e.Endpoint);
+                m_Hub.OnEndpointSignedIn += (s, e) => AddNewEndpoint(e.Endpoint, e.Commands);
+                m_Hub.OnEndpointSignedOff += (s, e) => RemoveEndpoint(e.Endpoint);
 
-                var knownCommands = m_CommandHub.AvailableCommands();
+                var knownCommands = m_Hub.AvailableCommands();
                 foreach (var command in knownCommands)
                 {
                     AddNewEndpoint(command.Item1, command.Item2);
@@ -206,7 +226,7 @@ namespace Apollo.Core.Base.Loaders
                         IDatasetLoaderCommands command = null;
                         try
                         {
-                            command = m_CommandHub.CommandsFor<IDatasetLoaderCommands>(endpoint);
+                            command = m_Hub.CommandsFor<IDatasetLoaderCommands>(endpoint);
                         }
                         catch (CommandNotSupportedException)
                         {
@@ -276,11 +296,57 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token)
         {
-            // Call IDatasetLoaderCommands.Load to start the loading process
-            // - Need to somehow transfer the file
-            // - Might need to transfer assemblies (or do we let other parts figure that out)
-            // - Returns channel connection information which needs to be passed on somehow
-            throw new NotImplementedException();
+            Func<DatasetOnlineInformation> result =
+                () =>
+                {
+                    var connection = (from i in m_Layer.LocalConnectionPoints()
+                                      where i.ChannelType.Equals(typeof(NamedPipeChannelType))
+                                      select i).First();
+
+                    IDatasetLoaderCommands commands = null;
+                    lock (m_Lock)
+                    {
+                        if (m_LoaderCommands.ContainsKey(planToImplement.Proposal.Endpoint))
+                        {
+                            throw new EndpointNotContactableException(planToImplement.Proposal.Endpoint);
+                        }
+
+                        commands = m_LoaderCommands[planToImplement.Proposal.Endpoint];
+                    }
+
+                    var endpointTask = commands.Load(connection, planToImplement.DistributionFor.Id);
+                    endpointTask.Wait();
+
+                    // Wait for the application to start up and register itself with our command hub.
+                    var endpoint = endpointTask.Result;
+                    var resetEvent = new AutoResetEvent(false);
+                    Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                            h => m_Hub.OnEndpointSignedIn += h,
+                            h => m_Hub.OnEndpointSignedIn -= h)
+                        .Where(args => args.EventArgs.Endpoint.Equals(endpoint))
+                        .Take(1)
+                        .Subscribe(
+                            args =>
+                            {
+                                resetEvent.Set();
+                            });
+
+                    if (!m_Hub.HasCommandsFor(endpoint))
+                    {
+                        resetEvent.WaitOne();
+                    }
+
+                    // The commands have been registered, so now wait for the 
+                    // dataset to be loaded.
+                    //
+                    // Now the dataset loading is complete
+                    return new DatasetOnlineInformation(
+                        planToImplement.DistributionFor.Id,
+                        planToImplement.Proposal.Endpoint,
+                        m_Hub);
+                };
+
+            return Task<DatasetOnlineInformation>.Factory.StartNew(result, token);
         }
     }
 }

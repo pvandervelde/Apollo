@@ -78,7 +78,7 @@ namespace Apollo.Core.Base
         /// Initializes a new instance of the <see cref="DatasetId"/> class with the given integer as ID number.
         /// </summary>
         /// <param name="id">The ID number. Must be larger than -1.</param>
-        private DatasetId(int id)
+        internal DatasetId(int id)
             : base(id)
         {
             Debug.Assert(id > InvalidId, "The ID number should not be invalid"); 
