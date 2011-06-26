@@ -43,19 +43,6 @@ namespace Apollo.Core.Base
             args.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
-        private static void RegisterCommunicationComponents(ContainerBuilder builder, bool allowChannelDiscovery)
-        {
-            RegisterCommandHub(builder);
-            RegisterCommunicationLayer(builder);
-            RegisterEndpointDiscoverySources(builder, allowChannelDiscovery);
-            RegisterCommandDiscoverySources(builder);
-            RegisterMessageHandler(builder);
-            RegisterMessageProcessingActions(builder);
-            RegisterCommunicationChannel(builder);
-            RegisterEndpoints(builder);
-            RegisterChannelTypes(builder, allowChannelDiscovery);
-        }
-
         private static void RegisterCommandHub(ContainerBuilder builder)
         {
             builder.Register(c => new RemoteCommandHub(
@@ -250,11 +237,6 @@ namespace Apollo.Core.Base
                 .As<TcpChannelType>();
         }
 
-        private static void RegisterLoaderComponents(ContainerBuilder builder)
-        {
-            // DatasetLoader
-        }
-
         /// <summary>
         /// Indicates if the communication channels are allowed to provide discovery.
         /// </summary>
@@ -281,8 +263,15 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            RegisterCommunicationComponents(builder, m_AllowChannelDiscovery);
-            RegisterLoaderComponents(builder);
+            RegisterCommandHub(builder);
+            RegisterCommunicationLayer(builder);
+            RegisterEndpointDiscoverySources(builder, m_AllowChannelDiscovery);
+            RegisterCommandDiscoverySources(builder);
+            RegisterMessageHandler(builder);
+            RegisterMessageProcessingActions(builder);
+            RegisterCommunicationChannel(builder);
+            RegisterEndpoints(builder);
+            RegisterChannelTypes(builder, m_AllowChannelDiscovery);
         }
     }
 }

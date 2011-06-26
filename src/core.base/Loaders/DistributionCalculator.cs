@@ -7,10 +7,12 @@
 using System;
 using System.Linq;
 using Apollo.Core.Base.Communication;
-using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
+    /// <summary>
+    /// Generates dataset loading proposals for the local machine.
+    /// </summary>
     internal sealed class DistributionCalculator : ICalculateDistributionParameters
     {
         /// <summary>
@@ -21,17 +23,9 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Initializes a new instance of the <see cref="DistributionCalculator"/> class.
         /// </summary>
-        /// <param name="local">The ID of the local endpoint.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="local"/> is <see langword="null" />.
-        /// </exception>
-        public DistributionCalculator(EndpointId local)
+        public DistributionCalculator()
         {
-            {
-                Enforce.Argument(() => local);
-            }
-
-            m_LocalEndpoint = local;
+            m_LocalEndpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
         }
 
         /// <summary>
