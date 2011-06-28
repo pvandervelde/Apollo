@@ -11,6 +11,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using MbUnit.Framework;
@@ -28,7 +29,12 @@ namespace Apollo.Core.Projects
         private static IProject CreateProject()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -97,7 +103,12 @@ namespace Apollo.Core.Projects
         public void GetDataset()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -125,7 +136,12 @@ namespace Apollo.Core.Projects
         public void Name()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -161,7 +177,12 @@ namespace Apollo.Core.Projects
         public void Summary()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -197,7 +218,12 @@ namespace Apollo.Core.Projects
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -250,7 +276,12 @@ namespace Apollo.Core.Projects
         public void Children()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -290,7 +321,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChildWithNullCreationInformation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -317,7 +353,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -352,7 +393,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChild()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -402,7 +448,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChildrenWithNullCollection()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -429,7 +480,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChildrenWithEmptyCollection()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -456,7 +512,12 @@ namespace Apollo.Core.Projects
         public void CreateNewChildren()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -501,7 +562,12 @@ namespace Apollo.Core.Projects
         public void DeleteWhenClosed()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -541,7 +607,12 @@ namespace Apollo.Core.Projects
         public void DeleteUndeletableDataset()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -568,7 +639,12 @@ namespace Apollo.Core.Projects
         public void DeleteDatasetWithUndeletableChild()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -619,7 +695,12 @@ namespace Apollo.Core.Projects
         public void DeleteDatasetWithChildren()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()

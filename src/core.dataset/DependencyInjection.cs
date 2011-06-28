@@ -37,6 +37,7 @@ namespace Apollo.Core.Dataset
         /// <returns>The DI container.</returns>
         public static IContainer Load(ApplicationContext context)
         {
+            IContainer result = null;
             var builder = new ContainerBuilder();
             {
                 // Don't allow discovery on the dataset application because:
@@ -44,6 +45,9 @@ namespace Apollo.Core.Dataset
                 // - We don't want anybody talking to the application except for the
                 //   application that started it.
                 builder.RegisterModule(new BaseModule(false));
+                builder.RegisterModule(new BaseModuleForDatasets(
+                    () => CloseApplication(result),
+                    file => { }));
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()
@@ -85,7 +89,14 @@ namespace Apollo.Core.Dataset
                     .SingleInstance();
             }
 
-            return builder.Build();
+            result = builder.Build();
+            return result;
+        }
+
+        private static void CloseApplication(IContainer container)
+        {
+            var context = container.Resolve<ApplicationContext>();
+            context.ExitThread();
         }
     }
 }

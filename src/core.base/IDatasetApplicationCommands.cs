@@ -16,6 +16,14 @@ namespace Apollo.Core.Base
     public interface IDatasetApplicationCommands : ICommandSet
     {
         /// <summary>
+        /// Loads the dataset into the dataset application.
+        /// </summary>
+        /// <param name="ownerId">The ID of the endpoint which requested the load of the dataset.</param>
+        /// <param name="token">The token that indicates which file should be uploaded.</param>
+        /// <returns>A task that will finish once the dataset is loaded.</returns>
+        Task Load(EndpointId ownerId, UploadToken token);
+
+        /// <summary>
         /// Closes the remote dataset application.
         /// </summary>
         /// <returns>A task that will finish once the application is closed.</returns>

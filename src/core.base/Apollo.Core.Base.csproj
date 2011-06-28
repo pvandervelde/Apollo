@@ -55,6 +55,9 @@
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
     <Compile Include="BaseModule.cs" />
+    <Compile Include="BaseModuleForDatasets.cs" />
+    <Compile Include="BaseModuleForHosts.cs" />
+    <Compile Include="BaseModuleForLoaders.cs" />
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
@@ -71,10 +74,12 @@
     <Compile Include="Communication\CommunicationChannel.cs" />
     <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
     <Compile Include="Communication\CommunicationLayer.cs" />
+    <Compile Include="Communication\CommunicationLayerStarter.cs" />
     <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
     <Compile Include="Communication\EndpointEventArgs.cs" />
     <Compile Include="Communication\EndpointId.cs" />
     <Compile Include="Communication\EndpointIdExtensions.cs" />
+    <Compile Include="Communication\FileRegistrationNotFoundException.cs" />
     <Compile Include="Communication\IAceptExternalCommandInformation.cs" />
     <Compile Include="Communication\ICommandCollection.cs" />
     <Compile Include="Communication\InternalCommandAttribute.cs" />
@@ -83,6 +88,7 @@
     <Compile Include="Communication\LocalCommandCollection.cs" />
     <Compile Include="Communication\ManualCommandRegistrationReporter.cs" />
     <Compile Include="Communication\Messages\CommandInvokedResponseMessage.cs" />
+    <Compile Include="Communication\Messages\DataDownloadRequestMessage.cs" />
     <Compile Include="Communication\Messages\EndpointInformationRequestMessage.cs" />
     <Compile Include="Communication\EndpointNotContactableException.cs" />
     <Compile Include="Communication\FailedToSendMessageException.cs" />
@@ -112,6 +118,7 @@
     <Compile Include="Communication\Messages\MessageKindFilter.cs" />
     <Compile Include="Communication\Messages\NewCommandRegisteredMessage.cs" />
     <Compile Include="Communication\Messages\Processors\CommandInvokedProcessAction.cs" />
+    <Compile Include="Communication\Messages\Processors\DataDownloadProcessAction.cs" />
     <Compile Include="Communication\Messages\Processors\EndpointConnectProcessAction.cs" />
     <Compile Include="Communication\CommandSetProxyExtensions.cs" />
     <Compile Include="Communication\Messages\Processors\EndpointInformationRequestProcessAction.cs" />
@@ -138,9 +145,12 @@
     <Compile Include="Communication\TypeIsNotAValidCommandSetException.cs" />
     <Compile Include="Communication\UnableToLoadCommandSetTypeException.cs" />
     <Compile Include="Communication\UnknownEndpointIdFormatException.cs" />
+    <Compile Include="Communication\UploadNotDeregisteredException.cs" />
+    <Compile Include="Communication\UploadToken.cs" />
+    <Compile Include="Communication\WaitingUploads.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
+    <Compile Include="DatasetApplicationCommands.cs" />
     <Compile Include="DatasetIdExtensions.cs" />
-    <Compile Include="HostCommands.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IHostCommands.cs" />
     <Compile Include="Loaders\DatasetApplicationLoader.cs" />

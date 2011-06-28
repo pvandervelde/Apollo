@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,12 +41,19 @@ namespace Apollo.Core.Base.Loaders
         private readonly ISendCommandsToRemoteEndpoints m_Hub;
 
         /// <summary>
+        /// The collection that stores all the uploads waiting to be
+        /// started.
+        /// </summary>
+        private readonly WaitingUploads m_Uploads;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LocalDatasetDistributor"/> class.
         /// </summary>
         /// <param name="localDistributor">The object that handles distribution proposals for the local machine.</param>
         /// <param name="loader">The object that handles the actual starting of the dataset application.</param>
         /// <param name="layer">The object that handles the communication between applications.</param>
         /// <param name="hub">The object that sends commands to remote endpoints.</param>
+        /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localDistributor"/> is <see langword="null" />.
         /// </exception>
@@ -58,11 +66,15 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="uploads"/> is <see langword="null" />.
+        /// </exception>
         public LocalDatasetDistributor(
             ICalculateDistributionParameters localDistributor,
             IApplicationLoader loader,
             ICommunicationLayer layer,
-            ISendCommandsToRemoteEndpoints hub)
+            ISendCommandsToRemoteEndpoints hub,
+            WaitingUploads uploads)
         {
             {
                 Enforce.Argument(() => localDistributor);
@@ -75,6 +87,7 @@ namespace Apollo.Core.Base.Loaders
             m_Loader = loader;
             m_Layer = layer;
             m_Hub = hub;
+            m_Uploads = uploads;
         }
 
         /// <summary>
@@ -115,7 +128,7 @@ namespace Apollo.Core.Base.Loaders
                     var connection = (from i in m_Layer.LocalConnectionPoints()
                                       where i.ChannelType.Equals(typeof(NamedPipeChannelType))
                                       select i).First();
-                    var endpoint = m_Loader.LoadDataset(connection, planToImplement.DistributionFor.Id);
+                    var endpoint = m_Loader.LoadDataset(connection);
                     
                     // Wait for the application to start up and register itself with our command hub.
                     var resetEvent = new AutoResetEvent(false);
@@ -135,9 +148,16 @@ namespace Apollo.Core.Base.Loaders
                         resetEvent.WaitOne();
                     }
 
-                    // The commands have been registered, so now wait for the 
-                    // dataset to be loaded.
-                    //
+                    // Store the file 
+                    var file = planToImplement.DistributionFor.StoredAt.AsFile();
+                    var uploadToken = m_Uploads.Register(file.FullName);
+
+                    // The commands have been registered, so now load the dataset
+                    Debug.Assert(m_Hub.HasCommandFor(endpoint, typeof(IDatasetApplicationCommands)), "No application commands registered.");
+                    var commands = m_Hub.CommandsFor<IDatasetApplicationCommands>(endpoint);
+                    var task = commands.Load(m_Layer.Id, uploadToken);
+                    task.Wait();
+
                     // Now the dataset loading is complete
                     return new DatasetOnlineInformation(
                         planToImplement.DistributionFor.Id, 

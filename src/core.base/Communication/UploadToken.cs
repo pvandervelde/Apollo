@@ -6,33 +6,31 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Threading;
 using Apollo.Utilities;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Defines an ID number for datasets.
+    /// Defines an ID number for uploads.
     /// </summary>
     /// <remarks>
-    /// This ID number uses integers internally. We don't expect to
-    /// have enough datasets in a single project for integer overflow to occur.
+    /// This token uses integers internally. We don't expect to
+    /// have enough uploads in a single execution of an application
+    /// for integer overflow to occur.
     /// </remarks>
     /// <design>
     /// <para>
-    /// The <c>DatasetId</c> class stores an ID number for a dataset. The internal
-    /// data is an integer which indicates the sequential number of the ID. The way
-    /// this is implemented means that ID numbers are only sequential inside a single
-    /// application. This means that we should always get the ID number of the dataset
-    /// from the same location. This should normally not be a big problem given that
-    /// only the project should generate new datasets.
+    /// The <c>UploadToken</c> class stores a token for an upload. The internal
+    /// data is an integer which indicates the sequential number of the token. The way
+    /// this is implemented means that tokens are only sequential inside a single
+    /// application. This means that we should always get the token of the upload
+    /// from the same location. 
     /// </para>
     /// </design>
     [Serializable]
-    [DebuggerDisplay("Dataset: [{InternalValue}]")]
-    public sealed class DatasetId : Id<DatasetId, int>
+    public sealed class UploadToken : Id<UploadToken, int>
     {
         /// <summary>
         /// Defines the ID number for an invalid dataset ID.
@@ -58,18 +56,18 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetId"/> class.
+        /// Initializes a new instance of the <see cref="UploadToken"/> class.
         /// </summary>
-        public DatasetId()
+        public UploadToken()
             : this(NextIdValue())
         { 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetId"/> class with the given integer as ID number.
+        /// Initializes a new instance of the <see cref="UploadToken"/> class with the given integer as ID number.
         /// </summary>
         /// <param name="id">The ID number. Must be larger than -1.</param>
-        internal DatasetId(int id)
+        internal UploadToken(int id)
             : base(id)
         {
             Debug.Assert(id > InvalidId, "The ID number should not be invalid"); 
@@ -82,9 +80,9 @@ namespace Apollo.Core.Base
         /// <returns>
         /// A copy of the current ID number.
         /// </returns>
-        protected override DatasetId Clone(int value)
+        protected override UploadToken Clone(int value)
         {
-            var result = new DatasetId(value);
+            var result = new UploadToken(value);
             return result;
         }
 
@@ -98,7 +96,7 @@ namespace Apollo.Core.Base
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "DatasetId: [{0}]",
+                "UploadToken: [{0}]",
                 InternalValue);
         }
     }

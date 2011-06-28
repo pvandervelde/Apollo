@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Utilities
+namespace Apollo.Utilities
 {
     /// <summary>
     /// Defines the interface for objects that need to perform initialization 
@@ -15,7 +15,7 @@ namespace Apollo.Core.Utilities
     /// by the Autofac IOC container 
     /// (see here: http://code.google.com/p/autofac/wiki/Startable).
     /// </design>
-    internal interface ILoadOnApplicationStartup
+    public interface ILoadOnApplicationStartup
     {
         /// <summary>
         /// Initializes the current instance.

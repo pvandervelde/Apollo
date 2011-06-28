@@ -49,7 +49,8 @@ namespace Apollo.Core.Base
                     c.Resolve<ICalculateDistributionParameters>(),
                     c.Resolve<IApplicationLoader>(),
                     c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+                    c.Resolve<ISendCommandsToRemoteEndpoints>(),
+                    c.Resolve<WaitingUploads>()))
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
                 .SingleInstance();

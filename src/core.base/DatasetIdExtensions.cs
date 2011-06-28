@@ -14,7 +14,7 @@ namespace Apollo.Core.Base
     public static class DatasetIdExtensions
     {
         /// <summary>
-        /// Deserializes an <see cref="EndpointId"/> from a string.
+        /// Deserializes an <see cref="DatasetId"/> from a string.
         /// </summary>
         /// <param name="serializedId">The string containing the serialized <see cref="DatasetId"/> information.</param>
         /// <returns>A new <see cref="DatasetId"/> based on the given <paramref name="serializedId"/>.</returns>

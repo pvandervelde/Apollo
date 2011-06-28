@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
@@ -336,7 +337,7 @@ namespace Apollo.Base.Communication
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
             resetEvent.WaitOne();
-            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IMachineCommands>(connectionInfo.Id));
+            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IHostCommands>(connectionInfo.Id));
         }
 
         [Test]

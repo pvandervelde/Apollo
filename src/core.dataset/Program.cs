@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Forms;
-using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities.Applications;
+using Autofac;
 using Mono.Options;
 
 namespace Apollo.Core.Dataset
@@ -58,7 +58,6 @@ namespace Apollo.Core.Dataset
             EndpointId hostId = null;
             Type channelType = null;
             Uri channelUri = null;
-            DatasetId dataset = null;
 
             // Parse the command line options
             var options = new OptionSet 
@@ -78,15 +77,10 @@ namespace Apollo.Core.Dataset
                         "The {URI} of the connection that can be used to connect to the host application.",
                         v => channelUri = new Uri(v)
                     },
-                    {
-                        "d|dataset",
-                        "The {DATASET} that is used to communicate with the parent application.",
-                        v => dataset = DatasetIdExtensions.Deserialize(v)
-                    }
                 };
 
             options.Parse(arguments);
-            if ((hostId == null) || (channelType == null) || (channelUri == null) || (dataset == null))
+            if ((hostId == null) || (channelType == null) || (channelUri == null))
             {
                 throw new InvalidCommandLineArgumentsException();
             }
@@ -94,10 +88,12 @@ namespace Apollo.Core.Dataset
             // To stop the application from running use the ApplicationContext
             // and call context.ExitThread();
             var container = DependencyInjection.Load(context);
-            
-            // Prepare the application for running. This includes setting up the communication channel etc.
-            // - Create the entry point class
 
+            // Notify the host app that we're alive, after which the 
+            // rest of the app should pick up the loading of the dataset etc.
+            var resolver = container.Resolve<IAcceptExternalEndpointInformation>();
+            resolver.RecentlyConnectedEndpoint(hostId, channelType, channelUri);
+            
             // Start with the message processing loop and then we 
             // wait for it to either get terminated or until we kill ourselves.
             Application.Run(context);

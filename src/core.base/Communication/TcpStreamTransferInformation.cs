@@ -19,6 +19,14 @@ namespace Apollo.Core.Base.Communication
     internal sealed class TcpStreamTransferInformation : StreamTransferInformation
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="TcpStreamTransferInformation"/> class.
+        /// </summary>
+        public TcpStreamTransferInformation()
+            : base(typeof(TcpChannelType))
+        { 
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating the IP address of the remote computer to which 
         /// the file should be transferred.
         /// </summary>

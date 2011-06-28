@@ -21,8 +21,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="ownerConnection">
         ///     The channel connection information for the owner.
         /// </param>
-        /// <param name="dataset">The ID of the dataset that should be loaded.</param>
         /// <returns>The ID number of the newly created endpoint.</returns>
-        EndpointId LoadDataset(ChannelConnectionInformation ownerConnection, DatasetId dataset);
+        EndpointId LoadDataset(ChannelConnectionInformation ownerConnection);
     }
 }

@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using MbUnit.Framework;
@@ -38,7 +39,12 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -77,7 +83,12 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(() => new DatasetOnlineInformation(), t),
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                    t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()

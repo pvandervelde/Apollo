@@ -62,34 +62,28 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Loads the dataset into an external application and returns when the dataset is completely loaded.
+        /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
         /// <param name="ownerConnection">
         ///     The channel connection information for the owner.
         /// </param>
-        /// <param name="dataset">The ID of the dataset that should be loaded.</param>
-        /// <returns>The ID number of the newly created endpoint.</returns>
+        /// <returns>The ID of the new endpoint.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="ownerConnection"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
-        /// </exception>
-        public EndpointId LoadDataset(ChannelConnectionInformation ownerConnection, DatasetId dataset)
+        public EndpointId LoadDataset(ChannelConnectionInformation ownerConnection)
         {
             {
                 Enforce.Argument(() => ownerConnection);
-                Enforce.Argument(() => dataset);
             }
 
             var fullFilePath = Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), DatasetApplicationFileName);
             var arguments = string.Format(
                 CultureInfo.InvariantCulture,
-                "--host={0} --channeltype={1} --channeluri={2} --dataset={3}",
+                "--host={0} --channeltype={1} --channeluri={2}",
                 ownerConnection.Id,
                 ownerConnection.ChannelType.AssemblyQualifiedName,
-                ownerConnection.Address,
-                dataset);
+                ownerConnection.Address);
 
             var startInfo = new ProcessStartInfo
             {

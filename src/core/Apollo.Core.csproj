@@ -209,7 +209,6 @@
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
-    <Compile Include="Utilities\ILoadOnApplicationStartup.cs" />
     <Compile Include="Utilities\Licensing\IValidationResultStorage.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
@@ -41,7 +42,7 @@ namespace Apollo.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -71,7 +72,7 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var responseMsg = storedMsg as EndpointInformationResponseMessage;
             Assert.AreElementsEqual(
-                new List<ISerializedType> { CommandSetProxyExtensions.FromType(typeof(ICommunicationChannelCommands)) }, 
+                new List<ISerializedType> { CommandSetProxyExtensions.FromType(typeof(IHostCommands)) }, 
                 responseMsg.Commands, 
                 (x, y) => x.Equals(y));
         }
@@ -82,7 +83,7 @@ namespace Apollo.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -122,7 +123,7 @@ namespace Apollo.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");

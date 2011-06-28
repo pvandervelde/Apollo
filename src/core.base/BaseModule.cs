@@ -15,6 +15,7 @@ using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
 using Autofac.Core;
+using AutofacContrib.Startable;
 
 namespace Apollo.Core.Base
 {
@@ -237,6 +238,20 @@ namespace Apollo.Core.Base
                 .As<TcpChannelType>();
         }
 
+        private static void RegisterUploads(ContainerBuilder builder)
+        {
+            builder.Register(c => new WaitingUploads());
+        }
+
+        private static void RegisterStartables(ContainerBuilder builder)
+        {
+            builder.Register(c => new CommunicationLayerStarter(
+                    c.Resolve<ICommunicationLayer>()))
+                .As<ILoadOnApplicationStartup>();
+
+            builder.RegisterModule(new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
+        }
+
         /// <summary>
         /// Indicates if the communication channels are allowed to provide discovery.
         /// </summary>
@@ -272,6 +287,8 @@ namespace Apollo.Core.Base
             RegisterCommunicationChannel(builder);
             RegisterEndpoints(builder);
             RegisterChannelTypes(builder, m_AllowChannelDiscovery);
+            RegisterUploads(builder);
+            RegisterStartables(builder);
         }
     }
 }

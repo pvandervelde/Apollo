@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using MbUnit.Framework;
@@ -27,8 +28,8 @@ namespace Apollo.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(ICommunicationChannelCommands),
-                    typeof(IMachineCommands)
+                    typeof(IHostCommands),
+                    typeof(IDatasetApplicationCommands)
                 };
 
             var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
@@ -48,8 +49,8 @@ namespace Apollo.Base.Communication.Messages
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(ICommunicationChannelCommands),
-                    typeof(IMachineCommands)
+                    typeof(IHostCommands),
+                    typeof(IDatasetApplicationCommands)
                 };
             var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);

@@ -7,6 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Communication
@@ -95,6 +97,33 @@ namespace Apollo.Core.Base.Communication
         /// <param name="message">The message that has to be send.</param>
         /// <returns>A task object that will eventually contain the response message.</returns>
         Task<ICommunicationMessage> SendMessageAndWaitForResponse(EndpointId endpoint, ICommunicationMessage message);
+
+        /// <summary>
+        /// Uploads a given file to a specific endpoint.
+        /// </summary>
+        /// <param name="filePath">The full path to the file that should be transferred.</param>
+        /// <param name="transferInfo">The object that provides the upload information.</param>
+        /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <returns>
+        ///     A task that will return once the upload is complete.
+        /// </returns>
+        Task UploadData(string filePath, StreamTransferInformation transferInfo, CancellationToken token);
+
+        /// <summary>
+        /// Downloads a given file from a specific endpoint.
+        /// </summary>
+        /// <remarks>
+        /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
+        /// it does exist then the data will be appended to it.
+        /// </remarks>
+        /// <param name="endpointToDownloadFrom">The endpoint ID of the endpoint from which the data should be transferred.</param>
+        /// <param name="uploadToken">The token that indicates which file should be uploaded.</param>
+        /// <param name="localFile">The full file path to which the network stream should be written.</param>
+        /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <returns>
+        /// The task which will return the pointer to the file once the download is complete.
+        /// </returns>
+        Task<Stream> DownloadData(EndpointId endpointToDownloadFrom, UploadToken uploadToken, string localFile, CancellationToken token);
 
         /// <summary>
         /// Disconnects from the given endpoint.

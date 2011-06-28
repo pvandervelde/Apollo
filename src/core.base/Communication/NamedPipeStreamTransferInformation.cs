@@ -5,9 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -18,6 +15,14 @@ namespace Apollo.Core.Base.Communication
     [Serializable]
     internal sealed class NamedPipeStreamTransferInformation : StreamTransferInformation
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NamedPipeStreamTransferInformation"/> class.
+        /// </summary>
+        public NamedPipeStreamTransferInformation()
+            : base(typeof(NamedPipeChannelType))
+        { 
+        }
+
         /// <summary>
         /// Gets or sets a value indicating the name of the pipe.
         /// </summary>

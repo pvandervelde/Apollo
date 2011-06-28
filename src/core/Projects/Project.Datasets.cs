@@ -284,6 +284,12 @@ namespace Apollo.Core.Projects
                 proxy.OwnerHasLoadedDataset();
             }
 
+            // This may need to bounce between the project
+            // and the UI a bit. The user will need to indicate
+            // that a dataset should be loaded, then we go
+            // off to determine where we can load it from,
+            // Then we provide suggestions to the user (if there
+            // is more than one). And finally we load the damn thing
             throw new NotImplementedException();
         }
 

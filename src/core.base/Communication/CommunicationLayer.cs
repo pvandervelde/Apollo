@@ -9,8 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Lokad;
@@ -21,7 +24,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines the methods needed to communicate with one or more remote applications.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal sealed class CommunicationLayer : ICommunicationLayer
+    internal sealed class CommunicationLayer : ICommunicationLayer, IDisposable
     {
         /// <summary>
         /// The collection of endpoints that have been discovered.
@@ -485,6 +488,83 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// Uploads a given file to a specific endpoint.
+        /// </summary>
+        /// <param name="filePath">The full path to the file that should be transferred.</param>
+        /// <param name="transferInfo">The object that provides the upload information.</param>
+        /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <returns>
+        ///     A task that will return once the upload is complete.
+        /// </returns>
+        public Task UploadData(string filePath, StreamTransferInformation transferInfo, CancellationToken token)
+        {
+            {
+                Enforce.Argument(() => filePath);
+                Enforce.Argument(() => transferInfo);
+            }
+
+            var pair = m_OpenConnections[transferInfo.ChannelType];
+            return pair.Item1.TransferData(filePath, transferInfo, token);
+        }
+
+        /// <summary>
+        /// Downloads a given file from a specific endpoint.
+        /// </summary>
+        /// <remarks>
+        /// If the <paramref name="localFile"/> does not exist a new file will be created with the given path. If
+        /// it does exist then the data will be appended to it.
+        /// </remarks>
+        /// <param name="endpointToDownloadFrom">The endpoint ID of the endpoint from which the data should be transferred.</param>
+        /// <param name="uploadToken">The token that indicates which file should be uploaded.</param>
+        /// <param name="localFile">The full file path to which the network stream should be written.</param>
+        /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <returns>
+        /// The task which will return the pointer to the file once the download is complete.
+        /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="endpointToDownloadFrom"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="EndpointNotContactableException">
+        ///     Thrown if the <paramref name="endpointToDownloadFrom"/> is not registered.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="uploadToken"/> is <see langword="null" />.
+        /// </exception>
+        public Task<Stream> DownloadData(EndpointId endpointToDownloadFrom, UploadToken uploadToken, string localFile, CancellationToken token)
+        {
+            {
+                Enforce.Argument(() => endpointToDownloadFrom);
+                Enforce.With<EndpointNotContactableException>(
+                    m_PotentialEndpoints.ContainsKey(endpointToDownloadFrom),
+                    Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint,
+                    endpointToDownloadFrom);
+
+                Enforce.Argument(() => uploadToken);
+            }
+
+            var connection = SelectMostAppropriateConnection(endpointToDownloadFrom);
+            Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
+
+            var pair = m_OpenConnections[connection.ChannelType];
+            var info = pair.Item1.PrepareForDataReception(localFile, token);
+
+            var msg = new DataDownloadRequestMessage(Id, uploadToken, info.Item1);
+            pair.Item1.Send(endpointToDownloadFrom, msg);
+            return info.Item2.ContinueWith<Stream>(
+                t =>
+                {
+                    return new FileStream(
+                        t.Result.FullName,
+                        FileMode.Open,
+                        FileAccess.Read,
+                        FileShare.None);
+                },
+                token,
+                TaskContinuationOptions.OnlyOnRanToCompletion,
+                null);
+        }
+
+        /// <summary>
         /// Disconnects from the given endpoint.
         /// </summary>
         /// <param name="endpoint">The endpoint.</param>
@@ -515,6 +595,15 @@ namespace Apollo.Core.Base.Communication
                 // we are going to and so it comes down to the same thing.
                 RaiseOnEndpointSignedOut(endpoint);
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            SignOut();
         }
     }
 }

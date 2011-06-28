@@ -183,6 +183,12 @@
   <data name="Exceptions_Messages_FilePathCannotBeEmpty" xml:space="preserve">
     <value>A file path cannot be an empty string.</value>
   </data>
+  <data name="Exceptions_Messages_FileRegistrationNotFound" xml:space="preserve">
+    <value>No file registration was found for the given token.</value>
+  </data>
+  <data name="Exceptions_Messages_FileRegistrationNotFound_WithToken" xml:space="preserve">
+    <value>No file registration was found for the token: {0}</value>
+  </data>
   <data name="Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes" xml:space="preserve">
     <value>Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}.</value>
   </data>
@@ -257,5 +263,11 @@
   </data>
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>
+  </data>
+  <data name="Exceptions_Messages_UploadNotDeregistered" xml:space="preserve">
+    <value>An upload for the given token already exists.</value>
+  </data>
+  <data name="Exceptions_Messages_UploadNotDeregistered_WithToken" xml:space="preserve">
+    <value>An upload for the token [{0}] already exists.</value>
   </data>
 </root>

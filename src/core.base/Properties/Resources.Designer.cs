@@ -259,6 +259,24 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No file registration was found for the given token..
+        /// </summary>
+        internal static string Exceptions_Messages_FileRegistrationNotFound {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FileRegistrationNotFound", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file registration was found for the token: {0}.
+        /// </summary>
+        internal static string Exceptions_Messages_FileRegistrationNotFound_WithToken {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FileRegistrationNotFound_WithToken", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}..
         /// </summary>
         internal static string Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes {
@@ -482,6 +500,24 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_UnknownEndpointIdFormat {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownEndpointIdFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An upload for the given token already exists..
+        /// </summary>
+        internal static string Exceptions_Messages_UploadNotDeregistered {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UploadNotDeregistered", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An upload for the token [{0}] already exists..
+        /// </summary>
+        internal static string Exceptions_Messages_UploadNotDeregistered_WithToken {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UploadNotDeregistered_WithToken", resourceCulture);
             }
         }
     }
