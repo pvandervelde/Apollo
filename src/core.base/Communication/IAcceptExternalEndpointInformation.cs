@@ -12,7 +12,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines the interface for objects that store or forward information about
     /// the connection state of external endpoints.
     /// </summary>
-    public interface IAcceptExternalEndpointInformation
+    internal interface IAcceptExternalEndpointInformation
     {
         /// <summary>
         /// Stores or forwards information about an endpoint that has recently

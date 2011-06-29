@@ -75,16 +75,17 @@ namespace Apollo.Utilities.Logging
 
         private static Target BufferTarget(Target targetToBuffer)
         {
-            var logTarget = new BufferingTargetWrapper(targetToBuffer);
-            {
-                // Define how many messages should be buffered.
-                logTarget.BufferSize = 10;
-
-                // Define how quickly the message buffer should be flushed
-                logTarget.FlushTimeout = 500;
-            }
-
-            return logTarget;
+            // var logTarget = new BufferingTargetWrapper(targetToBuffer);
+            // {
+            //     // Define how many messages should be buffered.
+            //     logTarget.BufferSize = 10;
+            //
+            //     // Define how quickly the message buffer should be flushed
+            //     logTarget.FlushTimeout = 500;
+            // }
+            //
+            // return logTarget;
+            return targetToBuffer;
         }
 
         private static LogFactory BuildLogFactory(string name, NLog.LogLevel minimumLevel, Target target)

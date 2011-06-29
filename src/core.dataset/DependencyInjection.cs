@@ -40,6 +40,8 @@ namespace Apollo.Core.Dataset
             IContainer result = null;
             var builder = new ContainerBuilder();
             {
+                builder.RegisterModule(new UtilitiesModule());
+
                 // Don't allow discovery on the dataset application because:
                 // - The dataset application wouldn't know what to do with it anyway
                 // - We don't want anybody talking to the application except for the

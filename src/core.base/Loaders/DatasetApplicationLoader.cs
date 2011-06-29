@@ -80,7 +80,7 @@ namespace Apollo.Core.Base.Loaders
             var fullFilePath = Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), DatasetApplicationFileName);
             var arguments = string.Format(
                 CultureInfo.InvariantCulture,
-                "--host={0} --channeltype={1} --channeluri={2}",
+                @"--host={0} --channeltype=""{1}"" --channeluri={2}",
                 ownerConnection.Id,
                 ownerConnection.ChannelType.AssemblyQualifiedName,
                 ownerConnection.Address);

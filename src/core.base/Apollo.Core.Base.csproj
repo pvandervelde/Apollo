@@ -160,6 +160,7 @@
     <Compile Include="Loaders\DiskSpecification.cs" />
     <Compile Include="Loaders\DistributionCalculator.cs" />
     <Compile Include="Loaders\DatasetLoadingProposalComparer.cs" />
+    <Compile Include="Loaders\DistributionSuggestion.cs" />
     <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
     <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
@@ -175,6 +176,7 @@
     <Compile Include="Loaders\NetworkIdentifier.cs" />
     <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Loaders\RemoteDatasetDistributor.cs" />
+    <Compile Include="Loaders\SelectedProposal.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -33,6 +33,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object), 
                     t),
                 new DatasetOfflineInformation(
@@ -48,8 +49,8 @@ namespace Apollo.Core.Projects
                         }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor = 
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor = 
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             Assert.IsNotNull(project);
@@ -72,6 +73,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -87,8 +89,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Save(null));
@@ -103,6 +105,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -118,8 +121,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             project.Close();
 
@@ -142,6 +145,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -157,8 +161,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Export(null, false, new Mock<IPersistenceInformation>().Object));
@@ -173,6 +177,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -188,8 +193,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             Assert.Throws<UnknownDatasetException>(() => project.Export(new DatasetId(), false, new Mock<IPersistenceInformation>().Object));
@@ -204,6 +209,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -219,8 +225,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -236,6 +242,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -251,8 +258,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             project.Close();
@@ -284,6 +291,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -299,8 +307,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             var name = string.Empty;
@@ -324,6 +332,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -339,8 +348,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
 
             var summary = string.Empty;

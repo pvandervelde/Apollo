@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Projects;
@@ -98,6 +99,7 @@ namespace Apollo.Core.UserInterfaces.Projects
 
             m_Dataset = dataset;
             m_Dataset.OnDeleted += (s, e) => RaiseOnInvalidate();
+            m_Dataset.OnLoadingProgress += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing);
             m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
@@ -274,16 +276,62 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         /// <summary>
-        /// Returns a collection containing information on all the machines
-        /// the dataset is distributed over.
+        /// Gets a value indicating whether the dataset can be loaded onto a machine.
+        /// </summary>
+        public bool CanLoad
+        {
+            get
+            {
+                return m_Dataset.CanLoad;
+            }
+        }
+
+        /// <summary>
+        /// Returns the machine on which the dataset is running.
         /// </summary>
         /// <returns>
-        /// A collection containing information about all the machines the
-        /// dataset is distributed over.
+        /// The machine on which the dataset is running.
         /// </returns>
-        public IEnumerable<Machine> RunsOn()
+        public NetworkIdentifier RunsOn()
         {
             return m_Dataset.RunsOn();
+        }
+
+        /// <summary>
+        /// Loads the dataset onto a machine.
+        /// </summary>
+        /// <param name="preferredLocation">
+        /// Indicates a preferred machine location for the dataset to be loaded onto.
+        /// </param>
+        /// <param name="machineSelector">
+        ///     The function that selects the most suitable machine for the dataset to run on.
+        /// </param>
+        /// <param name="token">The token that is used to cancel the loading.</param>
+        /// <remarks>
+        /// Note that the <paramref name="preferredLocation"/> is
+        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
+        /// plan that is better suited to the contents of the dataset.
+        /// </remarks>
+        public void LoadOntoMachine(
+            LoadingLocations preferredLocation,
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            CancellationToken token)
+        {
+            m_Dataset.LoadOntoMachine(preferredLocation, machineSelector, token);
+        }
+
+        /// <summary>
+        /// An event raised when there is progress in the loading of the datset.
+        /// </summary>
+        public event EventHandler<ProgressEventArgs> OnLoadingProgress;
+
+        private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
+        {
+            var local = OnLoadingProgress;
+            if (local != null)
+            {
+                local(this, new ProgressEventArgs(progress, mark));
+            }
         }
 
         /// <summary>
@@ -298,6 +346,14 @@ namespace Apollo.Core.UserInterfaces.Projects
             {
                 local(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// Unloads the dataset from the machine it is currently loaded onto.
+        /// </summary>
+        public void UnloadFromMachine()
+        {
+            m_Dataset.UnloadFromMachine();
         }
 
         /// <summary>

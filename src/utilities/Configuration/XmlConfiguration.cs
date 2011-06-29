@@ -25,7 +25,7 @@ namespace Apollo.Utilities.Configuration
             Justification = "Documentation can start with a language keyword")]
         public bool HasValueFor(ConfigurationKey key)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         /// <summary>

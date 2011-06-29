@@ -65,7 +65,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -107,7 +107,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -125,7 +125,7 @@ namespace Apollo.Core.Projects
 
             builder.Verify(b => b.Define(), Times.Exactly(1));
             builder.Verify(
-                b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()), 
+                b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()), 
                 Times.Exactly(1));
             builder.Verify(b => b.Build(), Times.Exactly(1));
         }
@@ -161,7 +161,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -184,7 +184,7 @@ namespace Apollo.Core.Projects
             builder.Verify(b => b.Define(), Times.Exactly(1));
             builder.Verify(
                 b => b.WithDatasetDistributor(
-                    It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()), 
+                    It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()), 
                     Times.Exactly(1));
             builder.Verify(b => b.FromStorage(It.IsAny<IPersistenceInformation>()), Times.Exactly(1));
             builder.Verify(b => b.Build(), Times.Exactly(1));
@@ -209,7 +209,7 @@ namespace Apollo.Core.Projects
                 builder.Setup(b => b.Define())
                     .Returns(builder.Object);
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object);
 
                 builder.Setup(b => b.Build())

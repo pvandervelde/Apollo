@@ -55,7 +55,7 @@ namespace Apollo.Core.Base.Loaders
             return usableNodes;
         }
 
-        private static List<DatasetLoadingProposal> OrderProposals(
+        private static IEnumerable<DatasetLoadingProposal> OrderProposals(
             ExpectedDatasetLoad load,
             LoadingLocations preferedLocations,
             IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
@@ -63,9 +63,6 @@ namespace Apollo.Core.Base.Loaders
         {
             var loadingProposals = new Queue<Task<DatasetLoadingProposal>>();
 
-            // We assume that all loaders which are attached to a command
-            // are distributed. The local loader will be communicated with
-            // directly.
             bool shouldLoad = ShouldLoadDistributed(preferedLocations);
             foreach (var pair in usableNodes)
             {
@@ -89,7 +86,6 @@ namespace Apollo.Core.Base.Loaders
                 }
             }
 
-            var orderedProposals = new List<DatasetLoadingProposal>();
             while (loadingProposals.Count > 0)
             {
                 if (token.IsCancellationRequested)
@@ -132,11 +128,9 @@ namespace Apollo.Core.Base.Loaders
                 var proposal = task.Result;
                 if (proposal.IsAvailable)
                 {
-                    orderedProposals.Add(proposal);
+                    yield return proposal;
                 }
             }
-
-            return orderedProposals;
         }
 
         private static bool ShouldLoadDistributed(LoadingLocations preferedLocations)
@@ -343,6 +337,7 @@ namespace Apollo.Core.Base.Loaders
                     return new DatasetOnlineInformation(
                         planToImplement.DistributionFor.Id,
                         planToImplement.Proposal.Endpoint,
+                        planToImplement.MachineToDistributeTo,
                         m_Hub);
                 };
 

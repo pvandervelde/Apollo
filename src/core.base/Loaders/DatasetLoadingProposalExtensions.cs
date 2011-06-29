@@ -11,7 +11,7 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Defines extension methods for the <see cref="DatasetLoadingProposal"/> class.
     /// </summary>
-    internal static class DatasetLoadingProposalExtensions
+    public static class DatasetLoadingProposalExtensions
     {
         /// <summary>
         /// Rates a proposal based on the amount of time necessary to transfer and load the

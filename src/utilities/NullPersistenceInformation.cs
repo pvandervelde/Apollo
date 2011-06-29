@@ -32,6 +32,18 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
+        /// Returns the size of the stored information in bytes.
+        /// </summary>
+        /// <returns>
+        /// The size of the stored information in bytes.
+        /// </returns>
+        public long StoredSizeInBytes()
+        {
+            // @todo: put the proper size in here. Can only do that after we have a default setup though.
+            return 100;
+        }
+
+        /// <summary>
         /// Returns a <see cref="FileInfo"/> object that points to the stored data in the file system.
         /// </summary>
         /// <returns>

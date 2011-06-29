@@ -65,7 +65,7 @@ namespace Apollo.Utilities.Logging
         {
 #if DEBUG
                 // Default debug setting is to log errors and fatals only.
-                return LevelToLog.Info;
+                return LevelToLog.Trace;
 #else
                 // Default release setting is to log errors and fatals only.
                 return LevelToLog.Error;

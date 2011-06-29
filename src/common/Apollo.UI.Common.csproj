@@ -61,9 +61,23 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
     </Reference>
+    <Reference Include="ReactiveUI">
+      <HintPath>..\..\lib\reactiveui\ReactiveUI.dll</HintPath>
+    </Reference>
+    <Reference Include="ReactiveUI.Xaml">
+      <HintPath>..\..\lib\reactiveui\ReactiveUI.Xaml.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.CoreEx.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\reactive\System.Reactive.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -121,6 +135,7 @@
     <Compile Include="Commands\CloseViewCommand.cs" />
     <Compile Include="Commands\CreationOfNewScriptCanceledException.cs" />
     <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Commands\LoadDatasetOntoMachineCommand.cs" />
     <Compile Include="Commands\LoadingOfScriptCanceledException.cs" />
     <Compile Include="Commands\NewProjectCommand.cs" />
     <Compile Include="Commands\NewScriptCommand.cs" />
@@ -129,9 +144,12 @@
     <Compile Include="Commands\OpenScriptCommand.cs" />
     <Compile Include="Commands\RunScriptCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
     <Compile Include="CommonUserInterfaceModule.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverter.cs" />
+    <Compile Include="Converters\DistributionSuggestionToTextConverter.cs" />
+    <Compile Include="Converters\IsWorkingToHiddenPanelVisibilityConverter.cs" />
     <Compile Include="Converters\ScriptDescriptionModelToTextConverter.cs" />
     <Compile Include="EventListener.cs" />
     <Compile Include="Events\CloseViewEvent.cs" />
@@ -211,6 +229,13 @@
     <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
     <Compile Include="Views\Datasets\IDatasetView.cs" />
+    <Compile Include="Views\Datasets\IMachineSelectorView.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorModel.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorParameter.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorPresenter.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorView.xaml.cs">
+      <DependentUpon>MachineSelectorView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Projects\IProjectDescriptionView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionView.xaml.cs">
@@ -284,6 +309,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Datasets\DatasetVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Datasets\MachineSelectorView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -607,7 +636,60 @@
   <ItemGroup>
     <None Include="Resources\ZoomOut_128x128.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Download_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_256x256.png" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

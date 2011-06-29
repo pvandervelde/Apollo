@@ -80,6 +80,8 @@ namespace Apollo.ProjectExplorer
                 { 
                     new UtilitiesModule(),
                     new BaseModule(true),
+                    new BaseModuleForLoaders(),
+                    new BaseModuleForHosts(),
                 };
         }
 

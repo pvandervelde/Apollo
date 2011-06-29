@@ -55,32 +55,34 @@ namespace Apollo.Core.Dataset
 
         private static int RunApplication(string[] arguments, ApplicationContext context)
         {
-            EndpointId hostId = null;
-            Type channelType = null;
-            Uri channelUri = null;
+            string hostId = null;
+            string channelType = null;
+            string channelUri = null;
 
             // Parse the command line options
             var options = new OptionSet 
                 {
                     { 
-                        "h|host", 
+                        "h=|host=", 
                         "The {ENDPOINTID} of the host application that requested the start of this application.", 
-                        v => hostId = EndpointIdExtensions.Deserialize(v)
+                        v => hostId = v
                     },
                     {
-                        "t|channeltype",
+                        "t=|channeltype=",
                         "The {TYPE} of the channel over which the connection should be made.",
-                        v => channelType = Type.GetType(v, null, null, true, false)
+                        v => channelType = v
                     },
                     {
-                        "u|channeluri",
+                        "u=|channeluri=",
                         "The {URI} of the connection that can be used to connect to the host application.",
-                        v => channelUri = new Uri(v)
+                        v => channelUri = v
                     },
                 };
 
             options.Parse(arguments);
-            if ((hostId == null) || (channelType == null) || (channelUri == null))
+            if (string.IsNullOrWhiteSpace(hostId) ||
+                string.IsNullOrWhiteSpace(channelType) ||
+                string.IsNullOrWhiteSpace(channelUri))
             {
                 throw new InvalidCommandLineArgumentsException();
             }
@@ -91,9 +93,9 @@ namespace Apollo.Core.Dataset
 
             // Notify the host app that we're alive, after which the 
             // rest of the app should pick up the loading of the dataset etc.
-            var resolver = container.Resolve<IAcceptExternalEndpointInformation>();
-            resolver.RecentlyConnectedEndpoint(hostId, channelType, channelUri);
-            
+            var resolver = container.Resolve<Action<string, string, string>>();
+            resolver(hostId, channelType, channelUri);
+
             // Start with the message processing loop and then we 
             // wait for it to either get terminated or until we kill ourselves.
             Application.Run(context);

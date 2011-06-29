@@ -121,7 +121,10 @@
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
+    <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
+    <Compile Include="Projects\DatasetNotLoadedException.cs" />
     <Compile Include="Projects\IOwnedProxyDataset.cs" />
+    <Compile Include="Projects\IProxyCommandSet.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />

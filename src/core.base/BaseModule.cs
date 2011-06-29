@@ -99,6 +99,17 @@ namespace Apollo.Core.Base
                 .As<IDiscoverOtherServices>()
                 .As<IAcceptExternalEndpointInformation>()
                 .SingleInstance();
+
+            // This function is used to resolve connection information from
+            // a set of strings.
+            builder.Register<Action<string, string, string>>(c =>
+                (id, channelType, address) =>
+                {
+                    c.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
+                        EndpointIdExtensions.Deserialize(id),
+                        Type.GetType(channelType, null, null, true, false),
+                        new Uri(address));
+                });
         }
 
         private static void RegisterCommandDiscoverySources(ContainerBuilder builder)

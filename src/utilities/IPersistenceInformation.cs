@@ -23,6 +23,14 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
+        /// Returns the size of the stored information in bytes.
+        /// </summary>
+        /// <returns>
+        /// The size of the stored information in bytes.
+        /// </returns>
+        long StoredSizeInBytes();
+
+        /// <summary>
         /// Returns a <see cref="FileInfo"/> object that points to the stored data in the file system.
         /// </summary>
         /// <returns>

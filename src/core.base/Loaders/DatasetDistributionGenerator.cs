@@ -54,34 +54,25 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="request"/> is <see langword="null" />.
         /// </exception>
-        public Task<IEnumerable<DistributionPlan>> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
+        public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
         {
             {
                 Enforce.Argument(() => request);
             }
 
-            Func<IEnumerable<DistributionPlan>> action =
-                () =>
+            foreach (var distributor in m_Distributors)
+            {
+                if (token.IsCancellationRequested)
                 {
-                    var list = new List<DistributionPlan>();
-                    foreach (var distributor in m_Distributors)
-                    {
-                        if (token.IsCancellationRequested)
-                        {
-                            token.ThrowIfCancellationRequested();
-                        }
+                    token.ThrowIfCancellationRequested();
+                }
 
-                        var proposals = distributor.ProposeDistributionFor(request, token);
-                        list.AddRange(proposals);
-                    }
-                    
-                    var comparer = new DatasetLoadingProposalComparer();
-                    list.Sort((x, y) => comparer.Compare(x.Proposal, y.Proposal));
-                    
-                    return list;
-                };
-
-            return Task<IEnumerable<DistributionPlan>>.Factory.StartNew(action, token, TaskCreationOptions.LongRunning, null);
+                var proposals = distributor.ProposeDistributionFor(request, token);
+                foreach (var proposal in proposals)
+                {
+                    yield return proposal;
+                }
+            }
         }
     }
 }

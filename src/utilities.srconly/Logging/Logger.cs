@@ -196,6 +196,7 @@ namespace Apollo.Utilities.Logging
             }
 
             m_Logger.Log(info);
+            m_Logger.Factory.Flush();
         }
 
         /// <summary>

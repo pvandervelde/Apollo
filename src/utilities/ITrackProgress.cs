@@ -33,7 +33,7 @@ namespace Apollo.Utilities
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        event EventHandler<StartupProgressEventArgs> OnStartupProgress;
+        event EventHandler<ProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Stops the tracking of the progress.

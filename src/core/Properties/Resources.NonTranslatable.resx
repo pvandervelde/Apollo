@@ -112,10 +112,10 @@
     <value>2.0</value>
   </resheader>
   <resheader name="reader">
-    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <resheader name="writer">
-    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="Exception_Messages_CannotCompareUnequalTypes" xml:space="preserve">
     <value>Cannot compare these objects: {0} and {1}</value>
@@ -332,5 +332,8 @@
   </data>
   <data name="Exception_Messages_CannotUseDatasetAfterItBecomesInvalid" xml:space="preserve">
     <value>A dataset cannot be used after it has become invalid.</value>
+  </data>
+  <data name="Exception_Messages_DatasetNotLoaded" xml:space="preserve">
+    <value>Cannot access the online information for the given dataset because it is not loaded.</value>
   </data>
 </root>

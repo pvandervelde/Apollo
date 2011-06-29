@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Loaders;
 using Lokad;
 
 namespace Apollo.Core.Base
@@ -30,6 +31,7 @@ namespace Apollo.Core.Base
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <param name="endpoint">The ID number of the endpoint that has the actual dataset loaded.</param>
+        /// <param name="networkId">The network identifier of the machine on which the dataset runs.</param>
         /// <param name="hub">The object that handles sending commands to the remote endpoint.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
@@ -38,21 +40,27 @@ namespace Apollo.Core.Base
         ///     Thrown if <paramref name="endpoint"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="networkId"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
         /// </exception>
         public DatasetOnlineInformation(
             DatasetId id, 
             EndpointId endpoint,
+            NetworkIdentifier networkId,
             ISendCommandsToRemoteEndpoints hub)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => endpoint);
+                Enforce.Argument(() => networkId);
                 Enforce.Argument(() => hub);
             }
 
             Id = id;
             Endpoint = endpoint;
+            RunsOn = networkId;
             m_Hub = hub;
         }
 
@@ -71,6 +79,15 @@ namespace Apollo.Core.Base
         /// dataset loaded.
         /// </summary>
         public EndpointId Endpoint
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the machine on which the dataset is running.
+        /// </summary>
+        public NetworkIdentifier RunsOn
         {
             get;
             private set;

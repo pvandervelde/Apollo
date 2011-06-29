@@ -29,7 +29,7 @@ namespace Apollo.Core
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
-        public event EventHandler<StartupProgressEventArgs> OnStartupProgress;
+        public event EventHandler<ProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Fires the <see cref="OnStartupProgress"/> event.
@@ -38,10 +38,10 @@ namespace Apollo.Core
         /// <param name="currentAction">The current action which is being processed.</param>
         protected void RaiseOnStartupProgress(int progress, IProgressMark currentAction)
         {
-            EventHandler<StartupProgressEventArgs> local = OnStartupProgress;
+            EventHandler<ProgressEventArgs> local = OnStartupProgress;
             if (local != null)
             {
-                local(this, new StartupProgressEventArgs(progress, currentAction));
+                local(this, new ProgressEventArgs(progress, currentAction));
             }
         }
 

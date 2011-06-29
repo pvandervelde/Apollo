@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -29,6 +28,6 @@ namespace Apollo.Core.Base.Loaders
         /// The distribution plan that takes into account the characteristics of
         /// the dataset and the currently available computing power.
         /// </returns>
-        Task<IEnumerable<DistributionPlan>> ProposeDistributionFor(DatasetRequest request, CancellationToken token);
+        IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token);
     }
 }

@@ -162,6 +162,7 @@ namespace Apollo.Core.Base.Loaders
                     return new DatasetOnlineInformation(
                         planToImplement.DistributionFor.Id, 
                         planToImplement.Proposal.Endpoint,
+                        planToImplement.MachineToDistributeTo,
                         m_Hub);
                 };
 

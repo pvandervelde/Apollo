@@ -25,7 +25,7 @@ namespace Apollo.Core
             int progress = 10;
             var progressMock = new Mock<IProgressMark>();
 
-            var args = new StartupProgressEventArgs(progress, progressMock.Object);
+            var args = new ProgressEventArgs(progress, progressMock.Object);
             Assert.AreEqual<int>(progress, args.Progress);
             Assert.AreEqual<IProgressMark>(progressMock.Object, args.CurrentlyProcessing);
         }

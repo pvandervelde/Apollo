@@ -73,7 +73,7 @@ namespace Apollo.Utilities.ExceptionHandling
                 //   but that will probably fail ...
                 var text = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Fatal exception occurred during application execution",
+                    "Fatal exception occurred during application execution. Exception message was: {0}",
                     e);
 
                 var msg = new LogMessage(

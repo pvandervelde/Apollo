@@ -43,6 +43,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -58,8 +59,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = builder.Define()
                 .WithDatasetDistributor(distributor)
                 .Build();
@@ -87,6 +88,7 @@ namespace Apollo.Core.Projects
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
                     t),
                 new DatasetOfflineInformation(
@@ -102,8 +104,8 @@ namespace Apollo.Core.Projects
                     }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, Task<IEnumerable<DistributionPlan>>> distributor =
-                (r, c) => new Task<IEnumerable<DistributionPlan>>(() => new List<DistributionPlan> { plan });
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
 
             var project = builder.Define()
                 .WithDatasetDistributor(distributor)

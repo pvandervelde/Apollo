@@ -224,7 +224,7 @@ namespace Apollo.Utilities
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        public event EventHandler<StartupProgressEventArgs> OnStartupProgress;
+        public event EventHandler<ProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Raises the startup progress event with the specified values.
@@ -236,7 +236,7 @@ namespace Apollo.Utilities
             var local = OnStartupProgress;
             if (local != null)
             { 
-                local(this, new StartupProgressEventArgs(progress, currentlyProcessing));
+                local(this, new ProgressEventArgs(progress, currentlyProcessing));
             }
         }
 
