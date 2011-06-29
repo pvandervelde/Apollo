@@ -18,6 +18,27 @@ namespace Apollo.Core.Base.Loaders
     [Serializable]
     public sealed class HardwareSpecification
     {
+        private sealed class MemoryInformation
+        {
+            public ulong MaximumProcessMemorySizeInKiloBytes
+            {
+                get;
+                set;
+            }
+
+            public ulong TotalPhysicalMemorySizeInKiloBytes
+            {
+                get;
+                set;
+            }
+
+            public ulong TotalVirtualMemorySizeInKiloBytes
+            {
+                get;
+                set;
+            }
+        }
+
         /// <summary>
         /// Returns the amount of physical memory installed in the machine in bytes.
         /// </summary>
@@ -26,7 +47,7 @@ namespace Apollo.Core.Base.Loaders
         /// amount of physical memory available to the operating system and the total
         /// amount of virtual memory the operating system provides.
         /// </returns>
-        private static Tuple<ulong, ulong, ulong> LocalMachinePhysicalMemorySize()
+        private static MemoryInformation LocalMachinePhysicalMemorySize()
         {
             try
             {
@@ -44,11 +65,16 @@ namespace Apollo.Core.Base.Loaders
                     totalVirtual += (ulong)queryObj["TotalVirtualMemorySize"];
                 }
 
-                return new Tuple<ulong, ulong, ulong>(maxPerProcess, totalPhysical, totalVirtual);
+                return new MemoryInformation
+                    {
+                        MaximumProcessMemorySizeInKiloBytes = maxPerProcess,
+                        TotalPhysicalMemorySizeInKiloBytes = totalPhysical,
+                        TotalVirtualMemorySizeInKiloBytes = totalVirtual,
+                    };
             }
             catch (ManagementException)
             {
-                return new Tuple<ulong, ulong, ulong>(0, 0, 0);
+                return new MemoryInformation();
             }
         }
 
@@ -63,7 +89,11 @@ namespace Apollo.Core.Base.Loaders
             var memorySizes = LocalMachinePhysicalMemorySize();
             var disks = DiskSpecification.ForLocalMachine();
 
-            return new HardwareSpecification(memorySizes.Item1, memorySizes.Item2, memorySizes.Item3, disks);
+            return new HardwareSpecification(
+                memorySizes.MaximumProcessMemorySizeInKiloBytes, 
+                memorySizes.TotalPhysicalMemorySizeInKiloBytes, 
+                memorySizes.TotalVirtualMemorySizeInKiloBytes, 
+                disks);
         }
 
         /// <summary>

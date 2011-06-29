@@ -347,16 +347,16 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The collection describing all the known endpoints and the commands they describe.
         /// </returns>
-        public IEnumerable<Tuple<EndpointId, IEnumerable<Type>>> AvailableCommands()
+        public IEnumerable<CommandInformationPerEndpoint> AvailableCommands()
         {
-            var result = new List<Tuple<EndpointId, IEnumerable<Type>>>(); 
+            var result = new List<CommandInformationPerEndpoint>(); 
             lock (m_Lock)
             {
                 foreach (var pair in m_RemoteCommands)
                 {
                     var list = new List<Type>();
                     list.AddRange(pair.Value.Keys);
-                    result.Add(new Tuple<EndpointId, IEnumerable<Type>>(pair.Key, list));
+                    result.Add(new CommandInformationPerEndpoint(pair.Key, list));
                 }
             }
 

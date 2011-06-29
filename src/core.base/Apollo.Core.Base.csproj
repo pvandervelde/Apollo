@@ -62,6 +62,7 @@
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
     <Compile Include="Communication\CommandInformationEventArgs.cs" />
+    <Compile Include="Communication\CommandInformationPerEndpoint.cs" />
     <Compile Include="Communication\CommandInvocationFailedException.cs" />
     <Compile Include="Communication\CommandNotSupportedException.cs" />
     <Compile Include="Communication\CommandProxyBuilder.cs" />

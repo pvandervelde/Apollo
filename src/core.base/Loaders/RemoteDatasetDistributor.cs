@@ -204,7 +204,7 @@ namespace Apollo.Core.Base.Loaders
                 var knownCommands = m_Hub.AvailableCommands();
                 foreach (var command in knownCommands)
                 {
-                    AddNewEndpoint(command.Item1, command.Item2);
+                    AddNewEndpoint(command.Endpoint, command.RegisteredCommands);
                 }
             }
         }

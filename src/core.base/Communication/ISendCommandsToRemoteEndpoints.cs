@@ -22,7 +22,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The collection describing all the known endpoints and the commands they describe.
         /// </returns>
-        IEnumerable<Tuple<EndpointId, IEnumerable<Type>>> AvailableCommands();
+        IEnumerable<CommandInformationPerEndpoint> AvailableCommands();
 
         /// <summary>
         /// Returns a collection describing all the known commands for the given endpoint.
