@@ -9,9 +9,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Windows.Forms;
-using Apollo.Core.Base.Communication;
 using Apollo.Utilities.Applications;
 using Autofac;
+using AutofacContrib.Startable;
 using Mono.Options;
 
 namespace Apollo.Core.Dataset
@@ -90,6 +90,12 @@ namespace Apollo.Core.Dataset
             // To stop the application from running use the ApplicationContext
             // and call context.ExitThread();
             var container = DependencyInjection.Load(context);
+
+            // Load the communication system and get it going
+            if (container.IsRegistered<IStarter>())
+            {
+                container.Resolve<IStarter>().Start();
+            }
 
             // Notify the host app that we're alive, after which the 
             // rest of the app should pick up the loading of the dataset etc.

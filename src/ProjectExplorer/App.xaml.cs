@@ -62,14 +62,10 @@ namespace Apollo.ProjectExplorer
         }
 
         /// <summary>
-        /// Initializes the environment for use. Currently sets Environment Variables and 
-        /// creates directories.
+        /// Initializes the environment for use. 
         /// </summary>
         private static void InitializeEnvironment()
         {
-            // Set the internal logging for NLog
-            Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_FILE", @"d:\temp\nloginternal.log");
-            Environment.SetEnvironmentVariable("NLOG_INTERNAL_LOG_LEVEL", "Debug");
         }
 
         /// <summary>

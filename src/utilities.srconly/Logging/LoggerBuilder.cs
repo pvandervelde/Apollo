@@ -8,8 +8,6 @@ using System.Globalization;
 using NLog;
 using NLog.Config;
 using NLog.Targets;
-using NLog.Targets.Wrappers;
-using NLog.Win32.Targets;
 
 namespace Apollo.Utilities.Logging
 {
@@ -18,6 +16,21 @@ namespace Apollo.Utilities.Logging
     /// </summary>
     internal static class LoggerBuilder
     {
+        static LoggerBuilder()
+        {
+            TurnOnLogDebugging();
+        }
+
+        /// <summary>
+        /// Turns on the NLog internal logging for debug purposes.
+        /// </summary>
+        private static void TurnOnLogDebugging()
+        {
+            // Set the internal logging for NLog
+            // InternalLogger.LogFile = @"d:\temp\nloginternal.log";
+            // InternalLogger.LogLevel = LogLevel.Trace;
+        }
+
         private static Target BuildFileTarget(string filePath)
         {
             var fileTarget = new FileTarget()
@@ -64,7 +77,7 @@ namespace Apollo.Utilities.Logging
                 Log = "Application",
 
                 // Define how we move the event id to the logger.
-                EventID = string.Format(CultureInfo.InvariantCulture, "${{event-context:item={0}}}", AdditionalLogMessageProperties.EventId),
+                EventId = string.Format(CultureInfo.InvariantCulture, "${{event-context:item={0}}}", AdditionalLogMessageProperties.EventId),
 
                 // Define how we move the event category to the logger.
                 Category = string.Format(CultureInfo.InvariantCulture, "${{event-context:item={0}}}", AdditionalLogMessageProperties.EventCategory),
@@ -102,8 +115,10 @@ namespace Apollo.Utilities.Logging
             var result = new LogFactory(config);
             {
                 result.GlobalThreshold = NLog.LogLevel.Trace;
+                result.ThrowExceptions = true;
             }
 
+            result.EnableLogging();
             return result;
         }
 

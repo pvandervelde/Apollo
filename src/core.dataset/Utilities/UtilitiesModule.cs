@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Apollo.Utilities.Configuration;
 using Apollo.Utilities.Logging;
 using Autofac;
 
@@ -47,6 +48,9 @@ namespace Apollo.Utilities
 
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
+
+                builder.Register(c => new XmlConfiguration())
+                    .As<IConfiguration>();
 
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(

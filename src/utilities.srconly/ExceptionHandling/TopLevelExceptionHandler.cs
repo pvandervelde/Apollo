@@ -110,7 +110,7 @@ namespace Apollo.Utilities.ExceptionHandling
             // loader issues. These are probably due to us trying to load some of our code or
             // one of it's dependencies. Given that this is causing a problem it seems wise to not
             // try to use our (external) code to find an assembly file path ...
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             if (localAppDataPath == null)
             {
                 throw new DirectoryNotFoundException();
@@ -122,14 +122,17 @@ namespace Apollo.Utilities.ExceptionHandling
             var productAttribute = GetAttributeFromAssembly<AssemblyProductAttribute>();
             Debug.Assert((productAttribute != null) && !string.IsNullOrEmpty(productAttribute.Product), "There should be a product name.");
 
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
             var companyDirectory = Path.Combine(localAppDataPath, companyAttribute.Company);
             var productDirectory = Path.Combine(companyDirectory, productAttribute.Product);
-            if (!Directory.Exists(productDirectory))
+            var versionDirectory = Path.Combine(productDirectory, new Version(assemblyVersion.Major, assemblyVersion.Minor).ToString(2));
+            if (!Directory.Exists(versionDirectory))
             {
-                Directory.CreateDirectory(productDirectory);
+                Directory.CreateDirectory(versionDirectory);
             }
 
-            return productDirectory;
+            return versionDirectory;
         }
 
         /// <summary>

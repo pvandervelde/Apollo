@@ -191,7 +191,7 @@ namespace Apollo.Utilities.Logging
             {
                 foreach (var pair in message.Properties)
                 {
-                    info.Context[pair.Key] = pair.Value;
+                    info.Properties[pair.Key] = pair.Value;
                 }
             }
 
