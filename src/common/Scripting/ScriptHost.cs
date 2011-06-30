@@ -81,7 +81,7 @@ namespace Apollo.UI.Common.Scripting
 
             m_ProjectsForScripts = new ProjectHubForScripts(projects);
             m_AppDomainBuilder = appdomainBuilder;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>

@@ -48,7 +48,7 @@ namespace Apollo.Core
             }
 
             m_Owner = owner;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>

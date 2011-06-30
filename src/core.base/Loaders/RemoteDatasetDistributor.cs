@@ -200,7 +200,7 @@ namespace Apollo.Core.Base.Loaders
 
             m_Layer = layer;
             m_Configuration = configuration;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
             m_Hub = commandHub;
             {
                 // Note that the events may come in on a different thread than the one

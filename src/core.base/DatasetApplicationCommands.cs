@@ -70,7 +70,7 @@ namespace Apollo.Core.Base
             m_Layer = layer;
             m_CloseAction = closeAction;
             m_LoadAction = loadAction;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>

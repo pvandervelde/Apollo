@@ -57,7 +57,7 @@ namespace Apollo.Core.UserInterfaces.Projects
             }
 
             m_Creator = projectCreator;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         #region Implementation of ICommand

@@ -6,7 +6,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using MbUnit.Framework;
@@ -127,7 +129,11 @@ namespace Apollo.Base.Communication
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = (e, m) =>
                 {
                     intermediateMsg = m as CommandInvokedMessage;
-                    return Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(remoteEndpoint, new MessageId()));
+                    return Task<ICommunicationMessage>.Factory.StartNew(
+                        () => new SuccessMessage(remoteEndpoint, new MessageId()),
+                        new CancellationToken(),
+                        TaskCreationOptions.None,
+                        new CurrentThreadTaskScheduler());
                 };
 
             var builder = new CommandProxyBuilder(local, sender);
@@ -157,7 +163,11 @@ namespace Apollo.Base.Communication
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = (e, m) =>
             {
                 intermediateMsg = m as CommandInvokedMessage;
-                return Task<ICommunicationMessage>.Factory.StartNew(() => new FailureMessage(remoteEndpoint, new MessageId()));
+                return Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new FailureMessage(remoteEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             };
 
             var builder = new CommandProxyBuilder(local, sender);
@@ -188,7 +198,11 @@ namespace Apollo.Base.Communication
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = (e, m) =>
             {
                 intermediateMsg = m as CommandInvokedMessage;
-                return Task<ICommunicationMessage>.Factory.StartNew(() => new CommandInvokedResponseMessage(remoteEndpoint, new MessageId(), 20));
+                return Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new CommandInvokedResponseMessage(remoteEndpoint, new MessageId(), 20),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             };
 
             var builder = new CommandProxyBuilder(local, sender);
@@ -219,7 +233,11 @@ namespace Apollo.Base.Communication
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = (e, m) =>
             {
                 intermediateMsg = m as CommandInvokedMessage;
-                return Task<ICommunicationMessage>.Factory.StartNew(() => new FailureMessage(remoteEndpoint, new MessageId()));
+                return Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new FailureMessage(remoteEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             };
 
             var builder = new CommandProxyBuilder(local, sender);

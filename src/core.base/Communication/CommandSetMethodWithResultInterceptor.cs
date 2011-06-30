@@ -96,7 +96,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             m_SendMessageWithResponse = sendMessageWithResponse;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>

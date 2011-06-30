@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
@@ -101,13 +102,15 @@ namespace Apollo.Core.Projects
         public void SaveAfterClosing()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -141,13 +144,15 @@ namespace Apollo.Core.Projects
         public void ExportWithNullDatasetId()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -173,13 +178,15 @@ namespace Apollo.Core.Projects
         public void ExportWithUnknownDatasetId()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -205,13 +212,15 @@ namespace Apollo.Core.Projects
         public void ExportWithNullPersistenceInformation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -238,13 +247,15 @@ namespace Apollo.Core.Projects
         public void ExportAfterClosing()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -287,13 +298,15 @@ namespace Apollo.Core.Projects
         public void Name()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -328,13 +341,15 @@ namespace Apollo.Core.Projects
         public void Summary()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()

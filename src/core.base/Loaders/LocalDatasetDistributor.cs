@@ -95,7 +95,7 @@ namespace Apollo.Core.Base.Loaders
             m_Layer = layer;
             m_Hub = hub;
             m_Uploads = uploads;
-            m_Scheduler = scheduler;
+            m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
         /// <summary>

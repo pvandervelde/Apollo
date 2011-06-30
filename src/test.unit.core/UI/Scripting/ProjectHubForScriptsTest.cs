@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
 using Apollo.Core.UserInterfaces.Projects;
@@ -62,7 +64,11 @@ namespace Apollo.UI.Scripting
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         })
                     .Verifiable();
             }
@@ -113,7 +119,11 @@ namespace Apollo.UI.Scripting
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 

@@ -75,7 +75,7 @@ namespace Apollo.UI.Common.Views.Datasets
                 action, 
                 new CancellationToken(),
                 TaskCreationOptions.LongRunning,
-                scheduler);
+                scheduler ?? TaskScheduler.Default);
         }
 
         /// <summary>

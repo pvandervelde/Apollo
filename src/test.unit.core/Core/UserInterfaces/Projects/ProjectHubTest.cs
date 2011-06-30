@@ -4,9 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
@@ -61,7 +62,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         })
                     .Verifiable();
             }
@@ -117,7 +122,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         {
                             LoadProjectContext loadContext = context as LoadProjectContext;
                             Assert.AreSame(persistence.Object, loadContext.LoadFrom);
-                            loadContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            loadContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         })
                     .Verifiable();
             }
@@ -154,7 +163,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 

@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
@@ -104,13 +105,15 @@ namespace Apollo.Core.Projects
         public void GetDataset()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -138,13 +141,15 @@ namespace Apollo.Core.Projects
         public void Name()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -180,13 +185,15 @@ namespace Apollo.Core.Projects
         public void Summary()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -222,13 +229,15 @@ namespace Apollo.Core.Projects
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -247,7 +256,7 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
-                l => new SelectedProposal();
+                l => new SelectedProposal(plan);
 
             Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
                 () => dataset.LoadOntoMachine(
@@ -261,13 +270,15 @@ namespace Apollo.Core.Projects
         public void LoadOntoMachineWhenAlreadyLoaded()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -288,7 +299,7 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
-                l => new SelectedProposal();
+                l => new SelectedProposal(plan);
 
             dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
 
@@ -307,13 +318,15 @@ namespace Apollo.Core.Projects
         public void LoadOntoMachineWithSelectionCancellation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -333,12 +346,16 @@ namespace Apollo.Core.Projects
 
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
+
+            // Explicitly return nothing so that we cancel the process
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal();
 
             bool wasLoaded = false;
             dataset.OnLoaded += (s, e) => wasLoaded = true;
-            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+
+            var source = new CancellationTokenSource();
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, source.Token);
 
             Assert.IsFalse(wasLoaded);
         }
@@ -348,13 +365,15 @@ namespace Apollo.Core.Projects
         public void LoadOntoMachine()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -375,7 +394,7 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
-                l => new SelectedProposal();
+                l => new SelectedProposal(plan);
 
             bool wasLoaded = false;
             dataset.OnLoaded += (s, e) => wasLoaded = true;
@@ -393,14 +412,28 @@ namespace Apollo.Core.Projects
         [Description("Checks that a dataset can be unloaded from a machine.")]
         public void UnloadFromMachine()
         {
+            var commands = new Mock<IDatasetApplicationCommands>();
+            {
+                commands.Setup(c => c.Close())
+                    .Returns(Task.Factory.StartNew(() => { }));
+            }
+
+            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            {
+                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                    .Returns(commands.Object);
+            }
+
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                        hub.Object),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -421,7 +454,7 @@ namespace Apollo.Core.Projects
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
-                l => new SelectedProposal();
+                l => new SelectedProposal(plan);
 
             dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
 
@@ -440,13 +473,15 @@ namespace Apollo.Core.Projects
         public void Children()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -486,13 +521,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChildWithNullCreationInformation()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -519,13 +556,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -560,13 +599,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChild()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -616,13 +657,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChildrenWithNullCollection()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -649,13 +692,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChildrenWithEmptyCollection()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -682,13 +727,15 @@ namespace Apollo.Core.Projects
         public void CreateNewChildren()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -733,13 +780,15 @@ namespace Apollo.Core.Projects
         public void DeleteWhenClosed()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -779,13 +828,15 @@ namespace Apollo.Core.Projects
         public void DeleteUndeletableDataset()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -812,13 +863,15 @@ namespace Apollo.Core.Projects
         public void DeleteDatasetWithUndeletableChild()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()
@@ -869,13 +922,15 @@ namespace Apollo.Core.Projects
         public void DeleteDatasetWithChildren()
         {
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object),
-                    t),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
                     new DatasetCreationInformation()

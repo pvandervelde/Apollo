@@ -335,6 +335,11 @@ namespace Apollo.Core.Projects
                 Debug.Assert(machineSelector != null, "There should be a way to select the most suitable machine.");
             }
 
+            if (m_ActiveDatasets.ContainsKey(id))
+            {
+                return;
+            }
+
             // Indicate that the loading process has started.
             m_LoadingDatsets.Add(id, null);
             try

@@ -212,7 +212,7 @@ namespace Apollo.Core.Base.Communication
                 },
                 token,
                 TaskCreationOptions.LongRunning,
-                scheduler);
+                scheduler ?? TaskScheduler.Default);
 
             return new Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
         }
@@ -296,7 +296,7 @@ namespace Apollo.Core.Base.Communication
                 },
                 token,
                 TaskCreationOptions.LongRunning,
-                scheduler);
+                scheduler ?? TaskScheduler.Default);
 
             return result;
         }
