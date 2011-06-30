@@ -104,10 +104,15 @@ namespace Apollo.Core.Base.Communication
         /// <param name="filePath">The full path to the file that should be transferred.</param>
         /// <param name="transferInfo">The object that provides the upload information.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         ///     A task that will return once the upload is complete.
         /// </returns>
-        Task UploadData(string filePath, StreamTransferInformation transferInfo, CancellationToken token);
+        Task UploadData(
+            string filePath, 
+            StreamTransferInformation transferInfo, 
+            CancellationToken token,
+            TaskScheduler scheduler);
 
         /// <summary>
         /// Downloads a given file from a specific endpoint.
@@ -120,10 +125,16 @@ namespace Apollo.Core.Base.Communication
         /// <param name="uploadToken">The token that indicates which file should be uploaded.</param>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         /// The task which will return the pointer to the file once the download is complete.
         /// </returns>
-        Task<Stream> DownloadData(EndpointId endpointToDownloadFrom, UploadToken uploadToken, string localFile, CancellationToken token);
+        Task<Stream> DownloadData(
+            EndpointId endpointToDownloadFrom, 
+            UploadToken uploadToken, 
+            string localFile, 
+            CancellationToken token,
+            TaskScheduler scheduler);
 
         /// <summary>
         /// Disconnects from the given endpoint.

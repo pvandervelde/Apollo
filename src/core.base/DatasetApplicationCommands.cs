@@ -35,11 +35,17 @@ namespace Apollo.Core.Base
         private readonly Action<FileInfo> m_LoadAction;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetApplicationCommands"/> class.
         /// </summary>
         /// <param name="layer">The object that handles the communication with remote endpoints.</param>
         /// <param name="closeAction">The action that closes the application.</param>
         /// <param name="loadAction">The action that is used to load the dataset from a given file path.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
@@ -52,7 +58,8 @@ namespace Apollo.Core.Base
         public DatasetApplicationCommands(
             ICommunicationLayer layer, 
             Action closeAction,
-            Action<FileInfo> loadAction)
+            Action<FileInfo> loadAction,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => layer);
@@ -63,6 +70,7 @@ namespace Apollo.Core.Base
             m_Layer = layer;
             m_CloseAction = closeAction;
             m_LoadAction = loadAction;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -76,12 +84,13 @@ namespace Apollo.Core.Base
             var filePath = Path.GetTempFileName();
 
             var source = new CancellationTokenSource();
-            var task = m_Layer.DownloadData(ownerId, token, filePath, source.Token);
+            var task = m_Layer.DownloadData(ownerId, token, filePath, source.Token, m_Scheduler);
             return task.ContinueWith(
                 t =>
                 {
                     m_LoadAction(new FileInfo(filePath));
-                });
+                },
+                TaskContinuationOptions.ExecuteSynchronously);
         }
 
         /// <summary>
@@ -90,7 +99,11 @@ namespace Apollo.Core.Base
         /// <returns>A task that will finish once the application is closed.</returns>
         public Task Close()
         {
-            return Task.Factory.StartNew(() => m_CloseAction);
+            return Task.Factory.StartNew(
+                () => m_CloseAction,
+                new CancellationToken(),
+                TaskCreationOptions.None,
+                m_Scheduler);
         }
 
         /// <summary>

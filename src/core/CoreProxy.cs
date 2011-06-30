@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Lokad;
 
@@ -27,13 +28,19 @@ namespace Apollo.Core
         private readonly IKernel m_Owner;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CoreProxy"/> class.
         /// </summary>
         /// <param name="owner">The <see cref="Kernel"/> to which this proxy is linked.</param>
+        /// <param name="scheduler">The scheduler that is used to run tasks.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
-        public CoreProxy(IKernel owner)
+        public CoreProxy(IKernel owner, TaskScheduler scheduler = null)
             : base()
         {
             {
@@ -41,6 +48,7 @@ namespace Apollo.Core
             }
 
             m_Owner = owner;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -49,7 +57,11 @@ namespace Apollo.Core
         /// <returns>The task that is running the shutdown of the system.</returns>
         public Task Shutdown()
         {
-            return Task.Factory.StartNew(() => m_Owner.Shutdown());
+            return Task.Factory.StartNew(
+                () => m_Owner.Shutdown(),
+                new CancellationToken(),
+                TaskCreationOptions.LongRunning,
+                m_Scheduler);
         }
 
         /// <summary>

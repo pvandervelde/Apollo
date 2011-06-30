@@ -493,10 +493,15 @@ namespace Apollo.Core.Base.Communication
         /// <param name="filePath">The full path to the file that should be transferred.</param>
         /// <param name="transferInfo">The object that provides the upload information.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         ///     A task that will return once the upload is complete.
         /// </returns>
-        public Task UploadData(string filePath, StreamTransferInformation transferInfo, CancellationToken token)
+        public Task UploadData(
+            string filePath,
+            StreamTransferInformation transferInfo,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => filePath);
@@ -504,7 +509,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             var pair = m_OpenConnections[transferInfo.ChannelType];
-            return pair.Item1.TransferData(filePath, transferInfo, token);
+            return pair.Item1.TransferData(filePath, transferInfo, token, scheduler);
         }
 
         /// <summary>
@@ -518,19 +523,16 @@ namespace Apollo.Core.Base.Communication
         /// <param name="uploadToken">The token that indicates which file should be uploaded.</param>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         /// The task which will return the pointer to the file once the download is complete.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="endpointToDownloadFrom"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="EndpointNotContactableException">
-        ///     Thrown if the <paramref name="endpointToDownloadFrom"/> is not registered.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="uploadToken"/> is <see langword="null" />.
-        /// </exception>
-        public Task<Stream> DownloadData(EndpointId endpointToDownloadFrom, UploadToken uploadToken, string localFile, CancellationToken token)
+        public Task<Stream> DownloadData(
+            EndpointId endpointToDownloadFrom,
+            UploadToken uploadToken,
+            string localFile,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => endpointToDownloadFrom);
@@ -546,7 +548,7 @@ namespace Apollo.Core.Base.Communication
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
             var pair = m_OpenConnections[connection.ChannelType];
-            var info = pair.Item1.PrepareForDataReception(localFile, token);
+            var info = pair.Item1.PrepareForDataReception(localFile, token, scheduler);
 
             var msg = new DataDownloadRequestMessage(Id, uploadToken, info.Item1);
             pair.Item1.Send(endpointToDownloadFrom, msg);
@@ -560,8 +562,8 @@ namespace Apollo.Core.Base.Communication
                         FileShare.None);
                 },
                 token,
-                TaskContinuationOptions.OnlyOnRanToCompletion,
-                null);
+                TaskContinuationOptions.None,
+                scheduler);
         }
 
         /// <summary>

@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Utilities.Commands;
 using Lokad;
@@ -33,22 +34,29 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// The method used to unload the project.
         /// </summary>
-        private Action m_UnloadMethod;
+        private readonly Action m_UnloadMethod;
+
+        /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnloadProjectCommand"/> class.
         /// </summary>
         /// <param name="unloadMethod">The method used to unload the project.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="unloadMethod"/> is <see langword="null"/>.
         /// </exception>
-        internal UnloadProjectCommand(Action unloadMethod)
+        internal UnloadProjectCommand(Action unloadMethod, TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => unloadMethod);
             }
 
             m_UnloadMethod = unloadMethod;
+            m_Scheduler = scheduler;
         }
 
         #region Implementation of ICommand
@@ -74,7 +82,11 @@ namespace Apollo.Core.UserInterfaces.Projects
             var commandContext = context as UnloadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            commandContext.Result = Task.Factory.StartNew(() => m_UnloadMethod());
+            commandContext.Result = Task.Factory.StartNew(
+                () => m_UnloadMethod(),
+                new CancellationToken(),
+                TaskCreationOptions.None,
+                m_Scheduler);
         }
 
         #endregion

@@ -166,11 +166,17 @@ namespace Apollo.Core.Base.Loaders
         private readonly IConfiguration m_Configuration;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RemoteDatasetDistributor"/> class.
         /// </summary>
         /// <param name="layer">The object that handles the communication between applications.</param>
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
         /// <param name="configuration">The application specific configuration.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
@@ -183,7 +189,8 @@ namespace Apollo.Core.Base.Loaders
         public RemoteDatasetDistributor(
             ICommunicationLayer layer,
             ISendCommandsToRemoteEndpoints commandHub, 
-            IConfiguration configuration)
+            IConfiguration configuration,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => layer);
@@ -193,6 +200,7 @@ namespace Apollo.Core.Base.Loaders
 
             m_Layer = layer;
             m_Configuration = configuration;
+            m_Scheduler = scheduler;
             m_Hub = commandHub;
             {
                 // Note that the events may come in on a different thread than the one
@@ -341,7 +349,11 @@ namespace Apollo.Core.Base.Loaders
                         m_Hub);
                 };
 
-            return Task<DatasetOnlineInformation>.Factory.StartNew(result, token);
+            return Task<DatasetOnlineInformation>.Factory.StartNew(
+                result, 
+                token,
+                TaskCreationOptions.LongRunning,
+                m_Scheduler);
         }
     }
 }

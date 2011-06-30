@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Loaders;
 using Lokad;
@@ -34,13 +35,17 @@ namespace Apollo.UI.Common.Views.Datasets
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="suggestions">The collection containing the dataset loading suggestions.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks on.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="suggestions"/> is <see langword="null" />.
         /// </exception>
-        public MachineSelectorModel(IContextAware context, IEnumerable<DistributionSuggestion> suggestions)
+        public MachineSelectorModel(
+            IContextAware context, 
+            IEnumerable<DistributionSuggestion> suggestions,
+            TaskScheduler scheduler = null)
             : base(context)
         {
             {
@@ -66,7 +71,11 @@ namespace Apollo.UI.Common.Views.Datasets
                     IsLoading = false;
                 };
 
-            Task.Factory.StartNew(action, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(
+                action, 
+                new CancellationToken(),
+                TaskCreationOptions.LongRunning,
+                scheduler);
         }
 
         /// <summary>

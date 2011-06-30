@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
 using Apollo.Utilities;
@@ -32,22 +33,29 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// <summary>
         /// The function that is used to load the project.
         /// </summary>
-        private Func<IPersistenceInformation, IProject> m_Loader;
+        private readonly Func<IPersistenceInformation, IProject> m_Loader;
+
+        /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadProjectCommand"/> class.
         /// </summary>
         /// <param name="loader">The function that is used to load the project.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="loader"/> is <see langword="null"/>.
         /// </exception>
-        internal LoadProjectCommand(Func<IPersistenceInformation, IProject> loader)
+        internal LoadProjectCommand(Func<IPersistenceInformation, IProject> loader, TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => loader);
             }
 
             m_Loader = loader;
+            m_Scheduler = scheduler;
         }
 
         #region Implementation of ICommand
@@ -73,7 +81,11 @@ namespace Apollo.Core.UserInterfaces.Projects
             var commandContext = context as LoadProjectContext;
             Debug.Assert(commandContext != null, "Incorrect command context provided.");
 
-            commandContext.Result = Task<IProject>.Factory.StartNew(() => m_Loader(commandContext.LoadFrom));
+            commandContext.Result = Task<IProject>.Factory.StartNew(
+                () => m_Loader(commandContext.LoadFrom),
+                new CancellationToken(),
+                TaskCreationOptions.LongRunning,
+                m_Scheduler);
         }
 
         #endregion

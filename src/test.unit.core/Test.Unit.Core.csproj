@@ -48,6 +48,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\..\lib\parallelextensions\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>

@@ -16,7 +16,7 @@ namespace Apollo.Core.Base.Loaders
     internal interface IApplicationLoader
     {
         /// <summary>
-        /// Loads the dataset into an external application and returns when the dataset is completely loaded.
+        /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
         /// <param name="ownerConnection">
         ///     The channel connection information for the owner.

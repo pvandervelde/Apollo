@@ -141,7 +141,8 @@ namespace Apollo.Core.Base.Communication
                         t =>
                         {
                             ProcessInformationResponse(t, endpoint);
-                        });
+                        },
+                        TaskContinuationOptions.ExecuteSynchronously);
                 }
             }
         }

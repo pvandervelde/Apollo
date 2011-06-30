@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
@@ -23,10 +24,11 @@ namespace Apollo.Core.Base.Communication
         /// which is delivered by another task.
         /// </summary>
         /// <param name="inputTask">The task which will deliver the <see cref="ICommunicationMessage"/> that contains the return value.</param>
+        /// <param name="scheduler">The scheduler that is used to run the task.</param>
         /// <returns>
         /// A task returning the desired return type.
         /// </returns>
-        private static Task CreateTask(Task<ICommunicationMessage> inputTask)
+        private static Task CreateTask(Task<ICommunicationMessage> inputTask, TaskScheduler scheduler)
         {
             Action action = () =>
             {
@@ -42,7 +44,11 @@ namespace Apollo.Core.Base.Communication
                 throw new CommandInvocationFailedException();
             };
 
-            return Task.Factory.StartNew(action, TaskCreationOptions.LongRunning);
+            return Task.Factory.StartNew(
+                action, 
+                new CancellationToken(),
+                TaskCreationOptions.LongRunning,
+                scheduler);
         }
 
         /// <summary>
@@ -51,23 +57,31 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> m_SendMessageWithResponse;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandSetMethodWithoutResultInterceptor"/> class.
         /// </summary>
         /// <param name="sendMessageWithResponse">
         ///     The function used to send the information about the method invocation to the owning endpoint.
         /// </param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
         public CommandSetMethodWithoutResultInterceptor(
             Func<ISerializedMethodInvocation, 
-            Task<ICommunicationMessage>> sendMessageWithResponse)
+            Task<ICommunicationMessage>> sendMessageWithResponse,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);
             }
 
             m_SendMessageWithResponse = sendMessageWithResponse;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -93,7 +107,7 @@ namespace Apollo.Core.Base.Communication
                 throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
             }
 
-            invocation.ReturnValue = CreateTask(result);
+            invocation.ReturnValue = CreateTask(result, m_Scheduler);
         }
     }
 }

@@ -227,7 +227,8 @@ namespace Apollo.UI.Common.Views.Scripting
 
                     m_ScriptRunInfo.ScriptOutput.OnScriptOutput += new EventHandler<ScriptOutputEventArgs>(OnScriptOutput);
                     m_ScriptRunInfo = null;
-                });
+                },
+                TaskContinuationOptions.None);
         }
 
         private void OnScriptOutput(object sender, ScriptOutputEventArgs args)

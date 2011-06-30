@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
@@ -31,12 +32,13 @@ namespace Apollo.Core.Base.Communication
         /// <param name="inputTask">
         ///     The task which will deliver the <see cref="ICommunicationMessage"/> that contains the return value.
         /// </param>
+        /// <param name="scheduler">The scheduler that runs the return task.</param>
         /// <returns>
         /// A task returning the desired return type.
         /// </returns>
         [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
             Justification = "This method is called via reflection in order to generate the correct return value for a command method.")]
-        private static Task<T> CreateTask<T>(Task<ICommunicationMessage> inputTask)
+        private static Task<T> CreateTask<T>(Task<ICommunicationMessage> inputTask, TaskScheduler scheduler)
         {
             Func<T> action = () =>
             {
@@ -57,7 +59,11 @@ namespace Apollo.Core.Base.Communication
                 throw new CommandInvocationFailedException();
             };
 
-            return Task<T>.Factory.StartNew(action, TaskCreationOptions.LongRunning);
+            return Task<T>.Factory.StartNew(
+                action, 
+                new CancellationToken(),
+                TaskCreationOptions.LongRunning,
+                scheduler);
         }
 
         /// <summary>
@@ -66,23 +72,31 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> m_SendMessageWithResponse;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandSetMethodWithResultInterceptor"/> class.
         /// </summary>
         /// <param name="sendMessageWithResponse">
         ///     The function used to send the information about the method invocation to the owning endpoint.
         /// </param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
         public CommandSetMethodWithResultInterceptor(
             Func<ISerializedMethodInvocation, 
-            Task<ICommunicationMessage>> sendMessageWithResponse)
+            Task<ICommunicationMessage>> sendMessageWithResponse,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);
             }
 
             m_SendMessageWithResponse = sendMessageWithResponse;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -132,7 +146,7 @@ namespace Apollo.Core.Base.Communication
                     "CreateTask", 
                     BindingFlags.DeclaredOnly | BindingFlags.Static | BindingFlags.NonPublic,
                     null,
-                    new Type[] { typeof(Task<ICommunicationMessage>) },
+                    new Type[] { typeof(Task<ICommunicationMessage>), typeof(TaskScheduler) },
                     null)
                 .MakeGenericMethod(genericArguments[0]);
 
@@ -140,7 +154,7 @@ namespace Apollo.Core.Base.Communication
             // slow but we don't expect it to cause too much trouble given that we're getting
             // the result from another application which lives on the other side of a named pipe
             // (best case) or TCP connection (worst case)
-            invocation.ReturnValue = taskBuilder.Invoke(null, new object[] { result });
+            invocation.ReturnValue = taskBuilder.Invoke(null, new object[] { result, m_Scheduler });
         }
     }
 }

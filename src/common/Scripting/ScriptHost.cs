@@ -30,6 +30,11 @@ namespace Apollo.UI.Common.Scripting
         private readonly Func<string, AppDomainPaths, AppDomain> m_AppDomainBuilder;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// The combination of the script language and the <c>AppDomain</c> that is used to run 
         /// the current script in. AppDomains are only recycled once a new language is selected.
         /// </summary>
@@ -57,13 +62,17 @@ namespace Apollo.UI.Common.Scripting
         /// </summary>
         /// <param name="projects">The object that handles all the project related actions.</param>
         /// <param name="appdomainBuilder">The function that creates a new <see cref="AppDomain"/> with the given name.</param>
+        /// <param name="scheduler">The scheduler that will be used to schedule tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="projects"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="appdomainBuilder"/> is <see langword="null" />.
         /// </exception>
-        public ScriptHost(ILinkToProjects projects, Func<string, AppDomainPaths, AppDomain> appdomainBuilder)
+        public ScriptHost(
+            ILinkToProjects projects, 
+            Func<string, AppDomainPaths, AppDomain> appdomainBuilder,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => projects);
@@ -72,6 +81,7 @@ namespace Apollo.UI.Common.Scripting
 
             m_ProjectsForScripts = new ProjectHubForScripts(projects);
             m_AppDomainBuilder = appdomainBuilder;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -120,7 +130,7 @@ namespace Apollo.UI.Common.Scripting
 
             var source = new CancellationTokenSource();
             var token = new CancelScriptToken(source.Token);
-            var result = new Task(
+            var result = Task.Factory.StartNew(
                 () =>
                 {
                     try
@@ -134,12 +144,12 @@ namespace Apollo.UI.Common.Scripting
                     }
                 },
                 source.Token,
-                TaskCreationOptions.LongRunning);
+                TaskCreationOptions.LongRunning,
+                m_Scheduler);
 
             m_CurrentlyRunningScript = result;
             m_CurrentToken = source;
 
-            result.Start();
             return new Tuple<Task, CancellationTokenSource>(result, source);
         }
 

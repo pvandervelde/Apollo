@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication.Messages.Processors
@@ -27,17 +28,26 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly ICommunicationLayer m_Layer;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DataDownloadProcessAction"/> class.
         /// </summary>
         /// <param name="uploads">The object that stores the files that need uploading.</param>
         /// <param name="layer">The object that handles the communication with remote endpoints.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks on.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="uploads"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
-        public DataDownloadProcessAction(WaitingUploads uploads, ICommunicationLayer layer)
+        public DataDownloadProcessAction(
+            WaitingUploads uploads, 
+            ICommunicationLayer layer,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => uploads);
@@ -46,6 +56,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             m_Uploads = uploads;
             m_Layer = layer;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -81,7 +92,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             var filePath = m_Uploads.Deregister(msg.Token);
             var tokenSource = new CancellationTokenSource();
-            var task = m_Layer.UploadData(filePath, msg.TransferInformation, tokenSource.Token);
+            var task = m_Layer.UploadData(filePath, msg.TransferInformation, tokenSource.Token, m_Scheduler);
 
             ICommunicationMessage returnMsg = null;
             try

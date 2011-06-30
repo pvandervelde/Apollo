@@ -47,6 +47,11 @@ namespace Apollo.Core.Base.Loaders
         private readonly WaitingUploads m_Uploads;
 
         /// <summary>
+        /// The scheduler that will be used to schedule tasks.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="LocalDatasetDistributor"/> class.
         /// </summary>
         /// <param name="localDistributor">The object that handles distribution proposals for the local machine.</param>
@@ -54,6 +59,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="layer">The object that handles the communication between applications.</param>
         /// <param name="hub">The object that sends commands to remote endpoints.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
+        /// <param name="scheduler">The scheduler that is used to run the tasks on.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localDistributor"/> is <see langword="null" />.
         /// </exception>
@@ -74,7 +80,8 @@ namespace Apollo.Core.Base.Loaders
             IApplicationLoader loader,
             ICommunicationLayer layer,
             ISendCommandsToRemoteEndpoints hub,
-            WaitingUploads uploads)
+            WaitingUploads uploads,
+            TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => localDistributor);
@@ -88,6 +95,7 @@ namespace Apollo.Core.Base.Loaders
             m_Layer = layer;
             m_Hub = hub;
             m_Uploads = uploads;
+            m_Scheduler = scheduler;
         }
 
         /// <summary>
@@ -120,7 +128,9 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// A set of objects which allow act as proxies for the loaded datasets.
         /// </returns>
-        public Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token)
+        public Task<DatasetOnlineInformation> ImplementPlan(
+            DistributionPlan planToImplement, 
+            CancellationToken token)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -166,7 +176,11 @@ namespace Apollo.Core.Base.Loaders
                         m_Hub);
                 };
 
-            return Task<DatasetOnlineInformation>.Factory.StartNew(result, token);
+            return Task<DatasetOnlineInformation>.Factory.StartNew(
+                result, 
+                token,
+                TaskCreationOptions.LongRunning,
+                m_Scheduler);
         }
     }
 }

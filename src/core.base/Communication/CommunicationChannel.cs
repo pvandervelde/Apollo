@@ -330,24 +330,22 @@ namespace Apollo.Core.Base.Communication
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="localFile"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="localFile"/> is an empty string.
-        /// </exception>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+            string localFile,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => localFile);
                 Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(localFile), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
             }
 
-            return m_Type.PrepareForDataReception(localFile, token);
+            return m_Type.PrepareForDataReception(localFile, token, scheduler);
         }
 
         /// <summary>
@@ -359,19 +357,15 @@ namespace Apollo.Core.Base.Communication
         /// which the data is transferred.
         /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="filePath"/> is an empty string.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
-        /// </exception>
-        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(
+            string filePath,
+            StreamTransferInformation transferInformation,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => filePath);
@@ -379,7 +373,7 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => transferInformation);
             }
 
-            return m_Type.TransferData(filePath, transferInformation, token);
+            return m_Type.TransferData(filePath, transferInformation, token, scheduler);
         }
 
         /// <summary>

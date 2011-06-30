@@ -176,7 +176,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 result = method.Invoke(commandSet, parameterValues.ToArray()) as Task;
                 
                 Debug.Assert(result != null, "The command return result was not a Task or Task<T>.");
-                result.ContinueWith(t => ProcessTaskReturnResult(msg, t));
+                result.ContinueWith(
+                    t => ProcessTaskReturnResult(msg, t),
+                    TaskContinuationOptions.ExecuteSynchronously);
             }
             catch (Exception e)
             {

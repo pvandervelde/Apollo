@@ -11,6 +11,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
@@ -395,7 +396,8 @@ namespace Apollo.Core.Projects
                             proxy.OwnerReportsDatasetLoadingProgress(100, new DatasetLoadingProgressMark());
                             proxy.OwnerHasLoadedDataset();
                         }
-                    });
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion);
             }
             catch (OperationCanceledException)
             {
