@@ -5,10 +5,13 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Globalization;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
+using Apollo.Utilities;
 using Castle.DynamicProxy;
 using Lokad;
 
@@ -51,10 +54,42 @@ namespace Apollo.Core.Base.Communication
                 scheduler);
         }
 
+        private static string MethodToText(MethodInfo method)
+        {
+            // var builder = new StringBuilder();
+            // builder.Append(method.DeclaringType.FullName);
+            // builder.Append(".");
+            // builder.Append(method.Name);
+            // builder.Append("(");
+            //
+            // var parameters = method.GetParameters();
+            // for (int i = 0; i < parameters.Length; i++)
+            // {
+            //     var parameter = parameters[i];
+            //     builder.Append(parameter.ParameterType.FullName);
+            //     builder.Append(" ");
+            //     builder.Append(parameter.Name);
+            //     if (i < parameters.Length - 1)
+            //     {
+            //         builder.Append(", ");
+            //     }
+            // }
+            //
+            // builder.Append(")");
+            //
+            // return builder.ToString();
+            return method.ToString();
+        }
+
         /// <summary>
         /// The function which sends the <see cref="CommandInvokedMessage"/> to the owning endpoint.
         /// </summary>
         private readonly Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> m_SendMessageWithResponse;
+
+        /// <summary>
+        /// The function used to write log messages.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
         /// The scheduler that will be used to schedule tasks.
@@ -67,20 +102,27 @@ namespace Apollo.Core.Base.Communication
         /// <param name="sendMessageWithResponse">
         ///     The function used to send the information about the method invocation to the owning endpoint.
         /// </param>
+        /// <param name="logger">The function that is used to log messages.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
         public CommandSetMethodWithoutResultInterceptor(
             Func<ISerializedMethodInvocation, 
             Task<ICommunicationMessage>> sendMessageWithResponse,
+            Action<LogSeverityProxy, string> logger,
             TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);
+                Enforce.Argument(() => logger);
             }
 
             m_SendMessageWithResponse = sendMessageWithResponse;
+            m_Logger = logger;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
@@ -90,6 +132,13 @@ namespace Apollo.Core.Base.Communication
         /// <param name="invocation">Information about the call that was intercepted.</param>
         public void Intercept(IInvocation invocation)
         {
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Invoking {0}",
+                    MethodToText(invocation.Method)));
+
             Task<ICommunicationMessage> result = null;
             try
             {
@@ -100,10 +149,24 @@ namespace Apollo.Core.Base.Communication
             }
             catch (EndpointNotContactableException e)
             {
+                m_Logger(
+                LogSeverityProxy.Error,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Tried to invoke {0}, but failed to contact the remote endpoint.",
+                    MethodToText(invocation.Method)));
+
                 throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
             }
             catch (FailedToSendMessageException e)
             {
+                m_Logger(
+                LogSeverityProxy.Error,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Tried to invoke {0}, but failed to send the message.",
+                    MethodToText(invocation.Method)));
+
                 throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
             }
 

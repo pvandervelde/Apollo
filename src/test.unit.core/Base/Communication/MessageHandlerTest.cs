@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
 
@@ -23,7 +24,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that a message response is delivered to the correct waiting task.")]
         public void ForwardResponse()
         {
-            var handler = new MessageHandler();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var handler = new MessageHandler(logger);
 
             var endpoint = new EndpointId("endpoint");
             var messageId = new MessageId();
@@ -42,7 +44,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that a failure response is delivered to the correct waiting task if the endpoint disconnects.")]
         public void ForwardResponseWithDisconnectingEndpoint()
         {
-            var handler = new MessageHandler();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var handler = new MessageHandler(logger);
 
             var endpoint = new EndpointId("endpoint");
             var messageId = new MessageId();
@@ -69,7 +72,8 @@ namespace Apollo.Base.Communication
                     .Callback<ICommunicationMessage>(m => { storedMessage = m; });
             }
 
-            var handler = new MessageHandler();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var handler = new MessageHandler(logger);
             handler.ActOnArrival(new MessageKindFilter(typeof(EndpointConnectMessage)), processAction.Object);
 
             var endpoint = new EndpointId("endpoint");

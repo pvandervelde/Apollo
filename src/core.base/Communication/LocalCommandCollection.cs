@@ -115,9 +115,9 @@ namespace Apollo.Core.Base.Communication
             m_Commands.Add(commandType, commands);
             if (m_Layer.IsSignedIn)
             {
-                foreach (var endpoint in m_Layer.LocalConnectionPoints())
+                foreach (var endpoint in m_Layer.KnownEndpoints())
                 {
-                    m_Layer.SendMessageTo(endpoint.Id, new NewCommandRegisteredMessage(m_Layer.Id, commandType));
+                    m_Layer.SendMessageTo(endpoint, new NewCommandRegisteredMessage(m_Layer.Id, commandType));
                 }
             }
         }

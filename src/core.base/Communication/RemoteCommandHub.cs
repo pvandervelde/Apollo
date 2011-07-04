@@ -129,6 +129,12 @@ namespace Apollo.Core.Base.Communication
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
                         // We've already contacted the endpoint and we're still waiting.
+                        m_Logger(
+                            LogSeverityProxy.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Already waiting for commands from endpoint [{0}].",
+                                endpoint));
                         return;
                     }
 
@@ -187,30 +193,20 @@ namespace Apollo.Core.Base.Communication
                             // needs to travel to another application and come back (possibly over the network). it seems the
                             // sorted list is the best trade-off (memory vs performance) in this case.
                             var commands = msg.Commands;
+                            m_Logger(
+                                LogSeverityProxy.Trace,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Received {0} commands from endpoint [{1}].",
+                                    commands.Count,
+                                    endpoint));
 
                             var list = new SortedList<Type, CommandSetProxy>(commands.Count, new TypeComparer());
                             foreach (var command in commands)
                             { 
                                 // Hydrate the command type. This requires loading the assembly which a) might
                                 // be slow and b) might fail
-                                Type commandSetType = null;
-                                try
-                                {
-                                    commandSetType = CommandSetProxyExtensions.ToType(command);
-                                }
-                                catch (UnableToLoadCommandSetTypeException)
-                                {
-                                    m_Logger(
-                                        LogSeverityProxy.Error,
-                                        string.Format(
-                                            CultureInfo.InvariantCulture,
-                                            "Could not load the command set type: {0} for endpoint {1}",
-                                            command.AssemblyQualifiedTypeName,
-                                            endpoint));
-
-                                    throw;
-                                }
-
+                                Type commandSetType = LoadCommandType(endpoint, command);
                                 list.Add(commandSetType, (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType));
                             }
 
@@ -252,6 +248,13 @@ namespace Apollo.Core.Base.Communication
                 {
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
+                        m_Logger(
+                           LogSeverityProxy.Trace,
+                           string.Format(
+                               CultureInfo.InvariantCulture,
+                               "No longer waiting for commands from endpoint: {0}",
+                               endpoint));
+
                         m_WaitingForCommandInformation.Remove(endpoint);
                     }
                 }
@@ -276,11 +279,25 @@ namespace Apollo.Core.Base.Communication
             {
                 if (m_WaitingForCommandInformation.Contains(endpoint))
                 {
+                    m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "No longer waiting for commands from endpoint [{0}].",
+                            endpoint));
+
                     m_WaitingForCommandInformation.Remove(endpoint);
                 }
 
                 if (m_RemoteCommands.ContainsKey(endpoint))
                 {
+                    m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Removing commands for endpoint [{0}].",
+                            endpoint));
+
                     commands = m_RemoteCommands[endpoint];
                     m_RemoteCommands.Remove(endpoint);
                 }
@@ -299,28 +316,9 @@ namespace Apollo.Core.Base.Communication
 
         private void HandleNewCommandReported(EndpointId endpoint, ISerializedType command)
         {
-            // Hydrate the command type. This requires loading the assembly which a) might
-            // be slow and b) might fail
-            Type commandSetType = null;
-            try
-            {
-                commandSetType = CommandSetProxyExtensions.ToType(command);
-            }
-            catch (UnableToLoadCommandSetTypeException)
-            {
-                m_Logger(
-                    LogSeverityProxy.Error,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Could not load the command set type: {0} for endpoint {1}",
-                        command.AssemblyQualifiedTypeName,
-                        endpoint));
-
-                throw;
-            }
-
             // We're going to assume that if we hear about a new command then we already have information
             // about the endpoint. This may well be an incorrect assumption but for now it will do.
+            Type commandSetType = LoadCommandType(endpoint, command);
             lock (m_Lock)
             {
                 var proxy = (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType);
@@ -339,6 +337,39 @@ namespace Apollo.Core.Base.Communication
                     m_RemoteCommands.Add(endpoint, list);
                 }
             }
+        }
+
+        private Type LoadCommandType(EndpointId endpoint, ISerializedType command)
+        {
+            // Hydrate the command type. This requires loading the assembly which a) might
+            // be slow and b) might fail
+            Type commandSetType = null;
+            try
+            {
+                commandSetType = CommandSetProxyExtensions.ToType(command);
+
+                m_Logger(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Got command from endpoint [{0}] of type {1}.",
+                        endpoint,
+                        commandSetType));
+            }
+            catch (UnableToLoadCommandSetTypeException)
+            {
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Could not load the command set type: {0} for endpoint {1}",
+                        command.AssemblyQualifiedTypeName,
+                        endpoint));
+
+                throw;
+            }
+
+            return commandSetType;
         }
 
         /// <summary>

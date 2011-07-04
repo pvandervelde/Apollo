@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
+using Apollo.Utilities;
 using Castle.DynamicProxy;
 using Lokad;
 
@@ -221,29 +222,41 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> m_SendWithResponse;
 
         /// <summary>
+        /// The function used to write log messages.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CommandProxyBuilder"/> class.
         /// </summary>
         /// <param name="localEndpoint">The ID number of the local endpoint.</param>
         /// <param name="sendWithResponse">
         ///     The function that sends out a message to the given endpoint and returns a task that will, eventually, hold the return message.
         /// </param>
+        /// <param name="logger">The function that is used to log messages.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendWithResponse"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
         public CommandProxyBuilder(
             EndpointId localEndpoint,
-            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sendWithResponse)
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sendWithResponse,
+            Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendWithResponse);
+                Enforce.Argument(() => logger);
             }
 
             m_Local = localEndpoint;
             m_SendWithResponse = sendWithResponse;
+            m_Logger = logger;
         }
 
         /// <summary>
@@ -292,13 +305,15 @@ namespace Apollo.Core.Base.Communication
                 {
                     var msg = new CommandInvokedMessage(m_Local, methodInvocation);
                     return m_SendWithResponse(endpoint, msg);
-                });
+                },
+                m_Logger);
             var methodWithResult = new CommandSetMethodWithResultInterceptor(
                 methodInvocation =>
                 {
                     var msg = new CommandInvokedMessage(m_Local, methodInvocation);
                     return m_SendWithResponse(endpoint, msg);
-                });
+                },
+                m_Logger);
 
             var options = new ProxyGenerationOptions
                 {

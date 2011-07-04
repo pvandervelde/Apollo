@@ -19,7 +19,7 @@ namespace Apollo.Utilities.Logging
         /// <summary>
         /// The format string used to format a debug log entry.
         /// </summary>
-        public const string DebugLogFormat = @"{0}: {1}";
+        public const string DebugLogFormat = @"{0} - {1}: {2}";
 
         /// <summary>
         /// A function that returns the current time.
@@ -85,7 +85,7 @@ namespace Apollo.Utilities.Logging
                 Enforce.Argument(() => message);
             }
 
-            return string.Format(CultureInfo.CurrentCulture, DebugLogFormat, m_GetCurrentTime(), message.Text());
+            return string.Format(CultureInfo.CurrentCulture, DebugLogFormat, m_GetCurrentTime(), message.Level, message.Text());
         }
 
         /// <summary>

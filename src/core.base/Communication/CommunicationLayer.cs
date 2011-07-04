@@ -27,6 +27,11 @@ namespace Apollo.Core.Base.Communication
     internal sealed class CommunicationLayer : ICommunicationLayer, IDisposable
     {
         /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
         /// The collection of endpoints that have been discovered.
         /// </summary>
         private readonly Dictionary<EndpointId, SortedList<int, ChannelConnectionInformation>> m_PotentialEndpoints =
@@ -130,14 +135,30 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public IEnumerable<ChannelConnectionInformation> LocalConnectionPoints()
         {
-            foreach (var tuple in m_OpenConnections.Values)
+            var list = new List<ChannelConnectionInformation>();
+            lock (m_Lock)
             {
-                var info = tuple.Item1.LocalConnectionPoint;
-                if (info != null)
-                {
-                    yield return info;
-                }
+                list.AddRange(from tuple in m_OpenConnections.Values select tuple.Item1.LocalConnectionPoint);
             }
+
+            return list;
+        }
+
+        /// <summary>
+        /// Returns a collection containing the endpoint IDs of the known remote endpoints.
+        /// </summary>
+        /// <returns>
+        ///     The collection that contains the endpoint IDs of the remote endpoints.
+        /// </returns>
+        public IEnumerable<EndpointId> KnownEndpoints()
+        {
+            var list = new List<EndpointId>();
+            lock (m_Lock)
+            {
+                list.AddRange(m_PotentialEndpoints.Keys);
+            }
+
+            return list;
         }
 
         /// <summary>
@@ -152,11 +173,14 @@ namespace Apollo.Core.Base.Communication
 
             // First we load up our own channels so that we 
             // can send out our own information.
-            m_OpenConnections.Add(typeof(NamedPipeChannelType), m_ChannelBuilder(typeof(NamedPipeChannelType), m_Id));
-            m_OpenConnections.Add(typeof(TcpChannelType), m_ChannelBuilder(typeof(TcpChannelType), m_Id));
-            foreach (var tuple in m_OpenConnections.Values)
+            lock (m_Lock)
             {
-                tuple.Item1.OpenChannel();
+                m_OpenConnections.Add(typeof(NamedPipeChannelType), m_ChannelBuilder(typeof(NamedPipeChannelType), m_Id));
+                m_OpenConnections.Add(typeof(TcpChannelType), m_ChannelBuilder(typeof(TcpChannelType), m_Id));
+                foreach (var tuple in m_OpenConnections.Values)
+                {
+                    tuple.Item1.OpenChannel();
+                }
             }
 
             // Now we initiate discovery of other services. Note that discovery only works for 
@@ -190,28 +214,39 @@ namespace Apollo.Core.Base.Communication
             }
 
             // If we don't know the endpoint at all then add a collection for it.
-            if (!m_PotentialEndpoints.ContainsKey(info.Id))
+            lock (m_Lock)
             {
-                m_PotentialEndpoints.Add(info.Id, new SortedList<int, ChannelConnectionInformation>());
-            }
-
-            var list = m_PotentialEndpoints[info.Id];
-
-            // Remove all the known connections for the endpoint with the same channel type
-            // that way we always have the latest channel information. Which is useful if the
-            // channel changes due to outages.
-            var matchingItems = list.Where(p => p.Value.ChannelType.Equals(info.ChannelType));
-            if (matchingItems.Exists())
-            {
-                foreach (var item in matchingItems)
+                if (!m_PotentialEndpoints.ContainsKey(info.Id))
                 {
-                    list.Remove(item.Key);
+                    m_PotentialEndpoints.Add(info.Id, new SortedList<int, ChannelConnectionInformation>());
                 }
-            }
 
-            var attributes = info.ChannelType.GetCustomAttributes(typeof(ChannelRelativePerformanceAttribute), false);
-            int order = (attributes.Length > 0) ? (attributes[0] as ChannelRelativePerformanceAttribute).RelativeOrder : int.MaxValue;
-            list.Add(order, info);
+                var list = m_PotentialEndpoints[info.Id];
+
+                var matchingItems = from pair in list
+                                    where pair.Value.ChannelType.Equals(info.ChannelType)
+                                    select pair;
+
+                Debug.Assert(matchingItems.Count() <= 1, "We expect at maximum one channel to match the endpoint search here.");
+                if (matchingItems.Exists())
+                {
+                    foreach (var item in matchingItems)
+                    {
+                        if (item.Value.Address.Equals(info.Address))
+                        {
+                            // We already have the connection with the exact 
+                            // address. So we don't do anything.
+                            return;
+                        }
+
+                        list.Remove(item.Key);
+                    }
+                }
+
+                var attributes = info.ChannelType.GetCustomAttributes(typeof(ChannelRelativePerformanceAttribute), false);
+                int order = (attributes.Length > 0) ? (attributes[0] as ChannelRelativePerformanceAttribute).RelativeOrder : int.MaxValue;
+                list.Add(order, info);
+            }
 
             // Notify the world
             m_Logger(
@@ -222,6 +257,8 @@ namespace Apollo.Core.Base.Communication
                     info.Id,
                     info.ChannelType,
                     info.Address));
+
+            ConnectToEndpoint(info);
             RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
         }
 
@@ -240,25 +277,53 @@ namespace Apollo.Core.Base.Communication
                 return;
             }
 
+            var exists = false;
+            lock (m_Lock)
+            {
+                exists = m_PotentialEndpoints.ContainsKey(args.Endpoint);
+            }
+
             // Remove from the available list
-            if (m_PotentialEndpoints.ContainsKey(args.Endpoint))
+            if (exists)
             {
                 // notify the outside world
                 RaiseOnEndpointSignedOut(args.Endpoint);
 
-                var list = m_PotentialEndpoints[args.Endpoint];
-                m_PotentialEndpoints.Remove(args.Endpoint);
+                var list = new List<ChannelConnectionInformation>();
+                lock (m_Lock)
+                {
+                    list.AddRange(from info in m_PotentialEndpoints[args.Endpoint] select info.Value);
+                    m_PotentialEndpoints.Remove(args.Endpoint);
+                }
 
                 // Notify the comm.channel that the endpoint is dead or about to be
-                foreach (var pair in list)
+                foreach (var connection in list)
                 {
-                    var connection = pair.Value;
-                    if (m_OpenConnections.ContainsKey(connection.ChannelType))
+                    var channel = ChannelForChannelType(connection.ChannelType);
+                    if (channel != null)
                     {
-                        var channel = m_OpenConnections[connection.ChannelType];
-                        channel.Item1.DisconnectFrom(args.Endpoint);
+                        channel.DisconnectFrom(args.Endpoint);
                     }
                 }
+            }
+        }
+
+        private ICommunicationChannel ChannelForChannelType(Type connection)
+        {
+            return ChannelInformationForType(connection).Item1;
+        }
+
+        private Tuple<ICommunicationChannel, IDirectIncomingMessages> ChannelInformationForType(Type connection)
+        {
+            Tuple<ICommunicationChannel, IDirectIncomingMessages> channel = null;
+            lock (m_Lock)
+            {
+                if (m_OpenConnections.ContainsKey(connection))
+                {
+                    channel = m_OpenConnections[connection];
+                }
+
+                return channel;
             }
         }
 
@@ -285,14 +350,17 @@ namespace Apollo.Core.Base.Communication
             // lock in here to block things from happening.
             //
             // Disconnect from all channels
-            foreach (var pair in m_OpenConnections)
+            lock (m_Lock)
             {
-                var connection = pair.Value.Item1;
-                connection.CloseChannel();
-            }
+                foreach (var pair in m_OpenConnections)
+                {
+                    var connection = pair.Value.Item1;
+                    connection.CloseChannel();
+                }
 
-            // Clear all connections
-            m_OpenConnections.Clear();
+                // Clear all connections
+                m_OpenConnections.Clear();
+            }
 
             m_Logger(LogSeverityProxy.Trace, "Sign off process finished.");
             m_AlreadySignedOn = false;
@@ -339,7 +407,10 @@ namespace Apollo.Core.Base.Communication
             Justification = "Documentation can start with a language keyword")]
         public bool IsEndpointContactable(EndpointId endpoint)
         {
-            return (endpoint != null) && m_PotentialEndpoints.ContainsKey(endpoint);
+            lock (m_Lock)
+            {
+                return (endpoint != null) && m_PotentialEndpoints.ContainsKey(endpoint);
+            }
         }
 
         /// <summary>
@@ -365,30 +436,42 @@ namespace Apollo.Core.Base.Communication
             var connection = SelectMostAppropriateConnection(endpoint);
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var pair = m_OpenConnections[connection.ChannelType];
-            pair.Item1.ConnectTo(connection);
+            ConnectToEndpoint(connection);
+        }
+
+        private void ConnectToEndpoint(ChannelConnectionInformation connection)
+        {
+            {
+                Debug.Assert(connection != null, "The connection information should not be null.");
+            }
+
+            var channel = ChannelForChannelType(connection.ChannelType);
+            channel.ConnectTo(connection);
 
             m_Logger(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Connected to endpoint ({0}) signed in via the {1} channel",
-                    endpoint,
+                    connection.Id,
                     connection.ChannelType));
         }
 
         private ChannelConnectionInformation SelectMostAppropriateConnection(EndpointId endpoint)
         {
-            var list = m_PotentialEndpoints[endpoint];
-            if (list.Count == 0)
+            lock (m_Lock)
             {
-                return null;
-            }
-            else
-            {
-                // If there is an item in the list then we can just return the first one because that 
-                // will be the fastest connection.
-                return list.Values[0];
+                var list = m_PotentialEndpoints[endpoint];
+                if (list.Count == 0)
+                {
+                    return null;
+                }
+                else
+                {
+                    // If there is an item in the list then we can just return the first one because that 
+                    // will be the fastest connection.
+                    return list.Values[0];
+                }
             }
         }
 
@@ -421,8 +504,7 @@ namespace Apollo.Core.Base.Communication
             var connection = SelectMostAppropriateConnection(endpoint);
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var pair = m_OpenConnections[connection.ChannelType];
-            var channel = pair.Item1;
+            var channel = ChannelForChannelType(connection.ChannelType);
             if (!channel.HasConnectionTo(endpoint))
             {
                 channel.ConnectTo(connection);
@@ -471,7 +553,7 @@ namespace Apollo.Core.Base.Communication
             var connection = SelectMostAppropriateConnection(endpoint);
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var pair = m_OpenConnections[connection.ChannelType];
+            var pair = ChannelInformationForType(connection.ChannelType);
             var result = pair.Item2.ForwardResponse(endpoint, message.Id);
 
             m_Logger(
@@ -508,8 +590,8 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => transferInfo);
             }
 
-            var pair = m_OpenConnections[transferInfo.ChannelType];
-            return pair.Item1.TransferData(filePath, transferInfo, token, scheduler);
+            var channel = ChannelForChannelType(transferInfo.ChannelType);
+            return channel.TransferData(filePath, transferInfo, token, scheduler);
         }
 
         /// <summary>
@@ -547,11 +629,11 @@ namespace Apollo.Core.Base.Communication
             var connection = SelectMostAppropriateConnection(endpointToDownloadFrom);
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var pair = m_OpenConnections[connection.ChannelType];
-            var info = pair.Item1.PrepareForDataReception(localFile, token, scheduler);
+            var channel = ChannelForChannelType(connection.ChannelType);
+            var info = channel.PrepareForDataReception(localFile, token, scheduler);
 
             var msg = new DataDownloadRequestMessage(Id, uploadToken, info.Item1);
-            pair.Item1.Send(endpointToDownloadFrom, msg);
+            channel.Send(endpointToDownloadFrom, msg);
             return info.Item2.ContinueWith<Stream>(
                 t =>
                 {
@@ -573,12 +655,22 @@ namespace Apollo.Core.Base.Communication
         public void DisconnectFromEndpoint(EndpointId endpoint)
         {
             // Remove from the available list
-            if (m_PotentialEndpoints.ContainsKey(endpoint))
+            bool exists = false;
+            lock (m_Lock)
             {
-                var list = m_PotentialEndpoints[endpoint];
-                foreach (var pair in list)
+                exists = m_PotentialEndpoints.ContainsKey(endpoint);
+            }
+
+            if (exists)
+            {
+                var list = new List<ChannelConnectionInformation>();
+                lock (m_Lock)
                 {
-                    var connection = pair.Value;
+                    list.AddRange(from pair in m_PotentialEndpoints[endpoint] select pair.Value);
+                }
+
+                foreach (var connection in list)
+                {
                     if (m_OpenConnections.ContainsKey(connection.ChannelType))
                     {
                         var channel = m_OpenConnections[connection.ChannelType];

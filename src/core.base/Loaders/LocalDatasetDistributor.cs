@@ -171,7 +171,7 @@ namespace Apollo.Core.Base.Loaders
                     // Now the dataset loading is complete
                     return new DatasetOnlineInformation(
                         planToImplement.DistributionFor.Id, 
-                        planToImplement.Proposal.Endpoint,
+                        endpoint,
                         planToImplement.MachineToDistributeTo,
                         m_Hub);
                 };

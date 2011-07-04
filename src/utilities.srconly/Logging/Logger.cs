@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Lokad;
 using NLog;
 
@@ -125,6 +126,11 @@ namespace Apollo.Utilities.Logging
             }
 
             m_Logger = m_Factory.GetLogger(template.Name);
+
+            var separationLine = "============================================================================";
+            var openingText = string.Format(CultureInfo.InvariantCulture, "Starting {0} logger.", template.Name);
+            m_Logger.Info(separationLine);
+            m_Logger.Info(openingText);
         }
 
         /// <summary>
@@ -196,7 +202,6 @@ namespace Apollo.Utilities.Logging
             }
 
             m_Logger.Log(info);
-            m_Logger.Factory.Flush();
         }
 
         /// <summary>
@@ -205,6 +210,7 @@ namespace Apollo.Utilities.Logging
         /// </summary>
         public void Close()
         {
+            m_Logger.Info("Stopping logger.");
             m_Logger.Factory.Flush();
         }
 

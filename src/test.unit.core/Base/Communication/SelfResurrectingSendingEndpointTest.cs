@@ -29,7 +29,7 @@ namespace Apollo.Base.Communication
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint();
+            var receiver = new ReceivingEndpoint(logger);
             receiver.OnNewMessage += (s, e) => Assert.AreEqual(endpointId, e.Message.OriginatingEndpoint);
 
             var uri = new Uri("net.pipe://localhost/apollo/test/pipe");
@@ -63,7 +63,7 @@ namespace Apollo.Base.Communication
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint();
+            var receiver = new ReceivingEndpoint(logger);
             receiver.OnNewMessage +=
                 (s, e) =>
                 {

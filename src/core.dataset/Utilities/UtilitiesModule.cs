@@ -12,6 +12,7 @@ using System.Reflection;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.Logging;
 using Autofac;
+using NLog;
 
 namespace Apollo.Utilities
 {
@@ -76,7 +77,14 @@ namespace Apollo.Utilities
 
                                 foreach (var logger in loggers)
                                 {
-                                    logger.Log(msg);
+                                    try
+                                    {
+                                        logger.Log(msg);
+                                    }
+                                    catch (NLogRuntimeException)
+                                    {
+                                        // Ignore it and move on to the next logger.
+                                    }
                                 }
                             };
 

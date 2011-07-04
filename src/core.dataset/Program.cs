@@ -7,8 +7,12 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
+using Apollo.Utilities;
 using Apollo.Utilities.Applications;
 using Autofac;
 using AutofacContrib.Startable;
@@ -26,7 +30,7 @@ namespace Apollo.Core.Dataset
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "dataset.error.log";
+        private const string DefaultErrorFileName = "dataset.error.{0}.log";
 
         /// <summary>
         /// The main entry point for the dataset application.
@@ -50,7 +54,13 @@ namespace Apollo.Core.Dataset
                 };
 
             var eventLogSource = Assembly.GetExecutingAssembly().GetName().Name;
-            return CommandLineProgram.EntryPoint(applicationLogic, eventLogSource, DefaultErrorFileName);
+            return CommandLineProgram.EntryPoint(
+                applicationLogic, 
+                eventLogSource, 
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    DefaultErrorFileName,
+                    Process.GetCurrentProcess().Id));
         }
 
         private static int RunApplication(string[] arguments, ApplicationContext context)
@@ -90,11 +100,31 @@ namespace Apollo.Core.Dataset
             // To stop the application from running use the ApplicationContext
             // and call context.ExitThread();
             var container = DependencyInjection.Load(context);
+            var logger = container.Resolve<Action<LogSeverityProxy, string>>();
 
             // Load the communication system and get it going
             if (container.IsRegistered<IStarter>())
             {
                 container.Resolve<IStarter>().Start();
+            }
+
+            // Register all global commands
+            try
+            {
+                var commands = container.Resolve<ICommandCollection>();
+                var datasetCommand = container.Resolve<IDatasetApplicationCommands>();
+                commands.Register(typeof(IDatasetApplicationCommands), datasetCommand);
+            }
+            catch (Exception e)
+            {
+                logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Exception while registering commands. Exception was {0}",
+                        e));
+
+                return CommandLineProgram.UnhandledExceptionApplicationExitCode;
             }
 
             // Notify the host app that we're alive, after which the 

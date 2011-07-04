@@ -222,9 +222,6 @@
   <data name="Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero" xml:space="preserve">
     <value>The clock speed of a CPU must be larger than zero.</value>
   </data>
-  <data name="Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend" xml:space="preserve">
-    <value>There should be at least one command to make it useful to send the command information to the desired endpoint.</value>
-  </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet" xml:space="preserve">
     <value>The given type is not a valid command set interface.</value>
   </data>

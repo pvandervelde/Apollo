@@ -87,6 +87,11 @@ namespace Apollo.Core.Base.Communication
         private EventHandler m_HostFaultingHandler;
 
         /// <summary>
+        /// The event handler used when the host closes.
+        /// </summary>
+        private EventHandler m_HostClosedHandler;
+
+        /// <summary>
         /// The message handler that is used to receive messages from the
         /// receiving endpoint.
         /// </summary>
@@ -179,10 +184,31 @@ namespace Apollo.Core.Base.Communication
             // Create the new host
             m_HostFaultingHandler = (s, e) =>
                 {
+                    m_Logger(
+                        LogSeverityProxy.Warning,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel for address: {0} has faulted.",
+                            uri));
+
                     ReopenChannel(uri);
                 };
+
+            m_HostClosedHandler = (s, e) =>
+                {
+                    m_Logger(
+                        LogSeverityProxy.Warning,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel for address: {0} has closed prematurely.",
+                            uri));
+
+                    ReopenChannel(uri);
+                };
+
             m_Host = new ServiceHost(m_Receiver, uri);
             m_Host.Faulted += m_HostFaultingHandler;
+            m_Host.Closed += m_HostClosedHandler;
             var endpoint = m_Type.AttachEndpoint(m_Host, typeof(IReceivingEndpoint), m_Id);
             m_LocalConnection = new ChannelConnectionInformation(m_Id, m_Type.GetType(), endpoint.Address.Uri);
 
@@ -200,9 +226,13 @@ namespace Apollo.Core.Base.Communication
         {
             if (m_Host != null)
             {
-                m_Host.Close();
                 m_Host.Faulted -= m_HostFaultingHandler;
                 m_HostFaultingHandler = null;
+
+                m_Host.Closed -= m_HostClosedHandler;
+                m_HostClosedHandler = null;
+
+                m_Host.Close();
 
                 var disposable = m_Host as IDisposable;
                 if (disposable != null)

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Utilities;
 using MbUnit.Framework;
 
 namespace Apollo.Base.Communication
@@ -136,7 +137,9 @@ namespace Apollo.Base.Communication
                         new CurrentThreadTaskScheduler());
                 };
 
-            var builder = new CommandProxyBuilder(local, sender);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var builder = new CommandProxyBuilder(local, sender, logger);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -170,7 +173,9 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            var builder = new CommandProxyBuilder(local, sender);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var builder = new CommandProxyBuilder(local, sender, logger);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -205,7 +210,9 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            var builder = new CommandProxyBuilder(local, sender);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var builder = new CommandProxyBuilder(local, sender, logger);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTypedTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -240,7 +247,9 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            var builder = new CommandProxyBuilder(local, sender);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var builder = new CommandProxyBuilder(local, sender, logger);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTypedTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);

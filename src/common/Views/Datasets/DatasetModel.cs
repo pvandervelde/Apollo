@@ -45,8 +45,16 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Dataset.OnLoadingProgress += (s, e) => { }; // @todo: add progress reporting ...
-            m_Dataset.OnLoaded += (s, e) => Notify(() => this.IsLoaded);
-            m_Dataset.OnUnloaded += (s, e) => Notify(() => this.IsLoaded);
+            m_Dataset.OnLoaded += (s, e) =>
+                { 
+                    Notify(() => this.IsLoaded);
+                    Notify(() => this.RunsOn);
+                };
+            m_Dataset.OnUnloaded += (s, e) =>
+                { 
+                    Notify(() => this.IsLoaded);
+                    Notify(() => this.RunsOn);
+                };
         }
 
         /// <summary>

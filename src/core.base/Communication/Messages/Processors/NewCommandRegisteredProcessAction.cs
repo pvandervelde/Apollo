@@ -22,34 +22,22 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly IAceptExternalCommandInformation m_CommandRegistrator;
 
         /// <summary>
-        /// The function used to write messages to the log.
-        /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="NewCommandRegisteredProcessAction"/> class.
         /// </summary>
         /// <param name="commandRegistrator">
         ///     The object that forwards information about the newly registered commands.
         /// </param>
-        /// <param name="logger">The function used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandRegistrator"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
-        /// </exception>
         public NewCommandRegisteredProcessAction(
-            IAceptExternalCommandInformation commandRegistrator,
-            Action<LogSeverityProxy, string> logger)
+            IAceptExternalCommandInformation commandRegistrator)
         {
             {
                 Enforce.Argument(() => commandRegistrator);
-                Enforce.Argument(() => logger);
             }
 
             m_CommandRegistrator = commandRegistrator;
-            m_Logger = logger;
         }
 
         /// <summary>

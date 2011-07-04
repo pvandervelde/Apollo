@@ -377,15 +377,6 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to There should be at least one command to make it useful to send the command information to the desired endpoint..
-        /// </summary>
-        internal static string Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The given type is not a valid command set interface..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet {

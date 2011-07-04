@@ -251,17 +251,17 @@ namespace Apollo.Core.Base.Communication
             /// <summary>
             /// Initializes a new instance of the <see cref="SerializedMethodInvocation"/> class.
             /// </summary>
-            /// <param name="commandSet">The serialized information about the command set.</param>
+            /// <param name="type">The serialized information about the command set.</param>
             /// <param name="methodName">The name of the method that was called.</param>
             /// <param name="namedParameters">The collection of parameter names and values.</param>
-            public SerializedMethodInvocation(ISerializedType commandSet, string methodName, List<Tuple<ISerializedType, object>> namedParameters)
+            public SerializedMethodInvocation(ISerializedType type, string methodName, List<Tuple<ISerializedType, object>> namedParameters)
             {
                 {
-                    Debug.Assert(commandSet != null, "No command set information specified.");
+                    Debug.Assert(type != null, "No type information specified.");
                     Debug.Assert(!string.IsNullOrWhiteSpace(methodName), "No method name specified.");
                 }
 
-                CommandSet = commandSet;
+                CommandSet = type;
                 MemberName = methodName;
                 m_Parameters = namedParameters;
             }
@@ -410,10 +410,6 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public static ISerializedType FromType(Type type)
         {
-            {
-                Debug.Assert(typeof(ICommandSet).IsAssignableFrom(type), "Cannot store serialized ICommandSet information for this type.");
-            }
-
             return new SerializedType(type.AssemblyQualifiedName);
         }
 

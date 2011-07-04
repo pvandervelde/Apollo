@@ -58,7 +58,8 @@ namespace Apollo.Core.Base
                     c.Resolve<ICommunicationLayer>(),
                     m_CloseDatasetAction,
                     m_LoadDatasetAction))
-                .As<IDatasetApplicationCommands>();
+                .As<IDatasetApplicationCommands>()
+                .As<ICommandSet>();
         }
     }
 }

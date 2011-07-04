@@ -59,7 +59,8 @@ namespace Apollo.Core.Base
                 (endpoint, msg) =>
                 {
                     return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                }));
+                },
+                c.Resolve<Action<LogSeverityProxy, string>>()));
 
             builder.Register(c => new LocalCommandCollection(
                     c.Resolve<ICommunicationLayer>()))
@@ -130,7 +131,8 @@ namespace Apollo.Core.Base
             // Note that there is no direct relation between the IChannelType and the MessageHandler
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
             // we pretend that there is a connection between IChannelType and the MessageHandler.
-            builder.Register(c => new MessageHandler())
+            builder.Register(c => new MessageHandler(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -139,7 +141,8 @@ namespace Apollo.Core.Base
                 .Keyed<IDirectIncomingMessages>(typeof(NamedPipeChannelType))
                 .SingleInstance();
 
-            builder.Register(c => new MessageHandler())
+            builder.Register(c => new MessageHandler(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -155,16 +158,22 @@ namespace Apollo.Core.Base
             // and then throw those objects away. If this turns out to be too expensive
             // or the list becomes too long then we can do something cunning with the 
             // use of Autofac Metadata.
-            builder.Register(c => new EndpointConnectProcessAction(
-                    c.Resolve<IAcceptExternalEndpointInformation>(),
-                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
-                .As<IMessageProcessAction>();
-
             builder.Register(c => new CommandInvokedProcessAction(
                     c.Resolve<ICommunicationLayer>().Id,
                     (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                     c.Resolve<ICommandCollection>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new DataDownloadProcessAction(
+                    c.Resolve<WaitingUploads>(),
+                    c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new EndpointConnectProcessAction(
+                    c.Resolve<IAcceptExternalEndpointInformation>(),
+                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
 
@@ -176,8 +185,7 @@ namespace Apollo.Core.Base
                 .As<IMessageProcessAction>();
 
             builder.Register(c => new NewCommandRegisteredProcessAction(
-                    c.Resolve<IAceptExternalCommandInformation>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<IAceptExternalCommandInformation>()))
                 .As<IMessageProcessAction>();
         }
 
@@ -231,7 +239,8 @@ namespace Apollo.Core.Base
                     p.TypedAs<Func<EndpointId, IChannelProxy>>()))
                 .As<ISendingEndpoint>();
 
-            builder.Register(c => new ReceivingEndpoint())
+            builder.Register(c => new ReceivingEndpoint(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessagePipe>();
         }
 
@@ -251,15 +260,17 @@ namespace Apollo.Core.Base
 
         private static void RegisterUploads(ContainerBuilder builder)
         {
-            builder.Register(c => new WaitingUploads());
+            builder.Register(c => new WaitingUploads())
+                .SingleInstance();
         }
 
         private static void RegisterStartables(ContainerBuilder builder)
         {
             builder.Register(c => new CommunicationLayerStarter(
+                    c.Resolve<ISendCommandsToRemoteEndpoints>(),
                     c.Resolve<ICommunicationLayer>()))
                 .As<ILoadOnApplicationStartup>();
-
+            
             builder.RegisterModule(new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
         }
 

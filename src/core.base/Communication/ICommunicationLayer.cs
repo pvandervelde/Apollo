@@ -44,6 +44,14 @@ namespace Apollo.Core.Base.Communication
         IEnumerable<ChannelConnectionInformation> LocalConnectionPoints();
 
         /// <summary>
+        /// Returns a collection containing the endpoint IDs of the known remote endpoints.
+        /// </summary>
+        /// <returns>
+        ///     The collection that contains the endpoint IDs of the remote endpoints.
+        /// </returns>
+        IEnumerable<EndpointId> KnownEndpoints();
+
+        /// <summary>
         /// Connects to the network and broadcasts a sign on message.
         /// </summary>
         void SignIn();

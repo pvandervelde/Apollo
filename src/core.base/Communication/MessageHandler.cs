@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
@@ -51,6 +52,27 @@ namespace Apollo.Core.Base.Communication
         /// </remarks>
         private readonly Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
             = new Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
+
+        /// <summary>
+        /// The function that logs messages.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MessageHandler"/> class.
+        /// </summary>
+        /// <param name="logger">The function that handles the logging of messages.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        public MessageHandler(Action<LogSeverityProxy, string> logger)
+        {
+            {
+                Enforce.Argument(() => logger);
+            }
+
+            m_Logger = logger;
+        }
 
         /// <summary>
         /// On arrival of a message which responds to the message with the
@@ -127,6 +149,14 @@ namespace Apollo.Core.Base.Communication
             // First check that the message isn't a response
             if (!message.InResponseTo.Equals(MessageId.None))
             {
+                m_Logger(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Message [{0}] is a response to message [{1}].",
+                        message.Id,
+                        message.InResponseTo));
+
                 TaskCompletionSource<ICommunicationMessage> source = null;
                 lock (m_Lock)
                 {
@@ -166,6 +196,14 @@ namespace Apollo.Core.Base.Communication
             {
                 if (pair.Key.PassThrough(message))
                 {
+                    m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Processing message of type {0} with action of type {1}.",
+                            message.GetType(),
+                            pair.Value.GetType()));
+
                     pair.Value.Invoke(message);
                 }
             }
@@ -181,6 +219,13 @@ namespace Apollo.Core.Base.Communication
 
         private void TerminateWaitingResponsesForEndpoint(EndpointId endpointId)
         {
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Endpoint {0} is signing off.",
+                    endpointId));
+
             lock (m_Lock)
             {
                 var messagesThatWillNotBeAnswered = new List<MessageId>();
