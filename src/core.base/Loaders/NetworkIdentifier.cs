@@ -243,7 +243,14 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Machine {0} [{1}]", DomainName, Group);
+            if (!string.IsNullOrWhiteSpace(Group))
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0} [{1}]", DomainName, Group);
+            }
+            else 
+            {
+                return string.Format(CultureInfo.InvariantCulture, "{0}", DomainName);
+            }
         }
     }
 }
