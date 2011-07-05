@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the EndpointIdExtensions class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointIdExtensionsTest
     {
         [Test]
-        [Description("Checks that the deserialization of an endpoint ID is done correctly.")]
         public void Deserialize()
         {
             var id = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
@@ -29,14 +27,12 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that an endpoint ID cannot be deserialized from an empty string.")]
         public void DeserializeWithEmptyString()
         {
             Assert.Throws<ArgumentException>(() => EndpointIdExtensions.Deserialize(string.Empty));
         }
 
         [Test]
-        [Description("Checks that it is possible to determine from which machine an endpoint comes.")]
         public void IsOnMachine()
         {
             var id = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
@@ -45,7 +41,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that it is possible to determine if an endpoint comes from the local machine.")]
         public void IsOnLocalMachine()
         {
             var id = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
@@ -53,7 +48,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that it is possible to extract the machine name from an endpoint ID.")]
         public void OriginatesOnMachine()
         {
             var id = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();

@@ -13,7 +13,6 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the ProcessorSpecification class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class MachineTest
@@ -24,7 +23,6 @@ namespace Apollo.Base.Loaders
         private static readonly HardwareSpecification s_HardwareForLocalMachine = HardwareSpecification.ForLocalMachine();
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<Machine>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -46,7 +44,6 @@ namespace Apollo.Base.Loaders
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Machine>
         {
             ImplementsOperatorOverloads = true,
@@ -62,7 +59,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object can be constructed.")]
         public void Create()
         {
             var id = new NetworkIdentifier("a");

@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the DatasetUnloadEventArgs class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetUnloadEventArgsTest
     {
         [Test]
-        [Description("Checks that an object can be created correctly.")]
         public void Create()
         {
             var id = new DatasetId();

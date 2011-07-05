@@ -21,7 +21,6 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the NamedPipeChannelType class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class NamedPipeChannelTypeTest
@@ -82,7 +81,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that data can be streamed across a named pipe.")]
         public void StreamData()
         {
             var config = new Mock<IConfiguration>();
@@ -117,7 +115,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that data can be streamed across a named pipe even if the transfer is interrupted from the senders side.")]
         public void StreamDataWithDisturbanceOnSenderSide()
         {
             var config = new Mock<IConfiguration>();
@@ -185,7 +182,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that data can be streamed across a named pipe even if the transfer is interrupted from the receivers side.")]
         public void StreamDataWithDisturbanceOnReceiverSide()
         {
             var config = new Mock<IConfiguration>();

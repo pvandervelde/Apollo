@@ -14,13 +14,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the NetworkIdentifier class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class NetworkIdentifierTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<NetworkIdentifier>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -46,7 +44,6 @@ namespace Apollo.Base.Loaders
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<NetworkIdentifier>
         {
             ImplementsOperatorOverloads = true,
@@ -66,7 +63,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         {
             var domain = "a";
@@ -80,7 +76,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the network ID can determine if the ID is for the local machine.")]
         public void IsLocalMachine()
         {
             var domain = Environment.MachineName;
@@ -91,7 +86,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the network ID can determine if the ID belongs to a machine that is part of a machine group.")]
         public void IsPartOfGroup()
         {
             var domain = "a";

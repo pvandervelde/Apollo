@@ -16,13 +16,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the SelfResurrectingSendingEndpoint class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class SelfResurrectingSendingEndpointTest
     {
         [Test]
-        [Description("Checks that a message can be send even if there is no current channel.")]
         public void SendWithNoChannel()
         {
             Action<LogSeverityProxy, string> logger = (level, m) => { };
@@ -55,7 +53,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a message can be send even if the current channel is faulted.")]
         public void SendWithFaultedChannel()
         {
             var count = 0;

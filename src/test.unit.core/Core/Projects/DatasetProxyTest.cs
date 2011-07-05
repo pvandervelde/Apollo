@@ -22,7 +22,6 @@ using Moq;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the Project.DatasetProxy class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetProxyTest
@@ -61,7 +60,6 @@ namespace Apollo.Core.Projects
         }
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<IProxyDataset>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -86,7 +84,6 @@ namespace Apollo.Core.Projects
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Project.DatasetProxy>
         {
             ImplementsOperatorOverloads = true,
@@ -101,7 +98,6 @@ namespace Apollo.Core.Projects
         };
 
         [Test]
-        [Description("Checks that a dataset can be obtained from the project.")]
         public void GetDataset()
         {
             var plan = new DistributionPlan(
@@ -137,7 +133,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that when the name of a dataset is set a notification is send out.")]
         public void Name()
         {
             var plan = new DistributionPlan(
@@ -181,7 +176,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that when the summary of a dataset is set a notification is send out.")]
         public void Summary()
         {
             var plan = new DistributionPlan(
@@ -225,7 +219,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset cannot be loaded onto a machine with an illegal loading location.")]
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
             var plan = new DistributionPlan(
@@ -266,7 +259,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset is not loaded onto a machine if it is already loaded.")]
         public void LoadOntoMachineWhenAlreadyLoaded()
         {
             var plan = new DistributionPlan(
@@ -314,7 +306,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset is not loaded if the selection is cancelled.")]
         public void LoadOntoMachineWithSelectionCancellation()
         {
             var plan = new DistributionPlan(
@@ -361,7 +352,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset can be loaded onto a machine.")]
         public void LoadOntoMachine()
         {
             var plan = new DistributionPlan(
@@ -409,7 +399,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset can be unloaded from a machine.")]
         public void UnloadFromMachine()
         {
             var commands = new Mock<IDatasetApplicationCommands>();
@@ -469,7 +458,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that the children of a dataset can be obtained.")]
         public void Children()
         {
             var plan = new DistributionPlan(
@@ -517,7 +505,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child cannot be created without creation information.")]
         public void CreateNewChildWithNullCreationInformation()
         {
             var plan = new DistributionPlan(
@@ -552,7 +539,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child cannot be created if the dataset is not allowed to be a parent.")]
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
             var plan = new DistributionPlan(
@@ -595,7 +581,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child can be created.")]
         public void CreateNewChild()
         {
             var plan = new DistributionPlan(
@@ -653,7 +638,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children cannot be created with a null collection reference.")]
         public void CreateNewChildrenWithNullCollection()
         {
             var plan = new DistributionPlan(
@@ -688,7 +672,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children cannot be created without creation information.")]
         public void CreateNewChildrenWithEmptyCollection()
         {
             var plan = new DistributionPlan(
@@ -723,7 +706,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children can be created.")]
         public void CreateNewChildren()
         {
             var plan = new DistributionPlan(
@@ -776,7 +758,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset after the project is closed.")]
         public void DeleteWhenClosed()
         {
             var plan = new DistributionPlan(
@@ -824,7 +805,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that can't be deleted.")]
         public void DeleteUndeletableDataset()
         {
             var plan = new DistributionPlan(
@@ -859,7 +839,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithUndeletableChild()
         {
             var plan = new DistributionPlan(
@@ -918,7 +897,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithChildren()
         {
             var plan = new DistributionPlan(

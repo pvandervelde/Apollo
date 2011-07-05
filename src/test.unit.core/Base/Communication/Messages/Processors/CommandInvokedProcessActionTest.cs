@@ -20,7 +20,6 @@ using Moq;
 namespace Apollo.Base.Communication.Messages.Processors
 {
     [TestFixture]
-    [Description("Tests the CommandInvokedProcessAction class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class CommandInvokedProcessActionTest
@@ -34,7 +33,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the object processes the correct message type.")]
         public void MessageTypeToProcess()
         {
             var endpoint = new EndpointId("id");
@@ -47,7 +45,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly if there is a Task return value.")]
         public void InvokeWithTaskReturn()
         {
             var actionObject = new Mock<IMockCommandSet>();
@@ -96,7 +93,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly if there is a Task<T> method return value.")]
         public void InvokeWithTypedTaskReturn()
         {
             var actionObject = new Mock<IMockCommandSet>();
@@ -148,7 +144,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailingResponse()
         {
             var actionObject = new Mock<IMockCommandSet>();
@@ -205,7 +200,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailedChannel()
         {
             var actionObject = new Mock<IMockCommandSet>();

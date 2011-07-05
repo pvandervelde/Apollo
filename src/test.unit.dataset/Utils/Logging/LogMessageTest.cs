@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Utilities.Logging
 {
     [TestFixture]
-    [Description("Tests the LogMessage class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class LogMessageTest
     {
         [Test]
-        [Description("Checks a LogMessage can be created.")]
         public void Create()
         {
             var level = LevelToLog.Debug;
@@ -32,7 +30,6 @@ namespace Apollo.Utilities.Logging
         }
 
         [Test]
-        [Description("Checks a LogMessage can be created.")]
         public void CreateWithProperties()
         {
             var level = LevelToLog.Debug;

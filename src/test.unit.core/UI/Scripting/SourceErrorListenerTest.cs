@@ -13,13 +13,11 @@ using Microsoft.Scripting;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the SourceErrorListener class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class SourceErrorListenerTest
     {
         [Test]
-        [Description("Checks that reported errors are succesfully stored.")]
         public void ErrorReported()
         {
             var listener = new SourceErrorListener();

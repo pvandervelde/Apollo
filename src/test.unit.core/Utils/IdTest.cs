@@ -17,7 +17,6 @@ namespace Apollo.Utilities
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
     // move all the overloads of Equals(object) and GetHashCode() to the ID derivative class).
     [TestFixture]
-    [Description("Tests the Id class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class IdTest
@@ -63,7 +62,6 @@ namespace Apollo.Utilities
         #endregion
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MockId>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -89,7 +87,6 @@ namespace Apollo.Utilities
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<MockId>
         {
             ImplementsOperatorOverloads = true,
@@ -109,7 +106,6 @@ namespace Apollo.Utilities
         };
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is null.")]
         public void LargerThanOperatorWithFirstObjectNull()
         {
             MockId first = null;
@@ -119,7 +115,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the second object is null.")]
         public void LargerThanOperatorWithSecondObjectNull()
         {
             MockId first = new MockId(10);
@@ -129,7 +124,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are null.")]
         public void LargerThanOperatorWithBothObjectsNull()
         {
             MockId first = null;
@@ -139,7 +133,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are equal.")]
         public void LargerThanOperatorWithEqualObjects()
         {
             MockId first = new MockId(10);
@@ -149,7 +142,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the first object is larger than the second.")]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
             MockId first = new MockId(11);
@@ -159,7 +151,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is smaller than the second.")]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
             MockId first = new MockId(9);
@@ -169,7 +160,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is null.")]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             MockId first = null;
@@ -179,7 +169,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the second object is null.")]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
             MockId first = new MockId(10);
@@ -189,7 +178,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are null.")]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
             MockId first = null;
@@ -199,7 +187,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are equal.")]
         public void SmallerThanOperatorWithEqualObjects()
         {
             MockId first = new MockId(10);
@@ -209,7 +196,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is larger than the second.")]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
             MockId first = new MockId(11);
@@ -219,7 +205,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the < operator returns true if the first object is smaller than the second.")]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
             MockId first = new MockId(9);
@@ -229,7 +214,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
             MockId first = new MockId(10);
@@ -239,7 +223,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 1 if the second objects is null.")]
         public void CompareToWithNullObject()
         {
             MockId first = new MockId(10);
@@ -249,7 +232,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 0 if the second object is equal to the first.")]
         public void CompareToOperatorWithEqualObjects()
         {
             MockId first = new MockId(10);
@@ -259,7 +241,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a postive number if the first objects is larger than the second.")]
         public void CompareToWithLargerFirstObject()
         {
             MockId first = new MockId(11);
@@ -269,7 +250,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a negative number if the first objects is larger than the second.")]
         public void CompareToWithSmallerFirstObject()
         {
             MockId first = new MockId(10);
@@ -279,7 +259,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the CompareTo method throws an exception if the second objects type is not equal to the first.")]
         public void CompareToWithUnequalObjectTypes()
         {
             MockId first = new MockId(10);

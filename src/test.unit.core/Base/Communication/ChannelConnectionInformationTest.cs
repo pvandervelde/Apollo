@@ -13,13 +13,11 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ChannelConnectionInformation class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class ChannelConnectionInformationTest
     {
         [Test]
-        [Description("Checks that an object cannot be created with an incorrect channel type.")]
         public void CreateWithIncorrectChannelType()
         {
             Assert.Throws<ArgumentException>(
@@ -30,7 +28,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         {
             var endpoint = new EndpointId("a");

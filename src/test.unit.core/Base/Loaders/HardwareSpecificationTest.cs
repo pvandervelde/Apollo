@@ -12,7 +12,6 @@ using MbUnit.Framework;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the HardwareSpecification class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class HardwareSpecificationTest
@@ -21,7 +20,6 @@ namespace Apollo.Base.Loaders
         private static readonly DiskSpecification[] s_Disks = DiskSpecification.ForLocalMachine();
 
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         {
             ulong maxPerProcessMemory = 10;

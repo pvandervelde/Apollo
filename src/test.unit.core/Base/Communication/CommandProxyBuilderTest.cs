@@ -17,7 +17,6 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ChannelClosedEventArgs class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1601:PartialElementsMustBeDocumented",
@@ -25,14 +24,12 @@ namespace Apollo.Base.Communication
     public sealed partial class CommandProxyBuilderTest
     {
         [Test]
-        [Description("Checks that the type must be assignable from ICommandSet.")]
         public void VerifyThatTypeIsACorrectCommandSetWithNonAssignableType()
         { 
             Assert.Throws<TypeIsNotAValidCommandSetException>(() => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(object)));
         }
 
         [Test]
-        [Description("Checks that the type must be an interface.")]
         public void VerifyThatTypeIsACorrectCommandSetWithNonInterface()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -40,7 +37,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot be an open generic type.")]
         public void VerifyThatTypeIsACorrectCommandSetWithGenericInterface()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -48,7 +44,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have properties.")]
         public void VerifyThatTypeIsACorrectCommandSetWithProperties()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -56,7 +51,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have additional events.")]
         public void VerifyThatTypeIsACorrectCommandSetWithAdditionalEvents()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -64,7 +58,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type should have at least one method.")]
         public void VerifyThatTypeIsACorrectCommandSetWithoutMethods()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -72,7 +65,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have any open generic methods.")]
         public void VerifyThatTypeIsACorrectCommandSetWithGenericMethod()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -80,7 +72,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have methods with an incorrect return type.")]
         public void VerifyThatTypeIsACorrectCommandSetWithIncorrectReturnType()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -88,7 +79,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have methods with a non-serializable return type.")]
         public void VerifyThatTypeIsACorrectCommandSetWithNonSerializableReturnType()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -96,7 +86,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have methods with an out parameter.")]
         public void VerifyThatTypeIsACorrectCommandSetWithOutParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -104,7 +93,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have methods with an ref parameter.")]
         public void VerifyThatTypeIsACorrectCommandSetWithRefParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -112,7 +100,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the type cannot have methods with a non-serializable parameter.")]
         public void VerifyThatTypeIsACorrectCommandSetWithNonSerializableParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
@@ -120,7 +107,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a proxy returning a Task can report on the success of the remote operation.")]
         public void ProxyConnectingToMethodWithTaskReturnWithSuccessFullExecution()
         {
             var remoteEndpoint = new EndpointId("other");
@@ -156,7 +142,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a proxy returning a Task can report on the failure of the remote operation.")]
         public void ProxyConnectingToMethodWithTaskReturnWithFailedExecution()
         {
             var remoteEndpoint = new EndpointId("other");
@@ -193,7 +178,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a proxy returning a Task<T> can report on the success of the remote operation.")]
         public void ProxyConnectingToMethodWithTypedTaskReturnWithSuccessfullExecution()
         {
             var remoteEndpoint = new EndpointId("other");
@@ -230,7 +214,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a proxy returning a Task<T> can report on the failure of the remote operation.")]
         public void ProxyConnectingToMethodWithTypedTaskReturnWithFailedExecution()
         {
             var remoteEndpoint = new EndpointId("other");

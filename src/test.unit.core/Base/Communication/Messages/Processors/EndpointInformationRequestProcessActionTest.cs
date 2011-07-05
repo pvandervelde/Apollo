@@ -18,13 +18,11 @@ using Moq;
 namespace Apollo.Base.Communication.Messages.Processors
 {
     [TestFixture]
-    [Description("Tests the EndpointInformationRequestProcessAction class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointInformationRequestProcessActionTest
     {
         [Test]
-        [Description("Checks that the object processes the correct message type.")]
         public void MessageTypeToProcess()
         {
             var endpoint = new EndpointId("id");
@@ -37,7 +35,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void Invoke()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
@@ -78,7 +75,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailingResponse()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
@@ -118,7 +114,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailedChannel()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 

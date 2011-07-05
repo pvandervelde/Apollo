@@ -16,13 +16,11 @@ namespace Apollo.Utilities.Commands
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
     // move all the overloads of Equals(object) and GetHashCode() to the ID derivative class).
     [TestFixture]
-    [Description("Tests the CommandId class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class CommandIdTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<CommandId>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -35,7 +33,6 @@ namespace Apollo.Utilities.Commands
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<CommandId>
         {
             ImplementsOperatorOverloads = true,
@@ -47,7 +44,6 @@ namespace Apollo.Utilities.Commands
         };
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is null.")]
         public void LargerThanOperatorWithFirstObjectNull()
         {
             CommandId first = null;
@@ -57,7 +53,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the second object is null.")]
         public void LargerThanOperatorWithSecondObjectNull()
         {
             var first = new CommandId("name");
@@ -67,7 +62,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are null.")]
         public void LargerThanOperatorWithBothObjectsNull()
         {
             CommandId first = null;
@@ -77,7 +71,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are equal.")]
         public void LargerThanOperatorWithEqualObjects()
         {
             var first = new CommandId("name");
@@ -87,7 +80,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the first object is larger than the second.")]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
             var first = new CommandId("b");
@@ -97,7 +89,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is smaller than the second.")]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
             var first = new CommandId("a");
@@ -107,7 +98,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is null.")]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             CommandId first = null;
@@ -117,7 +107,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the second object is null.")]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
             var first = new CommandId("name");
@@ -127,7 +116,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are null.")]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
             CommandId first = null;
@@ -137,7 +125,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are equal.")]
         public void SmallerThanOperatorWithEqualObjects()
         {
             var first = new CommandId("name");
@@ -147,7 +134,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is larger than the second.")]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
             var first = new CommandId("b");
@@ -157,7 +143,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the < operator returns true if the first object is smaller than the second.")]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
             var first = new CommandId("a");
@@ -167,7 +152,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
             var first = new CommandId("name");
@@ -177,7 +161,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 1 if the second objects is null.")]
         public void CompareToWithNullObject()
         {
             IComparable first = new CommandId("name");
@@ -187,7 +170,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 0 if the second object is equal to the first.")]
         public void CompareToOperatorWithEqualObjects()
         {
             IComparable first = new CommandId("name");
@@ -197,7 +179,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a postive number if the first objects is larger than the second.")]
         public void CompareToWithLargerFirstObject()
         {
             IComparable first = new CommandId("b");
@@ -207,7 +188,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a negative number if the first objects is larger than the second.")]
         public void CompareToWithSmallerFirstObject()
         {
             IComparable first = new CommandId("a");
@@ -218,7 +198,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that the CompareTo method throws an exception if the second objects type is not equal to the first.")]
         public void CompareToWithUnequalObjectTypes()
         {
             IComparable first = new CommandId("name");

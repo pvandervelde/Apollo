@@ -16,7 +16,6 @@ using Moq;
 namespace Apollo.Utilities
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class FusionHelperTest
@@ -81,7 +80,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly can be loaded with a simple name, i.e. only the module name.")]
         public void LoadAssemblyWithExistingSimpleName()
         {
             var helper = InitializeFusionHelper();
@@ -91,7 +89,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly cannot be loaded with a non-existing simple name, i.e. only the module name.")]
         public void LoadAssemblyWithNonExistingSimpleName()
         {
             var helper = InitializeFusionHelper();
@@ -101,7 +98,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly can be loaded with a simple name with file extension.")]
         public void LoadAssemblyWithExistingSimpleNameWithExtension()
         {
             var helper = InitializeFusionHelper();
@@ -111,7 +107,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly cannot be loaded with a non-existing simple name with file extension.")]
         public void LoadAssemblyWithNonExistingSimpleNameWithExtension()
         {
             var helper = InitializeFusionHelper();
@@ -121,7 +116,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly can be loaded with a full name.")]
         public void LoadAssemblyWithExistingFullName()
         {
             var helper = InitializeFusionHelper();
@@ -131,7 +125,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly can be loaded with a full name.")]
         public void LoadAssemblyBasedOnPublicToken()
         {
             var helper = InitializeFusionHelper();
@@ -142,7 +135,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly cannot be loaded with a full name that misses the version number.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnVersion()
         {
             var helper = InitializeFusionHelper();
@@ -157,7 +149,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly cannot be loaded with a full name that misses the culture.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnCulture()
         {
             var helper = InitializeFusionHelper();
@@ -172,7 +163,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Tests that an assembly cannot be loaded with a full name that misses the public key.")]
         public void LoadAssemblyWithNonExistingFullNameBasedOnPublicToken()
         {
             var helper = InitializeFusionHelper();

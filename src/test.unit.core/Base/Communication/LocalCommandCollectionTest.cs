@@ -16,7 +16,6 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ManualDiscoverySource class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class LocalCommandCollectionTest
@@ -27,7 +26,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a command set can be registered.")]
         public void Register()
         {
             var layer = new Mock<ICommunicationLayer>();
@@ -56,7 +54,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a command set can only be registered once.")]
         public void RegisterWithExistingType()
         {
             var layer = new Mock<ICommunicationLayer>();
@@ -86,7 +83,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that asking for an unknown command set returns a null reference.")]
         public void CommandsForWithUnknownType()
         {
             var layer = new Mock<ICommunicationLayer>();
@@ -95,7 +91,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that asking for a command set the command set object.")]
         public void CommandsFor()
         {
             var layer = new Mock<ICommunicationLayer>();

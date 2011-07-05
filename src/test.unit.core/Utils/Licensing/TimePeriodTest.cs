@@ -14,13 +14,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
-    [Description("Tests the TimePeriod struct.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class TimePeriodTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<TimePeriod>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -50,7 +48,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<TimePeriod>
         {
             ImplementsOperatorOverloads = true,
@@ -81,7 +78,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [Test]
-        [Description("Checks that the TimePeriod struct can be created succesfully.")]
         public void CreateWithPeriod()
         {
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily);
@@ -91,7 +87,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the TimePeriod struct can be created with a modifier.")]
         public void CreateWithModifier()
         {
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily, 10);
@@ -100,7 +95,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the TimePeriod struct can be created as a periodic time period.")]
         public void CreateWithIsPeriodic()
         {
             TimePeriod period = new TimePeriod(RepeatPeriod.Daily, false);
@@ -109,7 +103,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to minutes.")]
         public void RepeatAfterWithMinutesEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 28, 23, 30, 0, TimeSpan.Zero);
@@ -120,7 +113,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to minutes.")]
         public void RepeatAfterWithMinutesExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 23, 30, 0, TimeSpan.Zero);
@@ -131,7 +123,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to minutes.")]
         public void RepeatAfterWithMinutesPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 31, 23, 30, 0, TimeSpan.Zero);
@@ -142,7 +133,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into daylight savings for a TimePeriod set to hours.")]
         [Ignore("Not sure how to find daylight savings time in a independent way.")]
         public void RepeatAfterWithHoursPassingEntryOfDaylightSaving()
         {
@@ -150,7 +140,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when coming out of daylight savings for a TimePeriod set to hours.")]
         [Ignore("Not sure how to find daylight savings time in a independent way.")]
         public void RepeatAfterWithHoursPassingExitOfDaylightSaving()
         {
@@ -158,7 +147,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to hours.")]
         public void RepeatAfterWithHoursEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 28, 22, 0, 0, TimeSpan.Zero);
@@ -169,7 +157,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to hours.")]
         public void RepeatAfterWithHoursExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 22, 0, 0, TimeSpan.Zero);
@@ -180,7 +167,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to hours.")]
         public void RepeatAfterWithHoursPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 31, 22, 0, 0, TimeSpan.Zero);
@@ -191,7 +177,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to days.")]
         public void RepeatAfterWithDaysEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 27, 12, 0, 0, TimeSpan.Zero);
@@ -202,7 +187,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to days.")]
         public void RepeatAfterWithDaysExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -213,7 +197,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing over a leap day for a TimePeriod set to days.")]
         public void RepeatAfterWithDaysPassingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 28, 12, 0, 0, TimeSpan.Zero);
@@ -224,7 +207,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to days.")]
         public void RepeatAfterWithDaysPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 30, 12, 0, 0, TimeSpan.Zero);
@@ -235,7 +217,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to weeks.")]
         public void RepeatAfterWithWeeksEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 22, 12, 0, 0, TimeSpan.Zero);
@@ -246,7 +227,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to weeks.")]
         public void RepeatAfterWithWeeksExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -257,7 +237,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing over a leap day for a TimePeriod set to weeks.")]
         public void RepeatAfterWithWeeksPassingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 25, 12, 0, 0, TimeSpan.Zero);
@@ -268,7 +247,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to years.")]
         public void RepeatAfterWithWeeksPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 29, 12, 0, 0, TimeSpan.Zero);
@@ -279,7 +257,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to fortnights.")]
         public void RepeatAfterWithFortnightsEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 15, 12, 0, 0, TimeSpan.Zero);
@@ -290,7 +267,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to fortnights.")]
         public void RepeatAfterWithFortnightsExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -301,7 +277,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing over a leap day for a TimePeriod set to fortnights.")]
         public void RepeatAfterWithFortnightsPassingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 22, 12, 0, 0, TimeSpan.Zero);
@@ -312,7 +287,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to fortnights.")]
         public void RepeatAfterWithFortnightsPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 29, 12, 0, 0, TimeSpan.Zero);
@@ -323,7 +297,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to months.")]
         public void RepeatAfterWithMonthsEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 1, 29, 12, 0, 0, TimeSpan.Zero);
@@ -334,7 +307,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to months.")]
         public void RepeatAfterWithMonthsExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -345,7 +317,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing over a leap day for a TimePeriod set to months.")]
         public void RepeatAfterWithMonthsPassingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 15, 12, 0, 0, TimeSpan.Zero);
@@ -356,7 +327,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing into a new year for a TimePeriod set to months.")]
         public void RepeatAfterWithMonthsPassingNewYear()
         {
             var start = new DateTimeOffset(2004, 12, 29, 12, 0, 0, TimeSpan.Zero);
@@ -367,7 +337,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when entering a leap day for a TimePeriod set to years.")]
         public void RepeatAfterWithYearsEnteringLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -378,7 +347,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when exiting a leap day for a TimePeriod set to years.")]
         public void RepeatAfterWithYearsExitingLeapDay()
         {
             var start = new DateTimeOffset(2004, 2, 29, 12, 0, 0, TimeSpan.Zero);
@@ -389,7 +357,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that the correct time is returned when passing over a leap day for a TimePeriod set to years.")]
         public void RepeatAfterWithYearsPassingLeapDay()
         {
             var start = new DateTimeOffset(2004, 1, 29, 12, 0, 0, TimeSpan.Zero);

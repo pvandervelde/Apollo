@@ -12,7 +12,6 @@ using MbUnit.Framework;
 namespace Apollo.Core
 {
     [TestFixture]
-    [Description("Tests the Kernel class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class KernelTest
@@ -340,7 +339,6 @@ namespace Apollo.Core
         #endregion
 
         [Test]
-        [Description("Checks that a service cannot be installed if there is already a service of the same type installed.")]
         public void InstallServiceWithAlreadyInstalledService()
         {
             var kernel = new Kernel();
@@ -348,7 +346,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that a service cannot depend on itself")]
         public void InstallServiceThatDependsOnItself()
         {
             var testMock = new AdaptableKernelService(
@@ -359,7 +356,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that a service cannot depend on the generic KernelService class")]
         public void InstallServiceThatDependsOnKernelService()
         {
             var testMock = new AdaptableKernelService(
@@ -370,7 +366,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that a service is installed properly if dependent services are installed last.")]
         public void InstallServiceAsDependentFirst()
         {
             var kernelTestMock1 = new KernelService1(
@@ -401,7 +396,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that a service is installed properly if dependent services are installed first.")]
         public void InstallServiceAsDependentLast()
         {
             var kernelTestMock1 = new KernelService1(
@@ -432,7 +426,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that the kernel can be started.")]
         public void Start()
         {
             // Add 4 services:
@@ -474,7 +467,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that the kernel can be stopped.")]
         public void Stop()
         {
             // Add 4 services:

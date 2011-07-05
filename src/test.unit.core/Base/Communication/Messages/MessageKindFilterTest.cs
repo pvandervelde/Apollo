@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication.Messages
 {
     [TestFixture]
-    [Description("Tests the MessageKindFilter class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class MessageKindFilterTest
     {
         [Test]
-        [Description("Checks that an correct message passes the filter.")]
         public void PassThroughWithPassingMessage()
         {
             var filter = new MessageKindFilter(typeof(SuccessMessage));
@@ -26,7 +24,6 @@ namespace Apollo.Base.Communication.Messages
         }
 
         [Test]
-        [Description("Checks that an incorrect message does not pass the filter.")]
         public void PassThroughWithNonPassingMessage()
         {
             var filter = new MessageKindFilter(typeof(SuccessMessage));

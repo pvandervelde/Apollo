@@ -15,13 +15,11 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ManualDiscoverySource class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class MessageHandlerTest
     {
         [Test]
-        [Description("Checks that a message response is delivered to the correct waiting task.")]
         public void ForwardResponse()
         {
             Action<LogSeverityProxy, string> logger = (p, s) => { };
@@ -41,7 +39,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a failure response is delivered to the correct waiting task if the endpoint disconnects.")]
         public void ForwardResponseWithDisconnectingEndpoint()
         {
             Action<LogSeverityProxy, string> logger = (p, s) => { };
@@ -62,7 +59,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a message can be filtered.")]
         public void ActOnArrival()
         {
             ICommunicationMessage storedMessage = null;

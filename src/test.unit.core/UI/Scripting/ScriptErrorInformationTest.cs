@@ -13,13 +13,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the ScriptErrorInformation class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class ScriptErrorInformationTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ScriptErrorInformation>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -70,7 +68,6 @@ namespace Apollo.UI.Scripting
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<ScriptErrorInformation>
         {
             ImplementsOperatorOverloads = true,

@@ -16,13 +16,11 @@ using Moq;
 namespace Apollo.Base.Communication.Messages.Processors
 {
     [TestFixture]
-    [Description("Tests the EndpointConnectProcessAction class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointConnectProcessActionTest
     {
         [Test]
-        [Description("Checks that the object processes the correct message type.")]
         public void MessageTypeToProcess()
         {
             var sink = new Mock<IAcceptExternalEndpointInformation>();
@@ -37,7 +35,6 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void Invoke()
         {
             EndpointId processedId = null;

@@ -14,13 +14,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ReceivingEndpoint class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class ReceivingEndpointTest
     {
         [Test]
-        [Description("Checks that a message can be accepted.")]
         public void AcceptMessage()
         {
             Action<LogSeverityProxy, string> logger = (level, m) => { };
@@ -35,7 +33,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a message which raises an exception doesn't bring down the system.")]
         public void AcceptMessageThrowingException()
         {
             Action<LogSeverityProxy, string> logger = (level, m) => { };

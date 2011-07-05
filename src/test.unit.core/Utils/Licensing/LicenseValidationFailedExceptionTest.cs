@@ -13,13 +13,11 @@ namespace Apollo.Utilities.Licensing
 #if !DEPLOY
 
     [TestFixture]
-    [Description("Tests the LicenseValidationFailedException class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class LicenseValidationFailedExceptionTest
     {
         [VerifyContract]
-        [Description("Tests the exception class for the default constructors and serialization capabilities.")]
         public readonly IContract ExceptionTests = new ExceptionContract<LicenseValidationFailedException>
         {
             ImplementsSerialization = true,

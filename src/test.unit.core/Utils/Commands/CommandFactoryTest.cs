@@ -12,13 +12,11 @@ using Moq;
 namespace Apollo.Utilities.Commands
 {
     [TestFixture]
-    [Description("Tests the CommandFactory class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class CommandFactoryTest
     {
         [Test]
-        [Description("Checks that a command cannot be added with a duplicate name.")]
         public void AddWithDuplicateName()
         {
             var factory = new CommandFactory();
@@ -31,7 +29,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command can be added.")]
         public void Add()
         {
             var factory = new CommandFactory();
@@ -44,7 +41,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command cannot be removed with an unknown name.")]
         public void RemoveWithUnknownName()
         {
             var factory = new CommandFactory();
@@ -52,7 +48,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command can be removed.")]
         public void Remove()
         {
             var factory = new CommandFactory();
@@ -66,7 +61,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command cannot be invoked with an unknown name.")]
         public void InvokeWithoutContextWithUnknownName()
         {
             var factory = new CommandFactory();
@@ -74,7 +68,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command can be invoked.")]
         public void InvokeWithoutContext()
         {
             var factory = new CommandFactory();
@@ -93,7 +86,6 @@ namespace Apollo.Utilities.Commands
         }
 
         [Test]
-        [Description("Checks that a command cannot be invoked.")]
         public void Invoke()
         {
             var factory = new CommandFactory();

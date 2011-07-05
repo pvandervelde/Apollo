@@ -33,13 +33,11 @@ using Moq;
 namespace <#= nameSpace #>
 {
     [TestFixture]
-    [Description("Tests the <#= className #> class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class <#= className #>
     {
         [Test]
-        [Description("Checks that the validation fails when a validation result is from the future, even if the invalidation of the cache fails.")]
         public void VerifyWithGeneratedResultInTheFutureAndFailingCacheInvalidate()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -69,7 +67,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation fails when a validation result is from the future.")]
         public void VerifyWithGeneratedResultInTheFuture()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -102,7 +99,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation fails when a validation result has expired and the invalidation of the cache fails.")]
         public void VerifyWithExpiryTimeInThePastAndFailingCacheInvalidate()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -135,7 +131,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation runs correctly when a validation result has expired.")]
         public void VerifyWithExpiryTimeInThePast()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -166,7 +161,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation fails when a validation result is from the future, even if the invalidation of the cache fails.")]
         public void VerifyWithTimePeriodWithGeneratedResultInTheFutureAndFailingCacheInvalidate()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -197,7 +191,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation fails when a validation result is from the future.")]
         public void VerifyWithTimePeriodWithGeneratedResultInTheFuture()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -231,7 +224,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation fails when a validation result has expired and the invalidation of the cache fails.")]
         public void VerifyWithTimePeriodWithExpiryTimeInThePastAndFailingCacheInvalidate()
         { 
             var currentTime = DateTimeOffset.Now;
@@ -265,7 +257,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the validation runs correctly when a validation result has expired.")]
         public void VerifyWithTimePeriodWithExpiryTimeInThePast()
         { 
             var currentTime = DateTimeOffset.Now;

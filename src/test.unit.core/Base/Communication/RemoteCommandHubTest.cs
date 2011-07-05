@@ -19,7 +19,6 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the RemoteCommandHub class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteCommandHubTest
@@ -35,7 +34,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that endpoint sign in is correctly handled.")]
         public void HandleEndpointSignInWithSuccessfulTransfer()
         {
             var localEndpoint = new EndpointId("local");
@@ -80,7 +78,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that endpoint sign in is correctly handled if something goes wrong during the communication.")]
         public void HandleEndpointSignInWithFailedTransfer()
         {
             var localEndpoint = new EndpointId("local");
@@ -124,7 +121,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that endpoint sign out is correctly handled.")]
         public void HandleEndpointSignOut()
         {
             var localEndpoint = new EndpointId("local");
@@ -175,7 +171,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that new commands can be reported even if there are no other registered commands for the given endpoint.")]
         public void HandleNewCommandReportedWithoutCommands()
         {
             var localEndpoint = new EndpointId("local");
@@ -218,7 +213,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that new commands can be reported at any time.")]
         public void HandleNewCommandReportedWithCommands()
         {
             var localEndpoint = new EndpointId("local");
@@ -273,7 +267,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that new commands can be reported at any time.")]
         public void HandleNewCommandReportedWithoutCommandsRegisteringDuplicate()
         {
             var localEndpoint = new EndpointId("local");
@@ -329,7 +322,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that getting access to an unknown command set throws an exception.")]
         public void CommandsForWithUnknownCommand()
         {
             var localEndpoint = new EndpointId("local");
@@ -377,7 +369,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that it is possible to get access to a command set.")]
         public void CommandsFor()
         {
             var localEndpoint = new EndpointId("local");
@@ -421,7 +412,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that closing the connection to an endpoint correctly cleans up all the commands for that endpoint.")]
         public void CloseConnectionTo()
         {
             var localEndpoint = new EndpointId("local");
@@ -476,7 +466,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that closing the connection to all endpoints correctly cleans up all the commands for that endpoint.")]
         public void CloseConnections()
         {
             var localEndpoint = new EndpointId("local");

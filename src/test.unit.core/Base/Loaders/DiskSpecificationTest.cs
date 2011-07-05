@@ -14,13 +14,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the DiskSpecification class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class DiskSpecificationTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DiskSpecification>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -41,7 +39,6 @@ namespace Apollo.Base.Loaders
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<DiskSpecification>
         {
             ImplementsOperatorOverloads = true,
@@ -56,7 +53,6 @@ namespace Apollo.Base.Loaders
         };
 
         [Test]
-        [Description("Checks that an object can be constructed.")]
         public void Create()
         {
             var name = "a";

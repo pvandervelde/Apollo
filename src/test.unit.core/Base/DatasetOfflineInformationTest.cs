@@ -13,13 +13,11 @@ using Moq;
 namespace Apollo.Core.Base
 {
     [TestFixture]
-    [Description("Tests the DatasetOfflineInformation class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetOfflineInformationTest
     {
         [Test]
-        [Description("Checks that an object can be initialized correctly.")]
         public void Create()
         {
             var id = new DatasetId();

@@ -13,13 +13,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the TypeEqualityComparer class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetLoadingProposalComparerTest
     {
         [Test]
-        [Description("Checks that the comparison returns the correct value if the first object is null.")]
         public void CompareWithFirstObjectNull()
         {
             var proposal = new DatasetLoadingProposal 
@@ -38,7 +36,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the comparison returns the correct value if the second object is null.")]
         public void CompareWithSecondObjectNull()
         {
             var proposal = new DatasetLoadingProposal
@@ -57,7 +54,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the comparison throws an exception if the both objects null.")]
         public void CompareWithBothObjectsNull()
         {
             var comparer = new DatasetLoadingProposalComparer();
@@ -65,7 +61,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the comparison returns the correct value if both objects are equal.")]
         public void CompareWithEqualObjects()
         {
             var proposal = new DatasetLoadingProposal
@@ -84,7 +79,6 @@ namespace Apollo.Base.Loaders
         }
 
         [Test]
-        [Description("Checks that the comparison returns the correct value if the objects are not equal.")]
         public void CompareWithUnequalObjects()
         {
             var proposal1 = new DatasetLoadingProposal

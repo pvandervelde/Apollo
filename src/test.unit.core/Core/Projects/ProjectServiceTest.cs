@@ -19,13 +19,11 @@ using Moq;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectServiceTest
     {
         [Test]
-        [Description("Checks that the service can stop successfully.")]
         public void Stop()
         {
             var storage = new LicenseValidationResultStorage();
@@ -45,7 +43,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that the service can stop successfully.")]
         public void StopWithProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -93,7 +90,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new project can be created.")]
         public void CreateNewProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -131,7 +127,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new project cannot be loaded without a null persistence object.")]
         public void LoadProjectWithNullPersistenceInformation()
         {
             var storage = new LicenseValidationResultStorage();
@@ -147,7 +142,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new project can be loaded.")]
         public void LoadProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -191,7 +185,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a project can be unloaded.")]
         public void UnloadProject()
         {
             var storage = new LicenseValidationResultStorage();

@@ -15,13 +15,11 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the SendingEndpoint class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class SendingEndpointTest
     {
         [Test]
-        [Description("Checks that a message can be send to an unknown receiver.")]
         public void SendToUnknownReceiver()
         {
             var endpointId = new EndpointId("id");
@@ -40,7 +38,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a message can be send to an known receiver.")]
         public void SendToKnownReceiver()
         {
             var endpointId = new EndpointId("id");
@@ -65,7 +62,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the connection to a given channel can be closed.")]
         public void CloseChannelTo()
         {
             var endpointId = new EndpointId("id");

@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the ScriptOutputPipe class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ScriptOutputPipeTest
     {
         [Test]
-        [Description("Checks that writing a boolean value passes the correct event string.")]
         public void WriteBoolean()
         {
             var value = false;
@@ -36,7 +34,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a character value passes the correct event string.")]
         public void WriteCharacter()
         {
             var value = 'c';
@@ -54,7 +51,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a character array value passes the correct event string.")]
         public void WriteCharacterArray()
         {
             var value = new char[] { 'a', 'b', 'c' };
@@ -73,7 +69,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing part of a character value passes the correct event string.")]
         public void WritePartOfCharacterArray()
         {
             var value = new char[] { 'a', 'b', 'c' };
@@ -92,7 +87,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a decimal value passes the correct event string.")]
         public void WriteDecimal()
         {
             var value = 2.5M;
@@ -110,7 +104,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a double value passes the correct event string.")]
         public void WriteDouble()
         {
             var value = 2.5;
@@ -128,7 +121,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a float value passes the correct event string.")]
         public void WriteFloat()
         {
             var value = 2.5F;
@@ -146,7 +138,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing an integer value passes the correct event string.")]
         public void WriteInt()
         {
             var value = 10;
@@ -164,7 +155,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a long value passes the correct event string.")]
         public void WriteLong()
         {
             var value = 10L;
@@ -182,7 +172,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing an object value passes the correct event string.")]
         public void WriteObject()
         {
             var value = new object();
@@ -200,7 +189,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a format string with one argument passes the correct event string.")]
         public void WriteFormatStringWithOneArgument()
         {
             var value = "{0}";
@@ -225,7 +213,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a format string with two arguments passes the correct event string.")]
         public void WriteFormatStringWithTwoArguments()
         {
             var value = "{0} - {1}";
@@ -252,7 +239,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a format string with three arguments passes the correct event string.")]
         public void WriteFormatStringWithThreeArguments()
         {
             var value = "{0} - {1} + {2}";
@@ -281,7 +267,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a format string with an argument array passes the correct event string.")]
         public void WriteFormatStringWithArgumentArray()
         {
             var value = "{0}{1}{2}{3}";
@@ -312,7 +297,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing a string value passes the correct event string.")]
         public void WriteString()
         {
             var value = "string";
@@ -330,7 +314,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing an unsigned integer value passes the correct event string.")]
         public void WriteUnsignedInt()
         {
             var value = 10U;
@@ -348,7 +331,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that writing an unsigned long value passes the correct event string.")]
         public void WriteUnsignedLong()
         {
             var value = 10UL;

@@ -11,13 +11,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the CannotCreateProjectWithoutDatasetDistributorException class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class CannotCreateProjectWithoutDatasetDistributorExceptionTest
     {
         [VerifyContract]
-        [Description("Tests the exception class for the default constructors and serialization capabilities.")]
         public readonly IContract ExceptionTests = new ExceptionContract<CannotCreateProjectWithoutDatasetDistributorException>
         {
             ImplementsSerialization = true,

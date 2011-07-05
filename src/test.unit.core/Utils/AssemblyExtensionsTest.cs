@@ -12,7 +12,6 @@ using MbUnit.Framework;
 namespace Apollo.Utilities
 {
     [TestFixture]
-    [Description("Tests the AssemblyExtensions class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class AssemblyExtensionsTest
@@ -25,7 +24,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that AssemblyExtensions.LocalFilePath correctly determines the local file path of an assembly.")]
         public void LocalFilePath()
         {
             // Note that this test isn't complete by a long shot. We should really test
@@ -38,7 +36,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that AssemblyExtensions.GetStrongName correctly determines the strong name of an assembly.")]
         public void GetStrongName()
         {
             var assembly = typeof(string).Assembly;

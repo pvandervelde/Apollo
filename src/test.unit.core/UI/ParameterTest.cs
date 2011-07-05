@@ -14,7 +14,6 @@ using Moq;
 namespace Apollo.UI
 {
     [TestFixture]
-    [Description("Tests the Parameter class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ParameterTest
@@ -44,7 +43,6 @@ namespace Apollo.UI
         }
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<Parameter>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -63,7 +61,6 @@ namespace Apollo.UI
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Parameter>
         {
             ImplementsOperatorOverloads = false,

@@ -14,13 +14,11 @@ using Moq;
 namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
-    [Description("Tests the ProjectFacade class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectFacadeTest
     {
         [Test]
-        [Description("Checks that updates to the project name pass the new name on to the project object.")]
         public void Name()
         {
             var project = new Mock<IProject>();
@@ -36,7 +34,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the project name raise the correct event.")]
         public void OnNameUpdate()
         {
             var project = new Mock<IProject>();
@@ -50,7 +47,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the project summary pass the new summary on to the project object.")]
         public void Summary()
         {
             var project = new Mock<IProject>();
@@ -66,7 +62,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the project summary raise the correct event.")]
         public void OnSummaryUpdate()
         {
             var project = new Mock<IProject>();
@@ -80,7 +75,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that creating a dataset raise the correct event.")]
         public void OnDatasetCreated()
         {
             var project = new Mock<IProject>();
@@ -94,7 +88,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that deleting a dataset raise the correct event.")]
         public void OnDatasetDeleted()
         {
             var project = new Mock<IProject>();
@@ -108,7 +101,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the current project can be saved.")]
         public void SaveProject()
         {
             var persistence = new Mock<IPersistenceInformation>();
@@ -123,7 +115,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the root dataset can be obtained.")]
         public void Root()
         {
             var project = new Mock<IProject>();

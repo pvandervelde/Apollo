@@ -15,13 +15,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
-    [Description("Tests the ValidationSequence struct.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ValidationSequenceTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ValidationSequence>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -57,7 +55,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<ValidationSequence>
         {
             ImplementsOperatorOverloads = true,

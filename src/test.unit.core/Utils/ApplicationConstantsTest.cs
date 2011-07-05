@@ -13,13 +13,11 @@ using MbUnit.Framework;
 namespace Apollo.Core.Utilities
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ApplicationConstantsTest
     {
         [Test]
-        [Description("Checks that the CompanyName property returns the correct value.")]
         public void CompanyName()
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -30,7 +28,6 @@ namespace Apollo.Core.Utilities
         }
 
         [Test]
-        [Description("Checks that the ApplicationName property returns the correct value.")]
         public void ApplicationName()
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -41,7 +38,6 @@ namespace Apollo.Core.Utilities
         }
 
         [Test]
-        [Description("Checks that the ApplicationVersion property returns the correct value.")]
         public void ApplicationVersion()
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -52,7 +48,6 @@ namespace Apollo.Core.Utilities
         }
 
         [Test]
-        [Description("Checks that the ApplicationCompatibilityVersion property returns the correct value.")]
         public void ApplicationCompatibilityVersion()
         {
             var assembly = Assembly.GetEntryAssembly();
