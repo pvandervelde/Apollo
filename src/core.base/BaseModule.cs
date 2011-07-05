@@ -55,7 +55,7 @@ namespace Apollo.Core.Base
                 .SingleInstance();
 
             builder.Register(c => new CommandProxyBuilder(
-                c.Resolve<ICommunicationLayer>().Id,
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 (endpoint, msg) =>
                 {
                     return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
@@ -159,7 +159,7 @@ namespace Apollo.Core.Base
             // or the list becomes too long then we can do something cunning with the 
             // use of Autofac Metadata.
             builder.Register(c => new CommandInvokedProcessAction(
-                    c.Resolve<ICommunicationLayer>().Id,
+                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                     c.Resolve<ICommandCollection>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
@@ -178,7 +178,7 @@ namespace Apollo.Core.Base
                 .As<IMessageProcessAction>();
 
             builder.Register(c => new EndpointInformationRequestProcessAction(
-                    c.Resolve<ICommunicationLayer>().Id,
+                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                     c.Resolve<ICommandCollection>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))

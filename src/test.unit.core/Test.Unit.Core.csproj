@@ -86,9 +86,11 @@
     <Compile Include="Base\Communication\CommandProxyBuilderTest.Interfaces.cs" />
     <Compile Include="Base\Communication\ConnectionInformationEventArgsTest.cs" />
     <Compile Include="Base\Communication\EndpointEventArgsTest.cs" />
+    <Compile Include="Base\Communication\EndpointIdExtensionsTest.cs" />
     <Compile Include="Base\Communication\EndpointIdTest.cs" />
     <Compile Include="Base\Communication\EndpointNotContactableExceptionTest.cs" />
     <Compile Include="Base\Communication\FailedToSendMessageExceptionTest.cs" />
+    <Compile Include="Base\Communication\FileRegistrationNotFoundExceptionTest.cs" />
     <Compile Include="Base\Communication\LocalCommandCollectionTest.cs" />
     <Compile Include="Base\Communication\ManualDiscoverySourceTest.cs" />
     <Compile Include="Base\Communication\MessageEventArgsTest.cs" />
@@ -116,9 +118,14 @@
     <Compile Include="Base\Communication\SendingEndpointTest.cs" />
     <Compile Include="Base\Communication\TypeIsNotAValidCommandSetExceptionTest.cs" />
     <Compile Include="Base\Communication\UnableToLoadCommandSetTypeExceptionTest.cs" />
+    <Compile Include="Base\Communication\UnknownEndpointIdFormatExceptionTest.cs" />
+    <Compile Include="Base\Communication\UploadNotDeregisteredExceptionTest.cs" />
+    <Compile Include="Base\Communication\UploadTokenTest.cs" />
+    <Compile Include="Base\Communication\WaitingUploadsTest.cs" />
     <Compile Include="Base\DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="Base\DatasetIdTest.cs" />
     <Compile Include="Base\DatasetOfflineInformationTest.cs" />
+    <Compile Include="Base\Loaders\DatasetLoadingProposalComparerTest.cs" />
     <Compile Include="Base\Loaders\DiskSpecificationTest.cs" />
     <Compile Include="Base\Loaders\HardwareSpecificationTest.cs" />
     <Compile Include="Base\Loaders\MachineTest.cs" />
@@ -136,6 +143,7 @@
     <Compile Include="Core\Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Core\Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
     <Compile Include="Core\Projects\DatasetLoadEventArgsTest.cs" />
+    <Compile Include="Core\Projects\DatasetNotLoadedExceptionTest.cs" />
     <Compile Include="Core\Projects\DatasetProxyTest.cs" />
     <Compile Include="Core\Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Core\Projects\ProjectBuilderTest.cs" />
@@ -211,6 +219,7 @@
     <Compile Include="Utils\Licensing\ValidationServiceRunnerTest.cs" />
     <Compile Include="Utils\Licensing\ValidationServiceTest.cs" />
     <Compile Include="Utils\TimeBasedProgressTrackerTest.cs" />
+    <Compile Include="Utils\TypeEqualityComparerTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

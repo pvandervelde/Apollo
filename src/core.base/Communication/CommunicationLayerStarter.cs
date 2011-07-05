@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 using Lokad;
 
@@ -14,6 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines a initialization method for starting the communication layer when the application
     /// starts.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class CommunicationLayerStarter : ILoadOnApplicationStartup, IDisposable
     {
         /// <summary>

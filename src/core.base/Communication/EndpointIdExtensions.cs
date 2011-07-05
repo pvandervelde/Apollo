@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Apollo.Core.Base.Properties;
+using Lokad;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -47,6 +49,13 @@ namespace Apollo.Core.Base.Communication
         /// <returns>A new <see cref="EndpointId"/> based on the given <paramref name="serializedEndpoint"/>.</returns>
         public static EndpointId Deserialize(string serializedEndpoint)
         {
+            {
+                Enforce.Argument(() => serializedEndpoint);
+                Enforce.With<ArgumentException>(
+                    !string.IsNullOrWhiteSpace(serializedEndpoint),
+                    Resources.Exceptions_Messages_EndpointIdCannotBeDeserializedFromAnEmptyString);
+            }
+
             // @todo: do we check that this string has the right format?
             return new EndpointId(serializedEndpoint);
         }

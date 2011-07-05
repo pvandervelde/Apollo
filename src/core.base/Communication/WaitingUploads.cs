@@ -6,6 +6,8 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using Lokad;
+using Lokad.Rules;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -31,6 +33,11 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public UploadToken Register(string path)
         {
+            {
+                Enforce.Argument(() => path);
+                Enforce.Argument(() => path, StringIs.NotEmpty);
+            }
+
             var token = new UploadToken();
             m_Uploads.Add(token, path);
 
@@ -44,6 +51,11 @@ namespace Apollo.Core.Base.Communication
         /// <param name="path">The full path to the file that should be uploaded.</param>
         public void Reregister(UploadToken token, string path)
         {
+            {
+                Enforce.Argument(() => path);
+                Enforce.Argument(() => path, StringIs.NotEmpty);
+            }
+
             if (m_Uploads.ContainsKey(token))
             {
                 throw new UploadNotDeregisteredException(token);

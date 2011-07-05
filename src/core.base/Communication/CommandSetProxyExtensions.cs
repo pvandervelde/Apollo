@@ -414,18 +414,6 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Translates an <see cref="ICommandSet"/> object into a serializable form.
-        /// </summary>
-        /// <param name="commandSet">A command set object.</param>
-        /// <returns>
-        ///     An object that stores the <see cref="ICommandSet"/> type information in a serializable format.
-        /// </returns>
-        public static ISerializedType FromObject(ICommandSet commandSet)
-        {
-            return FromType(commandSet.GetType());
-        }
-
-        /// <summary>
         /// Returns the type of the <see cref="ICommandSet"/> for which information is stored
         /// in the <paramref name="commandSet"/> parameter.
         /// </summary>

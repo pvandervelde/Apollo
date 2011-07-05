@@ -17,14 +17,14 @@ namespace Apollo.Base.Communication
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
     // move all the overloads of Equals(object) and GetHashCode() to the ID derivative class).
     [TestFixture]
-    [Description("Tests the EndpointId class.")]
+    [Description("Tests the UploadToken class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class EndpointIdTest
+    public sealed class UploadTokenTest
     {
         [VerifyContract]
         [Description("Checks that the GetHashCode() contract is implemented correctly.")]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<EndpointId>
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<UploadToken>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -33,34 +33,31 @@ namespace Apollo.Base.Communication
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<EndpointId> 
+                new List<UploadToken> 
                         {
-                            new EndpointId("a"),
-                            new EndpointId("b"),
-                            new EndpointId("c"),
-                            new EndpointId("d"),
-                            new EndpointId("e"),
-                            new EndpointId("f"),
-                            new EndpointId("g"),
-                            new EndpointId("h"),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
+                            new UploadToken(),
                         },
         };
 
         [VerifyContract]
         [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
-        public readonly IContract EqualityVerification = new EqualityContract<EndpointId>
+        public readonly IContract EqualityVerification = new EqualityContract<UploadToken>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new EndpointId("a"),
-                        new EndpointId("b"),
-                        new EndpointId("c"),
-                        new EndpointId("d"),
-                        new EndpointId("e"),
-                        new EndpointId("f"),
-                        new EndpointId("g"),
-                        new EndpointId("h"),
+                        new UploadToken(),
+                        new UploadToken(),
+                        new UploadToken(),
+                        new UploadToken(),
+                        new UploadToken(),
                     },
         };
 
@@ -68,8 +65,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns false if the first object is null.")]
         public void LargerThanOperatorWithFirstObjectNull()
         {
-            EndpointId first = null;
-            EndpointId second = new EndpointId("a");
+            UploadToken first = null;
+            UploadToken second = new UploadToken();
 
             Assert.IsFalse(first > second);
         }
@@ -78,8 +75,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns true if the second object is null.")]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = null;
+            UploadToken first = new UploadToken();
+            UploadToken second = null;
 
             Assert.IsTrue(first > second);
         }
@@ -88,8 +85,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns false if both objects are null.")]
         public void LargerThanOperatorWithBothObjectsNull()
         {
-            EndpointId first = null;
-            EndpointId second = null;
+            UploadToken first = null;
+            UploadToken second = null;
 
             Assert.IsFalse(first > second);
         }
@@ -98,8 +95,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns false if both objects are equal.")]
         public void LargerThanOperatorWithEqualObjects()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = new EndpointId("a");
+            var first = new UploadToken();
+            var second = first.Clone();
 
             Assert.IsFalse(first > second);
         }
@@ -108,8 +105,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns true if the first object is larger than the second.")]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            EndpointId first = new EndpointId("b");
-            EndpointId second = new EndpointId("a");
+            var first = new UploadToken(2);
+            var second = new UploadToken(1);
 
             Assert.IsTrue(first > second);
         }
@@ -118,8 +115,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the > operator returns false if the first object is smaller than the second.")]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = new EndpointId("b");
+            var first = new UploadToken(1);
+            var second = new UploadToken(2);
 
             Assert.IsFalse(first > second);
         }
@@ -128,8 +125,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns false if the first object is null.")]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
-            EndpointId first = null;
-            EndpointId second = new EndpointId("a");
+            UploadToken first = null;
+            UploadToken second = new UploadToken();
 
             Assert.IsFalse(first < second);
         }
@@ -138,8 +135,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns false if the second object is null.")]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = null;
+            UploadToken first = new UploadToken();
+            UploadToken second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -148,8 +145,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns false if both objects are null.")]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
-            EndpointId first = null;
-            EndpointId second = null;
+            UploadToken first = null;
+            UploadToken second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -158,8 +155,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns false if both objects are equal.")]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = new EndpointId("a");
+            var first = new UploadToken();
+            var second = first.Clone();
 
             Assert.IsFalse(first < second);
         }
@@ -168,8 +165,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns false if the first object is larger than the second.")]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            EndpointId first = new EndpointId("b");
-            EndpointId second = new EndpointId("a");
+            var first = new UploadToken(2);
+            var second = new UploadToken(1);
 
             Assert.IsFalse(first < second);
         }
@@ -178,8 +175,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the < operator returns true if the first object is smaller than the second.")]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = new EndpointId("b");
+            var first = new UploadToken(1);
+            var second = new UploadToken(2);
 
             Assert.IsTrue(first < second);
         }
@@ -188,8 +185,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
-            EndpointId first = new EndpointId("a");
-            EndpointId second = first.Clone();
+            UploadToken first = new UploadToken();
+            UploadToken second = first.Clone();
 
             Assert.AreEqual(first, second);
         }
@@ -198,7 +195,7 @@ namespace Apollo.Base.Communication
         [Description("Checks that the CompareTo method returns 1 if the second objects is null.")]
         public void CompareToWithNullObject()
         {
-            EndpointId first = new EndpointId("a");
+            UploadToken first = new UploadToken();
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -208,8 +205,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the CompareTo method returns 0 if the second object is equal to the first.")]
         public void CompareToOperatorWithEqualObjects()
         {
-            EndpointId first = new EndpointId("a");
-            object second = new EndpointId("a");
+            var first = new UploadToken();
+            object second = first.Clone();
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -218,8 +215,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the CompareTo method returns a postive number if the first objects is larger than the second.")]
         public void CompareToWithLargerFirstObject()
         {
-            EndpointId first = new EndpointId("b");
-            object second = new EndpointId("a");
+            var first = new UploadToken(2);
+            var second = new UploadToken(1);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -228,8 +225,8 @@ namespace Apollo.Base.Communication
         [Description("Checks that the CompareTo method returns a negative number if the first objects is larger than the second.")]
         public void CompareToWithSmallerFirstObject()
         {
-            EndpointId first = new EndpointId("a");
-            object second = new EndpointId("b");
+            var first = new UploadToken(1);
+            var second = new UploadToken(2);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -238,7 +235,7 @@ namespace Apollo.Base.Communication
         [Description("Checks that the CompareTo method throws an exception if the second objects type is not equal to the first.")]
         public void CompareToWithUnequalObjectTypes()
         {
-            EndpointId first = new EndpointId("a");
+            UploadToken first = new UploadToken();
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -19,6 +20,7 @@ namespace Apollo.Core.Base.Loaders
     /// Loads datasets into an external application and provides enough information for the
     /// requester to connect to that application via the communication system.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class DatasetApplicationLoader : IApplicationLoader
     {
         /// <summary>

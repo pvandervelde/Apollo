@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using NLog;
 using NLog.Config;
@@ -14,6 +15,7 @@ namespace Apollo.Utilities.Logging
     /// <summary>
     /// Defines a factory that builds <see cref="ILogger"/> objects.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class LoggerBuilder
     {
         static LoggerBuilder()

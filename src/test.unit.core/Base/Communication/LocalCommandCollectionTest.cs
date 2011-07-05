@@ -36,14 +36,11 @@ namespace Apollo.Base.Communication
                     .Returns(new EndpointId("mine"));
                 layer.Setup(l => l.IsSignedIn)
                     .Returns(true);
-                layer.Setup(l => l.LocalConnectionPoints())
+                layer.Setup(l => l.KnownEndpoints())
                     .Returns(
-                        new List<ChannelConnectionInformation> 
+                        new List<EndpointId> 
                             { 
-                                new ChannelConnectionInformation(
                                     new EndpointId("other"), 
-                                    typeof(NamedPipeChannelType), 
-                                    new Uri("net.pipe://localhost/apollo_test")) 
                             });
                 layer.Setup(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
                     .Verifiable();
@@ -68,14 +65,11 @@ namespace Apollo.Base.Communication
                     .Returns(new EndpointId("mine"));
                 layer.Setup(l => l.IsSignedIn)
                     .Returns(true);
-                layer.Setup(l => l.LocalConnectionPoints())
+                layer.Setup(l => l.KnownEndpoints())
                     .Returns(
-                        new List<ChannelConnectionInformation> 
+                        new List<EndpointId> 
                             { 
-                                new ChannelConnectionInformation(
                                     new EndpointId("other"), 
-                                    typeof(NamedPipeChannelType), 
-                                    new Uri("net.pipe://localhost/apollo_test")) 
                             });
                 layer.Setup(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
                     .Verifiable();

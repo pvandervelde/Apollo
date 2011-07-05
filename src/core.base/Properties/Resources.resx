@@ -171,6 +171,9 @@
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
   </data>
+  <data name="Exceptions_Messages_EndpointIdCannotBeDeserializedFromAnEmptyString" xml:space="preserve">
+    <value>An endpoint ID cannot be deserialized from an empty string.</value>
+  </data>
   <data name="Exceptions_Messages_EndpointNotContactable" xml:space="preserve">
     <value>The endpoint cannot be contacted. No connection information for this endpoint is available.</value>
   </data>

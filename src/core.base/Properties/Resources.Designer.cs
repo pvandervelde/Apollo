@@ -223,6 +223,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to An endpoint ID cannot be deserialized from an empty string..
+        /// </summary>
+        internal static string Exceptions_Messages_EndpointIdCannotBeDeserializedFromAnEmptyString {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_EndpointIdCannotBeDeserializedFromAnEmptyString", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The endpoint cannot be contacted. No connection information for this endpoint is available..
         /// </summary>
         internal static string Exceptions_Messages_EndpointNotContactable {

@@ -33,7 +33,12 @@ namespace Apollo.Core.Logging
             var msg = new LogMessage(LevelToLog.Info, "blabla");
             var text = template.Translate(msg);
 
-            var expectedText = string.Format(CultureInfo.CurrentCulture, DebugLogTemplate.DebugLogFormat, GetDefaultDateTime(), msg.Text());
+            var expectedText = string.Format(
+                CultureInfo.CurrentCulture, 
+                DebugLogTemplate.DebugLogFormat, 
+                GetDefaultDateTime(), 
+                msg.Level, 
+                msg.Text());
             Assert.AreEqual(expectedText, text);
         }
 

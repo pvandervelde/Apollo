@@ -5,12 +5,14 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.Logging
 {
     /// <summary>
     /// Maps a <see cref="LogSeverityProxy"/> value to a <see cref="LevelToLog"/> value.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class LogSeverityProxyToLogLevelMap
     {
         /// <summary>

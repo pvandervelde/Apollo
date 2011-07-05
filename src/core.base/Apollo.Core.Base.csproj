@@ -151,7 +151,6 @@
     <Compile Include="Communication\WaitingUploads.cs" />
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="DatasetApplicationCommands.cs" />
-    <Compile Include="DatasetIdExtensions.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IHostCommands.cs" />
     <Compile Include="Loaders\DatasetApplicationLoader.cs" />

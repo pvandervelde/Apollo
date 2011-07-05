@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using Apollo.Core.Base.Communication;
 using Autofac;
@@ -16,6 +17,7 @@ namespace Apollo.Core.Base
     /// Handles the component registration for the dataset components for 
     /// applications that load and manipulate datasets.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public sealed class BaseModuleForDatasets : Module
     {
         /// <summary>

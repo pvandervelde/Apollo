@@ -19,6 +19,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// Defines a top level exception handler which stops all exceptions from progagating out of the application, thus
     /// providing a chance for logging and semi-graceful termination of the application.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class TopLevelExceptionHandler
     {
         /// <summary>
