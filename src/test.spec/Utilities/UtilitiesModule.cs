@@ -8,8 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
-using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Apollo.Utilities.Logging;
 using Autofac;
 
@@ -49,6 +48,9 @@ namespace Apollo.Utilities
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
+                builder.Register(c => new XmlConfiguration())
+                    .As<IConfiguration>();
+
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
                         Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
@@ -57,22 +59,22 @@ namespace Apollo.Utilities
                     .SingleInstance();
 
                 builder.Register<Action<LogSeverityProxy, string>>(c =>
-                {
-                    var loggers = c.Resolve<IEnumerable<ILogger>>();
-                    Action<LogSeverityProxy, string> action = (p, s) =>
-                    {
-                        var msg = new LogMessage(
-                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                            s);
-
-                        foreach (var logger in loggers)
                         {
-                            logger.Log(msg);
-                        }
-                    };
+                            var loggers = c.Resolve<IEnumerable<ILogger>>();
+                            Action<LogSeverityProxy, string> action = (p, s) =>
+                            {
+                                var msg = new LogMessage(
+                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                                    s);
 
-                    return action;
-                })
+                                foreach (var logger in loggers)
+                                {
+                                    logger.Log(msg);
+                                }
+                            };
+
+                            return action;
+                        })
                     .As<Action<LogSeverityProxy, string>>()
                     .SingleInstance();
             }

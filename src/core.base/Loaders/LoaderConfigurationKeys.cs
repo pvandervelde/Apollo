@@ -19,6 +19,8 @@ namespace Apollo.Core.Base.Loaders
         /// The <see cref="ConfigurationKey"/> that is used to retrieve the list of endpoints to which 
         /// the current application cannot distribute datasets to.
         /// </summary>
+        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
+            Justification = "A configuration key is immutable.")]
         public static readonly ConfigurationKey OffLimitsEndpoints = new ConfigurationKey();
     }
 }

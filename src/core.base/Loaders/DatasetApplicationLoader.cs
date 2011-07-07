@@ -29,41 +29,6 @@ namespace Apollo.Core.Base.Loaders
         private const string DatasetApplicationFileName = @"Apollo.Core.Dataset.exe";
 
         /// <summary>
-        /// The function which returns the URI of the named pipe connection on which the current 
-        /// application is listening for new connections.
-        /// </summary>
-        private readonly Func<Uri> m_NamedPipeConnection;
-
-        /// <summary>
-        /// The object that handles the remote commands.
-        /// </summary>
-        private readonly ISendCommandsToRemoteEndpoints m_Hub;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetApplicationLoader"/> class.
-        /// </summary>
-        /// <param name="namedPipeChannel">
-        ///     The function which returns the URI of the named pipe connection on which the current application is listening.
-        /// </param>
-        /// <param name="hub">The object that handles the remote commands.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="namedPipeChannel"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
-        /// </exception>
-        public DatasetApplicationLoader(Func<Uri> namedPipeChannel, ISendCommandsToRemoteEndpoints hub)
-        {
-            {
-                Enforce.Argument(() => namedPipeChannel);
-                Enforce.Argument(() => hub);
-            }
-
-            m_NamedPipeConnection = namedPipeChannel;
-            m_Hub = hub;
-        }
-
-        /// <summary>
         /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
         /// <param name="ownerConnection">

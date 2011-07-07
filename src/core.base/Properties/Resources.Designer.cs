@@ -313,6 +313,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The maximum number of channel restarts was exceeded. Not restarting the channel anymore..
+        /// </summary>
+        internal static string Exceptions_Messages_MaximumNumberOfChannelRestartsExceeded {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_MaximumNumberOfChannelRestartsExceeded", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to In order to filter on a given message kind the message class must implement the ICommunicationMessage interface..
         /// </summary>
         internal static string Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage {

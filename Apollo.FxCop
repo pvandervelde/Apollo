@@ -29,6 +29,7 @@
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.ProjectExplorer.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.SrcOnly.dll" Analyze="True" AnalyzeAllChildren="True" />
  </Targets>
  <Rules>
   <RuleFiles>
@@ -86,209 +87,6 @@
    </Namespace>
   </Namespaces>
   <Targets>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll">
-    <Modules>
-     <Module Name="apollo.core.base.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Core.Base">
-        <Types>
-         <Type Name="BaseModule">
-          <Members>
-           <Member Name="#RegisterLoaderComponents(Autofac.ContainerBuilder)">
-            <Messages>
-             <Message Id="builder" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-05-18 08:26:30Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'builder'</Item>
-               <Item>'BaseModule.RegisterLoaderComponents(ContainerBuilder)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DatasetOnlineInformation">
-          <Members>
-           <Member Name="#Id">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-18 08:26:30Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'DatasetOnlineInformation.Id'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-            <Accessors>
-             <Accessor Name="#get_Id()">
-              <Messages>
-               <Message TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065" Created="2011-05-18 08:26:30Z" FixCategory="Breaking">
-                <Issue Name="PropertyGetter" Level="Warning">
-                 <Item>'DatasetOnlineInformation.Id.get()'</Item>
-                 <Item>'NotImplementedException'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Core.Base.Loaders">
-        <Types>
-         <Type Name="DatasetLoader">
-          <Members>
-           <Member Name="#m_LoaderCommands">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2011-05-18 08:26:30Z">
-              <Issue>
-               <Item>'DatasetLoader.m_LoaderCommands'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="DistributionPlan">
-          <Members>
-           <Member Name="#Accept()">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-18 08:26:30Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'DistributionPlan.Accept()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#DistributionFor">
-            <Accessors>
-             <Accessor Name="#set_DistributionFor(Apollo.Core.Base.DatasetId)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.DistributionFor.set(DatasetId)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EarliestEstimatedFinishTime">
-            <Accessors>
-             <Accessor Name="#set_EarliestEstimatedFinishTime(System.DateTimeOffset)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EarliestEstimatedFinishTime.set(DateTimeOffset)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EarliestStartTime">
-            <Accessors>
-             <Accessor Name="#set_EarliestStartTime(System.DateTimeOffset)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EarliestStartTime.set(DateTimeOffset)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EstimatedLoadingTime">
-            <Accessors>
-             <Accessor Name="#set_EstimatedLoadingTime(System.TimeSpan)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EstimatedLoadingTime.set(TimeSpan)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EstimatedReturnTransferTime">
-            <Accessors>
-             <Accessor Name="#set_EstimatedReturnTransferTime(System.TimeSpan)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EstimatedReturnTransferTime.set(TimeSpan)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EstimatedRunningTime">
-            <Accessors>
-             <Accessor Name="#set_EstimatedRunningTime(System.TimeSpan)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EstimatedRunningTime.set(TimeSpan)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EstimatedTransferTime">
-            <Accessors>
-             <Accessor Name="#set_EstimatedTransferTime(System.TimeSpan)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EstimatedTransferTime.set(TimeSpan)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#EstimatedUnloadingTime">
-            <Accessors>
-             <Accessor Name="#set_EstimatedUnloadingTime(System.TimeSpan)">
-              <Messages>
-               <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-                <Issue>
-                 <Item>'DistributionPlan.EstimatedUnloadingTime.set(TimeSpan)'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-           <Member Name="#MachinesToDistributeTo()">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-18 08:26:30Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'DistributionPlan.MachinesToDistributeTo()'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="IDatasetLoaderCommands">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-05-18 08:26:30Z">
-            <Issue>
-             <Item>'IDatasetLoaderCommands'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.dll">
     <Modules>
      <Module Name="apollo.core.dll">
@@ -323,40 +121,6 @@
         <Types>
          <Type Name="Project">
           <Members>
-           <Member Name="#LoadOntoMachine(Apollo.Core.Base.DatasetId,Apollo.Core.Base.Loaders.LoadingLocation,Apollo.Core.Base.Loaders.MachineDistributionRange)">
-            <Messages>
-             <Message Id="preferredLocation" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-05-18 08:26:30Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'preferredLocation'</Item>
-               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="range" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-05-18 08:26:30Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'range'</Item>
-               <Item>'Project.LoadOntoMachine(DatasetId, LoadingLocation, MachineDistributionRange)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#m_DatasetDistributor">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2011-05-18 08:26:30Z">
-              <Issue>
-               <Item>'Project.m_DatasetDistributor'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#OnlineInformation(Apollo.Core.Base.DatasetId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2011-05-18 08:26:30Z">
-              <Issue>
-               <Item>'Project.OnlineInformation(DatasetId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
            <Member Name="#RestoreFromStore(Apollo.Utilities.IPersistenceInformation)">
             <Messages>
              <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2011-05-19 12:06:07Z" FixCategory="NonBreaking">
@@ -410,27 +174,6 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Utilities.dll">
-    <Modules>
-     <Module Name="apollo.utilities.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.Utilities">
-        <Types>
-         <Type Name="IPersistenceInformation">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-05-19 12:06:07Z">
-            <Issue>
-             <Item>'IPersistenceInformation'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
   </Targets>
   <Rules>
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
@@ -439,14 +182,8 @@
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
     <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
    </Rule>
-   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
-    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
-   </Rule>
    <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
     <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
-   </Rule>
-   <Rule TypeName="DoNotRaiseExceptionsInUnexpectedLocations" Category="Microsoft.Design" CheckId="CA1065">
-    <Resolution Name="PropertyGetter">{0} creates an exception of type {1}, an exception type that should not be raised in a property. If this exception instance might be raised, use a different exception type, convert this property into a method, or change this property's logic so that it no longer raises an exception.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>

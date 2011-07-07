@@ -88,6 +88,7 @@
     <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />
     <Compile Include="Communication\LocalCommandCollection.cs" />
     <Compile Include="Communication\ManualCommandRegistrationReporter.cs" />
+    <Compile Include="Communication\MaximumNumberOfChannelRestartsExceededException.cs" />
     <Compile Include="Communication\Messages\CommandInvokedResponseMessage.cs" />
     <Compile Include="Communication\Messages\DataDownloadRequestMessage.cs" />
     <Compile Include="Communication\Messages\EndpointInformationRequestMessage.cs" />

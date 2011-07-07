@@ -95,6 +95,7 @@
     <Compile Include="Base\Communication\LocalCommandCollectionTest.cs" />
     <Compile Include="Base\Communication\ManualCommandRegistrationReporterTest.cs" />
     <Compile Include="Base\Communication\ManualDiscoverySourceTest.cs" />
+    <Compile Include="Base\Communication\MaximumNumberOfChannelRestartsExceededExceptionTest.cs" />
     <Compile Include="Base\Communication\MessageEventArgsTest.cs" />
     <Compile Include="Base\Communication\MessageHandlerTest.cs" />
     <Compile Include="Base\Communication\MessageIdTest.cs" />

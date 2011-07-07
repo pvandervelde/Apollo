@@ -28,14 +28,7 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            builder.Register(c => new DatasetApplicationLoader(
-                    () =>
-                    {
-                        return (from connection in c.Resolve<ICommunicationLayer>().LocalConnectionPoints()
-                                where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
-                                select connection.Address).First();
-                    },
-                    c.Resolve<ISendCommandsToRemoteEndpoints>()))
+            builder.Register(c => new DatasetApplicationLoader())
                 .As<IApplicationLoader>();
 
             builder.Register(c => new DatasetDistributionGenerator(

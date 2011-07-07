@@ -131,6 +131,8 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             SendMessage(msg, returnMsg);
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "This method should not kill the application, it should notify the other side of the connection of failure if possible")]
         private void SendMessage(ICommunicationMessage msg, ICommunicationMessage returnMsg)
         {
             try

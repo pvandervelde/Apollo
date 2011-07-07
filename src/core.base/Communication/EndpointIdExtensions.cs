@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Communication
         public static string OriginatesOnMachine(this EndpointId endpoint)
         {
             var stringRepresentation = endpoint.ToString();
-            var index = stringRepresentation.LastIndexOf(":");
+            var index = stringRepresentation.LastIndexOf(":", StringComparison.Ordinal);
             if (index == -1)
             {
                 throw new UnknownEndpointIdFormatException();

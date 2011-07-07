@@ -26,15 +26,15 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="plan">The selected plan.</param>
         public SelectedProposal(DistributionPlan plan)
         {
-            WasSelectionCancelled = plan == null;
+            WasSelectionCanceled = plan == null;
             Plan = plan;
         }
 
         /// <summary>
         /// Gets a value indicating whether the selection process
-        /// was cancelled at any point.
+        /// was canceled at any point.
         /// </summary>
-        public bool WasSelectionCancelled
+        public bool WasSelectionCanceled
         {
             get;
             private set;

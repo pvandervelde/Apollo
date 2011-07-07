@@ -126,7 +126,7 @@ namespace Apollo.Base.Loaders
             {
                 DatasetToLoad = offlineInfo,
                 ExpectedLoadPerMachine = new ExpectedDatasetLoad(),
-                PreferedLocations = LoadingLocations.All,
+                PreferredLocations = LoadingLocations.All,
             };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreElementsEqualIgnoringOrder(

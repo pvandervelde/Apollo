@@ -64,6 +64,8 @@ namespace Apollo.Core.Dataset
                     Process.GetCurrentProcess().Id));
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We're catching the exception and then exiting the application.")]
         private static int RunApplication(string[] arguments, ApplicationContext context)
         {
             string hostId = null;

@@ -24,9 +24,9 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// Gets or sets the prefered loading locations.
+        /// Gets or sets the preferred loading locations.
         /// </summary>
-        public LoadingLocations PreferedLocations
+        public LoadingLocations PreferredLocations
         {
             get;
             set;

@@ -29,7 +29,7 @@ namespace Apollo.Core.Base.Loaders
             CancellationToken token)
         {
             var usableNodes = DetermineUsableEndpoints(availableEndpoints, configuration);
-            var orderedProposals = OrderProposals(request.ExpectedLoadPerMachine, request.PreferedLocations, usableNodes, token);
+            var orderedProposals = OrderProposals(request.ExpectedLoadPerMachine, request.PreferredLocations, usableNodes, token);
             return orderedProposals;
         }
 

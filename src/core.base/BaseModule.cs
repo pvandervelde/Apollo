@@ -205,6 +205,7 @@ namespace Apollo.Core.Base
                                 typeof(Func<EndpointId, IChannelProxy>),
                                 endpointToProxy));
                     },
+                    () => DateTimeOffset.Now,
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
@@ -224,6 +225,7 @@ namespace Apollo.Core.Base
                                 typeof(Func<EndpointId, IChannelProxy>),
                                 endpointToProxy));
                     },
+                    () => DateTimeOffset.Now,
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {

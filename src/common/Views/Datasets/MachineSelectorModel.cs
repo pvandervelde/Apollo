@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Loaders;
@@ -42,6 +43,8 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="suggestions"/> is <see langword="null" />.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed",
+            Justification = "The use of default parameters makes things simpler here.")]
         public MachineSelectorModel(
             IContextAware context, 
             IEnumerable<DistributionSuggestion> suggestions,

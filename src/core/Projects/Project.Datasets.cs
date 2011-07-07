@@ -348,7 +348,7 @@ namespace Apollo.Core.Projects
                 var request = new DatasetRequest
                     {
                         DatasetToLoad = offline,
-                        PreferedLocations = preferredLocation,
+                        PreferredLocations = preferredLocation,
                         ExpectedLoadPerMachine = new ExpectedDatasetLoad
                             {
                                 OnDiskSizeInBytes = offline.StoredAt.StoredSizeInBytes(),
@@ -367,7 +367,7 @@ namespace Apollo.Core.Projects
                     token.ThrowIfCancellationRequested();
                 }
 
-                if (selectedPlan.WasSelectionCancelled)
+                if (selectedPlan.WasSelectionCanceled)
                 {
                     if (m_LoadingDatsets.ContainsKey(id))
                     {

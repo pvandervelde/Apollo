@@ -312,6 +312,8 @@ namespace Apollo.Core.UserInterfaces.Projects
         /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "To select an appropriate machine we need a function which requires nested generics.")]
         public void LoadOntoMachine(
             LoadingLocations preferredLocation,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,

@@ -35,10 +35,33 @@ namespace Apollo.Core.Base.Communication
     internal sealed class CommunicationChannel : ICommunicationChannel, IDisposable
     {
         /// <summary>
+        /// The maximum number of faults that are allowed to occur inside a given time span.
+        /// </summary>
+        private const int MaximumNumberOfSequentialFaults = 10;
+
+        /// <summary>
+        /// The number of minutes over which the number of faults is not allowed
+        /// to exceed the <see cref="MaximumNumberOfSequentialFaults"/>.
+        /// </summary>
+        private const int FaultingTimeSpanInMinutes = 1;
+
+        /// <summary>
         /// Maps the endpoint to the connection information.
         /// </summary>
         private readonly Dictionary<EndpointId, ChannelConnectionInformation> m_ChannelConnectionMap =
             new Dictionary<EndpointId, ChannelConnectionInformation>();
+
+        /// <summary>
+        /// The collection that contains the times at which faults occurred.
+        /// </summary>
+        /// <remarks>
+        /// We always clear out the times that are futher away than the <see cref="FaultingTimeSpanInMinutes"/>
+        /// so there should never be more than <see cref="MaximumNumberOfSequentialFaults"/> entries in the 
+        /// storage. Except when we push the one fault time in that will push us over the limit. Hence we
+        /// reserve space for that one more entry.
+        /// </remarks>
+        private readonly List<DateTimeOffset> m_LatestFaultingTimes =
+            new List<DateTimeOffset>(MaximumNumberOfSequentialFaults + 1);
 
         /// <summary>
         /// The ID number of the current endpoint.
@@ -60,6 +83,11 @@ namespace Apollo.Core.Base.Communication
         /// The function that generates sending endpoints.
         /// </summary>
         private readonly Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> m_SenderBuilder;
+
+        /// <summary>
+        /// The function that returns the current time.
+        /// </summary>
+        private readonly Func<DateTimeOffset> m_CurrentTime;
 
         /// <summary>
         /// The function used to write messages to the log.
@@ -109,6 +137,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="channelType">The type of channel, e.g. TCP.</param>
         /// <param name="receiverBuilder">The function that builds receiving endpoints.</param>
         /// <param name="senderBuilder">The function that builds sending endpoints.</param>
+        /// <param name="currentTime">The function that returns the current time.</param>
         /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
@@ -123,6 +152,9 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="senderBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="currentTime"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         public CommunicationChannel(
@@ -130,6 +162,7 @@ namespace Apollo.Core.Base.Communication
             IChannelType channelType, 
             Func<IMessagePipe> receiverBuilder,
             Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> senderBuilder,
+            Func<DateTimeOffset> currentTime,
             Action<LogSeverityProxy, string> logger)
         {
             {
@@ -137,6 +170,7 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => channelType);
                 Enforce.Argument(() => receiverBuilder);
                 Enforce.Argument(() => senderBuilder);
+                Enforce.Argument(() => currentTime);
                 Enforce.Argument(() => logger);
             }
 
@@ -144,6 +178,7 @@ namespace Apollo.Core.Base.Communication
             m_Type = channelType;
             m_ReceiverBuilder = receiverBuilder;
             m_SenderBuilder = senderBuilder;
+            m_CurrentTime = currentTime;
             m_Logger = logger;
         }
 
@@ -191,6 +226,7 @@ namespace Apollo.Core.Base.Communication
                             "Channel for address: {0} has faulted.",
                             uri));
 
+                    StoreCurrentTimeAsFaultingTime();
                     ReopenChannel(uri);
                 };
 
@@ -222,6 +258,23 @@ namespace Apollo.Core.Base.Communication
                     uri));
         }
 
+        private void StoreCurrentTimeAsFaultingTime()
+        {
+            var now = m_CurrentTime();
+            m_LatestFaultingTimes.Add(now);
+            
+            var timespan = new TimeSpan(0, FaultingTimeSpanInMinutes, 0);
+            while (m_LatestFaultingTimes[0] < now - timespan)
+            {
+                m_LatestFaultingTimes.RemoveAt(0);
+            }
+
+            if (m_LatestFaultingTimes.Count > MaximumNumberOfSequentialFaults)
+            {
+                throw new MaximumNumberOfChannelRestartsExceededException();
+            }
+        }
+
         private void CleanupHost()
         {
             if (m_Host != null)
@@ -232,7 +285,34 @@ namespace Apollo.Core.Base.Communication
                 m_Host.Closed -= m_HostClosedHandler;
                 m_HostClosedHandler = null;
 
-                m_Host.Close();
+                try
+                {
+                    m_Host.Close();
+                }
+                catch (TimeoutException)
+                {
+                    // The default interval of time that was allotted for the operation was exceeded
+                    // before the operation was completed.
+                    m_Host.Abort();
+                }
+                catch (InvalidOperationException)
+                {
+                    // EITHER:
+                    // The communication object is in a System.ServiceModel.CommunicationState.Closing
+                    // or System.ServiceModel.CommunicationState.Closed state and cannot be modified.
+                    //
+                    // OR
+                    //
+                    // The communication object is not in a System.ServiceModel.CommunicationState.Opened
+                    // or System.ServiceModel.CommunicationState.Opening state and cannot be modified.
+                    m_Host.Abort();
+                }
+                catch (CommunicationObjectFaultedException)
+                {
+                    // The communication object is in a System.ServiceModel.CommunicationState.Faulted
+                    // state and cannot be modified.
+                    m_Host.Abort();
+                }
 
                 var disposable = m_Host as IDisposable;
                 if (disposable != null)

@@ -118,12 +118,13 @@ namespace Apollo.Core
         /// <summary>
         /// Creates the kernel.
         /// </summary>
+        /// <param name="shutdownAction">The action that should be executed just before shutdown.</param>
         /// <returns>
         /// The newly created kernel.
         /// </returns>
-        private static IKernel CreateKernel()
+        private static IKernel CreateKernel(Action shutdownAction)
         {
-            return new Kernel();
+            return new Kernel(shutdownAction);
         }
 
         /// <summary>
@@ -180,7 +181,11 @@ namespace Apollo.Core
                 m_Progress.Mark(new CoreLoadingProgressMark());
             }
 
-            var kernel = CreateKernel();
+            Action shutdownAction = () =>
+                {
+                    container.Dispose();
+                };
+            var kernel = CreateKernel(shutdownAction);
 
             var serviceTypes = FindServiceTypes();
             foreach (var serviceType in serviceTypes)

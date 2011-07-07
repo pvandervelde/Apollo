@@ -274,7 +274,6 @@ namespace Apollo.Core.Base.Communication
 
         private void HandleEndpointSignOut(EndpointId endpoint)
         {
-            IDictionary<Type, CommandSetProxy> commands = null;
             lock (m_Lock)
             {
                 if (m_WaitingForCommandInformation.Contains(endpoint))
@@ -298,16 +297,7 @@ namespace Apollo.Core.Base.Communication
                             "Removing commands for endpoint [{0}].",
                             endpoint));
 
-                    commands = m_RemoteCommands[endpoint];
                     m_RemoteCommands.Remove(endpoint);
-                }
-            }
-
-            if (commands != null)
-            {
-                foreach (var pair in commands)
-                {
-                    pair.Value.EndpointHasSignedOff();
                 }
             }
 

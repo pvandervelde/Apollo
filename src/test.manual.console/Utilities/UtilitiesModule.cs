@@ -63,29 +63,29 @@ namespace Apollo.Utilities
                     .SingleInstance();
 
                 builder.Register<Action<LogSeverityProxy, string>>(c =>
-                {
-                    var loggers = c.Resolve<IEnumerable<ILogger>>();
-                    Action<LogSeverityProxy, string> action = (p, s) =>
-                    {
-                        var msg = new LogMessage(
-                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                            s);
-
-                        foreach (var logger in loggers)
                         {
-                            try
+                            var loggers = c.Resolve<IEnumerable<ILogger>>();
+                            Action<LogSeverityProxy, string> action = (p, s) =>
                             {
-                                logger.Log(msg);
-                            }
-                            catch (NLogRuntimeException)
-                            {
-                                // Ignore it and move on to the next logger.
-                            }
-                        }
-                    };
+                                var msg = new LogMessage(
+                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                                    s);
 
-                    return action;
-                })
+                                foreach (var logger in loggers)
+                                {
+                                    try
+                                    {
+                                        logger.Log(msg);
+                                    }
+                                    catch (NLogRuntimeException)
+                                    {
+                                        // Ignore it and move on to the next logger.
+                                    }
+                                }
+                            };
+
+                            return action;
+                        })
                     .As<Action<LogSeverityProxy, string>>()
                     .SingleInstance();
             }

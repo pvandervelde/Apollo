@@ -79,6 +79,8 @@ namespace Apollo.UI.Common.Commands
         /// <param name="selector">
         ///     The function that is used to select the most suitable machine to load the dataset onto.
         /// </param>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "To select an appropriate machine we need a function which requires nested generics.")]
         public LoadDatasetOntoMachineCommand(
             DatasetFacade dataset,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector)

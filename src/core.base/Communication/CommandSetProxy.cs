@@ -20,53 +20,6 @@ namespace Apollo.Core.Base.Communication
     internal class CommandSetProxy : ICommandSet
     {
         /// <summary>
-        /// Indicates that the endpoint to which the current proxy is connected has
-        /// become, temporarily, unavailable.
-        /// </summary>
-        public void EndpointHasBecomeUnavailable()
-        {
-            RaiseOnAvailabilityChange();
-        }
-
-        /// <summary>
-        /// Indicates that the endpoint to which the current proxy is connected
-        /// has become available.
-        /// </summary>
-        public void EndpointHasBecomeAvailable()
-        {
-            RaiseOnAvailabilityChange();
-        }
-
-        /// <summary>
-        /// Indicates that the endpoint to which the current proxy is connected
-        /// has signed off from the network.
-        /// </summary>
-        public void EndpointHasSignedOff()
-        {
-            RaiseOnTerminated();
-        }
-
-        /// <summary>
-        /// An event raised when the endpoint to which the commandset belongs
-        /// becomes available or unavailable.
-        /// </summary>
-        /// <remarks>
-        /// Note that changes in availability do not mean that the endpoint has
-        /// permanently been terminated (although that may be the case). It merely
-        /// means that the endpoint is temporarily not available.
-        /// </remarks>
-        public event EventHandler<EventArgs> OnAvailabilityChange;
-
-        private void RaiseOnAvailabilityChange()
-        {
-            var local = OnAvailabilityChange;
-            if (local != null)
-            {
-                local(SelfReference(), EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
         /// Returns the reference to the 'current' object.
         /// </summary>
         /// <remarks>
@@ -87,21 +40,6 @@ namespace Apollo.Core.Base.Communication
         protected internal virtual object SelfReference()
         {
             return this;
-        }
-
-        /// <summary>
-        /// An event raised when the endpoint to which the command set belongs
-        /// becomes invalid.
-        /// </summary>
-        public event EventHandler<EventArgs> OnTerminated;
-
-        private void RaiseOnTerminated()
-        {
-            var local = OnTerminated;
-            if (local != null)
-            {
-                local(SelfReference(), EventArgs.Empty);
-            }
         }
     }
 }

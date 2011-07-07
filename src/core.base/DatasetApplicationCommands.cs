@@ -128,40 +128,5 @@ namespace Apollo.Core.Base
         {
             throw new NotImplementedException();
         }
-
-        /// <summary>
-        /// An event raised when the endpoint to which the commandset belongs
-        /// becomes available or unavailable.
-        /// </summary>
-        /// <remarks>
-        /// Note that changes in availability do not mean that the endpoint has
-        /// permanently been terminated (although that may be the case). It merely
-        /// means that the endpoint is temporarily not available.
-        /// </remarks>
-        public event EventHandler<EventArgs> OnAvailabilityChange;
-
-        private void RaiseOnAvailabilityChange()
-        {
-            var local = OnAvailabilityChange;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// An event raised when the endpoint to which the command set belongs
-        /// becomes invalid.
-        /// </summary>
-        public event EventHandler<EventArgs> OnTerminated;
-
-        private void RaiseOnTerminated()
-        {
-            var local = OnTerminated;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
-        }
     }
 }

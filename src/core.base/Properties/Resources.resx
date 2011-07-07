@@ -201,6 +201,9 @@
   <data name="Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues" xml:space="preserve">
     <value>The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}.</value>
   </data>
+  <data name="Exceptions_Messages_MaximumNumberOfChannelRestartsExceeded" xml:space="preserve">
+    <value>The maximum number of channel restarts was exceeded. Not restarting the channel anymore.</value>
+  </data>
   <data name="Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage" xml:space="preserve">
     <value>In order to filter on a given message kind the message class must implement the ICommunicationMessage interface.</value>
   </data>
