@@ -233,8 +233,6 @@ namespace Apollo.Utilities
         /// The assembly loader should also deal with NGEN-ed assemblies. This means that using
         /// Assembly.LoadFrom is not the best choice.
         /// </todo>
-        [SuppressMessage("Microsoft.Design", "CA1044:PropertiesShouldNotBeWriteOnly",
-            Justification = "The getter method is only called from the inside of the class. Properties 'feel' better here.")]
         internal Func<string, Assembly> AssemblyLoader 
         {
             private get

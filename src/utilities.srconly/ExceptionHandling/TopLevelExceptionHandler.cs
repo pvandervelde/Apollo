@@ -143,8 +143,6 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <returns>
         /// The requested attribute.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "The type parameter indicates which attribute we're looking for.")]
         private static T GetAttributeFromAssembly<T>() where T : Attribute
         {
             var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false);

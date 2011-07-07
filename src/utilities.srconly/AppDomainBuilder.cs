@@ -42,8 +42,6 @@ namespace Apollo.Utilities
         /// <param name="resolutionPaths">The assembly resolution paths for the new <c>AppDomain</c>.</param>
         /// <returns>The newly created <c>AppDomain</c>.</returns>
         [NotNull]
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "We do really want a directory and not a file system object, therefore we shall stick with DirectoryInfo.")]
         private static AppDomain Create(
             string name,
             AppDomainResolutionPaths resolutionPaths)
@@ -94,8 +92,6 @@ namespace Apollo.Utilities
         ///     Thrown if <paramref name="fileConstants"/> is <see langword="null" />.
         /// </exception>
         [NotNull]
-        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
-            Justification = "Making this method static would lead to a static class which makes testing harder.")]
         [SecurityPermission(SecurityAction.Demand, Flags = SecurityPermissionFlag.ControlAppDomain)]
         public static AppDomain Assemble(
             string friendlyName, 

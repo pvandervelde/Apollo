@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Projects;
@@ -21,16 +20,10 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// </summary>
     internal sealed class CreateProjectCommand : ICommand
     {
-        #region Static members
-
         /// <summary>
         /// Defines the Id for the <c>CreateProjectCommand</c>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"CreateProject");
-
-        #endregion
 
         /// <summary>
         /// The function that is used to create the new project.

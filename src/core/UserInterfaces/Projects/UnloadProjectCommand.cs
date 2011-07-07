@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Utilities.Commands;
@@ -20,16 +19,10 @@ namespace Apollo.Core.UserInterfaces.Projects
     /// </summary>
     internal sealed class UnloadProjectCommand : ICommand
     {
-        #region Static members
-
         /// <summary>
         /// Defines the Id for the <c>UnloadProjectCommand</c>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"UnloadProject");
-
-        #endregion
 
         /// <summary>
         /// The method used to unload the project.

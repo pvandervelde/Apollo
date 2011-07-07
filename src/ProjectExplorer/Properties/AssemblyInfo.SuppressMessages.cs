@@ -18,21 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 // Internal classes that seem to be unused but really are used
 [module: SuppressMessage(
     "Microsoft.Performance", 
-    "CA1812:AvoidUninstantiatedInternalClasses", 
-    Scope = "type", 
-    Target = "Apollo.ProjectExplorer.Views.Shell.ShellModel")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
-    "CA1812:AvoidUninstantiatedInternalClasses", 
-    Scope = "type", 
-    Target = "Apollo.ProjectExplorer.Views.About.AboutWindow")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
-    "CA1811:AvoidUncalledPrivateCode", 
-    Scope = "member", 
-    Target = "Apollo.ProjectExplorer.Views.Shell.ShellWindow.#.ctor(Apollo.UI.Common.Commands.ExitCommand)")]
-[module: SuppressMessage(
-    "Microsoft.Performance", 
     "CA1811:AvoidUncalledPrivateCode", 
     Scope = "member", 
     Target = "Apollo.ProjectExplorer.Commands.ShowAboutWindowCommand.#.ctor(Microsoft.Practices.Composite.Events.IEventAggregator)")]

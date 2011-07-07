@@ -66,8 +66,6 @@ namespace Apollo.ProjectExplorer.Commands
         ///     with the project system.
         /// </param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "The constructor is called via the IOC container.")]
         public ShowProjectsTabCommand(IContextAware context, ILinkToProjects projectFacade, IEventAggregator eventAggregator)
             : base(obj => ShowTab(context, eventAggregator), obj => CanShowTab(projectFacade))
         {

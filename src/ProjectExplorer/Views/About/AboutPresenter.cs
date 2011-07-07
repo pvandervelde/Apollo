@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Apollo.UI.Common;
 using Autofac;
 
@@ -18,8 +17,6 @@ namespace Apollo.ProjectExplorer.Views.About
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.
         /// </summary>
-        [SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields",
-            Justification = "Currently not used but will be as soon as we actually implement this.")]
         private readonly IContainer m_Container;
 
         /// <summary>

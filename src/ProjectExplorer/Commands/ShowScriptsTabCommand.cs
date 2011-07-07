@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Projects;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Views.Scripting;
@@ -52,8 +51,6 @@ namespace Apollo.ProjectExplorer.Commands
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "The constructor is called via the IOC container.")]
         public ShowScriptsTabCommand(IContextAware context, IEventAggregator eventAggregator)
             : base(obj => ShowTab(context, eventAggregator), obj => CanShowTab())
         {

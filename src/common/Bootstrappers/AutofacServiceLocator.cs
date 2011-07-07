@@ -100,8 +100,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <returns>The requested service.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Use of a generic parameter provides strongly typed methods.")]
         public TService GetInstance<TService>()
         {
             return m_AutofacContainer.Resolve<TService>();
@@ -113,8 +111,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <param name="key">The key under which the service is registered.</param>
         /// <returns>The requested service.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Use of a generic parameter provides strongly typed methods.")]
         public TService GetInstance<TService>(string key)
         {
             return m_AutofacContainer.ResolveNamed<TService>(key);
@@ -125,8 +121,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// </summary>
         /// <typeparam name="TService">The type of the service.</typeparam>
         /// <returns>A collection of services.</returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Use of a generic parameter provides strongly typed methods.")]
         public IEnumerable<TService> GetAllInstances<TService>()
         {
             var enumerable = (IEnumerable)m_AutofacContainer.Resolve<IEnumerable<TService>>();

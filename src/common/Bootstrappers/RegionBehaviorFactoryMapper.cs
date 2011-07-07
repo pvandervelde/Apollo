@@ -46,8 +46,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// <returns>
         /// The requested factory.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Using a generic T results in cleaner code, that is worth dealing with slightly more difficult usage.")]
         public RegionBehaviorFactoryMapper Map<T>(string behaviorKey)
             where T : IRegionBehavior
         {

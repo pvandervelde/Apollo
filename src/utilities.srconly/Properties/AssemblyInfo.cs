@@ -48,7 +48,3 @@ using System.Runtime.InteropServices;
     "Microsoft.Naming", 
     "CA1704:IdentifiersShouldBeSpelledCorrectly", 
     MessageId = "Src")]
-
-[assembly: SuppressMessage(
-    "Microsoft.Design", 
-    "CA2210:AssembliesShouldHaveValidStrongNames")]

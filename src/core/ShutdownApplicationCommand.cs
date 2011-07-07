@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Commands;
 using Lokad;
 using ICommand = Apollo.Utilities.Commands.ICommand;
@@ -18,16 +17,10 @@ namespace Apollo.Core
     /// </summary>
     internal sealed class ShutdownApplicationCommand : ICommand
     {
-        #region Static members
-
         /// <summary>
         /// Defines the Id for the <c>CheckApplicationCanShutdownCommand</c>.
         /// </summary>
-        [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes",
-            Justification = "A CommandId reference is immutable")]
         public static readonly CommandId CommandId = new CommandId(@"ShutdownApplication");
-
-        #endregion
 
         /// <summary>
         /// The action that performs the shutdown.

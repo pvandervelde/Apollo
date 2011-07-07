@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.ProjectExplorer.Properties;
 using Apollo.Utilities.Logging;
 
@@ -18,8 +17,6 @@ namespace Apollo.Utilities
     /// This class handles the resource retrieval for the code that is linked from 
     /// <c>Apollo.Utilities.SrcOnly</c> project.
     /// </design>
-    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Src",
-        Justification = "This class is only used internally.")]
     internal static class SrcOnlyResources
     {
         /// <summary>

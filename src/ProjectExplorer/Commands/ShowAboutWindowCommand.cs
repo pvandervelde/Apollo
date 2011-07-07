@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
 using Apollo.ProjectExplorer.Views.About;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
@@ -37,8 +36,6 @@ namespace Apollo.ProjectExplorer.Commands
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode",
-            Justification = "The constructor is called via the IOC container.")]
         public ShowAboutWindowCommand(IContextAware context, IEventAggregator eventAggregator)
             : base(obj => OnExecute(context, eventAggregator))
         {

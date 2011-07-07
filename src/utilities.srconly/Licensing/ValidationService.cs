@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Lokad;
 
 namespace Apollo.Utilities.Licensing
@@ -160,8 +159,6 @@ namespace Apollo.Utilities.Licensing
         ///     The number of validations that have failed in sequence since the last
         ///     successful validation.
         /// </param>
-        [SuppressMessage("Microsoft.Design", "CA1045:DoNotPassTypesByReference", MessageId = "0#",
-            Justification = "Getting a reference to the value makes most sense since we want to update the same reference.")]
         private void Validate(ref int sequentialFailedValidationCount)
         {
             var now = m_Now();
