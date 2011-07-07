@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -151,11 +152,6 @@ namespace Apollo.Core.Base.Loaders
             new Dictionary<EndpointId, IDatasetLoaderCommands>();
 
         /// <summary>
-        /// The object that handles the communication between applications.
-        /// </summary>
-        private readonly ICommunicationLayer m_Layer;
-
-        /// <summary>
         /// The object that manages the remote command proxies.
         /// </summary>
         private readonly ISendCommandsToRemoteEndpoints m_Hub;
@@ -166,6 +162,17 @@ namespace Apollo.Core.Base.Loaders
         private readonly IConfiguration m_Configuration;
 
         /// <summary>
+        /// The collection that stores all the uploads waiting to be
+        /// started.
+        /// </summary>
+        private readonly WaitingUploads m_Uploads;
+
+        /// <summary>
+        /// The function that returns information about the channel on which the connection should be made.
+        /// </summary>
+        private readonly Func<ChannelConnectionInformation> m_ChannelInformation;
+
+        /// <summary>
         /// The scheduler that will be used to schedule tasks.
         /// </summary>
         private readonly TaskScheduler m_Scheduler;
@@ -173,33 +180,39 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteDatasetDistributor"/> class.
         /// </summary>
-        /// <param name="layer">The object that handles the communication between applications.</param>
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
         /// <param name="configuration">The application specific configuration.</param>
+        /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
+        /// <param name="channelInformation">The function that returns information about the correct channel to use for communication.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandHub"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="uploads"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
+        /// </exception>
         public RemoteDatasetDistributor(
-            ICommunicationLayer layer,
             ISendCommandsToRemoteEndpoints commandHub, 
             IConfiguration configuration,
+            WaitingUploads uploads,
+            Func<ChannelConnectionInformation> channelInformation,
             TaskScheduler scheduler = null)
         {
             {
-                Enforce.Argument(() => layer);
                 Enforce.Argument(() => commandHub);
                 Enforce.Argument(() => configuration);
+                Enforce.Argument(() => channelInformation);
             }
 
-            m_Layer = layer;
             m_Configuration = configuration;
+            m_Uploads = uploads;
+            m_ChannelInformation = channelInformation;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
             m_Hub = commandHub;
             {
@@ -301,28 +314,23 @@ namespace Apollo.Core.Base.Loaders
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    var connection = (from i in m_Layer.LocalConnectionPoints()
-                                      where i.ChannelType.Equals(typeof(NamedPipeChannelType))
-                                      select i).First();
-
-                    IDatasetLoaderCommands commands = null;
+                    IDatasetLoaderCommands loaderCommands = null;
                     lock (m_Lock)
                     {
-                        if (m_LoaderCommands.ContainsKey(planToImplement.Proposal.Endpoint))
+                        if (!m_LoaderCommands.ContainsKey(planToImplement.Proposal.Endpoint))
                         {
                             throw new EndpointNotContactableException(planToImplement.Proposal.Endpoint);
                         }
 
-                        commands = m_LoaderCommands[planToImplement.Proposal.Endpoint];
+                        loaderCommands = m_LoaderCommands[planToImplement.Proposal.Endpoint];
                     }
 
-                    var endpointTask = commands.Load(connection, planToImplement.DistributionFor.Id);
+                    var endpointTask = loaderCommands.Load(m_ChannelInformation(), planToImplement.DistributionFor.Id);
                     endpointTask.Wait();
 
-                    // Wait for the application to start up and register itself with our command hub.
                     var endpoint = endpointTask.Result;
                     var resetEvent = new AutoResetEvent(false);
-                    Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                    var commandAvailabilityNotifier = Observable.FromEvent<CommandSetAvailabilityEventArgs>(
                             h => m_Hub.OnEndpointSignedIn += h,
                             h => m_Hub.OnEndpointSignedIn -= h)
                         .Where(args => args.EventArgs.Endpoint.Equals(endpoint))
@@ -333,15 +341,26 @@ namespace Apollo.Core.Base.Loaders
                                 resetEvent.Set();
                             });
 
-                    if (!m_Hub.HasCommandsFor(endpoint))
+                    using (commandAvailabilityNotifier)
                     {
-                        resetEvent.WaitOne();
+                        if (!m_Hub.HasCommandsFor(endpoint))
+                        {
+                            resetEvent.WaitOne();
+                        }
                     }
 
-                    // The commands have been registered, so now wait for the 
-                    // dataset to be loaded.
-                    //
-                    // Now the dataset loading is complete
+                    // Store the file 
+                    var file = planToImplement.DistributionFor.StoredAt.AsFile();
+                    var uploadToken = m_Uploads.Register(file.FullName);
+
+                    // The commands have been registered, so now load the dataset
+                    Debug.Assert(m_Hub.HasCommandFor(endpoint, typeof(IDatasetApplicationCommands)), "No application commands registered.");
+                    var applicationCommands = m_Hub.CommandsFor<IDatasetApplicationCommands>(endpoint);
+                    var task = applicationCommands.Load(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        uploadToken);
+                    task.Wait();
+
                     return new DatasetOnlineInformation(
                         planToImplement.DistributionFor.Id,
                         endpoint,

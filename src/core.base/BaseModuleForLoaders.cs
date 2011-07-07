@@ -44,16 +44,6 @@ namespace Apollo.Core.Base
 
             builder.Register(c => new DistributionCalculator())
                 .As<ICalculateDistributionParameters>();
-
-            builder.Register(c => new LocalDatasetDistributor(
-                    c.Resolve<ICalculateDistributionParameters>(),
-                    c.Resolve<IApplicationLoader>(),
-                    c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<ISendCommandsToRemoteEndpoints>(),
-                    c.Resolve<WaitingUploads>()))
-                .As<IGenerateDistributionProposals>()
-                .As<ILoadDatasets>()
-                .SingleInstance();
         }
     }
 }

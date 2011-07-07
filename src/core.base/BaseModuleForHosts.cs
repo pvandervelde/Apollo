@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities.Configuration;
@@ -29,9 +30,30 @@ namespace Apollo.Core.Base
             base.Load(builder);
 
             builder.Register(c => new RemoteDatasetDistributor(
-                    c.Resolve<ICommunicationLayer>(),
                     c.Resolve<ISendCommandsToRemoteEndpoints>(),
-                    c.Resolve<IConfiguration>()))
+                    c.Resolve<IConfiguration>(),
+                    c.Resolve<WaitingUploads>(),
+                    () =>
+                    {
+                        return (from connection in c.Resolve<ICommunicationLayer>().LocalConnectionPoints()
+                                where connection.ChannelType.Equals(typeof(TcpChannelType))
+                                select connection).First();
+                    }))
+                .As<IGenerateDistributionProposals>()
+                .As<ILoadDatasets>()
+                .SingleInstance();
+
+            builder.Register(c => new LocalDatasetDistributor(
+                    c.Resolve<ICalculateDistributionParameters>(),
+                    c.Resolve<IApplicationLoader>(),
+                    c.Resolve<ISendCommandsToRemoteEndpoints>(),
+                    c.Resolve<WaitingUploads>(),
+                    () =>
+                    {
+                        return (from connection in c.Resolve<ICommunicationLayer>().LocalConnectionPoints()
+                                where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
+                                select connection).First();
+                    }))
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
                 .SingleInstance();

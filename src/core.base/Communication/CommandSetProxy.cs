@@ -16,6 +16,7 @@ namespace Apollo.Core.Base.Communication
     /// This type is not really meant to be used except by the DynamicProxy2 framework, hence
     /// it should be an open type which is not abstract.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     internal class CommandSetProxy : ICommandSet
     {
         /// <summary>

@@ -105,5 +105,11 @@ namespace Apollo.Base.Communication
         {
             Task<int> MyMethod(int input);
         }
+
+        [InternalCommand]
+        public interface IMockCommandSetForInternalUse : ICommandSet
+        {
+            Task MyInternalMethod();
+        }
     }
 }

@@ -402,11 +402,11 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Translates an <see cref="ICommandSet"/> type into a serializable form.
+        /// Translates an <see cref="Type"/> type into a serializable form.
         /// </summary>
-        /// <param name="type">A command set type.</param>
+        /// <param name="type">A type.</param>
         /// <returns>
-        ///     An object that stores the <see cref="ICommandSet"/> type information in a serializable format.
+        ///     An object that stores the <see cref="Type"/> information in a serializable format.
         /// </returns>
         public static ISerializedType FromType(Type type)
         {

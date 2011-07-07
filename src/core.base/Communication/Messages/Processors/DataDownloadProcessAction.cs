@@ -107,8 +107,8 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                        CultureInfo.InvariantCulture,
                        "No file was registered for uploading with token {0}",
                        msg.Token));
-
-                m_Layer.SendMessageTo(msg.OriginatingEndpoint, new FailureMessage(m_Layer.Id, msg.Id));
+                
+                SendMessage(msg, new FailureMessage(m_Layer.Id, msg.Id));
                 return;
             }
 
@@ -128,6 +128,11 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 m_Uploads.Reregister(msg.Token, filePath);
             }
 
+            SendMessage(msg, returnMsg);
+        }
+
+        private void SendMessage(ICommunicationMessage msg, ICommunicationMessage returnMsg)
+        {
             try
             {
                 m_Layer.SendMessageTo(msg.OriginatingEndpoint, returnMsg);
