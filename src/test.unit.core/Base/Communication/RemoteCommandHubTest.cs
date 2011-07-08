@@ -8,6 +8,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
@@ -17,7 +19,6 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the RemoteCommandHub class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteCommandHubTest
@@ -27,8 +28,12 @@ namespace Apollo.Base.Communication
             Task MyMethod(int input);
         }
 
+        public interface IMockCommandSetWithTypedTaskReturn : ICommandSet
+        {
+            Task<int> MyMethod(int input);
+        }
+
         [Test]
-        [Description("Checks that endpoint sign in is correctly handled.")]
         public void HandleEndpointSignInWithSuccessfulTransfer()
         {
             var localEndpoint = new EndpointId("local");
@@ -41,15 +46,23 @@ namespace Apollo.Base.Communication
                         (e, m) => 
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = 
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
             
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -65,7 +78,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that endpoint sign in is correctly handled if something goes wrong during the communication.")]
         public void HandleEndpointSignInWithFailedTransfer()
         {
             var localEndpoint = new EndpointId("local");
@@ -77,15 +89,24 @@ namespace Apollo.Base.Communication
                     .Returns<EndpointId, ICommunicationMessage>(
                         (e, m) =>
                         {
-                            return Task<ICommunicationMessage>.Factory.StartNew(() => { throw new Exception(); });
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => { throw new Exception(); },
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
             var connectionInfo = new ChannelConnectionInformation(
@@ -95,14 +116,12 @@ namespace Apollo.Base.Communication
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
             // Now wait for everything to sort itself out
-            Thread.Sleep(50);
             Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
             Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
         }
 
         [Test]
-        [Description("Checks that endpoint sign off is correctly handled.")]
-        public void HandleEndpointSignOff()
+        public void HandleEndpointSignOut()
         {
             var localEndpoint = new EndpointId("local");
             var layer = new Mock<ICommunicationLayer>();
@@ -114,17 +133,24 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
 
-            var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
                 typeof(NamedPipeChannelType), 
@@ -133,7 +159,6 @@ namespace Apollo.Base.Communication
                 {
                     Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                     Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                    resetEvent.Set();
                 };
             hub.OnEndpointSignedOff += (s, e) =>
                 {
@@ -142,13 +167,161 @@ namespace Apollo.Base.Communication
                 };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-
-            resetEvent.WaitOne();
             layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(connectionInfo.Id));
         }
 
         [Test]
-        [Description("Checks that getting access to an unknown command set throws an exception.")]
+        public void HandleNewCommandReportedWithoutCommands()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, null),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+
+            var otherId = new EndpointId("other");
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    otherId, 
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(otherId));
+            Assert.IsTrue(hub.HasCommandFor(otherId, typeof(IMockCommandSetWithTaskReturn)));
+        }
+
+        [Test]
+        public void HandleNewCommandReportedWithCommands()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/apollo_test"));
+            hub.OnEndpointSignedIn += (s, e) =>
+            {
+                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+            };
+
+            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
+
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    connectionInfo.Id,
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+        }
+
+        [Test]
+        public void HandleNewCommandReportedWithoutCommandsRegisteringDuplicate()
+        {
+            var localEndpoint = new EndpointId("local");
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(localEndpoint);
+                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Returns<EndpointId, ICommunicationMessage>(
+                        (e, m) =>
+                        {
+                            return Task<ICommunicationMessage>.Factory.StartNew(
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
+                        });
+            }
+
+            var reporter = new Mock<IReportNewCommands>();
+            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+
+            var connectionInfo = new ChannelConnectionInformation(
+                new EndpointId("other"),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/apollo_test"));
+            hub.OnEndpointSignedIn += (s, e) =>
+            {
+                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+            };
+
+            reporter.Raise(
+                r => r.OnNewCommandRegistered += null, 
+                new CommandInformationEventArgs(
+                    connectionInfo.Id,
+                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+
+            Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
+            Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
+            Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTypedTaskReturn)));
+
+            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
+        }
+
+        [Test]
         public void CommandsForWithUnknownCommand()
         {
             var localEndpoint = new EndpointId("local");
@@ -161,19 +334,26 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
                 layer.Setup(l => l.DisconnectFromEndpoint(It.IsAny<EndpointId>()))
                     .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
 
-            var resetEvent = new AutoResetEvent(false);
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
                 typeof(NamedPipeChannelType), 
@@ -182,17 +362,13 @@ namespace Apollo.Base.Communication
             {
                 Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
                 Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                resetEvent.Set();
             };
 
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-
-            resetEvent.WaitOne();
-            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IMachineCommands>(connectionInfo.Id));
+            Assert.Throws<CommandNotSupportedException>(() => hub.CommandsFor<IHostCommands>(connectionInfo.Id));
         }
 
         [Test]
-        [Description("Checks that it is possible to get access to a command set.")]
         public void CommandsFor()
         {
             var localEndpoint = new EndpointId("local");
@@ -205,18 +381,23 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
+                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 
+            var reporter = new Mock<IReportNewCommands>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
+                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
+                    () => new SuccessMessage(localEndpoint, new MessageId()),
+                    new CancellationToken(),
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
-
-            var resetEvent = new AutoResetEvent(false);
-            hub.OnEndpointSignedIn += (s, e) => { resetEvent.Set(); };
+            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -224,117 +405,10 @@ namespace Apollo.Base.Communication
                 new Uri("net.pipe://localhost/apollo_test"));
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
-            resetEvent.WaitOne();
             var proxy = hub.CommandsFor<IMockCommandSetWithTaskReturn>(connectionInfo.Id);
             Assert.IsNotNull(proxy);
             Assert.IsInstanceOfType(typeof(CommandSetProxy), proxy);
             Assert.IsInstanceOfType(typeof(IMockCommandSetWithTaskReturn), proxy);
-        }
-
-        [Test]
-        [Description("Checks that closing the connection to an endpoint correctly cleans up all the commands for that endpoint.")]
-        public void CloseConnectionTo()
-        {
-            var localEndpoint = new EndpointId("local");
-            var layer = new Mock<ICommunicationLayer>();
-            {
-                layer.Setup(l => l.Id)
-                    .Returns(localEndpoint);
-                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
-                    .Returns<EndpointId, ICommunicationMessage>(
-                        (e, m) =>
-                        {
-                            return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
-                        });
-                layer.Setup(l => l.DisconnectFromEndpoint(It.IsAny<EndpointId>()))
-                    .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
-            }
-
-            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
-
-            var resetEvent = new AutoResetEvent(false);
-            var connectionInfo = new ChannelConnectionInformation(
-                new EndpointId("other"), 
-                typeof(NamedPipeChannelType), 
-                new Uri("net.pipe://localhost/apollo_test"));
-            hub.OnEndpointSignedIn += (s, e) =>
-            {
-                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
-                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                resetEvent.Set();
-            };
-            hub.OnEndpointSignedOff += (s, e) =>
-            {
-                Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
-                Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                resetEvent.Set();
-            };
-
-            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-
-            resetEvent.WaitOne();
-            hub.CloseConnectionTo(connectionInfo.Id);
-
-            resetEvent.WaitOne();
-            Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
-        }
-
-        [Test]
-        [Description("Checks that closing the connection to all endpoints correctly cleans up all the commands for that endpoint.")]
-        public void CloseConnections()
-        {
-            var localEndpoint = new EndpointId("local");
-            var layer = new Mock<ICommunicationLayer>();
-            {
-                layer.Setup(l => l.Id)
-                    .Returns(localEndpoint);
-                layer.Setup(l => l.SendMessageAndWaitForResponse(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
-                    .Returns<EndpointId, ICommunicationMessage>(
-                        (e, m) =>
-                        {
-                            return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)));
-                        });
-                layer.Setup(l => l.DisconnectFromEndpoint(It.IsAny<EndpointId>()))
-                    .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
-            }
-
-            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
-                (e, m) => Task<ICommunicationMessage>.Factory.StartNew(() => new SuccessMessage(localEndpoint, new MessageId()));
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-
-            var hub = new RemoteCommandHub(layer.Object, new CommandProxyBuilder(localEndpoint, sender), logger);
-
-            var resetEvent = new AutoResetEvent(false);
-            var connectionInfo = new ChannelConnectionInformation(
-                new EndpointId("other"), 
-                typeof(NamedPipeChannelType), 
-                new Uri("net.pipe://localhost/apollo_test"));
-            hub.OnEndpointSignedIn += (s, e) =>
-            {
-                Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
-                Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                resetEvent.Set();
-            };
-            hub.OnEndpointSignedOff += (s, e) =>
-            {
-                Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
-                Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
-                resetEvent.Set();
-            };
-
-            layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
-
-            resetEvent.WaitOne();
-            hub.CloseConnections();
-
-            resetEvent.WaitOne();
-            Assert.IsFalse(hub.HasCommandsFor(connectionInfo.Id));
         }
     }
 }

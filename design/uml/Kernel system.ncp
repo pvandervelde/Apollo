@@ -115,14 +115,6 @@ Some services will be started on application start up.</Text>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>LogSink</Name>
-        <Access>Internal</Access>
-        <Location left="1398" top="1286" />
-        <Size width="162" height="90" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
         <Name>PluginRepository</Name>
         <Access>Internal</Access>
         <Location left="1915" top="456" />
@@ -346,14 +338,6 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="14" second="10">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1606</X>
-          <Y>1149</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="15" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -365,7 +349,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>993</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="16" second="10">
+      <Relationship type="Generalization" first="15" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -377,11 +361,11 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>1081</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="9" second="16">
+      <Relationship type="Comment" first="9" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="17" second="4">
+      <Relationship type="Realization" first="16" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -393,7 +377,9 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>1099</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="17" second="16">
+      <Relationship type="Association" first="16" second="15">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -407,7 +393,9 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="0" second="17">
+      <Relationship type="Association" first="0" second="16">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -421,7 +409,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="18" second="17">
+      <Relationship type="Comment" first="17" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -433,7 +421,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>619</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="19" second="10">
+      <Relationship type="Generalization" first="18" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -445,7 +433,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>1063</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="11" second="19">
+      <Relationship type="Association" first="11" second="18">
         <Label>Depends on</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
@@ -456,7 +444,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="12" second="19">
+      <Relationship type="Association" first="12" second="18">
         <Label>Depends on</Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
@@ -471,7 +459,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="21" second="19">
+      <Relationship type="Comment" first="20" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -479,7 +467,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>1137</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="22" second="15">
+      <Relationship type="Comment" first="21" second="14">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -491,7 +479,7 @@ Probably no service, however all AppDomains / Threads / Services will have to be
           <Y>525</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="0" second="23">
+      <Relationship type="Realization" first="0" second="22">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -504,8 +492,6 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -585,16 +571,12 @@ Probably no service, however all AppDomains / Threads / Services will have to be
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="3" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>

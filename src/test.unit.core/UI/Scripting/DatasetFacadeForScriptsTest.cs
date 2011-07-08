@@ -21,7 +21,6 @@ using Moq;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the DatasetFacadeForScripts class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetFacadeForScriptsTest
@@ -44,7 +43,6 @@ namespace Apollo.UI.Scripting
         }
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetFacadeForScripts>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -64,7 +62,6 @@ namespace Apollo.UI.Scripting
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<DatasetFacadeForScripts>
         {
             ImplementsOperatorOverloads = true,
@@ -79,7 +76,6 @@ namespace Apollo.UI.Scripting
         };
 
         [Test]
-        [Description("Checks that updates to the dataset name pass the new name on to the project object.")]
         public void Name()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -95,7 +91,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that updates to the dataset name raise the correct event.")]
         public void OnNameUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -109,7 +104,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that updates to the dataset summary pass the new summary on to the project object.")]
         public void Summary()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -125,7 +119,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that updates to the dataset summary raise the correct event.")]
         public void OnSummaryUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -139,7 +132,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnInvalidate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -153,7 +145,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnLoaded()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -167,7 +158,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnUnloaded()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -181,7 +171,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the it is not possible to delete an un-deletable dataset.")]
         public void DeleteWithUndeletableDataset()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -195,7 +184,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the it is possible to delete the dataset.")]
         public void Delete()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -214,7 +202,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the it is possible to delete the dataset.")]
         public void ChildrenOf()
         {
             var child = CreateMockDataset();
@@ -232,7 +219,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that the AddChild method generates the correct setup information.")]
         public void AddChild()
         {
             DatasetCreationInformation creationInformation = null;

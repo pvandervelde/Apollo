@@ -45,6 +45,7 @@
     <Compile Include="Id.cs" />
     <Compile Include="IFileConstants.cs" />
     <Compile Include="IIsId.cs" />
+    <Compile Include="ILoadOnApplicationStartup.cs" />
     <Compile Include="ILockObject.cs" />
     <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="IProgressMark.cs" />
@@ -54,9 +55,9 @@
     <Compile Include="LockObject.cs" />
     <Compile Include="LogSeverityProxy.cs" />
     <Compile Include="NullPersistenceInformation.cs" />
+    <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
     <Compile Include="ReflectionExtensions.cs" />
-    <Compile Include="StartupProgressEventArgs.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

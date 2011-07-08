@@ -20,7 +20,6 @@ using Moq;
 namespace Apollo.Core.UserInterfaces
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class UserInterfaceServiceTest
@@ -57,7 +56,6 @@ namespace Apollo.Core.UserInterfaces
         #endregion
 
         [Test]
-        [Description("Checks that the object is created correctly.")]
         public void Create()
         {
             var commandCollection = new List<CommandId>();
@@ -97,7 +95,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the Contains method returns the correct value.")]
         public void Contains()
         {
             var commandCollection = new List<CommandId>();
@@ -123,7 +120,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the Invoke(CommandId) method returns without invoking if the service is not fully functional.")]
         public void InvokeWithIdNotFullyFunctional()
         {
             var commandCollection = new List<CommandId>();
@@ -149,7 +145,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the Invoke(CommandId) method invokes the command if the service is fully functional.")]
         public void InvokeWithIdFullyFunctional()
         {
             var commandCollection = new List<CommandId>();
@@ -186,7 +181,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the Invoke(CommandId, ICommandContext) method returns without invoking if the service is not fully functional.")]
         public void InvokeWithIdAndContextNotFullyFunctional()
         {
             var commandCollection = new List<CommandId>();
@@ -212,7 +206,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the Invoke(CommandId, ICommandContext) method invokes the command if the service is fully functional.")]
         public void InvokeWithIdAndContextFullyFunctional()
         {
             var commandCollection = new List<CommandId>();
@@ -249,7 +242,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the service returns the correct service types to connect to.")]
         public void ServicesToConnectTo()
         {
             var commandCollection = new List<CommandId>();
@@ -276,7 +268,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that the object can be connected to the dependencies.")]
         public void ConnectTo()
         {
             var commandCollection = new List<CommandId>();
@@ -306,7 +297,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that a notification cannot be registered without a NotificationName.")]
         public void RegisterNotificationWithNullName()
         {
             var commandCollection = new List<CommandId>();
@@ -327,7 +317,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that a notification cannot be registered without a callback method.")]
         public void RegisterNotificationWithNullCallback()
         {
             var commandCollection = new List<CommandId>();
@@ -348,7 +337,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that a notification cannot be registered with an existing name.")]
         public void RegisterNotificationWithExistingName()
         {
             var commandCollection = new List<CommandId>();
@@ -372,7 +360,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that stopping the service without a shutdown callback results in an exception.")]
         public void StopWithMissingAction()
         {
             var commandCollection = new List<CommandId>();
@@ -405,7 +392,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that stopping the service with a failing shutdown callback results in an exception.")]
         public void StopWithFailingAction()
         {
             var commandCollection = new List<CommandId>();
@@ -440,7 +426,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that stopping the service calls the shutdown action.")]
         public void Stop()
         {
             var commandCollection = new List<CommandId>();
@@ -478,7 +463,6 @@ namespace Apollo.Core.UserInterfaces
         }
 
         [Test]
-        [Description("Checks that ApplicationStartupCompleteMessage is handled correctly.")]
         public void HandleApplicationStartupCompleteMessage()
         {
             var commandCollection = new List<CommandId>();

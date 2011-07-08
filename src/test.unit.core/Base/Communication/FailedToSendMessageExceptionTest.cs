@@ -12,13 +12,11 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the FailedToSendMessageException class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class FailedToSendMessageExceptionTest
     {
         [VerifyContract]
-        [Description("Tests the exception class for the default constructors and serialization capabilities.")]
         public readonly IContract ExceptionTests = new ExceptionContract<FailedToSendMessageException>
         {
             ImplementsSerialization = true,

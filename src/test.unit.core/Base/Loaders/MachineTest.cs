@@ -4,7 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
@@ -14,7 +13,6 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the ProcessorSpecification class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class MachineTest
@@ -25,7 +23,6 @@ namespace Apollo.Base.Loaders
         private static readonly HardwareSpecification s_HardwareForLocalMachine = HardwareSpecification.ForLocalMachine();
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<Machine>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -37,39 +34,36 @@ namespace Apollo.Base.Loaders
             DistinctInstances =
                 new List<Machine> 
                         {
-                            new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                            new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                            new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine),
+                            new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine),
                         },
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Machine>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
-                        new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine, new Dictionary<BaselineId, BaselineResult>()),
+                        new Machine(new NetworkIdentifier("a"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("b"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("c"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("d"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("e"), s_HardwareForLocalMachine),
+                        new Machine(new NetworkIdentifier("f"), s_HardwareForLocalMachine),
                     },
         };
 
         [Test]
-        [Description("Checks that an object can be constructed.")]
         public void Create()
         {
             var id = new NetworkIdentifier("a");
             var hardware = s_HardwareForLocalMachine;
-            var baselines = new Dictionary<BaselineId, BaselineResult>();
-            var machine = new Machine(id, hardware, baselines);
+            var machine = new Machine(id, hardware);
 
             Assert.AreEqual(id, machine.Location);
             Assert.AreEqual(hardware, machine.Specification);

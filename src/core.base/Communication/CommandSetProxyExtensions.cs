@@ -251,17 +251,17 @@ namespace Apollo.Core.Base.Communication
             /// <summary>
             /// Initializes a new instance of the <see cref="SerializedMethodInvocation"/> class.
             /// </summary>
-            /// <param name="commandSet">The serialized information about the command set.</param>
+            /// <param name="type">The serialized information about the command set.</param>
             /// <param name="methodName">The name of the method that was called.</param>
             /// <param name="namedParameters">The collection of parameter names and values.</param>
-            public SerializedMethodInvocation(ISerializedType commandSet, string methodName, List<Tuple<ISerializedType, object>> namedParameters)
+            public SerializedMethodInvocation(ISerializedType type, string methodName, List<Tuple<ISerializedType, object>> namedParameters)
             {
                 {
-                    Debug.Assert(commandSet != null, "No command set information specified.");
+                    Debug.Assert(type != null, "No type information specified.");
                     Debug.Assert(!string.IsNullOrWhiteSpace(methodName), "No method name specified.");
                 }
 
-                CommandSet = commandSet;
+                CommandSet = type;
                 MemberName = methodName;
                 m_Parameters = namedParameters;
             }
@@ -402,31 +402,15 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Translates an <see cref="ICommandSet"/> type into a serializable form.
+        /// Translates an <see cref="Type"/> type into a serializable form.
         /// </summary>
-        /// <param name="type">A command set type.</param>
+        /// <param name="type">A type.</param>
         /// <returns>
-        ///     An object that stores the <see cref="ICommandSet"/> type information in a serializable format.
+        ///     An object that stores the <see cref="Type"/> information in a serializable format.
         /// </returns>
         public static ISerializedType FromType(Type type)
         {
-            {
-                Debug.Assert(typeof(ICommandSet).IsAssignableFrom(type), "Cannot store serialized ICommandSet information for this type.");
-            }
-
             return new SerializedType(type.AssemblyQualifiedName);
-        }
-
-        /// <summary>
-        /// Translates an <see cref="ICommandSet"/> object into a serializable form.
-        /// </summary>
-        /// <param name="commandSet">A command set object.</param>
-        /// <returns>
-        ///     An object that stores the <see cref="ICommandSet"/> type information in a serializable format.
-        /// </returns>
-        public static ISerializedType FromObject(ICommandSet commandSet)
-        {
-            return FromType(commandSet.GetType());
         }
 
         /// <summary>

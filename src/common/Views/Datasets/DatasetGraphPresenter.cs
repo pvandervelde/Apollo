@@ -40,9 +40,15 @@ namespace Apollo.UI.Common.Views.Datasets
 
             var serviceFacade = m_Container.Resolve<ILinkToProjects>();
             var project = serviceFacade.ActiveProject();
+            Func<DatasetFacade, DatasetModel> builder =
+                f =>
+                {
+                    var presenter = m_Container.Resolve<DatasetPresenter>();
+                    return presenter.CreateModel(f);
+                };
 
             Debug.Assert(project != null, "There should be an active project.");
-            View.Model = new DatasetGraphModel(context, project);
+            View.Model = new DatasetGraphModel(context, project, builder);
         }
     }
 }

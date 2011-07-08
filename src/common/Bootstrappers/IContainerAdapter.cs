@@ -89,8 +89,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// instance is new or a singleton.
         /// <para> Throw exception if can't return instance.</para>
         /// </remarks>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Use of a generic parameter provides strongly typed methods.")]
         T Resolve<T>() where T : class;
 
         /// <summary>
@@ -109,8 +107,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// The sought object or null if not found or can't create.
         /// </returns>
         /// <remarks>See <see cref="Resolve{T}"/>.</remarks>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Use of a generic parameter provides strongly typed methods.")]
         T TryResolve<T>() where T : class;
 
         /// <summary>

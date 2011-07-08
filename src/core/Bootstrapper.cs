@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
 using Apollo.Core.Utilities;
@@ -118,12 +119,13 @@ namespace Apollo.Core
         /// <summary>
         /// Creates the kernel.
         /// </summary>
+        /// <param name="shutdownAction">The action that should be executed just before shutdown.</param>
         /// <returns>
         /// The newly created kernel.
         /// </returns>
-        private static IKernel CreateKernel()
+        private static IKernel CreateKernel(Action shutdownAction)
         {
-            return new Kernel();
+            return new Kernel(shutdownAction);
         }
 
         /// <summary>
@@ -138,27 +140,39 @@ namespace Apollo.Core
         private readonly ITrackProgress m_Progress;
 
         /// <summary>
+        /// The event that is used to signal the application that it is safe to shut down.
+        /// </summary>
+        private readonly AutoResetEvent m_ShutdownEvent;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
         /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
+        /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="startInfo"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
+        /// </exception>
         protected Bootstrapper(
             KernelStartInfo startInfo, 
-            ITrackProgress progress)
+            ITrackProgress progress,
+            AutoResetEvent shutdownEvent)
         {
             {
                 Enforce.Argument(() => startInfo);
                 Enforce.Argument(() => progress);
+                Enforce.Argument(() => shutdownEvent);
             }
 
             m_StartInfo = startInfo;
             m_Progress = progress;
+            m_ShutdownEvent = shutdownEvent;
         }
 
         /// <summary>
@@ -180,7 +194,15 @@ namespace Apollo.Core
                 m_Progress.Mark(new CoreLoadingProgressMark());
             }
 
-            var kernel = CreateKernel();
+            Action shutdownAction = () =>
+                {
+                    // get rid of all the objects (e.g. communication etc.)
+                    container.Dispose();
+
+                    // indicate that we're done with the shutdown
+                    m_ShutdownEvent.Set();
+                };
+            var kernel = CreateKernel(shutdownAction);
 
             var serviceTypes = FindServiceTypes();
             foreach (var serviceType in serviceTypes)

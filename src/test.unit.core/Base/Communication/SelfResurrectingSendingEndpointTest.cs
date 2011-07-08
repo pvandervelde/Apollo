@@ -16,20 +16,18 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the SelfResurrectingSendingEndpoint class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class SelfResurrectingSendingEndpointTest
     {
         [Test]
-        [Description("Checks that a message can be send even if there is no current channel.")]
         public void SendWithNoChannel()
         {
             Action<LogSeverityProxy, string> logger = (level, m) => { };
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint();
+            var receiver = new ReceivingEndpoint(logger);
             receiver.OnNewMessage += (s, e) => Assert.AreEqual(endpointId, e.Message.OriginatingEndpoint);
 
             var uri = new Uri("net.pipe://localhost/apollo/test/pipe");
@@ -55,7 +53,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a message can be send even if the current channel is faulted.")]
         public void SendWithFaultedChannel()
         {
             var count = 0;
@@ -63,7 +60,7 @@ namespace Apollo.Base.Communication
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint();
+            var receiver = new ReceivingEndpoint(logger);
             receiver.OnNewMessage +=
                 (s, e) =>
                 {

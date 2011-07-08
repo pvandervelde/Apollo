@@ -21,11 +21,6 @@ namespace Apollo.UI.Common.Views.Datasets
     public sealed class DatasetGraphModel : Model
     {
         /// <summary>
-        /// The project that holds the dataset graph.
-        /// </summary>
-        private readonly ProjectFacade m_Project;
-
-        /// <summary>
         /// The graph that holds the information about the
         /// datasets for visualization purposes.
         /// </summary>
@@ -36,6 +31,16 @@ namespace Apollo.UI.Common.Views.Datasets
         /// </summary>
         private readonly Dictionary<DatasetFacade, DatasetViewVertex> m_VertexMap =
             new Dictionary<DatasetFacade, DatasetViewVertex>();
+
+        /// <summary>
+        /// The project that holds the dataset graph.
+        /// </summary>
+        private readonly ProjectFacade m_Project;
+
+        /// <summary>
+        /// The function that builds <see cref="DatasetModel"/> objects.
+        /// </summary>
+        private readonly Func<DatasetFacade, DatasetModel> m_DatasetModelBuilder;
 
         /// <summary>
         /// The type of layout that should be used.
@@ -52,13 +57,20 @@ namespace Apollo.UI.Common.Views.Datasets
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="facade">The project that holds the graph of datasets.</param>
+        /// <param name="datasetModelBuilder">The function that builds <see cref="DatasetModel"/> objects.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="facade"/> is <see langword="null" />.
         /// </exception>
-        public DatasetGraphModel(IContextAware context, ProjectFacade facade)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="datasetModelBuilder"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetGraphModel(
+            IContextAware context, 
+            ProjectFacade facade,
+            Func<DatasetFacade, DatasetModel> datasetModelBuilder)
             : base(context)
         {
             {
@@ -68,6 +80,8 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Project = facade;
             m_Project.OnDatasetCreated += (s, e) => AddDatasetToGraph();
             m_Project.OnDatasetDeleted += (s, e) => RemoveDatasetFromGraph();
+
+            m_DatasetModelBuilder = datasetModelBuilder;
 
             LayoutType = "Tree";
             LayoutParameters = new SimpleTreeLayoutParameters 
@@ -90,7 +104,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(new DatasetModel(InternalContext, child));
+                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child));
                         m_VertexMap.Add(child, vertex);
 
                         graph.AddVertex(vertex);
@@ -186,7 +200,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(new DatasetModel(InternalContext, child));
+                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child));
                         m_VertexMap.Add(child, vertex);
                         graph.AddVertex(vertex);
 

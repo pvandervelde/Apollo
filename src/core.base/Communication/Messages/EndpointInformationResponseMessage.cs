@@ -42,17 +42,11 @@ namespace Apollo.Core.Base.Communication.Messages
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="availableCommands"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="availableCommands"/> has no non-null elements.
-        /// </exception>
         public EndpointInformationResponseMessage(EndpointId origin, MessageId inResponseTo, params Type[] availableCommands)
             : base(origin, inResponseTo)
         {
             {
                 Enforce.Argument(() => availableCommands);
-                Enforce.With<ArgumentException>(
-                    (availableCommands.Length > 0) && (availableCommands[0] != null), 
-                    Resources.Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend);
             }
 
             foreach (var type in availableCommands)

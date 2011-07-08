@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
@@ -97,8 +98,6 @@ namespace Apollo.Core.Projects
             /// <summary>
             /// The ID number of the dataset that is being mirrored.
             /// </summary>
-            [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mId",
-                Justification = "Eh duh.")]
             private readonly DatasetId m_IdOfDataset;
 
             /// <summary>
@@ -164,6 +163,9 @@ namespace Apollo.Core.Projects
             /// <summary>
             /// Deletes the current dataset and all its children.
             /// </summary>
+            /// <exception cref="ArgumentException">
+            ///     Thrown when the owning project is closed.
+            /// </exception>
             public void Delete()
             {
                 {
@@ -343,17 +345,34 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
-            /// Returns a collection containing information on all the machines
-            /// the dataset is distributed over.
+            /// Gets a value indicating whether the dataset can be loaded onto a machine.
+            /// </summary>
+            public bool CanLoad
+            {
+                get
+                {
+                    return m_Owner.CanLoad(m_IdOfDataset);
+                }
+            }
+
+            /// <summary>
+            /// Returns the machine on which the dataset is running.
             /// </summary>
             /// <returns>
-            /// A collection containing information about all the machines the
-            /// dataset is distributed over.
+            /// The machine on which the dataset is running.
             /// </returns>
-            public IEnumerable<Machine> RunsOn()
+            /// <exception cref="DatasetNotLoadedException">
+            ///     Thrown when the dataset is not loaded onto a machine.
+            /// </exception>
+            public NetworkIdentifier RunsOn()
             {
-                // Needs to be a list!
-                throw new NotImplementedException();
+                if (!IsLoaded)
+                {
+                    throw new DatasetNotLoadedException();
+                }
+
+                var online = m_Owner.OnlineInformation(m_IdOfDataset);
+                return online.RunsOn;
             }
 
             /// <summary>
@@ -362,22 +381,35 @@ namespace Apollo.Core.Projects
             /// <param name="preferredLocation">
             /// Indicates a preferred machine location for the dataset to be loaded onto.
             /// </param>
-            /// <param name="range">
-            /// The number of machines over which the data set should be distributed.
+            /// <param name="machineSelector">
+            ///     The function that selects the most suitable machine for the dataset to run on.
             /// </param>
+            /// <param name="token">The token that is used to cancel the loading.</param>
             /// <remarks>
-            /// Note that the <paramref name="preferredLocation"/> and the <paramref name="range"/> are
-            /// only suggestions. The loader may deside to ignore the suggestions if there is a distribution
+            /// Note that the <paramref name="preferredLocation"/> is
+            /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
             /// plan that is better suited to the contents of the dataset.
             /// </remarks>
-            public void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range)
+            /// <exception cref="ArgumentException">
+            ///     Thrown when the project that owns this dataset has been closed.
+            /// </exception>
+            /// <exception cref="CannotLoadDatasetWithoutLoadingLocationException">
+            ///     Thrown when the <paramref name="preferredLocation"/> is <see cref="LoadingLocations.None"/>.
+            /// </exception>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown when <paramref name="machineSelector"/> is <see langword="null" />.
+            /// </exception>
+            public void LoadOntoMachine(
+                LoadingLocations preferredLocation,
+                Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+                CancellationToken token)
             {
                 {
                     Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
-                        preferredLocation != LoadingLocation.None, 
+                        preferredLocation != LoadingLocations.None, 
                         Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation);
-                    Enforce.Argument(() => range);
+                    Enforce.Argument(() => machineSelector);
                 }
 
                 if (IsLoaded)
@@ -385,7 +417,35 @@ namespace Apollo.Core.Projects
                     return;
                 }
 
-                m_Owner.LoadOntoMachine(m_IdOfDataset, preferredLocation, range);
+                m_Owner.LoadOntoMachine(
+                    m_IdOfDataset, 
+                    preferredLocation,
+                    machineSelector,
+                    token);
+            }
+
+            /// <summary>
+            /// A method called by the owner when the owner has dataset loading progress to report.
+            /// </summary>
+            /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
+            /// <param name="mark">The action that is currently being processed.</param>
+            void IOwnedProxyDataset.OwnerReportsDatasetLoadingProgress(int progress, IProgressMark mark)
+            {
+                RaiseOnLoadingProgress(progress, mark);
+            }
+
+            /// <summary>
+            /// An event raised when there is progress in the loading of the datset.
+            /// </summary>
+            public event EventHandler<ProgressEventArgs> OnLoadingProgress;
+
+            private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
+            {
+                var local = OnLoadingProgress;
+                if (local != null)
+                {
+                    local(this, new ProgressEventArgs(progress, mark));
+                }
             }
 
             /// <summary>
@@ -488,8 +548,14 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// The ID number of the child.
             /// </returns>
+            /// <exception cref="ArgumentException">
+            ///     Thrown when the owning project has been closed.
+            /// </exception>
             /// <exception cref="DatasetCannotBecomeParentException">
-            /// Thrown when the current dataset cannot become a parent.
+            ///     Thrown when the current dataset cannot become a parent.
+            /// </exception>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown when <paramref name="newChild"/> is <see langword="null" />.
             /// </exception>
             public IProxyDataset CreateNewChild(DatasetCreationInformation newChild)
             {
@@ -516,6 +582,18 @@ namespace Apollo.Core.Projects
             /// <returns>
             /// A collection containing the ID numbers of the newly created children.
             /// </returns>
+            /// <exception cref="ArgumentException">
+            ///     Thrown when the owning project has been closed.
+            /// </exception>
+            /// <exception cref="DatasetCannotBecomeParentException">
+            ///     Thrown when the current dataset is not allowed to have child datasets.
+            /// </exception>
+            /// <exception cref="ArgumentNullException">
+            ///     Thrown when <paramref name="newChildren"/> is <see langword="null" />.
+            /// </exception>
+            /// <exception cref="ArgumentException">
+            ///     Thrown when <paramref name="newChildren"/> is an empty collection.
+            /// </exception>
             public IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren)
             {
                 {
@@ -542,7 +620,7 @@ namespace Apollo.Core.Projects
             /// <summary>
             /// Gets a value indicating the set of commands that apply to the current dataset.
             /// </summary>
-            public ProxyCommandSet Commands
+            public IProxyCommandSet Commands
             {
                 get
                 {

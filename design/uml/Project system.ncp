@@ -720,16 +720,9 @@ How are we going to deal with that?</Text>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
-        <Text>The start-up arguments are:
-- A description of the communication channel.
-- ??</Text>
-        <Location left="527" top="163" />
-        <Size width="297" height="136" />
-      </Entity>
-      <Entity type="Comment">
         <Text>How do we deal with components? The core part of the application is in charge of picking the right ones, but we'll still need to be able to load them. For that we'll need loading information from somewhere.
 The application can provide the exact assembly details (name, version number, public key etc.) but we'll need to know where to find the files.</Text>
-        <Location left="209" top="163" />
+        <Location left="127" top="160" />
         <Size width="296" height="159" />
       </Entity>
       <Entity type="Comment">
@@ -971,14 +964,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Comment" first="2" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>610</X>
-          <Y>417</Y>
-        </BendPoint>
-      </Relationship>
       <Relationship type="Association" first="0" second="1">
         <Label>
         </Label>
@@ -995,11 +980,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="3" second="0">
+      <Relationship type="Comment" first="2" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>291</X>
+          <X>267</X>
           <Y>348</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -1007,25 +992,25 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>541</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="11" second="8">
+      <Relationship type="Realization" first="10" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="11" second="7">
+      <Relationship type="Association" first="10" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="12" second="7">
+      <Relationship type="Realization" first="11" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="15" second="11">
+      <Relationship type="Comment" first="14" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="16" second="11">
+      <Relationship type="Comment" first="15" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1033,7 +1018,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1931</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="5" second="11">
+      <Relationship type="Comment" first="4" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1045,7 +1030,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1722</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="6" second="12">
+      <Relationship type="Comment" first="5" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1057,15 +1042,15 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1606</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="4" second="12">
+      <Relationship type="Comment" first="3" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="18" second="19">
+      <Relationship type="Comment" first="17" second="18">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="20" second="10">
+      <Relationship type="Association" first="19" second="9">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1077,7 +1062,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="20" second="9">
+      <Relationship type="Association" first="19" second="8">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1089,7 +1074,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="20" second="8">
+      <Relationship type="Association" first="19" second="7">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1101,7 +1086,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="20" second="19">
+      <Relationship type="Association" first="19" second="18">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1113,7 +1098,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="20">
+      <Relationship type="Association" first="1" second="19">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1121,7 +1106,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="11" second="13">
+      <Relationship type="Association" first="10" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1129,11 +1114,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Comment" first="22" second="13">
+      <Relationship type="Comment" first="21" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="7" second="23">
+      <Relationship type="Association" first="6" second="22">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1141,7 +1126,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="23" second="14">
+      <Relationship type="Association" first="22" second="13">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1149,7 +1134,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>1..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="23" second="21">
+      <Relationship type="Association" first="22" second="20">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1157,7 +1142,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="14" second="21">
+      <Relationship type="Association" first="13" second="20">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1169,11 +1154,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="24" second="21">
+      <Relationship type="Comment" first="23" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="21" second="25">
+      <Relationship type="Association" first="20" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1181,11 +1166,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
-      <Relationship type="Comment" first="26" second="25">
+      <Relationship type="Comment" first="25" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="22" second="23">
+      <Relationship type="Comment" first="21" second="22">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1197,11 +1182,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>2059</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="20" second="27">
+      <Relationship type="Realization" first="19" second="26">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="28" second="12">
+      <Relationship type="Comment" first="27" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1209,11 +1194,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1514</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="17" second="29">
+      <Relationship type="Comment" first="16" second="28">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="0" second="29">
+      <Relationship type="Association" first="0" second="28">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1225,7 +1210,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="12" second="29">
+      <Relationship type="Association" first="11" second="28">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -1237,7 +1222,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="20" second="29">
+      <Relationship type="Association" first="19" second="28">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1249,11 +1234,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="30" second="25">
+      <Relationship type="Comment" first="29" second="24">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="32" second="20">
+      <Relationship type="Comment" first="31" second="19">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1261,11 +1246,11 @@ For data components this should lead to a hierarchy of components. e.g. geometry
           <Y>1248</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="31" second="32">
+      <Relationship type="Comment" first="30" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="33" second="32">
+      <Relationship type="Comment" first="32" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
@@ -1278,13 +1263,21 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>ICommunicationLayer</Name>
         <Access>Internal</Access>
-        <Location left="1773" top="457" />
-        <Size width="547" height="129" />
+        <Location left="1774" top="457" />
+        <Size width="713" height="265" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">bool IsEndpointAvailable(EndpointId endpoint)</Member>
-        <Member type="Event">event EventHandler&lt;EndpointAvailabilityEventArgs&gt; OnAvailabilityChange</Member>
-        <Member type="Event">event EventHandler&lt;EndpointEventArgs&gt; OnTerminate</Member>
-        <Member type="Method">void SendMessageTo(EndpointId endpoint, IMessage message)</Member>
+        <Member type="Property">EndpointId Id { get; }</Member>
+        <Member type="Property">bool IsSignedIn { get; }</Member>
+        <Member type="Method">IEnumerable&lt;ChannelConnectionInformation&gt; LocalConnectionPoints()</Member>
+        <Member type="Method">void SignIn()</Member>
+        <Member type="Method">void SignOut()</Member>
+        <Member type="Event">event EventHandler&lt;ConnectionInformationEventArgs&gt; OnEndpointSignedIn</Member>
+        <Member type="Event">event EventHandler&lt;EndpointEventArgs&gt; OnEndpointSignedOut</Member>
+        <Member type="Method">bool IsEndpointContactable(EndpointId endpoint)</Member>
+        <Member type="Method">void ConnectToEndpoint(EndpointId endpoint)</Member>
+        <Member type="Method">void SendMessageTo(EndpointId endpoint, ICommunicationMessage message)</Member>
+        <Member type="Method">Task&lt;ICommunicationMessage&gt; SendMessageAndWaitForResponse(EndpointId endpoint, ICommunicationMessage message)</Member>
+        <Member type="Method">void DisconnectFromEndpoint(EndpointId endpoint)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>ICommunicationChannel</Name>
@@ -1356,18 +1349,22 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Text>Should be allowed to start a channel with given connection parameters. This is necessary for:
 - Initial start of the dataset application
 - Reconnecting to a lost dataset application / service.</Text>
-        <Location left="1784" top="700" />
+        <Location left="1957" top="828" />
         <Size width="265" height="123" />
       </Entity>
       <Entity type="Class">
-        <Name>MessageHub</Name>
+        <Name>RemoteCommandHub</Name>
         <Access>Public</Access>
         <Location left="477" top="467" />
-        <Size width="392" height="128" />
+        <Size width="392" height="196" />
         <Collapsed>False</Collapsed>
+        <Member type="Event">public event EventHandler&lt;CommandSetAvailabilityEventArgs&gt; OnEndpointSignedIn</Member>
+        <Member type="Event">public event EventHandler&lt;EndpointEventArgs&gt; OnEndpointSignedOff</Member>
+        <Member type="Method">public bool HasCommandsFor(EndpointId endpoint)</Member>
+        <Member type="Method">public bool HasCommandFor(EndpointId endpoint, Type commandInterfaceType)</Member>
         <Member type="Method">public TCommands CommandsFor&lt;TCommands&gt;(EndpointId endpoint)</Member>
-        <Member type="Method">public void RegisterCommands(ICommandSet set)</Member>
         <Member type="Method">public void CloseConnectionTo(EndpointId endpoint)</Member>
+        <Member type="Method">public void CloseConnections()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
@@ -2159,8 +2156,8 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1743</X>
-          <Y>562</Y>
+          <X>1747</X>
+          <Y>607</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
@@ -2573,11 +2570,6 @@ And all parameters need to be serializable.</Text>
         <Location left="10" top="529" />
         <Size width="387" height="106" />
       </Entity>
-      <Entity type="Comment">
-        <Text>Do we need to define how to contact the machine? We may need a specific username or port?</Text>
-        <Location left="2514" top="1451" />
-        <Size width="203" height="102" />
-      </Entity>
       <Entity type="Class">
         <Name>HardwareSpecification</Name>
         <Access>Public</Access>
@@ -2590,20 +2582,6 @@ And all parameters need to be serializable.</Text>
         <Member type="Method">public IEnumerable&lt;DiskSpecification&gt; Disks()</Member>
         <Member type="Method">public IEnumerable&lt;NetworkSpecification&gt; Networks()</Member>
         <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>BaseLineResult</Name>
-        <Access>Public</Access>
-        <Location left="679" top="1645" />
-        <Size width="162" height="216" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public BaseLineId Id { get; }</Member>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>A baseline is a known dataset with known behavior that is used to get a performance baseline for a given machine.</Text>
-        <Location left="341" top="1700" />
-        <Size width="205" height="90" />
       </Entity>
       <Entity type="Comment">
         <Text>The goal for the loaders is to provide a set of distribution proposals based on a given distribution requirement. The loaders will create one distribution plan for each dataset that must be distributed. This allows smaller machines to be used even if they're not able to handle all of the datasets in the distribution request.</Text>
@@ -2773,14 +2751,6 @@ Define:
         <Text>Need to be able to broadcast that we're on the network and that we're getting off the network.</Text>
         <Location left="1111" top="97" />
         <Size width="181" height="90" />
-      </Entity>
-      <Entity type="Class">
-        <Name>DistributionConfiguration</Name>
-        <Access>Public</Access>
-        <Location left="4525" top="786" />
-        <Size width="163" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Do we need the ability to get a distribution plan for multiple datasets?</Text>
@@ -3001,19 +2971,7 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="7" second="6">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>585</X>
-          <Y>1765</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>649</X>
-          <Y>1765</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="10" second="5">
+      <Relationship type="Association" first="7" second="4">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3027,47 +2985,35 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="4" second="10">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2612</X>
-          <Y>1578</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2612</X>
-          <Y>1620</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="11" second="13">
+      <Relationship type="Comment" first="8" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="13" second="12">
+      <Relationship type="Association" first="10" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="14" second="17">
+      <Relationship type="Comment" first="11" second="14">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="17" second="15">
+      <Relationship type="Association" first="14" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="18" second="19">
+      <Relationship type="Realization" first="15" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="21" second="20">
+      <Relationship type="Comment" first="18" second="17">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="22" second="23">
+      <Relationship type="Realization" first="19" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3075,11 +3021,11 @@ And all parameters need to be serializable.</Text>
           <Y>826</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="20" second="24">
+      <Relationship type="Comment" first="17" second="21">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="19" second="17">
+      <Relationship type="Association" first="16" second="14">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -3091,7 +3037,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="28" second="17">
+      <Relationship type="Comment" first="24" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3099,7 +3045,7 @@ And all parameters need to be serializable.</Text>
           <Y>1670</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="13" second="29">
+      <Relationship type="Association" first="10" second="25">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -3115,7 +3061,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="30" second="0">
+      <Relationship type="Comment" first="26" second="0">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3123,7 +3069,7 @@ And all parameters need to be serializable.</Text>
           <Y>114</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="31" second="35">
+      <Relationship type="Comment" first="27" second="31">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3135,7 +3081,7 @@ And all parameters need to be serializable.</Text>
           <Y>647</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="34" second="35">
+      <Relationship type="Generalization" first="30" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3147,7 +3093,7 @@ And all parameters need to be serializable.</Text>
           <Y>745</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="33" second="34">
+      <Relationship type="Realization" first="29" second="30">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3159,7 +3105,7 @@ And all parameters need to be serializable.</Text>
           <Y>1015</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="33" second="32">
+      <Relationship type="Generalization" first="29" second="28">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3171,11 +3117,11 @@ And all parameters need to be serializable.</Text>
           <Y>997</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="32" second="35">
+      <Relationship type="Realization" first="28" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="23" second="35">
+      <Relationship type="Generalization" first="20" second="31">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3187,7 +3133,7 @@ And all parameters need to be serializable.</Text>
           <Y>742</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="22" second="32">
+      <Relationship type="Generalization" first="19" second="28">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3195,31 +3141,17 @@ And all parameters need to be serializable.</Text>
           <Y>997</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="22" second="36">
+      <Relationship type="Association" first="19" second="32">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="36" second="6">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1326</X>
-          <Y>1433</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>*</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Generalization" first="37" second="23">
+      <Relationship type="Generalization" first="33" second="20">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="38" second="18">
+      <Relationship type="Comment" first="34" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3227,7 +3159,7 @@ And all parameters need to be serializable.</Text>
           <Y>742</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="39" second="18">
+      <Relationship type="Comment" first="35" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3235,7 +3167,7 @@ And all parameters need to be serializable.</Text>
           <Y>731</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="17" second="40">
+      <Relationship type="Association" first="14" second="36">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -3247,7 +3179,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="17" second="41">
+      <Relationship type="Association" first="14" second="37">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -3255,11 +3187,11 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="16" second="41">
+      <Relationship type="Comment" first="13" second="37">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="5" second="42">
+      <Relationship type="Association" first="4" second="38">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -3275,7 +3207,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="5" second="43">
+      <Relationship type="Association" first="4" second="39">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -3287,7 +3219,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="5" second="44">
+      <Relationship type="Association" first="4" second="40">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -3303,19 +3235,11 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="27">
-        <Label>
-        </Label>
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="20" second="18">
+      <Relationship type="Comment" first="17" second="15">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="18" second="37">
+      <Relationship type="Association" first="15" second="33">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -3327,7 +3251,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="18" second="29">
+      <Relationship type="Realization" first="15" second="25">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3335,7 +3259,7 @@ And all parameters need to be serializable.</Text>
           <Y>907</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="45" second="35">
+      <Relationship type="Comment" first="41" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3343,13 +3267,13 @@ And all parameters need to be serializable.</Text>
           <Y>647</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="46" second="35">
+      <Relationship type="Association" first="42" second="31">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="0" second="46">
+      <Relationship type="Association" first="0" second="42">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3363,28 +3287,28 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="26" second="46">
+      <Relationship type="Comment" first="23" second="42">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="25" second="46">
+      <Relationship type="Comment" first="22" second="42">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="47" second="46">
+      <Relationship type="Association" first="43" second="42">
         <Label>Connects over the network</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="47" second="37">
+      <Relationship type="Association" first="43" second="33">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="36" second="10">
+      <Relationship type="Association" first="32" second="7">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3394,7 +3318,7 @@ And all parameters need to be serializable.</Text>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="43" second="48">
+      <Relationship type="Association" first="39" second="44">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>

@@ -9,8 +9,10 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using Apollo.Utilities.Configuration;
 using Apollo.Utilities.Logging;
 using Autofac;
+using NLog;
 
 namespace Apollo.Utilities
 {
@@ -48,6 +50,9 @@ namespace Apollo.Utilities
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
+                builder.Register(c => new XmlConfiguration())
+                    .As<IConfiguration>();
+
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
                         Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
@@ -72,7 +77,14 @@ namespace Apollo.Utilities
 
                                 foreach (var logger in loggers)
                                 {
-                                    logger.Log(msg);
+                                    try
+                                    {
+                                        logger.Log(msg);
+                                    }
+                                    catch (NLogRuntimeException)
+                                    {
+                                        // Ignore it and move on to the next logger.
+                                    }
                                 }
                             };
 

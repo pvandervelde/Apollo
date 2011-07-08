@@ -120,14 +120,12 @@ namespace Apollo.UI.Common.Scripting
         }
 
         /// <summary>
-        /// Returns a collection containing information on all the machines
-        /// the dataset is distributed over.
+        /// Returns the machine on which the dataset is running.
         /// </summary>
         /// <returns>
-        /// A collection containing information about all the machines the
-        /// dataset is distributed over.
+        /// The machine on which the dataset is running.
         /// </returns>
-        IEnumerable<Machine> RunsOn();
+        NetworkIdentifier RunsOn();
 
         /// <summary>
         /// An event fired after the dataset has been distributed to one or more machines.

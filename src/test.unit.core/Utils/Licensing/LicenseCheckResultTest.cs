@@ -12,7 +12,6 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
-    [Description("Tests the LicenseCheckResult struct.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class LicenseCheckResultTest
@@ -24,7 +23,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<LicenseCheckResult>
         {
             ImplementsOperatorOverloads = true,

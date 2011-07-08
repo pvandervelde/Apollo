@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Communication
     /// to the current endpoint. Upon reception of command information an endpoint will generate a proxy for
     /// the command interface thereby allowing remote invocation of commands through the proxy command interface.
     /// </remarks>
-    public sealed class RemoteCommandHub
+    internal sealed class RemoteCommandHub : ISendCommandsToRemoteEndpoints
     {
         /// <summary>
         /// The object used to lock on.
@@ -53,6 +53,11 @@ namespace Apollo.Core.Base.Communication
         private readonly ICommunicationLayer m_Layer;
 
         /// <summary>
+        /// The object that reports when a new command is registered on a remote endpoint.
+        /// </summary>
+        private readonly IReportNewCommands m_CommandReporter;
+
+        /// <summary>
         /// The object that creates command proxy objects.
         /// </summary>
         private readonly CommandProxyBuilder m_Builder;
@@ -66,10 +71,14 @@ namespace Apollo.Core.Base.Communication
         /// Initializes a new instance of the <see cref="RemoteCommandHub"/> class.
         /// </summary>
         /// <param name="layer">The communication layer that will handle the actual connections.</param>
+        /// <param name="commandReporter">The object that reports when a new command is registered on a remote endpoint.</param>
         /// <param name="builder">The object that is responsible for building the command proxies.</param>
         /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="commandReporter"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="builder"/> is <see langword="null" />.
@@ -78,12 +87,14 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         internal RemoteCommandHub(
-            ICommunicationLayer layer, 
+            ICommunicationLayer layer,
+            IReportNewCommands commandReporter,
             CommandProxyBuilder builder, 
             Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => layer);
+                Enforce.Argument(() => commandReporter);
                 Enforce.Argument(() => builder);
                 Enforce.Argument(() => logger);
             }
@@ -92,6 +103,11 @@ namespace Apollo.Core.Base.Communication
             {
                 m_Layer.OnEndpointSignedIn += (s, e) => HandleEndpointSignIn(e.ConnectionInformation);
                 m_Layer.OnEndpointSignedOut += (s, e) => HandleEndpointSignOut(e.Endpoint);
+            }
+
+            m_CommandReporter = commandReporter;
+            {
+                m_CommandReporter.OnNewCommandRegistered += (s, e) => HandleNewCommandReported(e.Endpoint, e.Command);
             }
 
             m_Builder = builder;
@@ -113,6 +129,12 @@ namespace Apollo.Core.Base.Communication
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
                         // We've already contacted the endpoint and we're still waiting.
+                        m_Logger(
+                            LogSeverityProxy.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Already waiting for commands from endpoint [{0}].",
+                                endpoint));
                         return;
                     }
 
@@ -125,7 +147,8 @@ namespace Apollo.Core.Base.Communication
                         t =>
                         {
                             ProcessInformationResponse(t, endpoint);
-                        });
+                        },
+                        TaskContinuationOptions.ExecuteSynchronously);
                 }
             }
         }
@@ -133,6 +156,7 @@ namespace Apollo.Core.Base.Communication
         private void ProcessInformationResponse(Task<ICommunicationMessage> task, EndpointId endpoint)
         {
             bool haveStoredCommandInformation = false;
+            var commandList = new List<Type>();
             try
             {
                 if (task.IsCompleted)
@@ -169,35 +193,44 @@ namespace Apollo.Core.Base.Communication
                             // needs to travel to another application and come back (possibly over the network). it seems the
                             // sorted list is the best trade-off (memory vs performance) in this case.
                             var commands = msg.Commands;
-                            m_RemoteCommands.Add(endpoint, new SortedList<Type, CommandSetProxy>(commands.Count, new TypeComparer()));
-                            
-                            var list = m_RemoteCommands[endpoint];
+                            m_Logger(
+                                LogSeverityProxy.Trace,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Received {0} commands from endpoint [{1}].",
+                                    commands.Count,
+                                    endpoint));
+
+                            var list = new SortedList<Type, CommandSetProxy>(commands.Count, new TypeComparer());
                             foreach (var command in commands)
                             { 
                                 // Hydrate the command type. This requires loading the assembly which a) might
                                 // be slow and b) might fail
-                                Type commandSetType = null;
-                                try
-                                {
-                                    commandSetType = CommandSetProxyExtensions.ToType(command);
-                                }
-                                catch (UnableToLoadCommandSetTypeException)
-                                {
-                                    m_Logger(
-                                        LogSeverityProxy.Error,
-                                        string.Format(
-                                            CultureInfo.InvariantCulture,
-                                            "Could not load the command set type: {0} for endpoint {1}",
-                                            command.AssemblyQualifiedTypeName,
-                                            endpoint));
-
-                                    throw;
-                                }
-
+                                Type commandSetType = LoadCommandType(endpoint, command);
                                 list.Add(commandSetType, (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType));
                             }
 
-                            haveStoredCommandInformation = true;
+                            if (list.Count > 0)
+                            {
+                                if (!m_RemoteCommands.ContainsKey(endpoint))
+                                {
+                                    m_RemoteCommands.Add(endpoint, list);
+                                }
+                                else 
+                                {
+                                    foreach (var pair in list)
+                                    {
+                                        var existingList = (SortedList<Type, CommandSetProxy>)m_RemoteCommands[endpoint];
+                                        if (!existingList.ContainsKey(pair.Key))
+                                        {
+                                            existingList.Add(pair.Key, pair.Value);
+                                        }
+                                    }
+                                }
+
+                                haveStoredCommandInformation = true;
+                                commandList.AddRange(list.Keys);
+                            }
                         }
                     }
                 }
@@ -215,6 +248,13 @@ namespace Apollo.Core.Base.Communication
                 {
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
+                        m_Logger(
+                           LogSeverityProxy.Trace,
+                           string.Format(
+                               CultureInfo.InvariantCulture,
+                               "No longer waiting for commands from endpoint: {0}",
+                               endpoint));
+
                         m_WaitingForCommandInformation.Remove(endpoint);
                     }
                 }
@@ -225,36 +265,146 @@ namespace Apollo.Core.Base.Communication
             // may trigger all kinds of other mayhem.
             if (haveStoredCommandInformation)
             {
-                RaiseOnEndpointSignedIn();
+                if (commandList.Count > 0)
+                {
+                    RaiseOnEndpointSignedIn(endpoint, commandList);
+                }
             }
         }
 
         private void HandleEndpointSignOut(EndpointId endpoint)
         {
-            IDictionary<Type, CommandSetProxy> commands = null;
             lock (m_Lock)
             {
                 if (m_WaitingForCommandInformation.Contains(endpoint))
                 {
+                    m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "No longer waiting for commands from endpoint [{0}].",
+                            endpoint));
+
                     m_WaitingForCommandInformation.Remove(endpoint);
                 }
 
                 if (m_RemoteCommands.ContainsKey(endpoint))
                 {
-                    commands = m_RemoteCommands[endpoint];
+                    m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Removing commands for endpoint [{0}].",
+                            endpoint));
+
                     m_RemoteCommands.Remove(endpoint);
                 }
             }
 
-            if (commands != null)
+            RaiseOnEndpointSignedOff(endpoint);
+        }
+
+        private void HandleNewCommandReported(EndpointId endpoint, ISerializedType command)
+        {
+            // We're going to assume that if we hear about a new command then we already have information
+            // about the endpoint. This may well be an incorrect assumption but for now it will do.
+            Type commandSetType = LoadCommandType(endpoint, command);
+            lock (m_Lock)
             {
-                foreach (var pair in commands)
+                var proxy = (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType);
+                if (m_RemoteCommands.ContainsKey(endpoint))
                 {
-                    pair.Value.EndpointHasSignedOff();
+                    var list = m_RemoteCommands[endpoint];
+                    if (!list.ContainsKey(commandSetType))
+                    {
+                        list.Add(commandSetType, proxy);
+                    }
+                }
+                else 
+                {
+                    var list = new SortedList<Type, CommandSetProxy>(new TypeComparer());
+                    list.Add(commandSetType, proxy);
+                    m_RemoteCommands.Add(endpoint, list);
+                }
+            }
+        }
+
+        private Type LoadCommandType(EndpointId endpoint, ISerializedType command)
+        {
+            // Hydrate the command type. This requires loading the assembly which a) might
+            // be slow and b) might fail
+            Type commandSetType = null;
+            try
+            {
+                commandSetType = CommandSetProxyExtensions.ToType(command);
+
+                m_Logger(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Got command from endpoint [{0}] of type {1}.",
+                        endpoint,
+                        commandSetType));
+            }
+            catch (UnableToLoadCommandSetTypeException)
+            {
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Could not load the command set type: {0} for endpoint {1}",
+                        command.AssemblyQualifiedTypeName,
+                        endpoint));
+
+                throw;
+            }
+
+            return commandSetType;
+        }
+
+        /// <summary>
+        /// Returns a collection describing all the known endpoints and the commands they
+        /// provide.
+        /// </summary>
+        /// <returns>
+        /// The collection describing all the known endpoints and the commands they describe.
+        /// </returns>
+        public IEnumerable<CommandInformationPerEndpoint> AvailableCommands()
+        {
+            var result = new List<CommandInformationPerEndpoint>(); 
+            lock (m_Lock)
+            {
+                foreach (var pair in m_RemoteCommands)
+                {
+                    var list = new List<Type>();
+                    list.AddRange(pair.Value.Keys);
+                    result.Add(new CommandInformationPerEndpoint(pair.Key, list));
                 }
             }
 
-            RaiseOnEndpointSignedOff(endpoint);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a collection describing all the known commands for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint.</param>
+        /// <returns>
+        ///     The collection describing all the known commands for the given endpoint.
+        /// </returns>
+        public IEnumerable<Type> AvailableCommandsFor(EndpointId endpoint)
+        {
+            var result = new List<Type>();
+            lock (m_Lock)
+            {
+                if (m_RemoteCommands.ContainsKey(endpoint))
+                {
+                    var list = m_RemoteCommands[endpoint];
+                    result.AddRange(list.Keys);
+                }
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -262,12 +412,12 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         public event EventHandler<CommandSetAvailabilityEventArgs> OnEndpointSignedIn;
 
-        private void RaiseOnEndpointSignedIn()
+        private void RaiseOnEndpointSignedIn(EndpointId endpoint, IEnumerable<Type> commands)
         {
             var local = OnEndpointSignedIn;
             if (local != null)
             {
-                local(this, new CommandSetAvailabilityEventArgs());
+                local(this, new CommandSetAvailabilityEventArgs(endpoint, commands));
             }
         }
 
@@ -334,50 +484,30 @@ namespace Apollo.Core.Base.Communication
         /// <returns>The requested command set.</returns>
         public TCommand CommandsFor<TCommand>(EndpointId endpoint) where TCommand : class, ICommandSet
         {
+            return CommandsFor(endpoint, typeof(TCommand)) as TCommand;
+        }
+
+        /// <summary>
+        /// Returns the command proxy for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint for which the commands should be returned.</param>
+        /// <param name="commandType">The type of the command.</param>
+        /// <returns>The requested command set.</returns>
+        public ICommandSet CommandsFor(EndpointId endpoint, Type commandType)
+        {
             if (!m_RemoteCommands.ContainsKey(endpoint))
             {
                 return null;
             }
 
             var commandSets = m_RemoteCommands[endpoint];
-            if (!commandSets.ContainsKey(typeof(TCommand)))
+            if (!commandSets.ContainsKey(commandType))
             {
-                throw new CommandNotSupportedException(typeof(TCommand));
+                throw new CommandNotSupportedException(commandType);
             }
 
-            var result = commandSets[typeof(TCommand)];
-            return result as TCommand;
-        }
-
-        /// <summary>
-        /// Closes the connection to the given endpoint.
-        /// </summary>
-        /// <remarks>
-        /// Closing the connection to a given endpoint also invalidates
-        /// all commandsets for that endpoint.
-        /// </remarks>
-        /// <param name="endpoint">The ID of the endpoint with which the connection should be closed.</param>
-        public void CloseConnectionTo(EndpointId endpoint)
-        {
-            m_Layer.DisconnectFromEndpoint(endpoint);
-        }
-
-        /// <summary>
-        /// Closes all connections.
-        /// </summary>
-        public void CloseConnections()
-        {
-            var endpoints = new List<EndpointId>();
-            lock (m_Lock)
-            {
-                endpoints.AddRange(m_RemoteCommands.Keys);
-                endpoints.AddRange(m_WaitingForCommandInformation);
-            }
-
-            foreach (var endpoint in endpoints)
-            {
-                CloseConnectionTo(endpoint);
-            }
+            var result = commandSets[commandType];
+            return result as ICommandSet;
         }
     }
 }

@@ -6,6 +6,7 @@
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
              xmlns:lex="http://schemas.root-project.org/xaml/presentation"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
              mc:Ignorable="d"
              d:DesignWidth="450"
              d:DesignHeight="300"
@@ -29,7 +30,7 @@
             <RowDefinition Height="*" />
 
             <!-- Loaded location -->
-            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
 
             <!-- Progress -->
             <RowDefinition Height="Auto" />
@@ -148,20 +149,35 @@
                        Foreground="SeaShell"
                        FontWeight="Bold" />
         </Label>
-        <Border Grid.Row="4"
-                Grid.Column="1"
-                Margin="0, 5, 5, 5"
-                Background="SeaShell"
-                BorderBrush="GoldenRod"
-                BorderThickness="3"
-                CornerRadius="10,10,10,10"
-                Padding="5">
-            <ListBox BorderThickness="0"
-                     Background="Transparent"
-                     SelectionMode="Single">
-
-            </ListBox>
-        </Border>
+        <DockPanel Grid.Row="4"
+                   Grid.Column="1"
+                   Margin="0, 5, 5, 5">
+            <Button x:Name="loadOrUnloadDatasetButton"
+                    x:FieldModifier="private"
+                    Margin="5" 
+                    DockPanel.Dock="Right">
+                <Image Width="24"
+                       Height="24">
+                    <Image.Style>
+                        <Style TargetType="{x:Type Image}">
+                            <Setter Property="Source" 
+                                    Value="{lex:LocImage Key=Img_Upload_48, Dict=Resources, Assembly=Apollo.UI.Common}" />
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Path=IsLoaded}" 
+                                             Value="True">
+                                    <Setter Property="Source" 
+                                            Value="{lex:LocImage Key=Img_Delete_48, Dict=Resources, Assembly=Apollo.UI.Common}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Image.Style>
+                </Image>
+            </Button>
+            
+            <TextBlock Background="SeaShell"
+                   Text="{Binding Path=RunsOn}" />
+        </DockPanel>
+        
 
         <!-- IsRunning + progress -->
         <Grid Grid.Row="5"

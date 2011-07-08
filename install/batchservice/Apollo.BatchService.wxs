@@ -45,6 +45,8 @@
                  Absent="disallow"
                  Level="1">
             <ComponentRef Id="C.Apollo.Core.BatchService.exe" />
+            
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
         </Feature>
     </Fragment>
 </Wix>

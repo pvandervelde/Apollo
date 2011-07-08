@@ -5,12 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
+using Apollo.Utilities;
 using QuickGraph;
 
 namespace Apollo.Core.Projects
@@ -21,6 +25,11 @@ namespace Apollo.Core.Projects
     internal sealed partial class Project
     {
         /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
         /// The graph that describes the relations between the different datasets.
         /// </summary>
         private readonly BidirectionalGraph<DatasetId, Edge<DatasetId>> m_Graph;
@@ -28,21 +37,31 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// The collection of all datasets that belong to the current project.
         /// </summary>
-        private readonly Dictionary<DatasetId, DatasetOfflineInformation> m_Datasets =
-            new Dictionary<DatasetId, DatasetOfflineInformation>();
+        private readonly IDictionary<DatasetId, DatasetOfflineInformation> m_Datasets =
+            new ConcurrentDictionary<DatasetId, DatasetOfflineInformation>();
 
         /// <summary>
         /// The collection of all datasets which are currently loaded onto a machine.
         /// </summary>
-        private readonly Dictionary<DatasetId, DatasetOnlineInformation> m_ActiveDatasets =
-            new Dictionary<DatasetId, DatasetOnlineInformation>();
+        private readonly IDictionary<DatasetId, DatasetOnlineInformation> m_ActiveDatasets =
+            new ConcurrentDictionary<DatasetId, DatasetOnlineInformation>();
 
         /// <summary>
         /// The collection that holds the proxies for the datasets that we are mirroring 
         /// for the UI.
         /// </summary>
-        private readonly Dictionary<DatasetId, IOwnedProxyDataset> m_DatasetProxies =
-            new Dictionary<DatasetId, IOwnedProxyDataset>();
+        private readonly IDictionary<DatasetId, IOwnedProxyDataset> m_DatasetProxies =
+            new ConcurrentDictionary<DatasetId, IOwnedProxyDataset>();
+
+        /// <summary>
+        /// The collection that holds the ID numbers of all datasets that are currently
+        /// being loaded.
+        /// </summary>
+        /// <remarks>
+        /// It is expected that there will never be that many entries in this collection.
+        /// </remarks>
+        private readonly IDictionary<DatasetId, object> m_LoadingDatsets =
+            new ConcurrentDictionary<DatasetId, object>();
 
         /// <summary>
         /// The ID number of the root dataset.
@@ -100,6 +119,21 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
+        /// Returns a value indicating whether the dataset can be loaded onto a machine.
+        /// </summary>
+        /// <param name="id">The ID number of the dataset.</param>
+        /// <returns>
+        ///     <see langword="true" /> if the dataset can be loaded; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        private bool CanLoad(DatasetId id)
+        {
+            Debug.Assert(id != null, "The ID should not be a null reference.");
+            return !id.Equals(m_RootDataset) && !m_LoadingDatsets.ContainsKey(id);
+        }
+
+        /// <summary>
         /// Returns the offline information for the given dataset.
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
@@ -147,7 +181,10 @@ namespace Apollo.Core.Projects
             // When adding a new dataset there is no way we can create cycles because
             // we can only add new children to parents, there is no way to link an
             // existing node to the parent.
-            m_Graph.AddVertex(id);
+            lock (m_Lock)
+            {
+                m_Graph.AddVertex(id);
+            }
 
             if (parent != null)
             {
@@ -160,10 +197,11 @@ namespace Apollo.Core.Projects
                 // Find the actual ID object that we have stored, the caller may have a copy
                 // of ID. Using a copy of the real ID might cause issues when connecting the
                 // graph so we only use the ID numbers that we have stored.
-                // NOTE: The Elevation is because QuickGraph is a full-trust assembly
-                //   which wants to actually have full trust.
                 var realParent = m_Datasets[parent].Id;
-                m_Graph.AddEdge(new Edge<DatasetId>(realParent, id));
+                lock (m_Lock)
+                {
+                    m_Graph.AddEdge(new Edge<DatasetId>(realParent, id));
+                }
             }
 
             RaiseOnDatasetCreated();
@@ -237,7 +275,11 @@ namespace Apollo.Core.Projects
                     proxy = m_DatasetProxies[datasetToDelete];
                 }
 
-                m_Graph.RemoveVertex(datasetToDelete);
+                lock (m_Lock)
+                {
+                    m_Graph.RemoveVertex(datasetToDelete);
+                }
+
                 m_DatasetProxies.Remove(datasetToDelete);
                 m_Datasets.Remove(datasetToDelete);
 
@@ -261,7 +303,13 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to get the children of a dataset.");
             }
 
-            var result = from outEdge in m_Graph.OutEdges(parent)
+            List<Edge<DatasetId>> outEdges;
+            lock (m_Lock)
+            {
+                outEdges = m_Graph.OutEdges(parent).ToList();
+            }
+
+            var result = from outEdge in outEdges
                          select m_Datasets[outEdge.Target];
 
             return result;
@@ -272,20 +320,99 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
         /// <param name="preferredLocation">The preferred loading location.</param>
-        /// <param name="range">The minimum and maximum number of machines over which the dataset should be distributed.</param>
-        private void LoadOntoMachine(DatasetId id, LoadingLocation preferredLocation, MachineDistributionRange range)
+        /// <param name="machineSelector">
+        ///     The function that selects the most suitable machine for the dataset to run on.
+        /// </param>
+        /// <param name="token">The token that is used to cancel the loading.</param>
+        private void LoadOntoMachine(
+            DatasetId id, 
+            LoadingLocations preferredLocation,
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            CancellationToken token)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to load a dataset onto a machine.");
+                Debug.Assert(machineSelector != null, "There should be a way to select the most suitable machine.");
             }
 
-            if (m_DatasetProxies.ContainsKey(id))
+            if (m_ActiveDatasets.ContainsKey(id))
             {
-                var proxy = m_DatasetProxies[id];
-                proxy.OwnerHasLoadedDataset();
+                return;
             }
 
-            throw new NotImplementedException();
+            // Indicate that the loading process has started.
+            m_LoadingDatsets.Add(id, null);
+            try
+            {
+                var offline = m_Datasets[id];
+                var request = new DatasetRequest
+                    {
+                        DatasetToLoad = offline,
+                        PreferredLocations = preferredLocation,
+                        ExpectedLoadPerMachine = new ExpectedDatasetLoad
+                            {
+                                OnDiskSizeInBytes = offline.StoredAt.StoredSizeInBytes(),
+                                InMemorySizeInBytes = offline.StoredAt.StoredSizeInBytes(),
+                                RelativeMemoryExpansionWhileRunning = 2.0,
+                                RelativeOnDiskExpansionAfterRunning = 2.0,
+                            },
+                    };
+                var suggestedPlans = m_DatasetDistributor(request, token);
+                var selection = from plan in suggestedPlans
+                                select new DistributionSuggestion(plan);
+
+                var selectedPlan = machineSelector(selection);
+                if (token.IsCancellationRequested)
+                {
+                    token.ThrowIfCancellationRequested();
+                }
+
+                if (selectedPlan.WasSelectionCanceled)
+                {
+                    if (m_LoadingDatsets.ContainsKey(id))
+                    {
+                        m_LoadingDatsets.Remove(id);
+                    }
+
+                    return;
+                }
+
+                if (m_DatasetProxies.ContainsKey(id))
+                {
+                    var proxy = m_DatasetProxies[id];
+                    proxy.OwnerReportsDatasetLoadingProgress(0, new DatasetLoadingProgressMark());
+                }
+
+                var task = selectedPlan.Plan.Accept(token);
+                task.ContinueWith(
+                    t =>
+                    {
+                        var dataset = t.Result;
+                        m_ActiveDatasets.Add(id, dataset);
+
+                        if (m_LoadingDatsets.ContainsKey(id))
+                        {
+                            m_LoadingDatsets.Remove(id);
+                        }
+
+                        if (m_DatasetProxies.ContainsKey(id))
+                        {
+                            var proxy = m_DatasetProxies[id];
+                            proxy.OwnerReportsDatasetLoadingProgress(100, new DatasetLoadingProgressMark());
+                            proxy.OwnerHasLoadedDataset();
+                        }
+                    },
+                    TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion);
+            }
+            catch (OperationCanceledException)
+            {
+                if (m_LoadingDatsets.ContainsKey(id))
+                {
+                    m_LoadingDatsets.Remove(id);
+                }
+
+                throw;
+            }
         }
 
         /// <summary>
@@ -298,14 +425,21 @@ namespace Apollo.Core.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
             }
 
+            if (!m_ActiveDatasets.ContainsKey(id))
+            {
+                return;
+            }
+
             if (m_DatasetProxies.ContainsKey(id))
             {
                 var proxy = m_DatasetProxies[id];
                 proxy.OwnerHasUnloadedDataset();
             }
 
-            // Should invalidate the dataset?
-            throw new NotImplementedException();
+            var onlineInfo = m_ActiveDatasets[id];
+            onlineInfo.Close();
+
+            m_ActiveDatasets.Remove(id);
         }
     }
 }

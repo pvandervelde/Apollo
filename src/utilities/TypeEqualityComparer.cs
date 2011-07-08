@@ -27,6 +27,16 @@ namespace Apollo.Utilities
             Justification = "Documentation can start with a language keyword")]
         public bool Equals(Type x, Type y)
         {
+            if (ReferenceEquals(x, null))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(y, null))
+            {
+                return false;
+            }
+
             return x.Assembly == y.Assembly &&
                 string.Equals(x.FullName, y.FullName, StringComparison.Ordinal);
         }

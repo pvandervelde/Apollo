@@ -18,7 +18,6 @@ using Moq;
 namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
-    [Description("Tests the DatasetFacade class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetFacadeTest
@@ -41,7 +40,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<DatasetFacade>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -61,7 +59,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         };
 
         [Test]
-        [Description("Checks that the == operator returns false if the first object is null.")]
         public void EqualsOperatorWithFirstObjectNull()
         {
             DatasetFacade first = null;
@@ -71,7 +68,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the == operator returns false if the second object is null.")]
         public void EqualsOperatorWithSecondObjectNull()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -81,7 +77,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the == operator returns true if both objects are equal.")]
         public void EqualsOperatorWithEqualObject()
         {
             var dataset = CreateMockDataset();
@@ -92,7 +87,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the == operator returns false if both objects are not equal.")]
         public void EqualsOperatorWithNonequalObjects()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -102,7 +96,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the != operator returns false if the first object is null.")]
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             DatasetFacade first = null;
@@ -112,7 +105,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the != operator returns false if the second object is null.")]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -122,7 +114,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the != operator returns false if both objects are equal.")]
         public void NotEqualsOperatorWithEqualObject()
         {
             var dataset = CreateMockDataset();
@@ -133,7 +124,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the != operator returns true if both objects are not equal.")]
         public void NotEqualsOperatorWithNonequalObjects()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -143,7 +133,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         { 
             var dataset = new Mock<IProxyDataset>();
@@ -182,7 +171,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the dataset name pass the new name on to the project object.")]
         public void Name()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -198,7 +186,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the dataset name raise the correct event.")]
         public void OnNameUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -212,7 +199,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the dataset summary pass the new summary on to the project object.")]
         public void Summary()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -228,7 +214,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that updates to the dataset summary raise the correct event.")]
         public void OnSummaryUpdate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -242,7 +227,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnInvalidate()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -256,7 +240,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnLoaded()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -270,7 +253,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the invalidate event is fired correctly.")]
         public void OnUnloaded()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -284,7 +266,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the it is not possible to delete an un-deletable dataset.")]
         public void DeleteWithUndeletableDataset()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -298,7 +279,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the it is possible to delete the dataset.")]
         public void Delete()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -317,7 +297,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the it is possible to delete the dataset.")]
         public void ChildrenOf()
         {
             var child = CreateMockDataset();
@@ -335,7 +314,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the AddChild method generates the correct setup information.")]
         public void AddChild()
         {
             DatasetCreationInformation creationInformation = null;
@@ -366,7 +344,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the AddChild method throws an exception if it is passed a null persistence object.")]
         public void AddChildWithNullPersistenceInformation()
         {
             var dataset = new Mock<IProxyDataset>();
@@ -375,7 +352,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the AddChild method uses the correct persistence object.")]
         public void AddChildWithPersistenceInformation()
         {
             DatasetCreationInformation creationInformation = null;
@@ -405,7 +381,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the Equals method returns false if the second objects is null.")]
         public void EqualsWithNullObject()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -415,7 +390,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the Equals method returns true if the second object is equal to the first.")]
         public void EqualsWithEqualObjects()
         {
             var dataset = CreateMockDataset();
@@ -426,7 +400,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the Equals method returns false if the second objects is not equal to the first.")]
         public void EqualsWithUnequalObjects()
         {
             var first = new DatasetFacade(CreateMockDataset());
@@ -436,7 +409,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that the Equals method returns false if the second objects type is not equal to the first.")]
         public void EqualsWithUnequalObjectTypes()
         {
             var first = new DatasetFacade(CreateMockDataset());

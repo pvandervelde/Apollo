@@ -99,19 +99,29 @@ namespace Apollo.Core.Base.Communication
         private readonly IConfiguration m_Configuration;
 
         /// <summary>
+        /// A flag that indicates if the TCP channel should participate in the UDP 
+        /// discovery or not.
+        /// </summary>
+        private readonly bool m_ShouldProvideDiscovery;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="TcpChannelType"/> class.
         /// </summary>
         /// <param name="tcpConfiguration">The configuration for the WCF tcp channel.</param>
+        /// <param name="shouldProvideDiscovery">
+        ///     A flag that indicates if the TCP channels should participate in the UDP discovery.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="tcpConfiguration"/> is <see langword="null" />.
         /// </exception>
-        public TcpChannelType(IConfiguration tcpConfiguration)
+        public TcpChannelType(IConfiguration tcpConfiguration, bool shouldProvideDiscovery)
         {
             {
                 Enforce.Argument(() => tcpConfiguration);
             }
 
             m_Configuration = tcpConfiguration;
+            m_ShouldProvideDiscovery = shouldProvideDiscovery;
         }
 
         /// <summary>
@@ -163,19 +173,21 @@ namespace Apollo.Core.Base.Communication
         /// <returns>The newly attached endpoint.</returns>
         public ServiceEndpoint AttachEndpoint(ServiceHost host, Type implementedContract, EndpointId localEndpoint)
         {
-            var discoveryBehavior = new ServiceDiscoveryBehavior();
-            discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
-            host.Description.Behaviors.Add(discoveryBehavior);
-            host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
-
             // Add the normal endpoint
             var endpoint = host.AddServiceEndpoint(implementedContract, GenerateBinding(), GenerateNewAddress());
+            if (m_ShouldProvideDiscovery)
+            {
+                var discoveryBehavior = new ServiceDiscoveryBehavior();
+                discoveryBehavior.AnnouncementEndpoints.Add(new UdpAnnouncementEndpoint());
+                host.Description.Behaviors.Add(discoveryBehavior);
+                host.Description.Endpoints.Add(new UdpDiscoveryEndpoint());
 
-            // As additional information add the EndpointId of the current endpoint.
-            var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", localEndpoint.ToString())));
-            endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", GetType().FullName)));
-            endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+                // As additional information add the EndpointId of the current endpoint.
+                var endpointDiscoveryBehavior = new EndpointDiscoveryBehavior();
+                endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("EndpointId", localEndpoint.ToString())));
+                endpointDiscoveryBehavior.Extensions.Add(new XElement("root", new XElement("BindingType", GetType().FullName)));
+                endpoint.Behaviors.Add(endpointDiscoveryBehavior);
+            }
 
             return endpoint;
         }
@@ -205,6 +217,7 @@ namespace Apollo.Core.Base.Communication
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
@@ -215,7 +228,10 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="localFile"/> is an empty string.
         /// </exception>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+            string localFile, 
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => localFile);
@@ -287,7 +303,7 @@ namespace Apollo.Core.Base.Communication
                 },
                 token,
                 TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+                scheduler ?? TaskScheduler.Default);
 
             return new Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
         }
@@ -301,6 +317,7 @@ namespace Apollo.Core.Base.Communication
         /// which the data is transferred.
         /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
@@ -316,7 +333,11 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="transferInformation"/> is not a <see cref="NamedPipeStreamTransferInformation"/> object.
         /// </exception>
-        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(
+            string filePath, 
+            StreamTransferInformation transferInformation, 
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => filePath);
@@ -371,7 +392,7 @@ namespace Apollo.Core.Base.Communication
                 },
                 token,
                 TaskCreationOptions.LongRunning,
-                TaskScheduler.Default);
+                scheduler ?? TaskScheduler.Default);
 
             return result;
         }

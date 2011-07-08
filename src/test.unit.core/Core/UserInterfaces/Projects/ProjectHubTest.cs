@@ -4,9 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
@@ -16,13 +17,11 @@ using Moq;
 namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
-    [Description("Tests the ProjectFacade class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectHubTest
     {
         [Test]
-        [Description("Checks the failure to create a new project results in the correct exception being thrown.")]
         public void CreateNewProjectWithLoadingFailure()
         {
             var service = new Mock<IUserInterfaceService>();
@@ -46,7 +45,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the creation of a new project stores the project reference.")]
         public void CreateNewProject()
         {
             var project = new Mock<IProject>();
@@ -61,7 +59,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         })
                     .Verifiable();
             }
@@ -74,7 +76,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the failure to load a project results in the correct exception being thrown.")]
         public void LoadNewProjectWithLoadingFailure()
         {
             var persistence = new Mock<IPersistenceInformation>();
@@ -100,7 +101,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the loading of a project stores the project reference.")]
         public void LoadNewProject()
         {
             var project = new Mock<IProject>();
@@ -117,7 +117,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         {
                             LoadProjectContext loadContext = context as LoadProjectContext;
                             Assert.AreSame(persistence.Object, loadContext.LoadFrom);
-                            loadContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            loadContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         })
                     .Verifiable();
             }
@@ -130,7 +134,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks that it is not possible to unload a project when none exists.")]
         public void UnloadProjectWithoutCurrentProject()
         {
             var service = new Mock<IUserInterfaceService>();
@@ -139,7 +142,6 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         [Test]
-        [Description("Checks the current project can be unloaded.")]
         public void UnloadProject()
         {
             var project = new Mock<IProject>();
@@ -154,7 +156,11 @@ namespace Apollo.Core.UserInterfaces.Projects
                         (id, context) =>
                         {
                             CreateProjectContext createContext = context as CreateProjectContext;
-                            createContext.Result = Task<IProject>.Factory.StartNew(() => project.Object);
+                            createContext.Result = Task<IProject>.Factory.StartNew(
+                                () => project.Object,
+                                new CancellationToken(),
+                                TaskCreationOptions.None,
+                                new CurrentThreadTaskScheduler());
                         });
             }
 

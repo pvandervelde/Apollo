@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,7 +16,6 @@ using Moq;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ManualDiscoverySource class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class LocalCommandCollectionTest
@@ -25,41 +26,75 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that a command set can be registered.")]
         public void Register()
         {
-            var collection = new LocalCommandCollection();
-            
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(new EndpointId("mine"));
+                layer.Setup(l => l.IsSignedIn)
+                    .Returns(true);
+                layer.Setup(l => l.KnownEndpoints())
+                    .Returns(
+                        new List<EndpointId> 
+                            { 
+                                    new EndpointId("other"), 
+                            });
+                layer.Setup(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Verifiable();
+            }
+
+            var collection = new LocalCommandCollection(layer.Object);
+
             var commands = new Mock<IMockCommandSetWithTaskReturn>();
             collection.Register(typeof(IMockCommandSetWithTaskReturn), commands.Object);
 
             Assert.IsTrue(collection.Exists(pair => pair.Key.Equals(typeof(IMockCommandSetWithTaskReturn))));
+            layer.Verify(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()), Times.Once());
         }
 
         [Test]
-        [Description("Checks that a command set can only be registered once.")]
         public void RegisterWithExistingType()
-        { 
-            var collection = new LocalCommandCollection();
+        {
+            var layer = new Mock<ICommunicationLayer>();
+            {
+                layer.Setup(l => l.Id)
+                    .Returns(new EndpointId("mine"));
+                layer.Setup(l => l.IsSignedIn)
+                    .Returns(true);
+                layer.Setup(l => l.KnownEndpoints())
+                    .Returns(
+                        new List<EndpointId> 
+                            { 
+                                    new EndpointId("other"), 
+                            });
+                layer.Setup(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()))
+                    .Verifiable();
+            }
+
+            var collection = new LocalCommandCollection(layer.Object);
             
             var commands = new Mock<IMockCommandSetWithTaskReturn>();
             collection.Register(typeof(IMockCommandSetWithTaskReturn), commands.Object);
+            layer.Verify(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()), Times.Once());
+
             Assert.Throws<CommandAlreadyRegisteredException>(() => collection.Register(typeof(IMockCommandSetWithTaskReturn), commands.Object));
+            layer.Verify(l => l.SendMessageTo(It.IsAny<EndpointId>(), It.IsAny<ICommunicationMessage>()), Times.Once());
         }
 
         [Test]
-        [Description("Checks that asking for an unknown command set returns a null reference.")]
         public void CommandsForWithUnknownType()
         {
-            var collection = new LocalCommandCollection();
+            var layer = new Mock<ICommunicationLayer>();
+            var collection = new LocalCommandCollection(layer.Object);
             Assert.IsNull(collection.CommandsFor(typeof(IMockCommandSetWithTaskReturn)));
         }
 
         [Test]
-        [Description("Checks that asking for a command set the command set object.")]
         public void CommandsFor()
         {
-            var collection = new LocalCommandCollection();
+            var layer = new Mock<ICommunicationLayer>();
+            var collection = new LocalCommandCollection(layer.Object);
 
             var commands = new Mock<IMockCommandSetWithTaskReturn>();
             collection.Register(typeof(IMockCommandSetWithTaskReturn), commands.Object);

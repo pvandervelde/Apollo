@@ -4,8 +4,6 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Diagnostics.CodeAnalysis;
-
 namespace Apollo.Utilities.Licensing
 {
     /// <summary>
@@ -16,8 +14,6 @@ namespace Apollo.Utilities.Licensing
         /// <summary>
         /// The interval, in milliseconds, between is-alive events.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Milli",
-            Justification = "It seems FxCop can't spell.")]
         public const int LicenseWatchdogIntervalInMilliseconds = 3 * 10 * 1000;
 
         /// <summary>

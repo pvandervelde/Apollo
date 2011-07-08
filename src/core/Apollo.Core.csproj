@@ -20,9 +20,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
     </Reference>
@@ -121,7 +118,10 @@
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
+    <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
+    <Compile Include="Projects\DatasetNotLoadedException.cs" />
     <Compile Include="Projects\IOwnedProxyDataset.cs" />
+    <Compile Include="Projects\IProxyCommandSet.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />
@@ -209,7 +209,6 @@
     <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
-    <Compile Include="Utilities\ILoadOnApplicationStartup.cs" />
     <Compile Include="Utilities\Licensing\IValidationResultStorage.cs">
       <SubType>Code</SubType>
     </Compile>

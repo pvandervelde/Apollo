@@ -13,13 +13,11 @@ using Moq;
 namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
-    [Description("Tests the ValidationService class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ValidationServiceTest
     {
         [Test]
-        [Description("Checks that starting the verification without any verification periods leads to an exception.")]
         public void StartValidationWithoutVerificationPeriods()
         {
             var now = DateTimeOffset.Now;
@@ -34,7 +32,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that running the verification with a failing IsAlive delegate leads to an exception.")]
         public void StartValidationWithFailingIsAliveDelegate()
         {
             var now = DateTimeOffset.Now;
@@ -51,7 +48,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that running the verification with a single period is successful.")]
         public void StartValidationWithSinglePeriod()
         {
             var now = DateTimeOffset.Now;
@@ -96,7 +92,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that a failed verification does not throw an exception if there are fewer sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresBelowMaximumForSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -139,7 +134,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that a failed verification does not throw an exception if there are fewer sequential non-exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresBelowMaximumForNonSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -189,7 +183,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that a failed verification throws an exception if there are more sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresAboveMaximumForSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -233,7 +226,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that a failed verification throws an exception if there are more non-sequential exceptions than the maximum.")]
         public void StartValidationWithSequentialFailuresAboveMaximumForNonSequentialVerifications()
         {
             var now = DateTimeOffset.Now;
@@ -284,7 +276,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that running the verification with multiple periods is successful.")]
         public void StartValidationWithMultiplePeriods()
         {
             var now = DateTimeOffset.Now;

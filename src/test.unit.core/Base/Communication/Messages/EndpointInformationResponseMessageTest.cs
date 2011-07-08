@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using MbUnit.Framework;
@@ -14,21 +15,19 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication.Messages
 {
     [TestFixture]
-    [Description("Tests the EndpointInformationResponseMessage class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointInformationResponseMessageTest
     {
         [Test]
-        [Description("Checks that a message object can be created.")]
         public void Create()
         {
             var id = new EndpointId("endpoint");
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(ICommunicationChannelCommands),
-                    typeof(IMachineCommands)
+                    typeof(IHostCommands),
+                    typeof(IDatasetApplicationCommands)
                 };
 
             var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
@@ -41,15 +40,14 @@ namespace Apollo.Base.Communication.Messages
         }
 
         [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");
             var response = new MessageId();
             var commands = new List<Type> 
                 { 
-                    typeof(ICommunicationChannelCommands),
-                    typeof(IMachineCommands)
+                    typeof(IHostCommands),
+                    typeof(IDatasetApplicationCommands)
                 };
             var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);

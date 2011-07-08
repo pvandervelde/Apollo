@@ -33,13 +33,11 @@ using Moq;
 namespace <#= nameSpace #>
 {
     [TestFixture]
-    [Description("Tests the <#= className #> class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class <#= className #>
     {
         [Test]
-        [Description("Checks that the constructor sets the LatestResult to the correct value.")]
         public void Create()
         {
             var now = DateTimeOffset.Now;
@@ -50,7 +48,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method sets a failure result when the validation calculation throws an exception.")]
         public void InvalidateWithValidationThatThrowsAnException()
         { 
             var now = DateTimeOffset.Now;
@@ -75,7 +72,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method sets a success result when called with no validation calculation.")]
         public void InvalidateWithoutValidating()
         { 
             var now = DateTimeOffset.Now;
@@ -99,7 +95,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method sets a success result when called with a validation calculation.")]
         public void InvalidateWithSuccessValidation()
         { 
             var now = DateTimeOffset.Now;
@@ -123,7 +118,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method sets a failure result when called with a validation calculation.")]
         public void InvalidateWithFailureValidation()
         { 
             var now = DateTimeOffset.Now;
@@ -147,7 +141,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method does a validation calculation if the result has expired longer ago than the period time.")]
         public void InvalidateWithMatchingTimeExpiredLongerThanThePeriodTime()
         { 
             var now = DateTimeOffset.Now;
@@ -171,7 +164,6 @@ namespace <#= nameSpace #>
         }
 
         [Test]
-        [Description("Checks that the Invalidate method does a validation calculation if the result has expired shorter ago than the period time.")]
         public void InvalidateWithMatchingTimeExpiredShorterThanThePeriodTime()
         { 
             var now = DateTimeOffset.Now;

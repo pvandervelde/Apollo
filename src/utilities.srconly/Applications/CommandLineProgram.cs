@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.ExceptionHandling;
 
 namespace Apollo.Utilities.Applications
@@ -12,6 +13,7 @@ namespace Apollo.Utilities.Applications
     /// <summary>
     /// Defines the default implementation for a commandline application.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class CommandLineProgram
     {
         /// <summary>

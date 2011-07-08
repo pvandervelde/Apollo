@@ -13,7 +13,7 @@ using Apollo.Core.Properties;
 namespace Apollo.Core.Projects
 {
     /// <summary>
-    /// An exception thrown when the user tries to load a dataset without specifying a legal <see cref="LoadingLocation"/>.
+    /// An exception thrown when the user tries to load a dataset without specifying a legal <see cref="LoadingLocations"/>.
     /// </summary>
     [Serializable]
     public sealed class CannotLoadDatasetWithoutLoadingLocationException : Exception

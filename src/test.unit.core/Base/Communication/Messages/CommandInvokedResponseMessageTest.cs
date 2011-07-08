@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication.Messages
 {
     [TestFixture]
-    [Description("Tests the CommandInvokedResponseMessage class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class CommandInvokedResponseMessageTest
     {
         [Test]
-        [Description("Checks that a message can be created.")]
         public void Create()
         {
             var id = new EndpointId("endpoint");
@@ -32,7 +30,6 @@ namespace Apollo.Base.Communication.Messages
         }
 
         [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");

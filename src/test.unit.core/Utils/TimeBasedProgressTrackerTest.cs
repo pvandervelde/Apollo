@@ -13,7 +13,6 @@ using Moq;
 namespace Apollo.Utilities
 {
     [TestFixture]
-    [Description("Tests the Id class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class TimeBasedProgressTrackerTest
@@ -35,7 +34,6 @@ namespace Apollo.Utilities
         #endregion
 
         [Test]
-        [Description("Checks that the MarkAdded event is raised correctly.")]
         public void MarkRaised()
         {
             IProgressMark storedMark = null;
@@ -52,7 +50,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the the tracker cannot be started without an progress mark.")]
         public void StartupProgressWithoutCurrentMark()
         {
             var store = new Mock<IStoreMarkerTimes>();
@@ -68,7 +65,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the StartupProgress event correctly indicates progress if the actual progress is higher than the maximum.")]
         public void StartupProgress()
         {
             var store = new Mock<IStoreMarkerTimes>();
@@ -117,7 +113,6 @@ namespace Apollo.Utilities
         }
 
         [Test]
-        [Description("Checks that the StartupProgress event is raised correctly.")]
         public void StartupProgressWithProgressPastMaximumProgress()
         {
             var store = new Mock<IStoreMarkerTimes>();

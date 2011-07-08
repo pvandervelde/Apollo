@@ -69,11 +69,15 @@ namespace Apollo.Core.Base.Communication
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token);
+        Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+            string localFile, 
+            CancellationToken token,
+            TaskScheduler scheduler);
 
         /// <summary>
         /// Transfers the data to the receiving endpoint.
@@ -84,10 +88,15 @@ namespace Apollo.Core.Base.Communication
         /// which the data is transferred.
         /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token);
+        Task TransferData(
+            string filePath, 
+            StreamTransferInformation transferInformation, 
+            CancellationToken token,
+            TaskScheduler scheduler);
 
         /// <summary>
         /// Sends the given message to the receiving endpoint.

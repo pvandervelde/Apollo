@@ -15,7 +15,6 @@ using MbUnit.Framework.ContractVerifiers;
 namespace Apollo.Utilities.Licensing
 {
     [TestFixture]
-    [Description("Tests the Checksum struct.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1601:PartialElementsMustBeDocumented",
@@ -23,7 +22,6 @@ namespace Apollo.Utilities.Licensing
     public sealed partial class ChecksumTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<Checksum>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -68,7 +66,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Checksum>
         {
             ImplementsOperatorOverloads = true,
@@ -81,7 +78,6 @@ namespace Apollo.Utilities.Licensing
         };
 
         [Test]
-        [Description("Checks that a Checksum is created with the correct hash value.")]
         public void Create()
         {
             var generationTime = DateTimeOffset.Now;
@@ -97,7 +93,6 @@ namespace Apollo.Utilities.Licensing
         }
 
         [Test]
-        [Description("Checks that it is possible to copy an existing checksum.")]
         public void CreateWithExistingChecksum()
         {
             var generationTime = DateTimeOffset.Now;

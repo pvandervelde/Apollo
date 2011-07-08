@@ -153,6 +153,9 @@
   <data name="Exceptions_Messages_CommandAlreadyRegistered" xml:space="preserve">
     <value>The given command interface has already been registered.</value>
   </data>
+  <data name="Exceptions_Messages_CommandInvocationFailed" xml:space="preserve">
+    <value>The invocation of a command failed.</value>
+  </data>
   <data name="Exceptions_Messages_CommandNotSupported" xml:space="preserve">
     <value>The requested command is not supported by the endpoint.</value>
   </data>
@@ -168,6 +171,9 @@
   <data name="Exceptions_Messages_DatasetCannotBecomeParent_WithId" xml:space="preserve">
     <value>The given dataset with ID: {0} cannot be made a parent.</value>
   </data>
+  <data name="Exceptions_Messages_EndpointIdCannotBeDeserializedFromAnEmptyString" xml:space="preserve">
+    <value>An endpoint ID cannot be deserialized from an empty string.</value>
+  </data>
   <data name="Exceptions_Messages_EndpointNotContactable" xml:space="preserve">
     <value>The endpoint cannot be contacted. No connection information for this endpoint is available.</value>
   </data>
@@ -180,6 +186,12 @@
   <data name="Exceptions_Messages_FilePathCannotBeEmpty" xml:space="preserve">
     <value>A file path cannot be an empty string.</value>
   </data>
+  <data name="Exceptions_Messages_FileRegistrationNotFound" xml:space="preserve">
+    <value>No file registration was found for the given token.</value>
+  </data>
+  <data name="Exceptions_Messages_FileRegistrationNotFound_WithToken" xml:space="preserve">
+    <value>No file registration was found for the token: {0}</value>
+  </data>
   <data name="Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes" xml:space="preserve">
     <value>Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}.</value>
   </data>
@@ -188,6 +200,9 @@
   </data>
   <data name="Exceptions_Messages_MaximumDistributionRangeMustBeLargerThanMinimum_WithValues" xml:space="preserve">
     <value>The maximum of a dataset distribution range must be equal or larger than the minimum. The minimum was {0} and the maximum was {1}.</value>
+  </data>
+  <data name="Exceptions_Messages_MaximumNumberOfChannelRestartsExceeded" xml:space="preserve">
+    <value>The maximum number of channel restarts was exceeded. Not restarting the channel anymore.</value>
   </data>
   <data name="Exceptions_Messages_MessageToFilterOnNeedsToImplementICommunicationMessage" xml:space="preserve">
     <value>In order to filter on a given message kind the message class must implement the ICommunicationMessage interface.</value>
@@ -212,12 +227,6 @@
   </data>
   <data name="Exceptions_Messages_ProcessorClockSpeedMustBeLargerThanZero" xml:space="preserve">
     <value>The clock speed of a CPU must be larger than zero.</value>
-  </data>
-  <data name="Exceptions_Messages_RemoteOperationFailed" xml:space="preserve">
-    <value>A remote operation failed.</value>
-  </data>
-  <data name="Exceptions_Messages_ThereShouldBeAtLeastOneCommandToSend" xml:space="preserve">
-    <value>There should be at least one command to make it useful to send the command information to the desired endpoint.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet" xml:space="preserve">
     <value>The given type is not a valid command set interface.</value>
@@ -254,5 +263,14 @@
   </data>
   <data name="Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName" xml:space="preserve">
     <value>An ICommandSet of type {0} could not be loaded.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
+    <value>The given endpoint had an unsupported format.</value>
+  </data>
+  <data name="Exceptions_Messages_UploadNotDeregistered" xml:space="preserve">
+    <value>An upload for the given token already exists.</value>
+  </data>
+  <data name="Exceptions_Messages_UploadNotDeregistered_WithToken" xml:space="preserve">
+    <value>An upload for the token [{0}] already exists.</value>
   </data>
 </root>

@@ -11,13 +11,11 @@ using MbUnit.Framework;
 namespace Apollo.Core.UserInterfaces.Application
 {
     [TestFixture]
-    [Description("Tests the SystemInformation class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class SystemInformationTest
     {
         [Test]
-        [Description("Checks that it is possible to create an object.")]
         public void Create()
         {
             var time = DateTimeOffset.Now;
@@ -36,7 +34,6 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
-        [Description("Checks that the Refresh function works properly.")]
         public void Refresh()
         {
             var time = DateTimeOffset.Now;

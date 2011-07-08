@@ -35,10 +35,33 @@ namespace Apollo.Core.Base.Communication
     internal sealed class CommunicationChannel : ICommunicationChannel, IDisposable
     {
         /// <summary>
+        /// The maximum number of faults that are allowed to occur inside a given time span.
+        /// </summary>
+        private const int MaximumNumberOfSequentialFaults = 10;
+
+        /// <summary>
+        /// The number of minutes over which the number of faults is not allowed
+        /// to exceed the <see cref="MaximumNumberOfSequentialFaults"/>.
+        /// </summary>
+        private const int FaultingTimeSpanInMinutes = 1;
+
+        /// <summary>
         /// Maps the endpoint to the connection information.
         /// </summary>
         private readonly Dictionary<EndpointId, ChannelConnectionInformation> m_ChannelConnectionMap =
             new Dictionary<EndpointId, ChannelConnectionInformation>();
+
+        /// <summary>
+        /// The collection that contains the times at which faults occurred.
+        /// </summary>
+        /// <remarks>
+        /// We always clear out the times that are futher away than the <see cref="FaultingTimeSpanInMinutes"/>
+        /// so there should never be more than <see cref="MaximumNumberOfSequentialFaults"/> entries in the 
+        /// storage. Except when we push the one fault time in that will push us over the limit. Hence we
+        /// reserve space for that one more entry.
+        /// </remarks>
+        private readonly List<DateTimeOffset> m_LatestFaultingTimes =
+            new List<DateTimeOffset>(MaximumNumberOfSequentialFaults + 1);
 
         /// <summary>
         /// The ID number of the current endpoint.
@@ -60,6 +83,11 @@ namespace Apollo.Core.Base.Communication
         /// The function that generates sending endpoints.
         /// </summary>
         private readonly Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> m_SenderBuilder;
+
+        /// <summary>
+        /// The function that returns the current time.
+        /// </summary>
+        private readonly Func<DateTimeOffset> m_CurrentTime;
 
         /// <summary>
         /// The function used to write messages to the log.
@@ -87,6 +115,11 @@ namespace Apollo.Core.Base.Communication
         private EventHandler m_HostFaultingHandler;
 
         /// <summary>
+        /// The event handler used when the host closes.
+        /// </summary>
+        private EventHandler m_HostClosedHandler;
+
+        /// <summary>
         /// The message handler that is used to receive messages from the
         /// receiving endpoint.
         /// </summary>
@@ -104,6 +137,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="channelType">The type of channel, e.g. TCP.</param>
         /// <param name="receiverBuilder">The function that builds receiving endpoints.</param>
         /// <param name="senderBuilder">The function that builds sending endpoints.</param>
+        /// <param name="currentTime">The function that returns the current time.</param>
         /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
@@ -118,6 +152,9 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="senderBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="currentTime"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         public CommunicationChannel(
@@ -125,6 +162,7 @@ namespace Apollo.Core.Base.Communication
             IChannelType channelType, 
             Func<IMessagePipe> receiverBuilder,
             Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> senderBuilder,
+            Func<DateTimeOffset> currentTime,
             Action<LogSeverityProxy, string> logger)
         {
             {
@@ -132,6 +170,7 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => channelType);
                 Enforce.Argument(() => receiverBuilder);
                 Enforce.Argument(() => senderBuilder);
+                Enforce.Argument(() => currentTime);
                 Enforce.Argument(() => logger);
             }
 
@@ -139,6 +178,7 @@ namespace Apollo.Core.Base.Communication
             m_Type = channelType;
             m_ReceiverBuilder = receiverBuilder;
             m_SenderBuilder = senderBuilder;
+            m_CurrentTime = currentTime;
             m_Logger = logger;
         }
 
@@ -179,10 +219,32 @@ namespace Apollo.Core.Base.Communication
             // Create the new host
             m_HostFaultingHandler = (s, e) =>
                 {
+                    m_Logger(
+                        LogSeverityProxy.Warning,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel for address: {0} has faulted.",
+                            uri));
+
+                    StoreCurrentTimeAsFaultingTime();
                     ReopenChannel(uri);
                 };
+
+            m_HostClosedHandler = (s, e) =>
+                {
+                    m_Logger(
+                        LogSeverityProxy.Warning,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Channel for address: {0} has closed prematurely.",
+                            uri));
+
+                    ReopenChannel(uri);
+                };
+
             m_Host = new ServiceHost(m_Receiver, uri);
             m_Host.Faulted += m_HostFaultingHandler;
+            m_Host.Closed += m_HostClosedHandler;
             var endpoint = m_Type.AttachEndpoint(m_Host, typeof(IReceivingEndpoint), m_Id);
             m_LocalConnection = new ChannelConnectionInformation(m_Id, m_Type.GetType(), endpoint.Address.Uri);
 
@@ -196,13 +258,61 @@ namespace Apollo.Core.Base.Communication
                     uri));
         }
 
+        private void StoreCurrentTimeAsFaultingTime()
+        {
+            var now = m_CurrentTime();
+            m_LatestFaultingTimes.Add(now);
+            
+            var timespan = new TimeSpan(0, FaultingTimeSpanInMinutes, 0);
+            while (m_LatestFaultingTimes[0] < now - timespan)
+            {
+                m_LatestFaultingTimes.RemoveAt(0);
+            }
+
+            if (m_LatestFaultingTimes.Count > MaximumNumberOfSequentialFaults)
+            {
+                throw new MaximumNumberOfChannelRestartsExceededException();
+            }
+        }
+
         private void CleanupHost()
         {
             if (m_Host != null)
             {
-                m_Host.Close();
                 m_Host.Faulted -= m_HostFaultingHandler;
                 m_HostFaultingHandler = null;
+
+                m_Host.Closed -= m_HostClosedHandler;
+                m_HostClosedHandler = null;
+
+                try
+                {
+                    m_Host.Close();
+                }
+                catch (TimeoutException)
+                {
+                    // The default interval of time that was allotted for the operation was exceeded
+                    // before the operation was completed.
+                    m_Host.Abort();
+                }
+                catch (InvalidOperationException)
+                {
+                    // EITHER:
+                    // The communication object is in a System.ServiceModel.CommunicationState.Closing
+                    // or System.ServiceModel.CommunicationState.Closed state and cannot be modified.
+                    //
+                    // OR
+                    //
+                    // The communication object is not in a System.ServiceModel.CommunicationState.Opened
+                    // or System.ServiceModel.CommunicationState.Opening state and cannot be modified.
+                    m_Host.Abort();
+                }
+                catch (CommunicationObjectFaultedException)
+                {
+                    // The communication object is in a System.ServiceModel.CommunicationState.Faulted
+                    // state and cannot be modified.
+                    m_Host.Abort();
+                }
 
                 var disposable = m_Host as IDisposable;
                 if (disposable != null)
@@ -330,24 +440,22 @@ namespace Apollo.Core.Base.Communication
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="localFile"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="localFile"/> is an empty string.
-        /// </exception>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(string localFile, CancellationToken token)
+        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+            string localFile,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => localFile);
                 Enforce.With<ArgumentException>(!string.IsNullOrWhiteSpace(localFile), Resources.Exceptions_Messages_FilePathCannotBeEmpty);
             }
 
-            return m_Type.PrepareForDataReception(localFile, token);
+            return m_Type.PrepareForDataReception(localFile, token, scheduler);
         }
 
         /// <summary>
@@ -359,19 +467,15 @@ namespace Apollo.Core.Base.Communication
         /// which the data is transferred.
         /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
+        /// <param name="scheduler">The scheduler that is used to run the return task with.</param>
         /// <returns>
         /// An task that indicates when the transfer is complete.
         /// </returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="filePath"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="filePath"/> is an empty string.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="transferInformation"/> is <see langword="null" />.
-        /// </exception>
-        public Task TransferData(string filePath, StreamTransferInformation transferInformation, CancellationToken token)
+        public Task TransferData(
+            string filePath,
+            StreamTransferInformation transferInformation,
+            CancellationToken token,
+            TaskScheduler scheduler)
         {
             {
                 Enforce.Argument(() => filePath);
@@ -379,7 +483,7 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => transferInformation);
             }
 
-            return m_Type.TransferData(filePath, transferInformation, token);
+            return m_Type.TransferData(filePath, transferInformation, token, scheduler);
         }
 
         /// <summary>

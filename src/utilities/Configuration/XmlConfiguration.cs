@@ -25,7 +25,7 @@ namespace Apollo.Utilities.Configuration
             Justification = "Documentation can start with a language keyword")]
         public bool HasValueFor(ConfigurationKey key)
         {
-            throw new NotImplementedException();
+            return false;
         }
 
         /// <summary>
@@ -36,8 +36,6 @@ namespace Apollo.Utilities.Configuration
         /// <returns>
         /// The desired value.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "The use of the generic return parameter allows strong typing.")]
         public T Value<T>(ConfigurationKey key)
         {
             throw new NotImplementedException();

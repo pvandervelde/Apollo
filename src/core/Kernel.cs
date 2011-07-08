@@ -39,6 +39,11 @@ namespace Apollo.Core
             new Dictionary<KernelService, List<ConnectionMap>>();
 
         /// <summary>
+        /// The action that should be executed just before the entire system shuts down.
+        /// </summary>
+        private readonly Action m_ShutdownAction;
+
+        /// <summary>
         /// The start-up state of the kernel.
         /// </summary>
         private StartupState m_State = StartupState.NotStarted;
@@ -46,8 +51,11 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Kernel"/> class.
         /// </summary>
-        public Kernel()
+        /// <param name="shutdownAction">The action that should be executed just before shut down.</param>
+        public Kernel(Action shutdownAction = null)
         {
+            m_ShutdownAction = shutdownAction;
+
             // Add our own proxy to the collection of services.
             // Do that in the constructor so that this is always loaded.
             // That means that there is no way to install another CoreProxy that
@@ -63,7 +71,7 @@ namespace Apollo.Core
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
-        public event EventHandler<StartupProgressEventArgs> OnStartupProgress;
+        public event EventHandler<ProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Raises the startup progress event.
@@ -75,7 +83,7 @@ namespace Apollo.Core
             var local = OnStartupProgress;
             if (local != null)
             {
-                local(this, new StartupProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark));
             }
         }
 
@@ -137,7 +145,7 @@ namespace Apollo.Core
 
                 if (currentService.StartupState != StartupState.Started)
                 {
-                    EventHandler<StartupProgressEventArgs> handler = (s, e) =>
+                    EventHandler<ProgressEventArgs> handler = (s, e) =>
                         {
                             var finishedPercentage = (double)startupOrder.IndexOf(currentService) / startupOrder.Count;
                             var currentPercentage = e.Progress / (100.0 * startupOrder.Count);
@@ -239,9 +247,7 @@ namespace Apollo.Core
         /// </summary>
         /// <design>
         /// Note that this method does not check if it is safe to shut the application down. It is assumed that
-        /// there are no more objections against shutting down once this method is reached. Under normal circumstances
-        /// this method should only be called by the <c>CoreProxy</c> which will perform the necessary checks
-        /// to ensure that all objections against shutdown are heard.
+        /// there are no more objections against shutting down once this method is reached. 
         /// </design>
         [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
             Justification = "The shutdown must proceede even if a service throws an unknown exception.")]
@@ -270,6 +276,13 @@ namespace Apollo.Core
                     // An exception occured. Ignore it and move on
                     // we're about to destroy the appdomain the service lives in.
                 }
+            }
+
+            // Run the final shut down action. This will normally dispose the 
+            // IOC container etc.
+            if (m_ShutdownAction != null)
+            {
+                m_ShutdownAction();
             }
 
             m_State = StartupState.Stopped;

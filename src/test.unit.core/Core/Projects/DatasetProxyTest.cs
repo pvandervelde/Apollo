@@ -8,7 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
 using MbUnit.Framework;
@@ -18,14 +22,38 @@ using Moq;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the Project.DatasetProxy class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetProxyTest
     {
         private static IProject CreateProject()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => new Task<DatasetOnlineInformation>(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             return new Project(distributor);
         }
 
@@ -35,7 +63,6 @@ namespace Apollo.Core.Projects
         }
 
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<IProxyDataset>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -60,7 +87,6 @@ namespace Apollo.Core.Projects
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<Project.DatasetProxy>
         {
             ImplementsOperatorOverloads = true,
@@ -75,10 +101,36 @@ namespace Apollo.Core.Projects
         };
 
         [Test]
-        [Description("Checks that a dataset can be obtained from the project.")]
         public void GetDataset()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -87,10 +139,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that when the name of a dataset is set a notification is send out.")]
         public void Name()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -107,10 +185,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that when the summary of a dataset is set a notification is send out.")]
         public void Summary()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -127,58 +231,290 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a dataset cannot be loaded onto a machine with an illegal loading location.")]
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                l => new SelectedProposal(plan);
 
             Assert.Throws<CannotLoadDatasetWithoutLoadingLocationException>(
-                () => dataset.LoadOntoMachine(LoadingLocation.None, new MachineDistributionRange()));
+                () => dataset.LoadOntoMachine(
+                    LoadingLocations.None,
+                    selector,
+                    new CancellationToken()));
         }
 
         [Test]
-        [Description("Checks that a dataset cannot be loaded onto a machine without a distribution range.")]
-        public void LoadOntoMachineWithNullDistributionRange()
+        public void LoadOntoMachineWhenAlreadyLoaded()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                l => new SelectedProposal(plan);
+
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+
+            Assert.IsTrue(dataset.IsLoaded);
+
+            bool wasLoaded = false;
+            dataset.OnLoaded += (s, e) => wasLoaded = true;
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+
+            Assert.IsFalse(wasLoaded);
+            Assert.IsTrue(dataset.IsLoaded);
+        }
+
+        [Test]
+        public void LoadOntoMachineWithSelectionCancellation()
+        {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
-            Assert.Throws<ArgumentNullException>(() => dataset.LoadOntoMachine(LoadingLocation.Local, null));
+            // Explicitly return nothing so that we cancel the process
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                l => new SelectedProposal();
+
+            bool wasLoaded = false;
+            dataset.OnLoaded += (s, e) => wasLoaded = true;
+
+            var source = new CancellationTokenSource();
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, source.Token);
+
+            Assert.IsFalse(wasLoaded);
         }
 
         [Test]
-        [Description("Checks that a dataset is not loaded onto a machine if it is already loaded.")]
-        [Ignore("Not implemented yet.")]
-        public void LoadOntoMachineWhenAlreadyLoaded()
-        {
-        }
-
-        [Test]
-        [Description("Checks that a dataset can be loaded onto a machine.")]
-        [Ignore("Not implemented yet.")]
         public void LoadOntoMachine()
         {
-            // Event
-            // project
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                l => new SelectedProposal(plan);
+
+            bool wasLoaded = false;
+            dataset.OnLoaded += (s, e) => wasLoaded = true;
+
+            int progress = -1;
+            dataset.OnLoadingProgress += (s, e) => progress = e.Progress;
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+
+            Assert.IsTrue(dataset.IsLoaded);
+            Assert.IsTrue(wasLoaded);
+            Assert.AreEqual(100, progress);
         }
 
         [Test]
-        [Description("Checks that a dataset can be unloaded from a machine.")]
-        [Ignore("Not implemented yet.")]
         public void UnloadFromMachine()
         {
-            // Event
-            // project
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var commands = new Mock<IDatasetApplicationCommands>();
+            {
+                commands.Setup(c => c.Close())
+                    .Returns(Task.Factory.StartNew(() => { }));
+            }
+
+            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            {
+                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                    .Returns(commands.Object);
+            }
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        hub.Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+
+            var project = new Project(distributor);
+            var dataset = project.BaseDataset();
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                l => new SelectedProposal(plan);
+
+            dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
+
+            Assert.IsTrue(dataset.IsLoaded);
+
+            bool wasUnloaded = false;
+            dataset.OnUnloaded += (s, e) => wasUnloaded = true;
+            dataset.UnloadFromMachine();
+
+            Assert.IsFalse(dataset.IsLoaded);
+            Assert.IsTrue(wasUnloaded);
         }
 
         [Test]
-        [Description("Checks that the children of a dataset can be obtained.")]
         public void Children()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -199,10 +535,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child cannot be created without creation information.")]
         public void CreateNewChildWithNullCreationInformation()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -210,10 +572,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child cannot be created if the dataset is not allowed to be a parent.")]
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -229,10 +617,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new child can be created.")]
         public void CreateNewChild()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -263,10 +677,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children cannot be created with a null collection reference.")]
         public void CreateNewChildrenWithNullCollection()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -274,10 +714,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children cannot be created without creation information.")]
         public void CreateNewChildrenWithEmptyCollection()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -285,10 +751,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new set of children can be created.")]
         public void CreateNewChildren()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var dataset = project.BaseDataset();
 
@@ -314,10 +806,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset after the project is closed.")]
         public void DeleteWhenClosed()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -338,10 +856,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that can't be deleted.")]
         public void DeleteUndeletableDataset()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -349,10 +893,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithUndeletableChild()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var root = project.BaseDataset();
 
@@ -384,10 +954,36 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an exception is thrown when deleting a dataset that has a child that can't be deleted.")]
         public void DeleteDatasetWithChildren()
         {
-            Func<DatasetRequest, IObservable<DistributionPlan>> distributor = r => new Mock<IObservable<DistributionPlan>>().Object;
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(distributor);
             var root = project.BaseDataset();
 

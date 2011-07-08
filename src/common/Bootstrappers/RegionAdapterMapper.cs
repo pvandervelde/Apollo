@@ -62,8 +62,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// <returns>
         /// A mapper which maps the control to the adapter.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Using a generic T results in cleaner code, that is worth dealing with slightly more difficult usage.")]
         public RegionAdapterMapper Map<TControl, TAdapter>()
             where TAdapter : class, IRegionAdapter
         {

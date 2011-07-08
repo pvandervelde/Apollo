@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
@@ -137,14 +138,20 @@ namespace Apollo.Core.Projects
         }
 
         /// <summary>
-        /// Returns a collection containing information on all the machines
-        /// the dataset is distributed over.
+        /// Gets a value indicating whether the dataset can be loaded onto a machine.
+        /// </summary>
+        bool CanLoad
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the machine on which the dataset is running.
         /// </summary>
         /// <returns>
-        /// A collection containing information about all the machines the
-        /// dataset is distributed over.
+        /// The machine on which the dataset is running.
         /// </returns>
-        IEnumerable<Machine> RunsOn();
+        NetworkIdentifier RunsOn();
 
         /// <summary>
         /// Loads the dataset onto a machine.
@@ -152,15 +159,24 @@ namespace Apollo.Core.Projects
         /// <param name="preferredLocation">
         /// Indicates a preferred machine location for the dataset to be loaded onto.
         /// </param>
-        /// <param name="range">
-        /// The number of machines over which the data set should be distributed.
+        /// <param name="machineSelector">
+        ///     The function that selects the most suitable machine for the dataset to run on.
         /// </param>
+        /// <param name="token">The token that is used to cancel the loading.</param>
         /// <remarks>
-        /// Note that the <paramref name="preferredLocation"/> and the <paramref name="range"/> are
-        /// only suggestions. The loader may deside to ignore the suggestions if there is a distribution
+        /// Note that the <paramref name="preferredLocation"/> is
+        /// only a suggestion. The loader may deside to ignore the suggestion if there is a distribution
         /// plan that is better suited to the contents of the dataset.
         /// </remarks>
-        void LoadOntoMachine(LoadingLocation preferredLocation, MachineDistributionRange range);
+        void LoadOntoMachine(
+            LoadingLocations preferredLocation,
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            CancellationToken token);
+
+        /// <summary>
+        /// An event raised when there is progress in the loading of the datset.
+        /// </summary>
+        event EventHandler<ProgressEventArgs> OnLoadingProgress;
 
         /// <summary>
         /// An event raised when the dataset is loaded onto one or more machines.
@@ -221,7 +237,7 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Gets a value indicating the set of commands that apply to the current dataset.
         /// </summary>
-        ProxyCommandSet Commands
+        IProxyCommandSet Commands
         {
             get;
         }

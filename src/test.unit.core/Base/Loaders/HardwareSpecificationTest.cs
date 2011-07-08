@@ -12,31 +12,27 @@ using MbUnit.Framework;
 namespace Apollo.Base.Loaders
 {
     [TestFixture]
-    [Description("Tests the HardwareSpecification class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class HardwareSpecificationTest
     {
         // Cache the WMI values for better performance
-        private static readonly ProcessorSpecification[] s_Processors = ProcessorSpecification.ForLocalMachine();
         private static readonly DiskSpecification[] s_Disks = DiskSpecification.ForLocalMachine();
-        private static readonly NetworkSpecification[] s_Networks = NetworkSpecification.ForLocalMachine();
 
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         {
-            ulong memory = 10;
-            var processors = s_Processors;
+            ulong maxPerProcessMemory = 10;
+            ulong totalPhysicalMemory = 9;
+            ulong totalVirtualMemory = 11;
             var disks = s_Disks;
-            var network = s_Networks;
 
-            var hardware = new HardwareSpecification(memory, processors, disks, network);
+            var hardware = new HardwareSpecification(maxPerProcessMemory, totalPhysicalMemory, totalVirtualMemory, disks);
 
-            Assert.AreEqual(memory, hardware.MemoryInBytes);
-            Assert.AreSame(processors, hardware.Processors());
+            Assert.AreEqual(maxPerProcessMemory, hardware.PerProcessMemoryInKilobytes);
+            Assert.AreEqual(totalPhysicalMemory, hardware.TotalPhysicalMemoryInKilobytes);
+            Assert.AreEqual(totalVirtualMemory, hardware.TotalVirtualMemoryInKilobytes);
             Assert.AreSame(disks, hardware.Disks());
-            Assert.AreSame(network, hardware.Network());
         }
     }
 }

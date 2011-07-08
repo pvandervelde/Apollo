@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the EndpointEventArgs class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointEventArgsTest
     {
         [Test]
-        [Description("Checks that an object can be created.")]
         public void Create()
         {
             var id = new EndpointId("a");

@@ -13,13 +13,11 @@ using Moq;
 namespace Apollo.Core.UserInterfaces.Application
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ApplicationFacadeTest
     {
         [Test]
-        [Description("Checks that the shutdown command is correctly given.")]
         public void Shutdown()
         {
             bool wasTriggered = false;
@@ -42,7 +40,6 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
-        [Description("Checks that the ApplicationStatus property returns the correct values.")]
         public void ApplicationStatus()
         {
             var service = new Mock<IUserInterfaceService>();
@@ -54,7 +51,6 @@ namespace Apollo.Core.UserInterfaces.Application
         }
 
         [Test]
-        [Description("Checks that notifications can be registered.")]
         public void RegisterNotification()
         {
             NotificationName notification = null;

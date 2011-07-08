@@ -17,13 +17,11 @@ namespace Apollo.Base.Communication
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
     // move all the overloads of Equals(object) and GetHashCode() to the ID derivative class).
     [TestFixture]
-    [Description("Tests the BaseLineId class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointIdTest
     {
         [VerifyContract]
-        [Description("Checks that the GetHashCode() contract is implemented correctly.")]
         public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<EndpointId>
         {
             // Note that the collision probability depends quite a lot on the number of 
@@ -47,7 +45,6 @@ namespace Apollo.Base.Communication
         };
 
         [VerifyContract]
-        [Description("Checks that the IEquatable<T> contract is implemented correctly.")]
         public readonly IContract EqualityVerification = new EqualityContract<EndpointId>
         {
             ImplementsOperatorOverloads = true,
@@ -65,7 +62,6 @@ namespace Apollo.Base.Communication
         };
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is null.")]
         public void LargerThanOperatorWithFirstObjectNull()
         {
             EndpointId first = null;
@@ -75,7 +71,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the second object is null.")]
         public void LargerThanOperatorWithSecondObjectNull()
         {
             EndpointId first = new EndpointId("a");
@@ -85,7 +80,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are null.")]
         public void LargerThanOperatorWithBothObjectsNull()
         {
             EndpointId first = null;
@@ -95,7 +89,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if both objects are equal.")]
         public void LargerThanOperatorWithEqualObjects()
         {
             EndpointId first = new EndpointId("a");
@@ -105,7 +98,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the > operator returns true if the first object is larger than the second.")]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
             EndpointId first = new EndpointId("b");
@@ -115,7 +107,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the > operator returns false if the first object is smaller than the second.")]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
             EndpointId first = new EndpointId("a");
@@ -125,7 +116,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is null.")]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             EndpointId first = null;
@@ -135,7 +125,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the second object is null.")]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
             EndpointId first = new EndpointId("a");
@@ -145,7 +134,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are null.")]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
             EndpointId first = null;
@@ -155,7 +143,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if both objects are equal.")]
         public void SmallerThanOperatorWithEqualObjects()
         {
             EndpointId first = new EndpointId("a");
@@ -165,7 +152,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns false if the first object is larger than the second.")]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
             EndpointId first = new EndpointId("b");
@@ -175,7 +161,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the < operator returns true if the first object is smaller than the second.")]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
             EndpointId first = new EndpointId("a");
@@ -185,7 +170,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the Clone method returns an exact copy of the original object.")]
         public void Clone()
         {
             EndpointId first = new EndpointId("a");
@@ -195,7 +179,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 1 if the second objects is null.")]
         public void CompareToWithNullObject()
         {
             EndpointId first = new EndpointId("a");
@@ -205,7 +188,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns 0 if the second object is equal to the first.")]
         public void CompareToOperatorWithEqualObjects()
         {
             EndpointId first = new EndpointId("a");
@@ -215,7 +197,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a postive number if the first objects is larger than the second.")]
         public void CompareToWithLargerFirstObject()
         {
             EndpointId first = new EndpointId("b");
@@ -225,7 +206,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the CompareTo method returns a negative number if the first objects is larger than the second.")]
         public void CompareToWithSmallerFirstObject()
         {
             EndpointId first = new EndpointId("a");
@@ -235,7 +215,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the CompareTo method throws an exception if the second objects type is not equal to the first.")]
         public void CompareToWithUnequalObjectTypes()
         {
             EndpointId first = new EndpointId("a");

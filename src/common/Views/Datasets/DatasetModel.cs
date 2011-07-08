@@ -7,7 +7,7 @@
 using System;
 using Apollo.Core.Base;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.UI.Common.Commands;
+using Apollo.UI.Common.Properties;
 using Lokad;
 using ICommand = System.Windows.Input.ICommand;
 
@@ -44,34 +44,55 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Dataset = dataset;
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
-            m_Dataset.OnLoaded += (s, e) => Notify(() => this.IsLoaded);
-            m_Dataset.OnUnloaded += (s, e) => Notify(() => this.IsLoaded);
-
-            NewChildDatasetCommand = new AddChildDatasetCommand(dataset);
-            DeleteDatasetCommand = new DeleteDatasetCommand(dataset);
+            m_Dataset.OnLoadingProgress += (s, e) => { }; // @todo: add progress reporting ...
+            m_Dataset.OnLoaded += (s, e) =>
+                { 
+                    Notify(() => this.IsLoaded);
+                    Notify(() => this.RunsOn);
+                };
+            m_Dataset.OnUnloaded += (s, e) =>
+                { 
+                    Notify(() => this.IsLoaded);
+                    Notify(() => this.RunsOn);
+                };
         }
 
         /// <summary>
-        /// Gets the new child dataset command.
+        /// Gets or sets the new child dataset command.
         /// </summary>
-        /// <value>The new child dataset command.</value>
         public ICommand NewChildDatasetCommand
         {
             get;
-            private set;
+            set;
         }
 
         /// <summary>
-        /// Gets the delete dataset command.
+        /// Gets or sets the delete dataset command.
         /// </summary>
-        /// <value>The delete dataset command.</value>
         public ICommand DeleteDatasetCommand
         {
             get;
-            private set;
+            set;
         }
 
-        // Load & Unload
+        /// <summary>
+        /// Gets or sets the load dataset command.
+        /// </summary>
+        public ICommand LoadDatasetCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the unload dataset command.
+        /// </summary>
+        public ICommand UnloadDatasetCommand
+        {
+            get;
+            set;
+        }
+
         // Start & Stop etc.
 
         /// <summary>
@@ -158,7 +179,27 @@ namespace Apollo.UI.Common.Views.Datasets
             }
         }
 
-        // MACHINES
+        /// <summary>
+        /// Gets a value indicating whether the dataset can be loaded onto a machine.
+        /// </summary>
+        public bool CanLoad
+        {
+            get
+            {
+                return m_Dataset.CanLoad;
+            }
+        }
+
+        /// <summary>
+        /// Gets the name of the machine on which the dataset is loaded.
+        /// </summary>
+        public string RunsOn
+        {
+            get
+            {
+                return IsLoaded ? m_Dataset.RunsOn().ToString() : Resources.DatasetModel_DatasetIsNotLoaded;
+            }
+        }
 
         // PROGRESS (Run / Save etc.)
     }

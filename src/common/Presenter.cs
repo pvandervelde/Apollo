@@ -120,8 +120,6 @@ namespace Apollo.UI.Common
         /// </summary>
         /// <param name="view">The view that is associated with the current presenter.</param>
         /// <param name="parameter">The parameter that is associated with the current presenter.</param>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes",
-            Justification = "These methods should not be overriden in child classes.")]
         void IPresenter.Initialize(object view, Parameter parameter)
         {
             View = (TView)view;
@@ -149,8 +147,6 @@ namespace Apollo.UI.Common
         /// Gets the view that is associated with the current presenter.
         /// </summary>
         /// <value>The view that is associated with the current presenter.</value>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes",
-            Justification = "These methods should not be overriden in child classes.")]
         object IPresenter.View
         {
             get
@@ -163,8 +159,6 @@ namespace Apollo.UI.Common
         /// Gets the parameter that is associated with the current presenter.
         /// </summary>
         /// <value>The parameter that is associated with the current presenter.</value>
-        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes",
-            Justification = "These methods should not be overriden in child classes.")]
         Parameter IPresenter.Parameter
         {
             get

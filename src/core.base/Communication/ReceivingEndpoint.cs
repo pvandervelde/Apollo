@@ -6,7 +6,10 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.ServiceModel;
+using Apollo.Utilities;
+using Lokad;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -24,6 +27,27 @@ namespace Apollo.Core.Base.Communication
     internal sealed class ReceivingEndpoint : IMessagePipe
     {
         /// <summary>
+        /// The function used to write messages to the log.
+        /// </summary>
+        private readonly Action<LogSeverityProxy, string> m_Logger;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ReceivingEndpoint"/> class.
+        /// </summary>
+        /// <param name="logger">The function that logs messages.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        /// </exception>
+        public ReceivingEndpoint(Action<LogSeverityProxy, string> logger)
+        {
+            {
+                Enforce.Argument(() => logger);
+            }
+
+            m_Logger = logger;
+        }
+
+        /// <summary>
         /// Accepts the messages.
         /// </summary>
         /// <param name="message">The message.</param>
@@ -33,12 +57,24 @@ namespace Apollo.Core.Base.Communication
         {
             try
             {
+                m_Logger(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Received message of type {0}.",
+                        message.GetType()));
+
                 RaiseOnNewMessage(message);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                // Should we send this back through the channel? We can't really can we??
-                // We should probably log something here ....
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Exception occurred during the handling of a message of type {0}. Exception was: {1}",
+                        message.GetType(),
+                        e));
             }
         }
 

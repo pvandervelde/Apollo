@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Properties;
@@ -31,7 +33,7 @@ namespace Apollo.Core.Projects
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
         /// </summary>
-        private readonly Func<DatasetRequest, IObservable<DistributionPlan>> m_DatasetDistributor;
+        private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
         /// A flag that indicates if the project has been closed.
@@ -80,7 +82,7 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor)
+        public Project(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
             : this(distributor, null)
         {
         }
@@ -98,7 +100,9 @@ namespace Apollo.Core.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, IObservable<DistributionPlan>> distributor, IPersistenceInformation persistenceInfo)
+        public Project(
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor, 
+            IPersistenceInformation persistenceInfo)
         {
             {
                 Enforce.Argument(() => distributor);
@@ -301,11 +305,6 @@ namespace Apollo.Core.Projects
             return ObtainProxyFor(m_RootDataset);
         }
 
-        // Do we need to get to individual nodes?
-        // Do we need to get to parent nodes etc.
-        // Do we want to give out a graph of readonly datasets? That would 
-        // allow users to use that instead of having to build their own
-
         /// <summary>
         /// Saves the project and all the datasets to the given stream.
         /// </summary>
@@ -382,14 +381,26 @@ namespace Apollo.Core.Projects
             // in parallel to this one will be notified.
             m_IsClosed = true;
 
-            // NOTE: We should only close if we're not saving data. If we are saving data then wait till
-            //       we're done, then close.
-            //
-            // When closing we should:
-            // - Terminate all dataset applications (from the leaf nodes up to the root)
-            // - Sign off from communications
-            // - Clear out all the datastructures
-            // - Terminate
+            // @todo: We should only close if we're not saving data. 
+            //        If we are saving data then wait till we're done, then close.
+            // @todo: We should only close if we're not loading
+            //        Technically we should abort the load
+            lock (m_Lock)
+            {
+                // Invalidate all datasets first.
+                m_DatasetProxies.Clear();
+                m_Datasets.Clear();
+
+                // Terminate all dataset applications (from the leaf nodes up to the root)
+                foreach (var online in m_ActiveDatasets.Values)
+                {
+                    online.Close();
+                }
+
+                m_ActiveDatasets.Clear();
+                m_Graph.Clear();
+            }
+
             RaiseOnClosed();
         }
     }

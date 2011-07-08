@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Licensing;
 
 namespace Apollo.Core.Utilities.Licensing
@@ -22,8 +21,6 @@ namespace Apollo.Core.Utilities.Licensing
         /// <returns>
         ///     A collection of <see cref="ValidationSequence"/> instances.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "The return value is an IEnumerable, generating this may take time thus a method is more suitable.")]
         IEnumerable<ValidationSequence> GetLicenseValidationSequences();
     }
 }

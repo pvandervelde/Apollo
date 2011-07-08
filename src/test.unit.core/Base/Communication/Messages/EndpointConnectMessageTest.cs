@@ -12,7 +12,6 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication.Messages
 {
     [TestFixture]
-    [Description("Tests the EndpointDisconnectMessage class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointConnectMessageTest
@@ -32,7 +31,6 @@ namespace Apollo.Base.Communication.Messages
         }
 
         [Test]
-        [Description("Checks that the message serialises and deserialises correctly.")]
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");

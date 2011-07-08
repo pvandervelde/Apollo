@@ -27,6 +27,11 @@ namespace Apollo.UI.Common.Views.Datasets
         private static readonly RoutedCommand s_RemoveDatasetCommand = new RoutedCommand();
 
         /// <summary>
+        /// The routed command that used to load and unload a dataset.
+        /// </summary>
+        private static readonly RoutedCommand s_LoadOrUnloadDatasetCommand = new RoutedCommand();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetVertexView"/> class.
         /// </summary>
         public DatasetVertexView()
@@ -45,6 +50,13 @@ namespace Apollo.UI.Common.Views.Datasets
                 var cb = new CommandBinding(s_RemoveDatasetCommand, CommandDeleteDatasetExecuted, CommandDeleteDatasetCanExecute);
                 CommandBindings.Add(cb);
                 deleteDatasetButton.Command = s_RemoveDatasetCommand;
+            }
+
+            // Bind the load / unload command
+            {
+                var cb = new CommandBinding(s_LoadOrUnloadDatasetCommand, CommandLoadUnloadDatasetExecuted, CommandLoadUnloadDatasetCanExecute);
+                CommandBindings.Add(cb);
+                loadOrUnloadDatasetButton.Command = s_LoadOrUnloadDatasetCommand;
             }
         }
 
@@ -94,6 +106,45 @@ namespace Apollo.UI.Common.Views.Datasets
         {
             e.Handled = true;
             Model.DeleteDatasetCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandLoadUnloadDatasetCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (Model != null)
+            {
+                if (!Model.IsLoaded)
+                {
+                    e.CanExecute = Model.LoadDatasetCommand.CanExecute(null);
+                }
+                else
+                {
+                    e.CanExecute = Model.UnloadDatasetCommand.CanExecute(null);
+                }
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandLoadUnloadDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (!Model.IsLoaded)
+            {
+                // Should do something like this: http://presentationlayer.wordpress.com/2011/05/24/wpf-overlay-message-view-controller/
+                // For an overlay ...
+                Model.LoadDatasetCommand.Execute(null);
+            }
+            else 
+            {
+                Model.UnloadDatasetCommand.Execute(null);
+            }
         }
     }
 }

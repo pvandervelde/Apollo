@@ -14,7 +14,6 @@ using MbUnit.Framework;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the DatasetLoadEventArgs class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetLoadEventArgsTest
@@ -22,10 +21,9 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Store a link to a machine here so that we only need to build it once.
         /// </summary>
-        private readonly Machine m_Machine = new Machine(new Dictionary<BaselineId, BaselineResult>());
+        private readonly Machine m_Machine = new Machine();
 
         [Test]
-        [Description("Checks that an object cannot be created with an empty machines collection.")]
         public void CreateWithEmptyMachinesCollection()
         {
             var id = new DatasetId();
@@ -34,7 +32,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that an object can be created correctly.")]
         public void Create()
         {
             var id = new DatasetId();

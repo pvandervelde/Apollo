@@ -31,7 +31,7 @@ namespace Test.Manual.Console
         {
             var builder = new ContainerBuilder();
             {
-                builder.RegisterModule(new BaseModule());
+                builder.RegisterModule(new BaseModule(true));
                 builder.RegisterModule(new UtilitiesModule());
 
                 builder.RegisterModule(

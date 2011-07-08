@@ -5,7 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Utilities.Licensing;
@@ -16,13 +19,11 @@ using Moq;
 namespace Apollo.Core.Projects
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectServiceTest
     {
         [Test]
-        [Description("Checks that the service can stop successfully.")]
         public void Stop()
         {
             var storage = new LicenseValidationResultStorage();
@@ -42,7 +43,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that the service can stop successfully.")]
         public void StopWithProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -62,7 +62,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -90,7 +90,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new project can be created.")]
         public void CreateNewProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -104,7 +103,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -121,12 +120,13 @@ namespace Apollo.Core.Projects
             service.CreateNewProject();
 
             builder.Verify(b => b.Define(), Times.Exactly(1));
-            builder.Verify(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()), Times.Exactly(1));
+            builder.Verify(
+                b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()), 
+                Times.Exactly(1));
             builder.Verify(b => b.Build(), Times.Exactly(1));
         }
 
         [Test]
-        [Description("Checks that a new project cannot be loaded without a null persistence object.")]
         public void LoadProjectWithNullPersistenceInformation()
         {
             var storage = new LicenseValidationResultStorage();
@@ -142,7 +142,6 @@ namespace Apollo.Core.Projects
         }
 
         [Test]
-        [Description("Checks that a new project can be loaded.")]
         public void LoadProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -156,7 +155,7 @@ namespace Apollo.Core.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -177,13 +176,15 @@ namespace Apollo.Core.Projects
             service.LoadProject(new Mock<IPersistenceInformation>().Object);
 
             builder.Verify(b => b.Define(), Times.Exactly(1));
-            builder.Verify(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()), Times.Exactly(1));
+            builder.Verify(
+                b => b.WithDatasetDistributor(
+                    It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()), 
+                    Times.Exactly(1));
             builder.Verify(b => b.FromStorage(It.IsAny<IPersistenceInformation>()), Times.Exactly(1));
             builder.Verify(b => b.Build(), Times.Exactly(1));
         }
 
         [Test]
-        [Description("Checks that a project can be unloaded.")]
         public void UnloadProject()
         {
             var storage = new LicenseValidationResultStorage();
@@ -201,7 +202,7 @@ namespace Apollo.Core.Projects
                 builder.Setup(b => b.Define())
                     .Returns(builder.Object);
 
-                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, IObservable<DistributionPlan>>>()))
+                builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object);
 
                 builder.Setup(b => b.Build())

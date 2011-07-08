@@ -5,7 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading;
+using System.Threading.Tasks;
+using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -15,93 +18,83 @@ namespace Apollo.Core.Base.Loaders
     public sealed class DistributionPlan
     {
         /// <summary>
+        /// The function that is used to load the dataset on to the machine that proposed the current plan.
+        /// </summary>
+        private readonly Func<DistributionPlan, CancellationToken, Task<DatasetOnlineInformation>> m_Loader;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DistributionPlan"/> class.
+        /// </summary>
+        /// <param name="loader">
+        ///     The function that provides the ability to load the dataset onto the selected machine
+        ///     if the current distribution plan should be accepted.
+        /// </param>
+        /// <param name="dataset">The ID of the datset that should be loaded.</param>
+        /// <param name="machine">
+        ///     The machine onto which the dataset will be loaded if the current plan is accepted.
+        /// </param>
+        /// <param name="proposal">
+        ///     The proposal that provides the estimated performance of loading the given
+        ///     dataset onto the given machine.
+        /// </param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="loader"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="machine"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="proposal"/> is <see langword="null" />.
+        /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
+        public DistributionPlan(
+            Func<DistributionPlan, CancellationToken, Task<DatasetOnlineInformation>> loader,
+            DatasetOfflineInformation dataset,
+            NetworkIdentifier machine,
+            DatasetLoadingProposal proposal)
+        {
+            {
+                Enforce.Argument(() => loader);
+                Enforce.Argument(() => dataset);
+                Enforce.Argument(() => machine);
+                Enforce.Argument(() => proposal);
+            }
+
+            m_Loader = loader;
+            DistributionFor = dataset;
+            MachineToDistributeTo = machine;
+            Proposal = proposal;
+        }
+
+        /// <summary>
         /// Gets a value indicating the ID number of the dataset for which
         /// this distribution plan is valid.
         /// </summary>
-        public DatasetId DistributionFor
+        public DatasetOfflineInformation DistributionFor
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// Returns a collection of objects describing the different machines
-        /// to which the given dataset will be distributed.
+        /// Gets the identifier of the machine onto which the dataset would be loaded
+        /// if this plan is accepted.
         /// </summary>
-        /// <returns>
-        /// The collection of machines to which the dataset will be distributed.
-        /// </returns>
-        public IEnumerable<NetworkIdentifier> MachinesToDistributeTo()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets a value indicating the estimated time necessary for the transfer of
-        /// the given dataset to the proposed machines.
-        /// </summary>
-        public TimeSpan EstimatedTransferTime
+        public NetworkIdentifier MachineToDistributeTo
         {
             get;
             private set;
         }
 
         /// <summary>
-        /// Gets a value indicating the estimated time necessary for the loadng of
-        /// the given dataset onto the proposed machines.
+        /// Gets the proposal that provides the estimated performance of loading the
+        /// dataset on the given machine.
         /// </summary>
-        public TimeSpan EstimatedLoadingTime
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the estimated time necessary for the running of
-        /// the given dataset on the proposed machines.
-        /// </summary>
-        public TimeSpan EstimatedRunningTime
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the estimated time necessary for the unloading of
-        /// the given dataset from the proposed machines.
-        /// </summary>
-        public TimeSpan EstimatedUnloadingTime
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the estimated time necessary for the return transfer of
-        /// the given dataset from the proposed machines to the current machine.
-        /// </summary>
-        public TimeSpan EstimatedReturnTransferTime
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the earliest time at which the transfer and running process
-        /// could start.
-        /// </summary>
-        public DateTimeOffset EarliestStartTime
-        {
-            get;
-            private set;
-        }
-
-        /// <summary>
-        /// Gets a value indicating the earliest time at which the resulting dataset could
-        /// be completely returned taking into account the earliest starting time and the
-        /// estimated transfer, loading, running, unloading and return transfer times.
-        /// </summary>
-        public DateTimeOffset EarliestEstimatedFinishTime
+        public DatasetLoadingProposal Proposal
         {
             get;
             private set;
@@ -111,12 +104,13 @@ namespace Apollo.Core.Base.Loaders
         /// Returns a collection of objects describing the datasets that have 
         /// been loaded through the execution of the current distribution plan.
         /// </summary>
+        /// <param name="token">The cancellation token that is used to cancel the loading action.</param>
         /// <returns>
         /// The collection of objects describing the activated datasets.
         /// </returns>
-        public IObservable<DatasetOnlineInformation> Accept()
+        public Task<DatasetOnlineInformation> Accept(CancellationToken token)
         {
-            throw new NotImplementedException();
+            return m_Loader(this, token);
         }
     }
 }

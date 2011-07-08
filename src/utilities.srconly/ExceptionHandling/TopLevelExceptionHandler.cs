@@ -19,6 +19,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// Defines a top level exception handler which stops all exceptions from progagating out of the application, thus
     /// providing a chance for logging and semi-graceful termination of the application.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class TopLevelExceptionHandler
     {
         /// <summary>
@@ -73,7 +74,7 @@ namespace Apollo.Utilities.ExceptionHandling
                 //   but that will probably fail ...
                 var text = string.Format(
                     CultureInfo.InvariantCulture,
-                    "Fatal exception occurred during application execution",
+                    "Fatal exception occurred during application execution. Exception message was: {0}",
                     e);
 
                 var msg = new LogMessage(
@@ -90,6 +91,7 @@ namespace Apollo.Utilities.ExceptionHandling
                     try
                     {
                         logger.Log(msg);
+                        logger.Close();
                     }
                     catch (Exception)
                     {
@@ -109,7 +111,7 @@ namespace Apollo.Utilities.ExceptionHandling
             // loader issues. These are probably due to us trying to load some of our code or
             // one of it's dependencies. Given that this is causing a problem it seems wise to not
             // try to use our (external) code to find an assembly file path ...
-            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+            var localAppDataPath = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
             if (localAppDataPath == null)
             {
                 throw new DirectoryNotFoundException();
@@ -121,14 +123,17 @@ namespace Apollo.Utilities.ExceptionHandling
             var productAttribute = GetAttributeFromAssembly<AssemblyProductAttribute>();
             Debug.Assert((productAttribute != null) && !string.IsNullOrEmpty(productAttribute.Product), "There should be a product name.");
 
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+
             var companyDirectory = Path.Combine(localAppDataPath, companyAttribute.Company);
             var productDirectory = Path.Combine(companyDirectory, productAttribute.Product);
-            if (!Directory.Exists(productDirectory))
+            var versionDirectory = Path.Combine(productDirectory, new Version(assemblyVersion.Major, assemblyVersion.Minor).ToString(2));
+            if (!Directory.Exists(versionDirectory))
             {
-                Directory.CreateDirectory(productDirectory);
+                Directory.CreateDirectory(versionDirectory);
             }
 
-            return productDirectory;
+            return versionDirectory;
         }
 
         /// <summary>
@@ -138,8 +143,6 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <returns>
         /// The requested attribute.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "The type parameter indicates which attribute we're looking for.")]
         private static T GetAttributeFromAssembly<T>() where T : Attribute
         {
             var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(T), false);

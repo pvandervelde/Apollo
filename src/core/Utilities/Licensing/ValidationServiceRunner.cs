@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Utilities;
 using Apollo.Utilities.Licensing;
 using Lokad;
 

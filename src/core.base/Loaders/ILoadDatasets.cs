@@ -4,10 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -19,10 +18,11 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Takes the set of distribution plans and loads the given datasets onto the specified machines.
         /// </summary>
-        /// <param name="plansToImplement">The collection of distribution plans.</param>
+        /// <param name="planToImplement">The distribution plan that should be implemented.</param>
+        /// <param name="token">The token used to indicate cancellation of the task.</param>
         /// <returns>
         /// A set of objects which allow act as proxies for the loaded datasets.
         /// </returns>
-        IObservable<DatasetOnlineInformation> ImplementPlan(IEnumerable<DistributionPlan> plansToImplement);
+        Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token);
     }
 }

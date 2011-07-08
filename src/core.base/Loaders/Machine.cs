@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Lokad;
 
@@ -72,12 +71,6 @@ namespace Apollo.Core.Base.Loaders
         }
 
         /// <summary>
-        /// The collection of baselines for the current machine.
-        /// </summary>
-        private readonly Dictionary<BaselineId, BaselineResult> m_Baselines
-            = new Dictionary<BaselineId, BaselineResult>();
-
-        /// <summary>
         /// Defines the location of the machine through the 
         /// network address.
         /// </summary>
@@ -89,39 +82,29 @@ namespace Apollo.Core.Base.Loaders
         private readonly HardwareSpecification m_Specification;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Machine"/> class with the given
-        /// baselines for the local machine.
+        /// Initializes a new instance of the <see cref="Machine"/> class for the local machine.
         /// </summary>
-        /// <param name="baselines">The baselines for the local machines.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="baselines"/> is <see langword="null" />.
-        /// </exception>
-        public Machine(IDictionary<BaselineId, BaselineResult> baselines)
-            : this(NetworkIdentifier.ForLocalMachine(), HardwareSpecification.ForLocalMachine(), baselines)
+        public Machine()
+            : this(NetworkIdentifier.ForLocalMachine(), HardwareSpecification.ForLocalMachine())
         { 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Machine"/> class with the given
-        /// baselines for the given machine.
+        /// Initializes a new instance of the <see cref="Machine"/> class for the given machine.
         /// </summary>
         /// <param name="location">The network location for the given machine.</param>
         /// <param name="specification">The hardware specification for the given machine.</param>
-        /// <param name="baselines">The baselines for the given machines.</param>
         public Machine(
             NetworkIdentifier location, 
-            HardwareSpecification specification, 
-            IDictionary<BaselineId, BaselineResult> baselines)
+            HardwareSpecification specification)
         {
             {
                 Enforce.Argument(() => location);
                 Enforce.Argument(() => specification);
-                Enforce.Argument(() => baselines);
             }
 
             m_Location = location;
             m_Specification = specification;
-            m_Baselines.AddRange(baselines);
         }
 
         /// <summary>
@@ -145,15 +128,6 @@ namespace Apollo.Core.Base.Loaders
             {
                 return m_Specification;
             }
-        }
-
-        /// <summary>
-        /// Returns the collection of baseline results for the given machine.
-        /// </summary>
-        /// <returns>The collection of baseline results for the given machine.</returns>
-        public IEnumerable<BaselineResult> Baselines()
-        {
-            return m_Baselines.Values;
         }
 
         /// <summary>

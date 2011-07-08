@@ -32,8 +32,6 @@ namespace Apollo.Utilities.Configuration
         /// <returns>
         /// The desired value.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "The use of the generic return parameter allows strong typing.")]
         T Value<T>(ConfigurationKey key);
     }
 }

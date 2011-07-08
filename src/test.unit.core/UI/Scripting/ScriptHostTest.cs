@@ -15,13 +15,11 @@ using Moq;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the ScriptHost class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class ScriptHostTest
     {
         [Test]
-        [Description("Checks that a script can be executed.")]
         public void Execute()
         {
             var projects = new Mock<ILinkToProjects>();

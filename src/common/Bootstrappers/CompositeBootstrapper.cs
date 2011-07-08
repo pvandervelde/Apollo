@@ -43,8 +43,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// <summary>
         /// Indicates if the default Prism services should be registered.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mUse",
-            Justification = "One day FxCop will learn the difference between mUse and m_Use. Until then ...")]
         private bool m_UseDefaultConfiguration = true;
 
         /// <summary>
@@ -191,8 +189,6 @@ namespace Apollo.UI.Common.Bootstrappers
         /// </summary>
         /// <typeparam name="TOriginal">The original type.</typeparam>
         /// <typeparam name="TResolveAs">The type as which the objects should be resolved.</typeparam>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "Using a generic T results in cleaner code, that is worth dealing with slightly more difficult usage.")]
         private void RegisterSingletonType<TOriginal, TResolveAs>()
         {
             Container.RegisterType(typeof(TOriginal), typeof(TResolveAs), ContainerRegistrationScope.Singleton);

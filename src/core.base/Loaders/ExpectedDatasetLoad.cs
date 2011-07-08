@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Loaders
@@ -11,6 +12,7 @@ namespace Apollo.Core.Base.Loaders
     /// <summary>
     /// Describes the expected load a dataset will put on a given machine.
     /// </summary>
+    [Serializable]
     [ExcludeFromCodeCoverage]
     public sealed class ExpectedDatasetLoad
     {
@@ -29,16 +31,6 @@ namespace Apollo.Core.Base.Loaders
         /// loaded into memory.
         /// </summary>
         public long InMemorySizeInBytes
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating the ID number of the baseline with
-        /// which the current dataset is comparable.
-        /// </summary>
-        public BaselineId Baseline
         {
             get;
             set;

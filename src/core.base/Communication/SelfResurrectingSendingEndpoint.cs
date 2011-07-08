@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.ServiceModel;
 using System.ServiceModel.Channels;
@@ -90,11 +89,26 @@ namespace Apollo.Core.Base.Communication
                 var service = m_Service;
                 if (!m_IsDisposed)
                 {
+                    m_Logger(
+                           LogSeverityProxy.Trace,
+                           string.Format(
+                               CultureInfo.InvariantCulture,
+                               "Sending message of type {0}.",
+                               message.GetType()));
+
                     service.AcceptMessage(message);
                 }
             }
             catch (FaultException e)
             {
+                m_Logger(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Exception occurred during the sending of message of type {0}. Exception was: {1}",
+                        message.GetType(),
+                        e));
+
                 if (e.InnerException != null)
                 {
                     throw new FailedToSendMessageException(Resources.Exceptions_Messages_FailedToSendMessage, e.InnerException);
@@ -126,10 +140,21 @@ namespace Apollo.Core.Base.Communication
                         if (m_Channel != null)
                         { 
                             // The channel is probably faulted so terminate it.
+                            m_Logger(
+                                LogSeverityProxy.Info, 
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Channel for endpoint at {0} has faulted. Aborting channel.",
+                                    m_Factory.Endpoint.Address.Uri));
                             m_Channel.Abort();
                         }
 
-                        m_Logger(LogSeverityProxy.Info, "Channel faulted. Rebuilding.");
+                        m_Logger(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Creating channel for endpoint at {0}.",
+                                m_Factory.Endpoint.Address.Uri));
                         m_Service = m_Factory.CreateChannel();
                         m_Channel = (IChannel)m_Service;
                     }
@@ -170,6 +195,12 @@ namespace Apollo.Core.Base.Communication
                 try
                 {
                     local.Close();
+                    m_Logger(
+                        LogSeverityProxy.Debug,
+                        string.Format(
+                            CultureInfo.InvariantCulture, 
+                            "Disposed of channel for {0}",
+                            m_Factory.Endpoint.Address.Uri));
                 }
                 catch (CommunicationObjectAbortedException e)
                 {
@@ -179,7 +210,8 @@ namespace Apollo.Core.Base.Communication
                         LogSeverityProxy.Debug,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "Channel failed to close normally. Exception was: {0}",
+                            "Channel for {0} failed to close normally. Exception was: {1}",
+                            m_Factory.Endpoint.Address.Uri,
                             e));
                 }
                 catch (TimeoutException e)
@@ -191,7 +223,8 @@ namespace Apollo.Core.Base.Communication
                         LogSeverityProxy.Debug,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "Channel failed to close normally. Exception was: {0}",
+                            "Channel for {0} failed to close normally. Exception was: {1}",
+                            m_Factory.Endpoint.Address.Uri,
                             e));
                 }
             }

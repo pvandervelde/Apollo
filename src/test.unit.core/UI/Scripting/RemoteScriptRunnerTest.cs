@@ -15,13 +15,11 @@ using Moq;
 namespace Apollo.UI.Scripting
 {
     [TestFixture]
-    [Description("Tests the RemoteScriptRunner class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteScriptRunnerTest
     {
         [Test]
-        [Description("Checks that it is possible to execute a script that produces no output.")]
         public void ExecuteWithoutOutput()
         {
             var projects = new Mock<ILinkScriptsToProjects>();
@@ -46,7 +44,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that output from a script is correctly reported.")]
         public void ExecuteWithOutput()
         {
             var projects = new Mock<ILinkScriptsToProjects>();
@@ -65,7 +62,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that executing a script with syntax errors throws an exception.")]
         public void ExecuteWithExecutionFailure()
         {
             var projects = new Mock<ILinkScriptsToProjects>();
@@ -83,7 +79,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that a script without syntax errors passes verification.")]
         public void VerifySyntaxWithoutSyntaxErrors()
         {
             var projects = new Mock<ILinkScriptsToProjects>();
@@ -101,7 +96,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that a single syntax error is detected and reported correctly.")]
         public void VerifySyntaxWithSingleSyntaxError()
         {
             var projects = new Mock<ILinkScriptsToProjects>();
@@ -124,7 +118,6 @@ namespace Apollo.UI.Scripting
         }
 
         [Test]
-        [Description("Checks that multiple syntax errors are detected and reported correctly.")]
         public void VerifySyntaxWithMultipleSyntaxErrors()
         {
             var projects = new Mock<ILinkScriptsToProjects>();

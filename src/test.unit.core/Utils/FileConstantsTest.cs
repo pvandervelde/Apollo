@@ -13,13 +13,11 @@ using MbUnit.Framework;
 namespace Apollo.Core.Utilities
 {
     [TestFixture]
-    [Description("Tests the FusionHelper class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class FileConstantsTest
     {
         [Test]
-        [Description("Checks that the ProductSettingsPath method returns the correct path.")]
         public void ProductSettingsPath()
         {
             var applicationConstants = new ApplicationConstants();
@@ -33,7 +31,6 @@ namespace Apollo.Core.Utilities
         }
 
         [Test]
-        [Description("Checks that the LogPath method returns the correct path.")]
         public void LogPath()
         {
             var applicationConstants = new ApplicationConstants();

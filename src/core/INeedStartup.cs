@@ -18,7 +18,7 @@ namespace Apollo.Core
         /// <summary>
         /// The event that is fired when there is an update in the startup process.
         /// </summary>
-        event EventHandler<StartupProgressEventArgs> OnStartupProgress;
+        event EventHandler<ProgressEventArgs> OnStartupProgress;
 
         /// <summary>
         /// Starts the process.

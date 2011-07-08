@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Apollo.Core.UserInterfaces.Application
@@ -22,8 +21,6 @@ namespace Apollo.Core.UserInterfaces.Application
         /// This was made static because it is highly unlikely that this value will
         /// change during the execution of the application.
         /// </design>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "sCore",
-            Justification = "s_ is the default prefix for static member variables.")]
         private static readonly Version s_CoreVersion = DetermineCoreVersion();
 
         /// <summary>

@@ -12,13 +12,11 @@ using MbUnit.Framework;
 namespace Apollo.Base.Communication
 {
     [TestFixture]
-    [Description("Tests the ManualDiscoverySource class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ManualDiscoverySourceTest
     {
         [Test]
-        [Description("Checks that no discovery events take place before the discovery is started.")]
         public void StartDiscovery()
         {
             var source = new ManualDiscoverySource();
@@ -50,7 +48,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that no discovery events take place after the discovery is stopped.")]
         public void EndDiscovery()
         {
             var source = new ManualDiscoverySource();
@@ -88,7 +85,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the OnEndpointBecomingAvailable event is fired if an endpoint connects.")]
         public void RecentlyConnectedEndpoint()
         {
             var source = new ManualDiscoverySource();
@@ -116,7 +112,6 @@ namespace Apollo.Base.Communication
         }
 
         [Test]
-        [Description("Checks that the OnEndpointBecomingUnavailable event is fired if an endpoint disconnects.")]
         public void RecentlyDisconnectedEndpoint()
         {
             var source = new ManualDiscoverySource();

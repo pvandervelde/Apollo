@@ -11,15 +11,6 @@ using System.Globalization;
 using System.Threading;
 using Apollo.Utilities;
 
-// Surpressing the message could not be done on the constructor or the field so we'll do a module 
-// level supressing of this warning.
-// The reason we're initializing the field is for clarity reasons. We explicityly
-// want to show that the field has to be zero, otherwise the generation of ID numbers will fail.
-[module: SuppressMessage("Microsoft.Performance", "CA1805:DoNotInitializeUnnecessarily",
-   Scope = "member",
-   Target = "Apollo.Core.Base.Projects.DatasetId.#.cctor()",
-   Justification = "Initializing the DatasetId.s_LastId member to be explicit about the value required.")]
-
 namespace Apollo.Core.Base
 {
     /// <summary>
@@ -78,7 +69,7 @@ namespace Apollo.Core.Base
         /// Initializes a new instance of the <see cref="DatasetId"/> class with the given integer as ID number.
         /// </summary>
         /// <param name="id">The ID number. Must be larger than -1.</param>
-        private DatasetId(int id)
+        internal DatasetId(int id)
             : base(id)
         {
             Debug.Assert(id > InvalidId, "The ID number should not be invalid"); 

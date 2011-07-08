@@ -12,13 +12,11 @@ using Moq;
 namespace Apollo.Core
 {
     [TestFixture]
-    [Description("Tests the CoreProxy class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class CoreProxyTest
     {
         [Test]
-        [Description("Checks that the object returns the correct names for services to which it should be connected.")]
         public void ServicesToConnectTo()
         {
             var service = new CoreProxy(new Mock<IKernel>().Object);
@@ -26,7 +24,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that ShutdownRequestMessage is handled correctly when the kernel is unable to stop yet it is forced too.")]
         public void Shutdown()
         {
             bool wasShutdown = false;
@@ -46,7 +43,6 @@ namespace Apollo.Core
         }
 
         [Test]
-        [Description("Checks that ApplicationShutdownCapabilityRequestMessage is handled correctly.")]
         public void NotifyServicesOfStartupCompletion()
         {
             var kernel = new Mock<IKernel>();

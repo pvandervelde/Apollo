@@ -13,13 +13,11 @@ using Moq;
 namespace Apollo.Core.UserInterfaces.Projects
 {
     [TestFixture]
-    [Description("Tests the CreateProjectCommand class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
             Justification = "Unit tests do not need documentation.")]
     public sealed class CreateProjectCommandTest
     {
         [Test]
-        [Description("Checks that the command can be invoked successfully.")]
         public void Invoke()
         {
             Func<IProject> function = () =>

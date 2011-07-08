@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Lokad;
@@ -21,8 +20,6 @@ namespace Apollo.Core.Base
         /// <summary>
         /// The ID number of the dataset.
         /// </summary>
-        [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "mId",
-            Justification = "Eh duh.")]
         private readonly DatasetId m_Id;
 
         /// <summary>

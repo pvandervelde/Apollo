@@ -14,7 +14,7 @@ namespace Apollo.Core.Base.Communication
     /// Stores the information required to contact a given WCF endpoint on a specific machine.
     /// </summary>
     [Serializable]
-    internal sealed class ChannelConnectionInformation
+    public sealed class ChannelConnectionInformation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ChannelConnectionInformation"/> class.

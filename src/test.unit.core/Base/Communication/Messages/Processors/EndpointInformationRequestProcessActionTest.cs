@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
@@ -17,13 +18,11 @@ using Moq;
 namespace Apollo.Base.Communication.Messages.Processors
 {
     [TestFixture]
-    [Description("Tests the EndpointInformationRequestProcessAction class.")]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
     public sealed class EndpointInformationRequestProcessActionTest
     {
         [Test]
-        [Description("Checks that the object processes the correct message type.")]
         public void MessageTypeToProcess()
         {
             var endpoint = new EndpointId("id");
@@ -36,12 +35,11 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void Invoke()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -71,18 +69,17 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             var responseMsg = storedMsg as EndpointInformationResponseMessage;
             Assert.AreElementsEqual(
-                new List<ISerializedType> { CommandSetProxyExtensions.FromType(typeof(ICommunicationChannelCommands)) }, 
+                new List<ISerializedType> { CommandSetProxyExtensions.FromType(typeof(IHostCommands)) }, 
                 responseMsg.Commands, 
                 (x, y) => x.Equals(y));
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailingResponse()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -117,12 +114,11 @@ namespace Apollo.Base.Communication.Messages.Processors
         }
 
         [Test]
-        [Description("Checks that the message is processed correctly.")]
         public void InvokeWithFailedChannel()
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(ICommunicationChannelCommands), new Mock<ICommunicationChannelCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");

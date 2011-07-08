@@ -4,7 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -16,23 +16,9 @@ namespace Apollo.Core.Base.Communication
     /// The <see cref="RemoteCommandHub"/> will generate a proxy object for all the command sets
     /// available on a given endpoint.
     /// </design>
+    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
+        Justification = "This interface is used as marker interface for sets of commands.")]
     public interface ICommandSet
     {
-        /// <summary>
-        /// An event raised when the endpoint to which the commandset belongs
-        /// becomes available or unavailable.
-        /// </summary>
-        /// <remarks>
-        /// Note that changes in availability do not mean that the endpoint has
-        /// permanently been terminated (although that may be the case). It merely
-        /// means that the endpoint is temporarily not available.
-        /// </remarks>
-        event EventHandler<CommandSetAvailabilityEventArgs> OnAvailabilityChange;
-
-        /// <summary>
-        /// An event raised when the endpoint to which the command set belongs
-        /// becomes invalid.
-        /// </summary>
-        event EventHandler<EventArgs> OnTerminated;
     }
 }

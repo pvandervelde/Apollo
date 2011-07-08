@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 
 namespace Apollo.Utilities.ExceptionHandling
@@ -14,6 +15,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// Defines methods that map an <see cref="Exception"/> to an ID number for error reporting
     /// purposes.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class ExceptionTypeToEventIdMap
     {
         /// <summary>

@@ -15,6 +15,7 @@ using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
 using Autofac.Core;
+using AutofacContrib.Startable;
 
 namespace Apollo.Core.Base
 {
@@ -43,34 +44,32 @@ namespace Apollo.Core.Base
             args.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
-        private static void RegisterCommunicationComponents(ContainerBuilder builder)
+        private static void RegisterUtilities(ContainerBuilder builder)
         {
-            RegisterCommandHub(builder);
-            RegisterCommunicationLayer(builder);
-            RegisterDiscoverySources(builder);
-            RegisterMessageHandler(builder);
-            RegisterMessageProcessingActions(builder);
-            RegisterCommunicationChannel(builder);
-            RegisterEndpoints(builder);
-            RegisterChannelTypes(builder);
+            builder.Register(c => new CommunicationConstants())
+                .As<ICommunicationConstants>();
         }
 
         private static void RegisterCommandHub(ContainerBuilder builder)
         {
             builder.Register(c => new RemoteCommandHub(
                     c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<IReportNewCommands>(),
                     c.Resolve<CommandProxyBuilder>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<ISendCommandsToRemoteEndpoints>()
                 .SingleInstance();
 
             builder.Register(c => new CommandProxyBuilder(
-                c.Resolve<ICommunicationLayer>().Id,
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                 (endpoint, msg) =>
                 {
                     return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                }));
+                },
+                c.Resolve<Action<LogSeverityProxy, string>>()));
 
-            builder.Register(c => new LocalCommandCollection())
+            builder.Register(c => new LocalCommandCollection(
+                    c.Resolve<ICommunicationLayer>()))
                 .As<ICommandCollection>()
                 .SingleInstance();
         }
@@ -90,10 +89,13 @@ namespace Apollo.Core.Base
                 .SingleInstance();
         }
 
-        private static void RegisterDiscoverySources(ContainerBuilder builder)
+        private static void RegisterEndpointDiscoverySources(ContainerBuilder builder, bool allowChannelDiscovery)
         {
-            builder.Register(c => new TcpBasedDiscoverySource())
-                .As<IDiscoverOtherServices>();
+            if (allowChannelDiscovery)
+            {
+                builder.Register(c => new TcpBasedDiscoverySource())
+                    .As<IDiscoverOtherServices>();
+            }
 
             // For now we're marking this as a single instance because
             // we want it to be linked to the CommunicationLayer at all times
@@ -104,6 +106,30 @@ namespace Apollo.Core.Base
                 .As<IDiscoverOtherServices>()
                 .As<IAcceptExternalEndpointInformation>()
                 .SingleInstance();
+
+            // This function is used to resolve connection information from
+            // a set of strings.
+            builder.Register<Action<string, string, string>>(c =>
+                (id, channelType, address) =>
+                {
+                    c.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
+                        EndpointIdExtensions.Deserialize(id),
+                        Type.GetType(channelType, null, null, true, false),
+                        new Uri(address));
+                });
+        }
+
+        private static void RegisterCommandDiscoverySources(ContainerBuilder builder)
+        {
+            // For now we're marking this as a single instance because
+            // we want it to be linked to the RemoteCommandHub at all times
+            // and yet we want to be able to give it out to users without 
+            // having to worry if we have given out the correct instance. Maybe
+            // there is a cleaner solution to this problem though ...
+            builder.Register(c => new ManualCommandRegistrationReporter())
+                .As<IAceptExternalCommandInformation>()
+                .As<IReportNewCommands>()
+                .SingleInstance();
         }
 
         private static void RegisterMessageHandler(ContainerBuilder builder)
@@ -111,7 +137,8 @@ namespace Apollo.Core.Base
             // Note that there is no direct relation between the IChannelType and the MessageHandler
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
             // we pretend that there is a connection between IChannelType and the MessageHandler.
-            builder.Register(c => new MessageHandler())
+            builder.Register(c => new MessageHandler(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -120,7 +147,8 @@ namespace Apollo.Core.Base
                 .Keyed<IDirectIncomingMessages>(typeof(NamedPipeChannelType))
                 .SingleInstance();
 
-            builder.Register(c => new MessageHandler())
+            builder.Register(c => new MessageHandler(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -136,24 +164,34 @@ namespace Apollo.Core.Base
             // and then throw those objects away. If this turns out to be too expensive
             // or the list becomes too long then we can do something cunning with the 
             // use of Autofac Metadata.
+            builder.Register(c => new CommandInvokedProcessAction(
+                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                    c.Resolve<ICommandCollection>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new DataDownloadProcessAction(
+                    c.Resolve<WaitingUploads>(),
+                    c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<IMessageProcessAction>();
+
             builder.Register(c => new EndpointConnectProcessAction(
                     c.Resolve<IAcceptExternalEndpointInformation>(),
                     from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
 
-            builder.Register(c => new CommandInvokedProcessAction(
-                    c.Resolve<ICommunicationLayer>().Id,
+            builder.Register(c => new EndpointInformationRequestProcessAction(
+                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                     (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                     c.Resolve<ICommandCollection>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
 
-            builder.Register(c => new EndpointInformationRequestProcessAction(
-                    c.Resolve<ICommunicationLayer>().Id,
-                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                    c.Resolve<ICommandCollection>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(c => new NewCommandRegisteredProcessAction(
+                    c.Resolve<IAceptExternalCommandInformation>()))
                 .As<IMessageProcessAction>();
         }
 
@@ -173,6 +211,7 @@ namespace Apollo.Core.Base
                                 typeof(Func<EndpointId, IChannelProxy>),
                                 endpointToProxy));
                     },
+                    () => DateTimeOffset.Now,
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
@@ -192,6 +231,7 @@ namespace Apollo.Core.Base
                                 typeof(Func<EndpointId, IChannelProxy>),
                                 endpointToProxy));
                     },
+                    () => DateTimeOffset.Now,
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .OnActivated(a =>
                 {
@@ -207,11 +247,12 @@ namespace Apollo.Core.Base
                     p.TypedAs<Func<EndpointId, IChannelProxy>>()))
                 .As<ISendingEndpoint>();
 
-            builder.Register(c => new ReceivingEndpoint())
+            builder.Register(c => new ReceivingEndpoint(
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessagePipe>();
         }
 
-        private static void RegisterChannelTypes(ContainerBuilder builder)
+        private static void RegisterChannelTypes(ContainerBuilder builder, bool allowChannelDiscovery)
         {
             builder.Register(c => new NamedPipeChannelType(
                     c.Resolve<IConfiguration>()))
@@ -219,14 +260,43 @@ namespace Apollo.Core.Base
                 .As<NamedPipeChannelType>();
 
             builder.Register(c => new TcpChannelType(
-                    c.Resolve<IConfiguration>()))
+                    c.Resolve<IConfiguration>(),
+                    allowChannelDiscovery))
                 .As<IChannelType>()
                 .As<TcpChannelType>();
         }
 
-        private static void RegisterLoaderComponents(ContainerBuilder builder)
+        private static void RegisterUploads(ContainerBuilder builder)
         {
-            // DatasetLoader
+            builder.Register(c => new WaitingUploads())
+                .SingleInstance();
+        }
+
+        private static void RegisterStartables(ContainerBuilder builder)
+        {
+            builder.Register(c => new CommunicationLayerStarter(
+                    c.Resolve<ICommunicationLayer>()))
+                .As<ILoadOnApplicationStartup>();
+            
+            builder.RegisterModule(new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
+        }
+
+        /// <summary>
+        /// Indicates if the communication channels are allowed to provide discovery.
+        /// </summary>
+        private readonly bool m_AllowChannelDiscovery;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseModule"/> class.
+        /// </summary>
+        /// <param name="allowChannelDiscovery">
+        ///     A flag that indicates if the communication channels are allowed to provide
+        ///     discovery.
+        /// </param>
+        public BaseModule(bool allowChannelDiscovery)
+            : base()
+        {
+            m_AllowChannelDiscovery = allowChannelDiscovery;
         }
 
         /// <summary>
@@ -237,8 +307,18 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            RegisterCommunicationComponents(builder);
-            RegisterLoaderComponents(builder);
+            RegisterUtilities(builder);
+            RegisterCommandHub(builder);
+            RegisterCommunicationLayer(builder);
+            RegisterEndpointDiscoverySources(builder, m_AllowChannelDiscovery);
+            RegisterCommandDiscoverySources(builder);
+            RegisterMessageHandler(builder);
+            RegisterMessageProcessingActions(builder);
+            RegisterCommunicationChannel(builder);
+            RegisterEndpoints(builder);
+            RegisterChannelTypes(builder, m_AllowChannelDiscovery);
+            RegisterUploads(builder);
+            RegisterStartables(builder);
         }
     }
 }

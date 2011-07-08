@@ -21,27 +21,6 @@ namespace Apollo.Base.Communication
             Justification = "Unit tests do not need documentation.")]
         public sealed class MockCommandSetNotAnInterface : ICommandSet
         {
-            public event EventHandler<CommandSetAvailabilityEventArgs> OnAvailabilityChange;
-
-            private void RaiseOnAvailabilityChange()
-            {
-                var local = OnAvailabilityChange;
-                if (local != null)
-                {
-                    local(this, new CommandSetAvailabilityEventArgs());
-                }
-            }
-
-            public event EventHandler<EventArgs> OnTerminated;
-
-            private void RaiseOnTerminated()
-            {
-                var local = OnTerminated;
-                if (local != null)
-                {
-                    local(this, EventArgs.Empty);
-                }
-            }
         }
 
         public interface IMockCommandSetWithGenericParameters<T> : ICommandSet
@@ -104,6 +83,12 @@ namespace Apollo.Base.Communication
         public interface IMockCommandSetWithTypedTaskReturn : ICommandSet
         {
             Task<int> MyMethod(int input);
+        }
+
+        [InternalCommand]
+        public interface IMockCommandSetForInternalUse : ICommandSet
+        {
+            Task MyInternalMethod();
         }
     }
 }

@@ -6,7 +6,6 @@
 
 using System;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace Apollo.Utilities
@@ -23,8 +22,6 @@ namespace Apollo.Utilities
         /// <returns>
         /// The calling assembly.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate",
-            Justification = "This member is potentially expensive to invoke and should thus be a method, not a property.")]
         private static Assembly GetAssembly()
         {
             return Assembly.GetEntryAssembly();
@@ -37,8 +34,6 @@ namespace Apollo.Utilities
         /// <returns>
         /// The requested attribute.
         /// </returns>
-        [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter",
-            Justification = "The type parameter indicates which attribute we're looking for.")]
         private static T GetAttributeFromAssembly<T>() where T : Attribute
         {
             var attributes = GetAssembly().GetCustomAttributes(typeof(T), false);
