@@ -965,48 +965,75 @@ task buildPackage -depends buildBinaries -action{
         Copy-Item $file.FullName -Destination $newFilePath -Force
     }
     
-    # Copy the dependencies
-    $lokadFile = 'Lokad.Shared.dll'
-    Copy-Item (Join-Path $props.dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
-   
+	# Copy the dependencies
     $autofacFile = 'Autofac.dll'
     Copy-Item (Join-Path $props.dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
     
     $autofacStartableFile = 'AutofacContrib.Startable.dll'
     Copy-Item (Join-Path $props.dirOutput $autofacStartableFile) -Destination (Join-Path $dirTempZip $autofacStartableFile)
-    
-    $quickgraph = 'QuickGraph.dll'
-    Copy-Item (Join-Path $props.dirOutput $quickgraph) -Destination (Join-Path $dirTempZip $quickgraph)    
-    
-    $nlog = 'NLog.dll'
-    Copy-Item (Join-Path $props.dirOutput $nlog) -Destination (Join-Path $dirTempZip $nlog)    
-    
-    $prismFile = 'Microsoft.Practices.Prism.dll'
-    Copy-Item (Join-Path $props.dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
-    
-    $prismInteractivityFile = 'Microsoft.Practices.Prism.Interactivity.dll'
-    Copy-Item (Join-Path $props.dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
-    
-    $serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
-    Copy-Item (Join-Path $props.dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
-    
-    $graphSharpFile = 'GraphSharp.dll'
+	
+	$castleCoreFile = 'Castle.Core.dll'
+    Copy-Item (Join-Path $props.dirOutput $castleCoreFile) -Destination (Join-Path $dirTempZip $castleCoreFile)
+	
+	$graphSharpFile = 'GraphSharp.dll'
     Copy-Item (Join-Path $props.dirOutput $graphSharpFile) -Destination (Join-Path $dirTempZip $graphSharpFile)
     
     $graphSharpControlsFile = 'GraphSharp.Controls.dll'
     Copy-Item (Join-Path $props.dirOutput $graphSharpControlsFile) -Destination (Join-Path $dirTempZip $graphSharpControlsFile)
-    
-    $wpfExtensionsFile = 'WPFExtensions.dll'
-    Copy-Item (Join-Path $props.dirOutput $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
-    
-    $greyableImageFile = 'GreyableImage.dll'
+	
+	$greyableImageFile = 'GreyableImage.dll'
     Copy-Item (Join-Path $props.dirOutput $greyableImageFile) -Destination (Join-Path $dirTempZip $greyableImageFile)
+	
+	$icSharpCodeAvalonEditFile = 'ICSharpCode.AvalonEdit.dll'
+    Copy-Item (Join-Path $props.dirOutput $icSharpCodeAvalonEditFile) -Destination (Join-Path $dirTempZip $icSharpCodeAvalonEditFile)
+	
+	$IronPythonFile = 'IronPython.dll'
+    Copy-Item (Join-Path $props.dirOutput $IronPythonFile) -Destination (Join-Path $dirTempZip $IronPythonFile)
+	
+	$lokadFile = 'Lokad.Shared.dll'
+    Copy-Item (Join-Path $props.dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
+	
+    $microsoftDynamicFile = 'Microsoft.Dynamic.dll'
+    Copy-Item (Join-Path $props.dirOutput $microsoftDynamicFile) -Destination (Join-Path $dirTempZip $microsoftDynamicFile)
     
-    $pixelLabCommonFile = 'PixelLab.Common.dll'
+	$prismFile = 'Microsoft.Practices.Prism.dll'
+    Copy-Item (Join-Path $props.dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
+    
+    $prismInteractivityFile = 'Microsoft.Practices.Prism.Interactivity.dll'
+    Copy-Item (Join-Path $props.dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
+	
+	$serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
+    Copy-Item (Join-Path $props.dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
+	
+	$microsoftScriptingFile = 'Microsoft.Scripting.dll'
+    Copy-Item (Join-Path $props.dirOutput $microsoftScriptingFile) -Destination (Join-Path $dirTempZip $microsoftScriptingFile)
+	
+	$monoOptionsFile = 'Mono.Options.dll'
+    Copy-Item (Join-Path $props.dirOutput $monoOptionsFile) -Destination (Join-Path $dirTempZip $monoOptionsFile)
+	
+    $nlogFile = 'NLog.dll'
+    Copy-Item (Join-Path $props.dirOutput $nlogFile) -Destination (Join-Path $dirTempZip $nlogFile)    
+    
+    $ognlFile = 'OGNL.dll'
+    Copy-Item (Join-Path $props.dirOutput $ognlFile) -Destination (Join-Path $dirTempZip $ognlFile)
+	
+	$pixelLabCommonFile = 'PixelLab.Common.dll'
     Copy-Item (Join-Path $props.dirOutput $pixelLabCommonFile) -Destination (Join-Path $dirTempZip $pixelLabCommonFile)
     
     $pixelLabWpfFile = 'PixelLab.Wpf.dll'
     Copy-Item (Join-Path $props.dirOutput $pixelLabWpfFile) -Destination (Join-Path $dirTempZip $pixelLabWpfFile)
+	
+	$quickgraphFile = 'QuickGraph.dll'
+    Copy-Item (Join-Path $props.dirOutput $quickgraphFile) -Destination (Join-Path $dirTempZip $quickgraphFile)    
+    
+    $systemCoreExFile = 'System.CoreEx.dll'
+    Copy-Item (Join-Path $props.dirOutput $systemCoreExFile) -Destination (Join-Path $dirTempZip $systemCoreExFile)    
+    
+    $systemReactiveFile = 'System.Reactive.dll'
+    Copy-Item (Join-Path $props.dirOutput $systemReactiveFile) -Destination (Join-Path $dirTempZip $systemReactiveFile)
+    
+    $wpfExtensionsFile = 'WPFExtensions.dll'
+    Copy-Item (Join-Path $props.dirOutput $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
     
     $wpfLocalizationFile = 'WPFLocalizeExtension.dll'
     Copy-Item (Join-Path $props.dirOutput $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
@@ -1040,7 +1067,7 @@ task assembleInstaller -depends buildBinaries -action{
     
     $logPath = Join-Path $props.dirLogs $props.logMsiBuild
     
-    #"Building 32-bit Apollo installer"
+    "Building 32-bit Apollo installer"
     $msbuildExe = Get-MsbuildExe
     Invoke-MsBuild $props.slnApolloWix 'release' $logPath 'normal' ("platform='x86'") $false
 

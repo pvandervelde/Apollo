@@ -29,11 +29,6 @@
       <HintPath>..\..\lib\scripting\IronPython.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\scripting\IronPython.Modules.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
