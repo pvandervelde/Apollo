@@ -7,8 +7,8 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
 using Apollo.Core;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
@@ -50,16 +50,24 @@ namespace Apollo.ProjectExplorer
         private readonly IContainer m_Container;
 
         /// <summary>
+        /// The reset event that is used to signal the application that it is safe to shut down.
+        /// </summary>
+        private readonly AutoResetEvent m_ResetEvent;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProjectExplorerModule"/> class.
         /// </summary>
         /// <param name="container">The IOC container that will hold the references.</param>
-        public ProjectExplorerModule(IContainer container)
+        /// <param name="resetEvent">The reset event that is used to signal the application that it is safe to shut down.</param>
+        public ProjectExplorerModule(IContainer container, AutoResetEvent resetEvent)
         {
             {
                 Debug.Assert(container != null, "The container should exist.");
+                Debug.Assert(resetEvent != null, "The reset event should exist.");
             }
 
             m_Container = container;
+            m_ResetEvent = resetEvent;
         }
 
         #region Implementation of IModule
@@ -160,15 +168,18 @@ namespace Apollo.ProjectExplorer
                     notificationNames.SystemShuttingDown,
                     obj =>
                     {
-                        var app = Application.Current;
-                        if (app.Dispatcher.CheckAccess())
-                        {
-                            app.Shutdown();
-                        }
-                        else
-                        {
-                            app.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(app.Shutdown));
-                        }
+                        // Shut down is rather yucky. It turns out that
+                        // app.Shutdown() is async (the documentation doesn't tell you that)
+                        // so we have to find a way to wait for it to be done. Enter yuckiness.
+                        var app = (App)Application.Current;
+                        Action action =
+                            () =>
+                            {
+                                m_ResetEvent.WaitOne();
+                                app.Shutdown();
+                            };
+
+                        app.Dispatcher.BeginInvoke(action);
                     });
             }
         }

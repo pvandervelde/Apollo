@@ -26,10 +26,9 @@ namespace Apollo.Base.Loaders
         Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteDatasetDistributorTest
     {
-        [Test]
-        public void ProposeDistributionFor()
+        private DatasetOfflineInformation CreateOfflineInfo()
         {
-            var offlineInfo = new DatasetOfflineInformation(
+            return new DatasetOfflineInformation(
                 new DatasetId(),
                 new DatasetCreationInformation()
                 {
@@ -40,6 +39,14 @@ namespace Apollo.Base.Loaders
                     CanBeDeleted = true,
                     LoadFrom = new Mock<IPersistenceInformation>().Object,
                 });
+        }
+
+        [Test]
+        public void ProposeDistributionFor()
+        {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var offlineInfo = CreateOfflineInfo();
             var result = new DatasetLoadingProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
@@ -56,7 +63,8 @@ namespace Apollo.Base.Loaders
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -104,6 +112,15 @@ namespace Apollo.Base.Loaders
                 hub.Object,
                 config.Object,
                 new WaitingUploads(),
+                (d, e, n) =>
+                {
+                    return new DatasetOnlineInformation(
+                        d,
+                        e,
+                        n,
+                        hub.Object,
+                        logger);
+                },
                 channelInfo,
                 new CurrentThreadTaskScheduler());
 
@@ -143,6 +160,8 @@ namespace Apollo.Base.Loaders
         [Test]
         public void ImplementPlan()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var filePath = @"c:\temp\myfile.txt";
             var storage = new Mock<IPersistenceInformation>();
             {
@@ -157,7 +176,8 @@ namespace Apollo.Base.Loaders
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -228,6 +248,15 @@ namespace Apollo.Base.Loaders
                 hub.Object,
                 config.Object,
                 new WaitingUploads(),
+                (d, e, n) =>
+                {
+                    return new DatasetOnlineInformation(
+                        d,
+                        e,
+                        n,
+                        hub.Object,
+                        logger);
+                },
                 channelInfo,
                 new CurrentThreadTaskScheduler());
 

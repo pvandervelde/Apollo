@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Threading;
 using Apollo.Utilities;
 using Autofac.Core;
 
@@ -41,6 +42,7 @@ namespace Test.Spec
             var bootstrapper = new KernelBootstrapper(
                 new BootstrapperStartInfo(),
                 progressTracker,
+                new AutoResetEvent(false),
                 onKernelLoad);
 
             // Load the kernel

@@ -245,7 +245,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             // Unfortunately we can't get to those tasks so we'll have to sleep the thread.
             // And because we are throwing exceptions we can't really define a good place to put a reset event either :(
             // SpinWait.SpinUntil(() => { }, 100);
-            Assert.AreEqual(2, count);
+            Assert.AreEqual(4, count);
             actionObject.Verify(a => a.MethodWithoutReturnValue(It.IsAny<int>()), Times.Once());
         }
     }

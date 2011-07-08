@@ -35,7 +35,16 @@ namespace Apollo.Core.Base.Communication
         {
             Action action = () =>
             {
-                inputTask.Wait();
+                try
+                {
+                    inputTask.Wait();
+                }
+                catch (AggregateException e)
+                {
+                    throw new CommandInvocationFailedException(
+                        Resources.Exceptions_Messages_CommandInvocationFailed,
+                        e);
+                }
 
                 var successMsg = inputTask.Result as SuccessMessage;
                 if (successMsg != null)

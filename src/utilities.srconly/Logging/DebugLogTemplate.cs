@@ -85,7 +85,12 @@ namespace Apollo.Utilities.Logging
                 Enforce.Argument(() => message);
             }
 
-            return string.Format(CultureInfo.CurrentCulture, DebugLogFormat, m_GetCurrentTime(), message.Level, message.Text());
+            return string.Format(
+                CultureInfo.CurrentCulture, 
+                DebugLogFormat, 
+                m_GetCurrentTime().ToString("yyyy/MM/ddTHH:mm:ss.fffff zzz", CultureInfo.CurrentCulture), 
+                message.Level, 
+                message.Text());
         }
 
         /// <summary>

@@ -160,6 +160,14 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             var invocation = msg.Invocation;
+            m_Logger(
+                LogSeverityProxy.Trace,
+                string.Format(
+                    CultureInfo.InvariantCulture,
+                    "Received request to execute command: {0}.{1}",
+                    invocation.CommandSet,
+                    invocation.MemberName));
+
             Task result = null;
             try
             {
@@ -208,10 +216,21 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                         "There should either be zero or one generic argument.");
                     if (genericArguments.Length == 0)
                     {
+                        m_Logger(
+                        LogSeverityProxy.Trace,
+                        "Returning Task value.");
+
                         returnMsg = new TaskReturn().HandleTaskReturnValue(m_Current, msg, result);
                     }
                     else
                     {
+                        m_Logger(
+                        LogSeverityProxy.Trace,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "Returning Task<T> value. T is {0}",
+                            genericArguments[0]));
+
                         // The result is Task<T>. This is where things are about to get very messy
                         // We need to use the HandleTaskReturnValue(EndpointId, MessageId, Task<T>) method to get our message
                         //

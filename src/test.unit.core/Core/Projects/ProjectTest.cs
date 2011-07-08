@@ -27,13 +27,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void Create()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object), 
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger), 
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -65,13 +68,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void SaveWithullPersistenceInformation()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -96,13 +102,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void SaveAfterClosing()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -136,13 +145,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void ExportWithNullDatasetId()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -169,13 +181,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void ExportWithUnknownDatasetId()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -202,13 +217,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void ExportWithNullPersistenceInformation()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -236,13 +254,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void ExportAfterClosing()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -284,13 +305,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void Name()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -326,13 +350,16 @@ namespace Apollo.Core.Projects
         [Test]
         public void Summary()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var plan = new DistributionPlan(
                 (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),

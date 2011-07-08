@@ -99,11 +99,29 @@ namespace Apollo.Core.Base
         /// <returns>A task that will finish once the application is closed.</returns>
         public Task Close()
         {
-            return Task.Factory.StartNew(
-                () => m_CloseAction,
+            // This one is tricky. We need to be able to send out the success message
+            // for the shutdown task but we can't do that if we shut down the app,
+            // so we create a fake do-nothing task to send out the command succes result,
+            // then in the attached task we actually shut down. Draw back is that we 
+            // can't report in that there is a problem but there is nothing we can do 
+            // about that.
+            var result = Task.Factory.StartNew(
+                () => { },
                 new CancellationToken(),
                 TaskCreationOptions.None,
                 m_Scheduler);
+
+            result.ContinueWith(
+                t => 
+                {
+                    // Just do this the ugly way. We're about to kill the app anyway
+                    Thread.Sleep(2000);
+                    m_CloseAction();
+                },
+                new CancellationToken(),
+                TaskContinuationOptions.None,
+                m_Scheduler);
+            return result;
         }
 
         /// <summary>

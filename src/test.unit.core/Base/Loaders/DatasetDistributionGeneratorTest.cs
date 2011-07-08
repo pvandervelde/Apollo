@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
@@ -26,6 +27,8 @@ namespace Apollo.Base.Loaders
         [Test]
         public void ProposeDistributionFor()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
             var first = new Mock<IGenerateDistributionProposals>();
             {
                 first.Setup(p => p.ProposeDistributionFor(It.IsAny<DatasetRequest>(), It.IsAny<CancellationToken>()))
@@ -38,7 +41,8 @@ namespace Apollo.Base.Loaders
                                         new DatasetId(),
                                         new EndpointId("id"),
                                         new NetworkIdentifier("machine"),
-                                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                                        logger),
                                     t,
                                     TaskCreationOptions.None,
                                     new CurrentThreadTaskScheduler()),
@@ -71,7 +75,8 @@ namespace Apollo.Base.Loaders
                                         new DatasetId(),
                                         new EndpointId("id"),
                                         new NetworkIdentifier("machine"),
-                                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                                        logger),
                                     t,
                                     TaskCreationOptions.None,
                                     new CurrentThreadTaskScheduler()),

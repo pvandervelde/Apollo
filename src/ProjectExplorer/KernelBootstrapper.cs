@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Apollo.Core;
 using Apollo.Core.Base;
 using Apollo.Utilities;
@@ -41,6 +42,7 @@ namespace Apollo.ProjectExplorer
         /// </summary>
         /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
+        /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
         /// <param name="containerStorage">The function used to store the DI container which holds the kernel UI references.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="startInfo"/> is <see langword="null"/>.
@@ -49,13 +51,17 @@ namespace Apollo.ProjectExplorer
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="containerStorage"/> is <see langword="null"/>.
         /// </exception>
         public KernelBootstrapper(
             KernelStartInfo startInfo, 
             ITrackProgress progress,
+            AutoResetEvent shutdownEvent,
             Action<IModule> containerStorage)
-            : base(startInfo, progress)
+            : base(startInfo, progress, shutdownEvent)
         {
             {
                 Enforce.Argument(() => containerStorage);

@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Apollo.UI.Common.Bootstrappers;
 using Autofac;
 using Lokad;
@@ -33,9 +34,14 @@ namespace Apollo.ProjectExplorer
     internal sealed class UserInterfaceBootstrapper : CompositeBootstrapper
     {
         /// <summary>
-        /// The IOC container.
+        /// The IOC container that contains the UI controls.
         /// </summary>
-        private readonly IContainer m_IocContainer;
+        private readonly IContainer m_ShellIocContainer;
+
+        /// <summary>
+        /// The reset event that is used to signal the application that it is safe to shut down.
+        /// </summary>
+        private readonly AutoResetEvent m_ResetEvent;
 
         /// <summary>
         /// The default logger. To be replaced by the proper one.
@@ -45,18 +51,24 @@ namespace Apollo.ProjectExplorer
         /// <summary>
         /// Initializes a new instance of the <see cref="UserInterfaceBootstrapper"/> class.
         /// </summary>
-        /// <param name="container">The container.</param>
+        /// <param name="container">The container that contains the UI controls.</param>
+        /// <param name="resetEvent">The reset event used to indicate to the application that it is safe to shut down.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="container"/> is <see langword="null" />.
         /// </exception>
-        public UserInterfaceBootstrapper(IContainer container)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="resetEvent"/> is <see langword="null" />.
+        /// </exception>
+        public UserInterfaceBootstrapper(IContainer container, AutoResetEvent resetEvent)
             : base(new AutofacContainerAdapter(container), new ModuleCatalog().AddModule(typeof(ProjectExplorerModule)))
         {
             {
                 Enforce.Argument(() => container);
+                Enforce.Argument(() => resetEvent);
             }
 
-            m_IocContainer = container;
+            m_ShellIocContainer = container;
+            m_ResetEvent = resetEvent;
         }
 
         #region Overrides of CompositeBootstrapper
@@ -92,11 +104,15 @@ namespace Apollo.ProjectExplorer
         {
             var builder = new ContainerBuilder();
             {
+                builder.Register(c => m_ResetEvent)
+                    .As<AutoResetEvent>()
+                    .ExternallyOwned();
+
                 // Note that this 'module' is a Prism module, not an Autofac one!
                 builder.RegisterType<ProjectExplorerModule>();
             }
             
-            builder.Update(m_IocContainer);
+            builder.Update(m_ShellIocContainer);
         }
 
         #endregion

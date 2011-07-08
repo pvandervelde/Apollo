@@ -33,8 +33,8 @@ namespace Apollo.Core.Logging
 
             var expectedText = string.Format(
                 CultureInfo.CurrentCulture, 
-                DebugLogTemplate.DebugLogFormat, 
-                GetDefaultDateTime(), 
+                DebugLogTemplate.DebugLogFormat,
+                GetDefaultDateTime().ToString("yyyy/MM/ddTHH:mm:ss.fffff zzz", CultureInfo.CurrentCulture), 
                 msg.Level, 
                 msg.Text());
             Assert.AreEqual(expectedText, text);

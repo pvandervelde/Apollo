@@ -81,20 +81,5 @@ namespace Apollo.Core.Base.Communication
         /// <param name="commandType">The type of the command.</param>
         /// <returns>The requested command set.</returns>
         ICommandSet CommandsFor(EndpointId endpoint, Type commandType);
-
-        /// <summary>
-        /// Closes the connection to the given endpoint.
-        /// </summary>
-        /// <remarks>
-        /// Closing the connection to a given endpoint also invalidates
-        /// all commandsets for that endpoint.
-        /// </remarks>
-        /// <param name="endpoint">The ID of the endpoint with which the connection should be closed.</param>
-        void CloseConnectionTo(EndpointId endpoint);
-
-        /// <summary>
-        /// Closes all connections.
-        /// </summary>
-        void CloseConnections();
     }
 }

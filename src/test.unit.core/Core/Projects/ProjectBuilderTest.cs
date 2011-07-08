@@ -33,6 +33,7 @@ namespace Apollo.Core.Projects
         [Test]
         public void BuildWithDistributorOnly()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -41,7 +42,8 @@ namespace Apollo.Core.Projects
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -76,6 +78,7 @@ namespace Apollo.Core.Projects
         [Test]
         public void BuildWithDistributorAndStorage()
         {
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -84,7 +87,8 @@ namespace Apollo.Core.Projects
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),

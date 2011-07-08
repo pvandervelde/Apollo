@@ -58,6 +58,8 @@ namespace Apollo.Core.Dataset
         private static void CloseApplication(IContainer container)
         {
             var context = container.Resolve<ApplicationContext>();
+            
+            container.Dispose();
             context.ExitThread();
         }
     }

@@ -16,13 +16,8 @@ namespace Apollo.Core.Base.Communication
     /// starts.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal sealed class CommunicationLayerStarter : ILoadOnApplicationStartup, IDisposable
+    internal sealed class CommunicationLayerStarter : ILoadOnApplicationStartup
     {
-        /// <summary>
-        /// The object that handles remote commands.
-        /// </summary>
-        private readonly ISendCommandsToRemoteEndpoints m_Hub;
-
         /// <summary>
         /// The communication layer for the application.
         /// </summary>
@@ -31,25 +26,16 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="CommunicationLayerStarter"/> class.
         /// </summary>
-        /// <param name="hub">The object that sends commands to the remote endpoints.</param>
         /// <param name="layer">The communication layer for the application.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
-        public CommunicationLayerStarter(ISendCommandsToRemoteEndpoints hub, ICommunicationLayer layer)
+        public CommunicationLayerStarter(ICommunicationLayer layer)
         {
             {
-                Enforce.Argument(() => hub);
                 Enforce.Argument(() => layer);
             }
 
-            // We need a reference to the hub so that it may be alive 
-            // before we sign in on the layer. That way the hub gets
-            // all the new endpoints etc.
-            m_Hub = hub;
             m_Layer = layer;
         }
 
@@ -59,15 +45,6 @@ namespace Apollo.Core.Base.Communication
         public void Initialize()
         {
             m_Layer.SignIn();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        public void Dispose()
-        {
-            m_Hub.CloseConnections();
-            m_Layer.SignOut();
         }
     }
 }

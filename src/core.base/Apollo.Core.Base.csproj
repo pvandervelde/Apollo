@@ -74,6 +74,7 @@
     <Compile Include="Communication\CommandSetProxySelfReferenceInterceptor.cs" />
     <Compile Include="Communication\CommunicationChannel.cs" />
     <Compile Include="Communication\CommunicationConfigurationKeys.cs" />
+    <Compile Include="Communication\CommunicationConstants.cs" />
     <Compile Include="Communication\CommunicationLayer.cs" />
     <Compile Include="Communication\CommunicationLayerStarter.cs" />
     <Compile Include="Communication\ConnectionInformationEventArgs.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="Communication\FileRegistrationNotFoundException.cs" />
     <Compile Include="Communication\IAceptExternalCommandInformation.cs" />
     <Compile Include="Communication\ICommandCollection.cs" />
+    <Compile Include="Communication\ICommunicationConstants.cs" />
     <Compile Include="Communication\InternalCommandAttribute.cs" />
     <Compile Include="Communication\IReportNewCommands.cs" />
     <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />

@@ -509,36 +509,5 @@ namespace Apollo.Core.Base.Communication
             var result = commandSets[commandType];
             return result as ICommandSet;
         }
-
-        /// <summary>
-        /// Closes the connection to the given endpoint.
-        /// </summary>
-        /// <remarks>
-        /// Closing the connection to a given endpoint also invalidates
-        /// all commandsets for that endpoint.
-        /// </remarks>
-        /// <param name="endpoint">The ID of the endpoint with which the connection should be closed.</param>
-        public void CloseConnectionTo(EndpointId endpoint)
-        {
-            m_Layer.DisconnectFromEndpoint(endpoint);
-        }
-
-        /// <summary>
-        /// Closes all connections.
-        /// </summary>
-        public void CloseConnections()
-        {
-            var endpoints = new List<EndpointId>();
-            lock (m_Lock)
-            {
-                endpoints.AddRange(m_RemoteCommands.Keys);
-                endpoints.AddRange(m_WaitingForCommandInformation);
-            }
-
-            foreach (var endpoint in endpoints)
-            {
-                CloseConnectionTo(endpoint);
-            }
-        }
     }
 }

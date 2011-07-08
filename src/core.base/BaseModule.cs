@@ -44,6 +44,12 @@ namespace Apollo.Core.Base
             args.Instance.OnClosed += (s, e) => handler.OnLocalChannelClosed();
         }
 
+        private static void RegisterUtilities(ContainerBuilder builder)
+        {
+            builder.Register(c => new CommunicationConstants())
+                .As<ICommunicationConstants>();
+        }
+
         private static void RegisterCommandHub(ContainerBuilder builder)
         {
             builder.Register(c => new RemoteCommandHub(
@@ -269,7 +275,6 @@ namespace Apollo.Core.Base
         private static void RegisterStartables(ContainerBuilder builder)
         {
             builder.Register(c => new CommunicationLayerStarter(
-                    c.Resolve<ISendCommandsToRemoteEndpoints>(),
                     c.Resolve<ICommunicationLayer>()))
                 .As<ILoadOnApplicationStartup>();
             
@@ -302,6 +307,7 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
+            RegisterUtilities(builder);
             RegisterCommandHub(builder);
             RegisterCommunicationLayer(builder);
             RegisterEndpointDiscoverySources(builder, m_AllowChannelDiscovery);

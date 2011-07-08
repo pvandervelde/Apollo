@@ -168,6 +168,11 @@ namespace Apollo.Core.Base.Loaders
         private readonly WaitingUploads m_Uploads;
 
         /// <summary>
+        /// The function that returns a <see cref="DatasetOnlineInformation"/>.
+        /// </summary>
+        private readonly Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> m_DatasetInformationBuilder;
+
+        /// <summary>
         /// The function that returns information about the channel on which the connection should be made.
         /// </summary>
         private readonly Func<ChannelConnectionInformation> m_ChannelInformation;
@@ -183,6 +188,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
         /// <param name="configuration">The application specific configuration.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
+        /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
         /// <param name="channelInformation">The function that returns information about the correct channel to use for communication.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
@@ -195,23 +201,29 @@ namespace Apollo.Core.Base.Loaders
         ///     Thrown if <paramref name="uploads"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="datasetInformationBuilder"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
         /// </exception>
         public RemoteDatasetDistributor(
             ISendCommandsToRemoteEndpoints commandHub, 
             IConfiguration configuration,
             WaitingUploads uploads,
+            Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
             Func<ChannelConnectionInformation> channelInformation,
             TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => commandHub);
                 Enforce.Argument(() => configuration);
+                Enforce.Argument(() => datasetInformationBuilder);
                 Enforce.Argument(() => channelInformation);
             }
 
             m_Configuration = configuration;
             m_Uploads = uploads;
+            m_DatasetInformationBuilder = datasetInformationBuilder;
             m_ChannelInformation = channelInformation;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
             m_Hub = commandHub;
@@ -361,11 +373,10 @@ namespace Apollo.Core.Base.Loaders
                         uploadToken);
                     task.Wait();
 
-                    return new DatasetOnlineInformation(
+                    return m_DatasetInformationBuilder(
                         planToImplement.DistributionFor.Id,
                         endpoint,
-                        planToImplement.MachineToDistributeTo,
-                        m_Hub);
+                        planToImplement.MachineToDistributeTo);
                 };
 
             return Task<DatasetOnlineInformation>.Factory.StartNew(

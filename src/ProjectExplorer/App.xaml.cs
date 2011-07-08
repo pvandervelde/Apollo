@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using Apollo.Utilities;
 using Apollo.Utilities.ExceptionHandling;
@@ -19,7 +20,7 @@ namespace Apollo.ProjectExplorer
     /// Interaction logic for App.xaml.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal partial class App
+    internal partial class App : IDisposable
     {
         /// <summary>
         /// Defines the error code for a normal application exit (i.e without errors).
@@ -69,6 +70,12 @@ namespace Apollo.ProjectExplorer
         }
 
         /// <summary>
+        /// The event that is used to signal the application that it is safe to shut down.
+        /// </summary>
+        private readonly AutoResetEvent m_ShutdownEvent
+            = new AutoResetEvent(false);
+
+        /// <summary>
         /// Called when the application starts.
         /// </summary>
         /// <param name="sender">The sender.</param>
@@ -95,6 +102,7 @@ namespace Apollo.ProjectExplorer
             var bootstrapper = new KernelBootstrapper(
                 new BootstrapperStartInfo(),
                 progressTracker,
+                m_ShutdownEvent,
                 module => LoadUserInterface(module));
 
             // Load the core system. This will automatically
@@ -117,7 +125,7 @@ namespace Apollo.ProjectExplorer
             }
 
             var container = builder.Build();
-            var bootstrapper = new UserInterfaceBootstrapper(container);
+            var bootstrapper = new UserInterfaceBootstrapper(container, m_ShutdownEvent);
             bootstrapper.Run();
         }
 
@@ -146,6 +154,15 @@ namespace Apollo.ProjectExplorer
             // Check if there is unsaved data
             // Check if anything is running
             // throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            m_ShutdownEvent.Dispose();
         }
     }
 }

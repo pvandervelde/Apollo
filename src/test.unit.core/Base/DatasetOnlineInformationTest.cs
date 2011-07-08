@@ -15,6 +15,7 @@ using Apollo.Base.Communication;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
+using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
 
@@ -32,8 +33,14 @@ namespace Apollo.Base
             var id = new DatasetId();
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
             var networkId = NetworkIdentifier.ForLocalMachine();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var info = new DatasetOnlineInformation(id, endpoint, networkId, hub.Object);
+            var info = new DatasetOnlineInformation(
+                id, 
+                endpoint, 
+                networkId, 
+                hub.Object,
+                logger);
             Assert.AreSame(id, info.Id);
             Assert.AreSame(endpoint, info.Endpoint);
             Assert.AreSame(networkId, info.RunsOn);
@@ -45,6 +52,7 @@ namespace Apollo.Base
             var id = new DatasetId();
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
             var networkId = NetworkIdentifier.ForLocalMachine();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var commandList = new Dictionary<Type, ICommandSet> 
                 {
@@ -69,7 +77,12 @@ namespace Apollo.Base
                     .Returns<EndpointId, Type>((e, t) => commandList[t]);
             }
 
-            var info = new DatasetOnlineInformation(id, endpoint, networkId, hub.Object);
+            var info = new DatasetOnlineInformation(
+                id, 
+                endpoint, 
+                networkId, 
+                hub.Object,
+                logger);
             var commands = info.AvailableCommands();
 
             Assert.AreEqual(2, commands.Count());
@@ -81,6 +94,7 @@ namespace Apollo.Base
             var id = new DatasetId();
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
             var networkId = NetworkIdentifier.ForLocalMachine();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var commandList = new SortedList<Type, ICommandSet> 
                 {
@@ -95,7 +109,12 @@ namespace Apollo.Base
                     .Returns((CommandProxyBuilderTest.IMockCommandSetWithTaskReturn)commandList.Values[0]);
             }
 
-            var info = new DatasetOnlineInformation(id, endpoint, networkId, hub.Object);
+            var info = new DatasetOnlineInformation(
+                id, 
+                endpoint, 
+                networkId, 
+                hub.Object,
+                logger);
             var commands = info.Command<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>();
             Assert.AreSame(commandList.Values[0], commands);
         }
@@ -106,6 +125,7 @@ namespace Apollo.Base
             var id = new DatasetId();
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
             var networkId = NetworkIdentifier.ForLocalMachine();
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var datasetCommands = new Mock<IDatasetApplicationCommands>();
             {
@@ -127,7 +147,12 @@ namespace Apollo.Base
                     .Returns(datasetCommands.Object);
             }
 
-            var info = new DatasetOnlineInformation(id, endpoint, networkId, hub.Object);
+            var info = new DatasetOnlineInformation(
+                id, 
+                endpoint, 
+                networkId, 
+                hub.Object,
+                logger);
             info.Close();
 
             datasetCommands.Verify(d => d.Close(), Times.Once());

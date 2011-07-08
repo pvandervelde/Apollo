@@ -4,10 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
+using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
 
@@ -33,6 +35,15 @@ namespace Apollo.Core.Base
                     c.Resolve<ISendCommandsToRemoteEndpoints>(),
                     c.Resolve<IConfiguration>(),
                     c.Resolve<WaitingUploads>(),
+                    (dataset, endpoint, network) =>
+                    {
+                        return new DatasetOnlineInformation(
+                            dataset,
+                            endpoint,
+                            network,
+                            c.Resolve<ISendCommandsToRemoteEndpoints>(),
+                            c.Resolve<Action<LogSeverityProxy, string>>());
+                    },
                     () =>
                     {
                         return (from connection in c.Resolve<ICommunicationLayer>().LocalConnectionPoints()
@@ -48,6 +59,15 @@ namespace Apollo.Core.Base
                     c.Resolve<IApplicationLoader>(),
                     c.Resolve<ISendCommandsToRemoteEndpoints>(),
                     c.Resolve<WaitingUploads>(),
+                    (dataset, endpoint, network) =>
+                    {
+                        return new DatasetOnlineInformation(
+                            dataset,
+                            endpoint,
+                            network,
+                            c.Resolve<ISendCommandsToRemoteEndpoints>(),
+                            c.Resolve<Action<LogSeverityProxy, string>>());
+                    },
                     () =>
                     {
                         return (from connection in c.Resolve<ICommunicationLayer>().LocalConnectionPoints()

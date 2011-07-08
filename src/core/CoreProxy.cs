@@ -60,7 +60,7 @@ namespace Apollo.Core
             return Task.Factory.StartNew(
                 () => m_Owner.Shutdown(),
                 new CancellationToken(),
-                TaskCreationOptions.LongRunning,
+                TaskCreationOptions.None,
                 m_Scheduler);
         }
 
