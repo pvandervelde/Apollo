@@ -20,9 +20,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NLog">
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
-    </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
     </Reference>

@@ -64,7 +64,8 @@
                  Absent="disallow"
                  Level="1">
             <FeatureRef Id="F.Apollo.LoaderService.Exe" />
-            
+
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
             <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />
         </Feature>
     </Fragment>

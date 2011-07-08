@@ -20,16 +20,6 @@
                       KeyPath="yes" />
             </Component>
 
-            <!-- NLog.dll -->
-            <Component Id="C.NLog.dll"
-                       Guid="{81F63D98-CB9B-446F-B599-BAA6E996B1F9}">
-                <File Id="File.NLog.dll"
-                      Name="NLog.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\NLog.dll"
-                      KeyPath="yes" />
-            </Component>
-
             <!-- QuickGraph.dll -->
             <Component Id="C.QuickGraph.dll"
                        Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
@@ -43,8 +33,10 @@
 
         <ComponentGroup Id="CGroup.Apollo.Core">
             <ComponentRef Id="C.Apollo.Core.dll" />
-            <ComponentRef Id="C.NLog.dll" />
             <ComponentRef Id="C.QuickGraph.dll" />
+
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
+            <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />
         </ComponentGroup>
     </Fragment>
 </Wix>

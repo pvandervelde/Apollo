@@ -115,7 +115,6 @@
                  ConfigurableDirectory="INSTALLLOCATION"
                  Display="1"
                  Level="1">
-            <FeatureRef Id="F.Apollo.Base" />
             <FeatureRef Id="F.Apollo.BatchService" />
 
             <!-- Note: The following ComponentGroupRef is required to pull in generated authoring from project references. -->

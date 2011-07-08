@@ -50,6 +50,16 @@
                       Source="$(var.Apollo_BinFolder)\AutofacContrib.Startable.dll"
                       KeyPath="yes" />
             </Component>
+          
+            <!-- Castle.Core.dll -->
+            <Component Id="C.Castle.Core.dll"
+                       Guid="{E224668B-0B61-43C0-B8D3-A179526C2F18}">
+                <File Id="File.Castle.Core.dll"
+                      Name="Castle.Core.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Castle.Core.dll"
+                      KeyPath="yes" />
+            </Component>
 
             <!-- Lokad.Shared.dll -->
             <Component Id="C.Lokad.Shared.dll"
@@ -58,6 +68,36 @@
                       Name="Lokad.Shared.dll"
                       DiskId="1"
                       Source="$(var.Apollo_BinFolder)\Lokad.Shared.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- NLog.dll -->
+            <Component Id="C.NLog.dll"
+                       Guid="{81F63D98-CB9B-446F-B599-BAA6E996B1F9}">
+              <File Id="File.NLog.dll"
+                    Name="NLog.dll"
+                    DiskId="1"
+                    Source="$(var.Apollo_BinFolder)\NLog.dll"
+                    KeyPath="yes" />
+            </Component>
+            
+            <!-- System.CoreEx.dll -->
+            <Component Id="C.System.CoreEx.dll"
+                       Guid="{15B3BFD2-4618-417B-B0F3-DAD5E3C8F45F}">
+                <File Id="File.System.CoreEx.dll"
+                      Name="System.CoreEx.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.CoreEx.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- System.Reactive.dll -->
+            <Component Id="C.System.Reactive.dll"
+                       Guid="{022520DB-88C9-4509-B692-F9FA2C736A1E}">
+                <File Id="File.System.Reactive.dll"
+                      Name="System.Reactive.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\System.Reactive.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
@@ -73,16 +113,16 @@
               SourceFile="$(var.Apollo_ResourceFolder)\icons\apollo.ico" />
 
         <!-- The feature for the main program. -->
-        <Feature Id="F.Apollo.Base"
-                 Title="$(var.Apollo_ProductName)"
-                 Description="The base main binaries for $(var.Apollo_ProductName)."
-                 Absent="disallow"
-                 Level="1">
+        <ComponentGroup Id="CGroup.Apollo.Base">
             <ComponentRef Id="C.Apollo.Core.Base.dll" />
             <ComponentRef Id="C.Apollo.Utilities.dll" />
             <ComponentRef Id="C.Autofac.dll" />
             <ComponentRef Id="C.AutofacContrib.Startable.dll" />
+            <ComponentRef Id="C.Castle.Core.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
-        </Feature>
+            <ComponentRef Id="C.NLog.dll" />
+            <ComponentRef Id="C.System.CoreEx.dll" />
+            <ComponentRef Id="C.System.Reactive.dll" />
+        </ComponentGroup>
     </Fragment>
 </Wix>

@@ -142,7 +142,6 @@
                  ConfigurableDirectory="INSTALLLOCATION"
                  Display="1"
                  Level="1">
-            <FeatureRef Id="F.Apollo.Base" />
             <FeatureRef Id="F.Apollo.LoaderService" />
 
             <!-- Include the clean-up actis for the start menu item(s) -->

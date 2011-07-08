@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <?include includes.wxi ?>
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.UI.Common.dll -->
+            <Component Id="C.Apollo.UI.Common.dll"
+                       Guid="{A4DFEE6C-143C-42E3-902E-C34F13614C61}">
+                <File Id="File.Apollo.UI.Common.dll"
+                      Name="Apollo.UI.Common.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.UI.Common.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- GraphSharp.dll -->
+            <Component Id="C.GraphSharp.dll"
+                       Guid="{C02B17E7-054B-4659-8290-A91E3A828113}">
+                <File Id="File.GraphSharp.dll"
+                      Name="GraphSharp.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\GraphSharp.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- GraphSharp.Controls.dll -->
+            <Component Id="C.GraphSharp.Controls.dll"
+                       Guid="{2727EB9A-1ACC-4E18-955C-32C58AD449B3}">
+                <File Id="File.GraphSharp.Controls.dll"
+                      Name="GraphSharp.Controls.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\GraphSharp.Controls.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- GreyableImage.dll -->
+            <Component Id="C.GreyableImage.dll"
+                       Guid="{3DCE7565-34C5-446E-975B-E694810DA5CD}">
+                <File Id="File.GreyableImage.dll"
+                      Name="GreyableImage.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\GreyableImage.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- ICSharpCode.AvalonEdit -->
+            <Component Id="C.ICSharpCode.AvalonEdit.dll"
+                       Guid="{1D1D9794-EFF7-407D-B623-33AF94DFC533}">
+                <File Id="File.ICSharpCode.AvalonEdit.dll"
+                      Name="ICSharpCode.AvalonEdit.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\ICSharpCode.AvalonEdit.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- IronPython.dll -->
+            <Component Id="C.IronPython.dll"
+                       Guid="{76AC7D70-BFA5-4F54-9BC7-97859B251F3B}">
+                <File Id="File.IronPython.dll"
+                      Name="IronPython.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\IronPython.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- Microsoft.Dynamic.dll -->
+            <Component Id="C.Microsoft.Dynamic.dll"
+                       Guid="{3B32CCAB-BF89-4027-AD01-EB5374AAC557}">
+                <File Id="File.Microsoft.Dynamic.dll"
+                      Name="Microsoft.Dynamic.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Dynamic.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Microsoft.Practices.Prism.dll -->
+            <Component Id="C.Microsoft.Practices.Prism.dll"
+                       Guid="{5BD306B0-29E2-4641-A057-2AE3770F8B2B}">
+                <File Id="File.Microsoft.Practices.Prism.dll"
+                      Name="Microsoft.Practices.Prism.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Microsoft.Practices.Prism.Interactivity.dll -->
+            <Component Id="C.Microsoft.Practices.Prism.Interactivity.dll"
+                       Guid="{5D517577-799F-4F0A-882A-8F4998735C78}">
+                <File Id="File.Microsoft.Practices.Prism.Interactivity.dll"
+                      Name="Microsoft.Practices.Prism.Interactivity.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.Prism.Interactivity.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Microsoft.Practices.ServiceLocation.dll -->
+            <Component Id="C.Microsoft.Practices.ServiceLocation.dll"
+                       Guid="{063913F3-9224-42D3-8523-DAEABA4480F1}">
+                <File Id="File.Microsoft.Practices.ServiceLocation.dll"
+                      Name="Microsoft.Practices.ServiceLocation.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Practices.ServiceLocation.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- Microsoft.Scripting.dll -->
+            <Component Id="C.Microsoft.Scripting.dll"
+                       Guid="{78707D13-D90B-499D-8F1F-15297E03330A}">
+                <File Id="File.Microsoft.Scripting.dll"
+                      Name="Microsoft.Scripting.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Scripting.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- PixelLab.Common.dll -->
+            <Component Id="C.PixelLab.Common.dll"
+                       Guid="{99A107CB-0FA4-469F-93E5-21B712116A18}">
+                <File Id="File.PixelLab.Common.dll"
+                      Name="PixelLab.Common.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\PixelLab.Common.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- PixelLab.Wpf.dll -->
+            <Component Id="C.PixelLab.Wpf.dll"
+                       Guid="{ECB64C28-50FA-4A47-8D38-97D6A93B862C}">
+                <File Id="File.PixelLab.Wpf.dll"
+                      Name="PixelLab.Wpf.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\PixelLab.Wpf.dll"
+                      KeyPath="yes" />
+            </Component>
+            
+            <!-- WPFExtensions.dll -->
+            <Component Id="C.WPFExtensions.dll"
+                       Guid="{EF11C9AC-C2ED-4810-A920-C7D6A9A0415E}">
+                <File Id="File.WPFExtensions.dll"
+                      Name="WPFExtensions.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\WPFExtensions.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- WPFLocalizeExtension.dll -->
+            <Component Id="C.WPFLocalizeExtension.dll"
+                       Guid="{C6959D6B-9ADC-4C76-8BB7-337B01ADB6F7}">
+                <File Id="File.WPFLocalizeExtension.dll"
+                      Name="WPFLocalizeExtension.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\WPFLocalizeExtension.dll"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <ComponentGroup Id="CGroup.Apollo.Ui.Common">
+            <ComponentRef Id="C.Apollo.UI.Common.dll" />
+            
+            <ComponentRef Id="C.GraphSharp.dll" />
+            <ComponentRef Id="C.GraphSharp.Controls.dll" />
+            <ComponentRef Id="C.GreyableImage.dll" />
+            <ComponentRef Id="C.ICSharpCode.AvalonEdit.dll" />
+            <ComponentRef Id="C.IronPython.dll" />
+
+            <ComponentRef Id="C.Microsoft.Dynamic.dll" />
+            <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
+            <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
+            <ComponentRef Id="C.Microsoft.Practices.ServiceLocation.dll" />
+            <ComponentRef Id="C.Microsoft.Scripting.dll" />
+            
+            <ComponentRef Id="C.PixelLab.Common.dll" />
+            <ComponentRef Id="C.PixelLab.Wpf.dll" />
+            <ComponentRef Id="C.WPFExtensions.dll" />
+            <ComponentRef Id="C.WPFLocalizeExtension.dll" />
+
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
+            <ComponentGroupRef Id="CGroup.Apollo.Core" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

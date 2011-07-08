@@ -71,9 +71,6 @@ namespace Apollo.Core
 
                     // QuickGraph
                     DetermineAssemblyPath(typeof(QuickGraph.GraphExtensions).Assembly),
-
-                    // NLog
-                    DetermineAssemblyPath(typeof(NLog.Logger).Assembly),
                 };
         }
 
