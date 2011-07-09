@@ -82,6 +82,16 @@ function Invoke-MsBuild([string]$solution, [string]$configuration, [string]$logP
 	}
 }
 
+function Get-BuildNumber
+{
+    if ($env:BUILD_NUMBER -ne $null)
+    {
+        return $env:BUILD_NUMBER
+    }
+    
+    return 0
+}
+
 function Get-BzrExe{
     'bzr'
 }
@@ -546,9 +556,11 @@ task getVersion -action{
     [xml]$xmlFile = Get-Content $props.versionFile
     $major = $xmlFile.version | %{$_.major} | Select-Object -Unique
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
-    $build = $xmlFile.version | %{$_.build} | Select-Object -Unique
+    $build = Get-BuildNumber
     $revision = Get-BzrVersion
-    $props.versionNumber = New-Object -TypeName System.Version -ArgumentList "$major.$minor.$build.$revision"
+	
+	$input = "$major.$minor.$build.$revision"
+    $props.versionNumber = New-Object -TypeName System.Version -ArgumentList $input
     ("version is: " + $props.versionNumber )
 }
 
