@@ -40,8 +40,8 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The collection of <see cref="IChannelType"/> objects which refer to a communication.
         /// </summary>
-        private readonly Dictionary<Type, Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_OpenConnections =
-            new Dictionary<Type, Tuple<ICommunicationChannel, IDirectIncomingMessages>>();
+        private readonly Dictionary<Type, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_OpenConnections =
+            new Dictionary<Type, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>>();
 
         /// <summary>
         /// The ID number of the current endpoint.
@@ -58,7 +58,7 @@ namespace Apollo.Core.Base.Communication
         /// a <see cref="IDirectIncomingMessages"/> which belong together. The return values
         /// are based on the type of the <see cref="IChannelType"/> for the channel.
         /// </summary>
-        private readonly Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
+        private readonly Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
 
         /// <summary>
         /// The function used to write messages to the log.
@@ -90,7 +90,7 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         public CommunicationLayer(
             IEnumerable<IDiscoverOtherServices> discoverySources,
-            Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
+            Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
             Action<LogSeverityProxy, string> logger)
         {
             {
@@ -313,9 +313,9 @@ namespace Apollo.Core.Base.Communication
             return ChannelInformationForType(connection).Item1;
         }
 
-        private Tuple<ICommunicationChannel, IDirectIncomingMessages> ChannelInformationForType(Type connection)
+        private System.Tuple<ICommunicationChannel, IDirectIncomingMessages> ChannelInformationForType(Type connection)
         {
-            Tuple<ICommunicationChannel, IDirectIncomingMessages> channel = null;
+            System.Tuple<ICommunicationChannel, IDirectIncomingMessages> channel = null;
             lock (m_Lock)
             {
                 if (m_OpenConnections.ContainsKey(connection))

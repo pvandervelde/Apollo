@@ -438,18 +438,19 @@ properties{
     $props.dirBinInstall = Join-Path $props.dirInstall 'bin'
    
     # tools directories
+	$props.dirPackages = Join-Path $props.dirBase 'packages'
+    $props.dirMbunit = Join-Path $props.dirPackages 'mbunit'
+    $props.dirNCoverExplorer = Join-Path $props.dirPackages 'ncoverexplorer'
+    $props.dirSandcastle = Join-Path $props.dirPackages 'sandcastle'
+    $props.dirFxCop = Join-Path $props.dirPackages 'FxCop'
+    $props.dirMoq = Join-Path (Join-Path (Join-Path $props.dirPackages 'Moq') 'lib') 'NET40'
+    $props.dirConcordion = Join-Path $props.dirPackages 'Concordion'
+    $props.dirPartCover = Join-Path $props.dirPackages 'PartCover'
+    $props.dirPartCoverExclusionWriter = Join-Path $props.dirPackages 'partcoverexclusionwriter'
+    $props.dirSourceMonitor = Join-Path $props.dirPackages 'SourceMonitor'
+    $props.dirCcm = Join-Path $props.dirPackages 'Ccm'
+	
     $props.dirTools = Join-Path $props.dirBase 'tools'
-    $props.dirBabel = Join-Path $props.dirTools 'babel'
-    $props.dirMbunit = Join-Path $props.dirTools 'mbunit'
-    $props.dirNCoverExplorer = Join-Path $props.dirTools 'ncoverexplorer'
-    $props.dirSandcastle = Join-Path $props.dirTools 'sandcastle'
-    $props.dirFxCop = Join-Path $props.dirTools 'FxCop'
-    $props.dirMoq = Join-Path $props.dirTools 'Moq'
-    $props.dirConcordion = Join-Path $props.dirTools 'Concordion'
-    $props.dirPartCover = Join-Path $props.dirTools 'PartCover'
-    $props.dirPartCoverExclusionWriter = Join-Path $props.dirTools 'partcoverexclusionwriter'
-    $props.dirSourceMonitor = Join-Path $props.dirTools 'SourceMonitor'
-    $props.dirCcm = Join-Path $props.dirTools 'Ccm'
     
     # solutions
     $props.slnApollo = Join-Path $props.dirSrc 'Apollo.sln'
@@ -514,7 +515,6 @@ properties{
     
     # Version number
     $props.versionNumber = New-Object -TypeName System.Version -ArgumentList "1.0.0.0"
-    $props.versionFile = Join-Path $props.dirBase 'Version.xml' 
 }
 
 # The default task doesn't do anything. This just calls the help function. Useful
@@ -562,6 +562,21 @@ task getVersion -action{
 	$input = "$major.$minor.$build.$revision"
     $props.versionNumber = New-Object -TypeName System.Version -ArgumentList $input
     ("version is: " + $props.versionNumber )
+}
+
+task getBuildDependencies -action{
+    # Pull in the tools packages
+    $nuget = 'nuget.exe'
+    $command = '& "' + $nuget + '" '
+    $command += 'install "' + (Join-Path $props.dirBase "packages.config") + '" '
+    $command += '-ExcludeVersion '
+    $command += '-OutputDirectory "' + $props.dirPackages + '"'
+    $command
+    Invoke-Expression $command
+    if ($LastExitCode -ne 0)
+    {
+        throw "NuGet failed on Apollo with return code: $LastExitCode"
+    }
 }
 
 ###############################################################################
@@ -684,7 +699,7 @@ task runPrepareDisk -depends displayInfo,runClean -action{
 	""
 }
 
-task buildBinaries -depends runPrepareDisk, getVersion -action{
+task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -action{
     "Building Apollo..."
     
     # Set the version numbers

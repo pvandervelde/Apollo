@@ -15,7 +15,6 @@ using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
 using Autofac.Core;
-using AutofacContrib.Startable;
 
 namespace Apollo.Core.Base
 {
@@ -276,9 +275,7 @@ namespace Apollo.Core.Base
         {
             builder.Register(c => new CommunicationLayerStarter(
                     c.Resolve<ICommunicationLayer>()))
-                .As<ILoadOnApplicationStartup>();
-            
-            builder.RegisterModule(new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
+                .As<IStartable>();
         }
 
         /// <summary>

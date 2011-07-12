@@ -10,67 +10,57 @@
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
     <Reference Include="Autofac">
-      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="GraphSharp">
-      <HintPath>..\..\lib\graphsharp\GraphSharp.dll</HintPath>
+      <HintPath>..\..\packages\GraphSharp\lib\GraphSharp.dll</HintPath>
     </Reference>
     <Reference Include="GraphSharp.Controls">
-      <HintPath>..\..\lib\graphsharp\GraphSharp.Controls.dll</HintPath>
+      <HintPath>..\..\packages\GraphSharp\lib\GraphSharp.Controls.dll</HintPath>
     </Reference>
     <Reference Include="GreyableImage">
-      <HintPath>..\..\lib\greyableimage\GreyableImage.dll</HintPath>
+      <HintPath>..\..\packages\GreyableImage\lib\GreyableImage.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.AvalonEdit">
-      <HintPath>..\..\lib\avalonedit\ICSharpCode.AvalonEdit.dll</HintPath>
+      <HintPath>..\..\packages\AvalonEdit\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
     </Reference>
     <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\scripting\IronPython.dll</HintPath>
+      <HintPath>..\..\packages\IronPython\lib\Net40\IronPython.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Lokad.Shared">
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\scripting\Microsoft.Dynamic.dll</HintPath>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Dynamic.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism">
-      <HintPath>..\..\lib\prism\Microsoft.Practices.Prism.dll</HintPath>
+      <HintPath>..\..\packages\Prism\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Practices.Prism.Interactivity">
-      <HintPath>..\..\lib\prism\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Practices.ServiceLocation">
-      <HintPath>..\..\lib\servicelocation\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <HintPath>..\..\packages\Prism\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\scripting\Microsoft.Scripting.dll</HintPath>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="PixelLab.Common">
-      <HintPath>..\..\lib\pixellab\PixelLab.Common.dll</HintPath>
-    </Reference>
-    <Reference Include="PixelLab.Wpf">
-      <HintPath>..\..\lib\pixellab\PixelLab.Wpf.dll</HintPath>
+      <HintPath>..\..\packages\PixelLab.Common\lib\net4\PixelLab.Common.dll</HintPath>
     </Reference>
     <Reference Include="QuickGraph, Version=3.3.40824.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\quickgraph\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\reactive\System.CoreEx.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\reactive\System.Reactive.dll</HintPath>
+      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
@@ -92,11 +82,8 @@
     <Reference Include="PresentationFramework">
       <RequiredTargetFramework>3.0</RequiredTargetFramework>
     </Reference>
-    <Reference Include="WPFExtensions">
-      <HintPath>..\..\lib\graphsharp\WPFExtensions.dll</HintPath>
-    </Reference>
     <Reference Include="WPFLocalizeExtension">
-      <HintPath>..\..\lib\wpflocalizeextension\WPFLocalizeExtension.dll</HintPath>
+      <HintPath>..\..\packages\WPFLocalizeExtension\lib\WPFLocalizeExtension.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>

@@ -18,7 +18,6 @@ using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac;
 using Autofac.Core;
-using AutofacContrib.Startable;
 using Lokad;
 
 namespace Apollo.Core
@@ -107,9 +106,9 @@ namespace Apollo.Core
             }
 
             var container = builder.Build();
-            if (container.IsRegistered<IStarter>())
+            if (container.IsRegistered<IStartable>())
             {
-                var startable = container.Resolve<IStarter>();
+                var startable = container.Resolve<IStartable>();
                 startable.Start();
             }
 

@@ -50,8 +50,8 @@ namespace Apollo.Core.Base.Communication
         /// We track the endpoint from which we're expecting a response in case we get an <c>EndpointDisconnectMessage</c>.
         /// In that case we need to know if we just lost the source of our potential answer or not.
         /// </remarks>
-        private readonly Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
-            = new Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
+        private readonly Dictionary<MessageId, System.Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
+            = new Dictionary<MessageId, System.Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
 
         /// <summary>
         /// The function that logs messages.
@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Communication
                 if (!m_TasksWaitingForResponse.ContainsKey(inResponseTo))
                 {
                     var source = new TaskCompletionSource<ICommunicationMessage>(TaskCreationOptions.None);
-                    m_TasksWaitingForResponse.Add(inResponseTo, Tuple.Create(messageReceiver, source));
+                    m_TasksWaitingForResponse.Add(inResponseTo, System.Tuple.Create(messageReceiver, source));
                 }
 
                 return m_TasksWaitingForResponse[inResponseTo].Item2.Task;

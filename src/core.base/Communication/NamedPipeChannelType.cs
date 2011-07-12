@@ -155,7 +155,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="localFile"/> is an empty string.
         /// </exception>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+        public System.Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
             string localFile, 
             CancellationToken token,
             TaskScheduler scheduler)
@@ -214,7 +214,7 @@ namespace Apollo.Core.Base.Communication
                 TaskCreationOptions.LongRunning,
                 scheduler ?? TaskScheduler.Default);
 
-            return new Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
+            return new System.Tuple<StreamTransferInformation, Task<FileInfo>>(info, result);
         }
 
         /// <summary>

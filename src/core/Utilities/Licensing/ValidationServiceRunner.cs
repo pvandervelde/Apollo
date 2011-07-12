@@ -15,7 +15,7 @@ namespace Apollo.Core.Utilities.Licensing
     /// Provides an initialization method used for running an <see cref="IValidationService"/> object
     /// when the application starts.
     /// </summary>
-    internal sealed class ValidationServiceRunner : ILoadOnApplicationStartup, IDisposable
+    internal sealed class ValidationServiceRunner : Autofac.IStartable, IDisposable
     {
         /// <summary>
         /// The service that must be run.
@@ -39,9 +39,9 @@ namespace Apollo.Core.Utilities.Licensing
         }
 
         /// <summary>
-        /// Starts the validation of the licenses.
+        /// Perform once-off startup processing.
         /// </summary>
-        public void Initialize()
+        public void Start()
         {
             m_Service.StartValidation();
         }

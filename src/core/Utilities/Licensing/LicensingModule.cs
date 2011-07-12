@@ -9,7 +9,6 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 using Apollo.Utilities.Licensing;
 using Autofac;
-using AutofacContrib.Startable;
 
 namespace Apollo.Core.Utilities.Licensing
 {
@@ -53,7 +52,7 @@ namespace Apollo.Core.Utilities.Licensing
 
                 builder.Register(c => new ValidationServiceRunner(
                         c.Resolve<IValidationService>()))
-                    .As<ILoadOnApplicationStartup>()
+                    .As<IStartable>()
                     .OwnedByLifetimeScope()
                     .SingleInstance();
 

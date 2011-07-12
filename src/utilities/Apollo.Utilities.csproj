@@ -45,7 +45,6 @@
     <Compile Include="Id.cs" />
     <Compile Include="IFileConstants.cs" />
     <Compile Include="IIsId.cs" />
-    <Compile Include="ILoadOnApplicationStartup.cs" />
     <Compile Include="ILockObject.cs" />
     <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="IProgressMark.cs" />
@@ -72,7 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared">
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

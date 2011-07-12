@@ -16,7 +16,7 @@ namespace Apollo.Core.Base.Communication
     /// starts.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal sealed class CommunicationLayerStarter : ILoadOnApplicationStartup
+    internal sealed class CommunicationLayerStarter : Autofac.IStartable
     {
         /// <summary>
         /// The communication layer for the application.
@@ -40,9 +40,9 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Starts the validation of the licenses.
+        /// Perform once-off startup processing.
         /// </summary>
-        public void Initialize()
+        public void Start()
         {
             m_Layer.SignIn();
         }
