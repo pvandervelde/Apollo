@@ -15,7 +15,6 @@ using System.Windows.Forms.Integration;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities.Applications;
 using Autofac;
-using AutofacContrib.Startable;
 
 namespace Test.Manual.Console
 {
@@ -97,7 +96,7 @@ namespace Test.Manual.Console
             s_Container = DependencyInjection.CreateContainer(context);
 
             // Load a communication layer and start listening.
-            s_Container.Resolve<IStarter>().Start();
+            s_Container.Resolve<IStartable>().Start();
             if (!string.IsNullOrWhiteSpace(endpoint) && !string.IsNullOrWhiteSpace(address))
             {
                 var manualResolver = s_Container.Resolve<IAcceptExternalEndpointInformation>();

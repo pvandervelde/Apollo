@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 using Autofac;
 
-namespace Apollo.Core.Utilities
+namespace Apollo.Core
 {
     /// <summary>
     /// Handles the component registrations for the utilities part 

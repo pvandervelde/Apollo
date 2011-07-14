@@ -343,11 +343,11 @@ namespace Apollo.Core.Base.Loaders
 
                     var endpoint = endpointTask.Result;
                     var resetEvent = new AutoResetEvent(false);
-                    var commandAvailabilityNotifier = 
-                        Observable.FromEvent<EventHandler<CommandSetAvailabilityEventArgs>, CommandSetAvailabilityEventArgs>(
+                    var commandAvailabilityNotifier =
+                        Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(
                             h => m_Hub.OnEndpointSignedIn += h,
                             h => m_Hub.OnEndpointSignedIn -= h)
-                        .Where(args => args.Endpoint.Equals(endpoint))
+                        .Where(args => args.EventArgs.Endpoint.Equals(endpoint))
                         .Take(1)
                         .Subscribe(
                             args =>

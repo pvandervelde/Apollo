@@ -10,7 +10,6 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.Core.Utilities.Licensing;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac.Core;
@@ -70,14 +69,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -105,14 +102,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -130,14 +125,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -155,14 +148,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -170,7 +161,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -191,14 +181,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -216,14 +204,12 @@ namespace Apollo.Core.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -231,7 +217,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -247,14 +232,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -273,14 +256,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
@@ -289,7 +270,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -302,14 +282,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -322,14 +300,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -342,14 +318,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -365,14 +339,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -380,7 +352,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -397,14 +368,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -414,7 +383,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -431,14 +399,12 @@ namespace Apollo.Core.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
 
@@ -449,7 +415,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -469,7 +434,6 @@ namespace Apollo.Core.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
 
-            var storage = new LicenseValidationResultStorage();
             Action<LogSeverityProxy, string> logger = (p, s) => { };
             Action<IModule> onStartService = module => { };
 
@@ -479,7 +443,6 @@ namespace Apollo.Core.UserInterfaces
             var service = new UserInterfaceService(
                 commands.Object,
                 notificationNames,
-                storage,
                 logger,
                 onStartService);
             service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
@@ -488,7 +451,6 @@ namespace Apollo.Core.UserInterfaces
             service.ConnectTo(proxy);
 
             var projects = new ProjectService(
-                new LicenseValidationResultStorage(),
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);

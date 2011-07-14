@@ -11,7 +11,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Utilities.Licensing;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
@@ -26,12 +25,10 @@ namespace Apollo.Core.Projects
         [Test]
         public void Stop()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 
@@ -45,7 +42,6 @@ namespace Apollo.Core.Projects
         [Test]
         public void StopWithProject()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             bool wasClosed = false;
@@ -72,7 +68,6 @@ namespace Apollo.Core.Projects
             }
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 
@@ -92,7 +87,6 @@ namespace Apollo.Core.Projects
         [Test]
         public void CreateNewProject()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -113,7 +107,6 @@ namespace Apollo.Core.Projects
             }
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 
@@ -129,12 +122,10 @@ namespace Apollo.Core.Projects
         [Test]
         public void LoadProjectWithNullPersistenceInformation()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 
@@ -144,7 +135,6 @@ namespace Apollo.Core.Projects
         [Test]
         public void LoadProject()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -169,7 +159,6 @@ namespace Apollo.Core.Projects
             }
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 
@@ -187,7 +176,6 @@ namespace Apollo.Core.Projects
         [Test]
         public void UnloadProject()
         {
-            var storage = new LicenseValidationResultStorage();
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -210,7 +198,6 @@ namespace Apollo.Core.Projects
             }
 
             var service = new ProjectService(
-                storage,
                 distributor.Object,
                 builder.Object);
 

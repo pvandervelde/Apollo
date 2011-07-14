@@ -6,8 +6,9 @@
 
 using System;
 using Apollo.Core.Properties;
+using Apollo.Utilities;
 
-namespace Apollo.Utilities
+namespace Apollo.Core
 {
     /// <summary>
     /// Defines methods for retrieving resource strings.

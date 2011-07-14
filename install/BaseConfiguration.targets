@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
    <PropertyGroup>
-    <Tools>$(SolutionDir)..\tools</Tools>
-    <WiXForMsBuild>$(Tools)\WiX</WiXForMsBuild>
+    <Packages>$(SolutionDir)..\packages</Packages>
+    <WiXForMsBuild>$(Packages)\WiX</WiXForMsBuild>
     <WixToolPath>$(WiXForMsBuild)\</WixToolPath>
     <WixTargetsPath>$(WiXForMsBuild)\Wix.targets</WixTargetsPath>
     <WixTasksPath>$(WiXForMsBuild)\wixtasks.dll</WixTasksPath>

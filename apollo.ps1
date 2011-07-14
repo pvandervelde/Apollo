@@ -278,79 +278,6 @@ function Create-PartCoverConfigFile(
 	Set-Content $newPath $text
 }
 
-function Create-LicenseVerificationSequencesFile([string]$generatorTemplate, [string]$yieldTemplate, [string]$newPath){
-    $yieldText = [string]::Join([Environment]::NewLine, (Get-Content -Path $yieldTemplate))
-    
-    # generate the sequences
-    # Check each hour after build
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
-    $sequenceText = $sequenceText -replace '@START_TIME@', 'BuildTime()'
-    $sequenceText += [Environment]::NewLine
-    $sequenceText += [Environment]::NewLine
-    
-    # Check each hour after install
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
-    $sequenceText = $sequenceText -replace '@START_TIME@', 'InstallTime()'
-    $sequenceText += [Environment]::NewLine
-    $sequenceText += [Environment]::NewLine
-    
-    # Check each hour after start
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
-    $sequenceText = $sequenceText -replace '@START_TIME@', 'ProcessStartTime()'
-    $sequenceText += [Environment]::NewLine
-    $sequenceText += [Environment]::NewLine
-    
-    # Check each hour after some time
-    $time = [DateTimeOffset]::Now.AddMinutes(10)
-    $timeText = 'new DateTimeOffset(' + $time.Year + `
-        ', ' + $time.Month + `
-        ', ' + $time.Day + `
-        ', ' + $time.Hour + `
-        ', ' + $time.Minute + `
-        ', ' + $time.Second + `
-        ', ' + $time.Millisecond + `
-        ', new TimeSpan(' + $time.Offset.Ticks + '))'
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'true'
-    $sequenceText = $sequenceText -replace '@START_TIME@', $timeText
-    $sequenceText += [Environment]::NewLine
-    $sequenceText += [Environment]::NewLine
-    
-    # Check within 3 minutes after start-up
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Minutely'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'false'
-    $sequenceText = $sequenceText -replace '@START_TIME@', 'ProcessStartTime()'
-    $sequenceText += [Environment]::NewLine
-    $sequenceText += [Environment]::NewLine
-    
-    # Check on a bunch of random dates
-    $timeText = 'new DateTimeOffset(2010, 08, 10, 23, 43, 05, 00, new TimeSpan(' + $time.Offset.Ticks + '))'
-    $sequenceText += $yieldText
-    $sequenceText = $sequenceText -replace '@REPEATPERIOD@', 'Hourly'
-    $sequenceText = $sequenceText -replace '@MODIFIER@', '1'
-    $sequenceText = $sequenceText -replace '@ISPERIODIC@', 'false'
-    $sequenceText = $sequenceText -replace '@START_TIME@', $timeText
-    
-    # Write the sequences to the file
-    $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $generatorTemplate))
-    $text = $text -replace '@YIELD_STATEMENTS@', $sequenceText
-    
-    Set-Content $newPath $text
-}
-
 function Create-SourceMonitorInputFile([string]$path, [string]$newPath, [string]$tempDir, [string]$srcDir, [string]$outputFile){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@PROJECT_FILE_NAME@', (Join-Path $tempDir 'apollo.smp')
@@ -439,7 +366,7 @@ properties{
    
     # tools directories
 	$props.dirPackages = Join-Path $props.dirBase 'packages'
-    $props.dirMbunit = Join-Path $props.dirPackages 'mbunit'
+    $props.dirMbunit = Join-Path $props.dirPackages 'Gallio.Complete'
     $props.dirNCoverExplorer = Join-Path $props.dirPackages 'ncoverexplorer'
     $props.dirSandcastle = Join-Path $props.dirPackages 'sandcastle'
     $props.dirFxCop = Join-Path $props.dirPackages 'FxCop'
@@ -477,10 +404,6 @@ properties{
     
     $props.internalsVisibleToTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
     $props.internalsVisibleToFile = Join-Path $props.dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
-    
-    $props.licenseVerificationSequencesTemplateFile = Join-Path $props.dirTemplates 'ValidationSequenceGenerator.cs.in'
-    $props.licenseVerificationSequencesYieldTemplateFile = Join-Path $props.dirTemplates 'ValidationSequenceGenerator.YieldStatement.cs.in'
-    $props.licenseVerificationSequencesFile = Join-Path $props.dirSrc 'ValidationSequenceGenerator.cs'
     
     $props.partCoverConfigTemplateFile = Join-Path $props.dirTemplates 'PartCover.Settings.xml.in'
     $props.partCoverConfigFile = Join-Path $props.dirTemp 'PartCover.Settings.xml'
@@ -719,11 +642,7 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -ac
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
     Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitCoreAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
     
-    # Create the license verification sequence file
-    Create-LicenseVerificationSequencesFile $props.licenseVerificationSequencesTemplateFile $props.licenseVerificationSequencesYieldTemplateFile $props.licenseVerificationSequencesFile
-
     $logPath = Join-Path $props.dirLogs $props.logMsBuild
-    
     $msbuildExe = Get-MsbuildExe
     Invoke-MsBuild $props.slnApollo $props.configuration $logPath 'minimal' (("platform='" + $props.Platform+ "'")) $props.incremental
     if ($LastExitCode -ne 0)
@@ -737,7 +656,7 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -ac
 task runUnitTests -depends buildBinaries -action{
     "Running unit tests..."
     
-    $gallioExe = 'Gallio.Echo.x86.exe'
+    $gallioExe = 'Gallio.Echo.exe'
     
     $files = ""
     $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | 
@@ -926,7 +845,7 @@ task buildApiDocs -depends buildBinaries -action{
     
     # generate the sandcastle file
     $sandcastleFile = Join-Path $props.dirTemp 'apollo.shfbproj'
-    Create-SandcastleConfigFile $props.sandcastleTemplateFile $sandcastleFile $props.dirTools $props.dirDoc $props.dirLogs $props.dirOutput
+    Create-SandcastleConfigFile $props.sandcastleTemplateFile $sandcastleFile $props.dirPackages $props.dirDoc $props.dirLogs $props.dirOutput
     
     # Set the DXROOT Environment variable
     $Env:DXROOT = $props.dirSandcastle
@@ -996,9 +915,6 @@ task buildPackage -depends buildBinaries -action{
     $autofacFile = 'Autofac.dll'
     Copy-Item (Join-Path $props.dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
     
-    $autofacStartableFile = 'AutofacContrib.Startable.dll'
-    Copy-Item (Join-Path $props.dirOutput $autofacStartableFile) -Destination (Join-Path $dirTempZip $autofacStartableFile)
-	
 	$castleCoreFile = 'Castle.Core.dll'
     Copy-Item (Join-Path $props.dirOutput $castleCoreFile) -Destination (Join-Path $dirTempZip $castleCoreFile)
 	
@@ -1052,9 +968,6 @@ task buildPackage -depends buildBinaries -action{
 	
 	$quickgraphFile = 'QuickGraph.dll'
     Copy-Item (Join-Path $props.dirOutput $quickgraphFile) -Destination (Join-Path $dirTempZip $quickgraphFile)    
-    
-    $systemCoreExFile = 'System.CoreEx.dll'
-    Copy-Item (Join-Path $props.dirOutput $systemCoreExFile) -Destination (Join-Path $dirTempZip $systemCoreExFile)    
     
     $systemReactiveFile = 'System.Reactive.dll'
     Copy-Item (Join-Path $props.dirOutput $systemReactiveFile) -Destination (Join-Path $dirTempZip $systemReactiveFile)

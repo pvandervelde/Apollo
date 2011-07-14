@@ -209,25 +209,6 @@
     <Compile Include="Utils\FileConstantsTest.cs" />
     <Compile Include="Utils\FusionHelperTest.cs" />
     <Compile Include="Utils\IdTest.cs" />
-    <Compile Include="Utils\Licensing\ChecksumTest.cs" />
-    <Compile Include="Utils\Licensing\ChecksumTest.HashCalculation.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ChecksumTest.HashCalculation.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\LicenseCheckResultTest.cs" />
-    <Compile Include="Utils\Licensing\LicenseValidationFailedExceptionTest.cs" />
-    <Compile Include="Utils\Licensing\LicenseValidationResultStorageTest.cs" />
-    <Compile Include="Utils\Licensing\TimePeriodTest.cs" />
-    <Compile Include="Utils\Licensing\ValidationSequenceTest.cs" />
-    <Compile Include="Utils\Licensing\ValidationServiceLicenseValidationCacheTest.cs">
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\ValidationServiceLicenseValidatorTest.cs">
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Utils\Licensing\ValidationServiceRunnerTest.cs" />
-    <Compile Include="Utils\Licensing\ValidationServiceTest.cs" />
     <Compile Include="Utils\TimeBasedProgressTrackerTest.cs" />
     <Compile Include="Utils\TypeEqualityComparerTest.cs" />
   </ItemGroup>
@@ -235,37 +216,10 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-    <None Include="Utils\Licensing\ChecksumTest.HashCalculation.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>ChecksumTest.HashCalculation.cs</LastGenOutput>
-    </None>
-    <None Include="Utils\Licensing\LicenseValidationCacheTest.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LicenseValidationCacheTest.txt</LastGenOutput>
-    </None>
-    <None Include="Utils\Licensing\LicenseValidationCacheTest.ttinclude" />
-    <None Include="Utils\Licensing\LicenseValidatorTest.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LicenseValidatorTest.txt</LastGenOutput>
-    </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Utils\Licensing\LicenseValidatorTest.ttinclude" />
-    <None Include="Utils\Licensing\LicenseValidatorTest.txt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LicenseValidatorTest.tt</DependentUpon>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Utils\Licensing\LicenseValidationCacheTest.txt">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LicenseValidationCacheTest.tt</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="UI\Views\Datasets\" />

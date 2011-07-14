@@ -12,8 +12,6 @@ using System.Reflection;
 using System.Threading;
 using Apollo.Core.Projects;
 using Apollo.Core.UserInterfaces;
-using Apollo.Core.Utilities;
-using Apollo.Core.Utilities.Licensing;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac;
@@ -97,7 +95,6 @@ namespace Apollo.Core
                 builder.RegisterModule(new UtilitiesModule());
                 builder.RegisterModule(new KernelModule());
                 builder.RegisterModule(new ProjectModule());
-                builder.RegisterModule(new LicensingModule());
 
                 foreach (var module in additionalModules)
                 {
@@ -106,9 +103,9 @@ namespace Apollo.Core
             }
 
             var container = builder.Build();
-            if (container.IsRegistered<IStartable>())
+            if (container.IsRegistered<Autofac.IStartable>())
             {
-                var startable = container.Resolve<IStartable>();
+                var startable = container.Resolve<Autofac.IStartable>();
                 startable.Start();
             }
 
@@ -261,7 +258,6 @@ namespace Apollo.Core
             var userInterface = new UserInterfaceService(
                 container.Resolve<ICommandContainer>(),
                 container.Resolve<INotificationNameConstants>(),
-                container.Resolve<IValidationResultStorage>(),
                 container.Resolve<Action<LogSeverityProxy, string>>(),
                 StoreContainer);
 

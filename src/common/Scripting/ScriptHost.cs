@@ -38,7 +38,7 @@ namespace Apollo.UI.Common.Scripting
         /// The combination of the script language and the <c>AppDomain</c> that is used to run 
         /// the current script in. AppDomains are only recycled once a new language is selected.
         /// </summary>
-        private Tuple<ScriptLanguage, AppDomain> m_CurrentLanguageDomainPair;
+        private System.Tuple<ScriptLanguage, AppDomain> m_CurrentLanguageDomainPair;
 
         /// <summary>
         /// The task that running the current script. <c>null</c> if no script is running.
@@ -106,7 +106,7 @@ namespace Apollo.UI.Common.Scripting
         /// <see cref="CancellationTokenSource"/> object that can be used to cancel the 
         /// running task.
         /// </returns>
-        public Tuple<Task, CancellationTokenSource> Execute(ScriptLanguage language, string scriptCode, TextWriter outputChannel)
+        public System.Tuple<Task, CancellationTokenSource> Execute(ScriptLanguage language, string scriptCode, TextWriter outputChannel)
         {
             // If there is an existing runner then nuke that one
             if (m_CurrentlyRunningScript != null)
@@ -123,7 +123,7 @@ namespace Apollo.UI.Common.Scripting
             if (m_CurrentLanguageDomainPair == null)
             {
                 var scriptDomain = m_AppDomainBuilder("ScriptDomain", AppDomainPaths.Core);
-                m_CurrentLanguageDomainPair = new Tuple<ScriptLanguage, AppDomain>(language, scriptDomain);
+                m_CurrentLanguageDomainPair = new System.Tuple<ScriptLanguage, AppDomain>(language, scriptDomain);
             }
 
             IExecuteScripts executor = LoadExecutor(language, m_CurrentLanguageDomainPair.Item2, outputChannel);
@@ -150,7 +150,7 @@ namespace Apollo.UI.Common.Scripting
             m_CurrentlyRunningScript = result;
             m_CurrentToken = source;
 
-            return new Tuple<Task, CancellationTokenSource>(result, source);
+            return new System.Tuple<Task, CancellationTokenSource>(result, source);
         }
 
         private void UnloadCurrentScriptDomain()

@@ -12,7 +12,6 @@ using System.Globalization;
 using Apollo.Core.Projects;
 using Apollo.Core.Properties;
 using Apollo.Core.UserInterfaces.Projects;
-using Apollo.Core.Utilities.Licensing;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac.Core;
@@ -48,11 +47,6 @@ namespace Apollo.Core.UserInterfaces
         private readonly INotificationNameConstants m_NotificationNames;
 
         /// <summary>
-        /// The object that stores the validity of the license.
-        /// </summary>
-        private readonly IValidationResultStorage m_LicenseValidationStorage;
-
-        /// <summary>
         /// The action which is executed when the service is started.
         /// </summary>
         private readonly Action<IModule> m_OnStartService;
@@ -72,7 +66,6 @@ namespace Apollo.Core.UserInterfaces
         /// </summary>
         /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
-        /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
         /// <param name="logger">The object that logs the debug information for the current service.</param>
         /// <param name="onStartService">
         ///     The method that stores the IOC module that will be used by the User Interface to refer
@@ -86,9 +79,6 @@ namespace Apollo.Core.UserInterfaces
         /// Thrown if <paramref name="notificationNames"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
@@ -97,7 +87,6 @@ namespace Apollo.Core.UserInterfaces
         public UserInterfaceService(
             ICommandContainer commands,
             INotificationNameConstants notificationNames,
-            IValidationResultStorage licenseValidationStorage,
             Action<LogSeverityProxy, string> logger,
             Action<IModule> onStartService)
             : base()
@@ -105,13 +94,11 @@ namespace Apollo.Core.UserInterfaces
             {
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => notificationNames);
-                Enforce.Argument(() => licenseValidationStorage);
                 Enforce.Argument(() => logger);
                 Enforce.Argument(() => onStartService);
             }
 
             m_NotificationNames = notificationNames;
-            m_LicenseValidationStorage = licenseValidationStorage;
             m_OnStartService = onStartService;
             m_Logger = logger;
 

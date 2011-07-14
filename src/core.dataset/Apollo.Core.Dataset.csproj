@@ -120,6 +120,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
