@@ -4,8 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using Apollo.Core.Base.Communication;
+using Autofac;
 using Test.Manual.Console.Models;
 
 namespace Test.Manual.Console
@@ -13,7 +13,7 @@ namespace Test.Manual.Console
     /// <summary>
     /// Provides the methods necessary for handling incoming messages.
     /// </summary>
-    internal sealed class ApplicationCentral : IFormTheApplicationCenter, ILoadOnApplicationStartup
+    internal sealed class ApplicationCentral : IFormTheApplicationCenter, IStartable
     {
         /// <summary>
         /// The layer from which the incoming messages are received.
@@ -55,9 +55,9 @@ namespace Test.Manual.Console
         }
 
         /// <summary>
-        /// Initializes the current instance.
+        /// Perform once-off startup processing.
         /// </summary>
-        public void Initialize()
+        public void Start()
         {
             m_CommunicationLayer.SignIn();
 

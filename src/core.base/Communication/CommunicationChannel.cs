@@ -445,7 +445,7 @@ namespace Apollo.Core.Base.Communication
         /// The connection information necessary to connect to the newly created channel and the task 
         /// responsible for handling the data reception.
         /// </returns>
-        public Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
+        public System.Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
             string localFile,
             CancellationToken token,
             TaskScheduler scheduler)

@@ -7,7 +7,6 @@
 using System;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Utilities.Licensing;
 using Apollo.Utilities;
 using Lokad;
 
@@ -22,11 +21,6 @@ namespace Apollo.Core.Projects
         /// The object used to lock on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
-
-        /// <summary>
-        /// The object that stores the validity of the license.
-        /// </summary>
-        private readonly IValidationResultStorage m_LicenseValidationStorage;
 
         /// <summary>
         /// The object that handles loading of datasets either on the local machine or
@@ -47,12 +41,8 @@ namespace Apollo.Core.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectService"/> class.
         /// </summary>
-        /// <param name="licenseValidationStorage">The object that stores the validity of the license.</param>
         /// <param name="datasetDistributor">The object that handles the distribution of datasets.</param>
         /// <param name="projectBuilder">The object that builds new projects.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="licenseValidationStorage"/> is <see langword="null"/>.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="datasetDistributor"/> is <see langword="null"/>.
         /// </exception>
@@ -60,20 +50,17 @@ namespace Apollo.Core.Projects
         /// Thrown if <paramref name="projectBuilder"/> is <see langword="null"/>.
         /// </exception>
         public ProjectService(
-            IValidationResultStorage licenseValidationStorage,
             IHelpDistributingDatasets datasetDistributor,
             IBuildProjects projectBuilder)
             : base()
         {
             {
-                Enforce.Argument(() => licenseValidationStorage);
                 Enforce.Argument(() => datasetDistributor);
                 Enforce.Argument(() => projectBuilder);
             }
 
             // No locks are necessary because we're in the constructor, no other
             // methods have been called or can be called.
-            m_LicenseValidationStorage = licenseValidationStorage;
             m_DatasetDistributor = datasetDistributor;
             m_Builder = projectBuilder;
         }

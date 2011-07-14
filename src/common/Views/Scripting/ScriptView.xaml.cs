@@ -101,8 +101,6 @@ namespace Apollo.UI.Common.Views.Scripting
                     CutCopyWholeLine = false,
                     EnableEmailHyperlinks = false,
                     EnableHyperlinks = true,
-                    EnableRectangularSelection = true,
-                    EnableTextDragDrop = true,
                     IndentationSize = 4,
                     InheritWordWrapIndentation = true,
                     RequireControlModifierForHyperlinkClick = true,

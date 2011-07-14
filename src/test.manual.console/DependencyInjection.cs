@@ -10,7 +10,6 @@ using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Autofac;
-using AutofacContrib.Startable;
 using Test.Manual.Console.Models;
 using Test.Manual.Console.Views;
 
@@ -34,9 +33,6 @@ namespace Test.Manual.Console
                 builder.RegisterModule(new BaseModule(true));
                 builder.RegisterModule(new UtilitiesModule());
 
-                builder.RegisterModule(
-                  new StartableModule<ILoadOnApplicationStartup>(s => s.Initialize()));
-
                 // Register the elements from the current assembly
                 builder.Register(c => new InteractiveWindow(
                         context,
@@ -57,7 +53,7 @@ namespace Test.Manual.Console
                         c.Resolve<ICommunicationLayer>(),
                         c.Resolve<ConnectionViewModel>()))
                     .As<IFormTheApplicationCenter>()
-                    .As<ILoadOnApplicationStartup>()
+                    .As<IStartable>()
                     .SingleInstance();
 
                 builder.Register(c => new ConnectionViewModel(c.Resolve<InteractiveWindow>().Dispatcher))

@@ -62,22 +62,22 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=2.2.3.887, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Concordion">
-      <HintPath>..\..\tools\concordion\Concordion.dll</HintPath>
+      <HintPath>..\..\packages\Concordion.Net\lib\Concordion.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="OGNL, Version=1.0.3396.12987, Culture=neutral, PublicKeyToken=ee5b68ec5ad4ef93, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\tools\concordion\OGNL.dll</HintPath>
+      <HintPath>..\..\packages\Concordion.Net\lib\OGNL.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -122,6 +122,9 @@
     <EmbeddedResource Include="System\Shutdown.html">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,7 +6,6 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Utilities.Licensing;
 using Autofac;
 
 namespace Apollo.Core.Projects
@@ -27,7 +26,6 @@ namespace Apollo.Core.Projects
             base.Load(builder);
 
             builder.Register(c => new ProjectService(
-                    c.Resolve<IValidationResultStorage>(),
                     c.Resolve<IHelpDistributingDatasets>(),
                     c.Resolve<IBuildProjects>()))
                 .As<ProjectService>();

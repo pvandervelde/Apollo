@@ -14,15 +14,15 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -112,6 +112,7 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="app.config" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

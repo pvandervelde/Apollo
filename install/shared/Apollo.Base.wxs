@@ -40,16 +40,6 @@
                       Source="$(var.Apollo_BinFolder)\Autofac.dll"
                       KeyPath="yes" />
             </Component>
-
-            <!-- AutofacContrib.Startable.dll -->
-            <Component Id="C.AutofacContrib.Startable.dll"
-                       Guid="{F569B2AE-FD34-47F7-951E-E886524EB7A8}">
-                <File Id="File.AutofacContrib.Startable.dll"
-                      Name="AutofacContrib.Startable.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\AutofacContrib.Startable.dll"
-                      KeyPath="yes" />
-            </Component>
           
             <!-- Castle.Core.dll -->
             <Component Id="C.Castle.Core.dll"
@@ -80,16 +70,6 @@
                     Source="$(var.Apollo_BinFolder)\NLog.dll"
                     KeyPath="yes" />
             </Component>
-            
-            <!-- System.CoreEx.dll -->
-            <Component Id="C.System.CoreEx.dll"
-                       Guid="{15B3BFD2-4618-417B-B0F3-DAD5E3C8F45F}">
-                <File Id="File.System.CoreEx.dll"
-                      Name="System.CoreEx.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\System.CoreEx.dll"
-                      KeyPath="yes" />
-            </Component>
 
             <!-- System.Reactive.dll -->
             <Component Id="C.System.Reactive.dll"
@@ -117,11 +97,9 @@
             <ComponentRef Id="C.Apollo.Core.Base.dll" />
             <ComponentRef Id="C.Apollo.Utilities.dll" />
             <ComponentRef Id="C.Autofac.dll" />
-            <ComponentRef Id="C.AutofacContrib.Startable.dll" />
             <ComponentRef Id="C.Castle.Core.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
             <ComponentRef Id="C.NLog.dll" />
-            <ComponentRef Id="C.System.CoreEx.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />
         </ComponentGroup>
     </Fragment>

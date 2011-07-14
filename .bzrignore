@@ -30,3 +30,4 @@ partcover.driver.log
 ./install/Dependencies.wxi
 ./install/VersionNumber.wxi
 tools/sourcemonitor/SourceMonitor.log
+./packages

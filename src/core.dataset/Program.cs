@@ -15,7 +15,6 @@ using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Applications;
 using Autofac;
-using AutofacContrib.Startable;
 using Mono.Options;
 
 namespace Apollo.Core.Dataset
@@ -106,9 +105,9 @@ namespace Apollo.Core.Dataset
             var logger = container.Resolve<Action<LogSeverityProxy, string>>();
 
             // Load the communication system and get it going
-            if (container.IsRegistered<IStarter>())
+            if (container.IsRegistered<IStartable>())
             {
-                container.Resolve<IStarter>().Start();
+                container.Resolve<IStartable>().Start();
             }
 
             // Register all global commands

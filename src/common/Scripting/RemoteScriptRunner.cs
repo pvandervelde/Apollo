@@ -12,6 +12,7 @@ using Apollo.UI.Common.Properties;
 using Lokad;
 using Microsoft.Scripting;
 using Microsoft.Scripting.Hosting;
+using Microsoft.Scripting.Runtime;
 
 namespace Apollo.UI.Common.Scripting
 {
@@ -80,11 +81,8 @@ namespace Apollo.UI.Common.Scripting
         {
             if (m_Scope == null)
             {
-                var variables = new Dictionary<string, object> 
-                    {
-                        { ScriptProjects, m_Projects },
-                    };
-                m_Scope = m_Engine.CreateScope(variables);
+                m_Scope = m_Engine.CreateScope();
+                m_Scope.SetVariable(ScriptProjects, m_Projects);
             }
         }
 

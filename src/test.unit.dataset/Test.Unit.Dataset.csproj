@@ -15,18 +15,18 @@
   <ItemGroup>
     <Reference Include="Gallio, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\tools\mbunit\Gallio.dll</HintPath>
+      <HintPath>..\..\packages\Gallio.Complete\Gallio.dll</HintPath>
     </Reference>
     <Reference Include="MbUnit, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\tools\mbunit\MbUnit.dll</HintPath>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit.dll</HintPath>
     </Reference>
     <Reference Include="MbUnit35, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\tools\mbunit\MbUnit35.dll</HintPath>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit35.dll</HintPath>
     </Reference>
     <Reference Include="Moq">
-      <HintPath>..\..\tools\moq\Moq.dll</HintPath>
+      <HintPath>..\..\packages\Moq\lib\NET40\Moq.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -50,6 +50,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />

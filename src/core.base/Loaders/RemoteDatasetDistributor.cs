@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
@@ -23,7 +24,7 @@ namespace Apollo.Core.Base.Loaders
     internal sealed class RemoteDatasetDistributor : IGenerateDistributionProposals, ILoadDatasets
     {
         private static IEnumerable<DatasetLoadingProposal> RetrieveProposals(
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration,
             DatasetRequest request,
             CancellationToken token)
@@ -33,11 +34,11 @@ namespace Apollo.Core.Base.Loaders
             return orderedProposals;
         }
 
-        private static IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+        private static IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
+            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration)
         {
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
+            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
 
             var key = LoaderConfigurationKeys.OffLimitsEndpoints;
             if (configuration.HasValueFor(key))
@@ -59,7 +60,7 @@ namespace Apollo.Core.Base.Loaders
         private static IEnumerable<DatasetLoadingProposal> OrderProposals(
             ExpectedDatasetLoad load,
             LoadingLocations preferedLocations,
-            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
+            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
             CancellationToken token)
         {
             var loadingProposals = new Queue<Task<DatasetLoadingProposal>>();
@@ -295,12 +296,12 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
         {
-            var availableEndpoints = new List<Tuple<EndpointId, IDatasetLoaderCommands>>();
+            var availableEndpoints = new List<System.Tuple<EndpointId, IDatasetLoaderCommands>>();
             lock (m_Lock)
             {
                 foreach (var pair in m_LoaderCommands)
                 {
-                    availableEndpoints.Add(new Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
+                    availableEndpoints.Add(new System.Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
                 }
             }
 
@@ -342,7 +343,8 @@ namespace Apollo.Core.Base.Loaders
 
                     var endpoint = endpointTask.Result;
                     var resetEvent = new AutoResetEvent(false);
-                    var commandAvailabilityNotifier = Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                    var commandAvailabilityNotifier =
+                        Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(
                             h => m_Hub.OnEndpointSignedIn += h,
                             h => m_Hub.OnEndpointSignedIn -= h)
                         .Where(args => args.EventArgs.Endpoint.Equals(endpoint))

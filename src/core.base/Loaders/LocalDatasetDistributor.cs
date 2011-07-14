@@ -7,7 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
+using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
@@ -149,7 +149,8 @@ namespace Apollo.Core.Base.Loaders
                 {
                     var endpoint = m_Loader.LoadDataset(m_ChannelInformation());
                     var resetEvent = new AutoResetEvent(false);
-                    var commandAvailabilityNotifier = Observable.FromEvent<CommandSetAvailabilityEventArgs>(
+                    var commandAvailabilityNotifier = 
+                        Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(
                             h => m_Hub.OnEndpointSignedIn += h,
                             h => m_Hub.OnEndpointSignedIn -= h)
                         .Where(args => args.EventArgs.Endpoint.Equals(endpoint))

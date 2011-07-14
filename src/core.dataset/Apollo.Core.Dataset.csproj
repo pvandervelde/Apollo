@@ -14,33 +14,25 @@
   <ItemGroup>
     <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\Autofac.dll</HintPath>
-    </Reference>
-    <Reference Include="AutofacContrib.Startable, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\autofac\AutofacContrib.Startable.dll</HintPath>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
     </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.181.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Mono.Options">
-      <HintPath>..\..\lib\mono\Mono.Options.dll</HintPath>
+      <HintPath>..\..\packages\Mono.Options\lib\Mono.Options.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
-    <Reference Include="System.CoreEx, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\reactive\System.CoreEx.dll</HintPath>
-    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\reactive\System.Reactive.dll</HintPath>
+      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
@@ -128,6 +120,7 @@
     </EmbeddedResource>
     <None Include="app.config" />
     <AppDesigner Include="Properties\" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">

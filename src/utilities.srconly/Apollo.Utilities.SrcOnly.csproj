@@ -27,35 +27,6 @@
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
     <Compile Include="FusionHelper.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
-    <Compile Include="Licensing\Checksum.cs" />
-    <Compile Include="Licensing\Checksum.HashCalculation.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Checksum.HashCalculation.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Licensing\ILicenseValidator.cs" />
-    <Compile Include="Licensing\ILicenseValidationCache.cs" />
-    <Compile Include="Licensing\ITimeBasedValidator.cs" />
-    <Compile Include="Licensing\IValidationService.cs" />
-    <Compile Include="Licensing\IValidator.cs" />
-    <Compile Include="Licensing\LicenseCheckResult.cs" />
-    <Compile Include="Licensing\LicenseResultUpdated.cs" />
-    <Compile Include="Licensing\LicenseValidationCache.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LicenseValidationCache.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Licensing\LicenseValidator.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>LicenseValidator.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Licensing\LicenseValidationFailedException.cs" />
-    <Compile Include="Licensing\LicensingConstants.cs" />
-    <Compile Include="Licensing\RepeatPeriod.cs" />
-    <Compile Include="Licensing\TimePeriod.cs" />
-    <Compile Include="Licensing\ValidationService.cs" />
-    <Compile Include="Licensing\ValidationSequence.cs" />
     <Compile Include="Logging\AdditionalLogMessageProperties.cs" />
     <Compile Include="Logging\DebugLogTemplate.cs" />
     <Compile Include="Logging\ILogger.cs" />
@@ -77,11 +48,11 @@
   <ItemGroup>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\lokad\Lokad.Shared.dll</HintPath>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nlog\NLog.dll</HintPath>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -91,21 +62,6 @@
   <ItemGroup>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
-    </None>
-    <None Include="Licensing\Checksum.HashCalculation.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Checksum.HashCalculation.cs</LastGenOutput>
-    </None>
-    <None Include="Licensing\ChecksumHashCalculator.ttinclude" />
-    <None Include="Licensing\LicenseValidator.ttinclude" />
-    <None Include="Licensing\LicenseValidationCache.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LicenseValidationCache.cs</LastGenOutput>
-    </None>
-    <None Include="Licensing\LicenseValidationCache.ttinclude" />
-    <None Include="Licensing\LicenseValidator.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>LicenseValidator.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -121,6 +77,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>

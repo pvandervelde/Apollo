@@ -136,7 +136,7 @@ namespace Apollo.Base.Communication
 
             // Wait till we have written a decent amount of the file, then
             // kill the transfer.
-            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length < size / 2);
+            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length > size / 2, 100);
 
             // Kill the transfer
             token.Cancel();
@@ -203,7 +203,7 @@ namespace Apollo.Base.Communication
 
             // Wait till we have written a decent amount of the file, then
             // kill the transfer.
-            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length < size / 2);
+            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length > size / 2, 100);
 
             // Kill the transfer
             token.Cancel();
