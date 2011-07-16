@@ -67,7 +67,9 @@
                                           LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
                                           LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"
                                           OverlapRemovalAlgorithmType="FSA"
-                                          HighlightAlgorithmType="Simple" />
+                                          HighlightAlgorithmType="Simple" 
+                                          CreationTransition="{Binding Path=CreationTransition}"
+                                          DestructionTransition="{Binding Path=DestructionTransition}"/>
             </zoom:ZoomControl>
         </Border>
     </Grid>

@@ -10,6 +10,7 @@ using System.Diagnostics;
 using Apollo.Core.UserInterfaces.Projects;
 using GraphSharp.Algorithms.Layout;
 using GraphSharp.Algorithms.Layout.Simple.Tree;
+using GraphSharp.Controls;
 using Lokad;
 
 namespace Apollo.UI.Common.Views.Datasets
@@ -261,8 +262,26 @@ namespace Apollo.UI.Common.Views.Datasets
             }
         }
 
-        // - Has events / methods to pass data onto the graph / project
-        //   to make changes
-        // - Has methods that get updated when the graph changes
+        /// <summary>
+        /// Gets the creation transition.
+        /// </summary>
+        public ITransition CreationTransition
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Gets the destruction transition.
+        /// </summary>
+        public ITransition DestructionTransition
+        {
+            get
+            {
+                return new FadeOutTransition();
+            }
+        }
     }
 }
