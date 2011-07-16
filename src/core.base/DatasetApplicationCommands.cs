@@ -84,7 +84,7 @@ namespace Apollo.Core.Base
             var filePath = Path.GetTempFileName();
 
             var source = new CancellationTokenSource();
-            var task = m_Layer.DownloadData(ownerId, token, filePath, source.Token, m_Scheduler);
+            var task = m_Layer.DownloadData(ownerId, token, filePath, null, source.Token, m_Scheduler);
             return task.ContinueWith(
                 t =>
                 {

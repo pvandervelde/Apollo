@@ -114,7 +114,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             var filePath = m_Uploads.Deregister(msg.Token);
             var tokenSource = new CancellationTokenSource();
-            var task = m_Layer.UploadData(filePath, msg.TransferInformation, tokenSource.Token, m_Scheduler);
+            var task = m_Layer.UploadData(filePath, msg.TransferInformation, null, tokenSource.Token, m_Scheduler);
 
             ICommunicationMessage returnMsg = null;
             try
