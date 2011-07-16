@@ -100,7 +100,6 @@ namespace Apollo.ProjectExplorer
                 new StartupTimeStorage());
 
             var bootstrapper = new KernelBootstrapper(
-                new BootstrapperStartInfo(),
                 progressTracker,
                 m_ShutdownEvent,
                 module => LoadUserInterface(module));

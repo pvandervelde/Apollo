@@ -85,7 +85,6 @@
     <Compile Include="KernelNotInInstallReadyStateException.cs" />
     <Compile Include="KernelService.cs" />
     <Compile Include="KernelServiceStartupFailedException.cs" />
-    <Compile Include="KernelStartInfo.cs" />
     <Compile Include="KernelStartupFailedException.cs" />
     <Compile Include="MissingServiceDependencyException.cs" />
     <Compile Include="NotificationNameConstants.cs" />

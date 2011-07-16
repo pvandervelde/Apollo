@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.UserInterfaces.Projects;
 using GraphSharp.Algorithms.Layout;
 using GraphSharp.Algorithms.Layout.Simple.Tree;
@@ -105,7 +106,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child));
+                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child), InternalContext);
                         m_VertexMap.Add(child, vertex);
 
                         graph.AddVertex(vertex);
@@ -201,7 +202,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child));
+                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child), InternalContext);
                         m_VertexMap.Add(child, vertex);
                         graph.AddVertex(vertex);
 
@@ -265,6 +266,8 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Gets the creation transition.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "This property is used in the XAML databinding. It's easier if it is an instance property.")]
         public ITransition CreationTransition
         {
             get
@@ -276,6 +279,8 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Gets the destruction transition.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "This property is used in the XAML databinding. It's easier if it is an instance property.")]
         public ITransition DestructionTransition
         {
             get

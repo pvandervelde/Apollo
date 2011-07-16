@@ -122,13 +122,19 @@ namespace Apollo.Core.Base
 
             // This function is used to resolve connection information from
             // a set of strings.
-            builder.Register<Action<string, string, string>>(c =>
-                (id, channelType, address) =>
+            builder.Register<Action<string, string, string>>(
+                c =>
                 {
-                    c.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
-                        EndpointIdExtensions.Deserialize(id),
-                        Type.GetType(channelType, null, null, true, false),
-                        new Uri(address));
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return (id, channelType, address) =>
+                    {
+                        ctx.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
+                            EndpointIdExtensions.Deserialize(id),
+                            Type.GetType(channelType, null, null, true, false),
+                            new Uri(address));
+                    };
                 });
         }
 
