@@ -15,6 +15,7 @@ using System.Threading.Tasks.Schedulers;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
+using Gallio.Framework;
 using MbUnit.Framework;
 using Moq;
 
@@ -94,12 +95,15 @@ namespace Apollo.Base.Communication
 
             var outputPath = GetRandomFileName();
             var file = CreateRandomFile(1 * 1024 * 128);
-            var pair = recipient.PrepareForDataReception(outputPath, new CancellationToken(), null);
+            long outputProgress = 0;
+            Action<IProgressMark, long> outputReporter = (m, p) => outputProgress = p;
+            var pair = recipient.PrepareForDataReception(outputPath, outputReporter, new CancellationToken(), null);
             var outputTask = pair.Item2.ContinueWith(
                 t =>
                 {
                     Assert.IsTrue(t.IsCompleted);
                     Assert.IsFalse(t.IsFaulted);
+                    Assert.AreEqual(file.Length, outputProgress);
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                     using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
@@ -108,7 +112,16 @@ namespace Apollo.Base.Communication
                     }
                 });
 
-            Task sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken(), new CurrentThreadTaskScheduler());
+            long inputProgress = 0;
+            Action<IProgressMark, long> inputReporter = (m, p) => inputProgress = p;
+            Task sendingTask = sender.TransferData(
+                file.FullName, 
+                pair.Item1, 
+                inputReporter, 
+                new CancellationToken(), 
+                new CurrentThreadTaskScheduler());
+
+            Assert.AreEqual(file.Length, inputProgress);
 
             // Check that nothing went wrong on the other task
             outputTask.Wait();
@@ -126,20 +139,29 @@ namespace Apollo.Base.Communication
             var sender = new NamedPipeChannelType(config.Object);
             var recipient = new NamedPipeChannelType(config.Object);
 
-            var outputPath = GetRandomFileName();
-            var pair = recipient.PrepareForDataReception(outputPath, new CancellationTokenSource().Token, null);
-
-            long size = 1 * 1024 * 128;
+            long size = 1 * 1024 * 256;
             var file = CreateRandomFile(size);
+
+            var outputPath = GetRandomFileName();
+            var pair = recipient.PrepareForDataReception(outputPath, null, new CancellationTokenSource().Token, null);
             var token = new CancellationTokenSource();
-            Task sendingTask = sender.TransferData(file.FullName, pair.Item1, token.Token, null);
+            Action<IProgressMark, long> inputReporter =
+                (m, p) => 
+                {
+                    if (p > size / 2)
+                    {
+                        token.Cancel();
 
-            // Wait till we have written a decent amount of the file, then
-            // kill the transfer.
-            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length > size / 2, 100);
+                        DiagnosticLog.WriteLine(
+                        string.Format(
+                            "Writing to file: {0}. Current size: {1}. Expected size: {2}",
+                            outputPath,
+                            new FileInfo(outputPath).Length,
+                            size));
+                    }
+                };
 
-            // Kill the transfer
-            token.Cancel();
+            Task sendingTask = sender.TransferData(file.FullName, pair.Item1, inputReporter, token.Token, null);
 
             // check the status of the streaming processes
             try
@@ -151,31 +173,31 @@ namespace Apollo.Base.Communication
                 // We cancelled the task
             }
 
-            Assert.IsFalse(sendingTask.IsFaulted);
-            Assert.IsTrue(sendingTask.IsCompleted);
-            Assert.IsTrue(sendingTask.IsCanceled);
+            Assert.IsFalse(sendingTask.IsFaulted, "1");
+            Assert.IsTrue(sendingTask.IsCompleted, "2");
+            Assert.IsTrue(sendingTask.IsCanceled, "3");
 
             pair.Item2.Wait();
-            Assert.IsFalse(pair.Item2.IsCanceled);
-            Assert.IsFalse(pair.Item2.IsFaulted);
-            Assert.IsTrue(pair.Item2.IsCompleted);
+            Assert.IsFalse(pair.Item2.IsCanceled, "4");
+            Assert.IsFalse(pair.Item2.IsFaulted, "5");
+            Assert.IsTrue(pair.Item2.IsCompleted, "6");
 
             // Restart the operation.
-            pair = recipient.PrepareForDataReception(outputPath, new CancellationToken(), null);
+            pair = recipient.PrepareForDataReception(outputPath, null, new CancellationToken(), null);
             var outputTask = pair.Item2.ContinueWith(
                 t =>
                 {
-                    Assert.IsTrue(t.IsCompleted);
-                    Assert.IsFalse(t.IsFaulted);
+                    Assert.IsTrue(t.IsCompleted, "8");
+                    Assert.IsFalse(t.IsFaulted, "9");
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                     using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
                     {
-                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream));
+                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream), "10");
                     }
                 });
 
-            sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken(), new CurrentThreadTaskScheduler());
+            sendingTask = sender.TransferData(file.FullName, pair.Item1, null, new CancellationToken(), new CurrentThreadTaskScheduler());
 
             // Check that nothing went wrong on the other task
             outputTask.Wait();
@@ -193,20 +215,29 @@ namespace Apollo.Base.Communication
             var sender = new NamedPipeChannelType(config.Object);
             var recipient = new NamedPipeChannelType(config.Object);
 
+            long size = 1 * 1024 * 256;
+            var file = CreateRandomFile(size);
+
             var outputPath = GetRandomFileName();
             var token = new CancellationTokenSource();
-            var pair = recipient.PrepareForDataReception(outputPath, token.Token, null);
+            Action<IProgressMark, long> outputReporter =
+                (m, p) =>
+                {
+                    if (p > size / 2)
+                    {
+                        token.Cancel();
 
-            long size = 1 * 1024 * 128;
-            var file = CreateRandomFile(size);
-            Task sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationTokenSource().Token, null);
-
-            // Wait till we have written a decent amount of the file, then
-            // kill the transfer.
-            SpinWait.SpinUntil(() => new FileInfo(outputPath).Length > size / 2, 100);
-
-            // Kill the transfer
-            token.Cancel();
+                        DiagnosticLog.WriteLine(
+                           string.Format(
+                               "Writing to file: {0}. Current size: {1}. Expected size: {2}",
+                               outputPath,
+                               new FileInfo(outputPath).Length,
+                               size));
+                    }
+                };
+            var pair = recipient.PrepareForDataReception(outputPath, outputReporter, token.Token, null);
+            
+            Task sendingTask = sender.TransferData(file.FullName, pair.Item1, null, new CancellationTokenSource().Token, null);
 
             // check the status of the streaming processes
             try
@@ -218,9 +249,9 @@ namespace Apollo.Base.Communication
                 // We know it has been cancelled.
             }
 
-            Assert.IsTrue(pair.Item2.IsCanceled);
-            Assert.IsFalse(pair.Item2.IsFaulted);
-            Assert.IsTrue(pair.Item2.IsCompleted);
+            Assert.IsTrue(pair.Item2.IsCanceled, "1");
+            Assert.IsFalse(pair.Item2.IsFaulted, "2");
+            Assert.IsTrue(pair.Item2.IsCompleted, "3");
 
             try
             {
@@ -231,26 +262,26 @@ namespace Apollo.Base.Communication
                 // Pipe has died because the other side killed it.
             }
 
-            Assert.IsFalse(sendingTask.IsCanceled);
-            Assert.IsTrue(sendingTask.IsFaulted);
-            Assert.IsTrue(sendingTask.IsCompleted);
+            Assert.IsFalse(sendingTask.IsCanceled, "4");
+            Assert.IsTrue(sendingTask.IsFaulted, "5");
+            Assert.IsTrue(sendingTask.IsCompleted, "6");
 
             // Restart the operation.
-            pair = recipient.PrepareForDataReception(outputPath, new CancellationToken(), null);
+            pair = recipient.PrepareForDataReception(outputPath, null, new CancellationToken(), null);
             var outputTask = pair.Item2.ContinueWith(
                 t =>
                 {
-                    Assert.IsTrue(t.IsCompleted);
-                    Assert.IsFalse(t.IsFaulted);
+                    Assert.IsTrue(t.IsCompleted, "7");
+                    Assert.IsFalse(t.IsFaulted, "8");
 
                     using (var fileStream = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                     using (var outputStream = new FileStream(outputPath, FileMode.Open, FileAccess.Read))
                     {
-                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream));
+                        Assert.IsTrue(AreStreamsEqual(fileStream, outputStream), "10");
                     }
                 });
 
-            sendingTask = sender.TransferData(file.FullName, pair.Item1, new CancellationToken(), new CurrentThreadTaskScheduler());
+            sendingTask = sender.TransferData(file.FullName, pair.Item1, null, new CancellationToken(), new CurrentThreadTaskScheduler());
 
             // Check that nothing went wrong on the other task
             outputTask.Wait();

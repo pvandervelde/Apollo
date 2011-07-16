@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -111,6 +112,10 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         /// <param name="filePath">The full path to the file that should be transferred.</param>
         /// <param name="transferInfo">The object that provides the upload information.</param>
+        /// <param name="progressReporter">
+        ///     The action that is used to report progress in the transfer. The progress value is measured
+        ///     as the amount of bytes that were transferred.
+        /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
@@ -118,7 +123,8 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         Task UploadData(
             string filePath, 
-            StreamTransferInformation transferInfo, 
+            StreamTransferInformation transferInfo,
+            Action<IProgressMark, long> progressReporter,
             CancellationToken token,
             TaskScheduler scheduler);
 
@@ -132,6 +138,10 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpointToDownloadFrom">The endpoint ID of the endpoint from which the data should be transferred.</param>
         /// <param name="uploadToken">The token that indicates which file should be uploaded.</param>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
+        /// <param name="progressReporter">
+        ///     The action that is used to report progress in the transfer. The progress value is measured
+        ///     as the amount of bytes that were transferred.
+        /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
@@ -140,7 +150,8 @@ namespace Apollo.Core.Base.Communication
         Task<Stream> DownloadData(
             EndpointId endpointToDownloadFrom, 
             UploadToken uploadToken, 
-            string localFile, 
+            string localFile,
+            Action<IProgressMark, long> progressReporter,
             CancellationToken token,
             TaskScheduler scheduler);
 

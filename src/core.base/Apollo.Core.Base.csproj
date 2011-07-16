@@ -136,6 +136,7 @@
     <Compile Include="Communication\ReceivingEndpoint.cs" />
     <Compile Include="Communication\SelfResurrectingSendingEndpoint.cs" />
     <Compile Include="Communication\SendingEndpoint.cs" />
+    <Compile Include="Communication\StreamTransferProgressMark.cs" />
     <Compile Include="Communication\TcpBasedDiscoverySource.cs" />
     <Compile Include="Communication\TcpChannelType.cs" />
     <Compile Include="Communication\TcpStreamTransferInformation.cs" />

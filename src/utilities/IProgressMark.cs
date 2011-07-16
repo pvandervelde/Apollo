@@ -15,6 +15,7 @@ namespace Apollo.Utilities
         Justification = "For now we don't need any methods on this interface, but we may do later.")]
     public interface IProgressMark
     {
+        // Process ID?
         // Time
         // Description
         // Started / Finished

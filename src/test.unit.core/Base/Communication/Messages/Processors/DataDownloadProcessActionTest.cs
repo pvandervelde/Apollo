@@ -41,6 +41,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 layer.Setup(l => l.UploadData(
                         It.IsAny<string>(),
                         It.IsAny<StreamTransferInformation>(),
+                        It.IsAny<Action<IProgressMark, long>>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<TaskScheduler>()))
                     .Returns(Task.Factory.StartNew(
@@ -77,6 +78,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 l => l.UploadData(
                     It.IsAny<string>(),
                     It.IsAny<StreamTransferInformation>(),
+                    It.IsAny<Action<IProgressMark, long>>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TaskScheduler>()),
                 Times.Once());
@@ -100,6 +102,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 layer.Setup(l => l.UploadData(
                         It.IsAny<string>(),
                         It.IsAny<StreamTransferInformation>(),
+                        It.IsAny<Action<IProgressMark, long>>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<TaskScheduler>()))
                     .Returns(Task.Factory.StartNew(
@@ -134,6 +137,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 l => l.UploadData(
                     It.IsAny<string>(),
                     It.IsAny<StreamTransferInformation>(),
+                    It.IsAny<Action<IProgressMark, long>>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TaskScheduler>()),
                 Times.Never());
@@ -157,6 +161,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 layer.Setup(l => l.UploadData(
                         It.IsAny<string>(),
                         It.IsAny<StreamTransferInformation>(),
+                        It.IsAny<Action<IProgressMark, long>>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<TaskScheduler>()))
                     .Returns(Task.Factory.StartNew(
@@ -193,6 +198,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 l => l.UploadData(
                     It.IsAny<string>(),
                     It.IsAny<StreamTransferInformation>(),
+                    It.IsAny<Action<IProgressMark, long>>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TaskScheduler>()),
                 Times.Once());
@@ -216,6 +222,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 layer.Setup(l => l.UploadData(
                         It.IsAny<string>(),
                         It.IsAny<StreamTransferInformation>(),
+                        It.IsAny<Action<IProgressMark, long>>(),
                         It.IsAny<CancellationToken>(),
                         It.IsAny<TaskScheduler>()))
                     .Returns(Task.Factory.StartNew(
@@ -252,6 +259,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 l => l.UploadData(
                     It.IsAny<string>(),
                     It.IsAny<StreamTransferInformation>(),
+                    It.IsAny<Action<IProgressMark, long>>(),
                     It.IsAny<CancellationToken>(),
                     It.IsAny<TaskScheduler>()),
                 Times.Once());

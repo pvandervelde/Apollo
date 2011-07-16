@@ -15,6 +15,7 @@ using System.ServiceModel.Description;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Properties;
+using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
 using Lokad;
 
@@ -143,6 +144,10 @@ namespace Apollo.Core.Base.Communication
         /// </para>
         /// </remarks>
         /// <param name="localFile">The full file path to which the network stream should be written.</param>
+        /// <param name="progressReporter">
+        ///     The action that is used to report progress in the transfer. The progress value is measured
+        ///     as the amount of bytes that were transferred.
+        /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <param name="scheduler">The scheduler used to run the return task.</param>
         /// <returns>
@@ -156,7 +161,8 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="localFile"/> is an empty string.
         /// </exception>
         public System.Tuple<StreamTransferInformation, Task<FileInfo>> PrepareForDataReception(
-            string localFile, 
+            string localFile,
+            Action<IProgressMark, long> progressReporter,
             CancellationToken token,
             TaskScheduler scheduler)
         {
@@ -184,6 +190,7 @@ namespace Apollo.Core.Base.Communication
                         {
                             pipe.WaitForConnection();
 
+                            var totalBytesRead = 0L;
                             byte[] message = new byte[ReadBufferSize];
                             while (true)
                             {
@@ -204,6 +211,12 @@ namespace Apollo.Core.Base.Communication
                                 }
 
                                 file.Write(message, 0, bytesRead);
+
+                                totalBytesRead += bytesRead;
+                                if (progressReporter != null)
+                                {
+                                    progressReporter(new StreamTransferProgressMark(), totalBytesRead);
+                                }
                             }
                         }
                     }
@@ -225,6 +238,10 @@ namespace Apollo.Core.Base.Communication
         /// The information which describes the data to be transferred and the remote connection over
         /// which the data is transferred.
         /// </param>
+        /// <param name="progressReporter">
+        ///     The action that is used to report progress in the transfer. The progress value is measured
+        ///     as the amount of bytes that were transferred.
+        /// </param>
         /// <param name="token">The cancellation token that is used to cancel the task if necessary.</param>
         /// <param name="scheduler">The scheduler that is used to run the return task.</param>
         /// <returns>
@@ -244,7 +261,8 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         public Task TransferData(
             string filePath, 
-            StreamTransferInformation transferInformation, 
+            StreamTransferInformation transferInformation,
+            Action<IProgressMark, long> progressReporter,
             CancellationToken token,
             TaskScheduler scheduler)
         {
@@ -274,6 +292,7 @@ namespace Apollo.Core.Base.Communication
                         {
                             file.Position = transferInformation.StartPosition;
 
+                            var totalBytesRead = 0L;
                             byte[] buffer = new byte[ReadBufferSize];
                             while (true)
                             {
@@ -290,6 +309,12 @@ namespace Apollo.Core.Base.Communication
 
                                 pipe.Write(buffer, 0, bytesRead);
                                 pipe.Flush();
+
+                                totalBytesRead += bytesRead;
+                                if (progressReporter != null)
+                                {
+                                    progressReporter(new StreamTransferProgressMark(), totalBytesRead);
+                                }
                             }
                         }
                     }
