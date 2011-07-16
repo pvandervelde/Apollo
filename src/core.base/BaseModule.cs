@@ -59,13 +59,20 @@ namespace Apollo.Core.Base
                 .As<ISendCommandsToRemoteEndpoints>()
                 .SingleInstance();
 
-            builder.Register(c => new CommandProxyBuilder(
-                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                (endpoint, msg) =>
+            builder.Register(
+                c => 
                 {
-                    return c.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                },
-                c.Resolve<Action<LogSeverityProxy, string>>()));
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommandProxyBuilder(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        (endpoint, msg) =>
+                        {
+                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
+                        },
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                });
 
             builder.Register(c => new LocalCommandCollection(
                     c.Resolve<ICommunicationLayer>()))
@@ -75,15 +82,22 @@ namespace Apollo.Core.Base
 
         private static void RegisterCommunicationLayer(ContainerBuilder builder)
         {
-            builder.Register(c => new CommunicationLayer(
-                    c.Resolve<IEnumerable<IDiscoverOtherServices>>(),
-                    (Type t, EndpointId id) =>
-                    {
-                        return Tuple.Create(
-                            c.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
-                            c.ResolveKeyed<IDirectIncomingMessages>(t));
-                    },
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                c => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommunicationLayer(
+                        c.Resolve<IEnumerable<IDiscoverOtherServices>>(),
+                        (Type t, EndpointId id) =>
+                        {
+                            return Tuple.Create(
+                                ctx.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
+                                ctx.ResolveKeyed<IDirectIncomingMessages>(t));
+                        },
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .As<ICommunicationLayer>()
                 .SingleInstance();
         }
@@ -163,11 +177,18 @@ namespace Apollo.Core.Base
             // and then throw those objects away. If this turns out to be too expensive
             // or the list becomes too long then we can do something cunning with the 
             // use of Autofac Metadata.
-            builder.Register(c => new CommandInvokedProcessAction(
-                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                    c.Resolve<ICommandCollection>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                c => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommandInvokedProcessAction(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                        c.Resolve<ICommandCollection>(),
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .As<IMessageProcessAction>();
 
             builder.Register(c => new DataDownloadProcessAction(
@@ -176,17 +197,31 @@ namespace Apollo.Core.Base
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
 
-            builder.Register(c => new EndpointConnectProcessAction(
-                    c.Resolve<IAcceptExternalEndpointInformation>(),
-                    from channelType in c.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                c => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new EndpointConnectProcessAction(
+                        c.Resolve<IAcceptExternalEndpointInformation>(),
+                        from channelType in ctx.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .As<IMessageProcessAction>();
 
-            builder.Register(c => new EndpointInformationRequestProcessAction(
-                    EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                    (endpoint, msg) => c.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                    c.Resolve<ICommandCollection>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                c => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new EndpointInformationRequestProcessAction(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
+                        c.Resolve<ICommandCollection>(),
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .As<IMessageProcessAction>();
 
             builder.Register(c => new NewCommandRegisteredProcessAction(
@@ -199,19 +234,26 @@ namespace Apollo.Core.Base
             // CommunicationChannel.
             // Register one channel for each communication type. At the moment
             // that is only named pipe and TCP.
-            builder.Register((c, p) => new CommunicationChannel(
-                    p.TypedAs<EndpointId>(),
-                    c.Resolve<NamedPipeChannelType>(),
-                    () => c.Resolve<IMessagePipe>(),
-                    endpointToProxy =>
-                    {
-                        return c.Resolve<ISendingEndpoint>(
-                            new TypedParameter(
-                                typeof(Func<EndpointId, IChannelProxy>),
-                                endpointToProxy));
-                    },
-                    () => DateTimeOffset.Now,
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                (c, p) => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommunicationChannel(
+                        p.TypedAs<EndpointId>(),
+                        c.Resolve<NamedPipeChannelType>(),
+                        () => ctx.Resolve<IMessagePipe>(),
+                        endpointToProxy =>
+                        {
+                            return ctx.Resolve<ISendingEndpoint>(
+                                new TypedParameter(
+                                    typeof(Func<EndpointId, IChannelProxy>),
+                                    endpointToProxy));
+                        },
+                        () => DateTimeOffset.Now,
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .OnActivated(a =>
                 {
                     ConnectToMessageHandler(a, typeof(NamedPipeChannelType));
@@ -219,19 +261,26 @@ namespace Apollo.Core.Base
                 .Keyed<ICommunicationChannel>(typeof(NamedPipeChannelType))
                 .SingleInstance();
 
-            builder.Register((c, p) => new CommunicationChannel(
-                    p.TypedAs<EndpointId>(),
-                    c.Resolve<TcpChannelType>(),
-                    () => c.Resolve<IMessagePipe>(),
-                    endpointToProxy =>
-                    {
-                        return c.Resolve<ISendingEndpoint>(
-                            new TypedParameter(
-                                typeof(Func<EndpointId, IChannelProxy>),
-                                endpointToProxy));
-                    },
-                    () => DateTimeOffset.Now,
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+            builder.Register(
+                (c, p) => 
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new CommunicationChannel(
+                        p.TypedAs<EndpointId>(),
+                        c.Resolve<TcpChannelType>(),
+                        () => ctx.Resolve<IMessagePipe>(),
+                        endpointToProxy =>
+                        {
+                            return ctx.Resolve<ISendingEndpoint>(
+                                new TypedParameter(
+                                    typeof(Func<EndpointId, IChannelProxy>),
+                                    endpointToProxy));
+                        },
+                        () => DateTimeOffset.Now,
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                })
                 .OnActivated(a =>
                 {
                     ConnectToMessageHandler(a, typeof(TcpChannelType));

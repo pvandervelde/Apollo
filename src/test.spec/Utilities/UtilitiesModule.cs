@@ -58,23 +58,24 @@ namespace Apollo.Utilities
                     .As<ILogger>()
                     .SingleInstance();
 
-                builder.Register<Action<LogSeverityProxy, string>>(c =>
+                builder.Register<Action<LogSeverityProxy, string>>(
+                    c =>
+                    {
+                        var loggers = c.Resolve<IEnumerable<ILogger>>();
+                        Action<LogSeverityProxy, string> action = (p, s) =>
                         {
-                            var loggers = c.Resolve<IEnumerable<ILogger>>();
-                            Action<LogSeverityProxy, string> action = (p, s) =>
+                            var msg = new LogMessage(
+                                LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                                s);
+
+                            foreach (var logger in loggers)
                             {
-                                var msg = new LogMessage(
-                                    LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                                    s);
+                                logger.Log(msg);
+                            }
+                        };
 
-                                foreach (var logger in loggers)
-                                {
-                                    logger.Log(msg);
-                                }
-                            };
-
-                            return action;
-                        })
+                        return action;
+                    })
                     .As<Action<LogSeverityProxy, string>>()
                     .SingleInstance();
             }

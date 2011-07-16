@@ -54,19 +54,23 @@ namespace Apollo.Utilities
 
         private static void RegisterAppDomainBuilder(ContainerBuilder builder)
         {
-            builder.Register<Func<string, AppDomainPaths, AppDomain>>(c =>
-            {
-                Func<string, AppDomainPaths, AppDomain> result = (name, paths) =>
+            builder.Register<Func<string, AppDomainPaths, AppDomain>>(
+                c =>
                 {
-                    return AppDomainBuilder.Assemble(
-                        name,
-                        AppDomainResolutionPathsFor(paths),
-                        c.Resolve<IExceptionHandler>(),
-                        c.Resolve<IFileConstants>());
-                };
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    Func<string, AppDomainPaths, AppDomain> result = (name, paths) =>
+                    {
+                        return AppDomainBuilder.Assemble(
+                            name,
+                            AppDomainResolutionPathsFor(paths),
+                            ctx.Resolve<IExceptionHandler>(),
+                            ctx.Resolve<IFileConstants>());
+                    };
 
-                return result;
-            })
+                    return result;
+                })
                 .As<Func<string, AppDomainPaths, AppDomain>>()
                 .SingleInstance();
         }
@@ -85,30 +89,31 @@ namespace Apollo.Utilities
                 .As<ILogger>()
                 .SingleInstance();
 
-            builder.Register<Action<LogSeverityProxy, string>>(c =>
-            {
-                var loggers = c.Resolve<IEnumerable<ILogger>>();
-                Action<LogSeverityProxy, string> action = (p, s) =>
+            builder.Register<Action<LogSeverityProxy, string>>(
+                c =>
                 {
-                    var msg = new LogMessage(
-                        LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
-                        s);
-
-                    foreach (var logger in loggers)
+                    var loggers = c.Resolve<IEnumerable<ILogger>>();
+                    Action<LogSeverityProxy, string> action = (p, s) =>
                     {
-                        try
-                        {
-                            logger.Log(msg);
-                        }
-                        catch (NLogRuntimeException)
-                        {
-                            // Ignore it and move on to the next logger.
-                        }
-                    }
-                };
+                        var msg = new LogMessage(
+                            LogSeverityProxyToLogLevelMap.FromLogSeverityProxy(p),
+                            s);
 
-                return action;
-            })
+                        foreach (var logger in loggers)
+                        {
+                            try
+                            {
+                                logger.Log(msg);
+                            }
+                            catch (NLogRuntimeException)
+                            {
+                                // Ignore it and move on to the next logger.
+                            }
+                        }
+                    };
+
+                    return action;
+                })
                 .As<Action<LogSeverityProxy, string>>()
                 .SingleInstance();
         }
