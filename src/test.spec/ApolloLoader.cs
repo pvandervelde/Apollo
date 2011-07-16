@@ -40,7 +40,6 @@ namespace Test.Spec
         public static void Load(Action<IModule> onKernelLoad, ITrackProgress progressTracker)
         {
             var bootstrapper = new KernelBootstrapper(
-                new BootstrapperStartInfo(),
                 progressTracker,
                 new AutoResetEvent(false),
                 onKernelLoad);

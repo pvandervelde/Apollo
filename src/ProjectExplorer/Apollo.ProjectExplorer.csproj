@@ -155,7 +155,6 @@
     <Compile Include="Converters\ContentToPathConverter.cs" />
     <Compile Include="DispatcherContextWrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
-    <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
     <Compile Include="RegionNames.cs" />
     <Compile Include="Utilities\MockExceptionHandler.cs" />

@@ -43,7 +43,6 @@
     </Compile>
     <Compile Include="ApolloLoader.cs" />
     <Compile Include="ApolloTest.cs" />
-    <Compile Include="BootstrapperStartInfo.cs" />
     <Compile Include="KernelBootstrapper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">

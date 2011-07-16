@@ -125,12 +125,6 @@ namespace Apollo.Core
         }
 
         /// <summary>
-        /// The collection that contains the base and private path information
-        /// for the <c>AppDomain</c>s that need to be created.
-        /// </summary>
-        private readonly KernelStartInfo m_StartInfo;
-
-        /// <summary>
         /// Tracks the progress of the bootstrapping process.
         /// </summary>
         private readonly ITrackProgress m_Progress;
@@ -143,12 +137,8 @@ namespace Apollo.Core
         /// <summary>
         /// Initializes a new instance of the <see cref="Bootstrapper"/> class.
         /// </summary>
-        /// <param name="startInfo">The collection of <c>AppDomain</c> base and private paths.</param>
         /// <param name="progress">The object used to track the progress of the bootstrapping process.</param>
         /// <param name="shutdownEvent">The event that signals to the application that it is safe to shut down.</param>
-        /// <exception cref="ArgumentNullException">
-        /// Thrown when <paramref name="startInfo"/> is <see langword="null"/>.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="progress"/> is <see langword="null"/>.
         /// </exception>
@@ -156,17 +146,14 @@ namespace Apollo.Core
         ///     Thrown if <paramref name="shutdownEvent"/> is <see langword="null" />.
         /// </exception>
         protected Bootstrapper(
-            KernelStartInfo startInfo, 
             ITrackProgress progress,
             AutoResetEvent shutdownEvent)
         {
             {
-                Enforce.Argument(() => startInfo);
                 Enforce.Argument(() => progress);
                 Enforce.Argument(() => shutdownEvent);
             }
 
-            m_StartInfo = startInfo;
             m_Progress = progress;
             m_ShutdownEvent = shutdownEvent;
         }

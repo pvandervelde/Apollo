@@ -49,11 +49,13 @@ namespace Apollo.UI.Common.Views.Datasets
                 { 
                     Notify(() => this.IsLoaded);
                     Notify(() => this.RunsOn);
+                    RaiseOnLoaded();
                 };
             m_Dataset.OnUnloaded += (s, e) =>
                 { 
                     Notify(() => this.IsLoaded);
                     Notify(() => this.RunsOn);
+                    RaiseOnUnloaded();
                 };
         }
 
@@ -164,6 +166,34 @@ namespace Apollo.UI.Common.Views.Datasets
             set
             {
                 m_Dataset.Summary = value;
+            }
+        }
+
+        /// <summary>
+        /// An event fired after the dataset has been distributed to one or more machines.
+        /// </summary>
+        public event EventHandler<EventArgs> OnLoaded;
+
+        private void RaiseOnLoaded()
+        {
+            EventHandler<EventArgs> local = OnLoaded;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event fired after the dataset has been unloaded from the machines it was loaded onto.
+        /// </summary>
+        public event EventHandler<EventArgs> OnUnloaded;
+
+        private void RaiseOnUnloaded()
+        {
+            EventHandler<EventArgs> local = OnUnloaded;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
             }
         }
 

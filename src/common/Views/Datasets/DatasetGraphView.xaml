@@ -28,12 +28,72 @@
                                 Opacity="{Binding Path=Creator, Mode=OneWay, Converter={StaticResource creatorToOpacityConverter}}">
                             <local:DatasetVertexView DataContext="{TemplateBinding Vertex, Converter={StaticResource viewVertexConverter}}" />
 
-                            <Border.Effect>
-                                <DropShadowEffect BlurRadius="2"
-                                                  Color="LightGray"
-                                                  Opacity="0.3"
-                                                  Direction="315" />
-                            </Border.Effect>
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Style.Resources>
+                                        <Storyboard x:Key="GlowOn">
+                                            <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                          Storyboard.TargetProperty="(Effect).Color">
+                                                <LinearColorKeyFrame Value="Lime"
+                                                                     KeyTime="0:0:2" />
+                                            </ColorAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).Opacity">
+                                                <LinearDoubleKeyFrame Value="0.75"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).BlurRadius">
+                                                <LinearDoubleKeyFrame Value="25"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).ShadowDepth">
+                                                <LinearDoubleKeyFrame Value="0"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                        <Storyboard x:Key="GlowOff">
+                                            <ColorAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                          Storyboard.TargetProperty="(Effect).Color">
+                                                <LinearColorKeyFrame Value="LightGray"
+                                                                     KeyTime="0:0:2" />
+                                            </ColorAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).Opacity">
+                                                <LinearDoubleKeyFrame Value="0.3"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).BlurRadius">
+                                                <LinearDoubleKeyFrame Value="5"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames BeginTime="00:00:00"
+                                                                           Storyboard.TargetProperty="(Effect).ShadowDepth">
+                                                <LinearDoubleKeyFrame Value="5"
+                                                                      KeyTime="0:0:2" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </Style.Resources>
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect Direction="315"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsDatasetLoaded}"
+                                                     Value="True">
+                                            <DataTrigger.EnterActions>
+                                                <BeginStoryboard Storyboard="{StaticResource GlowOn}" />
+                                            </DataTrigger.EnterActions>
+                                            <DataTrigger.ExitActions>
+                                                <BeginStoryboard Storyboard="{StaticResource GlowOff}" />
+                                            </DataTrigger.ExitActions>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>

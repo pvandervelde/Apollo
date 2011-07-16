@@ -14,7 +14,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <summary>
     /// A graph vertex that stores a link to a dataset.
     /// </summary>
-    public sealed class DatasetViewVertex
+    public sealed class DatasetViewVertex : Model
     {
         /// <summary>
         /// The dataset that is linked to the current vertex.
@@ -25,16 +25,29 @@ namespace Apollo.UI.Common.Views.Datasets
         /// Initializes a new instance of the <see cref="DatasetViewVertex"/> class.
         /// </summary>
         /// <param name="model">The model of the dataset.</param>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="model"/> is <see langword="null" />.
         /// </exception>
-        public DatasetViewVertex(DatasetModel model)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="context"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetViewVertex(DatasetModel model, IContextAware context)
+            : base(context)
         {
             {
                 Enforce.Argument(() => model);
             }
 
             m_Dataset = model;
+            m_Dataset.OnLoaded += (s, e) =>
+            {
+                Notify(() => this.IsDatasetLoaded);
+            };
+            m_Dataset.OnUnloaded += (s, e) =>
+            {
+                Notify(() => this.IsDatasetLoaded);
+            };
         }
 
         /// <summary>
@@ -50,15 +63,6 @@ namespace Apollo.UI.Common.Views.Datasets
         }
 
         /// <summary>
-        /// Gets or sets a value indicating the name of the dataset.
-        /// </summary>
-        public string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets a value indicating who created the dataset.
         /// </summary>
         public DatasetCreator Creator
@@ -66,6 +70,17 @@ namespace Apollo.UI.Common.Views.Datasets
             get
             {
                 return m_Dataset.CreatedBy;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the dataset is loaded.
+        /// </summary>
+        public bool IsDatasetLoaded
+        {
+            get
+            {
+                return m_Dataset.IsLoaded;
             }
         }
     }
