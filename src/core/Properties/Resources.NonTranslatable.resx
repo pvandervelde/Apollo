@@ -336,4 +336,16 @@
   <data name="Exception_Messages_DatasetNotLoaded" xml:space="preserve">
     <value>Cannot access the online information for the given dataset because it is not loaded.</value>
   </data>
+  <data name="Exceptions_Messages_CannotInteruptRunningScript" xml:space="preserve">
+    <value>It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidScriptLanguage" xml:space="preserve">
+    <value>The given script language is not a valid choice.</value>
+  </data>
+  <data name="Exceptions_Messages_InvalidScriptLanguage_WithLanguage" xml:space="preserve">
+    <value>The given script language {0} cannot be used.</value>
+  </data>
+  <data name="Exceptions_Messages_ScriptExecutionFailure" xml:space="preserve">
+    <value>The given script failed to execute.</value>
+  </data>
 </root>

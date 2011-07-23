@@ -138,12 +138,6 @@
   <data name="DatasetGraphView_DatasetSummarySuggestion" xml:space="preserve">
     <value>Enter the summary for the dataset here</value>
   </data>
-  <data name="Exceptions_Messages_InvalidScriptLanguage" xml:space="preserve">
-    <value>The given script language is not a valid choice.</value>
-  </data>
-  <data name="Exceptions_Messages_InvalidScriptLanguage_WithLanguage" xml:space="preserve">
-    <value>The given script language {0} cannot be used.</value>
-  </data>
   <data name="Exception_Messages_ArgumentOutOfRange_ExpectedLargerThan" xml:space="preserve">
     <value>The argument is outside the valid range. Expected a value larger than {0}, got {1}.</value>
   </data>
@@ -192,9 +186,6 @@
   </data>
   <data name="ProjectDescriptionView_ProjectSummarySuggestion" xml:space="preserve">
     <value>Enter the summary for your project here</value>
-  </data>
-  <data name="Exceptions_Messages_ScriptExecutionFailure" xml:space="preserve">
-    <value>The given script failed to execute.</value>
   </data>
   <data name="Img_Cancel_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Cancel_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -498,9 +489,6 @@
   </data>
   <data name="ScriptDescription_Language_IronRuby" xml:space="preserve">
     <value>Ruby</value>
-  </data>
-  <data name="Exceptions_Messages_CannotInteruptRunningScript" xml:space="preserve">
-    <value>It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script.</value>
   </data>
   <data name="SelectScriptLanguageView_Cancel" xml:space="preserve">
     <value>Cancel</value>
