@@ -565,6 +565,42 @@ namespace Apollo.Core.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotInteruptRunningScript {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotInteruptRunningScript", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given script language is not a valid choice..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidScriptLanguage {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidScriptLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given script language {0} cannot be used..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidScriptLanguage_WithLanguage {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidScriptLanguage_WithLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given script failed to execute..
+        /// </summary>
+        internal static string Exceptions_Messages_ScriptExecutionFailure {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ScriptExecutionFailure", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed to unload a domain. The name of the domain is: {0}.
         /// </summary>
         internal static string Kernel_LogMessage_DomainUnloadFailed {

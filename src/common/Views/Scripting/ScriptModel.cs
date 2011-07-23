@@ -7,8 +7,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Apollo.Core.UserInterfaces.Scripting;
 using Apollo.UI.Common.Properties;
-using Apollo.UI.Common.Scripting;
 
 namespace Apollo.UI.Common.Views.Scripting
 {

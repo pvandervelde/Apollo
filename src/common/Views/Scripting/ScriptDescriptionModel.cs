@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using Apollo.Core.UserInterfaces.Scripting;
 using Apollo.UI.Common.Properties;
-using Apollo.UI.Common.Scripting;
 
 namespace Apollo.UI.Common.Views.Scripting
 {

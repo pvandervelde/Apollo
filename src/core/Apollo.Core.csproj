@@ -13,9 +13,21 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
     </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\IronPython.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="QuickGraph">
       <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
@@ -52,6 +64,31 @@
     <Compile Include="Projects\IProxyCommandSet.cs" />
     <Compile Include="SrcOnlyResources.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
+    <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />
+    <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptException.cs" />
+    <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\IDatasetScriptFacade.cs" />
+    <Compile Include="UserInterfaces\Scripting\IExecuteScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\IHostScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\ILinkScriptsToProjects.cs" />
+    <Compile Include="UserInterfaces\Scripting\InvalidScriptLanguageException.cs" />
+    <Compile Include="UserInterfaces\Scripting\IProjectScriptFacade.cs" />
+    <Compile Include="UserInterfaces\Scripting\ISendScriptOutput.cs" />
+    <Compile Include="UserInterfaces\Scripting\ISyntaxVerifier.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectFacadeForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectHubForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\RemoteScriptRunner.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptDomainLauncher.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptErrorInformation.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptExecutionFailureException.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptHost.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptLanguage.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptOutputEventArgs.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptOutputPipe.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptRunInformation.cs" />
+    <Compile Include="UserInterfaces\Scripting\SourceErrorListener.cs" />
+    <Compile Include="UserInterfaces\Scripting\SyntaxVerificationSeverity.cs" />
+    <Compile Include="UserInterfaces\Scripting\SyntaxVerifier.cs" />
     <Compile Include="UtilitiesModule.cs" />
     <Compile Include="ValueChangedEventArgs.cs" />
     <Compile Include="Projects\DatasetLoadEventArgs.cs" />

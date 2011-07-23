@@ -103,9 +103,6 @@ namespace Apollo.ProjectExplorer
                 // Register the utilities elements. These are 'shared' with the core
                 builder.RegisterModule(new UtilitiesModule());
 
-                // Register the scripting elements
-                builder.RegisterModule(new CommonUserInterfaceModule());
-
                 // Get all the registrations from Apollo.UI.Common
                 var commonUiAssembly = typeof(Observable).Assembly;
                 builder.RegisterAssemblyTypes(commonUiAssembly)

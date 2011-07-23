@@ -4,9 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.UserInterfaces.Scripting;
+using Apollo.Utilities;
 using Autofac;
 using Lokad;
 
@@ -60,6 +63,15 @@ namespace Apollo.Core.UserInterfaces
             builder.Register(c => new ProjectHub(c.Resolve<IUserInterfaceService>()))
                 .As<ILinkToProjects>()
                 .SingleInstance();
+
+            builder.Register(c => new ScriptHost(
+                    c.Resolve<ILinkToProjects>(),
+                    c.Resolve<Func<string, AppDomainPaths, AppDomain>>()))
+                .As<IHostScripts>()
+                .SingleInstance();
+
+            builder.Register(c => new ScriptOutputPipe())
+                .As<ISendScriptOutput>();
 
             // IInteractWithUsers
             // IGiveAdvice

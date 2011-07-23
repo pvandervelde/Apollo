@@ -151,15 +151,6 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script..
-        /// </summary>
-        internal static string Exceptions_Messages_CannotInteruptRunningScript {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_CannotInteruptRunningScript", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The creation of the new script was cancelled..
         /// </summary>
         internal static string Exceptions_Messages_CreationOfNewScriptCancelled {
@@ -169,38 +160,11 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The given script language is not a valid choice..
-        /// </summary>
-        internal static string Exceptions_Messages_InvalidScriptLanguage {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_InvalidScriptLanguage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The given script language {0} cannot be used..
-        /// </summary>
-        internal static string Exceptions_Messages_InvalidScriptLanguage_WithLanguage {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_InvalidScriptLanguage_WithLanguage", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to The loading of the script was cancelled..
         /// </summary>
         internal static string Exceptions_Messages_LoadingOfScriptCancelled {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_LoadingOfScriptCancelled", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The given script failed to execute..
-        /// </summary>
-        internal static string Exceptions_Messages_ScriptExecutionFailure {
-            get {
-                return ResourceManager.GetString("Exceptions_Messages_ScriptExecutionFailure", resourceCulture);
             }
         }
         

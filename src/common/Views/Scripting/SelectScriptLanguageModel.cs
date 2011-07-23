@@ -7,7 +7,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.UI.Common.Scripting;
+using Apollo.Core.UserInterfaces.Scripting;
 
 namespace Apollo.UI.Common.Views.Scripting
 {

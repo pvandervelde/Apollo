@@ -10,10 +10,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Apollo.Core.UserInterfaces.Scripting;
 using Apollo.UI.Common.Commands;
-using Apollo.UI.Common.Scripting;
 using ICSharpCode.AvalonEdit;
 using ICSharpCode.AvalonEdit.Highlighting;
+using Lokad;
 
 namespace Apollo.UI.Common.Views.Scripting
 {
@@ -56,6 +57,11 @@ namespace Apollo.UI.Common.Views.Scripting
         /// The routed command used to clear the output window.
         /// </summary>
         private static readonly RoutedUICommand s_ClearOutputTextCommand = new RoutedUICommand();
+
+        /// <summary>
+        /// Returns a new pipe that will be used by a script to provide output information.
+        /// </summary>
+        private Func<ISendScriptOutput> m_CreateNewScriptOutputPipe;
 
         /// <summary>
         /// Describes the state of the running script.
@@ -119,6 +125,22 @@ namespace Apollo.UI.Common.Views.Scripting
 
             // Make sure we update the syntax highlighting
             textEditor.TextArea.TextView.Redraw();
+        }
+
+        /// <summary>
+        /// Provides the view with a function that can build output pipes.
+        /// </summary>
+        /// <param name="builder">The function that builds script output pipes.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="builder"/> is <see langword="null" />.
+        /// </exception>
+        public void OutputPipeBuilder(Func<ISendScriptOutput> builder)
+        {
+            {
+                Enforce.Argument(() => builder);
+            }
+
+            m_CreateNewScriptOutputPipe = builder;
         }
 
         /// <summary>
@@ -205,7 +227,7 @@ namespace Apollo.UI.Common.Views.Scripting
         {
             e.Handled = true;
 
-            var pipe = new ScriptOutputPipe();
+            var pipe = m_CreateNewScriptOutputPipe();
             pipe.OnScriptOutput += new EventHandler<ScriptOutputEventArgs>(OnScriptOutput);
 
             m_ScriptRunInfo = new ScriptRunInformation

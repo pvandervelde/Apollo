@@ -8,9 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
+using Apollo.Core.UserInterfaces.Scripting;
 using Apollo.UI.Common.Commands;
 using Apollo.UI.Common.Properties;
-using Apollo.UI.Common.Scripting;
 using Autofac;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
@@ -69,6 +69,7 @@ namespace Apollo.UI.Common.Views.Scripting
                     ScriptLanguage = new ScriptDescriptionModel(context, ScriptLanguage.IronPython),
                     SyntaxVerifier = m_Container.Resolve<IHostScripts>().VerifySyntax(ScriptLanguage.IronPython),
                 };
+            View.OutputPipeBuilder(() => m_Container.Resolve<ISendScriptOutput>());
 
             var compositeCommand = CreateCloseCommand();
             var newScriptCommand = CreateNewScriptCommand();
