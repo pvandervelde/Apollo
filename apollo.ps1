@@ -656,7 +656,7 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -ac
 task runUnitTests -depends buildBinaries -action{
     "Running unit tests..."
     
-    $gallioExe = 'Gallio.Echo.exe'
+    $gallioExe = 'Gallio.Echo.x86.exe'
     
     $files = ""
     $assemblies = Get-ChildItem -path $props.dirOutput -Filter "*.dll" | 
