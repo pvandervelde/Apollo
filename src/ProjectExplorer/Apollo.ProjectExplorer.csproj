@@ -97,6 +97,9 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionProcessor.cs">
+      <Link>Utilities\ExceptionProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
       <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
     </Compile>
@@ -157,7 +160,6 @@
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
     <Compile Include="RegionNames.cs" />
-    <Compile Include="Utilities\MockExceptionHandler.cs" />
     <Compile Include="Utilities\SrcOnlyResources.cs" />
     <Compile Include="Utilities\UtilitiesModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />

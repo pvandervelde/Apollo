@@ -61,11 +61,17 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionProcessor.cs">
+      <Link>Utilities\ExceptionProcessor.cs</Link>
+    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
       <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
       <Link>Utilities\GuardResult.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
+      <Link>Utilities\IExceptionHandler.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
       <Link>Utilities\TopLevelExceptionHandler.cs</Link>

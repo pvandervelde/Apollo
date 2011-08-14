@@ -139,7 +139,7 @@ namespace Apollo.Utilities
 
             // Attach the exception handler
             {
-                domain.UnhandledException += exceptionHandler.OnUnhandledException;
+                domain.UnhandledException += (s, e) => exceptionHandler.OnException(e.ExceptionObject as Exception, e.IsTerminating);
             }
 
             return domain;

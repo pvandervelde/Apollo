@@ -17,13 +17,8 @@ namespace Apollo.Utilities.ExceptionHandling
         /// <summary>
         /// Used when an unhandled exception occurs in an <see cref="AppDomain"/>.
         /// </summary>
-        /// <param name="sender">
-        ///     The object from which the event origined.
-        /// </param>
-        /// <param name="e">
-        ///     The event arguments which where the exception is originating from
-        ///     and if the <c>AppDomain</c> is shutting down.
-        /// </param>
-        void OnUnhandledException(object sender, UnhandledExceptionEventArgs e);
+        /// <param name="exception">The exception that was thrown.</param>
+        /// <param name="isApplicationTerminating">Indicates if the application is about to shut down or not.</param>
+        void OnException(Exception exception, bool isApplicationTerminating);
     }
 }

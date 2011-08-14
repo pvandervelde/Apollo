@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Apollo.ProjectExplorer.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
@@ -140,7 +139,9 @@ namespace Apollo.Utilities
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
-                builder.Register(c => new MockExceptionHandler())
+                builder.Register((c, p) => new ExceptionProcessor(
+                        p.Positional<string>(0),
+                        p.Positional<string>(1)))
                     .As<IExceptionHandler>();
 
                 builder.Register(c => new XmlConfiguration())
