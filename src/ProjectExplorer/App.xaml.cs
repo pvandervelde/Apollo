@@ -55,7 +55,7 @@ namespace Apollo.ProjectExplorer
                     functionReturnResult = 0;
                 };
 
-            var result = TopLevelExceptionHandler.RunGuarded(
+            var result = TopLevelExceptionGuard.RunGuarded(
                 applicationAction, 
                 Assembly.GetExecutingAssembly().GetName().Name, 
                 DefaultErrorFileName);

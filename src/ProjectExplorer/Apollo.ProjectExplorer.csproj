@@ -34,8 +34,12 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NSarrac.Framework">
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -58,12 +62,22 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Views\StatusBar\IStatusBarView.cs" />
+    <Compile Include="Views\StatusBar\StatusBarModel.cs" />
+    <Compile Include="Views\StatusBar\StatusBarParameter.cs" />
+    <Compile Include="Views\StatusBar\StatusBarPresenter.cs" />
+    <Compile Include="Views\StatusBar\StatusBarView.xaml.cs">
+      <DependentUpon>StatusBarView.xaml</DependentUpon>
+    </Compile>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+      <Link>Properties\NSarracReportPublicKey.xml</Link>
+    </EmbeddedResource>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -97,8 +111,8 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionProcessor.cs">
-      <Link>Utilities\ExceptionProcessor.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
+      <Link>Utilities\ExceptionHandler.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
       <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
@@ -109,8 +123,20 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
       <Link>Utilities\IExceptionHandler.cs</Link>
     </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
-      <Link>Utilities\TopLevelExceptionHandler.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionProcessor.cs">
+      <Link>Utilities\IExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\LogBasedExceptionProcessor.cs">
+      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingExceptionProcessor.cs">
+      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingUtilities.cs">
+      <Link>Utilities\ReportingUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionGuard.cs">
+      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\FusionHelper.cs">
       <Link>Utilities\FusionHelper.cs</Link>
@@ -160,6 +186,7 @@
     <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="Commands\ShowAboutWindowCommand.cs" />
     <Compile Include="RegionNames.cs" />
+    <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="Utilities\SrcOnlyResources.cs" />
     <Compile Include="Utilities\UtilitiesModule.cs" />
     <Compile Include="Views\About\AboutModel.cs" />
@@ -188,6 +215,10 @@
     <Compile Include="Views\Shell\ShellWindow.xaml.cs">
       <DependentUpon>ShellWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Views\StatusBar\StatusBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

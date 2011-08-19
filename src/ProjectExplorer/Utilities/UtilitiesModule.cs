@@ -139,7 +139,7 @@ namespace Apollo.Utilities
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
-                builder.Register((c, p) => new ExceptionProcessor(
+                builder.Register((c, p) => new ExceptionHandler(
                         p.Positional<string>(0),
                         p.Positional<string>(1)))
                     .As<IExceptionHandler>();

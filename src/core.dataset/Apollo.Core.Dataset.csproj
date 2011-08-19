@@ -27,9 +27,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NSarrac.Framework">
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
@@ -37,22 +41,41 @@
     <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionProcessor.cs">
-      <Link>Utilities\ExceptionProcessor.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
+      <Link>Utilities\ExceptionHandler.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
       <Link>Utilities\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionProcessor.cs">
+      <Link>Utilities\IExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\LogBasedExceptionProcessor.cs">
+      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingExceptionProcessor.cs">
+      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingUtilities.cs">
+      <Link>Utilities\ReportingUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionGuard.cs">
+      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Logging\LogSeverityProxyToLogLevelMap.cs">
       <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
+    <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="utilities\SrcOnlyResources.cs" />
     <Compile Include="utilities\UtilitiesModule.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+	<EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+      <Link>Properties\NSarracReportPublicKey.xml</Link>
+    </EmbeddedResource>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -79,9 +102,6 @@
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
       <Link>utilities\GuardResult.cs</Link>
-    </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
-      <Link>utilities\TopLevelExceptionHandler.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
       <Link>utilities\AdditionalLogMessageProperties.cs</Link>

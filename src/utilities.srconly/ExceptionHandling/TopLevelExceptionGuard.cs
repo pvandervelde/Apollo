@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using NSarrac.Framework;
 
 namespace Apollo.Utilities.ExceptionHandling
 {
@@ -15,7 +16,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// providing a chance for logging and semi-graceful termination of the application.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    internal static class TopLevelExceptionHandler
+    internal static class TopLevelExceptionGuard
     {
         /// <summary>
         /// Runs an action inside a high level try .. catch construct that will not let any errors escape
@@ -31,20 +32,22 @@ namespace Apollo.Utilities.ExceptionHandling
             Justification = "Catching an Exception object here because this is the top-level exception handler.")]
         public static GuardResult RunGuarded(Action actionToExecute, string eventLogSource, string errorLogFileName)
         {
-            var processor = new ExceptionProcessor(eventLogSource, errorLogFileName);
-            try
             {
-                {
-                    Debug.Assert(actionToExecute != null, "The application method should not be null.");
-                }
-
-                actionToExecute();
-                return GuardResult.Success;
+                Debug.Assert(actionToExecute != null, "The application method should not be null.");
             }
-            catch (Exception e)
+
+            using (var processor = new ExceptionHandler(eventLogSource, errorLogFileName))
             {
-                processor.OnException(e, false);
-                return GuardResult.Failure;
+                try
+                {
+                    actionToExecute();
+                    return GuardResult.Success;
+                }
+                catch (Exception e)
+                {
+                    processor.OnException(e, false);
+                    return GuardResult.Failure;
+                }
             }
         }
     }

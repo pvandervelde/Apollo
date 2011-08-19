@@ -25,5 +25,10 @@ namespace Apollo.ProjectExplorer
         /// Defines the name of the top pane region of the shell.
         /// </summary>
         public const string TopPane = "TopPane";
+
+        /// <summary>
+        /// Defines the name of the status bar pane of the shell.
+        /// </summary>
+        public const string StatusBar = "StatusBar";
     }
 }
