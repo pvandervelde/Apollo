@@ -388,7 +388,7 @@ properties{
     $props.dirSandcastle = Join-Path $props.dirPackages 'sandcastle'
     $props.dirFxCop = Join-Path $props.dirPackages 'FxCop'
     $props.dirMoq = Join-Path (Join-Path (Join-Path $props.dirPackages 'Moq') 'lib') 'NET40'
-    $props.dirConcordion = Join-Path $props.dirPackages 'Concordion'
+    $props.dirConcordion = Join-Path (Join-Path $props.dirPackages 'Concordion.Net') 'lib'
     $props.dirPartCover = Join-Path $props.dirPackages 'PartCover'
     $props.dirPartCoverExclusionWriter = Join-Path $props.dirPackages 'partcoverexclusionwriter'
     $props.dirSourceMonitor = Join-Path $props.dirPackages 'SourceMonitor'
