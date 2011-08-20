@@ -17,10 +17,23 @@ namespace Apollo.Core.Utilities
             Justification = "Unit tests do not need documentation.")]
     public sealed class ApplicationConstantsTest
     {
+        private static Assembly GetAssembly()
+        {
+            var assembly = Assembly.GetEntryAssembly();
+            if (assembly == null)
+            {
+                // Either we're being called from unmanaged code
+                // or we're in a different appdomain than the actual executable
+                assembly = typeof(ApplicationConstants).Assembly;
+            }
+
+            return assembly;
+        }
+
         [Test]
         public void CompanyName()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = GetAssembly();
             var attribute = assembly.GetCustomAttributes(typeof(AssemblyCompanyAttribute), false)[0] as AssemblyCompanyAttribute;
 
             var constants = new ApplicationConstants();
@@ -30,7 +43,7 @@ namespace Apollo.Core.Utilities
         [Test]
         public void ApplicationName()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = GetAssembly();
             var attribute = assembly.GetCustomAttributes(typeof(AssemblyProductAttribute), false)[0] as AssemblyProductAttribute;
 
             var constants = new ApplicationConstants();
@@ -40,7 +53,7 @@ namespace Apollo.Core.Utilities
         [Test]
         public void ApplicationVersion()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = GetAssembly();
             var version = assembly.GetName().Version;
 
             var constants = new ApplicationConstants();
@@ -50,7 +63,7 @@ namespace Apollo.Core.Utilities
         [Test]
         public void ApplicationCompatibilityVersion()
         {
-            var assembly = Assembly.GetEntryAssembly();
+            var assembly = GetAssembly();
             var version = assembly.GetName().Version;
 
             var constants = new ApplicationConstants();

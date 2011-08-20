@@ -27,7 +27,7 @@ StyleCop.Cache
 AssemblyInfo.BuildInformation.cs
 ValidationSequenceGenerator.cs
 partcover.driver.log
-./install/Dependencies.wxi
-./install/VersionNumber.wxi
+./install/msi/Dependencies.wxi
+./install/msi/VersionNumber.wxi
 tools/sourcemonitor/SourceMonitor.log
 ./packages
