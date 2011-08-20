@@ -20,7 +20,10 @@ function Invoke-PsakeScript([string]$script, [String[]]$targets){
     ""
 }
 
-function Create-GeneratedItemsList([string]$path) {
+function Create-GeneratedItemsList([string]$path, [string]$outputDir = $null) {
+    Out-Host -InputObject $path
+    Out-Host -InputObject $outputDir
+    
     $startingDirectory = Split-Path $path -Parent
     $paths = New-Object System.Collections.Generic.List``1[System.String]
     Get-Content -Path $path | ForEach-Object {
@@ -31,12 +34,24 @@ function Create-GeneratedItemsList([string]$path) {
         }
         else
         {
-            if ($_ -ne "")
+            if ($_.StartsWith("{OUTPUT_DIR}\"))
             {
-                $generatedItem = Join-Path $startingDirectory $_
-                if (Test-Path -Path $generatedItem)
+                $filter = $_.Trim("{OUTPUT_DIR}\")
+                $item = Join-Path $outputDir $filter
+                if (Test-Path -Path $item)
                 {
-                    $paths.Add($generatedItem)
+                    $paths.Add($item)
+                }
+            }
+            else
+            {
+                if ($_ -ne "")
+                {
+                    $item = Join-Path $startingDirectory $_
+                    if (Test-Path -Path $item)
+                    {
+                        $paths.Add($item)
+                    }
                 }
             }
         }
@@ -357,12 +372,14 @@ properties{
     
     # contents directories
     $props.dirInstall = Join-Path $props.dirBase 'install'
+    $props.dirMsiInstall = Join-Path $props.dirInstall 'msi'
+    $props.dirZipInstall = Join-Path $props.dirInstall 'zip'
     $props.dirResource = Join-Path $props.dirBase 'resource'
     $props.dirTemplates = Join-Path $props.dirBase 'templates'
     $props.dirConfiguration = Join-Path $props.dirBase 'config'
     $props.dirSrc = Join-Path $props.dirBase 'src'
     
-    $props.dirBinInstall = Join-Path $props.dirInstall 'bin'
+    $props.dirBinMsiInstall = Join-Path $props.dirMsiInstall 'bin'
    
     # tools directories
 	$props.dirPackages = Join-Path $props.dirBase 'packages'
@@ -381,7 +398,7 @@ properties{
     
     # solutions
     $props.slnApollo = Join-Path $props.dirSrc 'Apollo.sln'
-    $props.slnApolloWix = Join-Path $props.dirInstall 'Apollo.sln'
+    $props.slnApolloWix = Join-Path $props.dirMsiInstall 'Apollo.sln'
     $props.msbuildSandcastleReferenceData = Join-Path $props.dirSandcastle 'fxReflection.proj'
     
     # assembly names
@@ -417,11 +434,11 @@ properties{
     $props.ccmTemplateFile = Join-Path $props.dirTemplates 'ccm.xml.in'
     $props.ccmFile = Join-Path $props.dirTemp 'sherlock.ccm.xml'
     
-    $props.wixVersionTemplateFile = Join-Path $props.dirInstall 'VersionNumber.wxi.in'
-    $props.wixVersionFile = Join-Path $props.dirInstall 'VersionNumber.wxi'
+    $props.wixVersionTemplateFile = Join-Path $props.dirMsiInstall 'VersionNumber.wxi.in'
+    $props.wixVersionFile = Join-Path $props.dirMsiInstall 'VersionNumber.wxi'
     
-    $props.dependenciesTemplateFile = Join-Path $props.dirInstall 'Dependencies.wxi.in'
-    $props.dependenciesFile = Join-Path $props.dirInstall 'Dependencies.wxi'
+    $props.dependenciesTemplateFile = Join-Path $props.dirMsiInstall 'Dependencies.wxi.in'
+    $props.dependenciesFile = Join-Path $props.dirMsiInstall 'Dependencies.wxi'
     
     # output files
     $props.logMsiBuild = 'msi.log'
@@ -455,9 +472,6 @@ task UnitTest -depends runUnitTests
 
 # Runs the Specification tests
 task SpecTest -depends runSpecificationTests
-
-# Runs the integration tests
-task IntegrationTest -depends runIntegrationTests
 
 # Runs the verifications
 task Verify -depends runFxCop, runDuplicateFinder, runCcm
@@ -523,7 +537,6 @@ The following build tasks are available
     'build':            Builds the binaries
     'unittest':         Runs the unit tests
     'spectest':         Runs the specification tests
-    'integrationtest':  Runs the integration tests
     'verify':           Runs the source and binary verification. Returning one or more reports
                         describing the flaws in the source / binaries.
     'doc':              Runs the documentation build
@@ -533,7 +546,7 @@ The following build tasks are available
 Multiple build tasks can be specified separated by a comma. 
        
 In order to run this build script please call this script via PSAKE like:
-    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,integrationtest,verify,doc,package,statistics 4.0
+    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify,doc,package,statistics 4.0
 "@
 }
 
@@ -791,13 +804,6 @@ task runSpecificationTests -depends buildBinaries -action{
 	""
 }
 
-task runIntegrationTests -depends buildBinaries -action{
-    "Running integration tests..."
-    "There are currently no integration tests. You should make some ..."
-	""
-    # ???
-}
-
 task runFxCop -depends buildBinaries -action{
     # could set different targets depending on configuration:
     # - skip some rules if in debug mode
@@ -891,96 +897,22 @@ task buildPackage -depends buildBinaries -action{
     # The directory does not exist. Create it
     New-Item $dirTempZip -ItemType directory | Out-Null # Don't display all the information
     
-    # Copy the files to the temp dir
-    # match all files that:
-    # - Are DLL, EXE or config files
-    # - Have the term Sherlock in their name
-    # - Don't have the terms 'Test' or 'vshost' in their name
-    $assemblies = Get-ChildItem -path $props.dirOutput | 
-        Where-Object { ((($_.Name -like "*Apollo*") -and `
-                        !( $_.Name -like "*SrcOnly.*") -and `
-                        !( $_.Name -like "*Test.*") -and `
-                        !($_.Name -like "*vshost*")) -and `
-                        (($_.Extension -match ".dll") -or `
-                         ($_.Extension -match ".exe") -or `
-                         ($_.Extension -match ".config") -or `
-                         ($_.Extension -match ".pdb")))}
-
-    foreach ($file in $assemblies){
-        $newFilePath = Join-Path $dirTempZip $file.Name
-        Copy-Item $file.FullName -Destination $newFilePath -Force
+    "Copying files to zip ..."
+    $itemsToPack = Create-GeneratedItemsList (Join-Path $props.dirZipInstall 'ItemsToPack.txt') $props.dirOutput
+    if ($itemsToPack -ne $null)
+    {
+        $itemsToPack | foreach {
+            if (Test-Path $_)
+            {
+				"Copying: $_"
+                Copy-Item $_ -Destination (Join-Path $dirTempZip ($_.Name)) -Force
+            }
+        }
     }
-    
-	# Copy the dependencies
-    $autofacFile = 'Autofac.dll'
-    Copy-Item (Join-Path $props.dirOutput $autofacFile) -Destination (Join-Path $dirTempZip $autofacFile)
-    
-	$castleCoreFile = 'Castle.Core.dll'
-    Copy-Item (Join-Path $props.dirOutput $castleCoreFile) -Destination (Join-Path $dirTempZip $castleCoreFile)
-	
-	$graphSharpFile = 'GraphSharp.dll'
-    Copy-Item (Join-Path $props.dirOutput $graphSharpFile) -Destination (Join-Path $dirTempZip $graphSharpFile)
-    
-    $graphSharpControlsFile = 'GraphSharp.Controls.dll'
-    Copy-Item (Join-Path $props.dirOutput $graphSharpControlsFile) -Destination (Join-Path $dirTempZip $graphSharpControlsFile)
-	
-	$greyableImageFile = 'GreyableImage.dll'
-    Copy-Item (Join-Path $props.dirOutput $greyableImageFile) -Destination (Join-Path $dirTempZip $greyableImageFile)
-	
-	$icSharpCodeAvalonEditFile = 'ICSharpCode.AvalonEdit.dll'
-    Copy-Item (Join-Path $props.dirOutput $icSharpCodeAvalonEditFile) -Destination (Join-Path $dirTempZip $icSharpCodeAvalonEditFile)
-	
-	$IronPythonFile = 'IronPython.dll'
-    Copy-Item (Join-Path $props.dirOutput $IronPythonFile) -Destination (Join-Path $dirTempZip $IronPythonFile)
-	
-	$lokadFile = 'Lokad.Shared.dll'
-    Copy-Item (Join-Path $props.dirOutput $lokadFile) -Destination (Join-Path $dirTempZip $lokadFile)
-	
-    $microsoftDynamicFile = 'Microsoft.Dynamic.dll'
-    Copy-Item (Join-Path $props.dirOutput $microsoftDynamicFile) -Destination (Join-Path $dirTempZip $microsoftDynamicFile)
-    
-	$prismFile = 'Microsoft.Practices.Prism.dll'
-    Copy-Item (Join-Path $props.dirOutput $prismFile) -Destination (Join-Path $dirTempZip $prismFile)
-    
-    $prismInteractivityFile = 'Microsoft.Practices.Prism.Interactivity.dll'
-    Copy-Item (Join-Path $props.dirOutput $prismInteractivityFile) -Destination (Join-Path $dirTempZip $prismInteractivityFile)
-	
-	$serviceLocationFile = 'Microsoft.Practices.ServiceLocation.dll'
-    Copy-Item (Join-Path $props.dirOutput $serviceLocationFile) -Destination (Join-Path $dirTempZip $serviceLocationFile)
-	
-	$microsoftScriptingFile = 'Microsoft.Scripting.dll'
-    Copy-Item (Join-Path $props.dirOutput $microsoftScriptingFile) -Destination (Join-Path $dirTempZip $microsoftScriptingFile)
-	
-	$monoOptionsFile = 'Mono.Options.dll'
-    Copy-Item (Join-Path $props.dirOutput $monoOptionsFile) -Destination (Join-Path $dirTempZip $monoOptionsFile)
-	
-    $nlogFile = 'NLog.dll'
-    Copy-Item (Join-Path $props.dirOutput $nlogFile) -Destination (Join-Path $dirTempZip $nlogFile)    
-    
-    $ognlFile = 'OGNL.dll'
-    Copy-Item (Join-Path $props.dirOutput $ognlFile) -Destination (Join-Path $dirTempZip $ognlFile)
-	
-	$pixelLabCommonFile = 'PixelLab.Common.dll'
-    Copy-Item (Join-Path $props.dirOutput $pixelLabCommonFile) -Destination (Join-Path $dirTempZip $pixelLabCommonFile)
-    
-    $pixelLabWpfFile = 'PixelLab.Wpf.dll'
-    Copy-Item (Join-Path $props.dirOutput $pixelLabWpfFile) -Destination (Join-Path $dirTempZip $pixelLabWpfFile)
-	
-	$quickgraphFile = 'QuickGraph.dll'
-    Copy-Item (Join-Path $props.dirOutput $quickgraphFile) -Destination (Join-Path $dirTempZip $quickgraphFile)    
-    
-    $systemReactiveFile = 'System.Reactive.dll'
-    Copy-Item (Join-Path $props.dirOutput $systemReactiveFile) -Destination (Join-Path $dirTempZip $systemReactiveFile)
-    
-    $wpfExtensionsFile = 'WPFExtensions.dll'
-    Copy-Item (Join-Path $props.dirOutput $wpfExtensionsFile) -Destination (Join-Path $dirTempZip $wpfExtensionsFile)
-    
-    $wpfLocalizationFile = 'WPFLocalizeExtension.dll'
-    Copy-Item (Join-Path $props.dirOutput $wpfLocalizationFile) -Destination (Join-Path $dirTempZip $wpfLocalizationFile)
     
     # zip them
     # Name the zip: Apollo_<DATE>
-    $output = Join-Path $props.dirDeploy ("Apollo_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
+    $output = Join-Path $props.dirDeploy ("Apollo_" + $props.Platform.Replace(" ", "") + "_" + $props.Configuration + "_" + [System.DateTime]::Now.ToString("yyyy_MM_dd-HH_mm_ss") + ".zip")
 
     "Compressing..."
 
@@ -989,7 +921,7 @@ task buildPackage -depends buildBinaries -action{
     & $7zipExe a -tzip $output (Get-ChildItem $dirTempZip | foreach { $_.FullName })
     if ($LastExitCode -ne 0)
     {
-        throw "Failed to compress the Apollo.Core binaries."
+        throw "Failed to compress the Apollo binaries."
     }
 	
 	""
@@ -1011,7 +943,7 @@ task assembleInstaller -depends buildBinaries -action{
     $msbuildExe = Get-MsbuildExe
     Invoke-MsBuild $props.slnApolloWix 'release' $logPath 'normal' ("platform='x86'") $false
 
-    $dirBinConfig = Join-Path (Join-Path $props.dirBinInstall 'x86') 'release'
+    $dirBinConfig = Join-Path (Join-Path $props.dirBinMsiInstall 'x86') 'release'
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x86 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x86 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x86 - $versionString.msi")
@@ -1019,7 +951,7 @@ task assembleInstaller -depends buildBinaries -action{
     "Building 64-bit Apollo installer"
     Invoke-MsBuild $props.slnApolloWix 'release' $logPath 'normal' ("platform='x64'") $false
     
-    $dirBinConfig = Join-Path (Join-Path $props.dirBinInstall 'x64') 'release'
+    $dirBinConfig = Join-Path (Join-Path $props.dirBinMsiInstall 'x64') 'release'
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.msi') -Destination (Join-Path $props.dirDeploy "apollo - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.batchservice.msi') -Destination (Join-Path $props.dirDeploy "apollo.batchservice - x64 - $versionString.msi")
     Copy-Item -Force -Path (Join-Path $dirBinConfig 'apollo.loaderapplication.msi') -Destination (Join-Path $props.dirDeploy "apollo.loaderapplication - x64 - $versionString.msi")
