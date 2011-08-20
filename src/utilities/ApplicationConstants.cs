@@ -24,7 +24,15 @@ namespace Apollo.Utilities
         /// </returns>
         private static Assembly GetAssembly()
         {
-            return Assembly.GetEntryAssembly();
+            var assembly = Assembly.GetEntryAssembly();
+            if (assembly == null)
+            { 
+                // Either we're being called from unmanaged code
+                // or we're in a different appdomain than the actual executable
+                assembly = Assembly.GetExecutingAssembly();
+            }
+
+            return assembly;
         }
 
         /// <summary>
