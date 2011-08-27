@@ -138,10 +138,10 @@
   <data name="DatasetGraphView_DatasetSummarySuggestion" xml:space="preserve">
     <value>Enter the summary for the dataset here</value>
   </data>
-  <data name="Exception_Messages_ArgumentOutOfRange_ExpectedLargerThan" xml:space="preserve">
+  <data name="Exceptions_Messages_ArgumentOutOfRange_ExpectedLargerThan" xml:space="preserve">
     <value>The argument is outside the valid range. Expected a value larger than {0}, got {1}.</value>
   </data>
-  <data name="Exception_Messages_ArgumentOutOfRange_ExpectedSmallerThan" xml:space="preserve">
+  <data name="Exceptions_Messages_ArgumentOutOfRange_ExpectedSmallerThan" xml:space="preserve">
     <value>The argument is outside the valid range. Expected a value smaller than {0}, got {1}.</value>
   </data>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
@@ -610,5 +610,35 @@
   <data name="MachineSelectorView_PleaseWait" xml:space="preserve">
     <value>Retrieving dataset loading proposals.
 Please wait ...</value>
+  </data>
+  <data name="ErrorReportIconView_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="ErrorReportIconView_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="ErrorReportIconView_SelectAll" xml:space="preserve">
+    <value>Select all items</value>
+  </data>
+  <data name="Img_Bug_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Bug_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_SmileyHappy_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SmileyHappy_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_SmileyNeutral_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SmileyNeutral_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_SmileySad_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\SmileySad_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Exceptions_Messages_FailedToSendFeedbackReport" xml:space="preserve">
+    <value>Failed to send the feedback report to the remote server.</value>
+  </data>
+  <data name="FeedbackToTextConverter_FeedbackModel" xml:space="preserve">
+    <value>Error in: {0} - Occurred on: {1}</value>
+  </data>
+  <data name="Exceptions_Messages_ArgumentException" xml:space="preserve">
+    <value>The provided argument is not suitable for the given function.</value>
   </data>
 </root>

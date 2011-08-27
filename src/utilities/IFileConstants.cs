@@ -14,7 +14,6 @@ namespace Apollo.Utilities
         /// <summary>
         /// Gets the extension for an assembly file.
         /// </summary>
-        /// <value>The extension for an assembly file.</value>
         string AssemblyExtension
         {
             get;
@@ -23,11 +22,27 @@ namespace Apollo.Utilities
         /// <summary>
         /// Gets the extension for a log file.
         /// </summary>
-        /// <value>The extension for a log file.</value>
         string LogExtension
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the extension for a feedback file.
+        /// </summary>
+        string FeedbackReportExtension
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Returns the path for the directory in the AppData directory which contains
+        /// all the product directories for the current company.
+        /// </summary>
+        /// <returns>
+        /// The full path for the AppData directory for the current company.
+        /// </returns>
+        string CompanyPath();
 
         /// <summary>
         /// Returns the path for the directory where the global 

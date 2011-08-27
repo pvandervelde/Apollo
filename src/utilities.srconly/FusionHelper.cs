@@ -328,9 +328,14 @@ namespace Apollo.Utilities
         {
             Debug.Assert(!string.IsNullOrEmpty(moduleName), "The assembly file name should not be empty.");
 
-            return (moduleName.IndexOf(m_FileConstants.AssemblyExtension, StringComparison.OrdinalIgnoreCase) < 0) ?
-                string.Format(CultureInfo.InvariantCulture, "{0}{1}", moduleName, m_FileConstants.AssemblyExtension) :
-                moduleName;
+            return (moduleName.IndexOf(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "*.{0}",
+                        m_FileConstants.AssemblyExtension), 
+                    StringComparison.OrdinalIgnoreCase) < 0) 
+                ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, m_FileConstants.AssemblyExtension) 
+                : moduleName;
         }
     }
 }

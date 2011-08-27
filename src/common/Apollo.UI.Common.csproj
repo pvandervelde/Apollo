@@ -51,6 +51,10 @@
       <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NSarrac.Framework, Version=0.1.20.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="PixelLab.Common">
       <HintPath>..\..\packages\PixelLab.Common\lib\net4\PixelLab.Common.dll</HintPath>
     </Reference>
@@ -134,10 +138,13 @@
     <Compile Include="Commands\OpenScriptCommand.cs" />
     <Compile Include="Commands\RunScriptCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="Commands\SendFeedbackReportCommand.cs" />
     <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
+    <Compile Include="CommonUiModule.cs" />
     <Compile Include="Converters\CommandToToolTipTextConverter.cs" />
     <Compile Include="Converters\DistributionSuggestionToTextConverter.cs" />
+    <Compile Include="Converters\FeedbackReportToTextConverter.cs" />
     <Compile Include="Converters\IsWorkingToHiddenPanelVisibilityConverter.cs" />
     <Compile Include="Converters\ScriptDescriptionModelToTextConverter.cs" />
     <Compile Include="EventListener.cs" />
@@ -149,6 +156,11 @@
     <Compile Include="Events\ShowViewEvent.cs" />
     <Compile Include="Events\ShowViewRequest.cs" />
     <Compile Include="Events\ShowViewRequest.Presenter.cs" />
+    <Compile Include="Feedback\FailedToSendFeedbackReportException.cs" />
+    <Compile Include="Feedback\FeedbackReportCollector.cs" />
+    <Compile Include="Feedback\FeedbackReportTransmitter.cs" />
+    <Compile Include="Feedback\ICollectFeedbackReports.cs" />
+    <Compile Include="Feedback\ISendFeedbackReports.cs" />
     <Compile Include="IContextAware.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
     <Compile Include="IPresenter.cs" />
@@ -200,6 +212,14 @@
     <Compile Include="Views\Datasets\MachineSelectorView.xaml.cs">
       <DependentUpon>MachineSelectorView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Feedback\ErrorReportsIconView.xaml.cs">
+      <DependentUpon>ErrorReportsIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Feedback\ErrorReportsModel.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsParameter.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsPresenter.cs" />
+    <Compile Include="Views\Feedback\FeedbackReportModel.cs" />
+    <Compile Include="Views\Feedback\IErrorReportsView.cs" />
     <Compile Include="Views\Projects\IProjectDescriptionView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionView.xaml.cs">
@@ -278,6 +298,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Datasets\MachineSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Feedback\ErrorReportsIconView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -655,6 +679,19 @@
   <ItemGroup>
     <None Include="Resources\Upload_256x256.png" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bug_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileyHappy_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileyNeutral_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileySad_128x128.png" />
+  </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

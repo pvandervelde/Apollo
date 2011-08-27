@@ -45,16 +45,21 @@ namespace Apollo.Utilities.ExceptionHandling
             var companyAttribute = GetAttributeFromAssembly<AssemblyCompanyAttribute>();
             Debug.Assert((companyAttribute != null) && !string.IsNullOrEmpty(companyAttribute.Company), "There should be a company name.");
 
+            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
+            var companyDirectory = Path.Combine(localAppDataPath, companyAttribute.Company);
+            var productDirectory = Path.Combine(companyDirectory, ProductName());
+            var versionDirectory = Path.Combine(productDirectory, new Version(assemblyVersion.Major, assemblyVersion.Minor).ToString(2));
+            var logDirectory = Path.Combine(versionDirectory, "logs");
+
+            return logDirectory;
+        }
+
+        private static string ProductName()
+        {
             var productAttribute = GetAttributeFromAssembly<AssemblyProductAttribute>();
             Debug.Assert((productAttribute != null) && !string.IsNullOrEmpty(productAttribute.Product), "There should be a product name.");
 
-            var assemblyVersion = Assembly.GetExecutingAssembly().GetName().Version;
-
-            var companyDirectory = Path.Combine(localAppDataPath, companyAttribute.Company);
-            var productDirectory = Path.Combine(companyDirectory, productAttribute.Product);
-            var versionDirectory = Path.Combine(productDirectory, new Version(assemblyVersion.Major, assemblyVersion.Minor).ToString(2));
-
-            return versionDirectory;
+            return productAttribute.Product;
         }
 
         /// <summary>
@@ -84,7 +89,12 @@ namespace Apollo.Utilities.ExceptionHandling
         public static string GenerateDumpFileName()
         {
             // Write the GUID in registry format: {00000000-0000-0000-0000-000000000000}
-            return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", Guid.NewGuid().ToString("B"), DumpFileExtension);
+            return string.Format(
+                CultureInfo.InvariantCulture, 
+                "{0}_{1}.{2}", 
+                ProductName(),
+                Guid.NewGuid().ToString("B"), 
+                DumpFileExtension);
         }
     }
 }

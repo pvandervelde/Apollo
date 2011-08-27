@@ -133,20 +133,56 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string ErrorReportIconView_Cancel {
+            get {
+                return ResourceManager.GetString("ErrorReportIconView_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string ErrorReportIconView_Ok {
+            get {
+                return ResourceManager.GetString("ErrorReportIconView_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all items.
+        /// </summary>
+        internal static string ErrorReportIconView_SelectAll {
+            get {
+                return ResourceManager.GetString("ErrorReportIconView_SelectAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided argument is not suitable for the given function..
+        /// </summary>
+        internal static string Exceptions_Messages_ArgumentException {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ArgumentException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The argument is outside the valid range. Expected a value larger than {0}, got {1}..
         /// </summary>
-        internal static string Exception_Messages_ArgumentOutOfRange_ExpectedLargerThan {
+        internal static string Exceptions_Messages_ArgumentOutOfRange_ExpectedLargerThan {
             get {
-                return ResourceManager.GetString("Exception_Messages_ArgumentOutOfRange_ExpectedLargerThan", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_ArgumentOutOfRange_ExpectedLargerThan", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to The argument is outside the valid range. Expected a value smaller than {0}, got {1}..
         /// </summary>
-        internal static string Exception_Messages_ArgumentOutOfRange_ExpectedSmallerThan {
+        internal static string Exceptions_Messages_ArgumentOutOfRange_ExpectedSmallerThan {
             get {
-                return ResourceManager.GetString("Exception_Messages_ArgumentOutOfRange_ExpectedSmallerThan", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_ArgumentOutOfRange_ExpectedSmallerThan", resourceCulture);
             }
         }
         
@@ -160,11 +196,29 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to send the feedback report to the remote server..
+        /// </summary>
+        internal static string Exceptions_Messages_FailedToSendFeedbackReport {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_FailedToSendFeedbackReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The loading of the script was cancelled..
         /// </summary>
         internal static string Exceptions_Messages_LoadingOfScriptCancelled {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_LoadingOfScriptCancelled", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Error in: {0} - Occurred on: {1}.
+        /// </summary>
+        internal static string FeedbackToTextConverter_FeedbackModel {
+            get {
+                return ResourceManager.GetString("FeedbackToTextConverter_FeedbackModel", resourceCulture);
             }
         }
         
@@ -206,6 +260,13 @@ namespace Apollo.UI.Common.Properties {
         internal static System.Drawing.Bitmap Img_Add_48 {
             get {
                 object obj = ResourceManager.GetObject("Img_Add_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_Bug_48 {
+            get {
+                object obj = ResourceManager.GetObject("Img_Bug_48", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -794,6 +855,27 @@ namespace Apollo.UI.Common.Properties {
         internal static System.Drawing.Bitmap Img_Search_48 {
             get {
                 object obj = ResourceManager.GetObject("Img_Search_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_SmileyHappy_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_SmileyHappy_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_SmileyNeutral_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_SmileyNeutral_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_SmileySad_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_SmileySad_128", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

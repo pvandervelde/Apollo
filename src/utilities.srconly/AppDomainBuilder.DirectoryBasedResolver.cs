@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using Lokad;
@@ -80,7 +81,13 @@ namespace Apollo.Utilities
                     // For each path in the list get all the assembly files in that path.
                     var helper = new FusionHelper(
                         () => m_Directories.SelectMany(
-                            dir => Directory.GetFiles(dir, m_FileConstants.AssemblyExtension, SearchOption.AllDirectories)),
+                            dir => Directory.GetFiles(
+                                dir, 
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "*.{0}",
+                                    m_FileConstants.AssemblyExtension), 
+                                SearchOption.AllDirectories)),
                         m_FileConstants);
                     domain.AssemblyResolve += helper.LocateAssemblyOnAssemblyLoadFailure;
                 }

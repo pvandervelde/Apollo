@@ -27,7 +27,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "projectexplorer.info.log";
+        private const string DefaultInfoFileName = "projectexplorer.info.log";
 
         private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
         {
@@ -77,7 +77,7 @@ namespace Apollo.Utilities
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
+                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
                     new DebugLogTemplate(() => DateTimeOffset.Now)))
                 .As<ILogger>()
                 .SingleInstance();

@@ -75,7 +75,7 @@ namespace Apollo.Utilities.ExceptionHandling
             }
         }
 
-        private static ulong LocalMachinePhysicalMemorySizeInBytes()
+        private static ulong LocalMachinePhysicalMemorySizeInKiloBytes()
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Apollo.Utilities.ExceptionHandling
         private static MachineData MachineData()
         {
             var cpu = LocalMachineCpuDescription();
-            var memory = (int)(LocalMachinePhysicalMemorySizeInBytes() / (1024 * 1024));
+            var memory = (int)(LocalMachinePhysicalMemorySizeInKiloBytes() / 1024);
             return new MachineData(cpu, memory);
         }
 

@@ -36,9 +36,9 @@
                         Margin="3,3,3,3"
                         Background="LightSteelBlue"/>
         </Border>
+        
         <!-- Status bar -->
-        <StatusBar Grid.Row="2">
-
-        </StatusBar>
+        <ItemsControl Grid.Row="2"
+                      regions:RegionManager.RegionName="{x:Static infrastructure:RegionNames.StatusBar}"/>
     </Grid>
 </Window>

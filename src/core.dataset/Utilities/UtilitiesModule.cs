@@ -6,7 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Apollo.Utilities.Configuration;
@@ -26,7 +28,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "dataset.info.log";
+        private const string DefaultInfoFileName = "dataset.info.{0}.log";
 
         /// <summary>
         /// Override to add registrations to the container.
@@ -55,7 +57,12 @@ namespace Apollo.Utilities
 
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
-                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
+                        Path.Combine(
+                            c.Resolve<IFileConstants>().LogPath(),
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                DefaultInfoFileName,
+                                Process.GetCurrentProcess().Id)),
                         new DebugLogTemplate(() => DateTimeOffset.Now)))
                     .As<ILogger>()
                     .SingleInstance();

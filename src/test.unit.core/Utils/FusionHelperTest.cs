@@ -67,7 +67,7 @@ namespace Apollo.Utilities
         {
             var mockFileConstants = new Mock<IFileConstants>();
             mockFileConstants.Setup(constants => constants.AssemblyExtension)
-                .Returns(".dll");
+                .Returns("dll");
 
             // Can effectively just return the current assembly / gallio assemblies / system
             var helper = new FusionHelper(() => m_Assemblies.Keys.ToArray<string>(), mockFileConstants.Object);

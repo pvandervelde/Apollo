@@ -18,14 +18,14 @@ namespace Apollo.UI.Common.Views.Datasets
     public sealed class DatasetGraphPresenter : Presenter<IDatasetGraphView, DatasetGraphModel, DatasetGraphParameter>
     {
         /// <summary>
-        /// The IOC container that is used to retrieve the commands for the menu.
+        /// The IOC container that is used to retrieve the commands for the dataset presenter.
         /// </summary>
         private readonly IContainer m_Container;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetGraphPresenter"/> class.
         /// </summary>
-        /// <param name="container">The IOC container that is used to retrieve the commands for the menu.</param>
+        /// <param name="container">The IOC container that is used to retrieve the commands for the dataset presenter.</param>
         public DatasetGraphPresenter(IContainer container)
         {
             m_Container = container;
