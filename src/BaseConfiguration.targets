@@ -55,7 +55,4 @@
     <PropertyGroup>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     </PropertyGroup>
-	<Target Name="BeforeBuild">
-		<Exec Command="&quot;NuGet.exe&quot; install &quot;$(ProjectDir)packages.config&quot; -x -o &quot;$(SolutionDir)\..\packages&quot;" />
-    </Target>
 </Project>
