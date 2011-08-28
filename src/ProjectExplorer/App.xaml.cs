@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
+using System.Windows.Shell;
 using Apollo.Utilities;
 using Apollo.Utilities.ExceptionHandling;
 using Autofac;
@@ -162,6 +163,16 @@ namespace Apollo.ProjectExplorer
         public void Dispose()
         {
             m_ShutdownEvent.Dispose();
+        }
+
+        private void OnJumpListItemRejectedByOperatingSystem(object sender, JumpItemsRejectedEventArgs e)
+        {
+            // item rejected
+        }
+
+        private void OnJumpListItemRemovedByUser(object sender, JumpItemsRemovedEventArgs e)
+        {
+            // Item removed by user
         }
     }
 }

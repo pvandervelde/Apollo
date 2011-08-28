@@ -10,6 +10,11 @@
         Width="800"
         Height="600"
         Closing="HandleShellClosing">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskbarItemInfo"
+                         x:FieldModifier="private">
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
