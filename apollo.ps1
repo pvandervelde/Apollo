@@ -502,17 +502,23 @@ task getVersion -action{
 }
 
 task getBuildDependencies -action{
-    # Pull in the tools packages
-    $nuget = 'nuget.exe'
-    $command = '& "' + $nuget + '" '
-    $command += 'install "' + (Join-Path $props.dirBase "packages.config") + '" '
-    $command += '-ExcludeVersion '
-    $command += '-OutputDirectory "' + $props.dirPackages + '"'
-    $command
-    Invoke-Expression $command
-    if ($LastExitCode -ne 0)
+    # Pull in all the packages
+    $packages = Get-ChildItem -Path $props.dirBase -Filter "packages.config" -Recurse
+    
+    foreach($package in $packages)
     {
-        throw "NuGet failed on Apollo with return code: $LastExitCode"
+        $nuget = 'nuget.exe'
+        $command = '& "' + $nuget + '" '
+        $command += 'install "' + ($package.FullName) + '" '
+        $command += '-ExcludeVersion '
+        $command += '-OutputDirectory "' + $props.dirPackages + '"'
+        
+        ("Grabbing package from: " + $package.FullName)
+        Invoke-Expression $command
+        if ($LastExitCode -ne 0)
+        {
+            throw "NuGet failed on Apollo with return code: $LastExitCode"
+        }
     }
 }
 
