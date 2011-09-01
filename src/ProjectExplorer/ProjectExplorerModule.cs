@@ -224,6 +224,14 @@ namespace Apollo.ProjectExplorer
                        CommonRegionNames.StatusBarErrorReport,
                        new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
 
+            m_Container.Resolve<IEventAggregator>()
+              .GetEvent<ShowViewEvent>()
+              .Publish(
+                  new ShowViewRequest(
+                      typeof(FeedbackPresenter),
+                      CommonRegionNames.StatusBarFeedback,
+                      new FeedbackParameter(m_Container.Resolve<IContextAware>())));
+
             ActivateProjectRegions();
         }
 

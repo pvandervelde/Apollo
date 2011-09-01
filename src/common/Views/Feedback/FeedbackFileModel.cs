@@ -13,7 +13,7 @@ namespace Apollo.UI.Common.Views.Feedback
     /// <summary>
     /// Defines the model for a single feedback report.
     /// </summary>
-    public sealed class FeedbackReportModel : Model
+    public sealed class FeedbackFileModel : Model
     {
         /// <summary>
         /// The path to the file that contains the report.
@@ -26,7 +26,7 @@ namespace Apollo.UI.Common.Views.Feedback
         private DateTimeOffset m_ReportDate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FeedbackReportModel"/> class.
+        /// Initializes a new instance of the <see cref="FeedbackFileModel"/> class.
         /// </summary>
         /// <param name="path">The path to the file that contains the feedback file.</param>
         /// <param name="date">The date on which the feedback report was generated.</param>
@@ -40,7 +40,7 @@ namespace Apollo.UI.Common.Views.Feedback
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
-        public FeedbackReportModel(string path, DateTimeOffset date, IContextAware context)
+        public FeedbackFileModel(string path, DateTimeOffset date, IContextAware context)
             : base(context)
         {
             {

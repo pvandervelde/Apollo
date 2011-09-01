@@ -14,7 +14,7 @@ using Apollo.UI.Common.Views.Feedback;
 namespace Apollo.UI.Common.Converters
 {
     /// <summary>
-    /// Converts an <see cref="FeedbackReportModel"/> object to a string representation.
+    /// Converts an <see cref="FeedbackFileModel"/> object to a string representation.
     /// </summary>
     public sealed class FeedbackReportToTextConverter : IValueConverter
     {
@@ -28,7 +28,7 @@ namespace Apollo.UI.Common.Converters
         /// <returns>A converted value. If the method returns null, the valid null value is used.</returns>
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            var model = value as FeedbackReportModel;
+            var model = value as FeedbackFileModel;
             if (model == null)
             {
                 throw new ArgumentException(Resources.Exceptions_Messages_ArgumentException, "value");

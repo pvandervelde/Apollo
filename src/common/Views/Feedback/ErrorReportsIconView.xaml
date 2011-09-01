@@ -16,7 +16,9 @@
             <ColumnDefinition Width="Auto" />
         </Grid.ColumnDefinitions>
         
-        <Button Grid.Row="0"
+        <Button x:Name="showErrorReportsButton" 
+                x:FieldModifier="private"
+                Grid.Row="0"
                 Grid.Column="0"
                 IsEnabled="{Binding Path=HasErrorReports}"
                 Click="OnErrorReportButtonClick">

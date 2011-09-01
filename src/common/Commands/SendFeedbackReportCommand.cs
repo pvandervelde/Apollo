@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Linq;
 using Apollo.UI.Common.Feedback;
 using Microsoft.Practices.Prism.Commands;
 
@@ -23,57 +21,49 @@ namespace Apollo.UI.Common.Commands
         /// Determines if a report can be send to the remote server.
         /// </summary>
         /// <param name="feedbackSender">The object that sends the report to the remote server.</param>
-        /// <param name="feedbackReports">A collection that contains the file information for the feedback reports.</param>
+        /// <param name="feedbackReport">A stream that contains a feedback report.</param>
         /// <returns>
         ///     <see langword="true"/> if the existing project can be closed; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private static bool CanSendReport(ISendFeedbackReports feedbackSender, IEnumerable<FileInfo> feedbackReports)
+        private static bool CanSendReport(ISendFeedbackReports feedbackSender, Stream feedbackReport)
         {
-            return (feedbackSender != null) && (feedbackReports != null) && feedbackReports.Any();
+            return (feedbackSender != null) && (feedbackReport != null) && (feedbackReport != null);
         }
         
         /// <summary>
         /// Called when a report should be send to the remote server.
         /// </summary>
         /// <param name="feedbackSender">The object that sends the report to the remote server.</param>
-        /// <param name="feedbackReports">The stream that contains the report that should be send.</param>
-        private static void OnSendReport(ISendFeedbackReports feedbackSender, IEnumerable<FileInfo> feedbackReports)
+        /// <param name="feedbackReport">A stream that contains a feedback report.</param>
+        private static void OnSendReport(ISendFeedbackReports feedbackSender, Stream feedbackReport)
         {
             if (feedbackSender == null)
             {
                 return;
             }
 
-            if ((feedbackReports == null) && feedbackReports.Any())
+            if (feedbackReport == null)
             {
                 return;
             }
 
-            foreach (var report in feedbackReports)
+            try
             {
-                try
-                {
-                    using (var stream = report.Open(FileMode.Open, FileAccess.Read, FileShare.None))
-                    {
-                        feedbackSender.Send(stream);
-                    }
-
-                    report.Delete();
-                }
-                catch (UnauthorizedAccessException)
-                { 
-                    // Ignore it and move on.
-                }
-                catch (IOException)
-                {
-                    // Ignore it and move on.
-                }
-                catch (FailedToSendFeedbackReportException)
-                {
-                    // Ignore it and move on.
-                }
+                feedbackSender.Send(feedbackReport);
+            }
+            catch (UnauthorizedAccessException)
+            { 
+                // Ignore it and move on.
+            }
+            catch (IOException)
+            {
+                // Ignore it and move on.
+            }
+            catch (FailedToSendFeedbackReportException)
+            {
+                // Ignore it and move on.
             }
         }
 
@@ -85,8 +75,8 @@ namespace Apollo.UI.Common.Commands
         /// </param>
         public SendFeedbackReportCommand(ISendFeedbackReports feedbackSender)
             : base(
-                obj => OnSendReport(feedbackSender, obj as IEnumerable<FileInfo>), 
-                obj => CanSendReport(feedbackSender, obj as IEnumerable<FileInfo>))
+                obj => OnSendReport(feedbackSender, obj as Stream), 
+                obj => CanSendReport(feedbackSender, obj as Stream))
         { 
         }
     }

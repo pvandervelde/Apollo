@@ -214,6 +214,33 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        internal static string FeedbackIconView_Cancel {
+            get {
+                return ResourceManager.GetString("FeedbackIconView_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Description:.
+        /// </summary>
+        internal static string FeedbackIconView_Description {
+            get {
+                return ResourceManager.GetString("FeedbackIconView_Description", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        internal static string FeedbackIconView_Ok {
+            get {
+                return ResourceManager.GetString("FeedbackIconView_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Error in: {0} - Occurred on: {1}.
         /// </summary>
         internal static string FeedbackToTextConverter_FeedbackModel {

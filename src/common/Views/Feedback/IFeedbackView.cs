@@ -4,21 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.UI.Common
+namespace Apollo.UI.Common.Views.Feedback
 {
     /// <summary>
-    /// Implemented by views.
+    /// Defines the interface for objects that provide a view onto a 
+    /// single feedback entry.
     /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    public interface IView<TModel>
+    public interface IFeedbackView : IView<FeedbackModel>
     {
-        /// <summary>
-        /// Gets or sets the model.
-        /// </summary>
-        TModel Model 
-        { 
-            get; 
-            set; 
-        }
     }
 }

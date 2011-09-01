@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Threading.Tasks;
@@ -21,8 +22,8 @@ namespace Apollo.UI.Common.Views.Feedback
         /// <summary>
         /// The collection that contains the reports.
         /// </summary>
-        private readonly ObservableCollection<FeedbackReportModel> m_Reports
-            = new ObservableCollection<FeedbackReportModel>();
+        private readonly ObservableCollection<FeedbackFileModel> m_Reports
+            = new ObservableCollection<FeedbackFileModel>();
 
         /// <summary>
         /// The object that collects the feedback reports that have been stored on the
@@ -68,7 +69,7 @@ namespace Apollo.UI.Common.Views.Feedback
             Action<FileInfo> action =
                 item =>
                 {
-                    m_Reports.Add(new FeedbackReportModel(item.FullName, item.CreationTime, InternalContext));
+                    m_Reports.Add(new FeedbackFileModel(item.FullName, item.CreationTime, InternalContext));
                 };
 
             var task = Task.Factory.StartNew(
@@ -92,6 +93,40 @@ namespace Apollo.UI.Common.Views.Feedback
         }
 
         /// <summary>
+        /// Sends the reports to the remote server.
+        /// </summary>
+        /// <param name="reportFiles">The collection that holds the reports that should be send.</param>
+        public void SendReports(IEnumerable<FeedbackFileModel> reportFiles)
+        {
+            foreach (var report in reportFiles)
+            {
+                try
+                {
+                    using (var stream = File.Open(report.Path, FileMode.Open, FileAccess.Read, FileShare.None))
+                    {
+                        SendReportsCommand.Execute(stream);
+                    }
+
+                    File.Delete(report.Path);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    // Ignore it and move on.
+                }
+                catch (IOException)
+                {
+                    // Ignore it and move on.
+                }
+                catch (FailedToSendFeedbackReportException)
+                {
+                    // Ignore it and move on.
+                }
+            }
+
+            RelocateReports();
+        }
+
+        /// <summary>
         /// Gets a value indicating whether there are any error reports.
         /// </summary>
         public bool HasErrorReports
@@ -105,7 +140,7 @@ namespace Apollo.UI.Common.Views.Feedback
         /// <summary>
         /// Gets the collection of error reports.
         /// </summary>
-        public ObservableCollection<FeedbackReportModel> Reports
+        public ObservableCollection<FeedbackFileModel> Reports
         {
             get
             {
@@ -114,13 +149,13 @@ namespace Apollo.UI.Common.Views.Feedback
         }
 
         /// <summary>
-        /// Gets the command that can be used to send a given set of reports 
+        /// Gets or sets the command that can be used to send a given set of reports 
         /// to the server.
         /// </summary>
-        public ICommand SendReportsCommand
+        private ICommand SendReportsCommand
         {
             get;
-            private set;
+            set;
         }
     }
 }

@@ -68,6 +68,7 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
@@ -218,8 +219,15 @@
     <Compile Include="Views\Feedback\ErrorReportsModel.cs" />
     <Compile Include="Views\Feedback\ErrorReportsParameter.cs" />
     <Compile Include="Views\Feedback\ErrorReportsPresenter.cs" />
-    <Compile Include="Views\Feedback\FeedbackReportModel.cs" />
+    <Compile Include="Views\Feedback\FeedbackFileModel.cs" />
+    <Compile Include="Views\Feedback\FeedbackIconView.xaml.cs">
+      <DependentUpon>FeedbackIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Feedback\FeedbackModel.cs" />
+    <Compile Include="Views\Feedback\FeedbackParameter.cs" />
+    <Compile Include="Views\Feedback\FeedbackPresenter.cs" />
     <Compile Include="Views\Feedback\IErrorReportsView.cs" />
+    <Compile Include="Views\Feedback\IFeedbackView.cs" />
     <Compile Include="Views\Projects\IProjectDescriptionView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionView.xaml.cs">
@@ -302,6 +310,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Feedback\ErrorReportsIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Feedback\FeedbackIconView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

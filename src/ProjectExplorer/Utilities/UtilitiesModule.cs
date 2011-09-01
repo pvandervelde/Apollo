@@ -9,11 +9,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Security.Cryptography;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
+using NSarrac.Framework;
 
 namespace Apollo.Utilities
 {
@@ -146,6 +148,9 @@ namespace Apollo.Utilities
 
                 builder.Register(c => new XmlConfiguration())
                     .As<IConfiguration>();
+
+                RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
+                builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 
                 // Register the loggers
                 RegisterLoggers(builder);

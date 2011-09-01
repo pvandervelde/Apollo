@@ -1,0 +1,203 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Feedback.FeedbackIconView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto" />
+        </Grid.ColumnDefinitions>
+
+        <Button x:Name="showFeedbackButton" 
+                x:FieldModifier="private"
+                Grid.Row="0"
+                Grid.Column="0"
+                Click="OnShowFeedbackButtonClick">
+            <Image Source="{lex:LocImage Key=Img_SmileyNeutral_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                   Width="16"
+                   Height="16"
+                   Margin="3, 0, 3, 0" />
+        </Button>
+
+        <Popup x:Name="feedbackPopup"
+               x:FieldModifier="private"
+               IsOpen="False"
+               StaysOpen="False"
+               PlacementTarget="{Binding ElementName=showFeedbackButton}"
+               MinWidth="250"
+               MinHeight="200"
+               Closed="OnFeedbackPopupClosed">
+            <Popup.Resources>
+                <ResourceDictionary>
+                    <ResourceDictionary.MergedDictionaries>
+                        <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
+                    </ResourceDictionary.MergedDictionaries>
+
+                    <Style x:Key="enableOkButton"
+                           TargetType="{x:Type Button}"
+                           BasedOn="{StaticResource standardButtonSize}">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding ElementName=items, Path=SelectedIndex}"
+                                         Value="-1">
+                                <Setter Property="Button.IsEnabled"
+                                        Value="false" />
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+
+                    <Style TargetType="{x:Type RadioButton}">
+                        <Setter Property="Focusable"
+                                Value="False" />
+                        <Setter Property="GroupName"
+                                Value="filter" />
+                        <Setter Property="IsTabStop"
+                                Value="False" />
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="{x:Type RadioButton}">
+                                    <ControlTemplate.Resources>
+                                        <Style TargetType="{x:Type Image}">
+                                            <Setter Property="Height"
+                                                    Value="16" />
+                                            <Setter Property="Width"
+                                                    Value="16" />
+                                            <Setter Property="VerticalAlignment"
+                                                    Value="Center" />
+                                            <Setter Property="Margin"
+                                                    Value="0,0,2,0" />
+                                        </Style>
+                                    </ControlTemplate.Resources>
+
+                                    <Border x:Name="PART_border"
+                                            CornerRadius="2"
+                                            Padding="3px"
+                                            Margin="2px"
+                                            Background="Transparent"
+                                            BorderThickness="1"
+                                            BorderBrush="{x:Static SystemColors.ControlDarkBrush}"
+                                            SnapsToDevicePixels="True">
+
+                                        <StackPanel Orientation="Horizontal"
+                                                    HorizontalAlignment="Center">
+                                            <ContentPresenter x:Name="PART_content" />
+                                        </StackPanel>
+                                    </Border>
+
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsChecked"
+                                                 Value="True">
+                                            <Setter TargetName="PART_content"
+                                                    Property="TextBlock.FontWeight"
+                                                    Value="Bold" />
+                                            <Setter TargetName="PART_border"
+                                                    Property="Background">
+                                                <Setter.Value>
+                                                    <LinearGradientBrush StartPoint="0,0"
+                                                                         EndPoint="0,1">
+                                                        <GradientStop Color="{x:Static SystemColors.ControlLightColor}"
+                                                                      Offset="0" />
+                                                        <GradientStop Color="{x:Static SystemColors.ControlColor}"
+                                                                      Offset="1" />
+                                                    </LinearGradientBrush>
+                                                </Setter.Value>
+                                            </Setter>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ResourceDictionary>
+            </Popup.Resources>
+            <Border Background="SeaShell"
+                    BorderBrush="GoldenRod"
+                    BorderThickness="2"
+                    CornerRadius="2,2,2,2"
+                    Padding="2,2,2,2">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Border Grid.Row="0" 
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="3"
+                            Padding="2,2,2,2">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Grid.Row="0"
+                                        Orientation="Horizontal"
+                                        HorizontalAlignment="Center">
+                                <RadioButton x:Name="positiveFeedbackRadioButton"
+                                             x:FieldModifier="private"
+                                             Checked="OnFeedbackRadioButtonChecked">
+                                    <Image Source="{lex:LocImage Key=Img_SmileyHappy_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                           Width="48"
+                                           Height="48"
+                                           Margin="3, 0, 3, 0" />
+                                </RadioButton>
+
+                                <RadioButton x:Name="neutralFeedbackRadioButton"
+                                             x:FieldModifier="private"
+                                             Checked="OnFeedbackRadioButtonChecked">
+                                    <Image Source="{lex:LocImage Key=Img_SmileyNeutral_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                           Width="48"
+                                           Height="48"
+                                           Margin="3, 0, 3, 0" />
+                                </RadioButton>
+
+                                <RadioButton x:Name="negativeFeedbackRadioButton"
+                                             x:FieldModifier="private"
+                                             Checked="OnFeedbackRadioButtonChecked">
+                                    <Image Source="{lex:LocImage Key=Img_SmileySad_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                           Width="48"
+                                           Height="48"
+                                           Margin="3, 0, 3, 0" />
+                                </RadioButton>
+                            </StackPanel>
+
+                            <pix:InfoTextBox Grid.Row="2"
+                                             Margin="5, 1, 5, 5"
+                                             TextWrapping="Wrap"
+                                             AcceptsReturn="True"
+                                             AcceptsTab="True"
+                                             VerticalScrollBarVisibility="Auto"
+                                             SpellCheck.IsEnabled="True"
+                                             TextBoxInfo="{lex:LocText Key=FeedbackIconView_Description, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=FeedbackView_Description}"
+                                             Text="{Binding Path=Description, Mode=TwoWay}" />
+                        </Grid>
+                    </Border>
+
+                    <StackPanel Grid.Row="1"
+                                Orientation="Horizontal"
+                                HorizontalAlignment="Right">
+                        <Button x:Name="sendFeedbackButton"
+                                x:FieldModifier="private"
+                                IsDefault="True"
+                                Margin="3, 3, 3, 3"
+                                Style="{StaticResource enableOkButton}">
+                            <TextBlock Text="{lex:LocText Key=FeedbackIconView_Ok, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Ok}" />
+                        </Button>
+                        <Button IsCancel="True"
+                                Margin="3, 3 3, 3"
+                                Style="{StaticResource standardButtonSize}"
+                                Click="OnCancelButtonClick">
+                            <TextBlock Text="{lex:LocText Key=FeedbackIconView_Cancel, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Cancel}" />
+                        </Button>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Popup>
+    </Grid>
+</UserControl>

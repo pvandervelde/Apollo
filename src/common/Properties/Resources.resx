@@ -641,4 +641,13 @@ Please wait ...</value>
   <data name="Exceptions_Messages_ArgumentException" xml:space="preserve">
     <value>The provided argument is not suitable for the given function.</value>
   </data>
+  <data name="FeedbackIconView_Cancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="FeedbackIconView_Description" xml:space="preserve">
+    <value>Description:</value>
+  </data>
+  <data name="FeedbackIconView_Ok" xml:space="preserve">
+    <value>Ok</value>
+  </data>
 </root>
