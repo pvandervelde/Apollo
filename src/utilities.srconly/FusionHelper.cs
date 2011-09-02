@@ -331,7 +331,7 @@ namespace Apollo.Utilities
             return (moduleName.IndexOf(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "*.{0}",
+                        ".{0}",
                         m_FileConstants.AssemblyExtension), 
                     StringComparison.OrdinalIgnoreCase) < 0) 
                 ? string.Format(CultureInfo.InvariantCulture, "{0}.{1}", moduleName, m_FileConstants.AssemblyExtension) 
