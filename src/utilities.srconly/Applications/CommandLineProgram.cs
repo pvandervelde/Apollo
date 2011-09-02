@@ -38,7 +38,7 @@ namespace Apollo.Utilities.Applications
             int functionReturnResult = -1;
             Action applicationAction = () => functionReturnResult = applicationMethod();
             
-            var result = TopLevelExceptionHandler.RunGuarded(applicationAction, eventLogSource, errorLogFileName);
+            var result = TopLevelExceptionGuard.RunGuarded(applicationAction, eventLogSource, errorLogFileName);
             return (result == GuardResult.Failure) ? UnhandledExceptionApplicationExitCode : functionReturnResult;
         }
     }

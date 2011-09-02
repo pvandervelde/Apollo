@@ -25,7 +25,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "test.manual.console.info.log";
+        private const string DefaultInfoFileName = "test.manual.console.info.log";
 
         /// <summary>
         /// Override to add registrations to the container.
@@ -51,7 +51,7 @@ namespace Apollo.Utilities
 
                 // Register the loggers
                 builder.Register(c => LoggerBuilder.ForFile(
-                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
+                        Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
                         new DebugLogTemplate(() => DateTimeOffset.Now)))
                     .As<ILogger>()
                     .SingleInstance();

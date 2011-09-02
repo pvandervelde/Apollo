@@ -14,16 +14,20 @@ using Apollo.Core.UserInterfaces.Application;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
+using Apollo.ProjectExplorer.Views.StatusBar;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
+using Apollo.UI.Common.Views.Feedback;
 using Apollo.UI.Common.Views.Projects;
 using Apollo.UI.Common.Views.Scripting;
 using Apollo.Utilities;
+using Apollo.Utilities.ExceptionHandling;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
 using Microsoft.Practices.Prism.Modularity;
+using NSarrac.Framework;
 
 namespace Apollo.ProjectExplorer
 {
@@ -102,6 +106,7 @@ namespace Apollo.ProjectExplorer
             {
                 // Register the utilities elements. These are 'shared' with the core
                 builder.RegisterModule(new UtilitiesModule());
+                builder.RegisterModule(new CommonUiModule());
 
                 // Get all the registrations from Apollo.UI.Common
                 var commonUiAssembly = typeof(Observable).Assembly;
@@ -145,6 +150,9 @@ namespace Apollo.ProjectExplorer
 
                 builder.Register(c => new DispatcherContextWrapper(Application.Current.Dispatcher))
                     .As<IContextAware>();
+                
+                var key = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
+                builder.RegisterModule(new FeedbackReportingModule(() => key));
             }
 
             builder.Update(m_Container);
@@ -200,6 +208,29 @@ namespace Apollo.ProjectExplorer
                         typeof(MenuPresenter), 
                         RegionNames.MainMenu, 
                         new MenuParameter(m_Container.Resolve<IContextAware>())));
+            m_Container.Resolve<IEventAggregator>()
+                .GetEvent<ShowViewEvent>()
+                .Publish(
+                    new ShowViewRequest(
+                        typeof(StatusBarPresenter),
+                        RegionNames.StatusBar,
+                        new StatusBarParameter(m_Container.Resolve<IContextAware>())));
+
+            m_Container.Resolve<IEventAggregator>()
+               .GetEvent<ShowViewEvent>()
+               .Publish(
+                   new ShowViewRequest(
+                       typeof(ErrorReportsPresenter),
+                       CommonRegionNames.StatusBarErrorReport,
+                       new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
+
+            m_Container.Resolve<IEventAggregator>()
+              .GetEvent<ShowViewEvent>()
+              .Publish(
+                  new ShowViewRequest(
+                      typeof(FeedbackPresenter),
+                      CommonRegionNames.StatusBarFeedback,
+                      new FeedbackParameter(m_Container.Resolve<IContextAware>())));
 
             ActivateProjectRegions();
         }

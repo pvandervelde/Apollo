@@ -21,10 +21,16 @@
     <Compile Include="AssemblyNameElements.cs" />
     <Compile Include="ExceptionHandling\EventType.cs" />
     <Compile Include="ExceptionHandling\EventTypeToEventCategoryMap.cs" />
-    <Compile Include="ExceptionHandling\TopLevelExceptionHandler.cs" />
+    <Compile Include="ExceptionHandling\ExceptionHandler.cs" />
     <Compile Include="ExceptionHandling\ExceptionTypeToEventIdMap.cs" />
     <Compile Include="ExceptionHandling\GuardResult.cs" />
     <Compile Include="ExceptionHandling\IExceptionHandler.cs" />
+    <Compile Include="ExceptionHandling\IExceptionProcessor.cs" />
+    <Compile Include="ExceptionHandling\LogBasedExceptionProcessor.cs" />
+    <Compile Include="ExceptionHandling\ReportingExceptionProcessor.cs" />
+    <Compile Include="ExceptionHandling\ReportingUtilities.cs" />
+    <Compile Include="ExceptionHandling\SrcOnlyExceptionHandlingUtillities.cs" />
+    <Compile Include="ExceptionHandling\TopLevelExceptionGuard.cs" />
     <Compile Include="FusionHelper.cs" />
     <Compile Include="IAppDomainAssemblyResolver.cs" />
     <Compile Include="Logging\AdditionalLogMessageProperties.cs" />
@@ -46,6 +52,10 @@
     <Compile Include="SrcOnlyResources.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Autofac, Version=2.5.1.827, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
@@ -54,7 +64,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NSarrac.Framework">
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Management" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Compilers\" />

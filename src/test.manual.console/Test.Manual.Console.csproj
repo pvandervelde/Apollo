@@ -28,10 +28,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NSarrac.Framework">
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml.Linq" />
@@ -61,14 +65,32 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
+      <Link>Utilities\ExceptionHandler.cs</Link>
+    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionTypeToEventIdMap.cs">
       <Link>Utilities\ExceptionTypeToEventIdMap.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\GuardResult.cs">
       <Link>Utilities\GuardResult.cs</Link>
     </Compile>
-    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionHandler.cs">
-      <Link>Utilities\TopLevelExceptionHandler.cs</Link>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionHandler.cs">
+      <Link>Utilities\IExceptionHandler.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\IExceptionProcessor.cs">
+      <Link>Utilities\IExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\LogBasedExceptionProcessor.cs">
+      <Link>Utilities\LogBasedExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingExceptionProcessor.cs">
+      <Link>Utilities\ReportingExceptionProcessor.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ReportingUtilities.cs">
+      <Link>Utilities\ReportingUtilities.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\TopLevelExceptionGuard.cs">
+      <Link>Utilities\TopLevelExceptionGuard.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\Logging\AdditionalLogMessageProperties.cs">
       <Link>Utilities\AdditionalLogMessageProperties.cs</Link>
@@ -106,6 +128,7 @@
     <Compile Include="IFormTheApplicationCenter.cs" />
     <Compile Include="Models\ConnectionViewModel.cs" />
     <Compile Include="Models\ConnectionInformationViewModel.cs" />
+    <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="Utilities\SrcOnlyResources.cs" />
     <Compile Include="Utilities\UtilitiesModule.cs" />
     <Compile Include="Views\CommunicationPassThrough.cs" />
@@ -131,6 +154,9 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+	<EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+      <Link>Properties\NSarracReportPublicKey.xml</Link>
+    </EmbeddedResource>
     <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>

@@ -46,7 +46,7 @@ namespace Apollo.Utilities
             [ExcludeFromCodeCoverage]
             get
             {
-                return ".dll";
+                return "dll";
             }
         }
 
@@ -59,8 +59,34 @@ namespace Apollo.Utilities
             [ExcludeFromCodeCoverage]
             get
             {
-                return ".log";
+                return "log";
             }
+        }
+
+        /// <summary>
+        /// Gets the extension for a feedback file.
+        /// </summary>
+        public string FeedbackReportExtension
+        {
+            get
+            {
+                return "nsdump";
+            }
+        }
+
+        /// <summary>
+        /// Returns the path for the directory in the AppData directory which contains
+        /// all the product directories for the current company.
+        /// </summary>
+        /// <returns>
+        /// The full path for the AppData directory for the current company.
+        /// </returns>
+        public string CompanyPath()
+        {
+            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+
+            return companyDirectory;
         }
 
         /// <summary>
@@ -73,8 +99,7 @@ namespace Apollo.Utilities
         /// </returns>
         public string ProductSettingsPath()
         {
-            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
-            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+            var companyDirectory = CompanyPath();
             var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
             var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
 

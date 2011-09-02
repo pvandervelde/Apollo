@@ -57,13 +57,9 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
+    <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+      <Link>Properties\NSarracReportPublicKey.xml</Link>
+    </EmbeddedResource>
     <None Include="packages.config" />
   </ItemGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

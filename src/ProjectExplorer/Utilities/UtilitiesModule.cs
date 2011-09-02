@@ -9,12 +9,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using Apollo.ProjectExplorer.Utilities;
+using System.Security.Cryptography;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
+using NSarrac.Framework;
 
 namespace Apollo.Utilities
 {
@@ -28,7 +29,7 @@ namespace Apollo.Utilities
         /// <summary>
         /// The default name for the error log.
         /// </summary>
-        private const string DefaultErrorFileName = "projectexplorer.info.log";
+        private const string DefaultInfoFileName = "projectexplorer.info.log";
 
         private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
         {
@@ -78,7 +79,7 @@ namespace Apollo.Utilities
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultErrorFileName),
+                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
                     new DebugLogTemplate(() => DateTimeOffset.Now)))
                 .As<ILogger>()
                 .SingleInstance();
@@ -140,11 +141,16 @@ namespace Apollo.Utilities
                 builder.Register(c => new FileConstants(c.Resolve<IApplicationConstants>()))
                     .As<IFileConstants>();
 
-                builder.Register(c => new MockExceptionHandler())
+                builder.Register((c, p) => new ExceptionHandler(
+                        p.Positional<string>(0),
+                        p.Positional<string>(1)))
                     .As<IExceptionHandler>();
 
                 builder.Register(c => new XmlConfiguration())
                     .As<IConfiguration>();
+
+                RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
+                builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 
                 // Register the loggers
                 RegisterLoggers(builder);

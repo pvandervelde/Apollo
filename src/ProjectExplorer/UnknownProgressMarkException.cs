@@ -17,9 +17,6 @@ namespace Apollo.ProjectExplorer
     /// linked to a <see cref="IProgressMark"/> object which is 
     /// unknown.
     /// </summary>
-    /// <design>
-    /// Accoording to FxCop exceptions should always be public (CA1064 - ExceptionsShouldBePublic).
-    /// </design>
     [Serializable]
     public sealed class UnknownProgressMarkException : Exception
     {

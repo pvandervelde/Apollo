@@ -15,7 +15,6 @@ namespace Apollo.UI.Common
         /// <summary>
         /// Gets or sets the model.
         /// </summary>
-        /// <value>The model.</value>
         TModel Model 
         { 
             get; 

@@ -25,5 +25,25 @@ namespace Apollo.UI.Common
         /// Defines the name of the content region of the shell.
         /// </summary>
         public const string Content = "Content";
+
+        /// <summary>
+        /// Defines the name of the text region of the status bar.
+        /// </summary>
+        public const string StatusBarStatusText = "StatusBar_StatusText";
+
+        /// <summary>
+        /// Defines the name of the progress region of the status bar.
+        /// </summary>
+        public const string StatusBarProgressReport = "StatusBar_ProgressReport";
+
+        /// <summary>
+        /// Defines the name of the feedback region of the status bar.
+        /// </summary>
+        public const string StatusBarFeedback = "StatusBar_Feedback";
+
+        /// <summary>
+        /// Defines the name of the error report region of the status bar.
+        /// </summary>
+        public const string StatusBarErrorReport = "StatusBar_ErrorReport";
     }
 }

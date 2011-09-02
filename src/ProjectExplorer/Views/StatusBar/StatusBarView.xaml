@@ -1,0 +1,40 @@
+﻿<common:RegionView x:Class="Apollo.ProjectExplorer.Views.StatusBar.StatusBarView"
+                   x:ClassModifier="internal"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:regions="http://www.codeplex.com/prism"
+                   xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+                   xmlns:common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common">
+    <StatusBar>
+        <StatusBar.ItemsPanel>
+            <ItemsPanelTemplate>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                </Grid>
+            </ItemsPanelTemplate>
+        </StatusBar.ItemsPanel>
+        
+        <!-- This is where the items go -->
+        <!-- Status of current dataset -->
+        <StatusBarItem Grid.Column="0"
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarStatusText}" />
+        
+        
+        <!-- Global progress bar -->
+        <StatusBarItem Grid.Column="1"
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarProgressReport}" />
+
+        <!-- Feedback icon -->
+        <StatusBarItem Grid.Column="2"
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarFeedback}" />
+
+        <!-- Icon indicating crash reports -->
+        <StatusBarItem Grid.Column="3"
+                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarErrorReport}" />
+    </StatusBar>
+</common:RegionView>
