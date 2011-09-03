@@ -149,6 +149,19 @@ namespace Apollo.Utilities
                 builder.Register(c => new XmlConfiguration())
                     .As<IConfiguration>();
 
+                builder.Register(c => new ProgressReportingHub())
+                    .OnActivated(a =>
+                        {
+                            var hub = (ProgressReportingHub)a.Instance;
+                            var reporters = a.Context.Resolve<IEnumerable<ITrackProgress>>();
+                            foreach (var reporter in reporters)
+                            {
+                                hub.AddReporter(reporter);
+                            }
+                        })
+                    .As<ICollectProgressReports>()
+                    .SingleInstance();
+
                 RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 

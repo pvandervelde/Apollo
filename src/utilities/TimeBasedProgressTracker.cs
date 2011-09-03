@@ -112,6 +112,7 @@ namespace Apollo.Utilities
             m_ElapsedTime = time => time - startTime;
 
             m_ProgressTimer.OnElapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
+            RaiseOnStartProgress();
             RaiseOnStartupProgress(StartingProgress, m_CurrentMark);
 
             m_ProgressTimer.Start();
@@ -221,10 +222,25 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
+        /// Occurs when the process for which progress is 
+        /// being reported is starting.
+        /// </summary>
+        public event EventHandler<EventArgs> OnStartProgress;
+
+        private void RaiseOnStartProgress()
+        {
+            var local = OnStartProgress;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        public event EventHandler<ProgressEventArgs> OnStartupProgress;
+        public event EventHandler<ProgressEventArgs> OnProgress;
 
         /// <summary>
         /// Raises the startup progress event with the specified values.
@@ -233,10 +249,25 @@ namespace Apollo.Utilities
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
         private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing)
         {
-            var local = OnStartupProgress;
+            var local = OnProgress;
             if (local != null)
             { 
                 local(this, new ProgressEventArgs(progress, currentlyProcessing));
+            }
+        }
+
+        /// <summary>
+        /// Occurs when the process for which progress is
+        /// being reported is finished.
+        /// </summary>
+        public event EventHandler<EventArgs> OnStopProgress;
+
+        private void RaiseOnStopProgress()
+        {
+            var local = OnStopProgress;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
             }
         }
 
@@ -247,6 +278,7 @@ namespace Apollo.Utilities
         {
             StopProgressTimer();
             RaiseOnStartupProgress(FinishingProgress, m_CurrentMark);
+            RaiseOnStopProgress();
         }
 
         /// <summary>

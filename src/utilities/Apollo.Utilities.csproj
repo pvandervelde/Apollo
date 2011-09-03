@@ -41,11 +41,13 @@
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="IApplicationConstants.cs" />
+    <Compile Include="ICollectProgressReports.cs" />
     <Compile Include="ICompanyConstants.cs" />
     <Compile Include="Id.cs" />
     <Compile Include="IFileConstants.cs" />
     <Compile Include="IIsId.cs" />
     <Compile Include="ILockObject.cs" />
+    <Compile Include="IndeterminateProgressMark.cs" />
     <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="IProgressMark.cs" />
     <Compile Include="IStoreMarkerTimes.cs" />
@@ -56,6 +58,7 @@
     <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
+    <Compile Include="ProgressReportingHub.cs" />
     <Compile Include="ReflectionExtensions.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
