@@ -20,6 +20,7 @@ using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Feedback;
+using Apollo.UI.Common.Views.Progress;
 using Apollo.UI.Common.Views.Projects;
 using Apollo.UI.Common.Views.Scripting;
 using Apollo.Utilities;
@@ -231,6 +232,14 @@ namespace Apollo.ProjectExplorer
                       typeof(FeedbackPresenter),
                       CommonRegionNames.StatusBarFeedback,
                       new FeedbackParameter(m_Container.Resolve<IContextAware>())));
+
+            m_Container.Resolve<IEventAggregator>()
+              .GetEvent<ShowViewEvent>()
+              .Publish(
+                  new ShowViewRequest(
+                      typeof(ProgressPresenter),
+                      CommonRegionNames.StatusBarProgressReport,
+                      new ProgressParameter(m_Container.Resolve<IContextAware>())));
 
             ActivateProjectRegions();
         }

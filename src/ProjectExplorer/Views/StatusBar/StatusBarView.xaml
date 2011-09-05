@@ -10,8 +10,8 @@
             <ItemsPanelTemplate>
                 <Grid>
                     <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="4*" />
                         <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
@@ -22,19 +22,21 @@
         <!-- This is where the items go -->
         <!-- Status of current dataset -->
         <StatusBarItem Grid.Column="0"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarStatusText}" />
+                       HorizontalContentAlignment="Stretch"
+                       regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarStatusText}" />
         
         
         <!-- Global progress bar -->
         <StatusBarItem Grid.Column="1"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarProgressReport}" />
+                       HorizontalContentAlignment="Stretch"
+                       regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarProgressReport}" />
 
         <!-- Feedback icon -->
         <StatusBarItem Grid.Column="2"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarFeedback}" />
+                       regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarFeedback}" />
 
         <!-- Icon indicating crash reports -->
         <StatusBarItem Grid.Column="3"
-                        regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarErrorReport}" />
+                       regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.StatusBarErrorReport}" />
     </StatusBar>
 </common:RegionView>
