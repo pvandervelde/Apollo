@@ -44,7 +44,7 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
-        /// Gets a string describing the action that is currently being processed.
+        /// Gets an object describing the action that is currently being processed.
         /// </summary>
         public IProgressMark CurrentlyProcessing
         {

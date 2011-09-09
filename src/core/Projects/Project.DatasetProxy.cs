@@ -425,11 +425,12 @@ namespace Apollo.Core.Projects
             }
 
             /// <summary>
-            /// A method called by the owner when the owner has dataset loading progress to report.
+            /// A method called by the owner when the owner has progress to report for the
+            /// current action that the dataset is executing.
             /// </summary>
             /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
             /// <param name="mark">The action that is currently being processed.</param>
-            void IOwnedProxyDataset.OwnerReportsDatasetLoadingProgress(int progress, IProgressMark mark)
+            void IOwnedProxyDataset.OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark)
             {
                 RaiseOnLoadingProgress(progress, mark);
             }
@@ -437,11 +438,11 @@ namespace Apollo.Core.Projects
             /// <summary>
             /// An event raised when there is progress in the loading of the datset.
             /// </summary>
-            public event EventHandler<ProgressEventArgs> OnLoadingProgress;
+            public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
             private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
             {
-                var local = OnLoadingProgress;
+                var local = OnProgressOfCurrentAction;
                 if (local != null)
                 {
                     local(this, new ProgressEventArgs(progress, mark));

@@ -174,9 +174,10 @@ namespace Apollo.Core.Projects
             CancellationToken token);
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the datset.
+        /// An event raised when there is progress in the current action which is being
+        /// executed by the dataset.
         /// </summary>
-        event EventHandler<ProgressEventArgs> OnLoadingProgress;
+        event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
         /// <summary>
         /// An event raised when the dataset is loaded onto one or more machines.

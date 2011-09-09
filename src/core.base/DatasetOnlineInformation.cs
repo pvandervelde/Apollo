@@ -134,6 +134,8 @@ namespace Apollo.Core.Base
             return m_Hub.CommandsFor<TCommand>(Endpoint);
         }
 
+        // TODO: DEFINE NOTIFICATIONS
+
         /// <summary>
         /// Closes the remote dataset application.
         /// </summary>

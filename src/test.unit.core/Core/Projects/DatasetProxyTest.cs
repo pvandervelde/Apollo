@@ -414,7 +414,7 @@ namespace Apollo.Core.Projects
             dataset.OnLoaded += (s, e) => wasLoaded = true;
 
             int progress = -1;
-            dataset.OnLoadingProgress += (s, e) => progress = e.Progress;
+            dataset.OnProgressOfCurrentAction += (s, e) => progress = e.Progress;
             dataset.LoadOntoMachine(LoadingLocations.All, selector, new CancellationToken());
 
             Assert.IsTrue(dataset.IsLoaded);

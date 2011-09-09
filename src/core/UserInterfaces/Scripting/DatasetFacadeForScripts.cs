@@ -98,7 +98,7 @@ namespace Apollo.Core.UserInterfaces.Scripting
 
             m_Dataset = facade;
             m_Dataset.OnInvalidate += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnLoadingProgress += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing);
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing);
             m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();

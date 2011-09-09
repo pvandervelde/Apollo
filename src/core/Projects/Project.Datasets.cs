@@ -380,7 +380,7 @@ namespace Apollo.Core.Projects
                 if (m_DatasetProxies.ContainsKey(id))
                 {
                     var proxy = m_DatasetProxies[id];
-                    proxy.OwnerReportsDatasetLoadingProgress(0, new DatasetLoadingProgressMark());
+                    proxy.OwnerReportsDatasetCurrentActionProgress(0, new DatasetLoadingProgressMark());
                 }
 
                 var task = selectedPlan.Plan.Accept(token);
@@ -398,7 +398,7 @@ namespace Apollo.Core.Projects
                         if (m_DatasetProxies.ContainsKey(id))
                         {
                             var proxy = m_DatasetProxies[id];
-                            proxy.OwnerReportsDatasetLoadingProgress(100, new DatasetLoadingProgressMark());
+                            proxy.OwnerReportsDatasetCurrentActionProgress(100, new DatasetLoadingProgressMark());
                             proxy.OwnerHasLoadedDataset();
                         }
                     },

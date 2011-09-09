@@ -24,6 +24,16 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly DatasetFacade m_Dataset;
 
         /// <summary>
+        /// Describes the currently running action.
+        /// </summary>
+        private string m_ProgressDescription;
+
+        /// <summary>
+        /// Describes the progress for the current action.
+        /// </summary>
+        private double m_Progress;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetModel"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
@@ -44,7 +54,11 @@ namespace Apollo.UI.Common.Views.Datasets
             m_Dataset = dataset;
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
-            m_Dataset.OnLoadingProgress += (s, e) => { }; // @todo: add progress reporting ...
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => 
+                {
+                    ProgressDescription = e.CurrentlyProcessing.ToString();
+                    Progress = e.Progress / 100.0;
+                };
             m_Dataset.OnLoaded += (s, e) =>
                 { 
                     Notify(() => this.IsLoaded);
@@ -231,6 +245,49 @@ namespace Apollo.UI.Common.Views.Datasets
             }
         }
 
-        // PROGRESS (Run / Save etc.)
+        /// <summary>
+        /// Gets the description for the currently executing action.
+        /// </summary>
+        public string ProgressDescription
+        {
+            get
+            {
+                return m_ProgressDescription;
+            }
+
+            private set
+            {
+                m_ProgressDescription = value;
+                Notify(() => ProgressDescription);
+            }
+        }
+
+        /// <summary>
+        /// Gets the progress for the currently executing action.
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                return m_Progress;
+            }
+
+            private set
+            {
+                var result = value;
+                if (result < 0.0)
+                {
+                    result = 0.0;
+                }
+
+                if (result > 1.0)
+                {
+                    result = 1.0;
+                }
+
+                m_Progress = result;
+                Notify(() => Progress);
+            }
+        }
     }
 }

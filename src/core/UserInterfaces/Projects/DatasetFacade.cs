@@ -99,7 +99,7 @@ namespace Apollo.Core.UserInterfaces.Projects
 
             m_Dataset = dataset;
             m_Dataset.OnDeleted += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnLoadingProgress += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing);
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnProgressOfCurrentAction(e.Progress, e.CurrentlyProcessing);
             m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
@@ -323,13 +323,14 @@ namespace Apollo.Core.UserInterfaces.Projects
         }
 
         /// <summary>
-        /// An event raised when there is progress in the loading of the datset.
+        /// An event raised when there is progress in the action that the dataset is
+        /// currently executing.
         /// </summary>
-        public event EventHandler<ProgressEventArgs> OnLoadingProgress;
+        public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-        private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
+        private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark)
         {
-            var local = OnLoadingProgress;
+            var local = OnProgressOfCurrentAction;
             if (local != null)
             {
                 local(this, new ProgressEventArgs(progress, mark));

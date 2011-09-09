@@ -23,7 +23,7 @@ namespace Apollo.Core.Projects
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="mark">The action that is currently being processed.</param>
-        void OwnerReportsDatasetLoadingProgress(int progress, IProgressMark mark);
+        void OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark);
 
         /// <summary>
         /// Called when the owner has successfully loaded the dataset onto one or more machines.
