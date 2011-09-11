@@ -135,9 +135,9 @@ namespace Apollo.Base.Communication
             Assert.IsFalse(result.IsCanceled);
             Assert.IsFalse(result.IsFaulted);
 
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn)), intermediateMsg.Invocation.CommandSet);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn)), intermediateMsg.Invocation.Type);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
             Assert.AreEqual(10, intermediateMsg.Invocation.Parameters[0].Item2);
         }
 
@@ -171,9 +171,9 @@ namespace Apollo.Base.Communication
             Assert.IsTrue(result.IsFaulted);
             Assert.IsAssignableFrom(typeof(CommandInvocationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
 
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn)), intermediateMsg.Invocation.CommandSet);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn)), intermediateMsg.Invocation.Type);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
             Assert.AreEqual(10, intermediateMsg.Invocation.Parameters[0].Item2);
         }
 
@@ -207,9 +207,9 @@ namespace Apollo.Base.Communication
             Assert.IsFalse(result.IsFaulted);
             Assert.AreEqual(20, result.Result);
 
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn)), intermediateMsg.Invocation.CommandSet);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn)), intermediateMsg.Invocation.Type);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
             Assert.AreEqual(10, intermediateMsg.Invocation.Parameters[0].Item2);
         }
 
@@ -243,9 +243,9 @@ namespace Apollo.Base.Communication
             Assert.IsTrue(result.IsFaulted);
             Assert.IsAssignableFrom(typeof(CommandInvocationFailedException), ((AggregateException)result.Exception).InnerExceptions[0].GetType());
 
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn)), intermediateMsg.Invocation.CommandSet);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn)), intermediateMsg.Invocation.Type);
             Assert.AreEqual(1, intermediateMsg.Invocation.Parameters.Count);
-            Assert.AreEqual(CommandSetProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(int)), intermediateMsg.Invocation.Parameters[0].Item1);
             Assert.AreEqual(10, intermediateMsg.Invocation.Parameters[0].Item2);
         }
     }

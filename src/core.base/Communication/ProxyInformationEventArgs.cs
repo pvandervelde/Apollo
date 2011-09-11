@@ -10,31 +10,31 @@ using Lokad;
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Stores <see cref="EventArgs"/> describing the registration of a new command on a
+    /// Stores <see cref="EventArgs"/> describing the registration of a new proxy on a
     /// remote endpoint.
     /// </summary>
-    internal sealed class CommandInformationEventArgs : EventArgs
+    internal sealed class ProxyInformationEventArgs : EventArgs
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandInformationEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="ProxyInformationEventArgs"/> class.
         /// </summary>
-        /// <param name="endpoint">The ID number of the endpoint on which the command was registered.</param>
-        /// <param name="command">The command that was registered.</param>
+        /// <param name="endpoint">The ID number of the endpoint on which the proxy was registered.</param>
+        /// <param name="proxyType">The command that was registered.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="endpoint"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="command"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="proxyType"/> is <see langword="null" />.
         /// </exception>
-        public CommandInformationEventArgs(EndpointId endpoint, ISerializedType command)
+        public ProxyInformationEventArgs(EndpointId endpoint, ISerializedType proxyType)
         {
             {
                 Enforce.Argument(() => endpoint);
-                Enforce.Argument(() => command);
+                Enforce.Argument(() => proxyType);
             }
 
             Endpoint = endpoint;
-            Command = command;
+            Proxy = proxyType;
         }
 
         /// <summary>
@@ -47,9 +47,9 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Gets the command that was registered on the remote endpoint.
+        /// Gets the proxy that was registered on the remote endpoint.
         /// </summary>
-        public ISerializedType Command
+        public ISerializedType Proxy
         {
             get;
             private set;

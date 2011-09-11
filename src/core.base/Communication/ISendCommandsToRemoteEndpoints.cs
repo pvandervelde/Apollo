@@ -60,7 +60,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpoint">The ID number of the endpoint.</param>
         /// <param name="commandInterfaceType">The type of the command that should be available.</param>
         /// <returns>
-        ///     <see langword="true" /> if there are the speicfic commands exist for the given endpoint; otherwise, <see langword="false" />.
+        ///     <see langword="true" /> if there are the specific commands exist for the given endpoint; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

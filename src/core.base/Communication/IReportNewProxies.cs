@@ -12,11 +12,11 @@ namespace Apollo.Core.Base.Communication
     /// Defines the interface for objects that track messages indicating
     /// that a new remote command has been registered.
     /// </summary>
-    internal interface IReportNewCommands
+    internal interface IReportNewProxies
     {
         /// <summary>
         /// An event raised when a new remote command is registered.
         /// </summary>
-        event EventHandler<CommandInformationEventArgs> OnNewCommandRegistered;
+        event EventHandler<ProxyInformationEventArgs> OnNewProxyRegistered;
     }
 }

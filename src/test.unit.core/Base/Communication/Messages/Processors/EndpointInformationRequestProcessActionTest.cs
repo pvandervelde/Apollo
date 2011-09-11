@@ -65,12 +65,12 @@ namespace Apollo.Base.Communication.Messages.Processors
             action.Invoke(new EndpointInformationRequestMessage(otherEndpoint));
 
             Assert.AreSame(otherEndpoint, storedEndpoint);
-            Assert.IsInstanceOfType(typeof(EndpointInformationResponseMessage), storedMsg);
+            Assert.IsInstanceOfType(typeof(EndpointProxyTypesResponseMessage), storedMsg);
 
-            var responseMsg = storedMsg as EndpointInformationResponseMessage;
+            var responseMsg = storedMsg as EndpointProxyTypesResponseMessage;
             Assert.AreElementsEqual(
-                new List<ISerializedType> { CommandSetProxyExtensions.FromType(typeof(IHostCommands)) }, 
-                responseMsg.Commands, 
+                new List<ISerializedType> { ProxyExtensions.FromType(typeof(IHostCommands)) }, 
+                responseMsg.ProxyTypes, 
                 (x, y) => x.Equals(y));
         }
 

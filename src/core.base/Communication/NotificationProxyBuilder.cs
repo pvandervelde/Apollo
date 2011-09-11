@@ -6,10 +6,8 @@
 
 using System;
 using System.Globalization;
-using System.Reflection;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Castle.DynamicProxy;
@@ -18,37 +16,31 @@ using Lokad;
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Builds proxy objects for the <see cref="RemoteCommandHub"/>.
+    /// Builds proxy objects for the <see cref="RemoteNotificationHub"/>.
     /// </summary>
-    internal sealed class CommandProxyBuilder
+    internal sealed class NotificationProxyBuilder
     {
         /// <summary>
         /// Verifies that an interface type will be a correct command set.
         /// </summary>
         /// <remarks>
         /// <para>
-        /// A proper command set class has the following characteristics:
+        /// A proper notification set class has the following characteristics:
         /// <list type="bullet">
         ///     <item>
-        ///         <description>The interface must derrive from <see cref="ICommandSet"/>.</description>
+        ///         <description>The interface must derrive from <see cref="INotificationSet"/>.</description>
         ///     </item>
         ///     <item>
-        ///         <description>The interface must only have methods, no properties or events.</description>
+        ///         <description>The interface must only have events, no properties or methods.</description>
         ///     </item>
         ///     <item>
-        ///         <description>Each method must return either <see cref="Task"/> or <see cref="Task{T}"/>.</description>
+        ///         <description>Each event be based on <see cref="EventHandler{T}"/> delegate.</description>
         ///     </item>
         ///     <item>
-        ///         <description>If a method returns a <see cref="Task{T}"/> then <c>T</c> must be a closed constructed type.</description>
+        ///         <description>The event must be based on a closed constructed type.</description>
         ///     </item>
         ///     <item>
-        ///         <description>If a method returns a <see cref="Task{T}"/> then <c>T</c> must be serializable.</description>
-        ///     </item>
-        ///     <item>
-        ///         <description>All method parameters must be serializable.</description>
-        ///     </item>
-        ///     <item>
-        ///         <description>None of the method parameters may be <c>ref</c> or <c>out</c> parameters.</description>
+        ///         <description>The <see cref="EventArgs"/> of <see cref="EventHandler{T}"/> must be serializable.</description>
         ///     </item>
         /// </list>
         /// </para>
@@ -59,110 +51,86 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         public static void VerifyThatTypetIsACorrectCommandSet(Type commandSet)
         {
-            if (!typeof(ICommandSet).IsAssignableFrom(commandSet))
+            if (!typeof(INotificationSet).IsAssignableFrom(commandSet))
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnICommandSet,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnINotificationSet,
                         commandSet));
             }
 
             if (!commandSet.IsInterface)
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeIsNotAnInterface,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnInterface,
                         commandSet));
             }
 
             if (commandSet.ContainsGenericParameters)
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed,
                         commandSet));
             }
 
             if (commandSet.GetProperties().Length > 0)
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties,
                         commandSet));
             }
 
-            if (commandSet.GetEvents().Length > typeof(ICommandSet).GetEvents().Length)
+            if (commandSet.GetMethods().Length > 0)
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods,
                         commandSet));
             }
 
-            var methods = commandSet.GetMethods();
-            if (methods.Length == 0)
+            var events = commandSet.GetEvents();
+            if (events.Length == 0)
             {
-                throw new TypeIsNotAValidCommandSetException(
+                throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMustHaveMethods,
+                        Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetMustHaveEvents,
                         commandSet));
             }
 
-            foreach (var method in methods)
+            foreach (var eventInfo in events)
             {
-                if (method.IsGenericMethodDefinition)
+                if (!HasCorrectDelegateType(eventInfo.EventHandlerType))
                 {
-                    throw new TypeIsNotAValidCommandSetException(
+                    throw new TypeIsNotAValidNotificationSetException(
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric,
+                            Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEventHandler,
                             commandSet,
-                            method));
-                }
-
-                if (!HasCorrectReturnType(method.ReturnType))
-                {
-                    throw new TypeIsNotAValidCommandSetException(
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsMustHaveCorrectReturnType,
-                            commandSet,
-                            method));
-                }
-
-                var parameters = method.GetParameters();
-                foreach (var parameter in parameters)
-                {
-                    if (!IsParameterValid(parameter))
-                    {
-                        throw new TypeIsNotAValidCommandSetException(
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetParametersMustBeValid,
-                                commandSet,
-                                method));
-                    }
+                            eventInfo));
                 }
             }
         }
 
-        private static bool HasCorrectReturnType(Type type)
+        private static bool HasCorrectDelegateType(Type type)
         {
-            if (type.Equals(typeof(Task)))
+            if (type.Equals(typeof(EventHandler)))
             {
                 return true;
             }
 
             if (type.IsGenericType)
-            { 
+            {
                 var baseType = type.GetGenericTypeDefinition();
-                if (baseType.Equals(typeof(Task<>)))
+                if (baseType.Equals(typeof(EventHandler<>)))
                 {
                     var genericParameters = type.GetGenericArguments();
                     if (genericParameters[0].ContainsGenericParameters)
@@ -183,26 +151,6 @@ namespace Apollo.Core.Base.Communication
         private static bool IsTypeSerializable(Type type)
         {
             return Attribute.IsDefined(type, typeof(DataContractAttribute)) || typeof(ISerializable).IsAssignableFrom(type) || type.IsSerializable;
-        }
-
-        private static bool IsParameterValid(ParameterInfo parameter)
-        {
-            if (parameter.ParameterType.ContainsGenericParameters)
-            {
-                return false;
-            }
-
-            if (parameter.IsOut || parameter.ParameterType.IsByRef)
-            {
-                return false;
-            }
-
-            if (!IsTypeSerializable(parameter.ParameterType))
-            {
-                return false;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -227,7 +175,7 @@ namespace Apollo.Core.Base.Communication
         private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandProxyBuilder"/> class.
+        /// Initializes a new instance of the <see cref="NotificationProxyBuilder"/> class.
         /// </summary>
         /// <param name="localEndpoint">The ID number of the local endpoint.</param>
         /// <param name="sendWithResponse">
@@ -243,7 +191,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
-        public CommandProxyBuilder(
+        public NotificationProxyBuilder(
             EndpointId localEndpoint,
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sendWithResponse,
             Action<LogSeverityProxy, string> logger)
@@ -267,7 +215,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>
         /// The interfaced proxy.
         /// </returns>
-        public T ProxyConnectingTo<T>(EndpointId endpoint) where T : ICommandSet
+        public T ProxyConnectingTo<T>(EndpointId endpoint) where T : INotificationSet
         {
             object result = ProxyConnectingTo(endpoint, typeof(T));
             return (T)result;
@@ -286,45 +234,29 @@ namespace Apollo.Core.Base.Communication
             {
                 Enforce.Argument(() => interfaceType);
                 Enforce.With<ArgumentException>(
-                    typeof(ICommandSet).IsAssignableFrom(interfaceType), 
-                    Resources.Exceptions_Messages_ACommandSetTypeMustDeriveFromICommandSet);
+                    typeof(INotificationSet).IsAssignableFrom(interfaceType), 
+                    Resources.Exceptions_Messages_ANotificationSetTypeMustDeriveFromINotificationSet);
 
                 Enforce.Argument(() => endpoint);
             }
 
             // We assume that the interface lives up to the demands we placed on it, i.e.:
-            // - Derives from ICommandSet
-            // - Has only methods, no properties and no events, other than those defined by
-            //   ICommandSet
-            // - Every method either returns nothing (void) or returns a Task<T> object.
+            // - Derives from INotificationSet
+            // - Has only events, no properties and no methods
+            // - Every event is based on either the EventHandler or the EventHandler<T> delegate.
             // All these checks should have been done when the interface was registered
             // at the remote endpoint.
             var selfReference = new ProxySelfReferenceInterceptor();
-            var methodWithoutResult = new CommandSetMethodWithoutResultInterceptor(
-                methodInvocation =>
-                {
-                    var msg = new CommandInvokedMessage(m_Local, methodInvocation);
-                    return m_SendWithResponse(endpoint, msg);
-                },
-                m_Logger);
-            var methodWithResult = new CommandSetMethodWithResultInterceptor(
-                methodInvocation =>
-                {
-                    var msg = new CommandInvokedMessage(m_Local, methodInvocation);
-                    return m_SendWithResponse(endpoint, msg);
-                },
-                m_Logger);
-
             var options = new ProxyGenerationOptions
                 {
-                    Selector = new CommandSetInterceptorSelector(),
-                    BaseTypeForInterfaceProxy = typeof(CommandSetProxy),
+                    Selector = new NotificationSetInterceptorSelector(),
+                    BaseTypeForInterfaceProxy = typeof(NotificationSetProxy),
                 };
 
             var proxy = m_Generator.CreateInterfaceProxyWithoutTarget(
                 interfaceType,
                 options,
-                new IInterceptor[] { selfReference, methodWithoutResult, methodWithResult });
+                new IInterceptor[] { selfReference });
 
             return proxy;
         }

@@ -30,13 +30,13 @@ namespace Apollo.Base.Communication.Messages
                     typeof(IDatasetApplicationCommands)
                 };
 
-            var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
+            var msg = new EndpointProxyTypesResponseMessage(id, response, commands.ToArray());
 
             Assert.AreSame(id, msg.OriginatingEndpoint);
             Assert.AreSame(response, msg.InResponseTo);
             
-            Assert.AreEqual(commands[0].AssemblyQualifiedName, msg.Commands[0].AssemblyQualifiedTypeName);
-            Assert.AreEqual(commands[1].AssemblyQualifiedName, msg.Commands[1].AssemblyQualifiedTypeName);
+            Assert.AreEqual(commands[0].AssemblyQualifiedName, msg.ProxyTypes[0].AssemblyQualifiedTypeName);
+            Assert.AreEqual(commands[1].AssemblyQualifiedName, msg.ProxyTypes[1].AssemblyQualifiedTypeName);
         }
 
         [Test]
@@ -49,14 +49,14 @@ namespace Apollo.Base.Communication.Messages
                     typeof(IHostCommands),
                     typeof(IDatasetApplicationCommands)
                 };
-            var msg = new EndpointInformationResponseMessage(id, response, commands.ToArray());
+            var msg = new EndpointProxyTypesResponseMessage(id, response, commands.ToArray());
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
             Assert.AreEqual(id, otherMsg.OriginatingEndpoint);
             Assert.AreEqual(response, otherMsg.InResponseTo);
             Assert.AreEqual(msg.Id, otherMsg.Id);
 
-            Assert.AreElementsEqual(msg.Commands, otherMsg.Commands, (x, y) => x.Equals(y));
+            Assert.AreElementsEqual(msg.ProxyTypes, otherMsg.ProxyTypes, (x, y) => x.Equals(y));
         }
     }
 }

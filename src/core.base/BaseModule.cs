@@ -53,7 +53,7 @@ namespace Apollo.Core.Base
         {
             builder.Register(c => new RemoteCommandHub(
                     c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<IReportNewCommands>(),
+                    c.ResolveKeyed<IReportNewProxies>(typeof(ICommandSet)),
                     c.Resolve<CommandProxyBuilder>(),
                     c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<ISendCommandsToRemoteEndpoints>()
@@ -75,6 +75,37 @@ namespace Apollo.Core.Base
                 });
 
             builder.Register(c => new LocalCommandCollection(
+                    c.Resolve<ICommunicationLayer>()))
+                .As<ICommandCollection>()
+                .SingleInstance();
+        }
+
+        private static void RegisterNotificationHub(ContainerBuilder builder)
+        {
+            builder.Register(c => new RemoteNotificationHub(
+                    c.Resolve<ICommunicationLayer>(),
+                    c.ResolveKeyed<IReportNewProxies>(typeof(INotificationSet)),
+                    c.Resolve<NotificationProxyBuilder>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                .As<INotifyOfRemoteEndpointEvents>()
+                .SingleInstance();
+
+            builder.Register(
+                c =>
+                {
+                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new NotificationProxyBuilder(
+                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                        (endpoint, msg) =>
+                        {
+                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
+                        },
+                        c.Resolve<Action<LogSeverityProxy, string>>());
+                });
+
+            builder.Register(c => new LocalNotificationCollection(
                     c.Resolve<ICommunicationLayer>()))
                 .As<ICommandCollection>()
                 .SingleInstance();
@@ -140,14 +171,14 @@ namespace Apollo.Core.Base
 
         private static void RegisterCommandDiscoverySources(ContainerBuilder builder)
         {
-            // For now we're marking this as a single instance because
-            // we want it to be linked to the RemoteCommandHub at all times
-            // and yet we want to be able to give it out to users without 
-            // having to worry if we have given out the correct instance. Maybe
-            // there is a cleaner solution to this problem though ...
-            builder.Register(c => new ManualCommandRegistrationReporter())
-                .As<IAceptExternalCommandInformation>()
-                .As<IReportNewCommands>()
+            builder.Register(c => new ManualProxyRegistrationReporter())
+                .Keyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))
+                .Keyed<IReportNewProxies>(typeof(ICommandSet))
+                .SingleInstance();
+
+            builder.Register(c => new ManualProxyRegistrationReporter())
+                .Keyed<IAcceptExternalProxyInformation>(typeof(INotificationSet))
+                .Keyed<IReportNewProxies>(typeof(INotificationSet))
                 .SingleInstance();
         }
 
@@ -231,7 +262,24 @@ namespace Apollo.Core.Base
                 .As<IMessageProcessAction>();
 
             builder.Register(c => new NewCommandRegisteredProcessAction(
-                    c.Resolve<IAceptExternalCommandInformation>()))
+                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new RegisterForNotificationProcessAction(
+                    c.Resolve<ISendNotifications>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new UnregisterFromNotificationProcessAction(
+                    c.Resolve<ISendNotifications>()))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new NewNotificationRegisteredProcessAction(
+                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(INotificationSet))))
+                .As<IMessageProcessAction>();
+
+            builder.Register(c => new NotificationRaisedProcessAction(
+                    c.Resolve<INotifyOfRemoteEndpointEvents>(),
+                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
         }
 
@@ -361,6 +409,7 @@ namespace Apollo.Core.Base
 
             RegisterUtilities(builder);
             RegisterCommandHub(builder);
+            RegisterNotificationHub(builder);
             RegisterCommunicationLayer(builder);
             RegisterEndpointDiscoverySources(builder, m_AllowChannelDiscovery);
             RegisterCommandDiscoverySources(builder);

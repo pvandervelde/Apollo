@@ -17,7 +17,7 @@ namespace Apollo.Base.Communication
     public sealed class UnableToLoadCommandSetTypeExceptionTest
     {
         [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnableToLoadCommandSetTypeException>
+        public readonly IContract ExceptionTests = new ExceptionContract<UnableToLoadProxyTypeException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

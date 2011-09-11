@@ -20,19 +20,19 @@ namespace Apollo.Base.Communication
         public void RecentlyRegisteredCommand()
         {
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
-            var type = CommandSetProxyExtensions.FromType(typeof(IDatasetApplicationCommands));
+            var type = ProxyExtensions.FromType(typeof(IDatasetApplicationCommands));
             var hasFired = false;
 
-            var reporter = new ManualCommandRegistrationReporter();
-            reporter.OnNewCommandRegistered += 
+            var reporter = new ManualProxyRegistrationReporter();
+            reporter.OnNewProxyRegistered += 
                 (s, e) =>
                 {
                     hasFired = true;
                     Assert.AreSame(endpoint, e.Endpoint);
-                    Assert.AreSame(type, e.Command);
+                    Assert.AreSame(type, e.Proxy);
                 };
 
-            reporter.RecentlyRegisteredCommand(endpoint, type);
+            reporter.RecentlyRegisteredProxy(endpoint, type);
             Assert.IsTrue(hasFired);
         }
     }

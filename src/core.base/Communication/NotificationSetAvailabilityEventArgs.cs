@@ -11,10 +11,10 @@ using Lokad;
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Defines a <see cref="EventArgs"/> class that stores information about the availability of commands for
-    /// a communication endpoint.
+    /// Defines a <see cref="EventArgs"/> class that stores information about the availability of
+    /// notifications for a communication endpoint.
     /// </summary>
-    public sealed class CommandSetAvailabilityEventArgs : EventArgs
+    public sealed class NotificationSetAvailabilityEventArgs : EventArgs
     {
         /// <summary>
         /// The endpoint ID for the endpoint that has provided a set of commands.
@@ -22,28 +22,28 @@ namespace Apollo.Core.Base.Communication
         private readonly EndpointId m_Endpoint;
 
         /// <summary>
-        /// The commands that were provided by the endpoint.
+        /// The notifications that were provided by the endpoint.
         /// </summary>
-        private readonly IEnumerable<Type> m_Commands;
+        private readonly IEnumerable<Type> m_Notifications;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CommandSetAvailabilityEventArgs"/> class.
+        /// Initializes a new instance of the <see cref="NotificationSetAvailabilityEventArgs"/> class.
         /// </summary>
-        /// <param name="endpoint">The ID of the endpoint that has provided a set of commands.</param>
-        /// <param name="commands">The commands that were provided.</param>
-        public CommandSetAvailabilityEventArgs(EndpointId endpoint, IEnumerable<Type> commands)
+        /// <param name="endpoint">The ID of the endpoint that has provided a set of notifications.</param>
+        /// <param name="notifications">The notifications that were provided.</param>
+        public NotificationSetAvailabilityEventArgs(EndpointId endpoint, IEnumerable<Type> notifications)
         {
             {
                 Enforce.Argument(() => endpoint);
-                Enforce.Argument(() => commands);
+                Enforce.Argument(() => notifications);
             }
 
             m_Endpoint = endpoint;
-            m_Commands = commands;
+            m_Notifications = notifications;
         }
 
         /// <summary>
-        /// Gets the ID of the endpoint that provided the commands.
+        /// Gets the ID of the endpoint that provided the notifications.
         /// </summary>
         public EndpointId Endpoint
         {
@@ -54,13 +54,13 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Gets the collection containing the command types that the endpoint provided.
+        /// Gets the collection containing the notification types that the endpoint provided.
         /// </summary>
-        public IEnumerable<Type> Commands
+        public IEnumerable<Type> Notifications
         {
             get
             {
-                return m_Commands;
+                return m_Notifications;
             }
         }
     }

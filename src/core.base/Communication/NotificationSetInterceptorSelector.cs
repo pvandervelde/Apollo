@@ -8,7 +8,6 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Apollo.Utilities;
 using Castle.DynamicProxy;
 
@@ -16,9 +15,9 @@ namespace Apollo.Core.Base.Communication
 {
     /// <summary>
     /// An <see cref="IInterceptorSelector"/> that indicates which selector should be used for a
-    /// <see cref="ICommandSet"/> proxy based on the existence of a return type for a method.
+    /// <see cref="INotificationSet"/> proxy based on the existence of a return type for a method.
     /// </summary>
-    internal sealed class CommandSetInterceptorSelector : IInterceptorSelector
+    internal sealed class NotificationSetInterceptorSelector : IInterceptorSelector
     {
         /// <summary>
         /// Selects the interceptors that should intercept calls to the given method.
@@ -35,12 +34,7 @@ namespace Apollo.Core.Base.Communication
                 return interceptors.Where(i => i is ProxySelfReferenceInterceptor).ToArray();
             }
 
-            if (method.ReturnType == typeof(Task))
-            {
-                return interceptors.Where(i => i is CommandSetMethodWithoutResultInterceptor).ToArray();
-            }
-
-            return interceptors.Where(i => i is CommandSetMethodWithResultInterceptor).ToArray();
+            return new IInterceptor[0];
         }
 
         /// <summary>
@@ -59,7 +53,7 @@ namespace Apollo.Core.Base.Communication
                 return true;
             }
 
-            var selector = obj as CommandSetInterceptorSelector;
+            var selector = obj as NotificationSetInterceptorSelector;
             return selector != null;
         }
 

@@ -165,17 +165,17 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Received request to execute command: {0}.{1}",
-                    invocation.CommandSet,
+                    invocation.Type,
                     invocation.MemberName));
 
             Task result = null;
             try
             {
-                var type = CommandSetProxyExtensions.ToType(invocation.CommandSet);
+                var type = ProxyExtensions.ToType(invocation.Type);
                 var commandSet = m_Commands.CommandsFor(type);
 
                 var parameterTypes = from pair in invocation.Parameters
-                                     select CommandSetProxyExtensions.ToType(pair.Item1);
+                                     select ProxyExtensions.ToType(pair.Item1);
                 var method = type.GetMethod(invocation.MemberName, parameterTypes.ToArray());
                 
                 var parameterValues = from pair in invocation.Parameters
@@ -264,7 +264,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "Error while sending endpoint information. Exception is: {0}",
+                        "Error while invoking command {0}.{1}. Exception is: {2}",
+                        msg.Invocation.Type,
+                        msg.Invocation.MemberName,
                         e));
                 m_SendMessage(msg.OriginatingEndpoint, new FailureMessage(m_Current, msg.Id));
             }

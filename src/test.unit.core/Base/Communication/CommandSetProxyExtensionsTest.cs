@@ -43,11 +43,11 @@ namespace Apollo.Base.Communication
             DistinctInstances =
                 new List<ISerializedType> 
                         {
-                            CommandSetProxyExtensions.FromType(typeof(object)),
-                            CommandSetProxyExtensions.FromType(typeof(string)),
-                            CommandSetProxyExtensions.FromType(typeof(ICommandSet)),
-                            CommandSetProxyExtensions.FromType(typeof(EndpointId)),
-                            CommandSetProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
+                            ProxyExtensions.FromType(typeof(object)),
+                            ProxyExtensions.FromType(typeof(string)),
+                            ProxyExtensions.FromType(typeof(ICommandSet)),
+                            ProxyExtensions.FromType(typeof(EndpointId)),
+                            ProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
                         },
         };
 
@@ -57,11 +57,11 @@ namespace Apollo.Base.Communication
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        CommandSetProxyExtensions.FromType(typeof(object)),
-                        CommandSetProxyExtensions.FromType(typeof(string)),
-                        CommandSetProxyExtensions.FromType(typeof(ICommandSet)),
-                        CommandSetProxyExtensions.FromType(typeof(EndpointId)),
-                        CommandSetProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
+                        ProxyExtensions.FromType(typeof(object)),
+                        ProxyExtensions.FromType(typeof(string)),
+                        ProxyExtensions.FromType(typeof(ICommandSet)),
+                        ProxyExtensions.FromType(typeof(EndpointId)),
+                        ProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
                     },
         };
 
@@ -77,13 +77,13 @@ namespace Apollo.Base.Communication
             DistinctInstances =
                 new List<ISerializedMethodInvocation> 
                         {
-                            CommandSetProxyExtensions.FromMethodInfo(
+                            ProxyExtensions.FromMethodInfo(
                                 typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 2 }),
-                            CommandSetProxyExtensions.FromMethodInfo(
+                            ProxyExtensions.FromMethodInfo(
                                 typeof(IMockCommandSet).GetMethod("OtherMethodWithoutReturnValue"), new object[] { 2 }),
-                            CommandSetProxyExtensions.FromMethodInfo(
+                            ProxyExtensions.FromMethodInfo(
                                 typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 }),
-                            CommandSetProxyExtensions.FromMethodInfo(
+                            ProxyExtensions.FromMethodInfo(
                                 typeof(IMockCommandSet).GetMethod("OtherMethodWithReturnValue"), new object[] { 2 }),
                         },
         };
@@ -94,13 +94,13 @@ namespace Apollo.Base.Communication
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        CommandSetProxyExtensions.FromMethodInfo(
+                        ProxyExtensions.FromMethodInfo(
                             typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 2 }),
-                        CommandSetProxyExtensions.FromMethodInfo(
+                        ProxyExtensions.FromMethodInfo(
                             typeof(IMockCommandSet).GetMethod("OtherMethodWithoutReturnValue"), new object[] { 2 }),
-                        CommandSetProxyExtensions.FromMethodInfo(
+                        ProxyExtensions.FromMethodInfo(
                             typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 }),
-                        CommandSetProxyExtensions.FromMethodInfo(
+                        ProxyExtensions.FromMethodInfo(
                             typeof(IMockCommandSet).GetMethod("OtherMethodWithReturnValue"), new object[] { 2 }),
                     },
         };

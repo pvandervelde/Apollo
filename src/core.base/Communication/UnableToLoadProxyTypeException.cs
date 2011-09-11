@@ -11,40 +11,40 @@ using Apollo.Core.Base.Properties;
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// An exception thrown when an <see cref="ICommandSet"/> type could not be loaded.
+    /// An exception thrown when a proxy type could not be loaded.
     /// </summary>
     [Serializable]
-    public sealed class UnableToLoadCommandSetTypeException : Exception
+    public sealed class UnableToLoadProxyTypeException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToLoadCommandSetTypeException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToLoadProxyTypeException"/> class.
         /// </summary>
-        public UnableToLoadCommandSetTypeException()
-            : this(Resources.Exceptions_Messages_UnableToLoadCommandSetType)
+        public UnableToLoadProxyTypeException()
+            : this(Resources.Exceptions_Messages_UnableToLoadProxyType)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToLoadCommandSetTypeException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToLoadProxyTypeException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public UnableToLoadCommandSetTypeException(string message) 
+        public UnableToLoadProxyTypeException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToLoadCommandSetTypeException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToLoadProxyTypeException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public UnableToLoadCommandSetTypeException(string message, Exception innerException)
+        public UnableToLoadProxyTypeException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UnableToLoadCommandSetTypeException"/> class.
+        /// Initializes a new instance of the <see cref="UnableToLoadProxyTypeException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized
@@ -60,7 +60,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private UnableToLoadCommandSetTypeException(SerializationInfo info, StreamingContext context)
+        private UnableToLoadProxyTypeException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

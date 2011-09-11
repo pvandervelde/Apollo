@@ -6,38 +6,37 @@
 
 using System;
 using System.Diagnostics;
-using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Communication.Messages.Processors
 {
     /// <summary>
-    /// Defines the action that processes an <see cref="NewCommandRegisteredMessage"/>.
+    /// Defines the action that processes an <see cref="NewNotificationRegisteredMessage"/>.
     /// </summary>
-    internal sealed class NewCommandRegisteredProcessAction : IMessageProcessAction
+    internal sealed class NewNotificationRegisteredProcessAction : IMessageProcessAction
     {
         /// <summary>
         /// The object that forwards information about the newly registered commands.
         /// </summary>
-        private readonly IAcceptExternalProxyInformation m_CommandRegistrator;
+        private readonly IAcceptExternalProxyInformation m_NotificationRegistrator;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewCommandRegisteredProcessAction"/> class.
+        /// Initializes a new instance of the <see cref="NewNotificationRegisteredProcessAction"/> class.
         /// </summary>
-        /// <param name="commandRegistrator">
-        ///     The object that forwards information about the newly registered commands.
+        /// <param name="notificationRegistrator">
+        ///     The object that forwards information about the newly registered notifications.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="commandRegistrator"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="notificationRegistrator"/> is <see langword="null" />.
         /// </exception>
-        public NewCommandRegisteredProcessAction(
-            IAcceptExternalProxyInformation commandRegistrator)
+        public NewNotificationRegisteredProcessAction(
+            IAcceptExternalProxyInformation notificationRegistrator)
         {
             {
-                Enforce.Argument(() => commandRegistrator);
+                Enforce.Argument(() => notificationRegistrator);
             }
 
-            m_CommandRegistrator = commandRegistrator;
+            m_NotificationRegistrator = notificationRegistrator;
         }
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             get
             {
-                return typeof(NewCommandRegisteredMessage);
+                return typeof(NewNotificationRegisteredMessage);
             }
         }
 
@@ -58,14 +57,14 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// <param name="message">The message upon which the action acts.</param>
         public void Invoke(ICommunicationMessage message)
         {
-            var msg = message as NewCommandRegisteredMessage;
+            var msg = message as NewNotificationRegisteredMessage;
             if (msg == null)
             {
                 Debug.Assert(false, "The message is of the incorrect type.");
                 return;
             }
 
-            m_CommandRegistrator.RecentlyRegisteredProxy(msg.OriginatingEndpoint, msg.Command);
+            m_NotificationRegistrator.RecentlyRegisteredProxy(msg.OriginatingEndpoint, msg.Notification);
         }
     }
 }

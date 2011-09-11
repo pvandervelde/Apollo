@@ -10,49 +10,49 @@ using Lokad;
 namespace Apollo.Core.Base.Communication.Messages
 {
     /// <summary>
-    /// Defines a message that contains information about a newly registered command.
+    /// Defines a message that contains information about a newly registered notification.
     /// </summary>
     [Serializable]
-    internal sealed class NewCommandRegisteredMessage : CommunicationMessage
+    internal sealed class NewNotificationRegisteredMessage : CommunicationMessage
     {
         /// <summary>
-        /// The newly registered command.
+        /// The newly registered notification.
         /// </summary>
-        private readonly ISerializedType m_Command;
+        private readonly ISerializedType m_Notification;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NewCommandRegisteredMessage"/> class.
+        /// Initializes a new instance of the <see cref="NewNotificationRegisteredMessage"/> class.
         /// </summary>
         /// <param name="origin">
         /// The ID of the endpoint that send the message.
         /// </param>
-        /// <param name="commandType">
-        ///     The newly available <see cref="ICommandSet"/> interface.
+        /// <param name="notificationType">
+        ///     The newly available <see cref="INotificationSet"/> interface.
         /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="commandType"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="notificationType"/> is <see langword="null" />.
         /// </exception>
-        public NewCommandRegisteredMessage(EndpointId origin, Type commandType)
+        public NewNotificationRegisteredMessage(EndpointId origin, Type notificationType)
             : base(origin)
         {
             {
-                Enforce.Argument(() => commandType);
+                Enforce.Argument(() => notificationType);
             }
 
-            m_Command = ProxyExtensions.FromType(commandType);
+            m_Notification = ProxyExtensions.FromType(notificationType);
         }
 
         /// <summary>
-        /// Gets the newly registered command.
+        /// Gets the newly registered notification.
         /// </summary>
-        public ISerializedType Command
+        public ISerializedType Notification
         {
             get
             {
-                return m_Command;
+                return m_Notification;
             }
         }
     }

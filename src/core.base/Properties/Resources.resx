@@ -141,6 +141,9 @@
   <data name="Exceptions_Messages_ANetworkConnectionNeedsAValidMacAddress" xml:space="preserve">
     <value>A network connection needs to have a valid MAC address.</value>
   </data>
+  <data name="Exceptions_Messages_ANotificationSetTypeMustDeriveFromINotificationSet" xml:space="preserve">
+    <value>A notification set must inherit from INotificationSet.</value>
+  </data>
   <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
     <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
   </data>
@@ -216,6 +219,9 @@
   <data name="Exceptions_Messages_MissingEndpointId" xml:space="preserve">
     <value>The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID.</value>
   </data>
+  <data name="Exceptions_Messages_NotificationObjectMustImplementNotificationInterface" xml:space="preserve">
+    <value>The provided notification object must implement the provided notification interface.</value>
+  </data>
   <data name="Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores" xml:space="preserve">
     <value>The number of logical processors in a CPU must be equal or larger than the number of physical cores.</value>
   </data>
@@ -258,11 +264,35 @@
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_TypeMustBeClosedConstructed" xml:space="preserve">
     <value>The type {0} is not a valid command set because it contains open generic parameters.</value>
   </data>
-  <data name="Exceptions_Messages_UnableToLoadCommandSetType" xml:space="preserve">
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet" xml:space="preserve">
+    <value>The given type is not a valid notification set interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods" xml:space="preserve">
+    <value>The type {0} is not a valid notification sest because it contains methods.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties" xml:space="preserve">
+    <value>The type {0} is not a valid notification set because it contains properties.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEventHandler" xml:space="preserve">
+    <value>The type {0} is not a valid notification set because it contains the event {1} which either does not use the EventHandler or EventHander&lt;T&gt; delegate, or the EventArgs generic parameter is not serializable.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetMustHaveEvents" xml:space="preserve">
+    <value>The type {0} is not a valid notification set because it does not have any events.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnINotificationSet" xml:space="preserve">
+    <value>The type {0} does not derive from INotificationSet</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnInterface" xml:space="preserve">
+    <value>The type {0} is not a valid notification set because it is not an interface.</value>
+  </data>
+  <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed" xml:space="preserve">
+    <value>The type {0} is not a valid notification set because it contains open generic parameters.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLoadProxyType" xml:space="preserve">
     <value>An ICommandSet type could not be loaded.</value>
   </data>
-  <data name="Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName" xml:space="preserve">
-    <value>An ICommandSet of type {0} could not be loaded.</value>
+  <data name="Exceptions_Messages_UnableToLoadProxyType_WithTypeName" xml:space="preserve">
+    <value>An proxy of type {0} could not be loaded.</value>
   </data>
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>

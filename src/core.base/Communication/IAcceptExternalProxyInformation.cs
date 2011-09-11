@@ -10,14 +10,14 @@ namespace Apollo.Core.Base.Communication
     /// Defines the interface for objects that store or forward information about
     /// commands that were recently registered on a remote endpoint.
     /// </summary>
-    internal interface IAceptExternalCommandInformation
+    internal interface IAcceptExternalProxyInformation
     {
         /// <summary>
-        /// Stores or forwards information about a command that has recently been
+        /// Stores or forwards information about a proxy that has recently been
         /// registered at a remote endpoint.
         /// </summary>
         /// <param name="id">The ID of the endpoint.</param>
-        /// <param name="command">The recently registered command.</param>
-        void RecentlyRegisteredCommand(EndpointId id, ISerializedType command);
+        /// <param name="command">The recently registered proxy.</param>
+        void RecentlyRegisteredProxy(EndpointId id, ISerializedType command);
     }
 }

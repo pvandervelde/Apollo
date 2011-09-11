@@ -152,7 +152,7 @@ namespace Apollo.Core.Base.Communication
             try
             {
                 result = m_SendMessageWithResponse(
-                    CommandSetProxyExtensions.FromMethodInfo(
+                    ProxyExtensions.FromMethodInfo(
                         invocation.Method,
                         invocation.Arguments));
             }

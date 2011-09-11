@@ -11,31 +11,31 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// Reports the registration of new commands on remote endpoints.
     /// </summary>
-    internal sealed class ManualCommandRegistrationReporter : IReportNewCommands, IAceptExternalCommandInformation
+    internal sealed class ManualProxyRegistrationReporter : IReportNewProxies, IAcceptExternalProxyInformation
     {
         /// <summary>
         /// An event raised when a new remote command is registered.
         /// </summary>
-        public event EventHandler<CommandInformationEventArgs> OnNewCommandRegistered;
+        public event EventHandler<ProxyInformationEventArgs> OnNewProxyRegistered;
 
-        private void RaiseOnNewCommandRegistered(EndpointId endpoint, ISerializedType command)
+        private void RaiseOnNewProxyRegistered(EndpointId endpoint, ISerializedType proxy)
         {
-            var local = OnNewCommandRegistered;
+            var local = OnNewProxyRegistered;
             if (local != null)
             {
-                local(this, new CommandInformationEventArgs(endpoint, command));
+                local(this, new ProxyInformationEventArgs(endpoint, proxy));
             }
         }
 
         /// <summary>
-        /// Stores or forwards information about a command that has recently been
+        /// Stores or forwards information about a proxy that has recently been
         /// registered at a remote endpoint.
         /// </summary>
         /// <param name="id">The ID of the endpoint.</param>
-        /// <param name="command">The recently registered command.</param>
-        public void RecentlyRegisteredCommand(EndpointId id, ISerializedType command)
+        /// <param name="command">The recently registered proxy.</param>
+        public void RecentlyRegisteredProxy(EndpointId id, ISerializedType command)
         {
-            RaiseOnNewCommandRegistered(id, command);
+            RaiseOnNewProxyRegistered(id, command);
         }
     }
 }

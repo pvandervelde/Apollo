@@ -86,7 +86,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             action.Invoke(
                 new CommandInvokedMessage(
                     new EndpointId("otherId"),
-                    CommandSetProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
+                    ProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
 
             actionObject.Verify(a => a.MethodWithoutReturnValue(It.IsAny<int>()), Times.Once());
             Assert.IsInstanceOfType(typeof(SuccessMessage), storedMsg);
@@ -133,7 +133,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             action.Invoke(
                 new CommandInvokedMessage(
                     new EndpointId("otherId"),
-                    CommandSetProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 })));
+                    ProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 })));
 
             actionObject.Verify(a => a.MethodWithReturnValue(It.IsAny<int>()), Times.Once());
             Assert.IsInstanceOfType(typeof(CommandInvokedResponseMessage), storedMsg);
@@ -192,7 +192,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             action.Invoke(
                 new CommandInvokedMessage(
                     new EndpointId("otherId"),
-                    CommandSetProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
+                    ProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
 
             actionObject.Verify(a => a.MethodWithoutReturnValue(It.IsAny<int>()), Times.Once());
             Assert.AreEqual(2, count);
@@ -239,7 +239,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             action.Invoke(
                 new CommandInvokedMessage(
                     new EndpointId("otherId"),
-                    CommandSetProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
+                    ProxyExtensions.FromMethodInfo(typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 1 })));
 
             // This is obviously pure evil but we need to wait for the tasks that get created by the Invoke method
             // Unfortunately we can't get to those tasks so we'll have to sleep the thread.

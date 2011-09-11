@@ -4,19 +4,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
     /// Defines the interface for objects that carry information, in serialized form, about 
-    /// a method call.
+    /// an event.
     /// </summary>
-    internal interface ISerializedMethodInvocation : IEquatable<ISerializedMethodInvocation>
+    internal interface ISerializedEventRegistration
     {
         /// <summary>
-        /// Gets the type on which the method was invoked.
+        /// Gets the command set on which the method was invoked.
         /// </summary>
         ISerializedType Type
         {
@@ -24,17 +21,9 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Gets the name of the method.
+        /// Gets the name of the event.
         /// </summary>
         string MemberName
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets a collection which contains the types and values of the parameters.
-        /// </summary>
-        List<Tuple<ISerializedType, object>> Parameters
         {
             get;
         }

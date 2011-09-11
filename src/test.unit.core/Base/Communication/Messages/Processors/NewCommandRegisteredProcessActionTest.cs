@@ -21,9 +21,9 @@ namespace Apollo.Base.Communication.Messages.Processors
         [Test]
         public void Invoke()
         {
-            var registrator = new Mock<IAceptExternalCommandInformation>();
+            var registrator = new Mock<IAcceptExternalProxyInformation>();
             {
-                registrator.Setup(r => r.RecentlyRegisteredCommand(It.IsAny<EndpointId>(), It.IsAny<ISerializedType>()))
+                registrator.Setup(r => r.RecentlyRegisteredProxy(It.IsAny<EndpointId>(), It.IsAny<ISerializedType>()))
                     .Verifiable();
             }
 
@@ -34,7 +34,7 @@ namespace Apollo.Base.Communication.Messages.Processors
                 typeof(LocalCommandCollectionTest.IMockCommandSetWithTaskReturn));
             action.Invoke(msg);
 
-            registrator.Verify(r => r.RecentlyRegisteredCommand(It.IsAny<EndpointId>(), It.IsAny<ISerializedType>()), Times.Once());
+            registrator.Verify(r => r.RecentlyRegisteredProxy(It.IsAny<EndpointId>(), It.IsAny<ISerializedType>()), Times.Once());
         }
     }
 }

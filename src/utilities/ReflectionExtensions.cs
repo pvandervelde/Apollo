@@ -20,8 +20,57 @@ namespace Apollo.Utilities
         /// <summary>
         /// Returns the name of the method which is called inside the expression.
         /// </summary>
+        /// <param name="expression">The expression that is used to call the method for which the name must be determined.</param>
         /// <example>
-        /// var result = MethodName(x => x.Bar)
+        /// var result = MethodName(() => x.Bar())
+        /// </example>
+        /// <returns>
+        /// The name of the method in the expression or <see langword="null"/> if no method was called in the expression.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The generics are necessar to get the name of the method via a lambda expression.")]
+        public static string MethodName(Expression<Action> expression)
+        {
+            var method = expression.Body as MemberExpression;
+            if (method != null)
+            {
+                return method.Member.Name;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the name of the method which is called inside the expression.
+        /// </summary>
+        /// <example>
+        /// var result = MethodName(x => x.Bar())
+        /// </example>
+        /// <typeparam name="T">The type on which the method is called.</typeparam>
+        /// <param name="expression">The expression that is used to call the method for which the name must be determined.</param>
+        /// <returns>
+        /// The name of the method in the expression or <see langword="null"/> if no method was called in the expression.
+        /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "By typing it as Expression<T> it becomes possible to use the lambda syntax at the caller site.")]
+        [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
+            Justification = "The generics are necessar to get the name of the method via a lambda expression.")]
+        public static string MethodName<T>(Expression<Action<T>> expression)
+        {
+            var method = expression.Body as MemberExpression;
+            if (method != null)
+            {
+                return method.Member.Name;
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Returns the name of the method which is called inside the expression.
+        /// </summary>
+        /// <example>
+        /// var result = MethodName(x => x.Bar())
         /// </example>
         /// <typeparam name="T">The type on which the method is called.</typeparam>
         /// <typeparam name="TResult">The result of the method call.</typeparam>

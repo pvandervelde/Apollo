@@ -16,13 +16,13 @@ namespace Apollo.Core.Base.Communication.Messages
     /// of an endpoint.
     /// </summary>
     [Serializable]
-    internal sealed class EndpointInformationResponseMessage : CommunicationMessage
+    internal sealed class EndpointProxyTypesResponseMessage : CommunicationMessage
     {
         private readonly List<ISerializedType> m_AvailableCommands =
             new List<ISerializedType>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EndpointInformationResponseMessage"/> class.
+        /// Initializes a new instance of the <see cref="EndpointProxyTypesResponseMessage"/> class.
         /// </summary>
         /// <param name="origin">
         /// The ID of the endpoint that send the message.
@@ -30,7 +30,7 @@ namespace Apollo.Core.Base.Communication.Messages
         /// <param name="inResponseTo">
         ///     The ID number of the message to which the current message is a response.
         /// </param>
-        /// <param name="availableCommands">
+        /// <param name="availableProxies">
         ///     The array that contains the type information for all available <see cref="ICommandSet"/> interfaces.
         /// </param>
         /// <exception cref="ArgumentNullException">
@@ -40,20 +40,20 @@ namespace Apollo.Core.Base.Communication.Messages
         ///     Thrown if <paramref name="inResponseTo"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="availableCommands"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="availableProxies"/> is <see langword="null" />.
         /// </exception>
-        public EndpointInformationResponseMessage(EndpointId origin, MessageId inResponseTo, params Type[] availableCommands)
+        public EndpointProxyTypesResponseMessage(EndpointId origin, MessageId inResponseTo, params Type[] availableProxies)
             : base(origin, inResponseTo)
         {
             {
-                Enforce.Argument(() => availableCommands);
+                Enforce.Argument(() => availableProxies);
             }
 
-            foreach (var type in availableCommands)
+            foreach (var type in availableProxies)
             {
                 if (type != null)
                 {
-                    m_AvailableCommands.Add(CommandSetProxyExtensions.FromType(type));
+                    m_AvailableCommands.Add(ProxyExtensions.FromType(type));
                 }
             }
         }
@@ -61,7 +61,7 @@ namespace Apollo.Core.Base.Communication.Messages
         /// <summary>
         /// Gets the collection of available commands.
         /// </summary>
-        public IList<ISerializedType> Commands
+        public IList<ISerializedType> ProxyTypes
         {
             get
             {

@@ -108,7 +108,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             var commands = new List<Type>(m_Commands.Select(p => p.Key));
             try
             {
-                var returnMessage = new EndpointInformationResponseMessage(m_Current, msg.Id, commands.ToArray());
+                var returnMessage = new EndpointProxyTypesResponseMessage(m_Current, msg.Id, commands.ToArray());
                 m_SendMessage(msg.OriginatingEndpoint, returnMessage);
             }
             catch (Exception e)

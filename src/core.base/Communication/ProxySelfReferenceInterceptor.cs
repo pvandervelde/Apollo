@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Communication
     /// to the outside world. For more information see:
     /// http://kozmic.pl/2009/10/30/castle-dynamic-proxy-tutorial-part-xv-patterns-and-antipatterns
     /// </remarks>
-    internal sealed class CommandSetProxySelfReferenceInterceptor : IInterceptor
+    internal sealed class ProxySelfReferenceInterceptor : IInterceptor
     {
         /// <summary>
         /// Called when a method or property call is intercepted.
