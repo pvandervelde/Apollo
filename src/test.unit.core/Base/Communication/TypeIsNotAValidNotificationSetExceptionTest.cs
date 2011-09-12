@@ -14,10 +14,10 @@ namespace Apollo.Base.Communication
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class UnableToLoadCommandSetTypeExceptionTest
+    public sealed class TypeIsNotAValidNotificationSetExceptionTest
     {
         [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnableToLoadProxyTypeException>
+        public readonly IContract ExceptionTests = new ExceptionContract<TypeIsNotAValidNotificationSetException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

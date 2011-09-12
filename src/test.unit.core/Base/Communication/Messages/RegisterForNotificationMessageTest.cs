@@ -13,19 +13,30 @@ namespace Apollo.Base.Communication.Messages
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-        Justification = "Unit tests do not need documentation.")]
-    public sealed class EndpointInformationRequestMessageTest
+                Justification = "Unit tests do not need documentation.")]
+    public sealed class RegisterForNotificationMessageTest
     {
+        [Test]
+        public void Create()
+        {
+            var id = new EndpointId("endpoint");
+            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var msg = new RegisterForNotificationMessage(id, notification);
+
+            Assert.AreSame(id, msg.OriginatingEndpoint);
+            Assert.AreSame(notification, msg.Notification);
+        }
+
         [Test]
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");
-            var msg = new EndpointInformationRequestMessage(id);
+            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var msg = new RegisterForNotificationMessage(id, notification);
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
             Assert.AreEqual(id, otherMsg.OriginatingEndpoint);
-            Assert.AreEqual(msg.Id, otherMsg.Id);
-            Assert.AreEqual(MessageId.None, otherMsg.InResponseTo);
+            Assert.AreEqual(notification, otherMsg.Notification);
         }
     }
 }

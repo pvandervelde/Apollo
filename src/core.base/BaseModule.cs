@@ -253,7 +253,7 @@ namespace Apollo.Core.Base
                     // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
                     // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
                     var ctx = c.Resolve<IComponentContext>();
-                    return new EndpointInformationRequestProcessAction(
+                    return new CommandInformationRequestProcessAction(
                         EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                         (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                         c.Resolve<ICommandCollection>(),

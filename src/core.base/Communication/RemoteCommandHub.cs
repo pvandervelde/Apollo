@@ -103,7 +103,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         protected override ICommunicationMessage CreateInformationRequestMessage(EndpointId endpointId)
         {
-            return new EndpointInformationRequestMessage(endpointId);
+            return new CommandInformationRequestMessage(endpointId);
         }
 
         /// <summary>

@@ -113,7 +113,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(ISerializedMethodInvocation other)
+        public bool Equals(ISerializedEventRegistration other)
         {
             if (ReferenceEquals(other, null))
             {
@@ -145,7 +145,7 @@ namespace Apollo.Core.Base.Communication
                 return true;
             }
 
-            var id = obj as ISerializedMethodInvocation;
+            var id = obj as ISerializedEventRegistration;
             return Equals(id);
         }
 

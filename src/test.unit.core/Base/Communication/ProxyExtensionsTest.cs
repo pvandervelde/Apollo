@@ -17,7 +17,7 @@ namespace Apollo.Base.Communication
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class CommandSetProxyExtensionsTest
+    public sealed class ProxyExtensionsTest
     {
         // A fake command set interface to invoke methods on
         public interface IMockCommandSet : ICommandSet

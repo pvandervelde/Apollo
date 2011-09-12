@@ -9,13 +9,13 @@ using System;
 namespace Apollo.Core.Base.Communication.Messages
 {
     /// <summary>
-    /// Defines a message that requests information from the receiving endpoint about its capabilities.
+    /// Defines a message that requests information from the receiving endpoint about its notifications.
     /// </summary>
     [Serializable]
-    internal sealed class EndpointInformationRequestMessage : CommunicationMessage
+    internal sealed class NotificationInformationRequestMessage : CommunicationMessage
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EndpointInformationRequestMessage"/> class.
+        /// Initializes a new instance of the <see cref="NotificationInformationRequestMessage"/> class.
         /// </summary>
         /// <param name="origin">
         /// The ID of the endpoint that send the message.
@@ -23,7 +23,7 @@ namespace Apollo.Core.Base.Communication.Messages
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="origin"/> is <see langword="null" />.
         /// </exception>
-        public EndpointInformationRequestMessage(EndpointId origin)
+        public NotificationInformationRequestMessage(EndpointId origin)
             : base(origin)
         {
         }

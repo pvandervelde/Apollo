@@ -16,14 +16,14 @@ using Lokad;
 namespace Apollo.Core.Base.Communication.Messages.Processors
 {
     /// <summary>
-    /// Defines the action that processes an <see cref="CommandInvokedMessage"/>.
+    /// Defines the action that processes an <see cref="NotificationInformationRequestMessage"/>.
     /// </summary>
-    internal sealed class EndpointInformationRequestProcessAction : IMessageProcessAction
+    internal sealed class NotificationInformationRequestProcessAction : IMessageProcessAction
     {
         /// <summary>
-        /// The collection that contains all the avaible commands.
+        /// The collection that contains all the avaible notifications.
         /// </summary>
-        private readonly ICommandCollection m_Commands;
+        private readonly INotificationSendersCollection m_Notifications;
 
         /// <summary>
         /// The action that is used to send a message to a remote endpoint.
@@ -41,11 +41,11 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EndpointInformationRequestProcessAction"/> class.
+        /// Initializes a new instance of the <see cref="NotificationInformationRequestProcessAction"/> class.
         /// </summary>
         /// <param name="localEndpoint">The endpoint ID of the local endpoint.</param>
         /// <param name="sendMessage">The action that is used to send messages.</param>
-        /// <param name="availableCommands">The collection that holds all the registered commands.</param>
+        /// <param name="availableNotifications">The collection that holds all the registered notifications.</param>
         /// <param name="logger">The function that is used to write messages to the log.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
@@ -54,27 +54,27 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="sendMessage"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="availableCommands"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="availableNotifications"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
-        public EndpointInformationRequestProcessAction(
+        public NotificationInformationRequestProcessAction(
             EndpointId localEndpoint,
             Action<EndpointId, ICommunicationMessage> sendMessage,
-            ICommandCollection availableCommands,
+            INotificationSendersCollection availableNotifications,
             Action<LogSeverityProxy, string> logger)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendMessage);
-                Enforce.Argument(() => availableCommands);
+                Enforce.Argument(() => availableNotifications);
                 Enforce.Argument(() => logger);
             }
 
             m_Current = localEndpoint;
             m_SendMessage = sendMessage;
-            m_Commands = availableCommands;
+            m_Notifications = availableNotifications;
             m_Logger = logger;
         }
 
@@ -86,7 +86,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             get
             {
-                return typeof(EndpointInformationRequestMessage);
+                return typeof(NotificationInformationRequestMessage);
             }
         }
 
@@ -98,17 +98,17 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             Justification = "If the exception escapes then the channel dies but we won't know what happened, so we log and move on.")]
         public void Invoke(ICommunicationMessage message)
         {
-            var msg = message as EndpointInformationRequestMessage;
+            var msg = message as NotificationInformationRequestMessage;
             if (msg == null)
             {
                 Debug.Assert(false, "The message is of the incorrect type.");
                 return;
             }
 
-            var commands = new List<Type>(m_Commands.Select(p => p.Key));
+            var notifications = new List<Type>(m_Notifications.Select(p => p.Key));
             try
             {
-                var returnMessage = new EndpointProxyTypesResponseMessage(m_Current, msg.Id, commands.ToArray());
+                var returnMessage = new EndpointProxyTypesResponseMessage(m_Current, msg.Id, notifications.ToArray());
                 m_SendMessage(msg.OriginatingEndpoint, returnMessage);
             }
             catch (Exception e)

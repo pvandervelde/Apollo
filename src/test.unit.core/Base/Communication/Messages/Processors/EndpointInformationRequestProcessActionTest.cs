@@ -30,8 +30,8 @@ namespace Apollo.Base.Communication.Messages.Processors
             var commands = new Mock<ICommandCollection>();
             Action<LogSeverityProxy, string> logger = (p, t) => { };
 
-            var action = new EndpointInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
-            Assert.AreEqual(typeof(EndpointInformationRequestMessage), action.MessageTypeToProcess);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            Assert.AreEqual(typeof(CommandInformationRequestMessage), action.MessageTypeToProcess);
         }
 
         [Test]
@@ -59,10 +59,10 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             Action<LogSeverityProxy, string> logger = (p, t) => { };
 
-            var action = new EndpointInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
 
             var otherEndpoint = new EndpointId("otherId");
-            action.Invoke(new EndpointInformationRequestMessage(otherEndpoint));
+            action.Invoke(new CommandInformationRequestMessage(otherEndpoint));
 
             Assert.AreSame(otherEndpoint, storedEndpoint);
             Assert.IsInstanceOfType(typeof(EndpointProxyTypesResponseMessage), storedMsg);
@@ -106,8 +106,8 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             Action<LogSeverityProxy, string> logger = (p, t) => { };
 
-            var action = new EndpointInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
-            action.Invoke(new EndpointInformationRequestMessage(new EndpointId("otherId")));
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
             Assert.IsInstanceOfType(typeof(FailureMessage), storedMsg);
@@ -132,8 +132,8 @@ namespace Apollo.Base.Communication.Messages.Processors
             int count = 0;
             Action<LogSeverityProxy, string> logger = (p, t) => { count++; };
 
-            var action = new EndpointInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
-            action.Invoke(new EndpointInformationRequestMessage(new EndpointId("otherId")));
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
         }
