@@ -139,8 +139,11 @@
     <Compile Include="Communication\NamedPipeChannelType.cs" />
     <Compile Include="Communication\NamedPipeStreamTransferInformation.cs" />
     <Compile Include="Communication\ChannelRelativePerformanceAttribute.cs" />
+    <Compile Include="Communication\NotificationEventAddMethodInterceptor.cs" />
+    <Compile Include="Communication\NotificationEventRemoveMethodInterceptor.cs" />
     <Compile Include="Communication\NotificationInformationEventArgs.cs" />
     <Compile Include="Communication\NotificationInformationPerEndpoint.cs" />
+    <Compile Include="Communication\NotificationNotSupportedException.cs" />
     <Compile Include="Communication\NotificationProxyBuilder.cs" />
     <Compile Include="Communication\NotificationSetAvailabilityEventArgs.cs" />
     <Compile Include="Communication\NotificationSetInterceptorSelector.cs" />

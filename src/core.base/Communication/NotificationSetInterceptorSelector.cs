@@ -34,6 +34,16 @@ namespace Apollo.Core.Base.Communication
                 return interceptors.Where(i => i is ProxySelfReferenceInterceptor).ToArray();
             }
 
+            if (method.Name.StartsWith("add_", StringComparison.Ordinal))
+            {
+                return interceptors.Where(i => i is NotificationEventAddMethodInterceptor).ToArray();
+            }
+
+            if (method.Name.StartsWith("remove_", StringComparison.Ordinal))
+            {
+                return interceptors.Where(i => i is NotificationEventRemoveMethodInterceptor).ToArray();
+            }
+
             return new IInterceptor[0];
         }
 

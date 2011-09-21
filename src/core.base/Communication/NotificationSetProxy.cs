@@ -5,9 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -22,43 +22,99 @@ namespace Apollo.Core.Base.Communication
     internal class NotificationSetProxy : INotificationSet
     {
         /// <summary>
-        /// Gets method that will be invoked the event is raised.
+        /// The lock which is used to guard the event handler collection.
         /// </summary>
-        /// <param name="obj">Object that contains the event.</param>
+        private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
+        /// The collection that holds the delegates for the different events.
+        /// </summary>
+        private readonly IDictionary<string, List<Delegate>> m_EventHandlers
+            = new SortedList<string, List<Delegate>>();
+
+        /// <summary>
+        /// Adds the given event handler to the collection of handlers for the given event.
+        /// </summary>
         /// <param name="eventName">The name of the event.</param>
-        /// <returns>
-        /// The method that is used to invoke the event.
-        /// </returns>
-        private static MethodInfo GetEventInvoker(object obj, string eventName)
+        /// <param name="handler">The event handler.</param>
+        protected internal void AddToEvent(string eventName, Delegate handler)
         {
+            lock (m_Lock)
             {
-                Debug.Assert(obj != null, "The input object should not be null.");
-                Debug.Assert(!string.IsNullOrEmpty(eventName), "The event name should not be null or empty.");
-            }
-
-            // prepare current processing type
-            var currentType = obj.GetType();
-
-            // try to get special event decleration
-            while (true)
-            {
-                var fieldInfo = currentType.GetField(
-                    eventName, 
-                    BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.GetField);
-                if (fieldInfo == null)
+                if (!m_EventHandlers.ContainsKey(eventName))
                 {
-                    if (currentType.BaseType != null)
-                    {
-                        // move deeper
-                        currentType = currentType.BaseType;
-                        continue;
-                    }
-
-                    Debug.Fail(string.Format("Not found event named {0} in object type {1}", eventName, obj));
-                    return null;
+                    m_EventHandlers.Add(eventName, new List<Delegate>());
                 }
 
-                return ((MulticastDelegate)fieldInfo.GetValue(obj)).Method;
+                var delegates = m_EventHandlers[eventName];
+                if (!delegates.Contains(handler))
+                {
+                    delegates.Add(handler);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes the given event handler from the collection of handlers for the given event.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <param name="handler">The event handler.</param>
+        protected internal void RemoveFromEvent(string eventName, Delegate handler)
+        {
+            lock (m_Lock)
+            {
+                if (m_EventHandlers.ContainsKey(eventName))
+                {
+                    var delegates = m_EventHandlers[eventName];
+                    if (delegates.Remove(handler))
+                    {
+                        if (delegates.Count == 0)
+                        {
+                            m_EventHandlers.Remove(eventName);
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Clears all the event handlers.
+        /// </summary>
+        protected internal void ClearAllEvents()
+        {
+            lock (m_Lock)
+            {
+                m_EventHandlers.Clear();
+            }
+        }
+
+        /// <summary>
+        /// Raises the event given by the <paramref name="eventName"/> parameter.
+        /// </summary>
+        /// <param name="eventName">The name of the event that should be raised.</param>
+        /// <param name="args">The event arguments with which the event should be raised.</param>
+        protected internal void RaiseEvent(string eventName, EventArgs args)
+        {
+            var obj = SelfReference();
+            var delegates = new List<Delegate>();
+            lock (m_Lock)
+            {
+                if (m_EventHandlers.ContainsKey(eventName))
+                {
+                    delegates.AddRange(m_EventHandlers[eventName]);
+                }
+            }
+
+            foreach (var del in delegates)
+            {
+                try
+                {
+                    del.DynamicInvoke(new object[] { obj, args });
+                }
+                catch (Exception)
+                {
+                    // Ignore it and move on.
+                }
             }
         }
 
@@ -83,18 +139,6 @@ namespace Apollo.Core.Base.Communication
         protected internal virtual object SelfReference()
         {
             return this;
-        }
-
-        /// <summary>
-        /// Raises the event given by the <paramref name="eventName"/> parameter.
-        /// </summary>
-        /// <param name="eventName">The name of the event that should be raised.</param>
-        /// <param name="args">The event arguments with which the event should be raised.</param>
-        protected internal void RaiseEvent(string eventName, EventArgs args)
-        {
-            var obj = SelfReference();
-            var eventInvoker = GetEventInvoker(obj, eventName);
-            eventInvoker.Invoke(obj, new object[] { obj, args });
         }
     }
 }

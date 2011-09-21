@@ -40,7 +40,7 @@ namespace Apollo.Core.Base.Communication
         /// </para>
         /// <param name="notificationType">The interface that defines the notification events.</param>
         /// <param name="notifications">The notification object.</param>
-        void Register(Type notificationType, INotificationSet notifications);
+        void Store(Type notificationType, INotificationSet notifications);
 
         /// <summary>
         /// Returns the notification object that was registered for the given interface type.

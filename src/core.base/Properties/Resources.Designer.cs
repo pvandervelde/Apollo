@@ -367,6 +367,24 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested notification is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_NotificationNotSupported {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NotificationNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The notification of type {0} is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_NotificationNotSupported_WithNotification {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NotificationNotSupported_WithNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The provided notification object must implement the provided notification interface..
         /// </summary>
         internal static string Exceptions_Messages_NotificationObjectMustImplementNotificationInterface {
@@ -422,7 +440,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains additional events on top of those defined by ICommandSet..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the following events: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents {
             get {
@@ -431,7 +449,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains properties..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the following properties: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties {
             get {
@@ -513,7 +531,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid notification sest because it contains methods..
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains the following methods: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods {
             get {
@@ -523,7 +541,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains properties..
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains the following properties: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties {
             get {

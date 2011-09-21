@@ -26,84 +26,84 @@ namespace Apollo.Base.Communication
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithNonAssignableType()
         { 
-            Assert.Throws<TypeIsNotAValidCommandSetException>(() => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(object)));
+            Assert.Throws<TypeIsNotAValidCommandSetException>(() => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(object)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithNonInterface()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(MockCommandSetNotAnInterface)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(MockCommandSetNotAnInterface)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithGenericInterface()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithGenericParameters<>)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithGenericParameters<>)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithProperties()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithProperties)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithProperties)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithAdditionalEvents()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithEvents)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithEvents)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithoutMethods()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithoutMethods)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithoutMethods)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithGenericMethod()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithGenericMethod)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithGenericMethod)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithIncorrectReturnType()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithIncorrectReturnType)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithIncorrectReturnType)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithNonSerializableReturnType()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithNonSerializableReturnType)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithNonSerializableReturnType)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithOutParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithOutParameter)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithOutParameter)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithRefParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithRefParameter)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithRefParameter)));
         }
 
         [Test]
         public void VerifyThatTypeIsACorrectCommandSetWithNonSerializableParameter()
         {
             Assert.Throws<TypeIsNotAValidCommandSetException>(
-                () => CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithNonSerializableParameter)));
+                () => CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(typeof(IMockCommandSetWithMethodWithNonSerializableParameter)));
         }
 
         [Test]

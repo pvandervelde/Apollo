@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Communication
             : base(
                 layer,
                 notificationReporter,
-                (endpoint, type) => (NotificationSetProxy)builder.ProxyConnectingTo(endpoint, type),
+                (endpoint, type) => (NotificationSetProxy)builder.ProxyConnectingTo(type),
                 logger)
         {
             {
@@ -160,6 +160,15 @@ namespace Apollo.Core.Base.Communication
         /// <param name="endpoint">The endpoint for which all the proxies have to be removed.</param>
         protected override void RemoveProxiesFor(EndpointId endpoint)
         {
+            if (m_RemoteNotifications.ContainsKey(endpoint))
+            {
+                var list = m_RemoteNotifications[endpoint];
+                foreach (var pair in list)
+                {
+                    pair.Value.ClearAllEvents();
+                }
+            }
+
             m_RemoteNotifications.Remove(endpoint);
         }
 
@@ -303,13 +312,13 @@ namespace Apollo.Core.Base.Communication
                     return null;
                 }
 
-                var commandSets = m_RemoteNotifications[endpoint];
-                if (!commandSets.ContainsKey(notificationType))
+                var notificationSets = m_RemoteNotifications[endpoint];
+                if (!notificationSets.ContainsKey(notificationType))
                 {
-                    throw new CommandNotSupportedException(notificationType);
+                    throw new NotificationNotSupportedException(notificationType);
                 }
 
-                var result = commandSets[notificationType];
+                var result = notificationSets[notificationType];
                 return result as INotificationSet;
             }
         }

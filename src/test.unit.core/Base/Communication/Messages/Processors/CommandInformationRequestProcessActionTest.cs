@@ -20,7 +20,7 @@ namespace Apollo.Base.Communication.Messages.Processors
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class EndpointInformationRequestProcessActionTest
+    public sealed class CommandInformationRequestProcessActionTest
     {
         [Test]
         public void MessageTypeToProcess()

@@ -5,9 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Reflection;
 using System.Runtime.Serialization;
-using System.Threading.Tasks;
+using System.Text;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Castle.DynamicProxy;
@@ -20,6 +23,67 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class NotificationProxyBuilder
     {
+        private static string MethodInfoToString(IEnumerable<MethodInfo> invalidMethods)
+        {
+            var methodsText = new StringBuilder();
+            foreach (var methodInfo in invalidMethods)
+            {
+                if (methodsText.Length > 0)
+                {
+                    methodsText.Append("; ");
+                }
+
+                var parametersText = new StringBuilder();
+                foreach (var parameterInfo in methodInfo.GetParameters())
+                {
+                    if (parametersText.Length > 0)
+                    {
+                        parametersText.Append(", ");
+                    }
+
+                    parametersText.Append(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}{1}{2} {3}",
+                            parameterInfo.IsOut ? "out " : string.Empty,
+                            parameterInfo.IsRetval ? "ref " : string.Empty,
+                            parameterInfo.ParameterType.Name,
+                            parameterInfo.Name));
+                }
+
+                methodsText.Append(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}.{1}({2})",
+                        methodInfo.DeclaringType.Name,
+                        methodInfo.Name,
+                        parametersText.ToString()));
+            }
+
+            return methodsText.ToString();
+        }
+
+        private static string PropertyInfoToString(IEnumerable<PropertyInfo> invalidProperties)
+        {
+            var propertiesText = new StringBuilder();
+            foreach (var propertyInfo in invalidProperties)
+            {
+                if (propertiesText.Length > 0)
+                {
+                    propertiesText.Append("; ");
+                }
+
+                propertiesText.Append(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}.{1}",
+                        propertyInfo.DeclaringType.Name,
+                        propertyInfo.Name));
+            }
+
+            return propertiesText.ToString();
+        }
+
         /// <summary>
         /// Verifies that an interface type will be a correct command set.
         /// </summary>
@@ -45,65 +109,74 @@ namespace Apollo.Core.Base.Communication
         /// </list>
         /// </para>
         /// </remarks>
-        /// <param name="commandSet">The type that has implemented the command set interface.</param>
+        /// <param name="notificationSet">The type that has implemented the command set interface.</param>
         /// <exception cref="TypeIsNotAValidCommandSetException">
         ///     If the given type is not a valid <see cref="ICommandSet"/> interface.
         /// </exception>
-        public static void VerifyThatTypetIsACorrectCommandSet(Type commandSet)
+        public static void VerifyThatTypeIsACorrectNotificationSet(Type notificationSet)
         {
-            if (!typeof(INotificationSet).IsAssignableFrom(commandSet))
+            if (!typeof(INotificationSet).IsAssignableFrom(notificationSet))
             {
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnINotificationSet,
-                        commandSet));
+                        notificationSet));
             }
 
-            if (!commandSet.IsInterface)
+            if (!notificationSet.IsInterface)
             {
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnInterface,
-                        commandSet));
+                        notificationSet));
             }
 
-            if (commandSet.ContainsGenericParameters)
+            if (notificationSet.ContainsGenericParameters)
             {
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed,
-                        commandSet));
+                        notificationSet));
             }
 
-            if (commandSet.GetProperties().Length > 0)
+            if (notificationSet.GetProperties().Length > 0)
             {
+                var propertiesText = PropertyInfoToString(notificationSet.GetProperties());
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties,
-                        commandSet));
+                        notificationSet,
+                        propertiesText));
             }
 
-            if (commandSet.GetMethods().Length > 0)
+            // Event methods get to stay, anything else is evil ...
+            var invalidMethods = from methodInfo in notificationSet.GetMethods()
+                                 where (!methodInfo.Name.StartsWith("add_") 
+                                        && !methodInfo.Name.StartsWith("remove_"))
+                                 select methodInfo;
+            if (invalidMethods.Any())
             {
+                var methodsText = MethodInfoToString(invalidMethods);
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods,
-                        commandSet));
+                        notificationSet,
+                        methodsText));
             }
 
-            var events = commandSet.GetEvents();
+            var events = notificationSet.GetEvents();
             if (events.Length == 0)
             {
                 throw new TypeIsNotAValidNotificationSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetMustHaveEvents,
-                        commandSet));
+                        notificationSet));
             }
 
             foreach (var eventInfo in events)
@@ -114,7 +187,7 @@ namespace Apollo.Core.Base.Communication
                         string.Format(
                             CultureInfo.InvariantCulture,
                             Resources.Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEventHandler,
-                            commandSet,
+                            notificationSet,
                             eventInfo));
                 }
             }
@@ -159,17 +232,6 @@ namespace Apollo.Core.Base.Communication
         private readonly ProxyGenerator m_Generator = new ProxyGenerator();
 
         /// <summary>
-        /// The ID of the local endpoint.
-        /// </summary>
-        private readonly EndpointId m_Local;
-
-        /// <summary>
-        /// The function which sends the message to the owning endpoint and returns a task that will,
-        /// eventually, hold the return message.
-        /// </summary>
-        private readonly Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> m_SendWithResponse;
-
-        /// <summary>
         /// The function used to write log messages.
         /// </summary>
         private readonly Action<LogSeverityProxy, string> m_Logger;
@@ -177,33 +239,16 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationProxyBuilder"/> class.
         /// </summary>
-        /// <param name="localEndpoint">The ID number of the local endpoint.</param>
-        /// <param name="sendWithResponse">
-        ///     The function that sends out a message to the given endpoint and returns a task that will, eventually, hold the return message.
-        /// </param>
         /// <param name="logger">The function that is used to log messages.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="sendWithResponse"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
-        public NotificationProxyBuilder(
-            EndpointId localEndpoint,
-            Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sendWithResponse,
-            Action<LogSeverityProxy, string> logger)
+        public NotificationProxyBuilder(Action<LogSeverityProxy, string> logger)
         {
             {
-                Enforce.Argument(() => localEndpoint);
-                Enforce.Argument(() => sendWithResponse);
                 Enforce.Argument(() => logger);
             }
 
-            m_Local = localEndpoint;
-            m_SendWithResponse = sendWithResponse;
             m_Logger = logger;
         }
 
@@ -211,33 +256,29 @@ namespace Apollo.Core.Base.Communication
         /// Generates a proxy object for the given command set and the specified endpoint.
         /// </summary>
         /// <typeparam name="T">The interface of the commandset for which a proxy must be made.</typeparam>
-        /// <param name="endpoint">The endpoint for which a proxy must be made.</param>
         /// <returns>
         /// The interfaced proxy.
         /// </returns>
-        public T ProxyConnectingTo<T>(EndpointId endpoint) where T : INotificationSet
+        public T ProxyConnectingTo<T>() where T : INotificationSet
         {
-            object result = ProxyConnectingTo(endpoint, typeof(T));
+            object result = ProxyConnectingTo(typeof(T));
             return (T)result;
         }
 
         /// <summary>
         /// Generates a proxy object for the given command set and the specified endpoint.
         /// </summary>
-        /// <param name="endpoint">The endpoint for which a proxy must be made.</param>
         /// <param name="interfaceType">The interface of the commandset for which a proxy must be made.</param>
         /// <returns>
         /// The interfaced proxy.
         /// </returns>
-        public object ProxyConnectingTo(EndpointId endpoint, Type interfaceType)
+        public INotificationSet ProxyConnectingTo(Type interfaceType)
         {
             {
                 Enforce.Argument(() => interfaceType);
                 Enforce.With<ArgumentException>(
                     typeof(INotificationSet).IsAssignableFrom(interfaceType), 
                     Resources.Exceptions_Messages_ANotificationSetTypeMustDeriveFromINotificationSet);
-
-                Enforce.Argument(() => endpoint);
             }
 
             // We assume that the interface lives up to the demands we placed on it, i.e.:
@@ -247,6 +288,9 @@ namespace Apollo.Core.Base.Communication
             // All these checks should have been done when the interface was registered
             // at the remote endpoint.
             var selfReference = new ProxySelfReferenceInterceptor();
+            var addEventHandler = new NotificationEventAddMethodInterceptor(m_Logger);
+            var removeEventHandler = new NotificationEventRemoveMethodInterceptor(m_Logger);
+
             var options = new ProxyGenerationOptions
                 {
                     Selector = new NotificationSetInterceptorSelector(),
@@ -256,9 +300,9 @@ namespace Apollo.Core.Base.Communication
             var proxy = m_Generator.CreateInterfaceProxyWithoutTarget(
                 interfaceType,
                 options,
-                new IInterceptor[] { selfReference });
+                new IInterceptor[] { selfReference, addEventHandler, removeEventHandler });
 
-            return proxy;
+            return (INotificationSet)proxy;
         }
     }
 }

@@ -65,28 +65,6 @@ namespace Apollo.Core.Base.Communication
 
         private static string MethodToText(MethodInfo method)
         {
-            // var builder = new StringBuilder();
-            // builder.Append(method.DeclaringType.FullName);
-            // builder.Append(".");
-            // builder.Append(method.Name);
-            // builder.Append("(");
-            //
-            // var parameters = method.GetParameters();
-            // for (int i = 0; i < parameters.Length; i++)
-            // {
-            //     var parameter = parameters[i];
-            //     builder.Append(parameter.ParameterType.FullName);
-            //     builder.Append(" ");
-            //     builder.Append(parameter.Name);
-            //     if (i < parameters.Length - 1)
-            //     {
-            //         builder.Append(", ");
-            //     }
-            // }
-            //
-            // builder.Append(")");
-            //
-            // return builder.ToString();
             return method.ToString();
         }
 

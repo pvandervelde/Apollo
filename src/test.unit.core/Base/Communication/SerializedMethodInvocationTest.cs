@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
@@ -18,8 +18,20 @@ namespace Apollo.Base.Communication
                 Justification = "Unit tests do not need documentation.")]
     public sealed class SerializedMethodInvocationTest
     {
+        // A fake command set interface to invoke methods on
+        public interface IMockCommandSet : ICommandSet
+        {
+            Task MethodWithoutReturnValue(int someNumber);
+
+            Task OtherMethodWithoutReturnValue(int otherNumber);
+
+            Task<int> MethodWithReturnValue(int someNumber);
+
+            Task<int> OtherMethodWithReturnValue(int otherNumber);
+        }
+
         [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<SerializedMethodInvocation>
+        public readonly IContract SerializedMethodHashCodeVerification = new HashCodeAcceptanceContract<ISerializedMethodInvocation>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -28,83 +40,33 @@ namespace Apollo.Base.Communication
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<SerializedMethodInvocation> 
+                new List<ISerializedMethodInvocation> 
                         {
-                            new SerializedMethodInvocation(
-                                new SerializedType("a"), 
-                                "a", 
-                                new List<Tuple<ISerializedType, object>>()),
-                            new SerializedMethodInvocation(
-                                new SerializedType("b"), 
-                                "b", 
-                                new List<Tuple<ISerializedType, object>>()),
-                            new SerializedMethodInvocation(
-                                new SerializedType("c"), 
-                                "c", 
-                                new List<Tuple<ISerializedType, object>>()),
-                            new SerializedMethodInvocation(
-                                new SerializedType("a"), 
-                                "a", 
-                                new List<Tuple<ISerializedType, object>> 
-                                    { 
-                                        new Tuple<ISerializedType, object>(new SerializedType("a"), "a")
-                                    }),
-                            new SerializedMethodInvocation(
-                                new SerializedType("b"), 
-                                "b", 
-                                new List<Tuple<ISerializedType, object>> 
-                                    { 
-                                        new Tuple<ISerializedType, object>(new SerializedType("b"), "b")
-                                    }),
-                            new SerializedMethodInvocation(
-                                new SerializedType("c"), 
-                                "c", 
-                                new List<Tuple<ISerializedType, object>> 
-                                    { 
-                                        new Tuple<ISerializedType, object>(new SerializedType("c"), "c")
-                                    }),
+                            ProxyExtensions.FromMethodInfo(
+                                typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 2 }),
+                            ProxyExtensions.FromMethodInfo(
+                                typeof(IMockCommandSet).GetMethod("OtherMethodWithoutReturnValue"), new object[] { 2 }),
+                            ProxyExtensions.FromMethodInfo(
+                                typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 }),
+                            ProxyExtensions.FromMethodInfo(
+                                typeof(IMockCommandSet).GetMethod("OtherMethodWithReturnValue"), new object[] { 2 }),
                         },
         };
 
         [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ISerializedMethodInvocation>
+        public readonly IContract SerializedMethodEqualityVerification = new EqualityContract<ISerializedMethodInvocation>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new SerializedMethodInvocation(
-                                new SerializedType("a"), 
-                                "a", 
-                                new List<Tuple<ISerializedType, object>>()),
-                        new SerializedMethodInvocation(
-                            new SerializedType("b"), 
-                            "b", 
-                            new List<Tuple<ISerializedType, object>>()),
-                        new SerializedMethodInvocation(
-                            new SerializedType("c"), 
-                            "c", 
-                            new List<Tuple<ISerializedType, object>>()),
-                        new SerializedMethodInvocation(
-                            new SerializedType("a"), 
-                            "a", 
-                            new List<Tuple<ISerializedType, object>> 
-                                { 
-                                    new Tuple<ISerializedType, object>(new SerializedType("a"), "a")
-                                }),
-                        new SerializedMethodInvocation(
-                            new SerializedType("b"), 
-                            "b", 
-                            new List<Tuple<ISerializedType, object>> 
-                                { 
-                                    new Tuple<ISerializedType, object>(new SerializedType("b"), "b")
-                                }),
-                        new SerializedMethodInvocation(
-                            new SerializedType("c"), 
-                            "c", 
-                            new List<Tuple<ISerializedType, object>> 
-                                { 
-                                    new Tuple<ISerializedType, object>(new SerializedType("c"), "c")
-                                }),
+                        ProxyExtensions.FromMethodInfo(
+                            typeof(IMockCommandSet).GetMethod("MethodWithoutReturnValue"), new object[] { 2 }),
+                        ProxyExtensions.FromMethodInfo(
+                            typeof(IMockCommandSet).GetMethod("OtherMethodWithoutReturnValue"), new object[] { 2 }),
+                        ProxyExtensions.FromMethodInfo(
+                            typeof(IMockCommandSet).GetMethod("MethodWithReturnValue"), new object[] { 2 }),
+                        ProxyExtensions.FromMethodInfo(
+                            typeof(IMockCommandSet).GetMethod("OtherMethodWithReturnValue"), new object[] { 2 }),
                     },
         };
     }

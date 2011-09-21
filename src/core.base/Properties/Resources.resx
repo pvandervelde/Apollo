@@ -219,6 +219,12 @@
   <data name="Exceptions_Messages_MissingEndpointId" xml:space="preserve">
     <value>The endpoint discovery message did not provide an endpoint ID. Contact information for the endpoint is incomplete without the ID.</value>
   </data>
+  <data name="Exceptions_Messages_NotificationNotSupported" xml:space="preserve">
+    <value>The requested notification is not supported by the endpoint.</value>
+  </data>
+  <data name="Exceptions_Messages_NotificationNotSupported_WithNotification" xml:space="preserve">
+    <value>The notification of type {0} is not supported by the endpoint.</value>
+  </data>
   <data name="Exceptions_Messages_NotificationObjectMustImplementNotificationInterface" xml:space="preserve">
     <value>The provided notification object must implement the provided notification interface.</value>
   </data>
@@ -238,10 +244,10 @@
     <value>The given type is not a valid command set interface.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents" xml:space="preserve">
-    <value>The type {0} is not a valid command set because it contains additional events on top of those defined by ICommandSet.</value>
+    <value>The type {0} is not a valid command set because it contains the following events: {1}.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties" xml:space="preserve">
-    <value>The type {0} is not a valid command set because it contains properties.</value>
+    <value>The type {0} is not a valid command set because it contains the following properties: {1}.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetMethodsCannotBeGeneric" xml:space="preserve">
     <value>The type {0} is not a valid command set because it contains the method {1} with one or more generic parameters.</value>
@@ -268,10 +274,10 @@
     <value>The given type is not a valid notification set interface.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods" xml:space="preserve">
-    <value>The type {0} is not a valid notification sest because it contains methods.</value>
+    <value>The type {0} is not a valid notification set because it contains the following methods: {1}.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties" xml:space="preserve">
-    <value>The type {0} is not a valid notification set because it contains properties.</value>
+    <value>The type {0} is not a valid notification set because it contains the following properties: {1}.</value>
   </data>
   <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEventHandler" xml:space="preserve">
     <value>The type {0} is not a valid notification set because it contains the event {1} which either does not use the EventHandler or EventHander&lt;T&gt; delegate, or the EventArgs generic parameter is not serializable.</value>

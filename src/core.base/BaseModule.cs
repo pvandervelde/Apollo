@@ -90,20 +90,8 @@ namespace Apollo.Core.Base
                 .As<INotifyOfRemoteEndpointEvents>()
                 .SingleInstance();
 
-            builder.Register(
-                c =>
-                {
-                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
-                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new NotificationProxyBuilder(
-                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                        (endpoint, msg) =>
-                        {
-                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                        },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
-                });
+            builder.Register(c => new NotificationProxyBuilder(
+                    c.Resolve<Action<LogSeverityProxy, string>>()));
 
             builder.Register(c => new LocalNotificationCollection(
                     c.Resolve<ICommunicationLayer>()))

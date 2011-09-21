@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
@@ -18,7 +19,7 @@ namespace Apollo.Base.Communication
     public sealed class SerializedTypeTest
     {
         [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<SerializedType>
+        public readonly IContract SerializedTypeHashCodeVerification = new HashCodeAcceptanceContract<ISerializedType>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -27,33 +28,27 @@ namespace Apollo.Base.Communication
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<SerializedType> 
+                new List<ISerializedType> 
                         {
-                            new SerializedType("a"),
-                            new SerializedType("b"),
-                            new SerializedType("c"),
-                            new SerializedType("d"),
-                            new SerializedType("e"),
-                            new SerializedType("f"),
-                            new SerializedType("g"),
-                            new SerializedType("h"),
+                            ProxyExtensions.FromType(typeof(object)),
+                            ProxyExtensions.FromType(typeof(string)),
+                            ProxyExtensions.FromType(typeof(ICommandSet)),
+                            ProxyExtensions.FromType(typeof(EndpointId)),
+                            ProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
                         },
         };
 
         [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ISerializedType>
+        public readonly IContract SerializedTypeEqualityVerification = new EqualityContract<ISerializedType>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new SerializedType("a"),
-                        new SerializedType("b"),
-                        new SerializedType("c"),
-                        new SerializedType("d"),
-                        new SerializedType("e"),
-                        new SerializedType("f"),
-                        new SerializedType("g"),
-                        new SerializedType("h"),
+                        ProxyExtensions.FromType(typeof(object)),
+                        ProxyExtensions.FromType(typeof(string)),
+                        ProxyExtensions.FromType(typeof(ICommandSet)),
+                        ProxyExtensions.FromType(typeof(EndpointId)),
+                        ProxyExtensions.FromType(typeof(IDatasetApplicationCommands)),
                     },
         };
     }

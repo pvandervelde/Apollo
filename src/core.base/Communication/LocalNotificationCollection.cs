@@ -38,7 +38,7 @@ namespace Apollo.Core.Base.Communication
         /// The collection that maps an notification to a collection of registered listeners.
         /// </summary>
         private readonly IDictionary<ISerializedEventRegistration, List<EndpointId>> m_RegisteredListeners
-            = new SortedList<ISerializedEventRegistration, List<EndpointId>>();
+            = new Dictionary<ISerializedEventRegistration, List<EndpointId>>();
 
         /// <summary>
         /// The communication layer that is used to send out messages about newly
@@ -65,7 +65,7 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// Registers a <see cref="INotificationSet"/> object.
+        /// Stores a <see cref="INotificationSet"/> object.
         /// </summary>
         /// <para>
         /// A proper notification set class has the following characteristics:
@@ -89,7 +89,7 @@ namespace Apollo.Core.Base.Communication
         /// </para>
         /// <param name="notificationType">The interface that defines the notification events.</param>
         /// <param name="notifications">The notification object.</param>
-        public void Register(Type notificationType, INotificationSet notifications)
+        public void Store(Type notificationType, INotificationSet notifications)
         {
             {
                 Enforce.Argument(() => notificationType);
@@ -99,13 +99,13 @@ namespace Apollo.Core.Base.Communication
                     Resources.Exceptions_Messages_NotificationObjectMustImplementNotificationInterface);
             }
 
-            CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(notificationType);
+            NotificationProxyBuilder.VerifyThatTypeIsACorrectNotificationSet(notificationType);
             if (m_Notifications.ContainsKey(notificationType))
             {
                 throw new CommandAlreadyRegisteredException();
             }
             
-            ConnectToEvents(notifications);
+            ConnectToEvents(notificationType, notifications);
 
             m_Notifications.Add(notificationType, notifications);
             if (m_Layer.IsSignedIn)
@@ -117,18 +117,50 @@ namespace Apollo.Core.Base.Communication
             }
         }
 
-        private void ConnectToEvents(INotificationSet notifications)
+        private void ConnectToEvents(Type notificationType, INotificationSet notifications)
         {
-            var events = notifications.GetType().GetEvents();
+            var events = notificationType.GetEvents();
             foreach (var eventInfo in events)
             {
                 var serializedInfo = ProxyExtensions.FromEventInfo(eventInfo);
-                EventHandler<EventArgs> handler = 
-                    (s, e) => 
-                    {
-                        HandleEventAndForwardToListeners(s, serializedInfo, e);
-                    };
-                eventInfo.AddEventHandler(notifications, handler);
+                if (eventInfo.EventHandlerType.Equals(typeof(EventHandler)))
+                {
+                    // This one is easy because we know the types ...
+                    EventHandler handler =
+                        (s, e) =>
+                        {
+                            HandleEventAndForwardToListeners(s, serializedInfo, e);
+                        };
+                    eventInfo.AddEventHandler(notifications, handler);
+                }
+                else 
+                {
+                    // This one is not easy. So we need to create an EventHandler of the 
+                    // correct type (EventHandler<T> where T is the correct type) and then
+                    // attach it to the event.
+                    var argsTypes = eventInfo.EventHandlerType.GetGenericArguments();
+                    var handlerType = typeof(EventHandler<>).MakeGenericType(argsTypes);
+                    EventHandler<EventArgs> handler =
+                        (s, e) =>
+                        {
+                            HandleEventAndForwardToListeners(s, serializedInfo, e);
+                        };
+
+                    // The following works if all the interface / class definitions
+                    // are inside the same assembly (?)
+                    //   var del = Delegate.CreateDelegate(handlerType, handler.Method);
+                    // Unfortunately that seems to fail in this case so we'll do this the
+                    // nasty way.
+                    var constructors = handlerType.GetConstructors();
+                    var del = (Delegate)constructors[0].Invoke(
+                        new object[] 
+                            { 
+                                handler.Target, 
+                                handler.Method.MethodHandle.GetFunctionPointer() 
+                            });
+
+                    eventInfo.AddEventHandler(notifications, del);
+                }
             }
         }
 
