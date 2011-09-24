@@ -19,6 +19,14 @@ namespace Apollo.Base.Communication.Messages.Processors
     public sealed class NewCommandRegisteredProcessActionTest
     {
         [Test]
+        public void MessageTypeToProcess()
+        {
+            var registrator = new Mock<IAceptExternalCommandInformation>();
+            var action = new NewCommandRegisteredProcessAction(registrator.Object);
+            Assert.AreEqual(typeof(NewCommandRegisteredMessage), action.MessageTypeToProcess);
+        }
+
+        [Test]
         public void Invoke()
         {
             var registrator = new Mock<IAceptExternalCommandInformation>();

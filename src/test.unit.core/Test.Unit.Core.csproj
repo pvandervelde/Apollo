@@ -113,7 +113,9 @@
     <Compile Include="Base\Communication\Messages\Processors\EndpointConnectProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\Processors\EndpointInformationRequestProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\Processors\NewCommandRegisteredProcessActionTest.cs" />
+    <Compile Include="Base\Communication\Messages\Processors\UnknownMessageTypeProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\SuccessMessageTest.cs" />
+    <Compile Include="Base\Communication\Messages\UnknownMessageTypeMessageTest.cs" />
     <Compile Include="Base\Communication\MissingBindingTypeExceptionTest.cs" />
     <Compile Include="Base\Communication\MissingEndpointIdExceptionTest.cs" />
     <Compile Include="Base\Communication\NamedPipeChannelTypeTest.cs" />

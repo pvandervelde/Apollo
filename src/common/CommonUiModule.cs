@@ -16,7 +16,7 @@ namespace Apollo.UI.Common
     /// Handles the component registrations for the Apollo.UI.Common assembly.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class CommonUiModule : Module
+    public sealed class CommonUIModule : Module
     {
         /// <summary>
         /// Override to add registrations to the container.

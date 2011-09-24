@@ -104,12 +104,14 @@ namespace Apollo.Base.Communication.Messages.Processors
                     .Returns(commandSets.GetEnumerator());
             }
 
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            int loggerCount = 0;
+            Action<LogSeverityProxy, string> logger = (p, t) => { loggerCount++; };
 
             var action = new EndpointInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
             action.Invoke(new EndpointInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
+            Assert.AreEqual(1, loggerCount);
             Assert.IsInstanceOfType(typeof(FailureMessage), storedMsg);
         }
 
