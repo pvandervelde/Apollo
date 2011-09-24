@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Base.Communication
@@ -11,6 +12,7 @@ namespace Apollo.Core.Base.Communication
     /// <summary>
     /// A progress mark used for stream transfers.
     /// </summary>
+    [Serializable]
     internal sealed class StreamTransferProgressMark : IProgressMark
     {
     }

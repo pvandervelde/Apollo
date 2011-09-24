@@ -13,6 +13,7 @@ namespace Apollo.Utilities
     /// <summary>
     /// Event arguments used for startup progress events.
     /// </summary>
+    [Serializable]
     public sealed class ProgressEventArgs : EventArgs
     {
         /// <summary>

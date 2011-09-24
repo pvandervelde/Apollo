@@ -4,12 +4,15 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Utilities
 {
     /// <summary>
     /// A progress mark that indicates that it doesn't know which mark
     /// the progress is at.
     /// </summary>
+    [Serializable]
     internal sealed class IndeterminateProgressMark : IProgressMark
     {
     }
