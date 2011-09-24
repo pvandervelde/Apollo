@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
+using Apollo.Core.Base.Communication.Messages.Processors;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
@@ -78,6 +79,33 @@ namespace Apollo.Base.Communication
             handler.ProcessMessage(msg);
 
             Assert.AreSame(msg, storedMessage);
+        }
+
+        [Test]
+        public void ActOnArrivalWithLastChanceHandler()
+        {
+            var localEndpoint = new EndpointId("id");
+
+            EndpointId storedEndpoint = null;
+            ICommunicationMessage storedMsg = null;
+            Action<EndpointId, ICommunicationMessage> sendAction = (e, m) =>
+            {
+                storedEndpoint = e;
+                storedMsg = m;
+            };
+
+            Action<LogSeverityProxy, string> logger = (p, t) => { };
+
+            var processAction = new UnknownMessageTypeProcessAction(localEndpoint, sendAction, logger);
+            var handler = new MessageHandler(logger);
+            handler.ActOnArrival(new MessageKindFilter(processAction.MessageTypeToProcess), processAction);
+
+            var endpoint = new EndpointId("endpoint");
+            var messageId = new MessageId();
+            var msg = new EndpointConnectMessage(endpoint, "net.pipe://localhost/apollo_test", typeof(NamedPipeChannelType));
+            handler.ProcessMessage(msg);
+
+            Assert.IsInstanceOfType<UnknownMessageTypeMessage>(storedMsg);
         }
     }
 }

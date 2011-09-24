@@ -186,7 +186,8 @@ namespace Apollo.Base.Communication.Messages.Processors
                     .Returns(commandSets.GetEnumerator());
             }
 
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            int loggerCount = 0;
+            Action<LogSeverityProxy, string> logger = (p, t) => { loggerCount++; };
 
             var action = new CommandInvokedProcessAction(endpoint, sendAction, commands.Object, logger);
             action.Invoke(
@@ -196,6 +197,7 @@ namespace Apollo.Base.Communication.Messages.Processors
 
             actionObject.Verify(a => a.MethodWithoutReturnValue(It.IsAny<int>()), Times.Once());
             Assert.AreEqual(2, count);
+            Assert.AreEqual(3, loggerCount);
             Assert.IsInstanceOfType(typeof(FailureMessage), storedMsg);
         }
 

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
-using Lokad;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -20,6 +19,12 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class MessageHandler : IDirectIncomingMessages, IProcessIncomingMessages
     {
+        private static bool IsLastChanceProcessor(IMessageProcessAction notifyAction)
+        {
+            var attributes = notifyAction.GetType().GetCustomAttributes(typeof(LastChanceMessageHandlerAttribute), false);
+            return attributes.Length == 1;
+        }
+
         private static bool IsMessageIndicatingEndpointDisconnect(ICommunicationMessage message)
         {
             return message.GetType().Equals(typeof(EndpointDisconnectMessage));
@@ -43,6 +48,11 @@ namespace Apollo.Core.Base.Communication
             = new Dictionary<IMessageFilter, IMessageProcessAction>();
 
         /// <summary>
+        /// The processor that should be used if there are no other message processors for a message type.
+        /// </summary>
+        private IMessageProcessAction m_LastChanceProcessor;
+
+        /// <summary>
         /// The collection that maps the ID numbers of the messages that are waiting for a response
         /// message to the endpoint.
         /// </summary>
@@ -50,8 +60,8 @@ namespace Apollo.Core.Base.Communication
         /// We track the endpoint from which we're expecting a response in case we get an <c>EndpointDisconnectMessage</c>.
         /// In that case we need to know if we just lost the source of our potential answer or not.
         /// </remarks>
-        private readonly Dictionary<MessageId, System.Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
-            = new Dictionary<MessageId, System.Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
+        private readonly Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>> m_TasksWaitingForResponse
+            = new Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
 
         /// <summary>
         /// The function that logs messages.
@@ -68,7 +78,7 @@ namespace Apollo.Core.Base.Communication
         public MessageHandler(Action<LogSeverityProxy, string> logger)
         {
             {
-                Enforce.Argument(() => logger);
+                Lokad.Enforce.Argument(() => logger);
             }
 
             m_Logger = logger;
@@ -96,9 +106,9 @@ namespace Apollo.Core.Base.Communication
         public Task<ICommunicationMessage> ForwardResponse(EndpointId messageReceiver, MessageId inResponseTo)
         {
             {
-                Enforce.Argument(() => messageReceiver);
-                Enforce.Argument(() => inResponseTo);
-                Enforce.With<ArgumentException>(!inResponseTo.Equals(MessageId.None), Resources.Exceptions_Messages_AMessageNeedsToHaveAnId);
+                Lokad.Enforce.Argument(() => messageReceiver);
+                Lokad.Enforce.Argument(() => inResponseTo);
+                Lokad.Enforce.With<ArgumentException>(!inResponseTo.Equals(MessageId.None), Resources.Exceptions_Messages_AMessageNeedsToHaveAnId);
             }
 
             lock (m_Lock)
@@ -122,12 +132,18 @@ namespace Apollo.Core.Base.Communication
         public void ActOnArrival(IMessageFilter messageFilter, IMessageProcessAction notifyAction)
         {
             {
-                Enforce.Argument(() => messageFilter);
-                Enforce.Argument(() => notifyAction);
+                Lokad.Enforce.Argument(() => messageFilter);
+                Lokad.Enforce.Argument(() => notifyAction);
             }
 
             lock (m_Lock)
             {
+                if (IsLastChanceProcessor(notifyAction))
+                {
+                    m_LastChanceProcessor = notifyAction;
+                    return;
+                }
+
                 if (!m_Filters.ContainsKey(messageFilter))
                 {
                     m_Filters.Add(messageFilter, notifyAction);
@@ -143,7 +159,7 @@ namespace Apollo.Core.Base.Communication
         public void ProcessMessage(ICommunicationMessage message)
         {
             {
-                Enforce.Argument(() => message);
+                Lokad.Enforce.Argument(() => message);
             }
 
             // First check that the message isn't a response
@@ -205,6 +221,10 @@ namespace Apollo.Core.Base.Communication
                             pair.Value.GetType()));
 
                     pair.Value.Invoke(message);
+
+                    // Each message type should only be procesed by one process action
+                    // so if we find it, then we're done.
+                    return;
                 }
             }
 
@@ -214,6 +234,13 @@ namespace Apollo.Core.Base.Communication
             if (IsMessageIndicatingEndpointDisconnect(message))
             {
                 TerminateWaitingResponsesForEndpoint(message.OriginatingEndpoint);
+                return;
+            }
+
+            // The message type is unknown. See if the last chance handler wants it ...
+            if (m_LastChanceProcessor != null)
+            {
+                m_LastChanceProcessor.Invoke(message);
             }
         }
 
