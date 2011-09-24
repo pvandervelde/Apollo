@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utilities;
 using Lokad;
@@ -80,6 +81,8 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// Invokes the current action based on the provided message.
         /// </summary>
         /// <param name="message">The message upon which the action acts.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "If the exception escapes then the channel dies but we won't know what happened, so we log and move on.")]
         public void Invoke(ICommunicationMessage message)
         {
             var msg = message as UnknownMessageTypeMessage;

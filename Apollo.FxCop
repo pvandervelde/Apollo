@@ -67,15 +67,6 @@
      </Message>
     </Messages>
    </Namespace>
-   <Namespace Name="Apollo.UI.Common.Converters">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-06-14 10:22:36Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Converters</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
    <Namespace Name="Apollo.UI.Common.Listeners">
     <Messages>
      <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-06-14 10:22:36Z">
@@ -91,32 +82,6 @@
     <Modules>
      <Module Name="apollo.core.dll">
       <Namespaces>
-       <Namespace Name="Apollo.Core">
-        <Types>
-         <Type Name="Bootstrapper">
-          <Members>
-           <Member Name="#m_StartInfo">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2011-06-14 10:22:36Z">
-              <Issue>
-               <Item>'Bootstrapper.m_StartInfo'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="INotificationArguments">
-          <Messages>
-           <Message TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040" Created="2011-05-18 08:26:30Z">
-            <Issue>
-             <Item>'INotificationArguments'</Item>
-            </Issue>
-           </Message>
-          </Messages>
-         </Type>
-        </Types>
-       </Namespace>
        <Namespace Name="Apollo.Core.Projects">
         <Types>
          <Type Name="Project">
@@ -138,36 +103,6 @@
            </Member>
           </Members>
          </Type>
-         <Type Name="ProjectService">
-          <Members>
-           <Member Name="#m_LicenseValidationStorage">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2011-05-18 08:26:30Z">
-              <Issue>
-               <Item>'ProjectService.m_LicenseValidationStorage'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.Core.UserInterfaces">
-        <Types>
-         <Type Name="UserInterfaceService">
-          <Members>
-           <Member Name="#m_LicenseValidationStorage">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2011-05-18 08:26:30Z">
-              <Issue>
-               <Item>'UserInterfaceService.m_LicenseValidationStorage'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
         </Types>
        </Namespace>
       </Namespaces>
@@ -176,14 +111,8 @@
    </Target>
   </Targets>
   <Rules>
-   <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
-    <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
-   </Rule>
    <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
     <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
-    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>
