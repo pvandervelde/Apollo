@@ -80,12 +80,41 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Clears all the event handlers.
         /// </summary>
+        /// <remarks>
+        ///     Note that this method does not indicate to the remote endpoint that there
+        ///     are no more subscribers.
+        /// </remarks>
         protected internal void ClearAllEvents()
         {
             lock (m_Lock)
             {
+                // Do we need to send the message that we're clearing the handlers?
+                // At the moment probably not because we only use this when we lose the
+                // connection to an endpoint.
                 m_EventHandlers.Clear();
             }
+        }
+
+        /// <summary>
+        /// Indicates if there are any subscribers to the given event.
+        /// </summary>
+        /// <param name="eventName">The name of the event.</param>
+        /// <returns>
+        ///     <see langword="true" /> if there is at least one subscriber to the event; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected internal bool HasSubscribers(string eventName)
+        {
+            lock (m_Lock)
+            {
+                if (m_EventHandlers.ContainsKey(eventName))
+                {
+                    return m_EventHandlers[eventName].Count > 0;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>

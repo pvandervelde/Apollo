@@ -122,8 +122,10 @@
     <Compile Include="Base\Communication\Messages\Processors\RegisterForNotificationProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\Processors\UnregisterFromNotificationProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\RegisterForNotificationMessageTest.cs" />
+    <Compile Include="Base\Communication\Messages\Processors\UnknownMessageTypeProcessActionTest.cs" />
     <Compile Include="Base\Communication\Messages\SuccessMessageTest.cs" />
     <Compile Include="Base\Communication\Messages\UnregisterFromNotificationMessageTest.cs" />
+    <Compile Include="Base\Communication\Messages\UnknownMessageTypeMessageTest.cs" />
     <Compile Include="Base\Communication\MissingBindingTypeExceptionTest.cs" />
     <Compile Include="Base\Communication\MissingEndpointIdExceptionTest.cs" />
     <Compile Include="Base\Communication\NamedPipeChannelTypeTest.cs" />

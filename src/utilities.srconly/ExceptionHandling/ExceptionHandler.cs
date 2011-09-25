@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Security.Cryptography;
 using Apollo.Utilities.Logging;
@@ -34,6 +35,8 @@ namespace Apollo.Utilities.ExceptionHandling
         /// </summary>
         private const string DefaultErrorFileName = "apollo.error.log";
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
         private static IExceptionProcessor CreateReportBuildingProcessor()
         {
             try
@@ -52,7 +55,9 @@ namespace Apollo.Utilities.ExceptionHandling
                 throw;
             }
         }
-
+        
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
         private static IExceptionProcessor CreateFileLoggingProcessor(string logFile)
         {
             try
@@ -74,6 +79,8 @@ namespace Apollo.Utilities.ExceptionHandling
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We don't really care if we get a processor or not but we really don't want a crash here.")]
         private static IExceptionProcessor CreateEventLoggingProcessor(string eventLog)
         {
             try
@@ -145,6 +152,8 @@ namespace Apollo.Utilities.ExceptionHandling
         /// </summary>
         /// <param name="exception">The exception that was thrown.</param>
         /// <param name="isApplicationTerminating">Indicates if the application is about to shut down or not.</param>
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "We're doing exception handling here, we don't really want anything to escape.")]
         public void OnException(Exception exception, bool isApplicationTerminating)
         {
             if (m_WasDisposed)

@@ -213,6 +213,7 @@
                 <ProgressBar Value="{Binding Path=Progress, Mode=OneWay}"
                              Minimum="0"
                              Maximum="1"
+                             MinHeight="15"
                              Margin="5, 0, 5, 5"/>
             </Grid>
         </Grid>

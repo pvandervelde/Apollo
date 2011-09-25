@@ -81,6 +81,15 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// Returns the name of the proxy objects for use in the trace logs.
+        /// </summary>
+        /// <returns>A string containing the name of the proxy objects for use in the trace logs.</returns>
+        protected override string TraceNameForProxyObjects()
+        {
+            return "commands";
+        }
+
+        /// <summary>
         /// Returns a value indicating if one or more proxies exist for the given endpoint.
         /// </summary>
         /// <param name="endpoint">The ID number of the endpoint.</param>

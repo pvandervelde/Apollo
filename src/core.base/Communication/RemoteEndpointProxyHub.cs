@@ -119,7 +119,8 @@ namespace Apollo.Core.Base.Communication
                             LogSeverityProxy.Trace,
                             string.Format(
                                 CultureInfo.InvariantCulture,
-                                "Already waiting for commands from endpoint [{0}].",
+                                "Already waiting for {0} from endpoint [{1}].",
+                                TraceNameForProxyObjects(),
                                 endpoint));
                         return;
                     }
@@ -183,8 +184,9 @@ namespace Apollo.Core.Base.Communication
                                 LogSeverityProxy.Trace,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
-                                    "Received {0} commands from endpoint [{1}].",
+                                    "Received {0} {1} from endpoint [{2}].",
                                     commands.Count,
+                                    TraceNameForProxyObjects(),
                                     endpoint));
 
                             var list = new SortedList<Type, TProxyObject>(commands.Count, new TypeComparer());
@@ -223,7 +225,8 @@ namespace Apollo.Core.Base.Communication
                            LogSeverityProxy.Trace,
                            string.Format(
                                CultureInfo.InvariantCulture,
-                               "No longer waiting for commands from endpoint: {0}",
+                               "No longer waiting for {0} from endpoint: {1}",
+                               TraceNameForProxyObjects(),
                                endpoint));
 
                         m_WaitingForCommandInformation.Remove(endpoint);
@@ -253,7 +256,8 @@ namespace Apollo.Core.Base.Communication
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "No longer waiting for commands from endpoint [{0}].",
+                            "No longer waiting for {0} from endpoint [{1}].",
+                            TraceNameForProxyObjects(),
                             endpoint));
 
                     m_WaitingForCommandInformation.Remove(endpoint);
@@ -265,7 +269,8 @@ namespace Apollo.Core.Base.Communication
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "Removing commands for endpoint [{0}].",
+                            "Removing {0} for endpoint [{1}].",
+                            TraceNameForProxyObjects(),
                             endpoint));
 
                     RemoveProxiesFor(endpoint);
@@ -300,7 +305,8 @@ namespace Apollo.Core.Base.Communication
                     LogSeverityProxy.Trace,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "Got command from endpoint [{0}] of type {1}.",
+                        "Got {0} from endpoint [{1}] of type {2}.",
+                        TraceNameForProxyObjects(),
                         endpoint,
                         proxyType));
             }
@@ -310,7 +316,8 @@ namespace Apollo.Core.Base.Communication
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "Could not load the command set type: {0} for endpoint {1}",
+                        "Could not load the {0} type: {1} for endpoint {2}",
+                        TraceNameForProxyObjects(),
                         serializedType.AssemblyQualifiedTypeName,
                         endpoint));
 
@@ -319,6 +326,12 @@ namespace Apollo.Core.Base.Communication
 
             return proxyType;
         }
+
+        /// <summary>
+        /// Returns the name of the proxy objects for use in the trace logs.
+        /// </summary>
+        /// <returns>A string containing the name of the proxy objects for use in the trace logs.</returns>
+        protected abstract string TraceNameForProxyObjects();
 
         /// <summary>
         /// Returns a value indicating if one or more proxies exist for the given endpoint.

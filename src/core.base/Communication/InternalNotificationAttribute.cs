@@ -7,14 +7,14 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.Core
+namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Defines the interface for objects that hold notification arguments.
+    /// Indicates that a <see cref="INotificationSet"/> is only for use by the notification system.
     /// </summary>
-    [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
-        Justification = "Using this as a marker interface because we need to have a type for notification arguments.")]
-    public interface INotificationArguments
+    [ExcludeFromCodeCoverage]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
+    public sealed class InternalNotificationAttribute : Attribute
     {
     }
 }

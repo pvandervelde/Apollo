@@ -5,10 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Text;
 
 namespace Apollo.Utilities
 {
@@ -91,6 +93,105 @@ namespace Apollo.Utilities
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Builds a comma separated string containing all the method names and parameters for each of the method information 
+        /// objects in the collection.
+        /// </summary>
+        /// <param name="methods">The collection containing the method information.</param>
+        /// <returns>A string containing all the method signatures.</returns>
+        public static string MethodInfoToString(IEnumerable<MethodInfo> methods)
+        {
+            var methodsText = new StringBuilder();
+            foreach (var methodInfo in methods)
+            {
+                if (methodsText.Length > 0)
+                {
+                    methodsText.Append("; ");
+                }
+
+                var parametersText = new StringBuilder();
+                foreach (var parameterInfo in methodInfo.GetParameters())
+                {
+                    if (parametersText.Length > 0)
+                    {
+                        parametersText.Append(", ");
+                    }
+
+                    parametersText.Append(
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "{0}{1}{2} {3}",
+                            parameterInfo.IsOut ? "out " : string.Empty,
+                            parameterInfo.IsRetval ? "ref " : string.Empty,
+                            parameterInfo.ParameterType.Name,
+                            parameterInfo.Name));
+                }
+
+                methodsText.Append(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}.{1}({2})",
+                        methodInfo.DeclaringType.Name,
+                        methodInfo.Name,
+                        parametersText.ToString()));
+            }
+
+            return methodsText.ToString();
+        }
+
+        /// <summary>
+        /// Builds a comma separated string containing all the property signatures of the property information in the collection.
+        /// </summary>
+        /// <param name="properties">The collection containing the property information.</param>
+        /// <returns>A string containing the property information.</returns>
+        public static string PropertyInfoToString(IEnumerable<PropertyInfo> properties)
+        {
+            var propertiesText = new StringBuilder();
+            foreach (var propertyInfo in properties)
+            {
+                if (propertiesText.Length > 0)
+                {
+                    propertiesText.Append("; ");
+                }
+
+                propertiesText.Append(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}.{1}",
+                        propertyInfo.DeclaringType.Name,
+                        propertyInfo.Name));
+            }
+
+            return propertiesText.ToString();
+        }
+
+        /// <summary>
+        /// Builds a comma separated string containing the event signatures of all the events in the 
+        /// collection.
+        /// </summary>
+        /// <param name="events">The collection containing the events.</param>
+        /// <returns>A string containing the event signatures.</returns>
+        public static string EventInfoToString(IEnumerable<EventInfo> events)
+        {
+            var propertiesText = new StringBuilder();
+            foreach (var eventInfo in events)
+            {
+                if (propertiesText.Length > 0)
+                {
+                    propertiesText.Append("; ");
+                }
+
+                propertiesText.Append(
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "{0}.{1}",
+                        eventInfo.DeclaringType.Name,
+                        eventInfo.Name));
+            }
+
+            return propertiesText.ToString();
         }
     }
 }

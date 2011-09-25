@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Communication
             : base(
                 layer,
                 notificationReporter,
-                (endpoint, type) => (NotificationSetProxy)builder.ProxyConnectingTo(type),
+                (endpoint, type) => (NotificationSetProxy)builder.ProxyConnectingTo(endpoint, type),
                 logger)
         {
             {
@@ -78,6 +78,15 @@ namespace Apollo.Core.Base.Communication
 
             m_Builder = builder;
             m_Logger = logger;
+        }
+
+        /// <summary>
+        /// Returns the name of the proxy objects for use in the trace logs.
+        /// </summary>
+        /// <returns>A string containing the name of the proxy objects for use in the trace logs.</returns>
+        protected override string TraceNameForProxyObjects()
+        {
+            return "notifications";
         }
 
         /// <summary>
@@ -103,7 +112,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         protected override ICommunicationMessage CreateInformationRequestMessage(EndpointId endpointId)
         {
-            return new CommandInformationRequestMessage(endpointId);
+            return new NotificationInformationRequestMessage(endpointId);
         }
 
         /// <summary>

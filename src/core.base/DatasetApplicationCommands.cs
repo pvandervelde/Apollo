@@ -81,16 +81,30 @@ namespace Apollo.Core.Base
         /// <returns>A task that will finish once the dataset is loaded.</returns>
         public Task Load(EndpointId ownerId, UploadToken token)
         {
-            var filePath = Path.GetTempFileName();
-
-            var source = new CancellationTokenSource();
-            var task = m_Layer.DownloadData(ownerId, token, filePath, null, source.Token, m_Scheduler);
-            return task.ContinueWith(
-                t =>
+            // This one is more tricky than you think. We need to return a Task (not a Task<T>), however
+            // if we do Task<T>.ContinueWith we get a System.Threading.Tasks.ContinuationTaskFromResultTask<System.IO.Stream>
+            // object. When we give that back to the command system it tries to push the stream across the network ... not
+            // really what we want.
+            //
+            // So to fix this we create a task and then inside that task we load the file (via another task) and continue
+            // of the nested task. The continuation task is a child of the global task and all is well because the 
+            // global task doesn't finish until the nested child task is done, and we get a Task object back
+            var globalTask = Task.Factory.StartNew(
+                () =>
                 {
-                    m_LoadAction(new FileInfo(filePath));
-                },
-                TaskContinuationOptions.ExecuteSynchronously);
+                    var filePath = Path.GetTempFileName();
+
+                    var source = new CancellationTokenSource();
+                    var task = m_Layer.DownloadData(ownerId, token, filePath, null, source.Token, m_Scheduler);
+                    var result = task.ContinueWith(
+                        t =>
+                        {
+                            m_LoadAction(new FileInfo(filePath));
+                        }, 
+                        TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously);
+                });
+
+            return globalTask;
         }
 
         /// <summary>

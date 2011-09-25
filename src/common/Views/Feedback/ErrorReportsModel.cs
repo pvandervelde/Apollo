@@ -72,7 +72,7 @@ namespace Apollo.UI.Common.Views.Feedback
                     m_Reports.Add(new FeedbackFileModel(item.FullName, item.CreationTime, InternalContext));
                 };
 
-            var task = Task.Factory.StartNew(
+            Task.Factory.StartNew(
                 () =>
                 {
                     var list = m_FeedbackCollector.LocateFeedbackReports();

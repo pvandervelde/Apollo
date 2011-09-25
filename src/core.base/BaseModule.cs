@@ -49,56 +49,6 @@ namespace Apollo.Core.Base
                 .As<ICommunicationConstants>();
         }
 
-        private static void RegisterCommandHub(ContainerBuilder builder)
-        {
-            builder.Register(c => new RemoteCommandHub(
-                    c.Resolve<ICommunicationLayer>(),
-                    c.ResolveKeyed<IReportNewProxies>(typeof(ICommandSet)),
-                    c.Resolve<CommandProxyBuilder>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
-                .As<ISendCommandsToRemoteEndpoints>()
-                .SingleInstance();
-
-            builder.Register(
-                c => 
-                {
-                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
-                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new CommandProxyBuilder(
-                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                        (endpoint, msg) =>
-                        {
-                            return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
-                        },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
-                });
-
-            builder.Register(c => new LocalCommandCollection(
-                    c.Resolve<ICommunicationLayer>()))
-                .As<ICommandCollection>()
-                .SingleInstance();
-        }
-
-        private static void RegisterNotificationHub(ContainerBuilder builder)
-        {
-            builder.Register(c => new RemoteNotificationHub(
-                    c.Resolve<ICommunicationLayer>(),
-                    c.ResolveKeyed<IReportNewProxies>(typeof(INotificationSet)),
-                    c.Resolve<NotificationProxyBuilder>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
-                .As<INotifyOfRemoteEndpointEvents>()
-                .SingleInstance();
-
-            builder.Register(c => new NotificationProxyBuilder(
-                    c.Resolve<Action<LogSeverityProxy, string>>()));
-
-            builder.Register(c => new LocalNotificationCollection(
-                    c.Resolve<ICommunicationLayer>()))
-                .As<ICommandCollection>()
-                .SingleInstance();
-        }
-
         private static void RegisterCommunicationLayer(ContainerBuilder builder)
         {
             builder.Register(
@@ -157,19 +107,6 @@ namespace Apollo.Core.Base
                 });
         }
 
-        private static void RegisterCommandDiscoverySources(ContainerBuilder builder)
-        {
-            builder.Register(c => new ManualProxyRegistrationReporter())
-                .Keyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))
-                .Keyed<IReportNewProxies>(typeof(ICommandSet))
-                .SingleInstance();
-
-            builder.Register(c => new ManualProxyRegistrationReporter())
-                .Keyed<IAcceptExternalProxyInformation>(typeof(INotificationSet))
-                .Keyed<IReportNewProxies>(typeof(INotificationSet))
-                .SingleInstance();
-        }
-
         private static void RegisterMessageHandler(ContainerBuilder builder)
         {
             // Note that there is no direct relation between the IChannelType and the MessageHandler
@@ -198,24 +135,6 @@ namespace Apollo.Core.Base
 
         private static void RegisterMessageProcessingActions(ContainerBuilder builder)
         {
-            // For now we'll just create two extra objects only to get their types
-            // and then throw those objects away. If this turns out to be too expensive
-            // or the list becomes too long then we can do something cunning with the 
-            // use of Autofac Metadata.
-            builder.Register(
-                c => 
-                {
-                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
-                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new CommandInvokedProcessAction(
-                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                        (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                        c.Resolve<ICommandCollection>(),
-                        c.Resolve<Action<LogSeverityProxy, string>>());
-                })
-                .As<IMessageProcessAction>();
-
             builder.Register(c => new DataDownloadProcessAction(
                     c.Resolve<WaitingUploads>(),
                     c.Resolve<ICommunicationLayer>(),
@@ -223,51 +142,29 @@ namespace Apollo.Core.Base
                 .As<IMessageProcessAction>();
 
             builder.Register(
-                c => 
-                {
-                    // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
-                    // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
-                    var ctx = c.Resolve<IComponentContext>();
-                    return new EndpointConnectProcessAction(
-                        c.Resolve<IAcceptExternalEndpointInformation>(),
-                        from channelType in ctx.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
-                        c.Resolve<Action<LogSeverityProxy, string>>());
-                })
+                    c => 
+                    {
+                        // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                        // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                        var ctx = c.Resolve<IComponentContext>();
+                        return new EndpointConnectProcessAction(
+                            c.Resolve<IAcceptExternalEndpointInformation>(),
+                            from channelType in ctx.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
+                            c.Resolve<Action<LogSeverityProxy, string>>());
+                    })
                 .As<IMessageProcessAction>();
 
             builder.Register(
-                c => 
+                c =>
                 {
                     // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
                     // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
                     var ctx = c.Resolve<IComponentContext>();
-                    return new CommandInformationRequestProcessAction(
+                    return new UnknownMessageTypeProcessAction(
                         EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                         (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                        c.Resolve<ICommandCollection>(),
                         c.Resolve<Action<LogSeverityProxy, string>>());
                 })
-                .As<IMessageProcessAction>();
-
-            builder.Register(c => new NewCommandRegisteredProcessAction(
-                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(ICommandSet))))
-                .As<IMessageProcessAction>();
-
-            builder.Register(c => new RegisterForNotificationProcessAction(
-                    c.Resolve<ISendNotifications>()))
-                .As<IMessageProcessAction>();
-
-            builder.Register(c => new UnregisterFromNotificationProcessAction(
-                    c.Resolve<ISendNotifications>()))
-                .As<IMessageProcessAction>();
-
-            builder.Register(c => new NewNotificationRegisteredProcessAction(
-                    c.ResolveKeyed<IAcceptExternalProxyInformation>(typeof(INotificationSet))))
-                .As<IMessageProcessAction>();
-
-            builder.Register(c => new NotificationRaisedProcessAction(
-                    c.Resolve<INotifyOfRemoteEndpointEvents>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
                 .As<IMessageProcessAction>();
         }
 
@@ -396,11 +293,8 @@ namespace Apollo.Core.Base
             base.Load(builder);
 
             RegisterUtilities(builder);
-            RegisterCommandHub(builder);
-            RegisterNotificationHub(builder);
             RegisterCommunicationLayer(builder);
             RegisterEndpointDiscoverySources(builder, m_AllowChannelDiscovery);
-            RegisterCommandDiscoverySources(builder);
             RegisterMessageHandler(builder);
             RegisterMessageProcessingActions(builder);
             RegisterCommunicationChannel(builder);

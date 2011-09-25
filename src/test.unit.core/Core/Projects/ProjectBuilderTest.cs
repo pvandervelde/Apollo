@@ -37,7 +37,7 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t, r) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -82,7 +82,7 @@ namespace Apollo.Core.Projects
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t, r) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),

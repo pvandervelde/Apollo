@@ -60,9 +60,13 @@ namespace Apollo.UI.Common.Views.Datasets
                     Progress = e.Progress / 100.0;
                 };
             m_Dataset.OnLoaded += (s, e) =>
-                { 
+                {
                     Notify(() => this.IsLoaded);
                     Notify(() => this.RunsOn);
+                    
+                    Progress = 0.0;
+                    ProgressDescription = string.Empty;
+
                     RaiseOnLoaded();
                 };
             m_Dataset.OnUnloaded += (s, e) =>

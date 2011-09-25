@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
 using MbUnit.Framework;
 
@@ -87,9 +88,19 @@ namespace Apollo.Base.Communication
         [Test]
         public void ProxyConnectingToEventWithNormalEventHandler()
         {
+            var local = new EndpointId("local");
+            RegisterForNotificationMessage intermediateMsg = null;
+            Action<EndpointId, ICommunicationMessage> messageSender = (e, m) =>
+            {
+                intermediateMsg = m as RegisterForNotificationMessage;
+            };
+
             Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(logger);
-            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>();
+
+            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+
+            var remoteEndpoint = new EndpointId("other");
+            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);
 
             object sender = null;
             EventArgs receivedArgs = null;
@@ -99,6 +110,9 @@ namespace Apollo.Base.Communication
                     sender = s;
                     receivedArgs = e;
                 };
+
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockNotificationSetWithEventHandler)), intermediateMsg.Notification.Type);
+            Assert.AreEqual("OnMyEvent", intermediateMsg.Notification.MemberName);
 
             var notificationObj = proxy as NotificationSetProxy;
             Assert.IsNotNull(notificationObj);
@@ -113,9 +127,18 @@ namespace Apollo.Base.Communication
         [Test]
         public void ProxyConnectingToEventWithTypedEventHandler()
         {
+            var local = new EndpointId("local");
+            RegisterForNotificationMessage intermediateMsg = null;
+            Action<EndpointId, ICommunicationMessage> messageSender = (e, m) =>
+            {
+                intermediateMsg = m as RegisterForNotificationMessage;
+            };
+
             Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(logger);
-            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithTypedEventHandler>();
+            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+
+            var remoteEndpoint = new EndpointId("other");
+            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithTypedEventHandler>(remoteEndpoint);
 
             object sender = null;
             EventArgs receivedArgs = null;
@@ -125,6 +148,9 @@ namespace Apollo.Base.Communication
                     sender = s;
                     receivedArgs = e;
                 };
+
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockNotificationSetWithTypedEventHandler)), intermediateMsg.Notification.Type);
+            Assert.AreEqual("OnMyEvent", intermediateMsg.Notification.MemberName);
 
             var notificationObj = proxy as NotificationSetProxy;
             Assert.IsNotNull(notificationObj);
@@ -139,9 +165,18 @@ namespace Apollo.Base.Communication
         [Test]
         public void ProxyDisconnectFromEventWithNormalEventHandler()
         {
+            var local = new EndpointId("local");
+            UnregisterFromNotificationMessage intermediateMsg = null;
+            Action<EndpointId, ICommunicationMessage> messageSender = (e, m) =>
+            {
+                intermediateMsg = m as UnregisterFromNotificationMessage;
+            };
+
             Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(logger);
-            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>();
+            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+
+            var remoteEndpoint = new EndpointId("other");
+            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);
 
             object sender = null;
             EventArgs receivedArgs = null;
@@ -153,6 +188,8 @@ namespace Apollo.Base.Communication
                     receivedArgs = e;
                 };
             proxy.OnMyEvent += handler;
+
+            Assert.IsNull(intermediateMsg);
 
             var notificationObj = proxy as NotificationSetProxy;
             Assert.IsNotNull(notificationObj);
@@ -167,6 +204,9 @@ namespace Apollo.Base.Communication
             receivedArgs = null;
             proxy.OnMyEvent -= handler;
 
+            Assert.AreEqual(ProxyExtensions.FromType(typeof(IMockNotificationSetWithEventHandler)), intermediateMsg.Notification.Type);
+            Assert.AreEqual("OnMyEvent", intermediateMsg.Notification.MemberName);
+
             notificationObj.RaiseEvent("OnMyEvent", new EventArgs());
             Assert.IsNull(sender);
             Assert.IsNull(receivedArgs);
@@ -175,9 +215,18 @@ namespace Apollo.Base.Communication
         [Test]
         public void ProxyCleanupAttachedEvents()
         {
+            var local = new EndpointId("local");
+            UnregisterFromNotificationMessage intermediateMsg = null;
+            Action<EndpointId, ICommunicationMessage> messageSender = (e, m) =>
+            {
+                intermediateMsg = m as UnregisterFromNotificationMessage;
+            };
+
             Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(logger);
-            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>();
+            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+
+            var remoteEndpoint = new EndpointId("other");
+            var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);
 
             object sender = null;
             EventArgs receivedArgs = null;
@@ -187,6 +236,8 @@ namespace Apollo.Base.Communication
                     sender = s;
                     receivedArgs = e;
                 };
+
+            Assert.IsNull(intermediateMsg);
 
             var notificationObj = proxy as NotificationSetProxy;
             Assert.IsNotNull(notificationObj);
@@ -200,6 +251,8 @@ namespace Apollo.Base.Communication
             sender = null;
             receivedArgs = null;
             notificationObj.ClearAllEvents();
+
+            Assert.IsNull(intermediateMsg);
 
             notificationObj.RaiseEvent("OnMyEvent", new EventArgs());
             Assert.IsNull(sender);

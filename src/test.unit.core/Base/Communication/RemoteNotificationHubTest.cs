@@ -66,7 +66,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object, 
+                reporter.Object, 
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger), 
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -110,7 +117,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object, 
+                reporter.Object, 
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger), 
+                logger);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
             var connectionInfo = new ChannelConnectionInformation(
@@ -153,7 +167,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object, 
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger), 
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -203,7 +224,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object,
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger),
+                logger);
 
             var otherId = new EndpointId("other");
             reporter.Raise(
@@ -245,7 +273,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object,
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger),
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -299,7 +334,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object,
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger),
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -356,7 +398,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object,
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger),
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -402,7 +451,14 @@ namespace Apollo.Base.Communication
                     new CurrentThreadTaskScheduler());
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var hub = new RemoteNotificationHub(layer.Object, reporter.Object, new NotificationProxyBuilder(logger), logger);
+            var hub = new RemoteNotificationHub(
+                layer.Object,
+                reporter.Object,
+                new NotificationProxyBuilder(
+                    localEndpoint,
+                    (e, msg) => { },
+                    logger),
+                logger);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),

@@ -98,8 +98,7 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         public CommandSetMethodWithoutResultInterceptor(
-            Func<ISerializedMethodInvocation, 
-            Task<ICommunicationMessage>> sendMessageWithResponse,
+            Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> sendMessageWithResponse,
             Action<LogSeverityProxy, string> logger,
             TaskScheduler scheduler = null)
         {

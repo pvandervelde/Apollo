@@ -39,10 +39,14 @@ namespace Apollo.Base.Communication.Messages.Processors
         [Test]
         public void Invoke()
         {
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var local = new EndpointId("local");
+            Action<EndpointId, ICommunicationMessage> messageSender = (e, m) => { };
 
-            NotificationProxyBuilder builder = new NotificationProxyBuilder(logger);
-            var proxy = builder.ProxyConnectingTo(typeof(IMockNotificationSetWithTypedEventHandler));
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+
+            var remoteEndpoint = new EndpointId("other");
+            var proxy = builder.ProxyConnectingTo(remoteEndpoint, typeof(IMockNotificationSetWithTypedEventHandler));
 
             object sender = null;
             EventArgs args = null;

@@ -24,48 +24,6 @@ namespace Apollo.Core.Base.Communication
     /// </summary>
     internal sealed class CommandProxyBuilder
     {
-        private static string EventInfoToString(IEnumerable<EventInfo> invalidEvents)
-        {
-            var propertiesText = new StringBuilder();
-            foreach (var eventInfo in invalidEvents)
-            {
-                if (propertiesText.Length > 0)
-                {
-                    propertiesText.Append("; ");
-                }
-
-                propertiesText.Append(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0}.{1}",
-                        eventInfo.DeclaringType.Name,
-                        eventInfo.Name));
-            }
-
-            return propertiesText.ToString();
-        }
-
-        private static string PropertyInfoToString(IEnumerable<PropertyInfo> invalidProperties)
-        {
-            var propertiesText = new StringBuilder();
-            foreach (var propertyInfo in invalidProperties)
-            {
-                if (propertiesText.Length > 0)
-                {
-                    propertiesText.Append("; ");
-                }
-
-                propertiesText.Append(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "{0}.{1}",
-                        propertyInfo.DeclaringType.Name,
-                        propertyInfo.Name));
-            }
-
-            return propertiesText.ToString();
-        }
-
         /// <summary>
         /// Verifies that an interface type will be a correct command set.
         /// </summary>
@@ -132,7 +90,7 @@ namespace Apollo.Core.Base.Communication
 
             if (commandSet.GetProperties().Length > 0)
             {
-                var propertiesText = PropertyInfoToString(commandSet.GetProperties());
+                var propertiesText = ReflectionExtensions.PropertyInfoToString(commandSet.GetProperties());
                 throw new TypeIsNotAValidCommandSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -143,7 +101,7 @@ namespace Apollo.Core.Base.Communication
 
             if (commandSet.GetEvents().Length > typeof(ICommandSet).GetEvents().Length)
             {
-                var eventsText = EventInfoToString(commandSet.GetEvents());
+                var eventsText = ReflectionExtensions.EventInfoToString(commandSet.GetEvents());
                 throw new TypeIsNotAValidCommandSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,

@@ -432,7 +432,7 @@ namespace Apollo.Core.Projects
             /// <param name="mark">The action that is currently being processed.</param>
             void IOwnedProxyDataset.OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark)
             {
-                RaiseOnLoadingProgress(progress, mark);
+                RaiseOnProgressOfCurrentAction(progress, mark);
             }
 
             /// <summary>
@@ -440,7 +440,7 @@ namespace Apollo.Core.Projects
             /// </summary>
             public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-            private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
+            private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark)
             {
                 var local = OnProgressOfCurrentAction;
                 if (local != null)

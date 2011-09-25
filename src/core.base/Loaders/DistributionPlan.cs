@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.Core.Base.Loaders
@@ -20,7 +21,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The function that is used to load the dataset on to the machine that proposed the current plan.
         /// </summary>
-        private readonly Func<DistributionPlan, CancellationToken, Task<DatasetOnlineInformation>> m_Loader;
+        private readonly Func<DistributionPlan, CancellationToken, Action<int, IProgressMark>, Task<DatasetOnlineInformation>> m_Loader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DistributionPlan"/> class.
@@ -52,7 +53,7 @@ namespace Apollo.Core.Base.Loaders
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
         public DistributionPlan(
-            Func<DistributionPlan, CancellationToken, Task<DatasetOnlineInformation>> loader,
+            Func<DistributionPlan, CancellationToken, Action<int, IProgressMark>, Task<DatasetOnlineInformation>> loader,
             DatasetOfflineInformation dataset,
             NetworkIdentifier machine,
             DatasetLoadingProposal proposal)
@@ -105,12 +106,13 @@ namespace Apollo.Core.Base.Loaders
         /// been loaded through the execution of the current distribution plan.
         /// </summary>
         /// <param name="token">The cancellation token that is used to cancel the loading action.</param>
+        /// <param name="progressReporter">The action that handles the reporting of progress.</param>
         /// <returns>
         /// The collection of objects describing the activated datasets.
         /// </returns>
-        public Task<DatasetOnlineInformation> Accept(CancellationToken token)
+        public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, IProgressMark> progressReporter)
         {
-            return m_Loader(this, token);
+            return m_Loader(this, token, progressReporter);
         }
     }
 }

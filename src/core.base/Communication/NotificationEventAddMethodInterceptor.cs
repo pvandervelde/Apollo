@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
 using Castle.DynamicProxy;
 using Lokad;
@@ -30,6 +31,16 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// The type of the interface that is being proxied.
+        /// </summary>
+        private readonly Type m_InterfaceType;
+
+        /// <summary>
+        /// The function which sends the <see cref="RegisterForNotificationMessage"/> to the owning endpoint.
+        /// </summary>
+        private readonly Action<ISerializedEventRegistration> m_SendMessageWithoutResponse;
+
+        /// <summary>
         /// The function used to write log messages.
         /// </summary>
         private readonly Action<LogSeverityProxy, string> m_Logger;
@@ -37,16 +48,33 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationEventAddMethodInterceptor"/> class.
         /// </summary>
+        /// <param name="proxyInterfaceType">The type of the interface that is being proxied.</param>
+        /// <param name="sendMessageWithoutResponse">
+        ///     The function used to send the information about the event registration to the owning endpoint.
+        /// </param>
         /// <param name="logger">The function that is used to log messages.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="proxyInterfaceType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="sendMessageWithoutResponse"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
-        public NotificationEventAddMethodInterceptor(Action<LogSeverityProxy, string> logger)
+        public NotificationEventAddMethodInterceptor(
+            Type proxyInterfaceType,
+            Action<ISerializedEventRegistration> sendMessageWithoutResponse,
+            Action<LogSeverityProxy, string> logger)
         {
             {
+                Enforce.Argument(() => proxyInterfaceType);
+                Enforce.Argument(() => sendMessageWithoutResponse);
                 Enforce.Argument(() => logger);
             }
 
+            m_InterfaceType = proxyInterfaceType;
+            m_SendMessageWithoutResponse = sendMessageWithoutResponse;
             m_Logger = logger;
         }
 
@@ -74,6 +102,11 @@ namespace Apollo.Core.Base.Communication
 
             var handler = invocation.Arguments[0] as Delegate;
             var proxy = invocation.Proxy as NotificationSetProxy;
+
+            if (!proxy.HasSubscribers(eventName))
+            { 
+                m_SendMessageWithoutResponse(new SerializedEvent(ProxyExtensions.FromType(m_InterfaceType), eventName));
+            }
 
             proxy.AddToEvent(eventName, handler);
         }

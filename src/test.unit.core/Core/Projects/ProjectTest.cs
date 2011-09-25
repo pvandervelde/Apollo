@@ -30,7 +30,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t, r) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -71,7 +71,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => new Task<DatasetOnlineInformation>(
+                (p, t, r) => new Task<DatasetOnlineInformation>(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -105,7 +105,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -148,7 +148,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -184,7 +184,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -220,7 +220,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -257,7 +257,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -308,7 +308,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -353,7 +353,7 @@ namespace Apollo.Core.Projects
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
