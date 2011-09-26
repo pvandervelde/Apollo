@@ -113,7 +113,7 @@ namespace Apollo.Utilities
 
             m_ProgressTimer.OnElapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
             RaiseOnStartProgress();
-            RaiseOnStartupProgress(StartingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
+            RaiseOnProgress(StartingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
 
             m_ProgressTimer.Start();
         }
@@ -175,7 +175,7 @@ namespace Apollo.Utilities
                                 }
                             }
 
-                            RaiseOnStartupProgress(progress, m_CurrentMark, estimatedTime);
+                            RaiseOnProgress(progress, m_CurrentMark, estimatedTime);
                         }
                         catch (Exception)
                         {
@@ -251,7 +251,7 @@ namespace Apollo.Utilities
         ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
         ///     if no time is known.
         /// </param>
-        private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing, TimeSpan estimatedTime)
+        private void RaiseOnProgress(int progress, IProgressMark currentlyProcessing, TimeSpan estimatedTime)
         {
             var local = OnProgress;
             if (local != null)
@@ -281,7 +281,7 @@ namespace Apollo.Utilities
         public void StopTracking()
         {
             StopProgressTimer();
-            RaiseOnStartupProgress(FinishingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
+            RaiseOnProgress(FinishingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
             RaiseOnStopProgress();
         }
 

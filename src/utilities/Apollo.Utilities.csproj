@@ -53,6 +53,7 @@
     <Compile Include="IStoreMarkerTimes.cs" />
     <Compile Include="IProgressTimer.cs" />
     <Compile Include="ITrackProgress.cs" />
+    <Compile Include="ITrackSteppingProgress.cs" />
     <Compile Include="LockObject.cs" />
     <Compile Include="LogSeverityProxy.cs" />
     <Compile Include="NullPersistenceInformation.cs" />

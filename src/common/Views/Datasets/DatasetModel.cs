@@ -8,6 +8,7 @@ using System;
 using Apollo.Core.Base;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
+using Apollo.Utilities;
 using Lokad;
 using ICommand = System.Windows.Input.ICommand;
 
@@ -24,6 +25,11 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly DatasetFacade m_Dataset;
 
         /// <summary>
+        /// The object that handles progress notifications to the application itself.
+        /// </summary>
+        private readonly ITrackSteppingProgress m_ProgressTracker;
+
+        /// <summary>
         /// Describes the currently running action.
         /// </summary>
         private string m_ProgressDescription;
@@ -37,6 +43,7 @@ namespace Apollo.UI.Common.Views.Datasets
         /// Initializes a new instance of the <see cref="DatasetModel"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <param name="progressTracker">The object that handles the progress notifications for the applications.</param>
         /// <param name="dataset">The dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
@@ -44,37 +51,55 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        public DatasetModel(IContextAware context, DatasetFacade dataset)
+        public DatasetModel(IContextAware context, ITrackSteppingProgress progressTracker, DatasetFacade dataset)
             : base(context)
         {
             {
+                Enforce.Argument(() => progressTracker);
                 Enforce.Argument(() => dataset);
             }
 
+            m_ProgressTracker = progressTracker;
             m_Dataset = dataset;
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
-            m_Dataset.OnProgressOfCurrentAction += (s, e) => 
-                {
-                    ProgressDescription = e.CurrentlyProcessing.ToString();
-                    Progress = e.Progress / 100.0;
-                };
-            m_Dataset.OnLoaded += (s, e) =>
-                {
-                    Notify(() => this.IsLoaded);
-                    Notify(() => this.RunsOn);
-                    
-                    Progress = 0.0;
-                    ProgressDescription = string.Empty;
-
-                    RaiseOnLoaded();
-                };
+            m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
+            m_Dataset.OnLoaded += HandleDatasetOnLoad;
             m_Dataset.OnUnloaded += (s, e) =>
                 { 
                     Notify(() => this.IsLoaded);
                     Notify(() => this.RunsOn);
                     RaiseOnUnloaded();
                 };
+        }
+
+        private void HandleDatasetProgress(object sender, ProgressEventArgs e)
+        {
+            ProgressDescription = e.CurrentlyProcessing.ToString();
+            Progress = e.Progress / 100.0;
+            if (e.Progress <= 0)
+            {
+                m_ProgressTracker.StartTracking();
+            }
+
+            m_ProgressTracker.Step(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+
+            if (e.Progress >= 100)
+            {
+                m_ProgressTracker.StopTracking();
+            }
+        }
+
+        private void HandleDatasetOnLoad(object sender, EventArgs e)
+        {
+            Notify(() => this.IsLoaded);
+            Notify(() => this.RunsOn);
+
+            Progress = 0.0;
+            ProgressDescription = string.Empty;
+            m_ProgressTracker.StopTracking();
+
+            RaiseOnLoaded();
         }
 
         /// <summary>

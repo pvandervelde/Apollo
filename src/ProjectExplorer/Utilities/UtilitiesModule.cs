@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using Apollo.ProjectExplorer.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
@@ -150,17 +151,18 @@ namespace Apollo.Utilities
                     .As<IConfiguration>();
 
                 builder.Register(c => new ProgressReportingHub())
-                    .OnActivated(a =>
-                        {
-                            var hub = (ProgressReportingHub)a.Instance;
-                            var reporters = a.Context.Resolve<IEnumerable<ITrackProgress>>();
-                            foreach (var reporter in reporters)
-                            {
-                                hub.AddReporter(reporter);
-                            }
-                        })
                     .As<ICollectProgressReports>()
                     .SingleInstance();
+
+                builder.Register(c => new StepBasedProgressTracker())
+                    .OnActivated(
+                        a =>
+                        {
+                            var hub = a.Context.Resolve<ICollectProgressReports>();
+                            hub.AddReporter(a.Instance);
+                        })
+                    .As<ITrackSteppingProgress>()
+                    .As<ITrackProgress>();
 
                 RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
