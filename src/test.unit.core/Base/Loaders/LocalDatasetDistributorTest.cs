@@ -218,7 +218,7 @@ namespace Apollo.Base.Loaders
                 channelInfo,
                 new CurrentThreadTaskScheduler());
 
-            Action<int, IProgressMark> progress = (p, m) => { };
+            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
-using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -24,7 +23,7 @@ namespace Apollo.Core.Base.Loaders
     internal sealed class RemoteDatasetDistributor : IGenerateDistributionProposals, ILoadDatasets
     {
         private static IEnumerable<DatasetLoadingProposal> RetrieveProposals(
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration,
             DatasetRequest request,
             CancellationToken token)
@@ -34,11 +33,11 @@ namespace Apollo.Core.Base.Loaders
             return orderedProposals;
         }
 
-        private static IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+        private static IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration)
         {
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
 
             var key = LoaderConfigurationKeys.OffLimitsEndpoints;
             if (configuration.HasValueFor(key))
@@ -60,7 +59,7 @@ namespace Apollo.Core.Base.Loaders
         private static IEnumerable<DatasetLoadingProposal> OrderProposals(
             ExpectedDatasetLoad load,
             LoadingLocations preferedLocations,
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
             CancellationToken token)
         {
             var loadingProposals = new Queue<Task<DatasetLoadingProposal>>();
@@ -226,11 +225,11 @@ namespace Apollo.Core.Base.Loaders
             TaskScheduler scheduler = null)
         {
             {
-                Enforce.Argument(() => commandHub);
-                Enforce.Argument(() => notificationHub);
-                Enforce.Argument(() => configuration);
-                Enforce.Argument(() => datasetInformationBuilder);
-                Enforce.Argument(() => channelInformation);
+                Lokad.Enforce.Argument(() => commandHub);
+                Lokad.Enforce.Argument(() => notificationHub);
+                Lokad.Enforce.Argument(() => configuration);
+                Lokad.Enforce.Argument(() => datasetInformationBuilder);
+                Lokad.Enforce.Argument(() => channelInformation);
             }
 
             m_Configuration = configuration;
@@ -311,12 +310,12 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
         {
-            var availableEndpoints = new List<System.Tuple<EndpointId, IDatasetLoaderCommands>>();
+            var availableEndpoints = new List<Tuple<EndpointId, IDatasetLoaderCommands>>();
             lock (m_Lock)
             {
                 foreach (var pair in m_LoaderCommands)
                 {
-                    availableEndpoints.Add(new System.Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
+                    availableEndpoints.Add(new Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
                 }
             }
 
@@ -341,7 +340,7 @@ namespace Apollo.Core.Base.Loaders
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, IProgressMark> progressReporter)
+            Action<int, IProgressMark, TimeSpan> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -382,7 +381,8 @@ namespace Apollo.Core.Base.Loaders
                         }
                     }
 
-                    EventHandler<ProgressEventArgs> progressHandler = (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing);
+                    EventHandler<ProgressEventArgs> progressHandler = 
+                        (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
                     var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
                     notifications.OnProgress += progressHandler;
                     try

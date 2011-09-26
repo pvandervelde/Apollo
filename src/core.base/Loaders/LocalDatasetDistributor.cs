@@ -157,7 +157,7 @@ namespace Apollo.Core.Base.Loaders
         public Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement, 
             CancellationToken token,
-            Action<int, IProgressMark> progressReporter)
+            Action<int, IProgressMark, TimeSpan> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -195,7 +195,8 @@ namespace Apollo.Core.Base.Loaders
                         }
                     }
 
-                    EventHandler<ProgressEventArgs> progressHandler = (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing);
+                    EventHandler<ProgressEventArgs> progressHandler = 
+                        (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
                     var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
                     notifications.OnProgress += progressHandler;
                     try

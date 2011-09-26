@@ -22,10 +22,10 @@ namespace Apollo.Utilities
         private readonly ILockObject m_Lock = new LockObject();
 
         /// <summary>
-        /// The collection that holds the progress reporters and their associated progress.
+        /// The collection that holds the progress reporters and their associated progress and estimated time values.
         /// </summary>
-        private readonly Dictionary<ITrackProgress, int> m_ReporterToProgressMap
-            = new Dictionary<ITrackProgress, int>();
+        private readonly Dictionary<ITrackProgress, Tuple<int, TimeSpan>> m_ReporterToProgressMap
+            = new Dictionary<ITrackProgress, Tuple<int, TimeSpan>>();
 
         /// <summary>
         /// Adds a progress reporter to the collection of reporters that
@@ -44,7 +44,7 @@ namespace Apollo.Utilities
                 reporterToAdd.OnStartProgress += ProcessStartProgress;
                 reporterToAdd.OnProgress += ProcessNewProgress;
                 reporterToAdd.OnStopProgress += ProcessStopProgress;
-                m_ReporterToProgressMap.Add(reporterToAdd, -1);
+                m_ReporterToProgressMap.Add(reporterToAdd, new Tuple<int, TimeSpan>(-1, TimeSpan.FromTicks(-1)));
             }
         }
 
@@ -65,10 +65,10 @@ namespace Apollo.Utilities
                 }
 
                 notify = !(from pair in m_ReporterToProgressMap
-                           where pair.Value > -1
+                           where pair.Value.Item1 > -1
                            select pair.Value).Any();
 
-                m_ReporterToProgressMap[reporter] = 0;
+                m_ReporterToProgressMap[reporter] = new Tuple<int, TimeSpan>(0, TimeSpan.FromTicks(1));
             }
 
             if (notify)
@@ -85,6 +85,7 @@ namespace Apollo.Utilities
                 return;
             }
 
+            double time = 0;
             double average = 0;
             lock (m_Lock)
             {
@@ -93,16 +94,20 @@ namespace Apollo.Utilities
                     return;
                 }
 
-                m_ReporterToProgressMap[reporter] = e.Progress;
+                m_ReporterToProgressMap[reporter] = new Tuple<int, TimeSpan>(e.Progress, e.EstimatedFinishingTime);
+                time = (from pair in m_ReporterToProgressMap
+                            where pair.Value.Item1 > -1
+                            select (1.0 - (pair.Value.Item1 / 100.0)) * pair.Value.Item2.Ticks).Max();
+
                 average = (from pair in m_ReporterToProgressMap
-                           where pair.Value > -1
-                           select pair.Value).Average();
+                           where pair.Value.Item1 > -1
+                           select pair.Value.Item1).Average();
             }
 
             int progress = (int)Math.Round(average);
             progress = (progress <= 100) ? progress : 100;
 
-            RaiseOnProgress(progress, new IndeterminateProgressMark());
+            RaiseOnProgress(progress, new IndeterminateProgressMark(), TimeSpan.FromTicks((long)time));
         }
 
         private void ProcessStopProgress(object s, EventArgs e)
@@ -121,12 +126,12 @@ namespace Apollo.Utilities
                     return;
                 }
 
-                m_ReporterToProgressMap[reporter] = -1;
+                m_ReporterToProgressMap[reporter] = new Tuple<int, TimeSpan>(-1, TimeSpan.FromTicks(-1));
 
                 // If there aren't any items with a progress value over -1
                 // then we just reset the last one.
                 notify = !(from pair in m_ReporterToProgressMap
-                           where pair.Value > -1
+                           where pair.Value.Item1 > -1
                            select pair.Value).Any();
             }
 
@@ -177,12 +182,12 @@ namespace Apollo.Utilities
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnProgress;
 
-        private void RaiseOnProgress(int progress, IProgressMark currentMark)
+        private void RaiseOnProgress(int progress, IProgressMark currentMark, TimeSpan estimatedTime)
         {
             var local = OnProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, currentMark));
+                local(this, new ProgressEventArgs(progress, currentMark, estimatedTime));
             }
         }
 

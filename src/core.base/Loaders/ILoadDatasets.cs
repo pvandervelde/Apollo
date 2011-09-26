@@ -28,6 +28,6 @@ namespace Apollo.Core.Base.Loaders
         Task<DatasetOnlineInformation> ImplementPlan(
             DistributionPlan planToImplement,
             CancellationToken token,
-            Action<int, IProgressMark> progressReporter);
+            Action<int, IProgressMark, TimeSpan> progressReporter);
     }
 }

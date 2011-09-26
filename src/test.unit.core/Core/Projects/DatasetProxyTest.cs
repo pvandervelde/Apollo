@@ -381,7 +381,7 @@ namespace Apollo.Core.Projects
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => 
                     {
-                        r(100, new DatasetLoadingProgressMark());
+                        r(100, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(-1));
                         return new DatasetOnlineInformation(
                             new DatasetId(),
                             new EndpointId("id"),

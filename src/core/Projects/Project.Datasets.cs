@@ -377,17 +377,17 @@ namespace Apollo.Core.Projects
                     return;
                 }
 
-                Action<int, IProgressMark> progressReporter =
-                    (p, m) =>
+                Action<int, IProgressMark, TimeSpan> progressReporter =
+                    (p, m, t) =>
                     {
                         if (m_DatasetProxies.ContainsKey(id))
                         {
                             var proxy = m_DatasetProxies[id];
-                            proxy.OwnerReportsDatasetCurrentActionProgress(p, m);
+                            proxy.OwnerReportsDatasetCurrentActionProgress(p, m, t);
                         }
                     };
 
-                progressReporter(0, new DatasetLoadingProgressMark());
+                progressReporter(0, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(1));
                 
                 var task = selectedPlan.Plan.Accept(token, progressReporter);
                 task.ContinueWith(

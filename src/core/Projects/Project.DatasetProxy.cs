@@ -430,9 +430,13 @@ namespace Apollo.Core.Projects
             /// </summary>
             /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
             /// <param name="mark">The action that is currently being processed.</param>
-            void IOwnedProxyDataset.OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark)
+            /// <param name="estimatedTime">
+            ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
+            ///     if no time is known.
+            /// </param>
+            void IOwnedProxyDataset.OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark, TimeSpan estimatedTime)
             {
-                RaiseOnProgressOfCurrentAction(progress, mark);
+                RaiseOnProgressOfCurrentAction(progress, mark, estimatedTime);
             }
 
             /// <summary>
@@ -440,12 +444,12 @@ namespace Apollo.Core.Projects
             /// </summary>
             public event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
 
-            private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark)
+            private void RaiseOnProgressOfCurrentAction(int progress, IProgressMark mark, TimeSpan estimatedTime)
             {
                 var local = OnProgressOfCurrentAction;
                 if (local != null)
                 {
-                    local(this, new ProgressEventArgs(progress, mark));
+                    local(this, new ProgressEventArgs(progress, mark, estimatedTime));
                 }
             }
 

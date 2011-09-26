@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Projects
@@ -19,11 +20,16 @@ namespace Apollo.Core.Projects
         void OwnerHasDeletedDataset();
 
         /// <summary>
-        /// A method called by the owner when the owner has dataset loading progress to report.
+        /// A method called by the owner when the owner has progress to report for the
+        /// current action that the dataset is executing.
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="mark">The action that is currently being processed.</param>
-        void OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark);
+        /// <param name="estimatedTime">
+        ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
+        ///     if no time is known.
+        /// </param>
+        void OwnerReportsDatasetCurrentActionProgress(int progress, IProgressMark mark, TimeSpan estimatedTime);
 
         /// <summary>
         /// Called when the owner has successfully loaded the dataset onto one or more machines.

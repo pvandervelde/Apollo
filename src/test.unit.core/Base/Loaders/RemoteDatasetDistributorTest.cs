@@ -278,7 +278,7 @@ namespace Apollo.Base.Loaders
                     loaderEndpoint,
                     new Type[] { typeof(IDatasetLoaderCommands) }));
 
-            Action<int, IProgressMark> progress = (p, m) => { };
+            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
             var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 

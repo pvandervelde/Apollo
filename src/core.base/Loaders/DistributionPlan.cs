@@ -21,7 +21,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The function that is used to load the dataset on to the machine that proposed the current plan.
         /// </summary>
-        private readonly Func<DistributionPlan, CancellationToken, Action<int, IProgressMark>, Task<DatasetOnlineInformation>> m_Loader;
+        private readonly Func<DistributionPlan, CancellationToken, Action<int, IProgressMark, TimeSpan>, Task<DatasetOnlineInformation>> m_Loader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DistributionPlan"/> class.
@@ -53,7 +53,7 @@ namespace Apollo.Core.Base.Loaders
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
         public DistributionPlan(
-            Func<DistributionPlan, CancellationToken, Action<int, IProgressMark>, Task<DatasetOnlineInformation>> loader,
+            Func<DistributionPlan, CancellationToken, Action<int, IProgressMark, TimeSpan>, Task<DatasetOnlineInformation>> loader,
             DatasetOfflineInformation dataset,
             NetworkIdentifier machine,
             DatasetLoadingProposal proposal)
@@ -110,7 +110,7 @@ namespace Apollo.Core.Base.Loaders
         /// <returns>
         /// The collection of objects describing the activated datasets.
         /// </returns>
-        public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, IProgressMark> progressReporter)
+        public Task<DatasetOnlineInformation> Accept(CancellationToken token, Action<int, IProgressMark, TimeSpan> progressReporter)
         {
             return m_Loader(this, token, progressReporter);
         }

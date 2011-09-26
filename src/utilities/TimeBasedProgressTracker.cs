@@ -113,7 +113,7 @@ namespace Apollo.Utilities
 
             m_ProgressTimer.OnElapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
             RaiseOnStartProgress();
-            RaiseOnStartupProgress(StartingProgress, m_CurrentMark);
+            RaiseOnStartupProgress(StartingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
 
             m_ProgressTimer.Start();
         }
@@ -175,7 +175,7 @@ namespace Apollo.Utilities
                                 }
                             }
 
-                            RaiseOnStartupProgress(progress, m_CurrentMark);
+                            RaiseOnStartupProgress(progress, m_CurrentMark, estimatedTime);
                         }
                         catch (Exception)
                         {
@@ -247,12 +247,16 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing)
+        /// <param name="estimatedTime">
+        ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
+        ///     if no time is known.
+        /// </param>
+        private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing, TimeSpan estimatedTime)
         {
             var local = OnProgress;
             if (local != null)
             { 
-                local(this, new ProgressEventArgs(progress, currentlyProcessing));
+                local(this, new ProgressEventArgs(progress, currentlyProcessing, estimatedTime));
             }
         }
 
@@ -277,7 +281,7 @@ namespace Apollo.Utilities
         public void StopTracking()
         {
             StopProgressTimer();
-            RaiseOnStartupProgress(FinishingProgress, m_CurrentMark);
+            RaiseOnStartupProgress(FinishingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
             RaiseOnStopProgress();
         }
 
