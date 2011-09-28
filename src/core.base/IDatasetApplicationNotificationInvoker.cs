@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Base
@@ -19,6 +20,8 @@ namespace Apollo.Core.Base
         /// </summary>
         /// <param name="progress">The progress percentage, ranging from 0 to 100.</param>
         /// <param name="currentlyProcessing">The action that is currently being processed.</param>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
         void RaiseOnProgress(int progress, IProgressMark currentlyProcessing);
     }
 }

@@ -31,7 +31,7 @@ namespace Apollo.Utilities
         /// </returns>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "The generics are necessar to get the name of the method via a lambda expression.")]
-        public static string MethodName(Expression<Action> expression)
+        public static string MethodName(LambdaExpression expression)
         {
             var method = expression.Body as MemberExpression;
             if (method != null)

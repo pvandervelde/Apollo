@@ -82,7 +82,7 @@ namespace Apollo.UI.Common.Views.Datasets
                 m_ProgressTracker.StartTracking();
             }
 
-            m_ProgressTracker.Step(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+            m_ProgressTracker.UpdateProgress(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
 
             if (e.Progress >= 100)
             {

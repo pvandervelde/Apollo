@@ -129,7 +129,7 @@ namespace Apollo.Core.Base.Communication
                     EventHandler handler =
                         (s, e) =>
                         {
-                            HandleEventAndForwardToListeners(s, serializedInfo, e);
+                            HandleEventAndForwardToListeners(serializedInfo, e);
                         };
                     eventInfo.AddEventHandler(notifications, handler);
                 }
@@ -143,7 +143,7 @@ namespace Apollo.Core.Base.Communication
                     EventHandler<EventArgs> handler =
                         (s, e) =>
                         {
-                            HandleEventAndForwardToListeners(s, serializedInfo, e);
+                            HandleEventAndForwardToListeners(serializedInfo, e);
                         };
 
                     // The following works if all the interface / class definitions
@@ -164,7 +164,7 @@ namespace Apollo.Core.Base.Communication
             }
         }
 
-        private void HandleEventAndForwardToListeners(object sender, ISerializedEventRegistration originatingEvent, EventArgs args)
+        private void HandleEventAndForwardToListeners(ISerializedEventRegistration originatingEvent, EventArgs args)
         {
             List<EndpointId> endpoints = null;
             lock (m_Lock)

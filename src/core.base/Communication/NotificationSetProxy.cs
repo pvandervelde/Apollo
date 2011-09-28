@@ -136,14 +136,7 @@ namespace Apollo.Core.Base.Communication
 
             foreach (var del in delegates)
             {
-                try
-                {
-                    del.DynamicInvoke(new object[] { obj, args });
-                }
-                catch (Exception)
-                {
-                    // Ignore it and move on.
-                }
+                del.DynamicInvoke(new object[] { obj, args });
             }
         }
 

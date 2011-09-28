@@ -99,12 +99,8 @@ namespace Apollo.Core.Dataset
                 throw new InvalidCommandLineArgumentsException();
             }
 
-            // To stop the application from running use the ApplicationContext
-            // and call context.ExitThread();
-            var container = DependencyInjection.Load(context);
-            var logger = container.Resolve<Action<LogSeverityProxy, string>>();
-
             // Load the communication system and get it going
+            var container = DependencyInjection.Load(context);
             if (container.IsRegistered<IStartable>())
             {
                 container.Resolve<IStartable>().Start();

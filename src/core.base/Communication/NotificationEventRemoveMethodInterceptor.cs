@@ -85,7 +85,7 @@ namespace Apollo.Core.Base.Communication
         public void Intercept(IInvocation invocation)
         {
             {
-                Debug.Assert(invocation.Method.Name.StartsWith(MethodPrefix), "Intercepted an incorrect method.");
+                Debug.Assert(invocation.Method.Name.StartsWith(MethodPrefix, StringComparison.Ordinal), "Intercepted an incorrect method.");
                 Debug.Assert(invocation.Arguments.Length == 1, "There should only be one argument.");
                 Debug.Assert(invocation.Arguments[0] is Delegate, "The argument should be a delegate.");
             }

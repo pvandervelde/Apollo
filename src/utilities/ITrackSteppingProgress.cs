@@ -21,7 +21,7 @@ namespace Apollo.Utilities
         ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
         ///     if no time is known.
         /// </param>
-        void Step(int progress, TimeSpan estimatedTime);
+        void UpdateProgress(int progress, TimeSpan estimatedTime);
 
         /// <summary>
         /// Provides the progress for the current step.
@@ -32,6 +32,6 @@ namespace Apollo.Utilities
         ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
         ///     if no time is known.
         /// </param>
-        void Step(int progress, IProgressMark mark, TimeSpan estimatedTime);
+        void UpdateProgress(int progress, IProgressMark mark, TimeSpan estimatedTime);
     }
 }

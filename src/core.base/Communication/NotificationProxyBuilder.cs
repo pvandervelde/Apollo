@@ -92,8 +92,8 @@ namespace Apollo.Core.Base.Communication
 
             // Event methods get to stay, anything else is evil ...
             var invalidMethods = from methodInfo in notificationSet.GetMethods()
-                                 where (!methodInfo.Name.StartsWith("add_") 
-                                        && !methodInfo.Name.StartsWith("remove_"))
+                                 where (!methodInfo.Name.StartsWith("add_", StringComparison.Ordinal) 
+                                        && !methodInfo.Name.StartsWith("remove_", StringComparison.Ordinal))
                                  select methodInfo;
             if (invalidMethods.Any())
             {

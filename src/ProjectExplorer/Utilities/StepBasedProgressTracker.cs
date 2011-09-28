@@ -32,7 +32,7 @@ namespace Apollo.ProjectExplorer.Utilities
         ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
         ///     if no time is known.
         /// </param>
-        public void Step(int progress, TimeSpan estimatedTime)
+        public void UpdateProgress(int progress, TimeSpan estimatedTime)
         {
             if (m_IsTracking)
             {
@@ -49,10 +49,10 @@ namespace Apollo.ProjectExplorer.Utilities
         ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
         ///     if no time is known.
         /// </param>
-        public void Step(int progress, IProgressMark mark, TimeSpan estimatedTime)
+        public void UpdateProgress(int progress, IProgressMark mark, TimeSpan estimatedTime)
         {
             Mark(mark);
-            Step(progress, estimatedTime);
+            UpdateProgress(progress, estimatedTime);
         }
 
         /// <summary>

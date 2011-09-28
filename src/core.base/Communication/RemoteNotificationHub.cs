@@ -32,16 +32,6 @@ namespace Apollo.Core.Base.Communication
             = new Dictionary<EndpointId, IDictionary<Type, NotificationSetProxy>>();
 
         /// <summary>
-        /// The object that creates notification proxy objects.
-        /// </summary>
-        private readonly NotificationProxyBuilder m_Builder;
-
-        /// <summary>
-        /// The function used to write messages to the log.
-        /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="RemoteNotificationHub"/> class.
         /// </summary>
         /// <param name="layer">The communication layer that will handle the actual connections.</param>
@@ -73,11 +63,7 @@ namespace Apollo.Core.Base.Communication
         {
             {
                 Enforce.Argument(() => builder);
-                Enforce.Argument(() => logger);
             }
-
-            m_Builder = builder;
-            m_Logger = logger;
         }
 
         /// <summary>
