@@ -34,19 +34,15 @@
         <ShowFeedbackControl>True</ShowFeedbackControl>
         <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
         <DocumentationSources>
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.xml" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Host.dll" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Host.xml" />
+			<DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Base.dll" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Base.xml" />
+			<DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Dataset.exe" />
+            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Dataset.xml" />
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.ProjectExplorer.exe" />
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.ProjectExplorer.xml" />
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.dll" />
-            <!--
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.Windows7.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.Windows7.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.WindowsVista.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.WindowsVista.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.WindowsXP.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.WindowsXP.xml" />
-            -->
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.xml" />
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.dll" />
             <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.xml" />
