@@ -21,7 +21,7 @@ namespace Apollo.Base.Communication.Messages
         public void Create()
         {
             var id = new EndpointId("endpoint");
-            var methodInvocation = CommandSetProxyExtensions.FromMethodInfo(MethodInfo.GetCurrentMethod(), new object[0]);
+            var methodInvocation = ProxyExtensions.FromMethodInfo(MethodInfo.GetCurrentMethod(), new object[0]);
             var msg = new CommandInvokedMessage(id, methodInvocation);
 
             Assert.AreSame(id, msg.OriginatingEndpoint);
@@ -32,7 +32,7 @@ namespace Apollo.Base.Communication.Messages
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");
-            var methodInvocation = CommandSetProxyExtensions.FromMethodInfo(MethodInfo.GetCurrentMethod(), new object[0]);
+            var methodInvocation = ProxyExtensions.FromMethodInfo(MethodInfo.GetCurrentMethod(), new object[0]);
             var msg = new CommandInvokedMessage(id, methodInvocation);
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 

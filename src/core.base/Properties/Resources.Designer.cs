@@ -133,6 +133,15 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A notification set must inherit from INotificationSet..
+        /// </summary>
+        internal static string Exceptions_Messages_ANotificationSetTypeMustDeriveFromINotificationSet {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ANotificationSetTypeMustDeriveFromINotificationSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The value for a base line ID must not be smaller than that of the ID for an unknown value..
         /// </summary>
         internal static string Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue {
@@ -358,6 +367,33 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The requested notification is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_NotificationNotSupported {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NotificationNotSupported", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The notification of type {0} is not supported by the endpoint..
+        /// </summary>
+        internal static string Exceptions_Messages_NotificationNotSupported_WithNotification {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NotificationNotSupported_WithNotification", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The provided notification object must implement the provided notification interface..
+        /// </summary>
+        internal static string Exceptions_Messages_NotificationObjectMustImplementNotificationInterface {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NotificationObjectMustImplementNotificationInterface", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The number of logical processors in a CPU must be equal or larger than the number of physical cores..
         /// </summary>
         internal static string Exceptions_Messages_NumberOfLogicalProcessorsMustBeLargerOrEqualToNumberOfPhysicalCores {
@@ -404,7 +440,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains additional events on top of those defined by ICommandSet..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the following events: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents {
             get {
@@ -413,7 +449,7 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains properties..
+        ///   Looks up a localized string similar to The type {0} is not a valid command set because it contains the following properties: {1}..
         /// </summary>
         internal static string Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties {
             get {
@@ -486,20 +522,95 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An ICommandSet type could not be loaded..
+        ///   Looks up a localized string similar to The given type is not a valid notification set interface..
         /// </summary>
-        internal static string Exceptions_Messages_UnableToLoadCommandSetType {
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadCommandSetType", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An ICommandSet of type {0} could not be loaded..
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains the following methods: {1}..
         /// </summary>
-        internal static string Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName {
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMethods {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadCommandSetType_WithTypeName", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveMetho" +
+                        "ds", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains the following properties: {1}..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHaveProperties {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetCannotHavePrope" +
+                        "rties", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains the event {1} which either does not use the EventHandler or EventHander&lt;T&gt; delegate, or the EventArgs generic parameter is not serializable..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEventHandler {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetEventsMustUseEv" +
+                        "entHandler", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it does not have any events..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetMustHaveEvents {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_NotificationSetMustHaveEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} does not derive from INotificationSet.
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnINotificationSet {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnINotificationSet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it is not an interface..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnInterface {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeIsNotAnInterface", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The type {0} is not a valid notification set because it contains open generic parameters..
+        /// </summary>
+        internal static string Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An ICommandSet type could not be loaded..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToLoadProxyType {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadProxyType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An proxy of type {0} could not be loaded..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToLoadProxyType_WithTypeName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToLoadProxyType_WithTypeName", resourceCulture);
             }
         }
         

@@ -346,8 +346,6 @@ How are we going to deal with that?</Text>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="2" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -374,6 +372,8 @@ How are we going to deal with that?</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="9" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -388,6 +388,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -402,6 +404,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -416,6 +420,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -454,6 +460,8 @@ How are we going to deal with that?</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="9" second="10">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -464,6 +472,8 @@ How are we going to deal with that?</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="16">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -486,12 +496,16 @@ How are we going to deal with that?</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="17">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -506,6 +520,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -520,6 +536,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="22">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -542,8 +560,6 @@ How are we going to deal with that?</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="17" second="24">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -566,8 +582,6 @@ How are we going to deal with that?</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="14" second="26">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -582,6 +596,8 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="27">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -633,6 +649,8 @@ How are we going to deal with that?</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="31">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -647,20 +665,22 @@ How are we going to deal with that?</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="28">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="33" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -686,8 +706,6 @@ How are we going to deal with that?</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="33">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -965,8 +983,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -997,6 +1013,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1051,8 +1069,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="19" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1063,8 +1079,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="8">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1075,8 +1089,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1087,8 +1099,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="18">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1099,14 +1109,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="19">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="10" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1119,14 +1129,14 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="6" second="22">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1135,16 +1145,12 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndMultiplicity>1..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="22" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="13" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1159,6 +1165,8 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="20" second="24">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1199,8 +1207,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="28">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1211,8 +1217,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="28">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -1223,8 +1227,6 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="28">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1263,7 +1265,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>ICommunicationLayer</Name>
         <Access>Internal</Access>
-        <Location left="1774" top="457" />
+        <Location left="2364" top="467" />
         <Size width="713" height="265" />
         <Collapsed>False</Collapsed>
         <Member type="Property">EndpointId Id { get; }</Member>
@@ -1282,7 +1284,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>ICommunicationChannel</Name>
         <Access>Internal</Access>
-        <Location left="2709" top="1475" />
+        <Location left="3664" top="1485" />
         <Size width="669" height="231" />
         <Collapsed>False</Collapsed>
         <Member type="Property">EndpointId Id { get; }</Member>
@@ -1299,7 +1301,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Class">
         <Name>NamedPipeChannel</Name>
         <Access>Internal</Access>
-        <Location left="2482" top="2679" />
+        <Location left="3437" top="2689" />
         <Size width="679" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public Uri GenerateNewChannelUri()</Member>
@@ -1312,7 +1314,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Class">
         <Name>TcpChannel</Name>
         <Access>Internal</Access>
-        <Location left="3246" top="2679" />
+        <Location left="4201" top="2689" />
         <Size width="679" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public Uri GenerateNewChannelUri()</Member>
@@ -1325,7 +1327,7 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       <Entity type="Interface">
         <Name>ICommunicationMessage</Name>
         <Access>Internal</Access>
-        <Location left="727" top="1921" />
+        <Location left="842" top="2471" />
         <Size width="244" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Property">MessageId Id { get; }</Member>
@@ -1334,13 +1336,13 @@ For data components this should lead to a hierarchy of components. e.g. geometry
       </Entity>
       <Entity type="Comment">
         <Text>Need a good abstraction for datastreaming. For named pipes we can share a memory block, but for P2P and TCP we need some streaming download. Probably chunked, restartable and compressed.</Text>
-        <Location left="4052" top="2405" />
+        <Location left="5007" top="2415" />
         <Size width="215" height="142" />
       </Entity>
       <Entity type="Class">
         <Name>MessageId</Name>
         <Access>Internal</Access>
-        <Location left="749" top="1754" />
+        <Location left="864" top="2304" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1349,29 +1351,30 @@ For data components this should lead to a hierarchy of components. e.g. geometry
         <Text>Should be allowed to start a channel with given connection parameters. This is necessary for:
 - Initial start of the dataset application
 - Reconnecting to a lost dataset application / service.</Text>
-        <Location left="1957" top="828" />
+        <Location left="3257" top="788" />
         <Size width="265" height="123" />
       </Entity>
       <Entity type="Class">
         <Name>RemoteCommandHub</Name>
         <Access>Public</Access>
         <Location left="477" top="467" />
-        <Size width="392" height="196" />
+        <Size width="444" height="213" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public IEnumerable&lt;CommandInformationPerEndpoint&gt; AvailableCommands()</Member>
+        <Member type="Method">public IEnumerable&lt;Type&gt; AvailableCommandsFor(EndpointId endpoint)</Member>
         <Member type="Event">public event EventHandler&lt;CommandSetAvailabilityEventArgs&gt; OnEndpointSignedIn</Member>
         <Member type="Event">public event EventHandler&lt;EndpointEventArgs&gt; OnEndpointSignedOff</Member>
         <Member type="Method">public bool HasCommandsFor(EndpointId endpoint)</Member>
         <Member type="Method">public bool HasCommandFor(EndpointId endpoint, Type commandInterfaceType)</Member>
-        <Member type="Method">public TCommands CommandsFor&lt;TCommands&gt;(EndpointId endpoint)</Member>
-        <Member type="Method">public void CloseConnectionTo(EndpointId endpoint)</Member>
-        <Member type="Method">public void CloseConnections()</Member>
+        <Member type="Method">public TCommand CommandsFor&lt;TCommand&gt;(EndpointId endpoint)</Member>
+        <Member type="Method">public ICommandSet CommandsFor(EndpointId endpoint, Type commandType)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Can have a method that returns a facade object. This facade object can then contain all the required methods for sending messages. e.g. there could be a DatasetFacade object which contains all the methods necessary for communicating with the dataset.
 
 This should help fix the problem of messages and needing to have one method per message etc..</Text>
-        <Location left="706" top="190" />
+        <Location left="967" top="663" />
         <Size width="293" height="172" />
       </Entity>
       <Entity type="Class">
@@ -1385,7 +1388,7 @@ This should help fix the problem of messages and needing to have one method per 
       <Entity type="Class">
         <Name>CommunicationLayer</Name>
         <Access>Internal</Access>
-        <Location left="2739" top="523" />
+        <Location left="3694" top="533" />
         <Size width="422" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Field">IDictionary&lt;EndpointId, ICommunicationChannel&gt; m_OpenConnections</Member>
@@ -1402,12 +1405,12 @@ This should help fix the problem of messages and needing to have one method per 
       </Entity>
       <Entity type="Comment">
         <Text>We can use the protocol buffers to smash the message into a transferable format</Text>
-        <Location left="3675" top="1915" />
+        <Location left="4630" top="1925" />
         <Size width="170" height="96" />
       </Entity>
       <Entity type="Comment">
         <Text>It may well make sense to compress the messages by using a GZIP compression</Text>
-        <Location left="3805" top="2920" />
+        <Location left="4760" top="2930" />
         <Size width="160" height="93" />
       </Entity>
       <Entity type="Comment">
@@ -1420,7 +1423,7 @@ See:
 - http://msdn.microsoft.com/en-us/library/aa717050.aspx
 - http://stackoverflow.com/questions/2819081/memorystream-and-large-object-heap
 -http://stackoverflow.com/questions/451376/file-download-through-wcf-slower-than-through-iis</Text>
-        <Location left="4377" top="2350" />
+        <Location left="5332" top="2360" />
         <Size width="514" height="240" />
       </Entity>
       <Entity type="Comment">
@@ -1431,7 +1434,7 @@ The network is reliable:
 - Downloads get interupted
 ==&gt; Handle this, but we don't care about message arrival if the other side disappears. Then we just restart the process.
 </Text>
-        <Location left="2140" top="1563" />
+        <Location left="3095" top="1573" />
         <Size width="339" height="133" />
       </Entity>
       <Entity type="Comment">
@@ -1441,7 +1444,7 @@ Latency is zero:
 ==&gt; Async processing seems the logical choice, that way you force consumers to acknowledge that things may take time.
 ==&gt; Don't do a chatty system. Do terse systems with fat messages.
 ==&gt; Take into account that data access may take time, provide progress measurements and indications everywhere.</Text>
-        <Location left="334" top="146" />
+        <Location left="10" top="144" />
         <Size width="339" height="215" />
       </Entity>
       <Entity type="Comment">
@@ -1450,7 +1453,7 @@ Bandwidth is infinite:
 - We're getting connections with more bandwidth every day BUT packet loss is real and the further the data has to travel the more likely it is to get lost.
 - The sender can't control the packet loss, so be prepared to resend the data (TCP does this for us).
 ==&gt; Packet size may not be under our control but still the goal is to send fat messages.</Text>
-        <Location left="1656" top="195" />
+        <Location left="2246" top="205" />
         <Size width="339" height="171" />
       </Entity>
       <Entity type="Comment">
@@ -1465,7 +1468,7 @@ The network is secure:
 Topology doesn't change:
 - It does, all the time. More so for clients than for servers but still.
 ==&gt; Do not rely on a specific machine. Get machines to broadcast their presence if they are on the network and ready to work. Ditto for going offline. WCF-discovery should work for this.</Text>
-        <Location left="2043" top="195" />
+        <Location left="2633" top="205" />
         <Size width="339" height="152" />
       </Entity>
       <Entity type="Comment">
@@ -1474,13 +1477,13 @@ There is one administrator:
 - There are probably more administrators and they all control their own little section
 ==&gt; Upgrades, how do we control them. Do we need forward or backward compatibility.
 ==&gt; Diagnosing problems is done by the admins, not the dev team so we'll need to provide them with the tools to do so.</Text>
-        <Location left="2140" top="1384" />
+        <Location left="3095" top="1394" />
         <Size width="339" height="172" />
       </Entity>
       <Entity type="Class">
         <Name>EndpointId</Name>
         <Access>Public</Access>
-        <Location left="2769" top="317" />
+        <Location left="3724" top="327" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1496,7 +1499,7 @@ There is one administrator:
       <Entity type="Class">
         <Name>CommunicationChannel</Name>
         <Access>Internal</Access>
-        <Location left="2845" top="2047" />
+        <Location left="3800" top="2057" />
         <Size width="679" height="281" />
         <Collapsed>False</Collapsed>
         <Member type="Field">IMessagePipe m_Receiver</Member>
@@ -1516,7 +1519,7 @@ There is one administrator:
       <Entity type="Interface">
         <Name>ISendingEndpoint</Name>
         <Access>Public</Access>
-        <Location left="2278" top="2248" />
+        <Location left="3233" top="2258" />
         <Size width="358" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Send(EndpointId id, ICommunicationMessage message)</Member>
@@ -1524,7 +1527,7 @@ There is one administrator:
       <Entity type="Class">
         <Name>ResurrectingWcfChannelProxy&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="1881" top="2248" />
+        <Location left="2836" top="2258" />
         <Size width="289" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void Send(ICommunicationMessage message)</Member>
@@ -1532,23 +1535,23 @@ There is one administrator:
       </Entity>
       <Entity type="Comment">
         <Text>http://kentb.blogspot.com/2010/01/wcf-channels-faulting-and-dependency.html</Text>
-        <Location left="1780" top="2098" />
+        <Location left="2735" top="2108" />
         <Size width="455" height="50" />
       </Entity>
       <Entity type="Comment">
         <Text>Do we need to keep a list of all services that are available? Not everybody will need it but some will (e.g. apollo.core and apollo.core.loaderservice).</Text>
-        <Location left="3022" top="135" />
+        <Location left="3977" top="145" />
         <Size width="181" height="114" />
       </Entity>
       <Entity type="Comment">
         <Text>Need to be able to broadcast that we're on the network and that we're getting off the network.</Text>
-        <Location left="3022" top="326" />
+        <Location left="3977" top="336" />
         <Size width="181" height="90" />
       </Entity>
       <Entity type="Interface">
         <Name>IProcessIncomingMessages</Name>
         <Access>Internal</Access>
-        <Location left="3510" top="1600" />
+        <Location left="4465" top="1610" />
         <Size width="339" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void ProcessMessage(ICommunicationMessage message)</Member>
@@ -1556,7 +1559,7 @@ There is one administrator:
       <Entity type="Class">
         <Name>MessageHandler</Name>
         <Access>Internal</Access>
-        <Location left="3201" top="1203" />
+        <Location left="4156" top="1213" />
         <Size width="498" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public Task&lt;ICommunicationMessage&gt; ForwardResponse(MessageId inResponseTo)</Member>
@@ -1567,7 +1570,7 @@ There is one administrator:
       <Entity type="Interface">
         <Name>IMessageProcessAction</Name>
         <Access>Internal</Access>
-        <Location left="3917" top="1330" />
+        <Location left="4872" top="1340" />
         <Size width="290" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Invoke(ICommunicationMessage message)</Member>
@@ -1575,14 +1578,14 @@ There is one administrator:
       <Entity type="Interface">
         <Name>IMessageFilter</Name>
         <Access>Internal</Access>
-        <Location left="3917" top="1168" />
+        <Location left="4872" top="1178" />
         <Size width="324" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">bool PassThrough(ICommunicationMessage message)</Member>
       </Entity>
       <Entity type="Comment">
         <Text>Remember that datasets may become very large so the streaming capabilities should be able to handle large blocks of data without issue.</Text>
-        <Location left="4052" top="2635" />
+        <Location left="5007" top="2645" />
         <Size width="215" height="107" />
       </Entity>
       <Entity type="Comment">
@@ -1593,13 +1596,13 @@ There is one administrator:
 - Failure (Comm. system)
 - Ping (Comm. system)
 - Command (defines command type + parameters)</Text>
-        <Location left="4406" top="1203" />
+        <Location left="5361" top="1213" />
         <Size width="323" height="188" />
       </Entity>
       <Entity type="Class">
         <Name>DiscoveryChannel</Name>
         <Access>Internal</Access>
-        <Location left="3901" top="527" />
+        <Location left="4856" top="537" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1607,7 +1610,7 @@ There is one administrator:
       <Entity type="Interface">
         <Name>IDiscoverOtherServices</Name>
         <Access>Internal</Access>
-        <Location left="3260" top="501" />
+        <Location left="4215" top="511" />
         <Size width="455" height="129" />
         <Collapsed>False</Collapsed>
         <Member type="Event">event EventHandler&lt;ConnectionInformationEventArgs&gt; OnServiceBecomingAvailable</Member>
@@ -1617,45 +1620,21 @@ There is one administrator:
       </Entity>
       <Entity type="Comment">
         <Text>This channel is used only for discovery of other services.</Text>
-        <Location left="3260" top="341" />
+        <Location left="4215" top="351" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Used to map an endpoint to the command set. The channel may change (if it dies or the dataset is moved) but the EndpointId should stay the same.</Text>
-        <Location left="2758" top="108" />
+        <Location left="3713" top="118" />
         <Size width="183" height="117" />
       </Entity>
       <Entity type="Interface">
         <Name>IReceivingEndpoint</Name>
         <Access>Public</Access>
-        <Location left="1652" top="1965" />
+        <Location left="2607" top="1975" />
         <Size width="335" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void AcceptMessage(ICommunicationMessage message)</Member>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IMessageReceptionAction</Name>
-        <Access>Public</Access>
-        <Location left="1488" top="679" />
-        <Size width="212" height="78" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">void Receive(IMessage message)</Member>
-      </Entity>
-      <Entity type="Class">
-        <Name>ResponseReceptionAction</Name>
-        <Access>Public</Access>
-        <Location left="1410" top="860" />
-        <Size width="163" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>RequestReceptionAction</Name>
-        <Access>Public</Access>
-        <Location left="1612" top="860" />
-        <Size width="163" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>The CommandSet is defined on by the owner of the CommandSet. The MessageHub will invoke the given commands when a message arrives from the other side.
@@ -1667,26 +1646,26 @@ On the other side the MessageHub will use the CommandSet interface to create a p
       <Entity type="Class">
         <Name>EndpointDisconnectMessage</Name>
         <Access>Internal</Access>
-        <Location left="396" top="1809" />
+        <Location left="511" top="2359" />
         <Size width="192" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string ClosingReason { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>RequestStreamTransferMessage</Name>
+        <Name>DataDownloadRequestMessage</Name>
         <Access>Internal</Access>
-        <Location left="1267" top="2350" />
+        <Location left="1267" top="2531" />
         <Size width="331" height="111" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public FileDescription File { get; }</Member>
+        <Member type="Property">public UploadToken Token { get; }</Member>
         <Member type="Property">public StreamTransferInformation TransferInformation { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>FailureMessage</Name>
         <Access>Internal</Access>
-        <Location left="217" top="2111" />
+        <Location left="332" top="2661" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -1694,7 +1673,7 @@ On the other side the MessageHub will use the CommandSet interface to create a p
       <Entity type="Class">
         <Name>CommandInvokedMessage</Name>
         <Access>Internal</Access>
-        <Location left="643" top="2675" />
+        <Location left="537" top="3109" />
         <Size width="290" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public ISerializedMethodInvocation Invocation { get; }</Member>
@@ -1702,17 +1681,15 @@ On the other side the MessageHub will use the CommandSet interface to create a p
       </Entity>
       <Entity type="Comment">
         <Text>Note that these don't have to be comparable but they do have to be equatable.</Text>
-        <Location left="1014" top="1754" />
+        <Location left="1129" top="2304" />
         <Size width="166" height="80" />
       </Entity>
       <Entity type="Interface">
         <Name>ICommandSet</Name>
         <Access>Public</Access>
         <Location left="453" top="920" />
-        <Size width="456" height="147" />
+        <Size width="456" height="97" />
         <Collapsed>False</Collapsed>
-        <Member type="Event">event EventHandler&lt;CommandSetAvailabilityEventArgs&gt; OnAvailabilityChange</Member>
-        <Member type="Event">event EventHandler&lt;EventArgs&gt; OnInvalidate</Member>
       </Entity>
       <Entity type="Comment">
         <Text>We're adding an interfae these because these interfaces are needed in the core application so that we can build a dynamic proxy for them in order to mirror the command set.</Text>
@@ -1741,7 +1718,7 @@ On the other side the MessageHub will use the CommandSet interface to create a p
       <Entity type="Class">
         <Name>EndpointInformationResponseMessage</Name>
         <Access>Internal</Access>
-        <Location left="93" top="2373" />
+        <Location left="208" top="2923" />
         <Size width="308" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public IList&lt;ISerializedType&gt; AvailableCommands { get; }</Member>
@@ -1749,12 +1726,12 @@ On the other side the MessageHub will use the CommandSet interface to create a p
       </Entity>
       <Entity type="Comment">
         <Text>The discovery channel needs to be there all the time because endpoints may come and go at random times.</Text>
-        <Location left="3260" top="135" />
+        <Location left="4215" top="145" />
         <Size width="160" height="103" />
       </Entity>
       <Entity type="Comment">
         <Text>Note that the collection of potential enpoints is just that due to the fact that it is possible that the endpoints randomly disappear due to unreliability of the network.</Text>
-        <Location left="2477" top="350" />
+        <Location left="3432" top="360" />
         <Size width="191" height="124" />
       </Entity>
       <Entity type="Comment">
@@ -1785,7 +1762,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Interface">
         <Name>IChannelType</Name>
         <Access>Public</Access>
-        <Location left="2845" top="2396" />
+        <Location left="3800" top="2406" />
         <Size width="688" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">Uri GenerateNewChannelUri()</Member>
@@ -1797,7 +1774,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>SendingEndpoint</Name>
         <Access>Public</Access>
-        <Location left="2278" top="2473" />
+        <Location left="3233" top="2483" />
         <Size width="369" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Field">Dictionairy&lt;EndpointId, IChannelProxy&gt; m_Endpoints</Member>
@@ -1807,20 +1784,20 @@ And all parameters need to be serializable.</Text>
       <Entity type="Interface">
         <Name>IChannelProxy</Name>
         <Access>Public</Access>
-        <Location left="1881" top="2473" />
+        <Location left="2836" top="2483" />
         <Size width="281" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void Send(ICommunicationMessage message)</Member>
       </Entity>
       <Entity type="Comment">
         <Text>Really only need one of these. They can send messages to all known endpoints.</Text>
-        <Location left="2526" top="1296" />
+        <Location left="3481" top="1306" />
         <Size width="200" height="80" />
       </Entity>
       <Entity type="Interface">
         <Name>IMessagePipe</Name>
         <Access>Public</Access>
-        <Location left="2140" top="1965" />
+        <Location left="3095" top="1975" />
         <Size width="311" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Event">event EventHandler&lt;MessageEventArgs&gt; OnNewMessage</Member>
@@ -1828,7 +1805,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>ReceivingEndpoint</Name>
         <Access>Public</Access>
-        <Location left="2140" top="1781" />
+        <Location left="3095" top="1791" />
         <Size width="346" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void AcceptMessage(ICommunicationMessage message)</Member>
@@ -1838,7 +1815,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>StreamTransferInformation</Name>
         <Access>Internal</Access>
-        <Location left="3102" top="3186" />
+        <Location left="4057" top="3196" />
         <Size width="196" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public long StartPosition { get; set; }</Member>
@@ -1847,7 +1824,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>CommunicationMessage</Name>
         <Access>Internal</Access>
-        <Location left="643" top="2131" />
+        <Location left="758" top="2681" />
         <Size width="413" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Constructor">protected CommunicationMessage(EndpointId origin)</Member>
@@ -1858,17 +1835,18 @@ And all parameters need to be serializable.</Text>
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>StreamAvailableForTransferMessage</Name>
+        <Name>NewCommandRegisteredMessage</Name>
         <Access>Internal</Access>
-        <Location left="1316" top="2145" />
-        <Size width="231" height="77" />
+        <Location left="1016" top="3109" />
+        <Size width="231" height="94" />
         <Collapsed>False</Collapsed>
+        <Member type="Property">public ISerializedType Command { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>TcpStreamTransferInformation</Name>
         <Access>Internal</Access>
-        <Location left="3355" top="3009" />
+        <Location left="4310" top="3019" />
         <Size width="210" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public IPAddress IPAddress { get; set; }</Member>
@@ -1878,7 +1856,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>NamedPipeStreamTransferInformation</Name>
         <Access>Internal</Access>
-        <Location left="2845" top="3009" />
+        <Location left="3800" top="3019" />
         <Size width="237" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string Name { get; set; }</Member>
@@ -1887,7 +1865,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Interface">
         <Name>IDirectIncomingMessages</Name>
         <Access>Public</Access>
-        <Location left="3476" top="993" />
+        <Location left="4431" top="1003" />
         <Size width="485" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Method">Task&lt;ICommunicationMessage&gt; ForwardResponse(MessageId inResponseTo)</Member>
@@ -1896,7 +1874,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>EndpointInformationRequestMessage</Name>
         <Access>Public</Access>
-        <Location left="132" top="2554" />
+        <Location left="248" top="3046" />
         <Size width="230" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -1904,7 +1882,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>SuccessMessage</Name>
         <Access>Public</Access>
-        <Location left="217" top="2218" />
+        <Location left="332" top="2768" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>None</Modifier>
@@ -1912,7 +1890,7 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>EndpointConnectMessage</Name>
         <Access>Public</Access>
-        <Location left="160" top="1896" />
+        <Location left="275" top="2446" />
         <Size width="182" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string Address { get; }</Member>
@@ -1922,53 +1900,187 @@ And all parameters need to be serializable.</Text>
       <Entity type="Class">
         <Name>CommandInvokedResponseMessage</Name>
         <Access>Public</Access>
-        <Location left="978" top="2675" />
+        <Location left="800" top="3225" />
         <Size width="222" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public object Result { get; }</Member>
         <Modifier>None</Modifier>
       </Entity>
+      <Entity type="Class">
+        <Name>RemoteNotificationHub</Name>
+        <Access>Public</Access>
+        <Location left="2501" top="1362" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ISendCommandsToRemoteEndpoints</Name>
+        <Access>Public</Access>
+        <Location left="464" top="106" />
+        <Size width="432" height="197" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">IEnumerable&lt;CommandInformationPerEndpoint&gt; AvailableCommands()</Member>
+        <Member type="Method">IEnumerable&lt;Type&gt; AvailableCommandsFor(EndpointId endpoint)</Member>
+        <Member type="Event">event EventHandler&lt;CommandSetAvailabilityEventArgs&gt; OnEndpointSignedIn</Member>
+        <Member type="Event">event EventHandler&lt;EndpointEventArgs&gt; OnEndpointSignedOff</Member>
+        <Member type="Method">bool HasCommandsFor(EndpointId endpoint)</Member>
+        <Member type="Method">bool HasCommandFor(EndpointId endpoint, Type commandInterfaceType)</Member>
+        <Member type="Method">TCommand CommandsFor&lt;TCommand&gt;(EndpointId endpoint)</Member>
+        <Member type="Method">ICommandSet CommandsFor(EndpointId endpoint, Type commandType)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>INotifyRemoteEndpointsOfEvents</Name>
+        <Access>Public</Access>
+        <Location left="2360" top="1714" />
+        <Size width="445" height="197" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">IEnumerable&lt;NotificationInformationPerEndpoint&gt; AvailableNotifications()</Member>
+        <Member type="Method">IEnumerable&lt;Type&gt; AvailableNotificationsFor(EndpointId endpoint)</Member>
+        <Member type="Event">event EventHandler&lt;NotificationAvailabilityEventArgs&gt; OnEndpointSignedIn</Member>
+        <Member type="Event">event EventHandler&lt;EndpointEventArgs&gt; OnEndpointSignedOff</Member>
+        <Member type="Method">bool HasNotificationsFor(EndpointId endpoint)</Member>
+        <Member type="Method">bool HasNotificationFor(EndpointId endpoint, Type notificationInterfaceType)</Member>
+        <Member type="Method">TNotification NotificationsFor&lt;TNotification&gt;(EndpointId endpoint)</Member>
+        <Member type="Method">INotificationSet NotificationsFor(EndpointId endpoint, Type notificationType)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>EventNotificationMessage</Name>
+        <Access>Public</Access>
+        <Location left="1331" top="2820" />
+        <Size width="165" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need to register to get the event. We only send it to those endpoints that have registered</Text>
+        <Location left="2752" top="1467" />
+        <Size width="195" height="93" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICommandCollection</Name>
+        <Access>Public</Access>
+        <Location left="1345" top="614" />
+        <Size width="366" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Register(Type commandType, ICommandSet commands)</Member>
+        <Member type="Method">ICommandSet CommandsFor(Type interfaceType)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>LocalCommandCollection</Name>
+        <Access>Public</Access>
+        <Location left="1345" top="789" />
+        <Size width="375" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Register(Type commandType, ICommandSet commands)</Member>
+        <Member type="Method">public ICommandSet CommandsFor(Type interfaceType)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Holds the actual command objects on the receiving side of the channel.</Text>
+        <Location left="1775" top="614" />
+        <Size width="190" height="83" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>INotificationSendersCollection</Name>
+        <Access>Public</Access>
+        <Location left="2432" top="788" />
+        <Size width="355" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void Register(Type eventType, INotificationSet notifications)</Member>
+        <Member type="Method">INotificationSet NotificationsFor(Type interfaceType)</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>INotificationSet</Name>
+        <Access>Public</Access>
+        <Location left="2466" top="1171" />
+        <Size width="234" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>LocalNotificationCollection</Name>
+        <Access>Public</Access>
+        <Location left="2329" top="961" />
+        <Size width="551" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void Register(Type eventType, INotificationSet notifications)</Member>
+        <Member type="Method">public INotificationSet NotificationsFor(Type interfaceType)</Member>
+        <Member type="Method">public void RegisterForNotification(EndpointId endpoint, ISerializedEventRegistration notification)</Member>
+        <Member type="Method">public void UnregisterFromNotification(EndpointId endpoint, ISerializedEventRegistration notification)</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>NotificationProxyBuilder</Name>
+        <Access>Public</Access>
+        <Location left="2842" top="1269" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ISendNotifications</Name>
+        <Access>Public</Access>
+        <Location left="1673" top="977" />
+        <Size width="538" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">void RegisterForNotification(EndpointId endpoint, ISerializedEventRegistration notification)</Member>
+        <Member type="Method">void UnregisterFromNotification(EndpointId endpoint, ISerializedEventRegistration notification)</Member>
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="4" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>824</X>
-          <Y>1885</Y>
+          <X>939</X>
+          <Y>2435</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>824</X>
-          <Y>1856</Y>
+          <X>939</X>
+          <Y>2406</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="7" second="0">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>3132</X>
+          <Y>630</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Comment" first="9" second="8">
-        <StartOrientation>Vertical</StartOrientation>
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>899</X>
+          <Y>751</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>785</X>
+          <Y>711</Y>
+        </BendPoint>
       </Relationship>
       <Relationship type="Realization" first="11" second="0">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2696</X>
-          <Y>560</Y>
+          <X>3651</X>
+          <Y>570</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="11" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1988,12 +2100,12 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3780</X>
-          <Y>2952</Y>
+          <X>4735</X>
+          <Y>2962</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3628</X>
-          <Y>2878</Y>
+          <X>4583</X>
+          <Y>2888</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Generalization" first="23" second="10">
@@ -2016,24 +2128,24 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2511</X>
-          <Y>1624</Y>
+          <X>3466</X>
+          <Y>1634</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2682</X>
-          <Y>1624</Y>
+          <X>3637</X>
+          <Y>1634</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="17" second="8">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>585</X>
-          <Y>404</Y>
+          <X>374</X>
+          <Y>247</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>585</X>
-          <Y>442</Y>
+          <X>444</X>
+          <Y>511</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="18" second="0">
@@ -2044,12 +2156,12 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2507</X>
-          <Y>1491</Y>
+          <X>3462</X>
+          <Y>1501</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2675</X>
-          <Y>1491</Y>
+          <X>3630</X>
+          <Y>1501</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="5" second="15">
@@ -2064,8 +2176,8 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2944</X>
-          <Y>498</Y>
+          <X>3899</X>
+          <Y>508</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="29" second="28">
@@ -2076,28 +2188,30 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3559</X>
-          <Y>2084</Y>
+          <X>4514</X>
+          <Y>2094</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Realization" first="31" second="30">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3602</X>
-          <Y>1397</Y>
+          <X>4557</X>
+          <Y>1407</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3602</X>
-          <Y>1545</Y>
+          <X>4557</X>
+          <Y>1555</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="31" second="32">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3725</X>
-          <Y>1292</Y>
+          <X>4680</X>
+          <Y>1302</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -2106,30 +2220,26 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>4179</X>
-          <Y>2602</Y>
+          <X>5134</X>
+          <Y>2612</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="31" second="33">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3724</X>
-          <Y>1250</Y>
+          <X>4679</X>
+          <Y>1260</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="37">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3186</X>
-          <Y>576</Y>
+          <X>4141</X>
+          <Y>586</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -2143,6 +2253,8 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="22">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2152,43 +2264,27 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="0" second="41">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1747</X>
-          <Y>607</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="43" second="41">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="42" second="41">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="44" second="8">
+      <Relationship type="Comment" first="41" second="8">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="49" second="6">
+      <Relationship type="Comment" first="46" second="6">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="8" second="50">
+      <Relationship type="Association" first="8" second="47">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="10" second="50">
+      <Relationship type="Realization" first="10" second="47">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="51" second="50">
+      <Relationship type="Comment" first="48" second="47">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2200,7 +2296,7 @@ And all parameters need to be serializable.</Text>
           <Y>895</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="52" second="50">
+      <Relationship type="Generalization" first="49" second="47">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2212,7 +2308,7 @@ And all parameters need to be serializable.</Text>
           <Y>993</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="23" second="52">
+      <Relationship type="Realization" first="23" second="49">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2224,7 +2320,7 @@ And all parameters need to be serializable.</Text>
           <Y>1263</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="53" second="50">
+      <Relationship type="Generalization" first="50" second="47">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2236,7 +2332,7 @@ And all parameters need to be serializable.</Text>
           <Y>987</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="12" second="53">
+      <Relationship type="Realization" first="12" second="50">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2244,33 +2340,35 @@ And all parameters need to be serializable.</Text>
           <Y>1351</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="55" second="38">
+      <Relationship type="Comment" first="52" second="38">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="56" second="11">
+      <Relationship type="Comment" first="53" second="11">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2712</X>
-          <Y>540</Y>
+          <X>3667</X>
+          <Y>550</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="57" second="58">
+      <Relationship type="Comment" first="54" second="55">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="8" second="58">
+      <Relationship type="Association" first="8" second="55">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>896</X>
+          <X>948</X>
           <Y>491</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="59" second="58">
+      <Relationship type="Comment" first="56" second="55">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
@@ -2279,12 +2377,12 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1856</X>
-          <Y>2298</Y>
+          <X>2811</X>
+          <Y>2308</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1690</X>
-          <Y>2069</Y>
+          <X>2645</X>
+          <Y>2079</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -2293,249 +2391,389 @@ And all parameters need to be serializable.</Text>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="2" second="60">
+      <Relationship type="Realization" first="2" second="57">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2766</X>
-          <Y>2654</Y>
+          <X>3721</X>
+          <Y>2664</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2818</X>
-          <Y>2458</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="3" second="60">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3635</X>
-          <Y>2654</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3559</X>
+          <X>3773</X>
           <Y>2468</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="24" second="60">
-        <Label>
-        </Label>
+      <Relationship type="Realization" first="3" second="57">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>4590</X>
+          <Y>2664</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>4514</X>
+          <Y>2478</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="24" second="57">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="24" second="25">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="61" second="25">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="61" second="62">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="26" second="62">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="63" second="1">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2751</X>
-          <Y>1332</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2796</X>
-          <Y>1446</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="24" second="64">
         <Label>
         </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="58" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="58" second="59">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="26" second="59">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="60" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3706</X>
+          <Y>1342</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3751</X>
+          <Y>1456</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="24" second="61">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2876</X>
-          <Y>2022</Y>
+          <X>3831</X>
+          <Y>2032</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2493</X>
-          <Y>2008</Y>
+          <X>3448</X>
+          <Y>2018</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="64" second="40">
+      <Relationship type="Generalization" first="61" second="40">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="65" second="64">
+      <Relationship type="Realization" first="62" second="61">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="67" second="4">
+      <Relationship type="Realization" first="64" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>863</X>
-          <Y>2106</Y>
+          <X>978</X>
+          <Y>2656</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>863</X>
-          <Y>2058</Y>
+          <X>978</X>
+          <Y>2608</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="46" second="67">
+      <Relationship type="Generalization" first="43" second="64">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1081</X>
-          <Y>2265</Y>
+          <X>1207</X>
+          <Y>2761</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="48" second="67">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Generalization" first="45" second="64">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>889</X>
+          <Y>3169</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>890</X>
+          <Y>2868</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="45" second="67">
+      <Relationship type="Generalization" first="42" second="64">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>693</X>
-          <Y>2106</Y>
+          <X>808</X>
+          <Y>2656</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="47" second="67">
+      <Relationship type="Generalization" first="44" second="64">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="54" second="67">
+      <Relationship type="Generalization" first="51" second="64">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>698</X>
-          <Y>2318</Y>
+          <X>813</X>
+          <Y>2868</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="68" second="67">
+      <Relationship type="Generalization" first="65" second="64">
         <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>978</X>
+          <Y>3167</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>947</X>
+          <Y>2897</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="70" second="66">
+      <Relationship type="Generalization" first="67" second="63">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3125</X>
-          <Y>3161</Y>
+          <X>4080</X>
+          <Y>3171</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="69" second="66">
+      <Relationship type="Generalization" first="66" second="63">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3270</X>
-          <Y>3161</Y>
+          <X>4225</X>
+          <Y>3171</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="2" second="70">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="2" second="67">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="3" second="69">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="3" second="66">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="5" second="60">
+      <Relationship type="Comment" first="5" second="57">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>4027</X>
-          <Y>2440</Y>
+          <X>4982</X>
+          <Y>2450</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="31" second="71">
+      <Relationship type="Realization" first="31" second="68">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3575</X>
-          <Y>1177</Y>
+          <X>4530</X>
+          <Y>1187</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3575</X>
-          <Y>1118</Y>
+          <X>4530</X>
+          <Y>1128</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="35" second="33">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="11" second="71">
-        <Label>
-        </Label>
+      <Relationship type="Association" first="11" second="68">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3071</X>
-          <Y>660</Y>
+          <X>4026</X>
+          <Y>670</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="30" second="24">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3346</X>
-          <Y>2015</Y>
+          <X>4301</X>
+          <Y>2025</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="72" second="67">
+      <Relationship type="Generalization" first="69" second="64">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>387</X>
-          <Y>2581</Y>
+          <X>503</X>
+          <Y>3073</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>740</X>
-          <Y>2318</Y>
+          <X>855</X>
+          <Y>2868</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="73" second="67">
+      <Relationship type="Generalization" first="70" second="64">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="74" second="67">
+      <Relationship type="Generalization" first="71" second="64">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>670</X>
-          <Y>2106</Y>
+          <X>785</X>
+          <Y>2656</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="75" second="67">
+      <Relationship type="Generalization" first="72" second="64">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="8" second="74">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="73" second="75">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="73" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2828</X>
+          <Y>1412</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3062</X>
+          <Y>775</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="76" second="64">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1196</X>
+          <Y>2798</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="77" second="73">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="79" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1745</X>
+          <Y>827</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2267</X>
+          <Y>621</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="79" second="78">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="79" second="47">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1539</X>
+          <Y>941</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>934</X>
+          <Y>962</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="80" second="78">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="83" second="81">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="83" second="0">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2916</X>
+          <Y>1016</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3032</X>
+          <Y>778</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="83" second="82">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="73" second="82">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2582</X>
+          <Y>1337</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="73" second="84">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2688</X>
+          <Y>1384</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="83" second="85">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
     </Relationships>
   </ProjectItem>
@@ -2972,6 +3210,8 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2990,6 +3230,8 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3000,6 +3242,8 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="14" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3026,8 +3270,6 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="14">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3046,8 +3288,6 @@ And all parameters need to be serializable.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="25">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3142,6 +3382,8 @@ And all parameters need to be serializable.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="19" second="32">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3168,8 +3410,6 @@ And all parameters need to be serializable.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="36">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3180,8 +3420,6 @@ And all parameters need to be serializable.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="37">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3192,8 +3430,6 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="4" second="38">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3208,8 +3444,6 @@ And all parameters need to be serializable.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="39">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -3220,8 +3454,6 @@ And all parameters need to be serializable.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="40">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3240,8 +3472,6 @@ And all parameters need to be serializable.</Text>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="15" second="33">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3268,12 +3498,16 @@ And all parameters need to be serializable.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="42" second="31">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="42">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3303,12 +3537,16 @@ And all parameters need to be serializable.</Text>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="43" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="32" second="7">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3319,8 +3557,6 @@ And all parameters need to be serializable.</Text>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="39" second="44">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3424,6 +3660,8 @@ And all parameters need to be serializable.</Text>
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="6">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">

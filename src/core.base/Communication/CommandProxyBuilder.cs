@@ -5,9 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
+using System.Text;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
@@ -57,7 +59,7 @@ namespace Apollo.Core.Base.Communication
         /// <exception cref="TypeIsNotAValidCommandSetException">
         ///     If the given type is not a valid <see cref="ICommandSet"/> interface.
         /// </exception>
-        public static void VerifyThatTypetIsACorrectCommandSet(Type commandSet)
+        public static void VerifyThatTypeIsACorrectCommandSet(Type commandSet)
         {
             if (!typeof(ICommandSet).IsAssignableFrom(commandSet))
             {
@@ -88,20 +90,24 @@ namespace Apollo.Core.Base.Communication
 
             if (commandSet.GetProperties().Length > 0)
             {
+                var propertiesText = ReflectionExtensions.PropertyInfoToString(commandSet.GetProperties());
                 throw new TypeIsNotAValidCommandSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveProperties,
-                        commandSet));
+                        commandSet,
+                        propertiesText));
             }
 
             if (commandSet.GetEvents().Length > typeof(ICommandSet).GetEvents().Length)
             {
+                var eventsText = ReflectionExtensions.EventInfoToString(commandSet.GetEvents());
                 throw new TypeIsNotAValidCommandSetException(
                     string.Format(
                         CultureInfo.InvariantCulture,
                         Resources.Exceptions_Messages_TypeIsNotAValidCommandSet_CommandSetCannotHaveEvents,
-                        commandSet));
+                        commandSet,
+                        eventsText));
             }
 
             var methods = commandSet.GetMethods();
@@ -299,7 +305,7 @@ namespace Apollo.Core.Base.Communication
             // - Every method either returns nothing (void) or returns a Task<T> object.
             // All these checks should have been done when the interface was registered
             // at the remote endpoint.
-            var selfReference = new CommandSetProxySelfReferenceInterceptor();
+            var selfReference = new ProxySelfReferenceInterceptor();
             var methodWithoutResult = new CommandSetMethodWithoutResultInterceptor(
                 methodInvocation =>
                 {

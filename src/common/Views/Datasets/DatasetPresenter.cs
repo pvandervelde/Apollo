@@ -10,6 +10,7 @@ using System.Windows;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.UI.Common.Commands;
+using Apollo.Utilities;
 using Autofac;
 
 namespace Apollo.UI.Common.Views.Datasets
@@ -43,7 +44,8 @@ namespace Apollo.UI.Common.Views.Datasets
         public DatasetModel CreateModel(DatasetFacade dataset)
         {
             var context = m_Container.Resolve<IContextAware>();
-            var result = new DatasetModel(context, dataset)
+            var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
+            var result = new DatasetModel(context, progressTracker, dataset)
             {
                 NewChildDatasetCommand = new AddChildDatasetCommand(dataset),
                 DeleteDatasetCommand = new DeleteDatasetCommand(dataset),

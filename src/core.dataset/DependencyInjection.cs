@@ -5,16 +5,12 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.IO;
-using System.Reflection;
+using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Utilities;
-using Apollo.Utilities.Logging;
 using Autofac;
 
 namespace Apollo.Core.Dataset
@@ -44,7 +40,7 @@ namespace Apollo.Core.Dataset
                 builder.RegisterModule(new BaseModule(false));
                 builder.RegisterModule(new BaseModuleForDatasets(
                     () => CloseApplication(result),
-                    file => { }));
+                    file => LoadDatasetFile(result, file)));
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()
@@ -61,6 +57,22 @@ namespace Apollo.Core.Dataset
             
             container.Dispose();
             context.ExitThread();
+        }
+
+        private static void LoadDatasetFile(IContainer container, FileInfo fileToLoad)
+        {
+            // For now we fake this out by pretending it takes time to load.
+            var progressAction = container.Resolve<IDatasetApplicationNotificationInvoker>();
+            progressAction.RaiseOnProgress(0, new StreamLoadProgressMark());
+
+            Thread.Sleep(1000);
+            progressAction.RaiseOnProgress(33, new StreamLoadProgressMark());
+
+            Thread.Sleep(1000);
+            progressAction.RaiseOnProgress(66, new StreamLoadProgressMark());
+
+            Thread.Sleep(1000);
+            progressAction.RaiseOnProgress(100, new StreamLoadProgressMark());
         }
     }
 }

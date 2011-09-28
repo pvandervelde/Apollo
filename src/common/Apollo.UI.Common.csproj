@@ -228,6 +228,13 @@
     <Compile Include="Views\Feedback\FeedbackPresenter.cs" />
     <Compile Include="Views\Feedback\IErrorReportsView.cs" />
     <Compile Include="Views\Feedback\IFeedbackView.cs" />
+    <Compile Include="Views\Progress\IProgressView.cs" />
+    <Compile Include="Views\Progress\ProgressModel.cs" />
+    <Compile Include="Views\Progress\ProgressParameter.cs" />
+    <Compile Include="Views\Progress\ProgressPresenter.cs" />
+    <Compile Include="Views\Progress\ProgressView.xaml.cs">
+      <DependentUpon>ProgressView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Projects\IProjectDescriptionView.cs" />
     <Compile Include="Views\Projects\IProjectView.cs" />
     <Compile Include="Views\Projects\ProjectDescriptionView.xaml.cs">
@@ -314,6 +321,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Feedback\FeedbackIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Progress\ProgressView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

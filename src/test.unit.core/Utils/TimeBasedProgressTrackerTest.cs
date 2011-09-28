@@ -78,7 +78,7 @@ namespace Apollo.Utilities
             IProgressMark storedMark = null;
             int storedProgress = 0;
             var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
-            tracker.OnStartupProgress += (s, e) =>
+            tracker.OnProgress += (s, e) =>
                 {
                     storedMark = e.CurrentlyProcessing;
                     storedProgress = e.Progress;
@@ -126,7 +126,7 @@ namespace Apollo.Utilities
             IProgressMark storedMark = null;
             int storedProgress = 0;
             var tracker = new TimeBasedProgressTracker(timer.Object, -1, store.Object);
-            tracker.OnStartupProgress += (s, e) =>
+            tracker.OnProgress += (s, e) =>
             {
                 storedMark = e.CurrentlyProcessing;
                 storedProgress = e.Progress;

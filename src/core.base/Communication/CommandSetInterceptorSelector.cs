@@ -32,7 +32,7 @@ namespace Apollo.Core.Base.Communication
             var name = ReflectionExtensions.MethodName<CommandSetProxy, object>(p => p.SelfReference());
             if (string.Equals(name, method.Name, StringComparison.Ordinal))
             {
-                return interceptors.Where(i => i is CommandSetProxySelfReferenceInterceptor).ToArray();
+                return interceptors.Where(i => i is ProxySelfReferenceInterceptor).ToArray();
             }
 
             if (method.ReturnType == typeof(Task))

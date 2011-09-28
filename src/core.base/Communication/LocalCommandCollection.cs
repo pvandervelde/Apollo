@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Communication
                     Resources.Exceptions_Messages_CommandObjectMustImplementCommandInterface);
             }
 
-            CommandProxyBuilder.VerifyThatTypetIsACorrectCommandSet(commandType);
+            CommandProxyBuilder.VerifyThatTypeIsACorrectCommandSet(commandType);
             if (m_Commands.ContainsKey(commandType))
             {
                 throw new CommandAlreadyRegisteredException();

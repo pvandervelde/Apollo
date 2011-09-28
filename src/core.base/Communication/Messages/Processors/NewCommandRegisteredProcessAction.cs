@@ -19,7 +19,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// <summary>
         /// The object that forwards information about the newly registered commands.
         /// </summary>
-        private readonly IAceptExternalCommandInformation m_CommandRegistrator;
+        private readonly IAcceptExternalProxyInformation m_CommandRegistrator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NewCommandRegisteredProcessAction"/> class.
@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="commandRegistrator"/> is <see langword="null" />.
         /// </exception>
         public NewCommandRegisteredProcessAction(
-            IAceptExternalCommandInformation commandRegistrator)
+            IAcceptExternalProxyInformation commandRegistrator)
         {
             {
                 Enforce.Argument(() => commandRegistrator);
@@ -65,7 +65,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 return;
             }
 
-            m_CommandRegistrator.RecentlyRegisteredCommand(msg.OriginatingEndpoint, msg.Command);
+            m_CommandRegistrator.RecentlyRegisteredProxy(msg.OriginatingEndpoint, msg.Command);
         }
     }
 }

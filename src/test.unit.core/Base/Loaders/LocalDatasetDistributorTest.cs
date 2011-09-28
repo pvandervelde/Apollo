@@ -50,7 +50,7 @@ namespace Apollo.Base.Loaders
                     PercentageOfPhysicalMemory = 50,
                 };
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -71,7 +71,8 @@ namespace Apollo.Base.Loaders
             }
             
             var loader = new Mock<IApplicationLoader>();
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
             var uploads = new WaitingUploads();
             Func<ChannelConnectionInformation> channelInfo =
                 () => new ChannelConnectionInformation(
@@ -82,7 +83,8 @@ namespace Apollo.Base.Loaders
             var distributor = new LocalDatasetDistributor(
                 localDistributor.Object,
                 loader.Object,
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 uploads,
                 (d, e, n) =>
                 {
@@ -90,7 +92,7 @@ namespace Apollo.Base.Loaders
                         d,
                         e,
                         n,
-                        hub.Object,
+                        commandHub.Object,
                         logger);
                 },
                 channelInfo,
@@ -125,7 +127,7 @@ namespace Apollo.Base.Loaders
             }
 
             var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                     () => new DatasetOnlineInformation(
                         new DatasetId(),
                         new EndpointId("id"),
@@ -169,15 +171,25 @@ namespace Apollo.Base.Loaders
                             new CurrentThreadTaskScheduler()));
             }
 
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.HasCommandsFor(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.HasCommandsFor(It.IsAny<EndpointId>()))
                     .Returns(true);
-                hub.Setup(h => h.HasCommandFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
+                commandHub.Setup(h => h.HasCommandFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
                     .Returns(true);
-                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
                     .Callback<EndpointId>(e => Assert.AreSame(datasetEndpoint, e))
                     .Returns(commands.Object);
+            }
+
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(datasetEndpoint, e))
+                    .Returns(notifications.Object);
             }
 
             Func<ChannelConnectionInformation> channelInfo =
@@ -191,7 +203,8 @@ namespace Apollo.Base.Loaders
             var distributor = new LocalDatasetDistributor(
                 localDistributor.Object,
                 loader.Object,
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 uploads,
                 (d, e, n) =>
                 {
@@ -199,12 +212,14 @@ namespace Apollo.Base.Loaders
                         d,
                         e,
                         n,
-                        hub.Object,
+                        commandHub.Object,
                         logger);
                 },
                 channelInfo,
                 new CurrentThreadTaskScheduler());
-            var result = distributor.ImplementPlan(plan, new CancellationToken());
+
+            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
+            var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 
             Assert.AreSame(datasetEndpoint, result.Result.Endpoint);

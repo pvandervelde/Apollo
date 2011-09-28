@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Security.Cryptography;
+using Apollo.ProjectExplorer.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.Logging;
@@ -148,6 +149,20 @@ namespace Apollo.Utilities
 
                 builder.Register(c => new XmlConfiguration())
                     .As<IConfiguration>();
+
+                builder.Register(c => new ProgressReportingHub())
+                    .As<ICollectProgressReports>()
+                    .SingleInstance();
+
+                builder.Register(c => new StepBasedProgressTracker())
+                    .OnActivated(
+                        a =>
+                        {
+                            var hub = a.Context.Resolve<ICollectProgressReports>();
+                            hub.AddReporter(a.Instance);
+                        })
+                    .As<ITrackSteppingProgress>()
+                    .As<ITrackProgress>();
 
                 RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));

@@ -36,7 +36,7 @@ namespace Apollo.Base.Loaders
                         new DistributionPlan[] 
                         {
                             new DistributionPlan(
-                                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                                     () => new DatasetOnlineInformation(
                                         new DatasetId(),
                                         new EndpointId("id"),
@@ -70,7 +70,7 @@ namespace Apollo.Base.Loaders
                         new DistributionPlan[] 
                         {
                             new DistributionPlan(
-                                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
                                     () => new DatasetOnlineInformation(
                                         new DatasetId(),
                                         new EndpointId("id"),

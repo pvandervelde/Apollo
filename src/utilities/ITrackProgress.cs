@@ -30,10 +30,21 @@ namespace Apollo.Utilities
         event EventHandler<ProgressMarkEventArgs> OnMarkAdded;
 
         /// <summary>
-        /// Occurs when there is a change in the progress of the system
-        /// startup.
+        /// Occurs when the process for which progress is 
+        /// being reported is starting.
         /// </summary>
-        event EventHandler<ProgressEventArgs> OnStartupProgress;
+        event EventHandler<EventArgs> OnStartProgress;
+
+        /// <summary>
+        /// Occurs when there is a change in the progress.
+        /// </summary>
+        event EventHandler<ProgressEventArgs> OnProgress;
+
+        /// <summary>
+        /// Occurs when the process for which progress is
+        /// being reported is finished.
+        /// </summary>
+        event EventHandler<EventArgs> OnStopProgress;
 
         /// <summary>
         /// Stops the tracking of the progress.

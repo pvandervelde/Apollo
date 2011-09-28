@@ -46,14 +46,14 @@ namespace Apollo.Base.Communication
                         (e, m) => 
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender = 
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -97,7 +97,7 @@ namespace Apollo.Base.Communication
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -133,14 +133,14 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -183,14 +183,14 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, null),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, null),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -203,10 +203,10 @@ namespace Apollo.Base.Communication
 
             var otherId = new EndpointId("other");
             reporter.Raise(
-                r => r.OnNewCommandRegistered += null, 
-                new CommandInformationEventArgs(
+                r => r.OnNewProxyRegistered += null, 
+                new ProxyInformationEventArgs(
                     otherId, 
-                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn))));
+                    ProxyExtensions.FromType(typeof(IMockCommandSetWithTaskReturn))));
 
             Assert.IsTrue(hub.HasCommandsFor(otherId));
             Assert.IsTrue(hub.HasCommandFor(otherId, typeof(IMockCommandSetWithTaskReturn)));
@@ -225,14 +225,14 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -256,10 +256,10 @@ namespace Apollo.Base.Communication
             layer.Raise(l => l.OnEndpointSignedIn += null, new ConnectionInformationEventArgs(connectionInfo));
 
             reporter.Raise(
-                r => r.OnNewCommandRegistered += null, 
-                new CommandInformationEventArgs(
+                r => r.OnNewProxyRegistered += null, 
+                new ProxyInformationEventArgs(
                     connectionInfo.Id,
-                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+                    ProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
 
             Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
             Assert.IsTrue(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
@@ -279,14 +279,14 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -309,10 +309,10 @@ namespace Apollo.Base.Communication
             };
 
             reporter.Raise(
-                r => r.OnNewCommandRegistered += null, 
-                new CommandInformationEventArgs(
+                r => r.OnNewProxyRegistered += null, 
+                new ProxyInformationEventArgs(
                     connectionInfo.Id,
-                    CommandSetProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
+                    ProxyExtensions.FromType(typeof(IMockCommandSetWithTypedTaskReturn))));
 
             Assert.IsTrue(hub.HasCommandsFor(connectionInfo.Id));
             Assert.IsFalse(hub.HasCommandFor(connectionInfo.Id, typeof(IMockCommandSetWithTaskReturn)));
@@ -334,7 +334,7 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
@@ -343,7 +343,7 @@ namespace Apollo.Base.Communication
                     .Callback<EndpointId>(e => layer.Raise(l => l.OnEndpointSignedOut += null, new EndpointEventArgs(e)));
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),
@@ -381,14 +381,14 @@ namespace Apollo.Base.Communication
                         (e, m) =>
                         {
                             return Task<ICommunicationMessage>.Factory.StartNew(
-                                () => new EndpointInformationResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
+                                () => new EndpointProxyTypesResponseMessage(e, m.Id, typeof(IMockCommandSetWithTaskReturn)),
                                 new CancellationToken(),
                                 TaskCreationOptions.None,
                                 new CurrentThreadTaskScheduler());
                         });
             }
 
-            var reporter = new Mock<IReportNewCommands>();
+            var reporter = new Mock<IReportNewProxies>();
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sender =
                 (e, m) => Task<ICommunicationMessage>.Factory.StartNew(
                     () => new SuccessMessage(localEndpoint, new MessageId()),

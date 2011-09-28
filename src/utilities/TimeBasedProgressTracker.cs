@@ -112,7 +112,8 @@ namespace Apollo.Utilities
             m_ElapsedTime = time => time - startTime;
 
             m_ProgressTimer.OnElapsed += (s, e) => ProcessProgressTimerElapsed(e.ElapsedTime);
-            RaiseOnStartupProgress(StartingProgress, m_CurrentMark);
+            RaiseOnStartProgress();
+            RaiseOnProgress(StartingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
 
             m_ProgressTimer.Start();
         }
@@ -174,7 +175,7 @@ namespace Apollo.Utilities
                                 }
                             }
 
-                            RaiseOnStartupProgress(progress, m_CurrentMark);
+                            RaiseOnProgress(progress, m_CurrentMark, estimatedTime);
                         }
                         catch (Exception)
                         {
@@ -221,22 +222,56 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
+        /// Occurs when the process for which progress is 
+        /// being reported is starting.
+        /// </summary>
+        public event EventHandler<EventArgs> OnStartProgress;
+
+        private void RaiseOnStartProgress()
+        {
+            var local = OnStartProgress;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Occurs when there is a change in the progress of the system
         /// startup.
         /// </summary>
-        public event EventHandler<ProgressEventArgs> OnStartupProgress;
+        public event EventHandler<ProgressEventArgs> OnProgress;
 
         /// <summary>
         /// Raises the startup progress event with the specified values.
         /// </summary>
         /// <param name="progress">The progress percentage. Should be between 0 and 100.</param>
         /// <param name="currentlyProcessing">The description of what is currently being processed.</param>
-        private void RaiseOnStartupProgress(int progress, IProgressMark currentlyProcessing)
+        /// <param name="estimatedTime">
+        ///     The amount of time it will take to finish the entire task from start to finish. Can be negative 
+        ///     if no time is known.
+        /// </param>
+        private void RaiseOnProgress(int progress, IProgressMark currentlyProcessing, TimeSpan estimatedTime)
         {
-            var local = OnStartupProgress;
+            var local = OnProgress;
             if (local != null)
             { 
-                local(this, new ProgressEventArgs(progress, currentlyProcessing));
+                local(this, new ProgressEventArgs(progress, currentlyProcessing, estimatedTime));
+            }
+        }
+
+        /// <summary>
+        /// Occurs when the process for which progress is
+        /// being reported is finished.
+        /// </summary>
+        public event EventHandler<EventArgs> OnStopProgress;
+
+        private void RaiseOnStopProgress()
+        {
+            var local = OnStopProgress;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
             }
         }
 
@@ -246,7 +281,8 @@ namespace Apollo.Utilities
         public void StopTracking()
         {
             StopProgressTimer();
-            RaiseOnStartupProgress(FinishingProgress, m_CurrentMark);
+            RaiseOnProgress(FinishingProgress, m_CurrentMark, m_MarkerTimers.TotalTime);
+            RaiseOnStopProgress();
         }
 
         /// <summary>

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Utilities;
 
 namespace Apollo.Core
@@ -11,6 +12,7 @@ namespace Apollo.Core
     /// <summary>
     /// Defines an <see cref="IProgressMark"/> which indicates that the application is starting.
     /// </summary>
+    [Serializable]
     public sealed class ApplicationStartingProgressMark : IProgressMark
     {
     }

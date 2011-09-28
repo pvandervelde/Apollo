@@ -4,9 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System.Collections.Generic;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -20,9 +21,13 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="planToImplement">The distribution plan that should be implemented.</param>
         /// <param name="token">The token used to indicate cancellation of the task.</param>
+        /// <param name="progressReporter">The action that handles the reporting of progress.</param>
         /// <returns>
         /// A set of objects which allow act as proxies for the loaded datasets.
         /// </returns>
-        Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token);
+        Task<DatasetOnlineInformation> ImplementPlan(
+            DistributionPlan planToImplement,
+            CancellationToken token,
+            Action<int, IProgressMark, TimeSpan> progressReporter);
     }
 }

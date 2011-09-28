@@ -11,7 +11,7 @@ using Lokad;
 namespace Apollo.Core.Base.Communication
 {
     /// <summary>
-    /// Defines a <see cref="EventArgs"/> class that stores information about the availability of
+    /// Defines a <see cref="EventArgs"/> class that stores information about the availability of commands for
     /// a communication endpoint.
     /// </summary>
     public sealed class CommandSetAvailabilityEventArgs : EventArgs

@@ -7,7 +7,9 @@
 using System;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Windows.Shell;
 using Apollo.UI.Common.Commands;
+using Apollo.Utilities;
 using Lokad;
 
 namespace Apollo.ProjectExplorer.Views.Shell
@@ -35,20 +37,58 @@ namespace Apollo.ProjectExplorer.Views.Shell
         /// Initializes a new instance of the <see cref="ShellWindow"/> class.
         /// </summary>
         /// <param name="exitCommand">The command used to exit the application.</param>
+        /// <param name="progressReporter">The object that reports progress for all of the application.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="exitCommand"/> is <see langword="null"/>.
         /// </exception>
-        public ShellWindow(ExitCommand exitCommand)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="progressReporter"/> is <see langword="null" />.
+        /// </exception>
+        public ShellWindow(ExitCommand exitCommand, ICollectProgressReports progressReporter)
             : this()
         {
             {
                 Enforce.Argument(() => exitCommand);
+                Enforce.Argument(() => progressReporter);
             }
 
             m_ExitCommand = exitCommand;
-        }
 
-        #region Implementation of IView
+            // Handle the start progress event.
+            {
+                progressReporter.OnStartProgress +=
+                    (s, e) =>
+                    {
+                        Action action = () => taskbarItemInfo.ProgressState = TaskbarItemProgressState.Indeterminate;
+                        Dispatcher.Invoke(action);
+                    };
+            }
+
+            // Handle the progress event.
+            {
+                Action<int> action =
+                    (progress) =>
+                    {
+                        taskbarItemInfo.ProgressState = TaskbarItemProgressState.Normal;
+                        taskbarItemInfo.ProgressValue = progress / 100.0;
+                    };
+                progressReporter.OnProgress +=
+                    (s, e) =>
+                    {
+                        Dispatcher.Invoke(action, e.Progress);
+                    };
+            }
+
+            // Handle the stop progress event.
+            {
+                progressReporter.OnStopProgress +=
+                    (s, e) =>
+                    {
+                        Action action = () => taskbarItemInfo.ProgressState = TaskbarItemProgressState.None;
+                        Dispatcher.Invoke(action);
+                    };
+            }
+        }
 
         /// <summary>
         /// Gets or sets the model.
@@ -66,8 +106,6 @@ namespace Apollo.ProjectExplorer.Views.Shell
                 DataContext = value;
             }
         }
-
-        #endregion
 
         /// <summary>
         /// Handles the window closing event.

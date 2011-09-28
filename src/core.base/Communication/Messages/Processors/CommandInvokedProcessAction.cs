@@ -31,6 +31,24 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private sealed class TaskReturn
         {
             /// <summary>
+            /// The action used to write information to the log.
+            /// </summary>
+            private readonly Action<LogSeverityProxy, string> m_Logger;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TaskReturn"/> class.
+            /// </summary>
+            /// <param name="logger">The action used to write information to the log.</param>
+            public TaskReturn(Action<LogSeverityProxy, string> logger)
+            {
+                {
+                    Debug.Assert(logger != null, "The logger variable should not be null.");
+                }
+
+                m_Logger = logger;
+            }
+
+            /// <summary>
             /// Provides a typed way of creating a return message based on the outcome of the invocation of a given command. This method 
             /// will only be invoked through reflection.
             /// </summary>
@@ -44,6 +62,13 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             {
                 if (returnValue.IsCanceled || returnValue.IsFaulted)
                 {
+                    m_Logger(
+                        LogSeverityProxy.Error,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "The task has failed. Exception is: {0}",
+                            returnValue.Exception));
+
                     return new FailureMessage(local, originalMsg.Id);
                 }
 
@@ -67,6 +92,13 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             {
                 if (returnValue.IsCanceled || returnValue.IsFaulted)
                 {
+                    m_Logger(
+                        LogSeverityProxy.Error,
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            "The task has failed. Exception is: {0}",
+                            returnValue.Exception));
+
                     return new FailureMessage(local, originalMsg.Id);
                 }
 
@@ -165,17 +197,17 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Received request to execute command: {0}.{1}",
-                    invocation.CommandSet,
+                    invocation.Type,
                     invocation.MemberName));
 
             Task result = null;
             try
             {
-                var type = CommandSetProxyExtensions.ToType(invocation.CommandSet);
+                var type = ProxyExtensions.ToType(invocation.Type);
                 var commandSet = m_Commands.CommandsFor(type);
 
                 var parameterTypes = from pair in invocation.Parameters
-                                     select CommandSetProxyExtensions.ToType(pair.Item1);
+                                     select ProxyExtensions.ToType(pair.Item1);
                 var method = type.GetMethod(invocation.MemberName, parameterTypes.ToArray());
                 
                 var parameterValues = from pair in invocation.Parameters
@@ -220,7 +252,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                         LogSeverityProxy.Trace,
                         "Returning Task value.");
 
-                        returnMsg = new TaskReturn().HandleTaskReturnValue(m_Current, msg, result);
+                        returnMsg = new TaskReturn(m_Logger).HandleTaskReturnValue(m_Current, msg, result);
                     }
                     else
                     {
@@ -238,7 +270,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                         // keyword because the generic parameters for the method are determined by the input parameters
                         // so if we create a 'dynamic' object and call the method with the desired name then the runtime
                         // will determine what the type parameter has to be.
-                        dynamic taskBuilder = new TaskReturn();
+                        dynamic taskBuilder = new TaskReturn(m_Logger);
 
                         // Call the desired method, making sure that we force the runtime to use the runtime type of the result
                         // variable, not the compile time one.
@@ -264,7 +296,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
-                        "Error while sending endpoint information. Exception is: {0}",
+                        "Error while invoking command {0}.{1}. Exception is: {2}",
+                        msg.Invocation.Type,
+                        msg.Invocation.MemberName,
                         e));
                 m_SendMessage(msg.OriginatingEndpoint, new FailureMessage(m_Current, msg.Id));
             }

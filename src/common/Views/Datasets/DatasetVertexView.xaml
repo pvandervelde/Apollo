@@ -203,20 +203,18 @@
             <Label Grid.Row="0"
                    Grid.Column="1"
                    Margin="0, 5, 5, 0">
-                <TextBlock Text="Doing some difficult expensive operation"
+                <TextBlock Text="{Binding Path=ProgressDescription, Mode=OneWay}"
                            Foreground="SeaShell" />
             </Label>
 
             <Grid Grid.Row="1"
                   Grid.Column="0"
                   Grid.ColumnSpan="2">
-                <ProgressBar Value="0"
+                <ProgressBar Value="{Binding Path=Progress, Mode=OneWay}"
+                             Minimum="0"
+                             Maximum="1"
+                             MinHeight="15"
                              Margin="5, 0, 5, 5"/>
-                <Label HorizontalAlignment="Center"
-                       Margin="5, 0, 5, 5">
-                    <TextBlock Text="Module N"
-                               Foreground="Blue" />
-                </Label>
             </Grid>
         </Grid>
     </Grid>

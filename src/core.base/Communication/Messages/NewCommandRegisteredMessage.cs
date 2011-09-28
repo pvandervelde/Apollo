@@ -42,7 +42,7 @@ namespace Apollo.Core.Base.Communication.Messages
                 Enforce.Argument(() => commandType);
             }
 
-            m_Command = CommandSetProxyExtensions.FromType(commandType);
+            m_Command = ProxyExtensions.FromType(commandType);
         }
 
         /// <summary>

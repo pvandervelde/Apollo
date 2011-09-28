@@ -78,6 +78,32 @@
    </Namespace>
   </Namespaces>
   <Targets>
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe">
+    <Modules>
+     <Module Name="apollo.core.dataset.exe">
+      <Namespaces>
+       <Namespace Name="Apollo.Core.Dataset">
+        <Types>
+         <Type Name="DependencyInjection">
+          <Members>
+           <Member Name="#LoadDatasetFile(Autofac.IContainer,System.IO.FileInfo)">
+            <Messages>
+             <Message Id="fileToLoad" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2011-09-26 10:18:02Z" FixCategory="NonBreaking">
+              <Issue>
+               <Item>'fileToLoad'</Item>
+               <Item>'DependencyInjection.LoadDatasetFile(IContainer, FileInfo)'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
+      </Namespaces>
+     </Module>
+    </Modules>
+   </Target>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.dll">
     <Modules>
      <Module Name="apollo.core.dll">

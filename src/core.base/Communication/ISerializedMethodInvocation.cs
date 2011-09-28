@@ -16,9 +16,9 @@ namespace Apollo.Core.Base.Communication
     internal interface ISerializedMethodInvocation : IEquatable<ISerializedMethodInvocation>
     {
         /// <summary>
-        /// Gets the command set on which the method was invoked.
+        /// Gets the type on which the method was invoked.
         /// </summary>
-        ISerializedType CommandSet
+        ISerializedType Type
         {
             get;
         }

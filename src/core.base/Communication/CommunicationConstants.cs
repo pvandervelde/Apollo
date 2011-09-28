@@ -5,12 +5,14 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Base.Communication
 {
+    /// <summary>
+    /// Stores the constant values related to communication.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
     internal sealed class CommunicationConstants : ICommunicationConstants
     {
         /// <summary>

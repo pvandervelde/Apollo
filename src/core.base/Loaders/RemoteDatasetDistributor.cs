@@ -14,7 +14,6 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
-using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -24,7 +23,7 @@ namespace Apollo.Core.Base.Loaders
     internal sealed class RemoteDatasetDistributor : IGenerateDistributionProposals, ILoadDatasets
     {
         private static IEnumerable<DatasetLoadingProposal> RetrieveProposals(
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration,
             DatasetRequest request,
             CancellationToken token)
@@ -34,11 +33,11 @@ namespace Apollo.Core.Base.Loaders
             return orderedProposals;
         }
 
-        private static IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
+        private static IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> DetermineUsableEndpoints(
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> availableEndpoints,
             IConfiguration configuration)
         {
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes = availableEndpoints;
 
             var key = LoaderConfigurationKeys.OffLimitsEndpoints;
             if (configuration.HasValueFor(key))
@@ -60,7 +59,7 @@ namespace Apollo.Core.Base.Loaders
         private static IEnumerable<DatasetLoadingProposal> OrderProposals(
             ExpectedDatasetLoad load,
             LoadingLocations preferedLocations,
-            IEnumerable<System.Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
+            IEnumerable<Tuple<EndpointId, IDatasetLoaderCommands>> usableNodes,
             CancellationToken token)
         {
             var loadingProposals = new Queue<Task<DatasetLoadingProposal>>();
@@ -155,7 +154,12 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// The object that manages the remote command proxies.
         /// </summary>
-        private readonly ISendCommandsToRemoteEndpoints m_Hub;
+        private readonly ISendCommandsToRemoteEndpoints m_CommandHub;
+
+        /// <summary>
+        /// The object that receives notifications from remote endpoints.
+        /// </summary>
+        private readonly INotifyOfRemoteEndpointEvents m_NotificationHub;
 
         /// <summary>
         /// The object that stores the configuration for the current application.
@@ -187,6 +191,7 @@ namespace Apollo.Core.Base.Loaders
         /// Initializes a new instance of the <see cref="RemoteDatasetDistributor"/> class.
         /// </summary>
         /// <param name="commandHub">The object that manages the remote command proxies.</param>
+        /// <param name="notificationHub">The object that receives notifications from remote endpoints.</param>
         /// <param name="configuration">The application specific configuration.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
@@ -194,6 +199,9 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandHub"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="notificationHub"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="configuration"/> is <see langword="null" />.
@@ -208,7 +216,8 @@ namespace Apollo.Core.Base.Loaders
         ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
         /// </exception>
         public RemoteDatasetDistributor(
-            ISendCommandsToRemoteEndpoints commandHub, 
+            ISendCommandsToRemoteEndpoints commandHub,
+            INotifyOfRemoteEndpointEvents notificationHub,
             IConfiguration configuration,
             WaitingUploads uploads,
             Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
@@ -216,10 +225,11 @@ namespace Apollo.Core.Base.Loaders
             TaskScheduler scheduler = null)
         {
             {
-                Enforce.Argument(() => commandHub);
-                Enforce.Argument(() => configuration);
-                Enforce.Argument(() => datasetInformationBuilder);
-                Enforce.Argument(() => channelInformation);
+                Lokad.Enforce.Argument(() => commandHub);
+                Lokad.Enforce.Argument(() => notificationHub);
+                Lokad.Enforce.Argument(() => configuration);
+                Lokad.Enforce.Argument(() => datasetInformationBuilder);
+                Lokad.Enforce.Argument(() => channelInformation);
             }
 
             m_Configuration = configuration;
@@ -227,20 +237,24 @@ namespace Apollo.Core.Base.Loaders
             m_DatasetInformationBuilder = datasetInformationBuilder;
             m_ChannelInformation = channelInformation;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
-            m_Hub = commandHub;
+            m_CommandHub = commandHub;
             {
+                // Set up the events so that we can see the loaders come online.
+                //
                 // Note that the events may come in on a different thread than the one
                 // we're normally accessed on. This is because adding an enpoint is usually 
                 // a result of a WCF message being received, on the WCF message thread.
-                m_Hub.OnEndpointSignedIn += (s, e) => AddNewEndpoint(e.Endpoint, e.Commands);
-                m_Hub.OnEndpointSignedOff += (s, e) => RemoveEndpoint(e.Endpoint);
+                m_CommandHub.OnEndpointSignedIn += (s, e) => AddNewEndpoint(e.Endpoint, e.Commands);
+                m_CommandHub.OnEndpointSignedOff += (s, e) => RemoveEndpoint(e.Endpoint);
 
-                var knownCommands = m_Hub.AvailableCommands();
+                var knownCommands = m_CommandHub.AvailableCommands();
                 foreach (var command in knownCommands)
                 {
                     AddNewEndpoint(command.Endpoint, command.RegisteredCommands);
                 }
             }
+
+            m_NotificationHub = notificationHub;
         }
 
         private void AddNewEndpoint(EndpointId endpoint, IEnumerable<Type> commandTypes)
@@ -254,7 +268,7 @@ namespace Apollo.Core.Base.Loaders
                         IDatasetLoaderCommands command = null;
                         try
                         {
-                            command = m_Hub.CommandsFor<IDatasetLoaderCommands>(endpoint);
+                            command = m_CommandHub.CommandsFor<IDatasetLoaderCommands>(endpoint);
                         }
                         catch (CommandNotSupportedException)
                         {
@@ -296,19 +310,19 @@ namespace Apollo.Core.Base.Loaders
         /// </returns>
         public IEnumerable<DistributionPlan> ProposeDistributionFor(DatasetRequest request, CancellationToken token)
         {
-            var availableEndpoints = new List<System.Tuple<EndpointId, IDatasetLoaderCommands>>();
+            var availableEndpoints = new List<Tuple<EndpointId, IDatasetLoaderCommands>>();
             lock (m_Lock)
             {
                 foreach (var pair in m_LoaderCommands)
                 {
-                    availableEndpoints.Add(new System.Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
+                    availableEndpoints.Add(new Tuple<EndpointId, IDatasetLoaderCommands>(pair.Key, pair.Value));
                 }
             }
 
             var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
             return from proposal in proposals
                    select new DistributionPlan(
-                       (p, t) => ImplementPlan(p, t),
+                       (p, t, r) => ImplementPlan(p, t, r),
                        request.DatasetToLoad,
                        new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
                        proposal);
@@ -319,10 +333,14 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         /// <param name="planToImplement">The distribution plan that should be implemented.</param>
         /// <param name="token">The token used to indicate cancellation of the task.</param>
+        /// <param name="progressReporter">The action that handles the reporting of progress.</param>
         /// <returns>
         /// A set of objects which allow act as proxies for the loaded datasets.
         /// </returns>
-        public Task<DatasetOnlineInformation> ImplementPlan(DistributionPlan planToImplement, CancellationToken token)
+        public Task<DatasetOnlineInformation> ImplementPlan(
+            DistributionPlan planToImplement, 
+            CancellationToken token,
+            Action<int, IProgressMark, TimeSpan> progressReporter)
         {
             Func<DatasetOnlineInformation> result =
                 () =>
@@ -345,8 +363,8 @@ namespace Apollo.Core.Base.Loaders
                     var resetEvent = new AutoResetEvent(false);
                     var commandAvailabilityNotifier =
                         Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(
-                            h => m_Hub.OnEndpointSignedIn += h,
-                            h => m_Hub.OnEndpointSignedIn -= h)
+                            h => m_CommandHub.OnEndpointSignedIn += h,
+                            h => m_CommandHub.OnEndpointSignedIn -= h)
                         .Where(args => args.EventArgs.Endpoint.Equals(endpoint))
                         .Take(1)
                         .Subscribe(
@@ -357,28 +375,40 @@ namespace Apollo.Core.Base.Loaders
 
                     using (commandAvailabilityNotifier)
                     {
-                        if (!m_Hub.HasCommandsFor(endpoint))
+                        if (!m_CommandHub.HasCommandsFor(endpoint) || !m_NotificationHub.HasNotificationsFor(endpoint))
                         {
                             resetEvent.WaitOne();
                         }
                     }
 
-                    // Store the file 
-                    var file = planToImplement.DistributionFor.StoredAt.AsFile();
-                    var uploadToken = m_Uploads.Register(file.FullName);
+                    EventHandler<ProgressEventArgs> progressHandler = 
+                        (s, e) => progressReporter(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+                    var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(endpoint);
+                    notifications.OnProgress += progressHandler;
+                    try
+                    {
+                        // Store the file 
+                        var file = planToImplement.DistributionFor.StoredAt.AsFile();
+                        var uploadToken = m_Uploads.Register(file.FullName);
 
-                    // The commands have been registered, so now load the dataset
-                    Debug.Assert(m_Hub.HasCommandFor(endpoint, typeof(IDatasetApplicationCommands)), "No application commands registered.");
-                    var applicationCommands = m_Hub.CommandsFor<IDatasetApplicationCommands>(endpoint);
-                    var task = applicationCommands.Load(
-                        EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                        uploadToken);
-                    task.Wait();
+                        // The commands have been registered, so now load the dataset
+                        Debug.Assert(
+                            m_CommandHub.HasCommandFor(endpoint, typeof(IDatasetApplicationCommands)), "No application commands registered.");
+                        var applicationCommands = m_CommandHub.CommandsFor<IDatasetApplicationCommands>(endpoint);
+                        var task = applicationCommands.Load(
+                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                            uploadToken);
+                        task.Wait();
 
-                    return m_DatasetInformationBuilder(
-                        planToImplement.DistributionFor.Id,
-                        endpoint,
-                        planToImplement.MachineToDistributeTo);
+                        return m_DatasetInformationBuilder(
+                            planToImplement.DistributionFor.Id,
+                            endpoint,
+                            planToImplement.MachineToDistributeTo);
+                    }
+                    finally
+                    {
+                        notifications.OnProgress -= progressHandler;
+                    }
                 };
 
             return Task<DatasetOnlineInformation>.Factory.StartNew(

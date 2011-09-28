@@ -48,7 +48,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             var action = new UnknownMessageTypeProcessAction(endpoint, sendAction, logger);
 
             var otherEndpoint = new EndpointId("otherId");
-            action.Invoke(new EndpointInformationRequestMessage(otherEndpoint));
+            action.Invoke(new CommandInformationRequestMessage(otherEndpoint));
 
             Assert.AreSame(otherEndpoint, storedEndpoint);
             Assert.IsInstanceOfType(typeof(UnknownMessageTypeMessage), storedMsg);
@@ -78,7 +78,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             Action<LogSeverityProxy, string> logger = (p, t) => { loggerCount++; };
 
             var action = new UnknownMessageTypeProcessAction(endpoint, sendAction, logger);
-            action.Invoke(new EndpointInformationRequestMessage(new EndpointId("otherId")));
+            action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
             Assert.AreEqual(1, loggerCount);
@@ -95,7 +95,7 @@ namespace Apollo.Base.Communication.Messages.Processors
             Action<LogSeverityProxy, string> logger = (p, t) => { count++; };
 
             var action = new UnknownMessageTypeProcessAction(endpoint, sendAction, logger);
-            action.Invoke(new EndpointInformationRequestMessage(new EndpointId("otherId")));
+            action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
         }

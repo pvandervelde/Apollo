@@ -8,6 +8,7 @@ using System;
 using Apollo.Core.Base;
 using Apollo.Core.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
+using Apollo.Utilities;
 using Lokad;
 using ICommand = System.Windows.Input.ICommand;
 
@@ -24,9 +25,25 @@ namespace Apollo.UI.Common.Views.Datasets
         private readonly DatasetFacade m_Dataset;
 
         /// <summary>
+        /// The object that handles progress notifications to the application itself.
+        /// </summary>
+        private readonly ITrackSteppingProgress m_ProgressTracker;
+
+        /// <summary>
+        /// Describes the currently running action.
+        /// </summary>
+        private string m_ProgressDescription;
+
+        /// <summary>
+        /// Describes the progress for the current action.
+        /// </summary>
+        private double m_Progress;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetModel"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <param name="progressTracker">The object that handles the progress notifications for the applications.</param>
         /// <param name="dataset">The dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
@@ -34,29 +51,55 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        public DatasetModel(IContextAware context, DatasetFacade dataset)
+        public DatasetModel(IContextAware context, ITrackSteppingProgress progressTracker, DatasetFacade dataset)
             : base(context)
         {
             {
+                Enforce.Argument(() => progressTracker);
                 Enforce.Argument(() => dataset);
             }
 
+            m_ProgressTracker = progressTracker;
             m_Dataset = dataset;
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
-            m_Dataset.OnLoadingProgress += (s, e) => { }; // @todo: add progress reporting ...
-            m_Dataset.OnLoaded += (s, e) =>
-                { 
-                    Notify(() => this.IsLoaded);
-                    Notify(() => this.RunsOn);
-                    RaiseOnLoaded();
-                };
+            m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
+            m_Dataset.OnLoaded += HandleDatasetOnLoad;
             m_Dataset.OnUnloaded += (s, e) =>
                 { 
                     Notify(() => this.IsLoaded);
                     Notify(() => this.RunsOn);
                     RaiseOnUnloaded();
                 };
+        }
+
+        private void HandleDatasetProgress(object sender, ProgressEventArgs e)
+        {
+            ProgressDescription = e.CurrentlyProcessing.ToString();
+            Progress = e.Progress / 100.0;
+            if (e.Progress <= 0)
+            {
+                m_ProgressTracker.StartTracking();
+            }
+
+            m_ProgressTracker.UpdateProgress(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
+
+            if (e.Progress >= 100)
+            {
+                m_ProgressTracker.StopTracking();
+            }
+        }
+
+        private void HandleDatasetOnLoad(object sender, EventArgs e)
+        {
+            Notify(() => this.IsLoaded);
+            Notify(() => this.RunsOn);
+
+            Progress = 0.0;
+            ProgressDescription = string.Empty;
+            m_ProgressTracker.StopTracking();
+
+            RaiseOnLoaded();
         }
 
         /// <summary>
@@ -231,6 +274,49 @@ namespace Apollo.UI.Common.Views.Datasets
             }
         }
 
-        // PROGRESS (Run / Save etc.)
+        /// <summary>
+        /// Gets the description for the currently executing action.
+        /// </summary>
+        public string ProgressDescription
+        {
+            get
+            {
+                return m_ProgressDescription;
+            }
+
+            private set
+            {
+                m_ProgressDescription = value;
+                Notify(() => ProgressDescription);
+            }
+        }
+
+        /// <summary>
+        /// Gets the progress for the currently executing action.
+        /// </summary>
+        public double Progress
+        {
+            get
+            {
+                return m_Progress;
+            }
+
+            private set
+            {
+                var result = value;
+                if (result < 0.0)
+                {
+                    result = 0.0;
+                }
+
+                if (result > 1.0)
+                {
+                    result = 1.0;
+                }
+
+                m_Progress = result;
+                Notify(() => Progress);
+            }
+        }
     }
 }

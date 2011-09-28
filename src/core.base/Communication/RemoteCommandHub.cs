@@ -5,12 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
 using Lokad;
@@ -26,46 +22,14 @@ namespace Apollo.Core.Base.Communication
     /// to the current endpoint. Upon reception of command information an endpoint will generate a proxy for
     /// the command interface thereby allowing remote invocation of commands through the proxy command interface.
     /// </remarks>
-    internal sealed class RemoteCommandHub : ISendCommandsToRemoteEndpoints
+    internal sealed class RemoteCommandHub : RemoteEndpointProxyHub<CommandSetProxy>, ISendCommandsToRemoteEndpoints
     {
-        /// <summary>
-        /// The object used to lock on.
-        /// </summary>
-        private readonly ILockObject m_Lock = new LockObject();
-
         /// <summary>
         /// The collection that holds all the <see cref="ICommandSet"/> proxies for each endpoint that
         /// has been registered.
         /// </summary>
         private readonly IDictionary<EndpointId, IDictionary<Type, CommandSetProxy>> m_RemoteCommands
             = new Dictionary<EndpointId, IDictionary<Type, CommandSetProxy>>();
-
-        /// <summary>
-        /// The collection of endpoints which have been contacted for information about 
-        /// their available commands.
-        /// </summary>
-        private readonly IList<EndpointId> m_WaitingForCommandInformation
-            = new List<EndpointId>();
-
-        /// <summary>
-        /// The communication layer which handles the sending and receiving of messages.
-        /// </summary>
-        private readonly ICommunicationLayer m_Layer;
-
-        /// <summary>
-        /// The object that reports when a new command is registered on a remote endpoint.
-        /// </summary>
-        private readonly IReportNewCommands m_CommandReporter;
-
-        /// <summary>
-        /// The object that creates command proxy objects.
-        /// </summary>
-        private readonly CommandProxyBuilder m_Builder;
-
-        /// <summary>
-        /// The function used to write messages to the log.
-        /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoteCommandHub"/> class.
@@ -88,278 +52,110 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         internal RemoteCommandHub(
             ICommunicationLayer layer,
-            IReportNewCommands commandReporter,
+            IReportNewProxies commandReporter,
             CommandProxyBuilder builder, 
             Action<LogSeverityProxy, string> logger)
+            : base(
+                layer,
+                commandReporter,
+                (endpoint, type) => (CommandSetProxy)builder.ProxyConnectingTo(endpoint, type),
+                logger)
         {
             {
-                Enforce.Argument(() => layer);
-                Enforce.Argument(() => commandReporter);
                 Enforce.Argument(() => builder);
-                Enforce.Argument(() => logger);
             }
-
-            m_Layer = layer;
-            {
-                m_Layer.OnEndpointSignedIn += (s, e) => HandleEndpointSignIn(e.ConnectionInformation);
-                m_Layer.OnEndpointSignedOut += (s, e) => HandleEndpointSignOut(e.Endpoint);
-            }
-
-            m_CommandReporter = commandReporter;
-            {
-                m_CommandReporter.OnNewCommandRegistered += (s, e) => HandleNewCommandReported(e.Endpoint, e.Command);
-            }
-
-            m_Builder = builder;
-            m_Logger = logger;
         }
 
-        private void HandleEndpointSignIn(ChannelConnectionInformation channelConnectionInformation)
+        /// <summary>
+        /// Returns the name of the proxy objects for use in the trace logs.
+        /// </summary>
+        /// <returns>A string containing the name of the proxy objects for use in the trace logs.</returns>
+        protected override string TraceNameForProxyObjects()
         {
-            // See if we already had the endpoint information. If so then we don't really care
-            // If not then we should get the command information
-            var endpoint = channelConnectionInformation.Id;
+            return "commands";
+        }
+
+        /// <summary>
+        /// Returns a value indicating if one or more proxies exist for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The ID number of the endpoint.</param>
+        /// <returns>
+        ///     <see langword="true" /> if one or more proxies exist for the endpoint; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        protected override bool HasProxyFor(EndpointId endpoint)
+        {
+            return m_RemoteCommands.ContainsKey(endpoint);
+        }
+
+        /// <summary>
+        /// Creates an <see cref="ICommunicationMessage"/> that requests information about the desired proxy types.
+        /// </summary>
+        /// <param name="endpointId">The ID number of the current endpoint.</param>
+        /// <returns>
+        /// The <see cref="ICommunicationMessage"/> that will be used to request the correct information.
+        /// </returns>
+        protected override ICommunicationMessage CreateInformationRequestMessage(EndpointId endpointId)
+        {
+            return new CommandInformationRequestMessage(endpointId);
+        }
+
+        /// <summary>
+        /// Adds the collection of proxies to the storage.
+        /// </summary>
+        /// <param name="endpoint">The endpoint from which the proxies came.</param>
+        /// <param name="list">The collection of proxies.</param>
+        protected override void AddProxiesToStorage(EndpointId endpoint, SortedList<Type, CommandSetProxy> list)
+        {
             if (!m_RemoteCommands.ContainsKey(endpoint))
             {
-                // Contact the endpoint and ask for information about the 
-                // available commands. Because this will take some time we'll just ignore
-                // the fact that the endpoint signed on and we'll pretend it didn't happen (yet).
-                lock (m_Lock)
+                m_RemoteCommands.Add(endpoint, list);
+            }
+            else
+            {
+                foreach (var pair in list)
                 {
-                    if (m_WaitingForCommandInformation.Contains(endpoint))
+                    var existingList = (SortedList<Type, CommandSetProxy>)m_RemoteCommands[endpoint];
+                    if (!existingList.ContainsKey(pair.Key))
                     {
-                        // We've already contacted the endpoint and we're still waiting.
-                        m_Logger(
-                            LogSeverityProxy.Trace,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Already waiting for commands from endpoint [{0}].",
-                                endpoint));
-                        return;
+                        existingList.Add(pair.Key, pair.Value);
                     }
-
-                    // Send out a message and ask for more information
-                    var msg = new EndpointInformationRequestMessage(m_Layer.Id);
-                    var task = m_Layer.SendMessageAndWaitForResponse(endpoint, msg);
-                    m_WaitingForCommandInformation.Add(endpoint);
-
-                    task.ContinueWith(
-                        t =>
-                        {
-                            ProcessInformationResponse(t, endpoint);
-                        },
-                        TaskContinuationOptions.ExecuteSynchronously);
                 }
             }
         }
 
-        private void ProcessInformationResponse(Task<ICommunicationMessage> task, EndpointId endpoint)
+        /// <summary>
+        /// Adds the proxy to the storage.
+        /// </summary>
+        /// <param name="endpoint">The endpoint from which the proxies came.</param>
+        /// <param name="proxyType">The type of the proxy.</param>
+        /// <param name="proxy">The proxy.</param>
+        protected override void AddProxyFor(EndpointId endpoint, Type proxyType, CommandSetProxy proxy)
         {
-            bool haveStoredCommandInformation = false;
-            var commandList = new List<Type>();
-            try
+            if (m_RemoteCommands.ContainsKey(endpoint))
             {
-                if (task.IsCompleted)
+                var list = m_RemoteCommands[endpoint];
+                if (!list.ContainsKey(proxyType))
                 {
-                    var msg = task.Result as EndpointInformationResponseMessage;
-                    if (msg == null)
-                    {
-                        // The message isn't the one we were expecting. Unfortunately 
-                        // there's nothing we can do about it. We'll just pretend we
-                        // didn't get a response and remove the endpoint from the
-                        // collection.
-                        m_Logger(
-                            LogSeverityProxy.Warning, 
-                            string.Format(
-                                CultureInfo.InvariantCulture, 
-                                "The information about endpoint: {0} was missing",
-                                endpoint));
-
-                        return;
-                    }
-
-                    lock (m_Lock)
-                    {
-                        // Only push the changes in to the collection if we
-                        // are indeed waiting for the changes. If the endpoint
-                        // was removed at some point before we get here then 
-                        // we apparently don't care anymore and we just ignore it
-                        if (m_WaitingForCommandInformation.Contains(endpoint))
-                        {
-                            Debug.Assert(!m_RemoteCommands.ContainsKey(endpoint), "There shouldn't be any endpoint information");
-
-                            // We expect that each endpoint will only have a few command sets but there might be a lot of 
-                            // endpoints. Also accessing any method in a command set proxy is going to be slow because it 
-                            // needs to travel to another application and come back (possibly over the network). it seems the
-                            // sorted list is the best trade-off (memory vs performance) in this case.
-                            var commands = msg.Commands;
-                            m_Logger(
-                                LogSeverityProxy.Trace,
-                                string.Format(
-                                    CultureInfo.InvariantCulture,
-                                    "Received {0} commands from endpoint [{1}].",
-                                    commands.Count,
-                                    endpoint));
-
-                            var list = new SortedList<Type, CommandSetProxy>(commands.Count, new TypeComparer());
-                            foreach (var command in commands)
-                            { 
-                                // Hydrate the command type. This requires loading the assembly which a) might
-                                // be slow and b) might fail
-                                Type commandSetType = LoadCommandType(endpoint, command);
-                                list.Add(commandSetType, (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType));
-                            }
-
-                            if (list.Count > 0)
-                            {
-                                if (!m_RemoteCommands.ContainsKey(endpoint))
-                                {
-                                    m_RemoteCommands.Add(endpoint, list);
-                                }
-                                else 
-                                {
-                                    foreach (var pair in list)
-                                    {
-                                        var existingList = (SortedList<Type, CommandSetProxy>)m_RemoteCommands[endpoint];
-                                        if (!existingList.ContainsKey(pair.Key))
-                                        {
-                                            existingList.Add(pair.Key, pair.Value);
-                                        }
-                                    }
-                                }
-
-                                haveStoredCommandInformation = true;
-                                commandList.AddRange(list.Keys);
-                            }
-                        }
-                    }
+                    list.Add(proxyType, proxy);
                 }
             }
-            catch (AggregateException)
+            else
             {
-                // We don't really care about any exceptions that were thrown
-                // If there was a problem we just remove the endpoint from the
-                // 'waiting list' and move on.
-                haveStoredCommandInformation = false;
-            }
-            finally 
-            {
-                lock (m_Lock)
-                {
-                    if (m_WaitingForCommandInformation.Contains(endpoint))
-                    {
-                        m_Logger(
-                           LogSeverityProxy.Trace,
-                           string.Format(
-                               CultureInfo.InvariantCulture,
-                               "No longer waiting for commands from endpoint: {0}",
-                               endpoint));
-
-                        m_WaitingForCommandInformation.Remove(endpoint);
-                    }
-                }
-            }
-
-            // Notify the outside world that we have more commands. Do this outside
-            // the lock because a) the notification may take a while and b) it 
-            // may trigger all kinds of other mayhem.
-            if (haveStoredCommandInformation)
-            {
-                if (commandList.Count > 0)
-                {
-                    RaiseOnEndpointSignedIn(endpoint, commandList);
-                }
+                var list = new SortedList<Type, CommandSetProxy>(new TypeComparer());
+                list.Add(proxyType, proxy);
+                m_RemoteCommands.Add(endpoint, list);
             }
         }
 
-        private void HandleEndpointSignOut(EndpointId endpoint)
+        /// <summary>
+        /// Removes all the proxies for the given endpoint.
+        /// </summary>
+        /// <param name="endpoint">The endpoint for which all the proxies have to be removed.</param>
+        protected override void RemoveProxiesFor(EndpointId endpoint)
         {
-            lock (m_Lock)
-            {
-                if (m_WaitingForCommandInformation.Contains(endpoint))
-                {
-                    m_Logger(
-                        LogSeverityProxy.Trace,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "No longer waiting for commands from endpoint [{0}].",
-                            endpoint));
-
-                    m_WaitingForCommandInformation.Remove(endpoint);
-                }
-
-                if (m_RemoteCommands.ContainsKey(endpoint))
-                {
-                    m_Logger(
-                        LogSeverityProxy.Trace,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Removing commands for endpoint [{0}].",
-                            endpoint));
-
-                    m_RemoteCommands.Remove(endpoint);
-                }
-            }
-
-            RaiseOnEndpointSignedOff(endpoint);
-        }
-
-        private void HandleNewCommandReported(EndpointId endpoint, ISerializedType command)
-        {
-            // We're going to assume that if we hear about a new command then we already have information
-            // about the endpoint. This may well be an incorrect assumption but for now it will do.
-            Type commandSetType = LoadCommandType(endpoint, command);
-            lock (m_Lock)
-            {
-                var proxy = (CommandSetProxy)m_Builder.ProxyConnectingTo(endpoint, commandSetType);
-                if (m_RemoteCommands.ContainsKey(endpoint))
-                {
-                    var list = m_RemoteCommands[endpoint];
-                    if (!list.ContainsKey(commandSetType))
-                    {
-                        list.Add(commandSetType, proxy);
-                    }
-                }
-                else 
-                {
-                    var list = new SortedList<Type, CommandSetProxy>(new TypeComparer());
-                    list.Add(commandSetType, proxy);
-                    m_RemoteCommands.Add(endpoint, list);
-                }
-            }
-        }
-
-        private Type LoadCommandType(EndpointId endpoint, ISerializedType command)
-        {
-            // Hydrate the command type. This requires loading the assembly which a) might
-            // be slow and b) might fail
-            Type commandSetType = null;
-            try
-            {
-                commandSetType = CommandSetProxyExtensions.ToType(command);
-
-                m_Logger(
-                    LogSeverityProxy.Trace,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Got command from endpoint [{0}] of type {1}.",
-                        endpoint,
-                        commandSetType));
-            }
-            catch (UnableToLoadCommandSetTypeException)
-            {
-                m_Logger(
-                    LogSeverityProxy.Error,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Could not load the command set type: {0} for endpoint {1}",
-                        command.AssemblyQualifiedTypeName,
-                        endpoint));
-
-                throw;
-            }
-
-            return commandSetType;
+            m_RemoteCommands.Remove(endpoint);
         }
 
         /// <summary>
@@ -412,7 +208,7 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         public event EventHandler<CommandSetAvailabilityEventArgs> OnEndpointSignedIn;
 
-        private void RaiseOnEndpointSignedIn(EndpointId endpoint, IEnumerable<Type> commands)
+        protected override void RaiseOnEndpointSignedIn(EndpointId endpoint, IEnumerable<Type> commands)
         {
             var local = OnEndpointSignedIn;
             if (local != null)
@@ -426,7 +222,7 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         public event EventHandler<EndpointEventArgs> OnEndpointSignedOff;
 
-        private void RaiseOnEndpointSignedOff(EndpointId endpoint)
+        protected override void RaiseOnEndpointSignedOff(EndpointId endpoint)
         {
             var local = OnEndpointSignedOff;
             if (local != null)
@@ -495,19 +291,22 @@ namespace Apollo.Core.Base.Communication
         /// <returns>The requested command set.</returns>
         public ICommandSet CommandsFor(EndpointId endpoint, Type commandType)
         {
-            if (!m_RemoteCommands.ContainsKey(endpoint))
+            lock (m_Lock)
             {
-                return null;
-            }
+                if (!m_RemoteCommands.ContainsKey(endpoint))
+                {
+                    return null;
+                }
 
-            var commandSets = m_RemoteCommands[endpoint];
-            if (!commandSets.ContainsKey(commandType))
-            {
-                throw new CommandNotSupportedException(commandType);
-            }
+                var commandSets = m_RemoteCommands[endpoint];
+                if (!commandSets.ContainsKey(commandType))
+                {
+                    throw new CommandNotSupportedException(commandType);
+                }
 
-            var result = commandSets[commandType];
-            return result as ICommandSet;
+                var result = commandSets[commandType];
+                return result as ICommandSet;
+            }
         }
     }
 }

@@ -99,35 +99,17 @@ namespace Apollo.Core.Dataset
                 throw new InvalidCommandLineArgumentsException();
             }
 
-            // To stop the application from running use the ApplicationContext
-            // and call context.ExitThread();
-            var container = DependencyInjection.Load(context);
-            var logger = container.Resolve<Action<LogSeverityProxy, string>>();
-
             // Load the communication system and get it going
+            var container = DependencyInjection.Load(context);
             if (container.IsRegistered<IStartable>())
             {
                 container.Resolve<IStartable>().Start();
             }
 
-            // Register all global commands
-            try
-            {
-                var commands = container.Resolve<ICommandCollection>();
-                var datasetCommand = container.Resolve<IDatasetApplicationCommands>();
-                commands.Register(typeof(IDatasetApplicationCommands), datasetCommand);
-            }
-            catch (Exception e)
-            {
-                logger(
-                    LogSeverityProxy.Error,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Exception while registering commands. Exception was {0}",
-                        e));
-
-                return CommandLineProgram.UnhandledExceptionApplicationExitCode;
-            }
+            // Register all global commands and notifications
+            // Just resolving the commands makes it all happen.
+            container.Resolve<IDatasetApplicationCommands>();
+            container.Resolve<IDatasetApplicationNotifications>();
 
             // Notify the host app that we're alive, after which the 
             // rest of the app should pick up the loading of the dataset etc.

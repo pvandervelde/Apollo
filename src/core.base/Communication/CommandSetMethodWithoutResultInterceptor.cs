@@ -65,28 +65,6 @@ namespace Apollo.Core.Base.Communication
 
         private static string MethodToText(MethodInfo method)
         {
-            // var builder = new StringBuilder();
-            // builder.Append(method.DeclaringType.FullName);
-            // builder.Append(".");
-            // builder.Append(method.Name);
-            // builder.Append("(");
-            //
-            // var parameters = method.GetParameters();
-            // for (int i = 0; i < parameters.Length; i++)
-            // {
-            //     var parameter = parameters[i];
-            //     builder.Append(parameter.ParameterType.FullName);
-            //     builder.Append(" ");
-            //     builder.Append(parameter.Name);
-            //     if (i < parameters.Length - 1)
-            //     {
-            //         builder.Append(", ");
-            //     }
-            // }
-            //
-            // builder.Append(")");
-            //
-            // return builder.ToString();
             return method.ToString();
         }
 
@@ -120,8 +98,7 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
         /// </exception>
         public CommandSetMethodWithoutResultInterceptor(
-            Func<ISerializedMethodInvocation, 
-            Task<ICommunicationMessage>> sendMessageWithResponse,
+            Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> sendMessageWithResponse,
             Action<LogSeverityProxy, string> logger,
             TaskScheduler scheduler = null)
         {
@@ -152,7 +129,7 @@ namespace Apollo.Core.Base.Communication
             try
             {
                 result = m_SendMessageWithResponse(
-                    CommandSetProxyExtensions.FromMethodInfo(
+                    ProxyExtensions.FromMethodInfo(
                         invocation.Method,
                         invocation.Arguments));
             }

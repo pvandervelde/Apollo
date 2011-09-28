@@ -98,7 +98,7 @@ namespace Apollo.Core.UserInterfaces.Scripting
 
             m_Dataset = facade;
             m_Dataset.OnInvalidate += (s, e) => RaiseOnInvalidate();
-            m_Dataset.OnLoadingProgress += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing);
+            m_Dataset.OnProgressOfCurrentAction += (s, e) => RaiseOnLoadingProgress(e.Progress, e.CurrentlyProcessing, e.EstimatedFinishingTime);
             m_Dataset.OnLoaded += (s, e) => RaiseOnLoaded();
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
@@ -324,12 +324,12 @@ namespace Apollo.Core.UserInterfaces.Scripting
         /// </summary>
         public event EventHandler<ProgressEventArgs> OnLoadingProgress;
 
-        private void RaiseOnLoadingProgress(int progress, IProgressMark mark)
+        private void RaiseOnLoadingProgress(int progress, IProgressMark mark, TimeSpan estimatedTime)
         {
             var local = OnLoadingProgress;
             if (local != null)
             {
-                local(this, new ProgressEventArgs(progress, mark));
+                local(this, new ProgressEventArgs(progress, mark, estimatedTime));
             }
         }
 

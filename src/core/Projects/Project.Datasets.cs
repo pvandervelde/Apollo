@@ -377,13 +377,19 @@ namespace Apollo.Core.Projects
                     return;
                 }
 
-                if (m_DatasetProxies.ContainsKey(id))
-                {
-                    var proxy = m_DatasetProxies[id];
-                    proxy.OwnerReportsDatasetLoadingProgress(0, new DatasetLoadingProgressMark());
-                }
+                Action<int, IProgressMark, TimeSpan> progressReporter =
+                    (p, m, t) =>
+                    {
+                        if (m_DatasetProxies.ContainsKey(id))
+                        {
+                            var proxy = m_DatasetProxies[id];
+                            proxy.OwnerReportsDatasetCurrentActionProgress(p, m, t);
+                        }
+                    };
 
-                var task = selectedPlan.Plan.Accept(token);
+                progressReporter(0, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(1));
+                
+                var task = selectedPlan.Plan.Accept(token, progressReporter);
                 task.ContinueWith(
                     t =>
                     {
@@ -398,7 +404,6 @@ namespace Apollo.Core.Projects
                         if (m_DatasetProxies.ContainsKey(id))
                         {
                             var proxy = m_DatasetProxies[id];
-                            proxy.OwnerReportsDatasetLoadingProgress(100, new DatasetLoadingProgressMark());
                             proxy.OwnerHasLoadedDataset();
                         }
                     },

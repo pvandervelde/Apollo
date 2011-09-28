@@ -26,7 +26,29 @@ namespace Apollo.Base.Loaders
         Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteDatasetDistributorTest
     {
-        private DatasetOfflineInformation CreateOfflineInfo()
+        private static DistributionPlan CreateNewDistributionPlan(
+           DatasetLoadingProposal proposal,
+            DatasetOfflineInformation offlineInfo,
+            Action<LogSeverityProxy, string> logger)
+        {
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                    offlineInfo,
+                NetworkIdentifier.ForLocalMachine(),
+                proposal);
+            return plan;
+        }
+
+        private static DatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
         {
             return new DatasetOfflineInformation(
                 new DatasetId(),
@@ -37,7 +59,7 @@ namespace Apollo.Base.Loaders
                     CanBeAdopted = false,
                     CanBeCopied = false,
                     CanBeDeleted = true,
-                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    LoadFrom = storage,
                 });
         }
 
@@ -46,7 +68,7 @@ namespace Apollo.Base.Loaders
         {
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
-            var offlineInfo = CreateOfflineInfo();
+            var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
             var result = new DatasetLoadingProposal
             {
                 Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
@@ -57,20 +79,11 @@ namespace Apollo.Base.Loaders
                 PercentageOfMaximumMemory = 50,
                 PercentageOfPhysicalMemory = 50,
             };
-            var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => new DatasetOnlineInformation(
-                        new DatasetId(),
-                        new EndpointId("id"),
-                        new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
-                    t,
-                    TaskCreationOptions.None,
-                    new CurrentThreadTaskScheduler()),
+
+            var plan = CreateNewDistributionPlan(
+                result,
                 offlineInfo,
-                NetworkIdentifier.ForLocalMachine(),
-                result);
+                logger);
 
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
@@ -84,11 +97,13 @@ namespace Apollo.Base.Loaders
                     .Verifiable();
             }
 
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
                     .Returns(loaderCommands.Object);
             }
+
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
 
             var offlimitsMachines = new SortedList<string, object> 
                 {
@@ -109,7 +124,8 @@ namespace Apollo.Base.Loaders
                             new Uri("net.pipe://localhost/pipe"));
 
             var distributor = new RemoteDatasetDistributor(
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 config.Object,
                 new WaitingUploads(),
                 (d, e, n) =>
@@ -118,7 +134,7 @@ namespace Apollo.Base.Loaders
                         d,
                         e,
                         n,
-                        hub.Object,
+                        commandHub.Object,
                         logger);
                 },
                 channelInfo,
@@ -126,14 +142,14 @@ namespace Apollo.Base.Loaders
 
             // Add the remote endpoints
             var forbiddenMachineId = new EndpointId("otherMachine:8080");
-            hub.Raise(
+            commandHub.Raise(
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     forbiddenMachineId,
                     new Type[] { typeof(IDatasetLoaderCommands) }));
 
             var legalMachineId = new EndpointId("myMachine:8080");
-            hub.Raise(
+            commandHub.Raise(
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     legalMachineId,
@@ -162,6 +178,18 @@ namespace Apollo.Base.Loaders
         {
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
+            var loaderEndpoint = new EndpointId("myMachine:8080");
+            var proposal = new DatasetLoadingProposal
+            {
+                Endpoint = loaderEndpoint,
+                IsAvailable = true,
+                LoadingTime = new TimeSpan(0, 1, 0),
+                TransferTime = new TimeSpan(0, 1, 0),
+                PercentageOfAvailableDisk = 50,
+                PercentageOfMaximumMemory = 50,
+                PercentageOfPhysicalMemory = 50,
+            };
+
             var filePath = @"c:\temp\myfile.txt";
             var storage = new Mock<IPersistenceInformation>();
             {
@@ -169,35 +197,7 @@ namespace Apollo.Base.Loaders
                     .Returns(new FileInfo(filePath));
             }
 
-            var loaderEndpoint = new EndpointId("myMachine:8080");
-            var plan = new DistributionPlan(
-                (p, t) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => new DatasetOnlineInformation(
-                        new DatasetId(),
-                        new EndpointId("id"),
-                        new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
-                    t,
-                    TaskCreationOptions.None,
-                    new CurrentThreadTaskScheduler()),
-                new DatasetOfflineInformation(
-                    new DatasetId(),
-                    new DatasetCreationInformation()
-                    {
-                        CreatedOnRequestOf = DatasetCreator.User,
-                        CanBecomeParent = true,
-                        CanBeAdopted = false,
-                        CanBeCopied = false,
-                        CanBeDeleted = true,
-                        LoadFrom = storage.Object,
-                    }),
-                NetworkIdentifier.ForLocalMachine(),
-                new DatasetLoadingProposal 
-                    {
-                        Endpoint = loaderEndpoint,
-                    });
-
+            var plan = CreateNewDistributionPlan(proposal, CreateOfflineInfo(storage.Object), logger);
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
@@ -221,15 +221,25 @@ namespace Apollo.Base.Loaders
                             new CurrentThreadTaskScheduler()));
             }
 
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.HasCommandsFor(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.HasCommandsFor(It.IsAny<EndpointId>()))
                     .Returns(true);
-                hub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetLoaderCommands>(It.IsAny<EndpointId>()))
                     .Returns(loaderCommands.Object);
-                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
                     .Callback<EndpointId>(e => Assert.AreSame(datasetEndpoint, e))
                     .Returns(applicationCommands.Object);
+            }
+
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(datasetEndpoint, e))
+                    .Returns(notifications.Object);
             }
 
             var config = new Mock<IConfiguration>();
@@ -245,7 +255,8 @@ namespace Apollo.Base.Loaders
                             new Uri("net.pipe://localhost/pipe"));
 
             var distributor = new RemoteDatasetDistributor(
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 config.Object,
                 new WaitingUploads(),
                 (d, e, n) =>
@@ -254,20 +265,21 @@ namespace Apollo.Base.Loaders
                         d,
                         e,
                         n,
-                        hub.Object,
+                        commandHub.Object,
                         logger);
                 },
                 channelInfo,
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints
-            hub.Raise(
+            commandHub.Raise(
                 h => h.OnEndpointSignedIn += null,
                 new CommandSetAvailabilityEventArgs(
                     loaderEndpoint,
                     new Type[] { typeof(IDatasetLoaderCommands) }));
 
-            var result = distributor.ImplementPlan(plan, new CancellationToken());
+            Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };
+            var result = distributor.ImplementPlan(plan, new CancellationToken(), progress);
             result.Wait();
 
             Assert.AreSame(datasetEndpoint, result.Result.Endpoint);
