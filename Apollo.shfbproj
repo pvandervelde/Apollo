@@ -34,8 +34,8 @@
         <ShowFeedbackControl>True</ShowFeedbackControl>
         <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
         <DocumentationSources>
-            <DocumentationSource sourceFile="modules\core\bin\build\Apollo.Core.dll" />
-            <DocumentationSource sourceFile="modules\core\bin\build\Apollo.Core.xml" />
+            <DocumentationSource sourceFile="modules\core\bin\build\Apollo.Core.Host.dll" />
+            <DocumentationSource sourceFile="modules\core\bin\build\Apollo.Core.Host.xml" />
             <DocumentationSource sourceFile="modules\ui\projectexplorer\bin\build\Apollo.ProjectExplorer.exe" />
             <DocumentationSource sourceFile="modules\ui\projectexplorer\bin\build\Apollo.ProjectExplorer.xml" />
             <DocumentationSource sourceFile="modules\ui\common\bin\build\Apollo.UI.Common.dll" />

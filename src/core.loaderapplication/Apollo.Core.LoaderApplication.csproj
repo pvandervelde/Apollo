@@ -150,7 +150,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-	<EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+    <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
       <Link>Properties\NSarracReportPublicKey.xml</Link>
     </EmbeddedResource>
   </ItemGroup>

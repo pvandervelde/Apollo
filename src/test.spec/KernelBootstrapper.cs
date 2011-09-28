@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
-using Apollo.Core;
 using Apollo.Core.Base;
+using Apollo.Core.Host;
 using Apollo.Utilities;
 using Autofac.Core;
 

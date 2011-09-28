@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+
+    <?include $(var.SolutionDir)Dependencies.wxi ?>
+    
+    <Fragment>
+        <!-- 
+            Define all the files that will be installed in the program files folder.
+            The user may decide to install in a different location which will be
+            reflected in a change to the value of the INSTALLLOCATION directory.
+        -->
+        <DirectoryRef Id="INSTALLLOCATION">
+            <!-- Apollo.Core.Host.dll -->
+            <Component Id="C.Apollo.Core.Host.dll"
+                       Guid="{5BFBBC07-ED98-4EEA-BB28-527693AEC44E}">
+                <File Id="File.Apollo.Core.Host.dll"
+                      Name="Apollo.Core.Host.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Host.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- QuickGraph.dll -->
+            <Component Id="C.QuickGraph.dll"
+                       Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
+                <File Id="File.QuickGraph.dll"
+                      Name="QuickGraph.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      KeyPath="yes" />
+            </Component>
+        </DirectoryRef>
+
+        <ComponentGroup Id="CGroup.Apollo.Core.Host">
+            <ComponentRef Id="C.Apollo.Core.Host.dll" />
+            <ComponentRef Id="C.QuickGraph.dll" />
+
+            <ComponentGroupRef Id="CGroup.Apollo.Base" />
+            <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />
+        </ComponentGroup>
+    </Fragment>
+</Wix>

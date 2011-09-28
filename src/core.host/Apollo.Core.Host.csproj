@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Apollo.Core.Host</RootNamespace>
+    <AssemblyName>Apollo.Core.Host</AssemblyName>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <ItemGroup>
+    <Reference Include="Autofac, Version=1.4.5.676, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.78.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Dynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph">
+      <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="ApplicationStartingProgressMark.cs" />
+    <Compile Include="ApplicationStartupEventArgs.cs" />
+    <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
+    <Compile Include="INotificationArguments.cs" />
+    <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
+    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
+    <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
+    <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
+    <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
+    <Compile Include="Projects\DatasetNotLoadedException.cs" />
+    <Compile Include="Projects\IOwnedProxyDataset.cs" />
+    <Compile Include="Projects\IProxyCommandSet.cs" />
+    <Compile Include="SrcOnlyResources.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
+    <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />
+    <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptException.cs" />
+    <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\IDatasetScriptFacade.cs" />
+    <Compile Include="UserInterfaces\Scripting\IExecuteScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\IHostScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\ILinkScriptsToProjects.cs" />
+    <Compile Include="UserInterfaces\Scripting\InvalidScriptLanguageException.cs" />
+    <Compile Include="UserInterfaces\Scripting\IProjectScriptFacade.cs" />
+    <Compile Include="UserInterfaces\Scripting\ISendScriptOutput.cs" />
+    <Compile Include="UserInterfaces\Scripting\ISyntaxVerifier.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectFacadeForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectHubForScripts.cs" />
+    <Compile Include="UserInterfaces\Scripting\RemoteScriptRunner.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptDomainLauncher.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptErrorInformation.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptExecutionFailureException.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptHost.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptLanguage.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptOutputEventArgs.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptOutputPipe.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptRunInformation.cs" />
+    <Compile Include="UserInterfaces\Scripting\SourceErrorListener.cs" />
+    <Compile Include="UserInterfaces\Scripting\SyntaxVerificationSeverity.cs" />
+    <Compile Include="UserInterfaces\Scripting\SyntaxVerifier.cs" />
+    <Compile Include="UtilitiesModule.cs" />
+    <Compile Include="ValueChangedEventArgs.cs" />
+    <Compile Include="Projects\DatasetLoadEventArgs.cs" />
+    <Compile Include="Projects\DatasetUnloadEventArgs.cs" />
+    <Compile Include="Projects\IBuildProjects.cs" />
+    <Compile Include="Projects\IProject.cs" />
+    <Compile Include="Projects\IProxyDataset.cs" />
+    <Compile Include="Projects\Project.cs" />
+    <Compile Include="Projects\Project.DatasetProxy.cs" />
+    <Compile Include="Projects\Project.Datasets.cs" />
+    <Compile Include="Projects\ProjectBuilder.cs" />
+    <Compile Include="Projects\ProjectModule.cs" />
+    <Compile Include="Projects\ProjectService.cs" />
+    <Compile Include="Projects\ProxyCommandSet.cs" />
+    <Compile Include="Projects\UnknownDatasetException.cs" />
+    <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
+    <Compile Include="AutoLoadAttribute.cs" />
+    <Compile Include="Bootstrapper.cs" />
+    <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
+    <Compile Include="CoreLoadingProgressMark.cs" />
+    <Compile Include="CoreStartingProgressMark.cs" />
+    <Compile Include="IHaveServiceDependencies.cs" />
+    <Compile Include="IKernel.cs" />
+    <Compile Include="INeedStartup.cs" />
+    <Compile Include="IOwnServices.cs" />
+    <Compile Include="CoreProxy.cs" />
+    <Compile Include="Kernel.ConnectionMap.cs" />
+    <Compile Include="Kernel.cs" />
+    <Compile Include="Kernel.ServiceVertex.cs" />
+    <Compile Include="KernelModule.cs" />
+    <Compile Include="KernelNotInInstallReadyStateException.cs" />
+    <Compile Include="KernelService.cs" />
+    <Compile Include="KernelServiceStartupFailedException.cs" />
+    <Compile Include="KernelStartupFailedException.cs" />
+    <Compile Include="MissingServiceDependencyException.cs" />
+    <Compile Include="NotificationNameConstants.cs" />
+    <Compile Include="ProgressMarkerTypeAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Resources.NonTranslatable.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.NonTranslatable.resx</DependentUpon>
+    </Compile>
+    <Compile Include="ShutdownApplicationCommand.cs" />
+    <Compile Include="ServiceCannotDependOnGenericKernelServiceException.cs" />
+    <Compile Include="ServiceCannotDependOnItselfException.cs" />
+    <Compile Include="ServiceTypeAlreadyInstalledException.cs" />
+    <Compile Include="ShutdownApplicationContext.cs" />
+    <Compile Include="ShutdownCapabilityArguments.cs" />
+    <Compile Include="StartupState.cs" />
+    <Compile Include="UnknownKernelServiceTypeException.cs" />
+    <Compile Include="UserInterfaces\Application\ApplicationFacade.cs" />
+    <Compile Include="UserInterfaces\Application\IAbstractApplications.cs" />
+    <Compile Include="UserInterfaces\Application\IHoldSystemInformation.cs" />
+    <Compile Include="UserInterfaces\Application\IServiceInformation.cs" />
+    <Compile Include="UserInterfaces\Application\ISystemInformationStorage.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformation.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformationStorage.cs" />
+    <Compile Include="UserInterfaces\DuplicateNotificationException.cs" />
+    <Compile Include="INotificationNameConstants.cs" />
+    <Compile Include="UserInterfaces\IUserInterfaceService.cs" />
+    <Compile Include="NotificationName.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotCreateNewProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotUnloadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\CreateProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\CreateProjectContext.cs" />
+    <Compile Include="UserInterfaces\Projects\DatasetFacade.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToCreateProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToLoadProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\ILinkToProjects.cs" />
+    <Compile Include="UserInterfaces\Projects\LoadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\LoadProjectContext.cs" />
+    <Compile Include="UserInterfaces\Projects\NoCurrentProjectException.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectFacade.cs" />
+    <Compile Include="UserInterfaces\Projects\UnloadProjectCommand.cs" />
+    <Compile Include="UserInterfaces\Projects\UnloadProjectContext.cs" />
+    <Compile Include="UserInterfaces\MissingNotificationActionException.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Plugins\" />
+    <Folder Include="UserInterfaces\Plugins\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utilities</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.NonTranslatable.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.NonTranslatable.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Scripting;
+using Apollo.Core.Host.UserInterfaces.Scripting;
 
 namespace Apollo.UI.Common.Views.Scripting
 {

@@ -7,7 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
-using Apollo.Core.UserInterfaces.Scripting;
+using Apollo.Core.Host.UserInterfaces.Scripting;
 using Apollo.UI.Common.Properties;
 
 namespace Apollo.UI.Common.Views.Scripting

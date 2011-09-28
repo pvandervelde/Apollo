@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Microsoft.Practices.Prism.Commands;
 
 namespace Apollo.UI.Common.Commands
