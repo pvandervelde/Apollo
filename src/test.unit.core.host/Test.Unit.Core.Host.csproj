@@ -1,0 +1,155 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{BC56ED6A-6780-4162-9B68-4B2D8013ECDC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Apollo.Core.Host</RootNamespace>
+    <AssemblyName>Test.Unit.Core.Host</AssemblyName>
+    <ShouldDoDocumentation>false</ShouldDoDocumentation>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <PropertyGroup>
+    <NoWarn>1685</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.7.720, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Gallio, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit35, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\common\Apollo.UI.Common.csproj">
+      <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
+      <Name>Apollo.UI.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
+      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
+      <Name>Apollo.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProjectExplorer\Apollo.ProjectExplorer.csproj">
+      <Project>{60F9649B-6C4B-43D4-AE8C-D68F04E2C3DF}</Project>
+      <Name>Apollo.ProjectExplorer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CannotUninstallNonequivalentServiceExceptionTest.cs" />
+    <Compile Include="CoreProxyTest.cs" />
+    <Compile Include="KernelNotInInstallReadyStateExceptionTest.cs" />
+    <Compile Include="KernelServiceStartupFailedExceptionTest.cs" />
+    <Compile Include="KernelStartupFailedExceptionTest.cs" />
+    <Compile Include="KernelTest.cs" />
+    <Compile Include="MissingServiceDependencyExceptionTest.cs" />
+    <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
+    <Compile Include="Projects\CannotDeleteDatasetException.cs" />
+    <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
+    <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
+    <Compile Include="Projects\DatasetIdTest.cs" />
+    <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
+    <Compile Include="Projects\DatasetNotLoadedExceptionTest.cs" />
+    <Compile Include="Projects\DatasetProxyTest.cs" />
+    <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
+    <Compile Include="Projects\ProjectBuilderTest.cs" />
+    <Compile Include="Projects\ProjectServiceTest.cs" />
+    <Compile Include="Projects\ProjectTest.cs" />
+    <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
+    <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />
+    <Compile Include="ServiceTypeAlreadyInstalledExceptionTest.cs" />
+    <Compile Include="ShutdownApplicationCommandTest.cs" />
+    <Compile Include="StartupProgressEventArgsTest.cs" />
+    <Compile Include="UnknownKernelServiceTypeExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Application\ApplicationFacadeTest.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformationStorageTest.cs" />
+    <Compile Include="UserInterfaces\Application\SystemInformationTest.cs" />
+    <Compile Include="UserInterfaces\DuplicateNotificationExceptionTest.cs" />
+    <Compile Include="UserInterfaces\MissingNotificationActionExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotCreateNewProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotLoadProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\CannotUnloadProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\CreateProjectCommandTest.cs" />
+    <Compile Include="UserInterfaces\Projects\DatasetFacadeTest.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToCreateProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\FailedToLoadProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\LoadProjectCommandTest.cs" />
+    <Compile Include="UserInterfaces\Projects\NoCurrentProjectExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectFacadeTest.cs" />
+    <Compile Include="UserInterfaces\Projects\ProjectHubTest.cs" />
+    <Compile Include="UserInterfaces\Projects\UnloadProjectCommandTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\CancelScriptTokenTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScriptsTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\InvalidScriptLanguageExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectFacadeForScriptsTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ProjectHubForScriptsTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\RemoteScriptRunnerTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptErrorInformationTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptExecutionFailureExceptionTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptHostTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\ScriptOutputPipeTest.cs" />
+    <Compile Include="UserInterfaces\Scripting\SourceErrorListenerTest.cs" />
+    <Compile Include="UserInterfaces\UserInterfaceServiceTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

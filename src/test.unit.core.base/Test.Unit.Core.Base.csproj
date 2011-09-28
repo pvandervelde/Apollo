@@ -1,0 +1,157 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{8E03F1B6-AA16-4D87-B6B4-91797555EE56}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Apollo.Core.Base</RootNamespace>
+    <AssemblyName>Test.Unit.Core.Base</AssemblyName>
+    <ShouldDoDocumentation>false</ShouldDoDocumentation>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <PropertyGroup>
+    <NoWarn>1685</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.7.720, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Gallio, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit35, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="ParallelExtensionsExtras">
+      <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
+    <Compile Include="Communication\ChannelClosedEventArgsTest.cs" />
+    <Compile Include="Communication\ChannelConnectionInformationTest.cs" />
+    <Compile Include="Communication\CommandAlreadyRegisteredExceptionTest.cs" />
+    <Compile Include="Communication\CommandNotSupportedExceptionTest.cs" />
+    <Compile Include="Communication\CommandProxyBuilderTest.cs" />
+    <Compile Include="Communication\CommandProxyBuilderTest.Interfaces.cs" />
+    <Compile Include="Communication\ConnectionInformationEventArgsTest.cs" />
+    <Compile Include="Communication\EndpointEventArgsTest.cs" />
+    <Compile Include="Communication\EndpointIdExtensionsTest.cs" />
+    <Compile Include="Communication\EndpointIdTest.cs" />
+    <Compile Include="Communication\EndpointNotContactableExceptionTest.cs" />
+    <Compile Include="Communication\FailedToSendMessageExceptionTest.cs" />
+    <Compile Include="Communication\FileRegistrationNotFoundExceptionTest.cs" />
+    <Compile Include="Communication\LocalCommandCollectionTest.cs" />
+    <Compile Include="Communication\LocalNotificationCollectionTest.cs" />
+    <Compile Include="Communication\ManualCommandRegistrationReporterTest.cs" />
+    <Compile Include="Communication\ManualDiscoverySourceTest.cs" />
+    <Compile Include="Communication\MaximumNumberOfChannelRestartsExceededExceptionTest.cs" />
+    <Compile Include="Communication\MessageEventArgsTest.cs" />
+    <Compile Include="Communication\MessageHandlerTest.cs" />
+    <Compile Include="Communication\MessageIdTest.cs" />
+    <Compile Include="Communication\Messages\CommandInformationRequestMessageTest.cs" />
+    <Compile Include="Communication\Messages\CommandInvokedMessageTest.cs" />
+    <Compile Include="Communication\Messages\CommandInvokedResponseMessageTest.cs" />
+    <Compile Include="Communication\Messages\DataDownloadRequestMessageTest.cs" />
+    <Compile Include="Communication\Messages\EndpointConnectMessageTest.cs" />
+    <Compile Include="Communication\Messages\EndpointDisconnectMessageTest.cs" />
+    <Compile Include="Communication\Messages\EndpointProxyTypesResponseMessageTest.cs" />
+    <Compile Include="Communication\Messages\FailureMessageTest.cs" />
+    <Compile Include="Communication\Messages\MessageKindFilterTest.cs" />
+    <Compile Include="Communication\Messages\NewNotificationRegisteredMessageTest.cs" />
+    <Compile Include="Communication\Messages\NotificationInformationRequestMessageTest.cs" />
+    <Compile Include="Communication\Messages\NotificationRaisedMessageTest.cs" />
+    <Compile Include="Communication\Messages\Processors\CommandInformationRequestProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\CommandInvokedProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\DataDownloadProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\EndpointConnectProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\NewCommandRegisteredProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\NewNotificationRegisteredProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\NotificationInformationRequestProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\NotificationRaisedProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\RegisterForNotificationProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\UnknownMessageTypeProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\Processors\UnregisterFromNotificationProcessActionTest.cs" />
+    <Compile Include="Communication\Messages\RegisterForNotificationMessageTest.cs" />
+    <Compile Include="Communication\Messages\SuccessMessageTest.cs" />
+    <Compile Include="Communication\Messages\UnknownMessageTypeMessageTest.cs" />
+    <Compile Include="Communication\Messages\UnregisterFromNotificationMessageTest.cs" />
+    <Compile Include="Communication\MissingBindingTypeExceptionTest.cs" />
+    <Compile Include="Communication\MissingEndpointIdExceptionTest.cs" />
+    <Compile Include="Communication\NamedPipeChannelTypeTest.cs" />
+    <Compile Include="Communication\NotificationNotSupportedExceptionTest.cs" />
+    <Compile Include="Communication\NotificationProxyBuilderTest.cs" />
+    <Compile Include="Communication\NotificationProxyBuilderTest.Interfaces.cs" />
+    <Compile Include="Communication\ReceivingEndpointTest.cs" />
+    <Compile Include="Communication\RemoteCommandHubTest.cs" />
+    <Compile Include="Communication\RemoteNotificationHubTest.cs" />
+    <Compile Include="Communication\RemoteOperationFailedExceptionTest.cs" />
+    <Compile Include="Communication\SelfResurrectingSendingEndpointTest.cs" />
+    <Compile Include="Communication\SendingEndpointTest.cs" />
+    <Compile Include="Communication\SerializedEventTest.cs" />
+    <Compile Include="Communication\SerializedMethodInvocationTest.cs" />
+    <Compile Include="Communication\SerializedTypeTest.cs" />
+    <Compile Include="Communication\TypeIsNotAValidCommandSetExceptionTest.cs" />
+    <Compile Include="Communication\TypeIsNotAValidNotificationSetExceptionTest.cs" />
+    <Compile Include="Communication\UnableToLoadProxyTypeException.cs" />
+    <Compile Include="Communication\UnknownEndpointIdFormatExceptionTest.cs" />
+    <Compile Include="Communication\UploadNotDeregisteredExceptionTest.cs" />
+    <Compile Include="Communication\UploadTokenTest.cs" />
+    <Compile Include="Communication\WaitingUploadsTest.cs" />
+    <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
+    <Compile Include="DatasetIdTest.cs" />
+    <Compile Include="DatasetOfflineInformationTest.cs" />
+    <Compile Include="DatasetOnlineInformationTest.cs" />
+    <Compile Include="Loaders\DatasetDistributionGeneratorTest.cs" />
+    <Compile Include="Loaders\DatasetLoadingProposalComparerTest.cs" />
+    <Compile Include="Loaders\DiskSpecificationTest.cs" />
+    <Compile Include="Loaders\HardwareSpecificationTest.cs" />
+    <Compile Include="Loaders\LocalDatasetDistributorTest.cs" />
+    <Compile Include="Loaders\MachineTest.cs" />
+    <Compile Include="Loaders\NetworkIdentifierTest.cs" />
+    <Compile Include="Loaders\RemoteDatasetDistributorTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

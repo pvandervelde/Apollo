@@ -402,7 +402,10 @@ properties{
     $props.msbuildSandcastleReferenceData = Join-Path $props.dirSandcastle 'fxReflection.proj'
     
     # assembly names
-    $props.assemblyNameTestUnitCore = 'Test.Unit.Core, PublicKey='
+    $props.assemblyNameTestUnitHost = 'Test.Unit.Core.Host, PublicKey='
+	$props.assemblyNameTestUnitBase = 'Test.Unit.Core.Base, PublicKey='
+	$props.assemblyNameTestUnitUi = 'Test.Unit.UI, PublicKey='
+	$props.assemblyNameTestUnitUtils = 'Test.Unit.Utilities, PublicKey='
     $props.assemblyNameTestUnitDataset = 'Test.Unit.Dataset, PublicKey='
     
     #$props.assemblyNameSpecTest = 'Test.Spec, PublicKey='
@@ -652,14 +655,17 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -ac
     
     # Set the InternalsVisibleTo attribute
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
-    $testUnitCoreAssemblyName = $props.assemblyNameTestUnitCore + $publicKeyToken
-    $testUnitDatasetAssemblyName = $props.assemblyNameTestUnitDataset + $publicKeyToken
+    $testUnitHostAssemblyName = $props.assemblyNameTestUnitHost + $publicKeyToken
+	$testUnitBaseAssemblyName = $props.assemblyNameTestUnitBase + $publicKeyToken
+	$testUnitUIAssemblyName = $props.assemblyNameTestUnitUi + $publicKeyToken
+	$testUnitUtilsAssemblyName = $props.assemblyNameTestUnitUtils + $publicKeyToken
+	$testUnitDatasetAssemblyName = $props.assemblyNameTestUnitDataset + $publicKeyToken
     
     $manualTestAssemblyName = $props.assemblyNameManualTest + $publicKeyToken
     
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
-    Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitCoreAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
+    Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitHostAssemblyName, $testUnitBaseAssemblyName, $testUnitUIAssemblyName, $testUnitUtilsAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
     
     $logPath = Join-Path $props.dirLogs $props.logMsBuild
     $msbuildExe = Get-MsbuildExe
