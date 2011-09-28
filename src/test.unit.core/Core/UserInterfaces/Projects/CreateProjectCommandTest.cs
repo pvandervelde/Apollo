@@ -6,11 +6,11 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Projects;
+using Apollo.Core.Host.Projects;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Projects
+namespace Apollo.Core.Host.UserInterfaces.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

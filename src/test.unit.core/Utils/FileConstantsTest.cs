@@ -10,7 +10,7 @@ using System.IO;
 using Apollo.Utilities;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Utilities
+namespace Apollo.Core.Host.Utilities
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

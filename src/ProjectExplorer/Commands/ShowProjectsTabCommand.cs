@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Views.Projects;

@@ -269,7 +269,7 @@
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
       <Name>Apollo.Core.Base</Name>
     </ProjectReference>
-    <ProjectReference Include="..\core\Apollo.Core.csproj">
+    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
       <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
       <Name>Apollo.Core</Name>
     </ProjectReference>

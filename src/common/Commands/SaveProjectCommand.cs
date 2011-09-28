@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
 

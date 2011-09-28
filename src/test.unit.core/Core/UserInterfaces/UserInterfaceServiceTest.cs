@@ -8,15 +8,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.Projects;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using Autofac.Core;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces
+namespace Apollo.Core.Host.UserInterfaces
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

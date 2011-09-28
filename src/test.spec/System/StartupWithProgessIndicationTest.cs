@@ -7,8 +7,8 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core;
-using Apollo.Core.UserInterfaces.Application;
+using Apollo.Core.Host;
+using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Utilities;
 using Autofac;
 using Autofac.Core;

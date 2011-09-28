@@ -9,7 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using Microsoft.Scripting;
 
-namespace Apollo.Core.UserInterfaces.Scripting
+namespace Apollo.Core.Host.UserInterfaces.Scripting
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

@@ -8,13 +8,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Threading.Tasks.Schedulers;
-using Apollo.Core.Projects;
+using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Projects
+namespace Apollo.Core.Host.UserInterfaces.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

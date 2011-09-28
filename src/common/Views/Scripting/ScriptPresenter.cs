@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using Apollo.Core.UserInterfaces.Scripting;
+using Apollo.Core.Host.UserInterfaces.Scripting;
 using Apollo.UI.Common.Commands;
 using Apollo.UI.Common.Properties;
 using Autofac;

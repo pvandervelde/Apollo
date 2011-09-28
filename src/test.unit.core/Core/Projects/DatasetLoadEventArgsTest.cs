@@ -11,7 +11,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Projects
+namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

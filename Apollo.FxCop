@@ -24,7 +24,7 @@
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Base.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.BatchService.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe" Analyze="True" AnalyzeAllChildren="True" />
-  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.dll" Analyze="True" AnalyzeAllChildren="True" />
+  <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Host.dll" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.LoaderApplication.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.ProjectExplorer.exe" Analyze="True" AnalyzeAllChildren="True" />
   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Common.dll" Analyze="True" AnalyzeAllChildren="True" />
@@ -49,20 +49,20 @@
  </Rules>
  <FxCopReport Version="10.0">
   <Namespaces>
-   <Namespace Name="Apollo.Core.UserInterfaces">
+   <Namespace Name="Apollo.Core.Host.UserInterfaces">
     <Messages>
      <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-05-18 08:26:30Z">
       <Issue>
-       <Item>Apollo.Core.UserInterfaces</Item>
+       <Item>Apollo.Core.Host.UserInterfaces</Item>
       </Issue>
      </Message>
     </Messages>
    </Namespace>
-   <Namespace Name="Apollo.Core.UserInterfaces.Application">
+   <Namespace Name="Apollo.Core.Host.UserInterfaces.Application">
     <Messages>
      <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-05-18 08:26:30Z">
       <Issue>
-       <Item>Apollo.Core.UserInterfaces.Application</Item>
+       <Item>Apollo.Core.Host.UserInterfaces.Application</Item>
       </Issue>
      </Message>
     </Messages>
@@ -104,11 +104,11 @@
      </Module>
     </Modules>
    </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.dll">
+   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Host.dll">
     <Modules>
      <Module Name="apollo.core.dll">
       <Namespaces>
-       <Namespace Name="Apollo.Core.Projects">
+       <Namespace Name="Apollo.Core.Host.Projects">
         <Types>
          <Type Name="Project">
           <Members>

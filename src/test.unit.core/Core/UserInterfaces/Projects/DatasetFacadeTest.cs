@@ -9,13 +9,13 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base;
-using Apollo.Core.Projects;
+using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Projects
+namespace Apollo.Core.Host.UserInterfaces.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

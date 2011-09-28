@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core;
+using Apollo.Core.Host;
 using Apollo.Utilities;
 using Lokad;
 

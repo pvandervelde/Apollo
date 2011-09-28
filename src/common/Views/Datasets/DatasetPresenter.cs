@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 using Apollo.Core.Base.Loaders;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Commands;
 using Apollo.Utilities;
 using Autofac;

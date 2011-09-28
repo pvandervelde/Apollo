@@ -3,7 +3,7 @@
 {OUTPUT_DIR}\Apollo.Core.LoaderApplication.exe
 {OUTPUT_DIR}\Apollo.ProjectExplorer.exe
 {OUTPUT_DIR}\Apollo.Core.Base.dll
-{OUTPUT_DIR}\Apollo.Core.dll
+{OUTPUT_DIR}\Apollo.Core.Host.dll
 {OUTPUT_DIR}\Apollo.UI.Common.dll
 {OUTPUT_DIR}\Apollo.Utilities.dll
 

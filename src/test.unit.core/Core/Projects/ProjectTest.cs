@@ -17,7 +17,7 @@ using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Projects
+namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

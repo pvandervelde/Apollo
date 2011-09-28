@@ -6,7 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.UserInterfaces.Scripting;
+using Apollo.Core.Host.UserInterfaces.Scripting;
 using Apollo.UI.Common.Views.Scripting;
 using Microsoft.Practices.Prism.Commands;
 

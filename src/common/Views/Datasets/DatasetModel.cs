@@ -6,7 +6,7 @@
 
 using System;
 using Apollo.Core.Base;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
 using Apollo.Utilities;
 using Lokad;

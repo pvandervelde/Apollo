@@ -8,7 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 
-namespace Apollo.Core.UserInterfaces.Application
+namespace Apollo.Core.Host.UserInterfaces.Application
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

@@ -804,7 +804,7 @@ task runSpecificationTests -depends buildBinaries -action{
     Invoke-Expression $command
     if ($LastExitCode -ne 0)
     {
-        throw "Concordion failed on Apollo.Core with return code: $LastExitCode"
+        throw "Concordion failed on Apollo.Core.Host with return code: $LastExitCode"
     }
 	
 	""
@@ -840,7 +840,7 @@ task runFxCop -depends buildBinaries -action{
     Invoke-Expression $command
     if ($LastExitCode -ne 0)
     {
-        throw "FxCop failed on Apollo.Core with return code: $LastExitCode"
+        throw "FxCop failed on Apollo.Core.Host with return code: $LastExitCode"
     }
 	
 	""

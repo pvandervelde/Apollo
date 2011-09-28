@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.UserInterfaces.Projects;
+using Apollo.Core.Host.UserInterfaces.Projects;
 using Lokad;
 
 namespace Apollo.UI.Common.Views.Projects

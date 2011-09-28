@@ -10,7 +10,7 @@ using Apollo.Utilities.Commands;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.UserInterfaces.Application
+namespace Apollo.Core.Host.UserInterfaces.Application
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

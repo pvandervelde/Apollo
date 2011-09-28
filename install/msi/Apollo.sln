@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
-Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Apollo", "core\Apollo.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
+Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Apollo", "host\Apollo.wixproj", "{B8DE1DF9-52C3-4EA2-AF76-F45B35BEFEBC}"
 EndProject
 Project("{930C7802-8A8C-48F9-8165-68863BCCD9DD}") = "Apollo.BatchService", "batchservice\Apollo.BatchService.wixproj", "{DF61935E-3097-417B-AE02-E8ED9DC4E843}"
 EndProject
