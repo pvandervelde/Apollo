@@ -141,7 +141,7 @@ function Configure-BuildEnvironment
     {
       'x86' { $bitness = 'Framework' }
       'x64' { $bitness = 'Framework64' }
-      $null {
+      { ($_ -eq $null) -or ($_ -eq [System.String]::Empty)} {
         $ptrSize = [System.IntPtr]::Size
         switch ($ptrSize)
         {
@@ -1102,7 +1102,7 @@ Assert
 		[Parameter(Position=1,Mandatory=0)]
 		[string[]]$taskList = @(),
 		[Parameter(Position=2,Mandatory=0)]
-		[string]$framework = '3.5',
+		[string]$framework = '4.0',
 		[Parameter(Position=3,Mandatory=0)]
 		[switch]$docs = $false,
 		[Parameter(Position=4,Mandatory=0)]
