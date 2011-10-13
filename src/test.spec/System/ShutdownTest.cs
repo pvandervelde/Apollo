@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Autofac;
@@ -42,7 +43,8 @@ namespace Test.Spec.System
         public void ShutdownApollo()
         {
             // Load the core
-            ApolloLoader.Load(ConnectToKernel);
+            var shutdownEvent = new AutoResetEvent(false);
+            ApolloLoader.Load(ConnectToKernel, shutdownEvent);
 
             // Once everything is up and running then we don't need it anymore
             // so dump it.
@@ -51,6 +53,8 @@ namespace Test.Spec.System
             try
             {
                 applicationFacade.Shutdown();
+                shutdownEvent.WaitOne();
+
                 m_ShutdownCompletedSuccessfully = "succesfully";
             }
             catch (Exception)
