@@ -1,6 +1,6 @@
 <Project>
   <Name>Utilities</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>Commands</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -98,8 +98,6 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Dependency" first="3" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -132,6 +130,372 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="7" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+    </Relationships>
+  </ProjectItem>
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
+    <Name>History</Name>
+    <Language>CSharp</Language>
+    <Entities>
+      <Entity type="Interface">
+        <Name>ITimeline</Name>
+        <Access>Public</Access>
+        <Location left="1526" top="301" />
+        <Size width="162" height="100" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IVariableTimeline&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="299" top="991" />
+        <Size width="162" height="132" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">T Current { get; set; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>VariableTimeLine&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="300" top="1212" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IVariableTimeline</Name>
+        <Access>Public</Access>
+        <Location left="544" top="741" />
+        <Size width="203" height="163" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">object VariableId { get; }</Member>
+        <Member type="Property">int CurrentRevision { get; }</Member>
+        <Member type="Method">void MoveBack()</Member>
+        <Member type="Method">void MoveBackTo(int revision)</Member>
+        <Member type="Method">void MoveBackTo(string mark)</Member>
+        <Member type="Method">void Mark(string markName)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>Timeline</Name>
+        <Access>Public</Access>
+        <Location left="1526" top="469" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Transactions?</Text>
+        <Location left="1890" top="517" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Have an implicit cast that allows us to get the value back when you reference the structure</Text>
+        <Location left="10" top="1198" />
+        <Size width="160" height="89" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IChangeSet</Name>
+        <Access>Public</Access>
+        <Location left="1386" top="862" />
+        <Size width="223" height="78" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">string Name { get; }</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Implements IDisposable</Text>
+        <Location left="1415" top="750" />
+        <Size width="160" height="50" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>using(var set = FooBar.NewSet())
+{
+    // Do stuff here ....
+}</Text>
+        <Location left="1372" top="1016" />
+        <Size width="198" height="84" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>So how are we going to deal with nested levels?</Text>
+        <Location left="1387" top="1160" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>How do we determine differentials for random objects?</Text>
+        <Location left="311" top="1388" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we need to nest timeline objects? We might have to because if we nest IChangeSet objects we need to track history only for as long as the parent IChangeSet isn't disposed. Once the parent ChangeSet is disposed we merge all the changes one level up.</Text>
+        <Location left="1849" top="807" />
+        <Size width="242" height="147" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Needs to define its dependencies. A dependency can be:
+- Roll-back blocking (i.e. if it is not there the changeset cannot be reverted)
+- Roll forward blocking (i.e. if it's not there the changeset cannot be rolled forward)
+- both
+- neither</Text>
+        <Location left="1638" top="1035" />
+        <Size width="478" height="103" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need to know if we can delay a roll back / roll forward command</Text>
+        <Location left="1638" top="1231" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>And what about deletions / creations of objects?</Text>
+        <Location left="1810" top="249" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>ICollectionVariableTimeLine&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="779" top="1016" />
+        <Size width="199" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IListCollectionVariableTimeLine&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="634" top="1167" />
+        <Size width="218" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IDictionaryCollectionVariableTimeLine&lt;K, T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="891" top="1167" />
+        <Size width="271" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IObjectTimeLine</Name>
+        <Access>Public</Access>
+        <Location left="1048" top="438" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">HistoryId Id { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IAmHistoryEnabled</Name>
+        <Access>Public</Access>
+        <Location left="245" top="134" />
+        <Size width="163" height="78" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">HistoryId Id { get; }</Member>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ITypeDescription</Name>
+        <Access>Public</Access>
+        <Location left="961" top="152" />
+        <Size width="331" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">Type Type { get; }</Member>
+        <Member type="Method">IEnumerable&lt;ConstructionInfo&gt; ConstructionMethods()</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>HistoryId</Name>
+        <Access>Public</Access>
+        <Location left="245" top="10" />
+        <Size width="163" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">private readonly long m_Id</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>How do we deal with multi-threading?</Text>
+        <Location left="1890" top="381" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Does the type provide us with a differential method too?</Text>
+        <Location left="672" top="160" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Side effect roll back / roll forward functions?</Text>
+        <Location left="1118" top="860" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>TimeLineTraveller</Name>
+        <Access>Public</Access>
+        <Location left="2188" top="396" />
+        <Size width="256" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Constructor">public TimeLineTraveller(ITimeTravelState state)</Member>
+        <Member type="Property">public ITimeTravelState State { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>ITimeTravelState</Name>
+        <Access>Public</Access>
+        <Location left="2545" top="422" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+    </Entities>
+    <Relationships>
+      <Relationship type="Realization" first="2" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="1" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>383</X>
+          <Y>966</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>491</X>
+          <Y>804</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="4" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="6" second="2">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="8" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1494</X>
+          <Y>825</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1494</X>
+          <Y>837</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="9" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="10" second="9">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="11" second="2">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="4">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1740</X>
+          <Y>631</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="13" second="7">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="14" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1732</X>
+          <Y>1163</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="16" second="3">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>897</X>
+          <Y>989</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>772</X>
+          <Y>808</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="17" second="16">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>814</X>
+          <Y>1102</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="18" second="16">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>942</X>
+          <Y>1102</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="4" second="19">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="19" second="3">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>630</X>
+          <Y>701</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+        <StartMultiplicity>1..*</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Association" first="19" second="21">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1111</X>
+          <Y>408</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1111</X>
+          <Y>281</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="23" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1715</X>
+          <Y>526</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="24" second="21">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="25" second="7">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="26" second="27">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -140,11 +504,5 @@
         <AssociationType>Composition</AssociationType>
       </Relationship>
     </Relationships>
-  </ProjectItem>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
-    <Name>History</Name>
-    <Language>CSharp</Language>
-    <Entities />
-    <Relationships />
   </ProjectItem>
 </Project>
