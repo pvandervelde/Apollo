@@ -351,12 +351,14 @@ properties{
     # provide a value.
     $coverage = $false
     $incremental = $false
+	$reloadPackages = $false
     $configuration = 'debug'
     $platform = 'Any CPU'
     
     # Store the defaults in the hashtable for later use
     $props.coverage = $coverage
     $props.incremental = $incremental
+	$props.reloadPackages = $reloadPackages
     $props.configuration = $configuration
     $props.platform = $platform
 
@@ -465,7 +467,7 @@ properties{
 task default -depends Help
 
 # Cleans all the generated files
-task Clean -depends runClean
+task Clean -depends runClean, runCleanPackages
 
 # Builds all the binaries
 task Build -depends buildBinaries
@@ -538,6 +540,7 @@ In order to run this build script please call a specific target.
 The following build properties are available:
     'incremental':      Turns on or off the incremental building of the binaries. Default is off.
     'coverage':         Turns on or off the unit testing coverage check. Default is off.
+	'reloadpackages':   Turns on or off the reloading of the Nuget packages. Default is off.
     'configuration':    Defines the configuration for the build. Valid values are 'debug' and 'release', default value is 'debug'.
     'platform':         Defines the platform for the build. Valid values are 'Any CPU', default value is 'Any CPU'.
 
@@ -555,13 +558,14 @@ The following build tasks are available
 Multiple build tasks can be specified separated by a comma. 
        
 In order to run this build script please call this script via PSAKE like:
-    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify,doc,package,statistics 4.0
+    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"reloadpackages"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify,doc,package,statistics 4.0
 "@
 }
 
 task runInit -action{
     $props.incremental = $incremental
     $props.coverage = $coverage
+	$props.reloadPackages = $reloadpackages;
     $props.configuration = $configuration
     $props.platform = $platform
     
@@ -580,6 +584,8 @@ task displayInfo -depends runInit -action{
     "Running as user: $user"
     ("Configuration:   " + $props.configuration)
     ("Platform:        " + $props.platform)
+	("Incremental:     " + $props.incremental)
+	("Reload packages: " + $props.reloadpackages)
     ""
 }
 
@@ -601,6 +607,14 @@ task runClean -depends displayInfo -precondition{ !$incremental } -action{
     }
 	
 	""
+}
+
+task runCleanPackages -depends displayInfo -precondition { $reloadpackages } -action{
+	if (Test-Path $props.dirPackages)
+	{
+		"Removing packages"
+		Remove-Item $props.dirPackages -Force -Recurse
+	}
 }
 
 task runPrepareDisk -depends displayInfo,runClean -action{
