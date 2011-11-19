@@ -5,4 +5,3 @@ src\AssemblyInfo.BuildInformation.cs
 src\AssemblyInfo.InternalsVisibleTo.cs
 src\AssemblyInfo.VersionNumber.cs
 src\ValidationSequenceGenerator.cs
-packages
