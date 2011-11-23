@@ -103,7 +103,7 @@ namespace Apollo.Utilities.Commands
             CommandId first = null;
             var second = new CommandId("name");
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

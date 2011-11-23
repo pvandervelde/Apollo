@@ -117,7 +117,7 @@ namespace Apollo.Core.Base.Communication
             UploadToken first = null;
             UploadToken second = new UploadToken();
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

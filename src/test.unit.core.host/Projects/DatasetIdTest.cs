@@ -217,7 +217,7 @@ namespace Apollo.Core.Projects
             DatasetId first = null;
             var second = new DatasetId();
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

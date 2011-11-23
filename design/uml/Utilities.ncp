@@ -165,32 +165,6 @@
         <Member type="Method">TimeMarker Mark(string markName)</Member>
         <Member type="Event">event EventHandler&lt;TimeTravellerEventArgs&gt; OnTimeTravellerArrived</Member>
       </Entity>
-      <Entity type="Interface">
-        <Name>IVariableTimeline&lt;T&gt;</Name>
-        <Access>Public</Access>
-        <Location left="1270" top="1361" />
-        <Size width="162" height="132" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">T Current { get; set; }</Member>
-      </Entity>
-      <Entity type="Class">
-        <Name>ReferenceVariableTimeline&lt;T&gt;</Name>
-        <Access>Public</Access>
-        <Location left="915" top="1763" />
-        <Size width="349" height="94" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">public static implicit operator T(VariableTimeLine&lt;T&gt; timeLineVariable)</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IVariableTimeline</Name>
-        <Access>Public</Access>
-        <Location left="1652" top="1238" />
-        <Size width="256" height="95" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">HistoryVariableId VariableId { get; }</Member>
-        <Member type="Property">TimeMarker CurrentMark { get; }</Member>
-      </Entity>
       <Entity type="Class">
         <Name>Timeline</Name>
         <Access>Internal</Access>
@@ -213,11 +187,6 @@
         <Text>Implements IDisposable</Text>
         <Location left="2182" top="681" />
         <Size width="160" height="50" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>How do we determine differentials for random objects?</Text>
-        <Location left="1009" top="1621" />
-        <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Do we need to nest timeline objects? We might have to because if we nest IChangeSet objects we need to track history only for as long as the parent IChangeSet isn't disposed. Once the parent ChangeSet is disposed we merge all the changes one level up.</Text>
@@ -246,29 +215,29 @@
       <Entity type="Interface">
         <Name>ICollectionVariableTimeline&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="1916" top="1522" />
+        <Location left="2213" top="1523" />
         <Size width="199" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IListCollectionVariableTimeline&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="1771" top="1673" />
+        <Location left="2068" top="1674" />
         <Size width="218" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IDictionaryCollectionVariableTimeline&lt;K, T&gt;</Name>
         <Access>Public</Access>
-        <Location left="2028" top="1673" />
+        <Location left="2325" top="1674" />
         <Size width="271" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IFollowObjectHistory</Name>
         <Access>Public</Access>
-        <Location left="649" top="649" />
-        <Size width="256" height="299" />
+        <Location left="650" top="649" />
+        <Size width="256" height="265" />
         <Collapsed>False</Collapsed>
         <Member type="Property">HistoryId Id { get; }</Member>
         <Member type="Property">TimeMarker CreationTime { get; }</Member>
@@ -281,16 +250,16 @@
         <Member type="Method">void RollForwardTo(TimeMarker marker)</Member>
         <Member type="Event">event EventHandler OnRollBack</Member>
         <Member type="Event">event EventHandler OnRollForward</Member>
-        <Member type="Method">void Mark(string markName)</Member>
+        <Member type="Method">void Mark(TimeMarker marker)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IAmHistoryEnabled</Name>
         <Access>Public</Access>
         <Location left="716" top="1325" />
-        <Size width="200" height="95" />
+        <Size width="234" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">HistoryId Id { get; }</Member>
-        <Member type="Property">IObjectTimeline History { get; }</Member>
+        <Member type="Property">IFollowObjectTimeline History { get; }</Member>
       </Entity>
       <Entity type="Interface">
         <Name>ITypeDescription</Name>
@@ -299,7 +268,7 @@
         <Size width="331" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Property">Type Type { get; }</Member>
-        <Member type="Property">IDifferentiatefObjects Differentiator { get; }</Member>
+        <Member type="Property">IGenerateStorageData StorageOperator { get; }</Member>
         <Member type="Method">IEnumerable&lt;ConstructionInfo&gt; ConstructionMethods()</Member>
       </Entity>
       <Entity type="Class">
@@ -341,7 +310,7 @@
       </Entity>
       <Entity type="Comment">
         <Text>Collections are going to be tricky. They'll need to track every change, but there are some cases where that is easy, e.g. a clear.</Text>
-        <Location left="1900" top="1894" />
+        <Location left="2197" top="1895" />
         <Size width="235" height="93" />
       </Entity>
       <Entity type="Comment">
@@ -351,7 +320,7 @@
       </Entity>
       <Entity type="Comment">
         <Text>Note that we should never track the actual object itself because that stops GC's from happening. But then how do we know the object has been removed?</Text>
-        <Location left="368" top="1314" />
+        <Location left="418" top="1312" />
         <Size width="216" height="113" />
       </Entity>
       <Entity type="Comment">
@@ -361,18 +330,8 @@
       </Entity>
       <Entity type="Comment">
         <Text>The collections should take IVariableTimeline objects otherwise we can't track changes in the individual objects.</Text>
-        <Location left="1713" top="1402" />
+        <Location left="1945" top="1523" />
         <Size width="160" height="100" />
-      </Entity>
-      <Entity type="Class">
-        <Name>HistoryVariableId</Name>
-        <Access>Public</Access>
-        <Location left="444" top="10" />
-        <Size width="162" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">HistoryId m_Object</Member>
-        <Member type="Field">ulong m_Id</Member>
-        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Implements IDisposable?</Text>
@@ -380,9 +339,9 @@
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
-        <Name>ValueVariableTimeline&lt;T&gt;</Name>
+        <Name>StandardObjectVariableTimeline&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="1024" top="1909" />
+        <Location left="886" top="1774" />
         <Size width="349" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public static implicit operator T(VariableTimeLine&lt;T&gt; timeLineVariable)</Member>
@@ -390,22 +349,17 @@
       </Entity>
       <Entity type="Comment">
         <Text>For objects that have a timeline ID</Text>
-        <Location left="1198" top="2206" />
+        <Location left="1523" top="1523" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
         <Name>HistoryObjectVariableTimeline&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="1118" top="2046" />
+        <Location left="1405" top="1774" />
         <Size width="349" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public static implicit operator T(VariableTimeLine&lt;T&gt; timeLineVariable)</Member>
         <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Implicit get is easy but implicit set means that we get a new object back. We don't really want that ....</Text>
-        <Location left="796" top="1924" />
-        <Size width="167" height="100" />
       </Entity>
       <Entity type="Comment">
         <Text>Can a timeline have a parent? They probably should be able to, because we want the datasets to sync up with the parent app.</Text>
@@ -414,12 +368,12 @@
       </Entity>
       <Entity type="Comment">
         <Text>Implements IDictionary&lt;K, V&gt;</Text>
-        <Location left="2185" top="1572" />
+        <Location left="2482" top="1573" />
         <Size width="192" height="50" />
       </Entity>
       <Entity type="Comment">
         <Text>Implements IList&lt;T&gt;</Text>
-        <Location left="1652" top="1588" />
+        <Location left="1964" top="1801" />
         <Size width="160" height="50" />
       </Entity>
       <Entity type="Comment">
@@ -437,24 +391,12 @@
         <Member type="Field">T m_Object</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
-      <Entity type="Class">
-        <Name>TimelineStorage&lt;T&gt;</Name>
-        <Access>Internal</Access>
-        <Location left="54" top="1001" />
-        <Size width="272" height="128" />
-        <Collapsed>False</Collapsed>
-        <Member type="Field">T m_Current</Member>
-        <Member type="Field">SortedList&lt;TimeMarker, T&gt; m_PastValues</Member>
-        <Member type="Field">SortedList&lt;TimeMarker, T&gt; m_FutureValues</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
       <Entity type="Interface">
         <Name>IStoreTimelineValues</Name>
         <Access>Public</Access>
-        <Location left="54" top="522" />
-        <Size width="256" height="180" />
+        <Location left="1548" top="1197" />
+        <Size width="256" height="163" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">HistoryVariableId Id { get; }</Member>
         <Member type="Method">void RollBackLast()</Member>
         <Member type="Method">void RollBackTo(TimeMarker marker)</Member>
         <Member type="Method">void RollForwardLast()</Member>
@@ -465,14 +407,14 @@
       <Entity type="Class">
         <Name>TimeMarker</Name>
         <Access>Public</Access>
-        <Location left="629" top="10" />
+        <Location left="449" top="10" />
         <Size width="162" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string Name { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>VariableTimeline&lt;T&gt;</Name>
+        <Name>TimelineStorage&lt;T&gt;</Name>
         <Access>Internal</Access>
         <Location left="1253" top="1573" />
         <Size width="233" height="94" />
@@ -481,9 +423,9 @@
         <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Interface">
-        <Name>IStoreTimelineValues&lt;T&gt;</Name>
+        <Name>IVariableTimeline&lt;T&gt;</Name>
         <Access>Public</Access>
-        <Location left="105" top="796" />
+        <Location left="1253" top="1971" />
         <Size width="163" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Property">T Current { get; set; }</Member>
@@ -495,12 +437,7 @@
       </Entity>
       <Entity type="Comment">
         <Text>Note that we store the ID of the object, not the actual object itself.</Text>
-        <Location left="1429" top="2212" />
-        <Size width="160" height="75" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Do we stream serialize it?</Text>
-        <Location left="1009" top="1496" />
+        <Location left="1754" top="1529" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Interface">
@@ -539,25 +476,40 @@
         <Value>RollForward</Value>
         <Value>RollBackAndRollForward</Value>
       </Entity>
+      <Entity type="Comment">
+        <Text>If timelines have a parent then the child timeline can only roll-back if there is no effect on the parent.</Text>
+        <Location left="963" top="846" />
+        <Size width="182" height="88" />
+      </Entity>
+      <Entity type="Class">
+        <Name>TimeValueStorage&lt;T&gt;</Name>
+        <Access>Public</Access>
+        <Location left="267" top="1494" />
+        <Size width="387" height="315" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public void AddNewValue(TimeMarker mark, T value)</Member>
+        <Member type="Method">public bool HasPastValue()</Member>
+        <Member type="Method">public T PastValue()</Member>
+        <Member type="Method">public bool HasFutureValue()</Member>
+        <Member type="Method">public T FutureValue()</Member>
+        <Member type="Method">public bool IsAtBeginOfTime()</Member>
+        <Member type="Method">public bool WouldRollBackPastTheBeginningOfTime(TimeMarker mark)</Member>
+        <Member type="Method">public T RollBackInTimeTo(TimeMarker mark)</Member>
+        <Member type="Method">public T RollBackToBeginning()</Member>
+        <Member type="Method">public bool IsAtEndOfTime()</Member>
+        <Member type="Method">public bool WouldRollForwardPastTheEndOfTime(TimeMarker mark)</Member>
+        <Member type="Method">public T RollForwardInTimeTo(TimeMarker mark)</Member>
+        <Member type="Method">public T RollForwardToEnd()</Member>
+        <Member type="Method">public void ForgetAll()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Generalization" first="1" second="3">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1354</X>
-          <Y>1336</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1599</X>
-          <Y>1301</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="4" second="0">
+      <Relationship type="Realization" first="1" second="0">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="6" second="5">
+      <Relationship type="Comment" first="3" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -569,7 +521,7 @@
           <Y>767</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="8" second="4">
+      <Relationship type="Comment" first="4" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -581,11 +533,11 @@
           <Y>833</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="8" second="5">
+      <Relationship type="Comment" first="4" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="9" second="5">
+      <Relationship type="Comment" first="5" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -593,7 +545,7 @@
           <Y>817</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="10" second="9">
+      <Relationship type="Comment" first="6" second="5">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -601,35 +553,23 @@
           <Y>607</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="12" second="3">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2034</X>
-          <Y>1495</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1933</X>
-          <Y>1305</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="13" second="12">
+      <Relationship type="Generalization" first="9" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>1951</X>
-          <Y>1608</Y>
+          <X>2248</X>
+          <Y>1609</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="14" second="12">
+      <Relationship type="Generalization" first="10" second="8">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2079</X>
-          <Y>1608</Y>
+          <X>2376</X>
+          <Y>1609</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="4" second="15">
+      <Relationship type="Association" first="1" second="11">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -637,13 +577,13 @@
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="15" second="17">
+      <Relationship type="Association" first="11" second="13">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>748</X>
+          <X>749</X>
           <Y>616</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
@@ -653,11 +593,11 @@
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="19" second="5">
+      <Relationship type="Comment" first="15" second="2">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="20" second="21">
+      <Relationship type="Association" first="16" second="17">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -665,23 +605,23 @@
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="23" second="13">
+      <Relationship type="Comment" first="19" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1948</X>
-          <Y>1869</Y>
+          <X>2245</X>
+          <Y>1870</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="23" second="14">
+      <Relationship type="Comment" first="19" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2058</X>
-          <Y>1867</Y>
+          <X>2355</X>
+          <Y>1868</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="24" second="15">
+      <Relationship type="Comment" first="20" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -689,71 +629,39 @@
           <Y>662</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>621</X>
+          <X>622</X>
           <Y>702</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="27" second="12">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Comment" first="23" second="8">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1792</X>
-          <Y>1533</Y>
+          <X>2130</X>
+          <Y>1555</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1891</X>
-          <Y>1554</Y>
+          <X>2188</X>
+          <Y>1555</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="25" second="16">
+      <Relationship type="Comment" first="21" second="12">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="29" second="16">
+      <Relationship type="Comment" first="24" second="12">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="31" second="32">
+      <Relationship type="Comment" first="26" second="27">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="7" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1100</X>
-          <Y>1730</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="33" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>860</X>
-          <Y>1803</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="33" second="30">
+      <Relationship type="Comment" first="28" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="33" second="32">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>883</X>
-          <Y>2049</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1093</X>
-          <Y>2114</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="34" second="4">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="11" second="0">
+      <Relationship type="Comment" first="7" second="0">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -761,67 +669,35 @@
           <Y>634</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="35" second="14">
+      <Relationship type="Comment" first="29" second="10">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="36" second="13">
+      <Relationship type="Comment" first="30" second="9">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="37" second="18">
+      <Relationship type="Comment" first="31" second="14">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="38" second="15">
+      <Relationship type="Realization" first="32" second="11">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="38" second="39">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>523</X>
-          <Y>1074</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>370</X>
-          <Y>1074</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-        <StartMultiplicity>1</StartMultiplicity>
-        <EndMultiplicity>0..*</EndMultiplicity>
-      </Relationship>
-      <Relationship type="Realization" first="42" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="2" second="42">
+      <Relationship type="Generalization" first="25" second="35">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1182</X>
-          <Y>1736</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1302</X>
-          <Y>1692</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Generalization" first="30" second="42">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1334</X>
-          <Y>1876</Y>
+          <X>1196</X>
+          <Y>1741</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
           <X>1334</X>
           <Y>1696</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="32" second="42">
+      <Relationship type="Generalization" first="27" second="35">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -829,15 +705,7 @@
           <Y>1706</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="43" second="40">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="39" second="43">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="38" second="16">
+      <Relationship type="Association" first="32" second="12">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
@@ -845,23 +713,19 @@
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="44" second="21">
+      <Relationship type="Comment" first="37" second="17">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="45" second="31">
+      <Relationship type="Comment" first="38" second="26">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="46" second="7">
+      <Relationship type="Realization" first="1" second="39">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="4" second="47">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="4" second="48">
+      <Relationship type="Realization" first="1" second="40">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -873,9 +737,69 @@
           <Y>625</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="49" second="5">
+      <Relationship type="Realization" first="41" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="28" second="43">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1242</X>
+          <Y>905</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1171</X>
+          <Y>905</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="8" second="33">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1738</X>
+          <Y>1389</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="32" second="33">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1687</X>
+          <Y>1172</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="35" second="44">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="35" second="33">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="27" second="36">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1366</X>
+          <Y>1946</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="25" second="36">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1293</X>
+          <Y>1946</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>

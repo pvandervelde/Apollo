@@ -10,25 +10,13 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utilities.Properties;
 
-namespace Apollo.Utilities
+namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// Defines the base class for ID numbers.
+    /// Stores a <see cref="TimeMarker"/> and a value at that specific time.
     /// </summary>
-    /// <remarks>
-    /// <para>
-    /// Derivative classes should define the type parameters as:
-    /// </para>
-    /// <example>
-    /// public sealed class SomeId : Id&lt;SomeId, SomeValueType&gt;
-    /// </example>
-    /// </remarks>
-    /// <typeparam name="TId">The type of the id.</typeparam>
-    /// <typeparam name="TInternalValue">The type of object that is stored internally as the ID number.</typeparam>
-    [Serializable]
-    public abstract class Id<TId, TInternalValue> : IIsId<TId> 
-        where TId : Id<TId, TInternalValue>
-        where TInternalValue : IComparable<TInternalValue>, IEquatable<TInternalValue>
+    /// <typeparam name="T">The type of value that is stored.</typeparam>
+    internal struct ValueAtTime<T> : IEquatable<ValueAtTime<T>>, IComparable<ValueAtTime<T>>, IComparable
     {
         /// <summary>
         /// Implements the operator ==.
@@ -36,7 +24,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator ==(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -63,7 +51,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator !=(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -90,7 +78,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator >(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator >(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
@@ -120,7 +108,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator >=(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator >=(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
@@ -150,7 +138,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator <(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator <(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
@@ -180,7 +168,7 @@ namespace Apollo.Utilities
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator <=(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        public static bool operator <=(ValueAtTime<T> first, ValueAtTime<T> second)
         {
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
@@ -205,58 +193,52 @@ namespace Apollo.Utilities
         }
 
         /// <summary>
-        /// The internal value which defines the value for the current ID.
+        /// The point in time for which the value is stored.
         /// </summary>
-        private readonly TInternalValue m_Value;
+        private readonly TimeMarker m_Time;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Id&lt;TId, TInternalValue&gt;"/> class.
+        /// The value.
         /// </summary>
+        private readonly T m_Value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueAtTime{T}"/> struct.
+        /// </summary>
+        /// <param name="time">The point in time for which the value is stored.</param>
         /// <param name="value">The value.</param>
-        /// <design>
-        /// There is no way to check that the value is actually usable. This all
-        /// depends on the type of the internal value. Unfortunately only the
-        /// derivative class knows that. But using a virtual method in a constructor
-        /// is not advisable. And so we can't call into the derivative class for
-        /// checking.
-        /// </design>
-        protected Id(TInternalValue value)
+        public ValueAtTime(TimeMarker time, T value)
         {
+            {
+                Debug.Assert(time != null, "The time marker should not be null.");
+            }
+
+            m_Time = time;
             m_Value = value;
         }
 
         /// <summary>
-        /// Gets the internal value in a readonly fashion.
+        /// Gets the marker that indicates for which point in time
+        /// this structure is valid.
         /// </summary>
-        /// <value>The internal value.</value>
-        protected TInternalValue InternalValue
+        public TimeMarker Time
         {
-            [DebuggerStepThrough]
-            get 
+            get
             {
-                return m_Value;
+                return m_Time;
             }
         }
 
         /// <summary>
-        /// Clones this ID number.
+        /// Gets the value for the given point in time.
         /// </summary>
-        /// <returns>
-        /// A copy of the current ID number.
-        /// </returns>
-        public TId Clone()
+        public T Value
         {
-            return Clone(m_Value);
+            get
+            {
+                return m_Value;
+            }
         }
-
-        /// <summary>
-        /// Performs the actual act of creating a copy of the current ID number.
-        /// </summary>
-        /// <param name="value">The internally stored value.</param>
-        /// <returns>
-        /// A copy of the current ID number.
-        /// </returns>
-        protected abstract TId Clone(TInternalValue value);
 
         /// <summary>
         /// Compares the current instance with another object of the same type and returns an integer that
@@ -276,36 +258,9 @@ namespace Apollo.Utilities
         /// Greater than zero
         /// This instance is greater than <paramref name="other"/>.
         /// </returns>
-        public int CompareTo(TId other)
+        public int CompareTo(ValueAtTime<T> other)
         {
-            // Check if other is a null reference by using ReferenceEquals because
-            // we overload the == operator. If other isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            return ReferenceEquals(other, null) ? 1 : CompareValues(m_Value, other.m_Value);
-        }
-
-        /// <summary>
-        /// Compares the current instance with another object of the same type and returns an integer that
-        /// indicates whether the current instance precedes, follows, or occurs in the same position in the
-        /// sort order as the other object.
-        /// </summary>
-        /// <param name="ourValue">The value of the current object.</param>
-        /// <param name="theirValue">The value of the object with which the current object is being compared.</param>
-        /// <returns>
-        /// A 32-bit signed integer that indicates the relative order of the objects being compared.
-        /// The return value has these meanings:
-        /// Value
-        /// Meaning
-        /// Less than zero
-        /// <paramref name="ourValue"/> is less than <paramref name="theirValue"/>.
-        /// Zero
-        /// <paramref name="ourValue"/> is equal to <paramref name="theirValue"/>.
-        /// Greater than zero
-        /// <paramref name="ourValue"/> is greater than <paramref name="theirValue"/>.
-        /// </returns>
-        protected virtual int CompareValues(TInternalValue ourValue, TInternalValue theirValue)
-        {
-            return m_Value.CompareTo(theirValue);
+            return m_Time.CompareTo(other.m_Time);
         }
 
         /// <summary>
@@ -338,61 +293,38 @@ namespace Apollo.Utilities
                 return 1;
             }
 
-            // Check if other is a null reference by using ReferenceEquals because
-            // we overload the == operator. If other isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            var id = obj as TId;
-            if (ReferenceEquals(id, null))
+            if (!(obj is ValueAtTime<T>))
             {
                 throw new ArgumentException(
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        Resources.Exceptions_Messages_ErrorCode_CompareArgument,
-                        obj.GetType().FullName,
-                        GetType().FullName),
-                    @"obj");
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            Resources.Exceptions_Messages_ErrorCode_CompareArgument,
+                            obj.GetType().FullName,
+                            GetType().FullName),
+                        @"obj");
             }
 
-            return CompareTo(id);
+            return CompareTo((ValueAtTime<T>)obj);
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="Id&lt;TId, TInternalValue&gt;"/> is equal to this instance.
+        /// Determines whether the specified <see cref="TimeMarker"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="Id&lt;TId, TInternalValue&gt;"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="TimeMarker"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="Id&lt;TId, TInternalValue&gt;"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="TimeMarker"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(TId other)
+        public bool Equals(ValueAtTime<T> other)
         {
             if (ReferenceEquals(this, other))
             {
                 return true;
             }
 
-            // Check if other is a null reference by using ReferenceEquals because
-            // we overload the == operator. If other isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null) && AreValuesEqual(m_Value, other.m_Value);
-        }
-
-        /// <summary>
-        /// Determines whether the specified values to see if they are equal.
-        /// </summary>
-        /// <param name="ourValue">The value owned by the current ID.</param>
-        /// <param name="theirValue">The value owned by the other ID.</param>
-        /// <returns>
-        ///     <see langword="true"/> if <paramref name="theirValue"/> is equal to the value owned by this instance;
-        ///     otherwise, <see langword="false"/>.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        protected virtual bool AreValuesEqual(TInternalValue ourValue, TInternalValue theirValue)
-        {
-            return ourValue.Equals(theirValue);
+            return m_Time == other.m_Time;
         }
 
         /// <summary>
@@ -404,29 +336,39 @@ namespace Apollo.Utilities
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public sealed override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
-            if (ReferenceEquals(this, obj))
+            if (obj is ValueAtTime<T>)
             {
-                return true;
+                var value = (ValueAtTime<T>)obj;
+                return Equals(value);
             }
 
-            // Check if other is a null reference by using ReferenceEquals because
-            // we overload the == operator. If other isn't actually null then
-            // we get an infinite loop where we're constantly trying to compare to null.
-            var id = obj as TId;
-            return !ReferenceEquals(id, null) && Equals(id);
+            return false;
         }
 
         /// <summary>
         /// Returns a hash code for this instance.
         /// </summary>
         /// <returns>
-        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
+        /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.
         /// </returns>
-        public sealed override int GetHashCode()
+        public override int GetHashCode()
         {
-            return m_Value.GetHashCode();
+            // As obtained from the Jon Skeet answer to:
+            // http://stackoverflow.com/questions/263400/what-is-the-best-algorithm-for-an-overridden-system-object-gethashcode
+            // And adapted towards the Modified Bernstein (shown here: http://eternallyconfuzzled.com/tuts/algorithms/jsw_tut_hashing.aspx)
+            //
+            // Overflow is fine, just wrap
+            unchecked
+            {
+                // Pick a random prime number
+                int hash = 17;
+
+                // Mash the hash together with yet another random prime number
+                hash = (hash * 23) ^ m_Time.GetHashCode();
+                return hash;
+            }
         }
 
         /// <summary>
@@ -435,6 +377,13 @@ namespace Apollo.Utilities
         /// <returns>
         /// A <see cref="System.String"/> that represents this instance.
         /// </returns>
-        public abstract override string ToString();
+        public override string ToString()
+        {
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "Time: {0}; Value: {1}",
+                m_Time,
+                m_Value);
+        }
     }
 }

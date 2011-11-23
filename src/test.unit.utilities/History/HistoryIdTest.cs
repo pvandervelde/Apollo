@@ -10,7 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.Base.Communication
+namespace Apollo.Utilities.History
 {
     // Note that it is not possible to use the Gallio Comparison contract verifiers because they require that the
     // class implements the overloaded operators directly which ID derivative classes do not do (and could only do if we
@@ -18,15 +18,15 @@ namespace Apollo.Core.Base.Communication
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
         Justification = "Unit tests do not need documentation.")]
-    public sealed class MessageIdTest
+    public sealed class HistoryIdTest
     {
-        private static MessageId Create(Guid id)
+        private static HistoryId Create(long id)
         {
-            return (MessageId)Mirror.ForType<MessageId>().Constructor.Invoke(id);
+            return (HistoryId)Mirror.ForType<HistoryId>().Constructor.Invoke(id);
         }
 
         [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<MessageId>
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<HistoryId>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -35,38 +35,45 @@ namespace Apollo.Core.Base.Communication
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<MessageId> 
+                new List<HistoryId> 
                         {
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
-                            new MessageId(),
+                            Create(0),
+                            Create(1),
+                            Create(2),
+                            Create(3),
+                            Create(4),
+                            Create(5),
+                            Create(6),
+                            Create(7),
+                            Create(8),
+                            Create(9),
                         },
         };
 
         [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<MessageId>
+        public readonly IContract EqualityVerification = new EqualityContract<HistoryId>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
-                        Create(Guid.NewGuid()),
+                        Create(0),
+                        Create(1),
+                        Create(2),
+                        Create(3),
+                        Create(4),
+                        Create(5),
+                        Create(6),
+                        Create(7),
+                        Create(8),
+                        Create(9),
                     },
         };
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
         {
-            MessageId first = null;
-            MessageId second = new MessageId();
+            HistoryId first = null;
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -74,8 +81,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            MessageId first = new MessageId();
-            MessageId second = null;
+            var first = Create(10);
+            HistoryId second = null;
 
             Assert.IsTrue(first > second);
         }
@@ -83,8 +90,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void LargerThanOperatorWithBothObjectsNull()
         {
-            MessageId first = null;
-            MessageId second = null;
+            HistoryId first = null;
+            HistoryId second = null;
 
             Assert.IsFalse(first > second);
         }
@@ -92,8 +99,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            var first = new MessageId();
-            var second = first.Clone();
+            var first = Create(10);
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -101,11 +108,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(11);
+            var second = Create(10);
 
             Assert.IsTrue(first > second);
         }
@@ -113,11 +117,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(9);
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -125,8 +126,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
-            MessageId first = null;
-            MessageId second = new MessageId();
+            HistoryId first = null;
+            var second = Create(10);
 
             Assert.IsTrue(first < second);
         }
@@ -134,8 +135,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            MessageId first = new MessageId();
-            MessageId second = null;
+            var first = Create(10);
+            HistoryId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -143,8 +144,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
-            MessageId first = null;
-            MessageId second = null;
+            HistoryId first = null;
+            HistoryId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -152,8 +153,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            var first = new MessageId();
-            var second = first.Clone();
+            var first = Create(10);
+            var second = Create(10);
 
             Assert.IsFalse(first < second);
         }
@@ -161,11 +162,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(11);
+            var second = Create(10);
 
             Assert.IsFalse(first < second);
         }
@@ -173,11 +171,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(9);
+            var second = Create(10);
 
             Assert.IsTrue(first < second);
         }
@@ -185,8 +180,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void Clone()
         {
-            MessageId first = new MessageId();
-            MessageId second = first.Clone();
+            var first = Create(10);
+            var second = first.Clone();
 
             Assert.AreEqual(first, second);
         }
@@ -194,7 +189,7 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void CompareToWithNullObject()
         {
-            MessageId first = new MessageId();
+            var first = Create(10);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -203,8 +198,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            var first = new MessageId();
-            object second = first.Clone();
+            var first = Create(10);
+            object second = Create(10);
 
             Assert.AreEqual(0, first.CompareTo(second));
         }
@@ -212,11 +207,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(11);
+            object second = Create(10);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -224,11 +216,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            var firstGuid = Guid.NewGuid();
-            var secondGuid = Guid.NewGuid();
-
-            var first = (firstGuid.CompareTo(secondGuid) < 0) ? Create(firstGuid) : Create(secondGuid);
-            var second = (firstGuid.CompareTo(secondGuid) > 0) ? Create(firstGuid) : Create(secondGuid);
+            var first = Create(10);
+            object second = Create(11);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -236,7 +225,7 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            MessageId first = new MessageId();
+            var first = Create(10);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));
