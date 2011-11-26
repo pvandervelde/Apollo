@@ -180,6 +180,74 @@ namespace Apollo.Utilities.History
         }
 
         [Test]
+        public void RollBackThroughClear()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage.Clear();
+            storage.Add(maximumValue + 1);
+
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void RollBackThroughRemove()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void RollBackThroughUpdate()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
         public void RollForwardToPriorToNextSnapshot()
         {
             var storage = new StandardObjectListTimelineStorage<int>();
@@ -296,6 +364,183 @@ namespace Apollo.Utilities.History
             storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void RollForwardThroughClear()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage.Clear();
+            storage.Add(maximumValue + 1);
+
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { maximumValue + 1 },
+                storage);
+        }
+
+        [Test]
+        public void RollForwardThroughRemove()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void RollForwardThroughUpdate()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, maximumValue, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void AddVoidsForwardStack()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+
+            storage.Add(11);
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 },
+                storage);
+        }
+
+        [Test]
+        public void ClearVoidsForwardStack()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+
+            storage.Clear();
+            storage.Add(maximumValue + 1);
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { maximumValue + 1 },
+                storage);
+        }
+
+        [Test]
+        public void RemoveVoidsForwardStack()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollForwardTo(new TimeMarker(1));
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
+                storage);
+        }
+
+        [Test]
+        public void UpdateClearsForwardStack()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i);
+            }
+
+            storage.StoreCurrent(new TimeMarker(0));
+
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(1));
+
+            storage.RollBackToStart();
+            storage[9] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollForwardTo(new TimeMarker(1));
+
+            Assert.AreElementsEqual(
+                new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, maximumValue },
                 storage);
         }
     }

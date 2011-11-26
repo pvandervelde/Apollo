@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using Apollo.Utilities.Properties;
 
 namespace Apollo.Utilities.History
@@ -191,21 +190,11 @@ namespace Apollo.Utilities.History
         {
             get
             {
-                if ((index < 0) || (index >= Count))
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
-
                 return m_StorageToExternal(m_Current[index]);
             }
 
             set
             {
-                if ((index < 0) || (index >= Count))
-                {
-                    throw new ArgumentOutOfRangeException("index");
-                }
-
                 var storageItem = m_ExternalToStorage(value);
                 m_Current[index] = storageItem;
                 m_Changes.Add(new ItemUpdatedChange<TStorage>(index, storageItem));
@@ -307,10 +296,10 @@ namespace Apollo.Utilities.History
         /// </returns>
         public IEnumerator<TExternal> GetEnumerator()
         {
-            return (from internalItem in m_Current
-                    select m_StorageToExternal(internalItem))
-                .ToList()
-                .GetEnumerator();
+            foreach (var item in m_Current)
+            {
+                yield return m_StorageToExternal(item);
+            }
         }
 
         /// <summary>
@@ -555,7 +544,7 @@ namespace Apollo.Utilities.History
             lastRollBackNode = m_PastValues.Last;
 
             // Roll the whole thing back
-            List<TStorage> current = new List<TStorage>(snapshotNode.Value.Value);
+            var current = new List<TStorage>(snapshotNode.Value.Value);
             if ((lastRollBackNode != null) && (snapshotNode.Value.Time < lastRollBackNode.Value.Time))
             {
                 var firstRollBackNode = lastRollBackNode;

@@ -40,8 +40,10 @@
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="History\DictionaryTimelineStorage.CollectionChanges.cs" />
     <Compile Include="History\DictionaryTimelineStorage.cs" />
     <Compile Include="History\HistoryId.cs" />
+    <Compile Include="History\HistoryObjectDictionaryTimelineStorage.cs" />
     <Compile Include="History\HistoryObjectListTimelineStorage.cs" />
     <Compile Include="History\HistoryObjectTimelineStorage.cs" />
     <Compile Include="History\IAmHistoryEnabled.cs" />
@@ -58,6 +60,7 @@
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineException.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenRemovedFromTheTimelineException.cs" />
     <Compile Include="History\ObjectTimeline.cs" />
+    <Compile Include="History\StandardObjectDictionaryTimelineStorage.cs" />
     <Compile Include="History\StandardObjectListTimelineStorage.cs" />
     <Compile Include="History\StandardObjectTimelineStorage.cs" />
     <Compile Include="History\TimelineIdDoesNotMatchException.cs" />

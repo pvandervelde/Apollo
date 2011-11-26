@@ -66,6 +66,7 @@
     <Compile Include="FileConstantsTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
     <Compile Include="History\HistoryIdTest.cs" />
+    <Compile Include="History\HistoryObjectDictionaryTimelineStorageTest.cs" />
     <Compile Include="History\HistoryObjectListTimelineStorageTest.cs" />
     <Compile Include="History\HistoryObjectTimelineStorageTest.cs" />
     <Compile Include="History\NoFutureValueRegisteredExceptionTest.cs" />
@@ -73,6 +74,7 @@
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineExceptionTest.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenRemovedFromTheTimelineExceptionTest.cs" />
     <Compile Include="History\ObjectTimelineTest.cs" />
+    <Compile Include="History\StandardObjectDictionaryTimelineStorageTest.cs" />
     <Compile Include="History\StandardObjectListTimelineStorageTest.cs" />
     <Compile Include="History\TimelineIdDoesNotMatchExceptionTest.cs" />
     <Compile Include="History\StandardObjectTimelineStorageTest.cs" />
