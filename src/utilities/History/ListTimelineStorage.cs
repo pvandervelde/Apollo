@@ -19,7 +19,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
-    internal abstract partial class ListTimelineStorage<TExternal, TStorage> : IListCollectionTimelineStorage<TExternal>
+    internal abstract partial class ListTimelineStorage<TExternal, TStorage> : IListTimelineStorage<TExternal>, IStoreTimelineValues
     {
         /// <summary>
         /// The number of time markers between snapshots.
@@ -322,7 +322,7 @@ namespace Apollo.Utilities.History
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private bool IsAtBeginOfTime()
+        public bool IsAtBeginOfTime()
         {
             return (m_PastValues.Count == 0) && (m_PastSnapshots.Count == 0);
         }
@@ -358,7 +358,7 @@ namespace Apollo.Utilities.History
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private bool IsAtEndOfTime()
+        public bool IsAtEndOfTime()
         {
             return (m_FutureValues.Count == 0) && (m_FutureSnapshots.Count == 0);
         }
@@ -397,7 +397,7 @@ namespace Apollo.Utilities.History
 
             // Find the latest snapshot that we can use as base for the roll-back
             var snapshotNode = m_PastSnapshots.Last;
-            while (snapshotNode.Value.Time > mark)
+            while ((snapshotNode != null) && (snapshotNode.Value.Time > mark))
             {
                 m_PastSnapshots.RemoveLast();
                 m_FutureSnapshots.AddFirst(snapshotNode);
@@ -416,44 +416,43 @@ namespace Apollo.Utilities.History
             }
 
             // Roll the snap-shot over the current values
-            var current = new List<TStorage>(snapshotNode.Value.Value);
-            if ((lastRollBackNode != null) && (snapshotNode.Value.Time < lastRollBackNode.Value.Time))
+            var current = new List<TStorage>();
+            if (snapshotNode != null)
             {
-                var firstRollBackNode = lastRollBackNode;
-                while ((firstRollBackNode.Previous != null) && (firstRollBackNode.Value.Time > snapshotNode.Value.Time))
+                current.AddRange(snapshotNode.Value.Value);
+                if ((lastRollBackNode != null) && (snapshotNode.Value.Time < lastRollBackNode.Value.Time))
                 {
-                    firstRollBackNode = firstRollBackNode.Previous;
-                }
+                    var firstRollBackNode = lastRollBackNode;
+                    while ((firstRollBackNode.Previous != null) && (firstRollBackNode.Value.Time > snapshotNode.Value.Time))
+                    {
+                        firstRollBackNode = firstRollBackNode.Previous;
+                    }
 
-                // We overshot by 1 node so ...
-                if (firstRollBackNode.Value.Time < snapshotNode.Value.Time)
-                {
-                    firstRollBackNode = firstRollBackNode.Next;
-                }
+                    // We overshot by 1 node so ...
+                    if (firstRollBackNode.Value.Time < snapshotNode.Value.Time)
+                    {
+                        firstRollBackNode = firstRollBackNode.Next;
+                    }
 
-                // Roll-back the changes
-                var rollbackNode = firstRollBackNode;
-                while (rollbackNode != lastRollBackNode.Next)
-                {
-                    var changeset = rollbackNode.Value.Value;
-                    ApplyChangeSet(current, changeset);
+                    // Roll-back the changes
+                    var rollbackNode = firstRollBackNode;
+                    while (rollbackNode != lastRollBackNode.Next)
+                    {
+                        var changeset = rollbackNode.Value.Value;
+                        ApplyChangeSet(current, changeset);
 
-                    rollbackNode = rollbackNode.Next;
-                }
+                        rollbackNode = rollbackNode.Next;
+                    }
 
-                // Store the stopping node because as soon as we move the firstRollBackNode (which
-                // is the last node we move) then accesssing the 'Previous' will return a different
-                // node.
-                var stoppingNode = firstRollBackNode.Previous;
+                    // Move the last changes to the futures collection
+                    var movingNode = m_PastValues.Last;
+                    while (movingNode != lastRollBackNode)
+                    {
+                        m_PastValues.RemoveLast();
+                        m_FutureValues.AddFirst(movingNode);
 
-                // Move the last changes to the futures collection
-                var movingNode = m_PastValues.Last;
-                while (movingNode != stoppingNode)
-                {
-                    m_PastValues.RemoveLast();
-                    m_FutureValues.AddFirst(movingNode);
-
-                    movingNode = m_PastValues.Last;
+                        movingNode = m_PastValues.Last;
+                    }
                 }
             }
 
@@ -478,8 +477,7 @@ namespace Apollo.Utilities.History
                 Debug.Assert(!IsAtBeginOfTime(), "Cannot roll-back to the beginning of time if without data stored.");
             }
 
-            var mark = m_PastSnapshots.First.Value.Time;
-            RollBackInTimeTo(mark);
+            RollBackInTimeTo(TimeMarker.TheBeginOfTime);
         }
 
         /// <summary>
@@ -577,8 +575,17 @@ namespace Apollo.Utilities.History
         /// Stores the current value in the history list with the given marker.
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>
+        /// <exception cref="CannotStoreValuesAtTheStartOfTimeException">
+        ///     Thrown when <paramref name="marker"/> is equal to <see cref="TimeMarker.TheBeginOfTime"/>.
+        /// </exception>
         public void StoreCurrent(TimeMarker marker)
         {
+            {
+                Lokad.Enforce.With<CannotStoreValuesAtTheStartOfTimeException>(
+                    marker > TimeMarker.TheBeginOfTime,
+                    Resources.Exceptions_Messages_CannotStoreValuesAtTheStartOfTime);
+            }
+
             if (m_Changes.Count == 0)
             {
                 return;
@@ -598,15 +605,7 @@ namespace Apollo.Utilities.History
             }
 
             m_Changes = new List<ICollectionChange<TStorage>>();
-            if (m_FutureValues.Count > 0)
-            {
-                m_FutureValues.Clear();
-            }
-
-            if (m_FutureSnapshots.Count > 0)
-            {
-                m_FutureSnapshots.Clear();
-            }
+            ForgetTheFuture();
         }
 
         private bool ShouldSnapshot()
@@ -652,6 +651,34 @@ namespace Apollo.Utilities.History
             {
                 local(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// Clears all the history storage and forgets all the 
+        /// stored historic information.
+        /// </summary>
+        public void ForgetAllHistory()
+        {
+            ForgetThePast();
+            ForgetTheFuture();
+
+            m_Current = new List<TStorage>();
+            m_Changes = new List<ICollectionChange<TStorage>>();
+        }
+
+        private void ForgetThePast()
+        {
+            m_PastValues.Clear();
+            m_PastSnapshots.Clear();
+        }
+
+        /// <summary>
+        /// Clears all the history information that is in the future.
+        /// </summary>
+        public void ForgetTheFuture()
+        {
+            m_FutureValues.Clear();
+            m_FutureSnapshots.Clear();
         }
     }
 }

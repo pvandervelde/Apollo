@@ -11,41 +11,41 @@ using Apollo.Utilities.Properties;
 namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// An exception that is thrown when the user tries to delete an object from the timeline 
-    /// when that object already has a deletion time.
+    /// An exception that is thrown when the user tries to delete an object that is not alive in 
+    /// the current timeline.
     /// </summary>
     [Serializable]
-    public sealed class ObjectHasAlreadyBeenRemovedFromTheTimelineException : Exception
+    public sealed class CannotRemoveNonLivingObjectException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectHasAlreadyBeenRemovedFromTheTimelineException"/> class.
+        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
         /// </summary>
-        public ObjectHasAlreadyBeenRemovedFromTheTimelineException() 
-            : this(Resources.Exceptions_Messages_ObjectHasAlreadyBeenRemoved)
+        public CannotRemoveNonLivingObjectException() 
+            : this(Resources.Exceptions_Messages_CannotRemoveNonLivingObject)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectHasAlreadyBeenRemovedFromTheTimelineException"/> class.
+        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public ObjectHasAlreadyBeenRemovedFromTheTimelineException(string message) 
+        public CannotRemoveNonLivingObjectException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectHasAlreadyBeenRemovedFromTheTimelineException"/> class.
+        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public ObjectHasAlreadyBeenRemovedFromTheTimelineException(string message, Exception innerException)
+        public CannotRemoveNonLivingObjectException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectHasAlreadyBeenRemovedFromTheTimelineException"/> class.
+        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -61,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private ObjectHasAlreadyBeenRemovedFromTheTimelineException(SerializationInfo info, StreamingContext context)
+        private CannotRemoveNonLivingObjectException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

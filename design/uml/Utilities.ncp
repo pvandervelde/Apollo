@@ -98,6 +98,8 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Dependency" first="3" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -130,6 +132,8 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="7" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -145,18 +149,16 @@
         <Name>IFollowHistory</Name>
         <Access>Public</Access>
         <Location left="1267" top="221" />
-        <Size width="407" height="367" />
+        <Size width="407" height="316" />
         <Collapsed>False</Collapsed>
         <Member type="Property">TimeMarker CurrentMark { get; }</Member>
         <Member type="Property">bool IsAtCurrentTime { get; }</Member>
         <Member type="Property">bool CanRollBack { get; }</Member>
         <Member type="Property">bool CanRollForward { get; }</Member>
-        <Member type="Method">void RollBackLast(TimelineTraveller traveller = null)</Member>
         <Member type="Method">void RollBackTo(TimeMarker marker, TimelineTraveller traveller = null)</Member>
         <Member type="Method">void RollBackTo(string mark, TimelineTraveller traveller = null)</Member>
         <Member type="Event">event EventHandler OnRollingBack</Member>
         <Member type="Event">event EventHandler OnRolledBack</Member>
-        <Member type="Method">void RollForwardLast(TimelineTraveller traveller = null)</Member>
         <Member type="Method">void RollForwardTo(TimeMarker marker, TimelineTraveller traveller = null)</Member>
         <Member type="Method">void RollForwardTo(string mark, TimelineTraveller traveller = null)</Member>
         <Member type="Event">event EventHandler OnRollingForward</Member>
@@ -234,7 +236,7 @@
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
-        <Name>IFollowObjectHistory</Name>
+        <Name>IFollowObjectTimeline</Name>
         <Access>Public</Access>
         <Location left="650" top="649" />
         <Size width="256" height="265" />
@@ -244,9 +246,7 @@
         <Member type="Property">TimeMarker DeletionTime { get; }</Member>
         <Member type="Method">bool IsAlive()</Member>
         <Member type="Method">void DeleteFromTimeline()</Member>
-        <Member type="Method">void RollBackLast()</Member>
         <Member type="Method">void RollBackTo(TimeMarker marker)</Member>
-        <Member type="Method">void RollForwardLast()</Member>
         <Member type="Method">void RollForwardTo(TimeMarker marker)</Member>
         <Member type="Event">event EventHandler OnRollBack</Member>
         <Member type="Event">event EventHandler OnRollForward</Member>
@@ -570,16 +570,12 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="1" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -598,8 +594,6 @@
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="17">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -666,7 +660,7 @@
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>1433</X>
-          <Y>634</Y>
+          <Y>583</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="29" second="10">
@@ -706,8 +700,6 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="32" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -762,8 +754,6 @@
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="32" second="33">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -774,8 +764,6 @@
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="35" second="44">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

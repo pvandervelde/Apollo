@@ -120,14 +120,23 @@
   <data name="Exceptions_Messages_ArgumentOutOfRange_WithArgument" xml:space="preserve">
     <value>The argument value was outside the valid range. The argument value was: {0}</value>
   </data>
+  <data name="Exceptions_Messages_CannotDeleteObjectBeforeCreation" xml:space="preserve">
+    <value>It is not possible to delete an object from the timeline before its creation.</value>
+  </data>
   <data name="Exceptions_Messages_CannotMovePastBeginningOfTime" xml:space="preserve">
     <value>Cannot move to a point in time prior to the beginning of the known timeline.</value>
   </data>
   <data name="Exceptions_Messages_CannotMovePastEndingOfTime" xml:space="preserve">
     <value>Cannot move to a point in time past the end of the known timeline.</value>
   </data>
+  <data name="Exceptions_Messages_CannotRemoveNonLivingObject" xml:space="preserve">
+    <value>The object must be alive in order to be removed.</value>
+  </data>
   <data name="Exceptions_Messages_CannotReturnAResult" xml:space="preserve">
     <value>This command context does not allow a result to be returned.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotStoreValuesAtTheStartOfTime" xml:space="preserve">
+    <value>No values may be stored on the first point in time.</value>
   </data>
   <data name="Exceptions_Messages_CurrentProgressMarkNotSet" xml:space="preserve">
     <value>A marker must be set before starting the timer.</value>
@@ -162,8 +171,8 @@
   <data name="Exceptions_Messages_ObjectHasAlreadyBeenCreated" xml:space="preserve">
     <value>An object has already been created for this timeline.</value>
   </data>
-  <data name="Exceptions_Messages_ObjectHasAlreadyBeenRemoved" xml:space="preserve">
-    <value>The object has already been removed from the timeline and cannot be removed again.</value>
+  <data name="Exceptions_Messages_ObjectHasNotBeenCreatedYet" xml:space="preserve">
+    <value>The operation is invalid because the object has not been created yet.</value>
   </data>
   <data name="Exceptions_Messages_ProgressToLarge" xml:space="preserve">
     <value>Progress needs to be {0}% or smaller.</value>

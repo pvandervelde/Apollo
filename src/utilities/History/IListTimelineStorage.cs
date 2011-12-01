@@ -13,7 +13,10 @@ namespace Apollo.Utilities.History
     /// collection.
     /// </summary>
     /// <typeparam name="T">The type of object that is stored in the collection.</typeparam>
-    public interface IListCollectionTimelineStorage<T> : IList<T>, IStoreTimelineValues
+    [DefineAsHistoryTrackingInterface]
+    public interface IListTimelineStorage<T> : IList<T>
     {
+        // We're mirroring the IList<T> type here because otherwise we can't differentiate between lists that should
+        // track their history and lists that shouldn't ....
     }
 }

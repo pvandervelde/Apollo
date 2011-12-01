@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -14,6 +15,28 @@ namespace Apollo.Utilities.History
     /// </summary>
     public interface IStoreTimelineValues
     {
+        /// <summary>
+        /// Returns a value indicating if the history is currently at the beginning of known time, 
+        /// meaning that we can only move forward.
+        /// </summary>
+        /// <returns>
+        ///     <see langword="true" /> if history is at the beginning of known time; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool IsAtBeginOfTime();
+
+        /// <summary>
+        /// Returns a value indicating if the history is currently at the end of known time, 
+        /// meaning that we can only move backward.
+        /// </summary>
+        /// <returns>
+        ///     <see langword="true" /> if history is at the end of known time; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool IsAtEndOfTime();
+
         /// <summary>
         /// Rolls the current value back to the value stored with the given <see cref="TimeMarker"/>.
         /// </summary>
@@ -41,5 +64,16 @@ namespace Apollo.Utilities.History
         /// An event that is raised if a roll-back or roll-forward has taken place.
         /// </summary>
         event EventHandler<EventArgs> OnValueChanged;
+
+        /// <summary>
+        /// Clears all the history storage and forgets all the 
+        /// stored historic information.
+        /// </summary>
+        void ForgetAllHistory();
+
+        /// <summary>
+        /// Clears all the history information that is in the future.
+        /// </summary>
+        void ForgetTheFuture();
     }
 }

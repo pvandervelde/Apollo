@@ -11,6 +11,7 @@ namespace Apollo.Utilities.History
     /// in the timeline.
     /// </summary>
     /// <typeparam name="T">The type of the member variable for which the values are stored.</typeparam>
+    [DefineAsHistoryTrackingInterface]
     public interface IVariableTimeline<T>
     {
         /// <summary>

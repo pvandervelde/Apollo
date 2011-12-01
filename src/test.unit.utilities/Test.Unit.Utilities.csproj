@@ -65,6 +65,8 @@
     <Compile Include="CurrentProgressMarkNotSetExceptionTest.cs" />
     <Compile Include="FileConstantsTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
+    <Compile Include="History\CannotDeleteObjectBeforeCreationExceptionTest.cs" />
+    <Compile Include="History\CannotStoreValuesAtTheStartOfTimeExceptionTest.cs" />
     <Compile Include="History\HistoryIdTest.cs" />
     <Compile Include="History\HistoryObjectDictionaryTimelineStorageTest.cs" />
     <Compile Include="History\HistoryObjectListTimelineStorageTest.cs" />
@@ -72,7 +74,8 @@
     <Compile Include="History\NoFutureValueRegisteredExceptionTest.cs" />
     <Compile Include="History\NoPreviousValueRegisteredExceptionTest.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineExceptionTest.cs" />
-    <Compile Include="History\ObjectHasAlreadyBeenRemovedFromTheTimelineExceptionTest.cs" />
+    <Compile Include="History\CannotRemoveNonLivingObjectExceptionTest.cs" />
+    <Compile Include="History\ObjectHasNotBeenCreatedYetExceptionTest.cs" />
     <Compile Include="History\ObjectTimelineTest.cs" />
     <Compile Include="History\StandardObjectDictionaryTimelineStorageTest.cs" />
     <Compile Include="History\StandardObjectListTimelineStorageTest.cs" />

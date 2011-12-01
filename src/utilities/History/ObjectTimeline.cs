@@ -29,15 +29,17 @@ namespace Apollo.Utilities.History
         /// </summary>
         static ObjectTimeline()
         {
-            var type = typeof(T);
-            var members = from field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                          where typeof(IVariableTimeline<>).IsAssignableToOpenGenericType(field.FieldType)
-                          select field;
-
             s_Members = new List<Tuple<string, Type>>();
-            foreach (var field in members)
+
+            var type = typeof(T);
+            var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+            foreach (var field in fields)
             {
-                s_Members.Add(new Tuple<string, Type>(field.Name, field.FieldType));
+                var fieldType = field.FieldType;
+                if (fieldType.GetCustomAttributes(typeof(DefineAsHistoryTrackingInterfaceAttribute), true).Length > 0)
+                {
+                    s_Members.Add(new Tuple<string, Type>(field.Name, fieldType));
+                }
             }
         }
 
@@ -54,7 +56,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The function that builds the object.
         /// </summary>
-        private readonly Func<IEnumerable<Tuple<string, IStoreTimelineValues>>, T> m_ObjectBuilder;
+        private readonly Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> m_ObjectBuilder;
 
         /// <summary>
         /// The object that is being tracked in the timeline.
@@ -89,7 +91,7 @@ namespace Apollo.Utilities.History
         public ObjectTimeline(
             HistoryId id,
             Func<Type, IStoreTimelineValues> storageBuilder,
-            Func<IEnumerable<Tuple<string, IStoreTimelineValues>>, T> objectBuilder)
+            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> objectBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => id);
@@ -113,6 +115,7 @@ namespace Apollo.Utilities.History
         /// </summary>
         public HistoryId Id
         {
+            [DebuggerStepThrough]
             get
             {
                 return m_Id;
@@ -124,6 +127,7 @@ namespace Apollo.Utilities.History
         /// </summary>
         public T Object
         {
+            [DebuggerStepThrough]
             get
             {
                 return m_Object;
@@ -135,6 +139,7 @@ namespace Apollo.Utilities.History
         /// </summary>
         public TimeMarker CreationTime
         {
+            [DebuggerStepThrough]
             get
             {
                 return m_CreationTime;
@@ -146,6 +151,7 @@ namespace Apollo.Utilities.History
         /// </summary>
         public TimeMarker DeletionTime
         {
+            [DebuggerStepThrough]
             get
             {
                 return m_DeletionTime;
@@ -173,25 +179,60 @@ namespace Apollo.Utilities.History
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="creationTime"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ObjectHasAlreadyBeenAddedToTheTimelineException">
+        ///     Thrown if an object has previously been added to the timeline and the timeline
+        ///     is not at the start of time.
+        /// </exception>
+        /// <exception cref="CannotStoreValuesAtTheStartOfTimeException">
+        ///     Thrown when <paramref name="creationTime"/> is equal to <see cref="TimeMarker.TheBeginOfTime"/>.
+        /// </exception>
         public void AddToTimeline(TimeMarker creationTime)
         {
             {
-                Lokad.Enforce.With<ObjectHasAlreadyBeenAddedToTheTimelineException>(
-                    IsAlive(),
-                    Resources.Exceptions_Messages_ObjectHasAlreadyBeenCreated);
                 Lokad.Enforce.Argument(() => creationTime);
+                
+                Lokad.Enforce.With<ObjectHasAlreadyBeenAddedToTheTimelineException>(
+                    !IsAlive() && IsAtStartOfTime(),
+                    Resources.Exceptions_Messages_ObjectHasAlreadyBeenCreated);
+                
+                Lokad.Enforce.With<CannotStoreValuesAtTheStartOfTimeException>(
+                    creationTime > TimeMarker.TheBeginOfTime,
+                    Resources.Exceptions_Messages_CannotStoreValuesAtTheStartOfTime);
             }
 
+            if (m_CreationTime != null)
+            {
+                // The object has been created before but we're shifting the
+                // creation time. Clear all the member collections.
+                foreach (var member in m_Members)
+                {
+                    member.ForgetAllHistory();
+                }
+            }
+            
             m_Object = Resurrect();
             m_CreationTime = creationTime;
             m_DeletionTime = null;
+        }
+
+        private bool IsAtStartOfTime()
+        {
+            foreach (var timeline in m_Members)
+            {
+                if (!timeline.IsAtBeginOfTime())
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         /// <summary>
         /// Deletes the object from the timeline.
         /// </summary>
         /// <param name="deletionTime">The time at which the object is deleted from the timeline.</param>
-        /// <exception cref="ObjectHasAlreadyBeenRemovedFromTheTimelineException">
+        /// <exception cref="CannotRemoveNonLivingObjectException">
         ///     Thrown if an object has already been removed.
         /// </exception>
         /// <exception cref="ArgumentNullException">
@@ -200,11 +241,27 @@ namespace Apollo.Utilities.History
         public void DeleteFromTimeline(TimeMarker deletionTime)
         {
             {
-                Lokad.Enforce.With<ObjectHasAlreadyBeenRemovedFromTheTimelineException>(
-                    !IsAlive() && (m_DeletionTime != null),
-                    Resources.Exceptions_Messages_ObjectHasAlreadyBeenRemoved);
-
                 Lokad.Enforce.Argument(() => deletionTime);
+                
+                Lokad.Enforce.With<ObjectHasNotBeenCreatedYetException>(
+                    m_CreationTime != null,
+                    Resources.Exceptions_Messages_ObjectHasNotBeenCreatedYet);
+
+                Lokad.Enforce.With<CannotDeleteObjectBeforeCreationException>(
+                    deletionTime > m_CreationTime,
+                    Resources.Exceptions_Messages_CannotDeleteObjectBeforeCreation);
+
+                // The object either: has to be alive with no deletion time 
+                //   OR
+                // Alive after a roll-back with a different deletion time.
+                Lokad.Enforce.With<CannotRemoveNonLivingObjectException>(
+                    IsAlive(),
+                    Resources.Exceptions_Messages_CannotRemoveNonLivingObject);
+            }
+
+            foreach (var member in m_Members)
+            {
+                member.ForgetTheFuture();
             }
 
             ClearObject();
@@ -253,9 +310,11 @@ namespace Apollo.Utilities.History
 
         private void RollBackToStart()
         {
-            // Just clear the object. Don't bother resetting the timeline because nobody will be able to 
-            // get to the timeline values anyway. At least not until we get an object back and then we'll
-            // move the timeline back to where we want it anyway.
+            foreach (var timeline in m_Members)
+            {
+                timeline.RollBackToStart();
+            }
+            
             ClearObject();
         }
 
@@ -287,7 +346,7 @@ namespace Apollo.Utilities.History
                 timelines.Add(new Tuple<string, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
             }
 
-            return m_ObjectBuilder(timelines);
+            return m_ObjectBuilder(Id, timelines);
         }
 
         /// <summary>
@@ -332,9 +391,11 @@ namespace Apollo.Utilities.History
 
         private void RollForwardToEnd()
         {
-            // Just clear the object. Don't bother resetting the timeline because nobody will be able to 
-            // get to the timeline values anyway. At least not until we get an object back and then we'll
-            // move the timeline back to where we want it anyway.
+            foreach (var timeline in m_Members)
+            {
+                timeline.RollForwardTo(m_DeletionTime);
+            }
+
             ClearObject();
         }
 
@@ -348,7 +409,7 @@ namespace Apollo.Utilities.History
 
             if (m_Object == null)
             {
-                Resurrect();
+                m_Object = Resurrect();
             }
         }
 
@@ -381,6 +442,11 @@ namespace Apollo.Utilities.History
             {
                 Debug.Assert(timeline != null, "One of the member timelines has not been initialized.");
                 timeline.StoreCurrent(marker);
+            }
+
+            if (m_DeletionTime != null)
+            {
+                m_DeletionTime = null;
             }
         }
     }

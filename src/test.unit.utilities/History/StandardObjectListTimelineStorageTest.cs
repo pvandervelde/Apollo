@@ -45,11 +45,11 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(25));
+            storage.RollBackTo(new TimeMarker(26));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 },
                 storage);
@@ -64,11 +64,11 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The first snapshot is at 0, the next one is 20 further so it is at 20
-            storage.RollBackTo(new TimeMarker(20));
+            // The first snapshot is at 1, the next one is 20 further so it is at 20
+            storage.RollBackTo(new TimeMarker(21));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
                 storage);
@@ -83,11 +83,11 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(15));
+            storage.RollBackTo(new TimeMarker(16));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 },
                 storage);
@@ -102,10 +102,10 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker((ulong)(maximumValue - 1)));
+            storage.RollBackTo(new TimeMarker((ulong)maximumValue));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
@@ -120,10 +120,10 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker(0));
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreElementsEqual(
                 new int[] { 0 },
                 storage);
@@ -138,13 +138,36 @@ namespace Apollo.Utilities.History
             for (int i = 1; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackTo(new TimeMarker(0));
             Assert.AreElementsEqual(
-                new int[] { 1 },
+                new int[] { },
                 storage);
+        }
+
+        [Test]
+        public void RollBackMultipleTimes()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 1; i < maximumValue; i++)
+            {
+                storage.Add(i);
+                storage.StoreCurrent(new TimeMarker((ulong)i));
+            }
+
+            for (int i = maximumValue - 1; i >= 0; i--)
+            {
+                storage.RollBackTo(new TimeMarker((ulong)i));
+                Assert.AreEqual(i, storage.Count);
+                for (int j = 1; j <= i; j++)
+                {
+                    Assert.IsTrue(storage.Contains(j));
+                }
+            }
         }
 
         [Test]
@@ -170,12 +193,12 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackToStart();
             Assert.AreElementsEqual(
-                new int[] { 0 },
+                new int[0],
                 storage);
         }
 
@@ -190,14 +213,14 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             storage.Clear();
             storage.Add(maximumValue + 1);
 
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollBackToStart();
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
@@ -214,12 +237,12 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage.Remove(5);
             storage.StoreCurrent(new TimeMarker(1));
 
-            storage.RollBackToStart();
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
@@ -236,12 +259,12 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
 
-            storage.RollBackToStart();
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
@@ -256,12 +279,12 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(15));
-            storage.RollForwardTo(new TimeMarker(19));
+            // The snapshot is at 21
+            storage.RollBackTo(new TimeMarker(16));
+            storage.RollForwardTo(new TimeMarker(20));
 
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19 },
@@ -277,12 +300,12 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(15));
-            storage.RollForwardTo(new TimeMarker(20));
+            // The snapshot is at 21
+            storage.RollBackTo(new TimeMarker(16));
+            storage.RollForwardTo(new TimeMarker(21));
 
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20 },
@@ -298,12 +321,12 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(15));
-            storage.RollForwardTo(new TimeMarker(25));
+            // The snapshot is at 21
+            storage.RollBackTo(new TimeMarker(16));
+            storage.RollForwardTo(new TimeMarker(26));
 
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25 },
@@ -319,11 +342,11 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker(5));
-            storage.RollForwardTo(new TimeMarker(5));
+            storage.RollBackTo(new TimeMarker(6));
+            storage.RollForwardTo(new TimeMarker(6));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5 },
                 storage);
@@ -338,11 +361,11 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker(5));
-            storage.RollForwardTo(new TimeMarker((ulong)(maximumValue - 1)));
+            storage.RollBackTo(new TimeMarker(6));
+            storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
@@ -357,14 +380,38 @@ namespace Apollo.Utilities.History
             for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker(5));
-            storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
+            storage.RollBackTo(new TimeMarker(6));
+            storage.RollForwardTo(new TimeMarker((ulong)(maximumValue + 1)));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 },
                 storage);
+        }
+
+        [Test]
+        public void RollForwardMultipleTimes()
+        {
+            var storage = new StandardObjectListTimelineStorage<int>();
+
+            int maximumValue = 10;
+            for (int i = 1; i < maximumValue; i++)
+            {
+                storage.Add(i);
+                storage.StoreCurrent(new TimeMarker((ulong)i));
+            }
+
+            storage.RollBackToStart();
+            for (int i = 1; i < maximumValue; i++)
+            {
+                storage.RollForwardTo(new TimeMarker((ulong)i));
+                Assert.AreEqual(i, storage.Count);
+                for (int j = 1; j <= i; j++)
+                {
+                    Assert.IsTrue(storage.Contains(j));
+                }
+            }
         }
 
         [Test]
@@ -378,15 +425,15 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             storage.Clear();
             storage.Add(maximumValue + 1);
 
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { maximumValue + 1 },
                 storage);
@@ -403,13 +450,13 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage.Remove(5);
             storage.StoreCurrent(new TimeMarker(1));
 
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(2));
+
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
                 storage);
@@ -426,13 +473,13 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
 
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(2));
+
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, maximumValue, 6, 7, 8, 9 },
                 storage);
@@ -449,16 +496,16 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
-
-            storage.RollBackToStart();
-
-            storage.Add(11);
+            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+
+            storage.Add(11);
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 11 },
                 storage);
@@ -475,17 +522,17 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
+            storage[5] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollBackToStart();
+            storage.RollBackTo(new TimeMarker(1));
 
             storage.Clear();
             storage.Add(maximumValue + 1);
-            storage.StoreCurrent(new TimeMarker(2));
+            storage.StoreCurrent(new TimeMarker(3));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { maximumValue + 1 },
                 storage);
@@ -502,16 +549,16 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
-
-            storage.RollBackToStart();
-
-            storage.Remove(5);
+            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+
+            storage.Remove(5);
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 6, 7, 8, 9 },
                 storage);
@@ -528,16 +575,16 @@ namespace Apollo.Utilities.History
                 storage.Add(i);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(1));
 
-            storage.RollBackToStart();
-            storage[9] = maximumValue;
+            storage[5] = maximumValue;
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+            storage[9] = maximumValue;
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
 
             Assert.AreElementsEqual(
                 new int[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, maximumValue },

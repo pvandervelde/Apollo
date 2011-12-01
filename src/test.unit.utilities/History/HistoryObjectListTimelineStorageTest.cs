@@ -201,11 +201,11 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
-            storage.RollBackTo(new TimeMarker(25));
+            // The snapshot is at 21
+            storage.RollBackTo(new TimeMarker(26));
             Assert.AreEqual(26, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -226,11 +226,11 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The first snapshot is at 0, the next one is 20 further so it is at 20
-            storage.RollBackTo(new TimeMarker(20));
+            // The first snapshot is at 1, the next one is 20 further so it is at 21
+            storage.RollBackTo(new TimeMarker(21));
             Assert.AreEqual(21, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -251,12 +251,12 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
+            // The snapshot is at 21
             storage.RollBackTo(new TimeMarker(15));
-            Assert.AreEqual(16, storage.Count);
+            Assert.AreEqual(15, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
                 Assert.AreSame(objects[new HistoryId(i)], storage[i]);
@@ -276,10 +276,10 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker((ulong)(maximumValue - 1)));
+            storage.RollBackTo(new TimeMarker((ulong)maximumValue));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -300,10 +300,10 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            storage.RollBackTo(new TimeMarker(0));
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreEqual(1, storage.Count);
             Assert.AreSame(objects[new HistoryId(0)], storage[0]);
         }
@@ -321,12 +321,11 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackTo(new TimeMarker(0));
-            Assert.AreEqual(1, storage.Count);
-            Assert.AreSame(objects[new HistoryId(1)], storage[0]);
+            Assert.AreEqual(0, storage.Count);
         }
 
         [Test]
@@ -335,7 +334,7 @@ namespace Apollo.Utilities.History
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
             var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
-            Assert.DoesNotThrow(() => storage.RollBackTo(new TimeMarker(0)));
+            Assert.DoesNotThrow(() => storage.RollBackTo(new TimeMarker(1)));
         }
 
         [Test]
@@ -360,12 +359,38 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackToStart();
-            Assert.AreEqual(1, storage.Count);
-            Assert.AreSame(objects[new HistoryId(0)], storage[0]);
+            Assert.AreEqual(0, storage.Count);
+        }
+
+        [Test]
+        public void RollBackMultipleTimes()
+        {
+            var objects = new Dictionary<HistoryId, MockHistoryObject>();
+            Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
+            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                var obj = new MockHistoryObject(i);
+                objects.Add(obj.HistoryId, obj);
+                storage.Add(obj);
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
+            }
+
+            for (int i = maximumValue - 1; i >= 0; i--)
+            {
+                storage.RollBackTo(new TimeMarker((ulong)i));
+                Assert.AreEqual(i, storage.Count);
+                for (int j = 1; j <= i; j++)
+                {
+                    Assert.IsTrue(storage.Contains(objects[new HistoryId(j - 1)]));
+                }
+            }
         }
 
         [Test]
@@ -383,16 +408,16 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
             
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             storage.Clear();
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage.Add(newObj);
 
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollBackToStart();
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -415,12 +440,12 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
             
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage.Remove(objects[new HistoryId(5)]);
             storage.StoreCurrent(new TimeMarker(1));
 
-            storage.RollBackToStart();
+            storage.Remove(objects[new HistoryId(5)]);
+            storage.StoreCurrent(new TimeMarker(2));
+
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -443,14 +468,14 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollBackToStart();
+            storage.RollBackTo(new TimeMarker(1));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -471,12 +496,12 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
+            // The snapshot is at 21
             storage.RollBackTo(new TimeMarker(15));
-            storage.RollForwardTo(new TimeMarker(19));
+            storage.RollForwardTo(new TimeMarker(20));
             Assert.AreEqual(20, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -497,12 +522,12 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
+            // The snapshot is at 21
             storage.RollBackTo(new TimeMarker(15));
-            storage.RollForwardTo(new TimeMarker(20));
+            storage.RollForwardTo(new TimeMarker(21));
             Assert.AreEqual(21, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -523,13 +548,13 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            // The snapshot is at 20
+            // The snapshot is at 21
             storage.RollBackTo(new TimeMarker(15));
             storage.RollForwardTo(new TimeMarker(25));
-            Assert.AreEqual(26, storage.Count);
+            Assert.AreEqual(25, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
                 Assert.AreSame(objects[new HistoryId(i)], storage[i]);
@@ -549,12 +574,12 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackTo(new TimeMarker(5));
             storage.RollForwardTo(new TimeMarker(5));
-            Assert.AreEqual(6, storage.Count);
+            Assert.AreEqual(5, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
                 Assert.AreSame(objects[new HistoryId(i)], storage[i]);
@@ -574,11 +599,11 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackTo(new TimeMarker(5));
-            storage.RollForwardTo(new TimeMarker((ulong)(maximumValue - 1)));
+            storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -599,15 +624,43 @@ namespace Apollo.Utilities.History
                 var obj = new MockHistoryObject(i);
                 objects.Add(obj.HistoryId, obj);
                 storage.Add(obj);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
             storage.RollBackTo(new TimeMarker(5));
-            storage.RollForwardTo(new TimeMarker((ulong)maximumValue));
+            storage.RollForwardTo(new TimeMarker((ulong)(maximumValue + 1)));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
                 Assert.AreSame(objects[new HistoryId(i)], storage[i]);
+            }
+        }
+
+        [Test]
+        public void RollForwardMultipleTimes()
+        {
+            var objects = new Dictionary<HistoryId, MockHistoryObject>();
+            Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
+            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                var obj = new MockHistoryObject(i);
+                objects.Add(obj.HistoryId, obj);
+                storage.Add(obj);
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
+            }
+
+            storage.RollBackToStart();
+            for (int i = 1; i < maximumValue; i++)
+            {
+                storage.RollForwardTo(new TimeMarker((ulong)i));
+                Assert.AreEqual(i, storage.Count);
+                for (int j = 1; j <= i; j++)
+                {
+                    Assert.IsTrue(storage.Contains(objects[new HistoryId(j - 1)]));
+                }
             }
         }
 
@@ -626,17 +679,17 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             storage.Clear();
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage.Add(newObj);
 
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(1, storage.Count);
             Assert.AreSame(objects[new HistoryId(maximumValue)], storage[0]);
         }
@@ -656,13 +709,13 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
-
-            storage.RemoveAt(5);
             storage.StoreCurrent(new TimeMarker(1));
 
+            storage.RemoveAt(5);
+            storage.StoreCurrent(new TimeMarker(2));
+
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(maximumValue - 1, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -692,15 +745,15 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
+            storage.StoreCurrent(new TimeMarker(2));
 
             storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -730,18 +783,18 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
-
-            storage.Add(newObj);
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollBackToStart();
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.Add(newObj);
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollBackTo(new TimeMarker(1));
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -771,19 +824,19 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
-
-            storage.RollBackToStart();
-
-            storage.Clear();
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+
+            storage.Clear();
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(0, storage.Count);
         }
 
@@ -802,19 +855,19 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
-
-            storage.RollBackToStart();
-
-            storage.RemoveAt(5);
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+
+            storage.RemoveAt(5);
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(maximumValue - 1, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {
@@ -844,19 +897,19 @@ namespace Apollo.Utilities.History
                 storage.Add(obj);
             }
 
-            storage.StoreCurrent(new TimeMarker(0));
+            storage.StoreCurrent(new TimeMarker(1));
 
             var newObj = new MockHistoryObject(maximumValue);
             objects.Add(newObj.HistoryId, newObj);
             storage[5] = newObj;
-            storage.StoreCurrent(new TimeMarker(1));
-
-            storage.RollBackToStart();
-
-            storage[9] = newObj;
             storage.StoreCurrent(new TimeMarker(2));
 
-            storage.RollForwardTo(new TimeMarker(1));
+            storage.RollBackTo(new TimeMarker(1));
+
+            storage[9] = newObj;
+            storage.StoreCurrent(new TimeMarker(3));
+
+            storage.RollForwardTo(new TimeMarker(2));
             Assert.AreEqual(maximumValue, storage.Count);
             for (int i = 0; i < storage.Count; i++)
             {

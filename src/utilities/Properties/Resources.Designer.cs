@@ -70,6 +70,15 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to It is not possible to delete an object from the timeline before its creation..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotDeleteObjectBeforeCreation {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotDeleteObjectBeforeCreation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cannot move to a point in time prior to the beginning of the known timeline..
         /// </summary>
         internal static string Exceptions_Messages_CannotMovePastBeginningOfTime {
@@ -88,11 +97,29 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The object must be alive in order to be removed..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotRemoveNonLivingObject {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotRemoveNonLivingObject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to This command context does not allow a result to be returned..
         /// </summary>
         internal static string Exceptions_Messages_CannotReturnAResult {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_CannotReturnAResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No values may be stored on the first point in time..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotStoreValuesAtTheStartOfTime {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotStoreValuesAtTheStartOfTime", resourceCulture);
             }
         }
         
@@ -196,11 +223,11 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The object has already been removed from the timeline and cannot be removed again..
+        ///   Looks up a localized string similar to The operation is invalid because the object has not been created yet..
         /// </summary>
-        internal static string Exceptions_Messages_ObjectHasAlreadyBeenRemoved {
+        internal static string Exceptions_Messages_ObjectHasNotBeenCreatedYet {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_ObjectHasAlreadyBeenRemoved", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_ObjectHasNotBeenCreatedYet", resourceCulture);
             }
         }
         

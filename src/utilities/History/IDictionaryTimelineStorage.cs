@@ -14,7 +14,10 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of object that is stored in the collection.</typeparam>
-    public interface IDictionaryTimelineStorage<TKey, TValue> : IDictionary<TKey, TValue>, IStoreTimelineValues
+    [DefineAsHistoryTrackingInterface]
+    public interface IDictionaryTimelineStorage<TKey, TValue> : IDictionary<TKey, TValue>
     {
+        // We're mirroring the IDictionary<TKey, TValue> type here because otherwise we can't differentiate 
+        // between dictionaries that should track their history and dictionaries that shouldn't ....
     }
 }

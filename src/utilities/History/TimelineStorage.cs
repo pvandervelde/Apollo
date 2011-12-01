@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utilities.Properties;
 
 namespace Apollo.Utilities.History
 {
@@ -49,7 +50,7 @@ namespace Apollo.Utilities.History
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private bool IsAtBeginOfTime()
+        public bool IsAtBeginOfTime()
         {
             return m_PastValues.Count == 0;
         }
@@ -85,7 +86,7 @@ namespace Apollo.Utilities.History
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private bool IsAtEndOfTime()
+        public bool IsAtEndOfTime()
         {
             return m_FutureValues.Count == 0;
         }
@@ -129,7 +130,7 @@ namespace Apollo.Utilities.History
             // point in time that we want to roll back to. So start searching
             // from the end of the collection
             var lastNode = m_PastValues.Last;
-            while (lastNode.Value.Time > mark)
+            while ((lastNode != null) && (lastNode.Value.Time > mark))
             {
                 m_PastValues.RemoveLast();
                 m_FutureValues.AddFirst(lastNode);
@@ -137,7 +138,7 @@ namespace Apollo.Utilities.History
                 lastNode = m_PastValues.Last;
             }
 
-            return m_PastValues.Last.Value.Value;
+            return (m_PastValues.Last != null) ? m_PastValues.Last.Value.Value : default(T);
         }
 
         /// <summary>
@@ -153,8 +154,7 @@ namespace Apollo.Utilities.History
                 Debug.Assert(!IsAtBeginOfTime(), "Cannot roll-back to the beginning of time if without data stored.");
             }
 
-            var mark = m_PastValues.First.Value.Time;
-            return RollBackInTimeTo(mark);
+            return RollBackInTimeTo(TimeMarker.TheBeginOfTime);
         }
 
         /// <summary>
@@ -213,17 +213,21 @@ namespace Apollo.Utilities.History
         /// Stores the current value in the history list with the given marker.
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>
+        /// <exception cref="CannotStoreValuesAtTheStartOfTimeException">
+        ///     Thrown when <paramref name="marker"/> is equal to <see cref="TimeMarker.TheBeginOfTime"/>.
+        /// </exception>
         public void StoreCurrent(TimeMarker marker)
         {
+            {
+                Lokad.Enforce.With<CannotStoreValuesAtTheStartOfTimeException>(
+                    marker > TimeMarker.TheBeginOfTime,
+                    Resources.Exceptions_Messages_CannotStoreValuesAtTheStartOfTime);
+            }
+
             if (IsLastValueDifferent())
             {
                 m_PastValues.AddLast(new LinkedListNode<ValueAtTime<T>>(new ValueAtTime<T>(marker, m_Current)));
-
-                // Adding a value clears the redo list.
-                if (m_FutureValues.Count > 0)
-                {
-                    m_FutureValues.Clear();
-                }
+                ForgetTheFuture();
             }
         }
 
@@ -260,6 +264,31 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
+        /// Clears all the history storage and forgets all the 
+        /// stored historic information.
+        /// </summary>
+        public void ForgetAllHistory()
+        {
+            ForgetThePast();
+            ForgetTheFuture();
+
+            m_Current = default(T);
+        }
+
+        private void ForgetThePast()
+        {
+            m_PastValues.Clear();
+        }
+
+        /// <summary>
+        /// Clears all the history information that is in the future.
+        /// </summary>
+        public void ForgetTheFuture()
+        {
+            m_FutureValues.Clear();
+        }
+
+        /// <summary>
         /// Gets or sets the current value for the variable.
         /// </summary>
         /// <remarks>
@@ -270,11 +299,13 @@ namespace Apollo.Utilities.History
         /// </remarks>
         protected T CurrentInternalValue
         {
+            [DebuggerStepThrough]
             get
             {
                 return m_Current;
             }
 
+            [DebuggerStepThrough]
             set
             {
                 m_Current = value;

@@ -206,6 +206,22 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
+        /// The time marker that signifies the start of time.
+        /// </summary>
+        private static readonly TimeMarker s_TheBeginOfTime = new TimeMarker(0);
+
+        /// <summary>
+        /// Gets the time marker that signifies the start of time.
+        /// </summary>
+        public static TimeMarker TheBeginOfTime
+        {
+            get
+            {
+                return s_TheBeginOfTime;
+            }
+        }
+
+        /// <summary>
         /// The value that indicates what the position of this time marker is on the timeline.
         /// </summary>
         private readonly ulong m_PositionInTime;
