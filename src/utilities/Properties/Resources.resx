@@ -135,6 +135,12 @@
   <data name="Exceptions_Messages_CannotReturnAResult" xml:space="preserve">
     <value>This command context does not allow a result to be returned.</value>
   </data>
+  <data name="Exceptions_Messages_CannotRollBackToAPointInTheFuture" xml:space="preserve">
+    <value>Cannot roll-back to a point in the future.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotRollForwardToAPointInThePast" xml:space="preserve">
+    <value>Cannot roll-forward to a point in the past.</value>
+  </data>
   <data name="Exceptions_Messages_CannotStoreValuesAtTheStartOfTime" xml:space="preserve">
     <value>No values may be stored on the first point in time.</value>
   </data>
@@ -162,6 +168,9 @@
   <data name="Exceptions_Messages_IncorrectResultType_WithTypes" xml:space="preserve">
     <value>Unexpected result type. Got {0} but expected {1}.</value>
   </data>
+  <data name="Exceptions_Messages_InvalidTimeMarker" xml:space="preserve">
+    <value>The provided time marker is not valid in the current situation.</value>
+  </data>
   <data name="Exceptions_Messages_NoFutureValueRegistered" xml:space="preserve">
     <value>No value later in time has been registered.</value>
   </data>
@@ -174,6 +183,12 @@
   <data name="Exceptions_Messages_ObjectHasNotBeenCreatedYet" xml:space="preserve">
     <value>The operation is invalid because the object has not been created yet.</value>
   </data>
+  <data name="Exceptions_Messages_ObjectUnknownToTimeline" xml:space="preserve">
+    <value>The object with the specified history ID does not exist in the current timeline.</value>
+  </data>
+  <data name="Exceptions_Messages_ObjectUnknownToTimeline_WithId" xml:space="preserve">
+    <value>The object with history ID {0} does not exist in the current timeline.</value>
+  </data>
   <data name="Exceptions_Messages_ProgressToLarge" xml:space="preserve">
     <value>Progress needs to be {0}% or smaller.</value>
   </data>
@@ -182,6 +197,12 @@
   </data>
   <data name="Exceptions_Messages_TheArrayIsShorterThanTheNumberOfItems_WithValues" xml:space="preserve">
     <value>The array to which the values should be copied is shorter ({0}) than the number of items to be copied ({1}).</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToPerformRollBackDueToBlockingDependency" xml:space="preserve">
+    <value>Unable to perform a roll-back due to a blocking dependency.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToPerformRollForwardDueToBlockingDependency" xml:space="preserve">
+    <value>Unable to perform a roll-forward due to a blocking dependency.</value>
   </data>
   <data name="Exceptions_Messages_UnknownCommand" xml:space="preserve">
     <value>No command with the specified name could be found.</value>
@@ -194,5 +215,11 @@
   </data>
   <data name="Exceptions_Messages_UnknownCommand_WithName" xml:space="preserve">
     <value>No command with the name [{0}] could be found.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownTimeMarker" xml:space="preserve">
+    <value>The specified name does not belong to a known time marker.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownTimeMarker_WithName" xml:space="preserve">
+    <value>The specified name ({0}) does not belong to a known time marker.</value>
   </data>
 </root>

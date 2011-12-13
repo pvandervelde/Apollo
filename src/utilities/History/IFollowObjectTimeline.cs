@@ -48,14 +48,12 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Adds the object to the timeline and sets the creation time.
         /// </summary>
-        /// <param name="creationTime">The creation time for the object.</param>
-        void AddToTimeline(TimeMarker creationTime);
+        void AddToTimeline();
 
         /// <summary>
         /// Deletes the object from the timeline.
         /// </summary>
-        /// <param name="deletionTime">The time at which the object is deleted from the timeline.</param>
-        void DeleteFromTimeline(TimeMarker deletionTime);
+        void DeleteFromTimeline();
 
         /// <summary>
         /// Rolls the current value back to the value stored with the given <see cref="TimeMarker"/>.

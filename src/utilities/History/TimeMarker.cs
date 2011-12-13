@@ -263,6 +263,25 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
+        /// Creates a new <see cref="TimeMarker"/> which is the logical successor to the current time marker.
+        /// </summary>
+        /// <returns>The new time marker.</returns>
+        public TimeMarker Next()
+        {
+            return new TimeMarker(m_PositionInTime + 1);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="TimeMarker"/> which is the logical successor to the current time marker.
+        /// </summary>
+        /// <param name="name">The tag name of the marker. May be an empty string.</param>
+        /// <returns>The new time marker.</returns>
+        public TimeMarker Next(string name)
+        {
+            return new TimeMarker(m_PositionInTime + 1, name);
+        }
+
+        /// <summary>
         /// Gets the tag name of the marker. Maybe an empty string.
         /// </summary>
         public string Name

@@ -61,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The object that is being tracked in the timeline.
         /// </summary>
-        private T m_Object;
+        private T m_Object; // WEAKREFERENCE???
 
         /// <summary>
         /// The point on the timeline where the tracked object is created.
@@ -172,32 +172,16 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Adds the object to the timeline and sets the creation time.
         /// </summary>
-        /// <param name="creationTime">The creation time for the object.</param>
-        /// <exception cref="ObjectHasAlreadyBeenAddedToTheTimelineException">
-        ///     Thrown if an object is already present.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="creationTime"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ObjectHasAlreadyBeenAddedToTheTimelineException">
         ///     Thrown if an object has previously been added to the timeline and the timeline
         ///     is not at the start of time.
         /// </exception>
-        /// <exception cref="CannotStoreValuesAtTheStartOfTimeException">
-        ///     Thrown when <paramref name="creationTime"/> is equal to <see cref="TimeMarker.TheBeginOfTime"/>.
-        /// </exception>
-        public void AddToTimeline(TimeMarker creationTime)
+        public void AddToTimeline()
         {
             {
-                Lokad.Enforce.Argument(() => creationTime);
-                
                 Lokad.Enforce.With<ObjectHasAlreadyBeenAddedToTheTimelineException>(
                     !IsAlive() && IsAtStartOfTime(),
                     Resources.Exceptions_Messages_ObjectHasAlreadyBeenCreated);
-                
-                Lokad.Enforce.With<CannotStoreValuesAtTheStartOfTimeException>(
-                    creationTime > TimeMarker.TheBeginOfTime,
-                    Resources.Exceptions_Messages_CannotStoreValuesAtTheStartOfTime);
             }
 
             if (m_CreationTime != null)
@@ -211,7 +195,7 @@ namespace Apollo.Utilities.History
             }
             
             m_Object = Resurrect();
-            m_CreationTime = creationTime;
+            m_CreationTime = null;
             m_DeletionTime = null;
         }
 
@@ -231,25 +215,18 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Deletes the object from the timeline.
         /// </summary>
-        /// <param name="deletionTime">The time at which the object is deleted from the timeline.</param>
+        /// <exception cref="ObjectHasNotBeenCreatedYetException">
+        /// Thrown if the object has not been created yet.
+        /// </exception>
         /// <exception cref="CannotRemoveNonLivingObjectException">
-        ///     Thrown if an object has already been removed.
+        /// Thrown if an object has already been removed.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="deletionTime"/> is <see langword="null" />.
-        /// </exception>
-        public void DeleteFromTimeline(TimeMarker deletionTime)
+        public void DeleteFromTimeline()
         {
             {
-                Lokad.Enforce.Argument(() => deletionTime);
-                
                 Lokad.Enforce.With<ObjectHasNotBeenCreatedYetException>(
                     m_CreationTime != null,
                     Resources.Exceptions_Messages_ObjectHasNotBeenCreatedYet);
-
-                Lokad.Enforce.With<CannotDeleteObjectBeforeCreationException>(
-                    deletionTime > m_CreationTime,
-                    Resources.Exceptions_Messages_CannotDeleteObjectBeforeCreation);
 
                 // The object either: has to be alive with no deletion time 
                 //   OR
@@ -265,7 +242,7 @@ namespace Apollo.Utilities.History
             }
 
             ClearObject();
-            m_DeletionTime = deletionTime;
+            m_DeletionTime = null;
         }
 
         private void ClearObject()
@@ -433,8 +410,14 @@ namespace Apollo.Utilities.History
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>
         public void Mark(TimeMarker marker)
         {
-            if (!IsAlive())
+            if (!IsAlive() && (m_CreationTime == null))
             {
+                return;
+            }
+
+            if (!IsAlive() && (m_DeletionTime == null))
+            {
+                m_DeletionTime = marker;
                 return;
             }
 
@@ -442,6 +425,11 @@ namespace Apollo.Utilities.History
             {
                 Debug.Assert(timeline != null, "One of the member timelines has not been initialized.");
                 timeline.StoreCurrent(marker);
+            }
+
+            if ((m_Object != null) && (m_CreationTime == null))
+            {
+                m_CreationTime = marker;
             }
 
             if (m_DeletionTime != null)

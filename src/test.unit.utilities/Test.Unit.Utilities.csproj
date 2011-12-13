@@ -81,6 +81,7 @@
     <Compile Include="History\StandardObjectListTimelineStorageTest.cs" />
     <Compile Include="History\TimelineIdDoesNotMatchExceptionTest.cs" />
     <Compile Include="History\StandardObjectTimelineStorageTest.cs" />
+    <Compile Include="History\TimelineTest.cs" />
     <Compile Include="History\TimeMarkerTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="IdTest.cs" />

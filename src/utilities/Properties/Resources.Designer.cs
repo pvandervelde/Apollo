@@ -115,6 +115,24 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot roll-back to a point in the future..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotRollBackToAPointInTheFuture {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotRollBackToAPointInTheFuture", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot roll-forward to a point in the past..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotRollForwardToAPointInThePast {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotRollForwardToAPointInThePast", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No values may be stored on the first point in time..
         /// </summary>
         internal static string Exceptions_Messages_CannotStoreValuesAtTheStartOfTime {
@@ -196,6 +214,15 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The provided time marker is not valid in the current situation..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidTimeMarker {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidTimeMarker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to No value later in time has been registered..
         /// </summary>
         internal static string Exceptions_Messages_NoFutureValueRegistered {
@@ -232,6 +259,24 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The object with the specified history ID does not exist in the current timeline..
+        /// </summary>
+        internal static string Exceptions_Messages_ObjectUnknownToTimeline {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ObjectUnknownToTimeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The object with history ID {0} does not exist in the current timeline..
+        /// </summary>
+        internal static string Exceptions_Messages_ObjectUnknownToTimeline_WithId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_ObjectUnknownToTimeline_WithId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Progress needs to be {0}% or smaller..
         /// </summary>
         internal static string Exceptions_Messages_ProgressToLarge {
@@ -255,6 +300,24 @@ namespace Apollo.Utilities.Properties {
         internal static string Exceptions_Messages_TheArrayIsShorterThanTheNumberOfItems_WithValues {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_TheArrayIsShorterThanTheNumberOfItems_WithValues", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to perform a roll-back due to a blocking dependency..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToPerformRollBackDueToBlockingDependency {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToPerformRollBackDueToBlockingDependency", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unable to perform a roll-forward due to a blocking dependency..
+        /// </summary>
+        internal static string Exceptions_Messages_UnableToPerformRollForwardDueToBlockingDependency {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnableToPerformRollForwardDueToBlockingDependency", resourceCulture);
             }
         }
         
@@ -291,6 +354,24 @@ namespace Apollo.Utilities.Properties {
         internal static string Exceptions_Messages_UnknownCommandParameter_WithName {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownCommandParameter_WithName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified name does not belong to a known time marker..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownTimeMarker {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownTimeMarker", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified name ({0}) does not belong to a known time marker..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownTimeMarker_WithName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownTimeMarker_WithName", resourceCulture);
             }
         }
     }

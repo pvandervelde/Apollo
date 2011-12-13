@@ -25,23 +25,17 @@ namespace Apollo.Utilities.History
         /// Registers the dependency for the current change set.
         /// </summary>
         /// <param name="dependency">The dependency.</param>
-        /// <param name="blocks">Indicates which action the dependency has influence on.</param>
-        void RegisterDependency(Func<bool> dependency, ChangeBlocker blocks);
+        void RegisterDependency(UpdateFromHistoryDependency dependency);
 
         /// <summary>
         /// Unregisters the given dependency.
         /// </summary>
         /// <param name="dependency">The dependency.</param>
-        void UnregisterDependency(Func<bool> dependency);
+        void UnregisterDependency(UpdateFromHistoryDependency dependency);
 
         /// <summary>
-        /// Gets or sets a value indicating whether the changes that have taken place
-        /// in the lifetime of the current change set should be stored or not.
+        /// Indicates that all the changes in the current change set should be stored.
         /// </summary>
-        bool ShouldRecordChanges
-        {
-            get;
-            set;
-        }
+        void StoreChanges();
     }
 }

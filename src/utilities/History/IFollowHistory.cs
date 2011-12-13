@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 
 namespace Apollo.Utilities.History
 {
@@ -90,27 +91,39 @@ namespace Apollo.Utilities.History
         event EventHandler<EventArgs> OnRolledForward;
 
         /// <summary>
-        /// Stores the current state and returns the <see cref="TimeMarker"/> that goes with that state.
+        /// Stores the current state and returns the <see cref="TimeMarker"/> that belongs to this change set.
         /// </summary>
-        /// <returns>
-        /// The time marker for the stored state.
-        /// </returns>
+        /// <returns>The time marker for the stored state.</returns>
         TimeMarker Mark();
 
         /// <summary>
-        /// Stores the current state with the given name and returns the <see cref="TimeMarker"/> that goes 
-        /// with that state.
+        /// Stores the current state and the dependencies and returns the <see cref="TimeMarker"/> that belongs to 
+        /// this change set.
+        /// </summary>
+        /// <param name="dependencies">The dependencies that indicate if the current change set can be rolled back or rolled forward.</param>
+        /// <returns>The time marker for the stored state.</returns>
+        TimeMarker Mark(IEnumerable<UpdateFromHistoryDependency> dependencies);
+
+        /// <summary>
+        /// Stores the current state with the given name and returns the <see cref="TimeMarker"/> that 
+        /// belongs to this change set.
         /// </summary>
         /// <param name="name">The name for the state.</param>
-        /// <returns>
-        /// The time marker for the stored state.
-        /// </returns>
+        /// <returns>The time marker for the stored state.</returns>
         TimeMarker Mark(string name);
 
         /// <summary>
-        /// An event that is raised if a roll-back or roll-forward has taken place that has
-        /// a <see cref="TimelineTraveller"/> object associated with it.
+        /// Stores the current state with the given name and the dependencies  and returns the <see cref="TimeMarker"/> that 
+        /// belongs to this change set.
         /// </summary>
-        event EventHandler<TimeTravellerEventArgs> OnTimeTravellerArrived;
+        /// <param name="name">The name for the state.</param>
+        /// <param name="dependencies">The dependencies that indicate if the current change set can be rolled back or rolled forward.</param>
+        /// <returns>The time marker for the stored state.</returns>
+        TimeMarker Mark(string name, IEnumerable<UpdateFromHistoryDependency> dependencies);
+
+        /// <summary>
+        /// An event that is raised when the current change set is stored in the timeline.
+        /// </summary>
+        event EventHandler<TimelineMarkEventArgs> OnMark;
     }
 }

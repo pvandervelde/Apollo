@@ -615,6 +615,32 @@ namespace Apollo.Utilities.History
         }
 
         [Test]
+        public void RollForwardWithLocalChange()
+        {
+            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+
+            int maximumValue = 10;
+            for (int i = 0; i < maximumValue; i++)
+            {
+                storage.Add(i, i);
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
+            }
+
+            storage.RollBackToStart();
+            storage.Add(maximumValue + 1, maximumValue + 1);
+
+            for (int i = 1; i < maximumValue; i++)
+            {
+                storage.RollForwardTo(new TimeMarker((ulong)i));
+                Assert.AreEqual(i, storage.Count);
+                for (int j = 1; j <= i; j++)
+                {
+                    Assert.IsTrue(storage.ContainsKey(j - 1));
+                }
+            }
+        }
+
+        [Test]
         public void RollForwardThroughClear()
         {
             var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
