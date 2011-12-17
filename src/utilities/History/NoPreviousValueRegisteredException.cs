@@ -12,7 +12,7 @@ namespace Apollo.Utilities.History
 {
     /// <summary>
     /// An exception thrown when the user tries to obtain a value for a point in time past the
-    /// end of known time.
+    /// start of known time.
     /// </summary>
     [Serializable]
     public sealed class NoPreviousValueRegisteredException : Exception

@@ -12,12 +12,12 @@ namespace Apollo.Utilities.History
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class StandardObjectTimelineStorageTest
+    public sealed class ValueHistoryTest
     {
         [Test]
         public void RollBackToPreviousValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -37,7 +37,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToToCurrentValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -54,7 +54,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToFirstValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -71,7 +71,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackPastFirstValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -88,14 +88,14 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToStartWithNoValues()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
             Assert.DoesNotThrow(() => storage.RollBackToStart());
         }
 
         [Test]
         public void RollBackToStart()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -112,7 +112,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToNextValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -131,7 +131,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToCurrentValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -150,7 +150,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToLastValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -169,7 +169,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardPastLastValue()
         {
-            var storage = new StandardObjectTimelineStorage<int>();
+            var storage = new ValueHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)

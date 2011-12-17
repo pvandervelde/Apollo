@@ -9,7 +9,7 @@ using System.Diagnostics;
 
 namespace Apollo.Utilities.History
 {
-    internal abstract partial class DictionaryTimelineStorage<TKey, TExternal, TStorage>
+    internal abstract partial class DictionaryHistoryBase<TKey, TExternal, TStorage>
     {
         /// <summary>
         /// An <see cref="ICollectionChange{ TValue }"/> which indicates that a value was added to a

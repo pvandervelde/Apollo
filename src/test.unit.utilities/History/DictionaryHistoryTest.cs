@@ -13,12 +13,12 @@ namespace Apollo.Utilities.History
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class StandardObjectDictionaryTimelineStorageTest
+    public sealed class DictionaryHistoryTest
     {
         [Test]
         public void Add()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -32,14 +32,14 @@ namespace Apollo.Utilities.History
         [Test]
         public void AddWithNullKey()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<string, string>();
+            var storage = new DictionaryHistory<string, string>();
             Assert.Throws<ArgumentNullException>(() => storage.Add(null, "a"));
         }
 
         [Test]
         public void AddWithDuplicateKey()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -50,7 +50,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void Remove()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -65,7 +65,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RemoveWithNullKey()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<string, string>();
+            var storage = new DictionaryHistory<string, string>();
 
             bool result = true;
             Assert.DoesNotThrow(
@@ -79,7 +79,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RemoveWithUnknownKey()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -91,7 +91,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void Clear()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -105,7 +105,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void TryGetValueWithExistingValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -121,7 +121,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void TryGetValueWithNullKey()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<string, string>();
+            var storage = new DictionaryHistory<string, string>();
 
             string result;
             var success = storage.TryGetValue(null, out result);
@@ -133,7 +133,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void TryGetValueWithUnknownValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int key = 5;
             int value = 10;
@@ -149,7 +149,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToBeforeLastSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -176,7 +176,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToLastSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -202,7 +202,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackPastLastSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -228,7 +228,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToCurrentValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -253,7 +253,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToFirstValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -270,7 +270,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackPastFirstValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -286,7 +286,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackMultipleTimes()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -309,21 +309,21 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackWithNoValues()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
             Assert.DoesNotThrow(() => storage.RollBackTo(new TimeMarker(1)));
         }
 
         [Test]
         public void RollBackToStartWithNoValues()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
             Assert.DoesNotThrow(() => storage.RollBackToStart());
         }
 
         [Test]
         public void RollBackToStart()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -339,7 +339,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughClear()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -370,7 +370,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughRemove()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -399,7 +399,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughUpdate()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -428,7 +428,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToPriorToNextSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -456,7 +456,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToNextSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -484,7 +484,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToPastNextSnapshot()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -512,7 +512,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToCurrentValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -539,7 +539,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToLastValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -566,7 +566,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardPastLastValue()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -593,7 +593,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardMultipleTimes()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -617,7 +617,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardWithLocalChange()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -643,7 +643,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughClear()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -668,7 +668,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughRemove()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -707,7 +707,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughUpdate()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -745,7 +745,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void AddVoidsForwardStack()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -787,7 +787,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void ClearVoidsForwardStack()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -814,7 +814,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RemoveVoidsForwardStack()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -855,7 +855,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void UpdateClearsForwardStack()
         {
-            var storage = new StandardObjectDictionaryTimelineStorage<int, int>();
+            var storage = new DictionaryHistory<int, int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)

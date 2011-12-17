@@ -61,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The object that is being tracked in the timeline.
         /// </summary>
-        private T m_Object; // WEAKREFERENCE???
+        private T m_Object;
 
         /// <summary>
         /// The point on the timeline where the tracked object is created.

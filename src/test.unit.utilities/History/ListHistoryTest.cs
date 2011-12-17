@@ -17,14 +17,14 @@ namespace Apollo.Utilities.History
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class StandardObjectListTimelineStorageTest
+    public sealed class ListHistoryTest
     {
         [VerifyContract]
-        public readonly IContract ListTests = new ListContract<StandardObjectListTimelineStorage<string>, string>
+        public readonly IContract ListTests = new ListContract<ListHistory<string>, string>
         {
             AcceptEqualItems = true,
             AcceptNullReference = true,
-            DefaultInstance = () => new StandardObjectListTimelineStorage<string>(),
+            DefaultInstance = () => new ListHistory<string>(),
             DistinctInstances = new DistinctInstanceCollection<string> 
                 {
                     "a",
@@ -39,7 +39,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToBeforeLastSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -58,7 +58,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToLastSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -77,7 +77,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackPastLastSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -96,7 +96,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToCurrentValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -114,7 +114,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackToFirstValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -132,7 +132,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackPastFirstValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -150,22 +150,22 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackMultipleTimes()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
-            for (int i = 1; i < maximumValue; i++)
+            for (int i = 0; i < maximumValue; i++)
             {
                 storage.Add(i);
-                storage.StoreCurrent(new TimeMarker((ulong)i));
+                storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            for (int i = maximumValue - 1; i >= 0; i--)
+            for (int i = maximumValue; i > 0; i--)
             {
                 storage.RollBackTo(new TimeMarker((ulong)i));
                 Assert.AreEqual(i, storage.Count);
                 for (int j = 1; j <= i; j++)
                 {
-                    Assert.IsTrue(storage.Contains(j));
+                    Assert.IsTrue(storage.Contains(j - 1));
                 }
             }
         }
@@ -173,21 +173,21 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackWithNoValues()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
             Assert.DoesNotThrow(() => storage.RollBackTo(new TimeMarker(0)));
         }
 
         [Test]
         public void RollBackToStartWithNoValues()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
             Assert.DoesNotThrow(() => storage.RollBackToStart());
         }
 
         [Test]
         public void RollBackToStart()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -205,7 +205,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughClear()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -229,7 +229,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughRemove()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -251,7 +251,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollBackThroughUpdate()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -273,7 +273,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToPriorToNextSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -294,7 +294,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToNextSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -315,7 +315,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToPastNextSnapshot()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -336,7 +336,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToCurrentValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -355,7 +355,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardToLastValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -374,7 +374,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardPastLastValue()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -393,7 +393,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardMultipleTimes()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -417,7 +417,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardWithLocalChange()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -443,7 +443,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughClear()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -468,7 +468,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughRemove()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -491,7 +491,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RollForwardThroughUpdate()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -514,7 +514,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void AddVoidsForwardStack()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -540,7 +540,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void ClearVoidsForwardStack()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -567,7 +567,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void RemoveVoidsForwardStack()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -593,7 +593,7 @@ namespace Apollo.Utilities.History
         [Test]
         public void UpdateClearsForwardStack()
         {
-            var storage = new StandardObjectListTimelineStorage<int>();
+            var storage = new ListHistory<int>();
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)

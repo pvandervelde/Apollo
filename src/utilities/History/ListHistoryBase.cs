@@ -19,7 +19,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
-    internal abstract partial class ListTimelineStorage<TExternal, TStorage> : IListTimelineStorage<TExternal>, IStoreTimelineValues
+    internal abstract partial class ListHistoryBase<TExternal, TStorage> : IListTimelineStorage<TExternal>, IStoreTimelineValues
     {
         /// <summary>
         /// The number of time markers between snapshots.
@@ -27,30 +27,16 @@ namespace Apollo.Utilities.History
         private const int SnapshotInterval = 20;
 
         /// <summary>
-        /// The collection that contains the past snapshots of the current collection at different 
-        /// past points in time.
+        /// The past and future snapshots.
         /// </summary>
-        private readonly LinkedList<ValueAtTime<List<TStorage>>> m_PastSnapshots
-            = new LinkedList<ValueAtTime<List<TStorage>>>();
+        private readonly ValueAtTimeStorage<List<TStorage>> m_SnapshotHistory 
+            = new ValueAtTimeStorage<List<TStorage>>();
 
         /// <summary>
-        /// The collection that contains the future snapshots of the current collection at different
-        /// future points in time.
+        /// The past and future changes.
         /// </summary>
-        private readonly LinkedList<ValueAtTime<List<TStorage>>> m_FutureSnapshots
-            = new LinkedList<ValueAtTime<List<TStorage>>>();
-
-        /// <summary>
-        /// The collection that contains the values that are in the past.
-        /// </summary>
-        private readonly LinkedList<ValueAtTime<List<ICollectionChange<TStorage>>>> m_PastValues
-            = new LinkedList<ValueAtTime<List<ICollectionChange<TStorage>>>>();
-
-        /// <summary>
-        /// The collection that contains the values that are in the future.
-        /// </summary>
-        private readonly LinkedList<ValueAtTime<List<ICollectionChange<TStorage>>>> m_FutureValues
-            = new LinkedList<ValueAtTime<List<ICollectionChange<TStorage>>>>();
+        private readonly ValueAtTimeStorage<List<ICollectionChange<TStorage>>> m_ValueHistory 
+            = new ValueAtTimeStorage<List<ICollectionChange<TStorage>>>();
 
         /// <summary>
         /// The function that maps an external object to a storage object.
@@ -85,7 +71,7 @@ namespace Apollo.Utilities.History
             = new List<ICollectionChange<TStorage>>();
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ListTimelineStorage{TExternal, TStorage}"/> class.
+        /// Initializes a new instance of the <see cref="ListHistoryBase{TExternal, TStorage}"/> class.
         /// </summary>
         /// <param name="externalToStorage">The function that maps an external object to a storage object.</param>
         /// <param name="storageToExternal">The function that maps a storage object to an external object.</param>
@@ -95,7 +81,7 @@ namespace Apollo.Utilities.History
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="storageToExternal"/> is <see langword="null" />.
         /// </exception>
-        protected ListTimelineStorage(
+        protected ListHistoryBase(
             Func<TExternal, TStorage> externalToStorage,
             Func<TStorage, TExternal> storageToExternal)
         {
@@ -324,7 +310,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         public bool IsAtBeginOfTime()
         {
-            return (m_PastValues.Count == 0) && (m_PastSnapshots.Count == 0);
+            return m_ValueHistory.IsAtBeginOfTime() && m_SnapshotHistory.IsAtBeginOfTime();
         }
 
         /// <summary>
@@ -340,13 +326,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         private bool WouldRollBackPastTheBeginningOfTime(TimeMarker mark)
         {
-            if (IsAtBeginOfTime())
-            {
-                return true;
-            }
-
-            var node = m_PastSnapshots.First;
-            return node.Value.Time > mark;
+            return m_SnapshotHistory.WouldRollBackPastTheBeginningOfTime(mark);
         }
 
         /// <summary>
@@ -360,7 +340,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         public bool IsAtEndOfTime()
         {
-            return (m_FutureValues.Count == 0) && (m_FutureSnapshots.Count == 0);
+            return m_ValueHistory.IsAtEndOfTime() && m_SnapshotHistory.IsAtEndOfTime();
         }
 
         /// <summary>
@@ -369,19 +349,13 @@ namespace Apollo.Utilities.History
         /// <param name="marker">The marker that indicates to which point in the history the value should be restored to.</param>
         public void RollBackTo(TimeMarker marker)
         {
-            if (!IsAtBeginOfTime())
+            if (IsAtBeginOfTime())
             {
-                if (!WouldRollBackPastTheBeginningOfTime(marker))
-                {
-                    RollBackInTimeTo(marker);
-                }
-                else
-                {
-                    RollBackToBeginning();
-                }
-
-                RaiseOnValueChanged();
+                return;
             }
+
+            RollBackInTimeTo(marker);
+            RaiseOnValueChanged();
         }
 
         /// <summary>
@@ -396,64 +370,25 @@ namespace Apollo.Utilities.History
             }
 
             // Find the latest snapshot that we can use as base for the roll-back
-            var snapshotNode = m_PastSnapshots.Last;
-            while ((snapshotNode != null) && (snapshotNode.Value.Time > mark))
-            {
-                m_PastSnapshots.RemoveLast();
-                m_FutureSnapshots.AddFirst(snapshotNode);
-
-                snapshotNode = m_PastSnapshots.Last;
-            }
+            var snapshot = !m_SnapshotHistory.IsAtBeginOfTime() ? m_SnapshotHistory.RollBackTo(mark) : m_SnapshotHistory.LastValue;
+            var snapshotTime = m_SnapshotHistory.LastTime;
 
             // Find the nodes that we need to apply to the snap shot to get to the desired state
-            var lastRollBackNode = m_PastValues.Last;
-            while ((lastRollBackNode != null) && (lastRollBackNode.Value.Time > mark))
+            if (!m_ValueHistory.IsAtBeginOfTime())
             {
-                m_PastValues.RemoveLast();
-                m_FutureValues.AddFirst(lastRollBackNode);
-
-                lastRollBackNode = m_PastValues.Last;
+                m_ValueHistory.RollBackTo(snapshotTime);
             }
 
             // Roll the snap-shot over the current values
-            var current = new List<TStorage>();
-            if (snapshotNode != null)
+            var current = (snapshot != null) ? new List<TStorage>(snapshot) : new List<TStorage>();
+            if (!m_ValueHistory.IsAtEndOfTime())
             {
-                current.AddRange(snapshotNode.Value.Value);
-                if ((lastRollBackNode != null) && (snapshotNode.Value.Time < lastRollBackNode.Value.Time))
-                {
-                    var firstRollBackNode = lastRollBackNode;
-                    while ((firstRollBackNode.Previous != null) && (firstRollBackNode.Value.Time > snapshotNode.Value.Time))
+                m_ValueHistory.RollForwardTo(
+                    mark,
+                    (t, v) =>
                     {
-                        firstRollBackNode = firstRollBackNode.Previous;
-                    }
-
-                    // We overshot by 1 node so ...
-                    if (firstRollBackNode.Value.Time < snapshotNode.Value.Time)
-                    {
-                        firstRollBackNode = firstRollBackNode.Next;
-                    }
-
-                    // Roll-back the changes
-                    var rollbackNode = firstRollBackNode;
-                    while (rollbackNode != lastRollBackNode.Next)
-                    {
-                        var changeset = rollbackNode.Value.Value;
-                        ApplyChangeSet(current, changeset);
-
-                        rollbackNode = rollbackNode.Next;
-                    }
-
-                    // Move the last changes to the futures collection
-                    var movingNode = m_PastValues.Last;
-                    while (movingNode != lastRollBackNode)
-                    {
-                        m_PastValues.RemoveLast();
-                        m_FutureValues.AddFirst(movingNode);
-
-                        movingNode = m_PastValues.Last;
-                    }
-                }
+                        ApplyChangeSet(current, v);
+                    });
             }
 
             m_Current = current;
@@ -468,26 +403,13 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
-        /// Moves the history back enough steps to make the last known time is equal to the first recorded value
-        /// in time.
-        /// </summary>
-        private void RollBackToBeginning()
-        {
-            {
-                Debug.Assert(!IsAtBeginOfTime(), "Cannot roll-back to the beginning of time if without data stored.");
-            }
-
-            RollBackInTimeTo(TimeMarker.TheBeginOfTime);
-        }
-
-        /// <summary>
         /// Rolls the current value back to the start point.
         /// </summary>
         public void RollBackToStart()
         {
             if (!IsAtBeginOfTime())
             {
-                RollBackToBeginning();
+                RollBackInTimeTo(TimeMarker.TheBeginOfTime);
                 RaiseOnValueChanged();
             }
         }
@@ -498,11 +420,13 @@ namespace Apollo.Utilities.History
         /// <param name="marker">The marker that indicates to which point in the history the value should be restored to.</param>
         public void RollForwardTo(TimeMarker marker)
         {
-            if (!IsAtEndOfTime())
+            if (IsAtEndOfTime())
             {
-                RollForwardInTimeTo(marker);
-                RaiseOnValueChanged();
+                return;
             }
+
+            RollForwardInTimeTo(marker);
+            RaiseOnValueChanged();
         }
 
         /// <summary>
@@ -516,56 +440,35 @@ namespace Apollo.Utilities.History
                 Debug.Assert(!IsAtEndOfTime(), "Should not be at the end of time.");
             }
 
-            // Find the last snapshot that we need to move
-            var snapshotNode = m_FutureSnapshots.First;
-            while ((snapshotNode != null) && (snapshotNode.Value.Time <= mark))
-            {
-                m_FutureSnapshots.RemoveFirst();
-                m_PastSnapshots.AddLast(snapshotNode);
+            // Find the latest snapshot that we can use as base for the roll-back
+            var snapshot = !m_SnapshotHistory.IsAtEndOfTime() ? m_SnapshotHistory.RollForwardTo(mark) : m_SnapshotHistory.LastValue;
+            var snapshotTime = m_SnapshotHistory.LastTime;
 
-                snapshotNode = m_FutureSnapshots.First;
+            // Roll forward to where we want to go first
+            List<TStorage> current = null;
+            if (snapshotTime >= m_ValueHistory.LastTime)
+            {
+                if (!m_ValueHistory.IsAtEndOfTime())
+                {
+                    m_ValueHistory.RollForwardTo(snapshotTime);
+                }
+
+                current = (snapshot != null) ? new List<TStorage>(snapshot) : new List<TStorage>();
+            }
+            else
+            {
+                current = m_Current;
             }
 
-            // Move all the nodes
-            var lastRollBackNode = m_FutureValues.First;
-            while ((lastRollBackNode != null) && (lastRollBackNode.Value.Time <= mark))
+            // Roll the snap-shot over the current values
+            if (!m_ValueHistory.IsAtEndOfTime())
             {
-                m_FutureValues.RemoveFirst();
-                m_PastValues.AddLast(lastRollBackNode);
-
-                lastRollBackNode = m_FutureValues.First;
-            }
-
-            // Reset the values to the last past values because we just pushed all the
-            // desired data back on to the past collections.
-            snapshotNode = m_PastSnapshots.Last;
-            lastRollBackNode = m_PastValues.Last;
-
-            // Roll the whole thing back
-            var current = new List<TStorage>(snapshotNode.Value.Value);
-            if ((lastRollBackNode != null) && (snapshotNode.Value.Time < lastRollBackNode.Value.Time))
-            {
-                var firstRollBackNode = lastRollBackNode;
-                while ((firstRollBackNode.Previous != null) && (firstRollBackNode.Value.Time > snapshotNode.Value.Time))
-                {
-                    firstRollBackNode = firstRollBackNode.Previous;
-                }
-
-                // We overshot by 1 node so ...
-                if (firstRollBackNode.Value.Time < snapshotNode.Value.Time)
-                {
-                    firstRollBackNode = firstRollBackNode.Next;
-                }
-
-                // update the new collection
-                var rollbackNode = firstRollBackNode;
-                while (rollbackNode != lastRollBackNode.Next)
-                {
-                    var changeset = rollbackNode.Value.Value;
-                    ApplyChangeSet(current, changeset);
-
-                    rollbackNode = rollbackNode.Next;
-                }
+                m_ValueHistory.RollForwardTo(
+                    mark,
+                    (t, v) =>
+                    {
+                        ApplyChangeSet(current, v);
+                    });
             }
 
             m_Current = current;
@@ -597,11 +500,7 @@ namespace Apollo.Utilities.History
             }
             else
             {
-                m_PastValues.AddLast(
-                    new LinkedListNode<ValueAtTime<List<ICollectionChange<TStorage>>>>(
-                        new ValueAtTime<List<ICollectionChange<TStorage>>>(
-                            marker,
-                            m_Changes)));
+                m_ValueHistory.StoreCurrent(marker, m_Changes);
             }
 
             m_Changes = new List<ICollectionChange<TStorage>>();
@@ -610,33 +509,32 @@ namespace Apollo.Utilities.History
 
         private bool ShouldSnapshot()
         {
-            if (m_PastSnapshots.Count == 0)
+            if (m_SnapshotHistory.LastValue == null)
             {
                 return true;
             }
 
-            Debug.Assert(m_PastSnapshots.Count > 0, "We should always have at least one snapshot.");
-            var lastSnapshotTime = m_PastSnapshots.Last.Value.Time;
+            Debug.Assert(m_SnapshotHistory.LastValue != null, "We should always have at least one snapshot.");
+            var lastSnapshotTime = m_SnapshotHistory.LastTime;
 
             int count = 0;
-            var node = m_PastValues.Last;
-            while ((node != null) && (lastSnapshotTime < node.Value.Time))
-            {
-                count++;
-                node = node.Previous;
-            }
+            m_ValueHistory.TrackBackwardsInTime(
+                (t, v) =>
+                {
+                    count++;
+                    return lastSnapshotTime < t;
+                });
 
             return SnapshotInterval <= count;
         }
 
         private void CreateSnapshot(TimeMarker marker)
         {
+            // We're creating a copy here so that we can keep the current 
+            // collection as current. One way or the other we'll need to make
+            // a copy anyway so might as well do it here.
             var snapshot = new List<TStorage>(m_Current);
-            m_PastSnapshots.AddLast(
-                new LinkedListNode<ValueAtTime<List<TStorage>>>(
-                    new ValueAtTime<List<TStorage>>(
-                        marker,
-                        snapshot)));
+            m_SnapshotHistory.StoreCurrent(marker, snapshot);
         }
 
         /// <summary>
@@ -659,17 +557,11 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void ForgetAllHistory()
         {
-            ForgetThePast();
-            ForgetTheFuture();
+            m_ValueHistory.ForgetAllHistory();
+            m_SnapshotHistory.ForgetAllHistory();
 
             m_Current = new List<TStorage>();
             m_Changes = new List<ICollectionChange<TStorage>>();
-        }
-
-        private void ForgetThePast()
-        {
-            m_PastValues.Clear();
-            m_PastSnapshots.Clear();
         }
 
         /// <summary>
@@ -677,8 +569,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void ForgetTheFuture()
         {
-            m_FutureValues.Clear();
-            m_FutureSnapshots.Clear();
+            m_ValueHistory.ForgetTheFuture();
+            m_SnapshotHistory.ForgetTheFuture();
         }
     }
 }

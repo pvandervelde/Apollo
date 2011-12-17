@@ -17,14 +17,14 @@ namespace Apollo.Utilities.History
     ///     the object with a given ID even if that object has changed (i.e. the object reference has changed) due to 
     ///     changes in the timeline.
     /// </remarks>
-    internal sealed class HistoryObjectTimelineStorage<T> : TimelineStorage<HistoryId>, IVariableTimeline<T> where T : IAmHistoryEnabled
+    internal sealed class HistoryObjectValueHistory<T> : ValueHistoryBase<HistoryId>, IVariableTimeline<T> where T : IAmHistoryEnabled
     {
         /// <summary>
-        /// Returns the current value of <typeparamref name="T"/> stored by the <see cref="HistoryObjectTimelineStorage{T}"/> object.
+        /// Returns the current value of <typeparamref name="T"/> stored by the <see cref="HistoryObjectValueHistory{T}"/> object.
         /// </summary>
         /// <param name="storage">The storage object that holds the value of <typeparamref name="T"/>.</param>
         /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
-        public static implicit operator T(HistoryObjectTimelineStorage<T> storage)
+        public static implicit operator T(HistoryObjectValueHistory<T> storage)
         {
             return storage.Current;
         }
@@ -36,13 +36,13 @@ namespace Apollo.Utilities.History
         private readonly Func<HistoryId, T> m_Lookup;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryObjectTimelineStorage{T}"/> class.
+        /// Initializes a new instance of the <see cref="HistoryObjectValueHistory{T}"/> class.
         /// </summary>
         /// <param name="lookupFunc">The function that is used to find the object that belongs to the given <see cref="HistoryId"/>.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="lookupFunc"/> is <see langword="null" />.
         /// </exception>
-        public HistoryObjectTimelineStorage(Func<HistoryId, T> lookupFunc)
+        public HistoryObjectValueHistory(Func<HistoryId, T> lookupFunc)
         {
             {
                 Lokad.Enforce.Argument(() => lookupFunc);

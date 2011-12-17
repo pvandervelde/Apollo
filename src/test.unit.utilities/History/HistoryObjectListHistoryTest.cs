@@ -15,7 +15,7 @@ namespace Apollo.Utilities.History
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class HistoryObjectListTimelineStorageTest
+    public sealed class HistoryObjectListHistoryTest
     {
         private sealed class MockHistoryObject : IAmHistoryEnabled, IEquatable<MockHistoryObject>
         {
@@ -172,11 +172,11 @@ namespace Apollo.Utilities.History
         }
 
         [VerifyContract]
-        public readonly IContract ListTests = new ListContract<HistoryObjectListTimelineStorage<MockHistoryObject>, MockHistoryObject>
+        public readonly IContract ListTests = new ListContract<HistoryObjectListHistory<MockHistoryObject>, MockHistoryObject>
         {
             AcceptEqualItems = true,
             AcceptNullReference = true,
-            DefaultInstance = () => new HistoryObjectListTimelineStorage<MockHistoryObject>(FromId),
+            DefaultInstance = () => new HistoryObjectListHistory<MockHistoryObject>(FromId),
             DistinctInstances = new DistinctInstanceCollection<MockHistoryObject> 
                 {
                     new MockHistoryObject(0),
@@ -193,7 +193,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -218,7 +218,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -243,7 +243,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -268,7 +268,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -292,7 +292,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -313,7 +313,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 1; i < maximumValue; i++)
@@ -333,7 +333,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
             Assert.DoesNotThrow(() => storage.RollBackTo(new TimeMarker(1)));
         }
 
@@ -342,7 +342,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
             Assert.DoesNotThrow(() => storage.RollBackToStart());
         }
 
@@ -351,7 +351,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -371,7 +371,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -382,7 +382,7 @@ namespace Apollo.Utilities.History
                 storage.StoreCurrent(new TimeMarker((ulong)(i + 1)));
             }
 
-            for (int i = maximumValue - 1; i >= 0; i--)
+            for (int i = maximumValue; i > 0; i--)
             {
                 storage.RollBackTo(new TimeMarker((ulong)i));
                 Assert.AreEqual(i, storage.Count);
@@ -398,7 +398,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -430,7 +430,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -458,7 +458,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -488,7 +488,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -514,7 +514,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -540,7 +540,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 30;
             for (int i = 0; i < maximumValue; i++)
@@ -566,7 +566,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -591,7 +591,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -616,7 +616,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -641,7 +641,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -669,7 +669,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -702,7 +702,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -732,7 +732,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -768,7 +768,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -806,7 +806,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -847,7 +847,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -878,7 +878,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)
@@ -920,7 +920,7 @@ namespace Apollo.Utilities.History
         {
             var objects = new Dictionary<HistoryId, MockHistoryObject>();
             Func<HistoryId, MockHistoryObject> lookupFunc = id => objects[id];
-            var storage = new HistoryObjectListTimelineStorage<MockHistoryObject>(lookupFunc);
+            var storage = new HistoryObjectListHistory<MockHistoryObject>(lookupFunc);
 
             int maximumValue = 10;
             for (int i = 0; i < maximumValue; i++)

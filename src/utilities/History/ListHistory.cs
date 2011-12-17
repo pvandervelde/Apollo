@@ -13,7 +13,7 @@ namespace Apollo.Utilities.History
     /// which are not <see cref="IAmHistoryEnabled"/>.
     /// </summary>
     /// <typeparam name="T">The type of object for which the values are stored.</typeparam>
-    internal sealed class StandardObjectListTimelineStorage<T> : ListTimelineStorage<T, T>
+    internal sealed class ListHistory<T> : ListHistoryBase<T, T>
     {
         private static T Translate(T input)
         {
@@ -21,9 +21,9 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StandardObjectListTimelineStorage{T}"/> class.
+        /// Initializes a new instance of the <see cref="ListHistory{T}"/> class.
         /// </summary>
-        public StandardObjectListTimelineStorage()
+        public ListHistory()
             : base(Translate, Translate)
         { 
         }

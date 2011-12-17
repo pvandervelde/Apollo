@@ -192,12 +192,12 @@ namespace Apollo.Utilities.History
         {
             if (typeof(IVariableTimeline<int>).IsAssignableFrom(storageType))
             {
-                return new StandardObjectTimelineStorage<int>();
+                return new ValueHistory<int>();
             }
 
             if (typeof(IListTimelineStorage<int>).IsAssignableFrom(storageType))
             {
-                return new StandardObjectListTimelineStorage<int>();
+                return new ListHistory<int>();
             }
 
             // Dunno what that is ...

@@ -14,7 +14,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of object that is passed into the collection.</typeparam>
-    internal sealed class StandardObjectDictionaryTimelineStorage<TKey, TValue> : DictionaryTimelineStorage<TKey, TValue, TValue>
+    internal sealed class DictionaryHistory<TKey, TValue> : DictionaryHistoryBase<TKey, TValue, TValue>
     {
         private static TValue Translate(TValue input)
         {
@@ -22,9 +22,9 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StandardObjectDictionaryTimelineStorage{TKey, TValue}"/> class.
+        /// Initializes a new instance of the <see cref="DictionaryHistory{TKey, TValue}"/> class.
         /// </summary>
-        public StandardObjectDictionaryTimelineStorage()
+        public DictionaryHistory()
             : base(Translate, Translate)
         { 
         }

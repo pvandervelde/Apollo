@@ -10,32 +10,30 @@ using System.Collections.Generic;
 namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// Stores the timeline values for an <see cref="IDictionary{TKey, TValue}"/> collection of objects of type <typeparamref name="TValue"/> 
+    /// Stores the timeline values for an <see cref="IList{T}"/> collection of objects of type <typeparamref name="T"/> 
     /// which are <see cref="IAmHistoryEnabled"/>.
     /// </summary>
-    /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
-    /// <typeparam name="TValue">The type of object that is passed into the collection.</typeparam>
+    /// <typeparam name="T">The type of object for which the values are stored.</typeparam>
     /// <remarks>
     ///     Objects that implement <see cref="IAmHistoryEnabled"/> get special treatment because we always want to return 
     ///     the object with a given ID even if that object has changed (i.e. the object reference has changed) due to 
     ///     changes in the timeline.
     /// </remarks>
-    internal sealed class HistoryObjectDictionaryTimelineStorage<TKey, TValue> 
-        : DictionaryTimelineStorage<TKey, TValue, HistoryId> where TValue : IAmHistoryEnabled
+    internal sealed class HistoryObjectListHistory<T> : ListHistoryBase<T, HistoryId> where T : IAmHistoryEnabled
     {
-        private static HistoryId ToId(TValue obj)
+        private static HistoryId ToId(T obj)
         {
             return obj.HistoryId;
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HistoryObjectDictionaryTimelineStorage{TKey, TValue}"/> class.
+        /// Initializes a new instance of the <see cref="HistoryObjectListHistory{T}"/> class.
         /// </summary>
         /// <param name="lookupFunc">The function that is used to find the object that belongs to the given <see cref="HistoryId"/>.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="lookupFunc"/> is <see langword="null" />.
         /// </exception>
-        public HistoryObjectDictionaryTimelineStorage(Func<HistoryId, TValue> lookupFunc)
+        public HistoryObjectListHistory(Func<HistoryId, T> lookupFunc)
             : base(ToId, lookupFunc)
         { 
         }

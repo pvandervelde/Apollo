@@ -5,7 +5,6 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Properties;
@@ -22,19 +21,12 @@ namespace Apollo.Utilities.History
     /// If we find that this is too much then we can always change the design to something more 'cunning'.
     /// e.g. a system where we store everything in an array or something.
     /// </design>
-    internal abstract class TimelineStorage<T> : IStoreTimelineValues
+    internal abstract class ValueHistoryBase<T> : IStoreTimelineValues
     {
         /// <summary>
-        /// The collection that contains the values that are in the past.
+        /// The object that stores the past and future values.
         /// </summary>
-        private readonly LinkedList<ValueAtTime<T>> m_PastValues
-            = new LinkedList<ValueAtTime<T>>();
-
-        /// <summary>
-        /// The collection that contains the values that are in the future.
-        /// </summary>
-        private readonly LinkedList<ValueAtTime<T>> m_FutureValues
-            = new LinkedList<ValueAtTime<T>>();
+        private readonly ValueAtTimeStorage<T> m_History = new ValueAtTimeStorage<T>();
 
         /// <summary>
         /// The current value of the variable.
@@ -52,7 +44,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         public bool IsAtBeginOfTime()
         {
-            return m_PastValues.Count == 0;
+            return m_History.IsAtBeginOfTime();
         }
 
         /// <summary>
@@ -68,13 +60,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         private bool WouldRollBackPastTheBeginningOfTime(TimeMarker mark)
         {
-            if (IsAtBeginOfTime())
-            {
-                return true;
-            }
-
-            var node = m_PastValues.First;
-            return node.Value.Time > mark;
+            return m_History.WouldRollBackPastTheBeginningOfTime(mark);
         }
 
         /// <summary>
@@ -88,7 +74,7 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         public bool IsAtEndOfTime()
         {
-            return m_FutureValues.Count == 0;
+            return m_History.IsAtEndOfTime();
         }
 
         /// <summary>
@@ -99,62 +85,9 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtBeginOfTime())
             {
-                if (!WouldRollBackPastTheBeginningOfTime(marker))
-                {
-                    m_Current = RollBackInTimeTo(marker);
-                }
-                else
-                {
-                    m_Current = RollBackToBeginning();
-                }
-
+                m_Current = m_History.RollBackTo(marker);
                 RaiseOnValueChanged();
             }
-        }
-
-        /// <summary>
-        /// Moves the history back enough steps to make the last known time is equal to or smaller than the
-        /// provided mark.
-        /// </summary>
-        /// <param name="mark">The mark that indicates to which point in time the roll-back should be performed.</param>
-        /// <returns>
-        ///     The last recorded value.
-        /// </returns>
-        private T RollBackInTimeTo(TimeMarker mark)
-        {
-            {
-                Debug.Assert(!IsAtBeginOfTime() && !WouldRollBackPastTheBeginningOfTime(mark), "Should not roll back past the beginning of time.");
-            }
-
-            // We assume that it is more likely that we have a more recent
-            // point in time that we want to roll back to. So start searching
-            // from the end of the collection
-            var lastNode = m_PastValues.Last;
-            while ((lastNode != null) && (lastNode.Value.Time > mark))
-            {
-                m_PastValues.RemoveLast();
-                m_FutureValues.AddFirst(lastNode);
-
-                lastNode = m_PastValues.Last;
-            }
-
-            return (m_PastValues.Last != null) ? m_PastValues.Last.Value.Value : default(T);
-        }
-
-        /// <summary>
-        /// Moves the history back enough steps to make the last known time is equal to the first recorded value
-        /// in time.
-        /// </summary>
-        /// <returns>
-        ///     The first recorded value in time.
-        /// </returns>
-        private T RollBackToBeginning()
-        {
-            {
-                Debug.Assert(!IsAtBeginOfTime(), "Cannot roll-back to the beginning of time if without data stored.");
-            }
-
-            return RollBackInTimeTo(TimeMarker.TheBeginOfTime);
         }
 
         /// <summary>
@@ -164,7 +97,7 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtBeginOfTime())
             {
-                m_Current = RollBackToBeginning();
+                m_Current = m_History.RollBackToStart();
                 RaiseOnValueChanged();
             }
         }
@@ -177,36 +110,9 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtEndOfTime())
             {
-                m_Current = RollForwardInTimeTo(marker);
+                m_Current = m_History.RollForwardTo(marker);
                 RaiseOnValueChanged();
             }
-        }
-
-        /// <summary>
-        /// Moves the history forward enough steps to make the next future time is equal to or larger than the
-        /// provided mark.
-        /// </summary>
-        /// <param name="mark">The mark that indicates to which point in time the roll-forward should be performed.</param>
-        /// <returns>
-        ///     The last recorded value.
-        /// </returns>
-        private T RollForwardInTimeTo(TimeMarker mark)
-        {
-            {
-                Debug.Assert(!IsAtEndOfTime(), "Should not be at the end of time.");
-            }
-
-            // We assume that it is more likely that we have a more recent
-            // point in time that we want to roll forward to. So start searching
-            // from the start of the collection
-            while ((m_FutureValues.First != null) && (m_FutureValues.First.Value.Time <= mark))
-            {
-                var lastNode = m_FutureValues.First;
-                m_FutureValues.RemoveFirst();
-                m_PastValues.AddLast(lastNode);
-            }
-
-            return m_PastValues.Last.Value.Value;
         }
 
         /// <summary>
@@ -226,8 +132,7 @@ namespace Apollo.Utilities.History
 
             if (IsLastValueDifferent())
             {
-                m_PastValues.AddLast(new LinkedListNode<ValueAtTime<T>>(new ValueAtTime<T>(marker, m_Current)));
-                ForgetTheFuture();
+                m_History.StoreCurrent(marker, m_Current);
             }
         }
 
@@ -238,7 +143,7 @@ namespace Apollo.Utilities.History
                 return true;
             }
 
-            var lastValue = m_PastValues.Last.Value.Value;
+            var lastValue = m_History.LastValue;
             if (ReferenceEquals(lastValue, null))
             {
                 return !ReferenceEquals(m_Current, null);
@@ -269,15 +174,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void ForgetAllHistory()
         {
-            ForgetThePast();
-            ForgetTheFuture();
-
+            m_History.ForgetAllHistory();
             m_Current = default(T);
-        }
-
-        private void ForgetThePast()
-        {
-            m_PastValues.Clear();
         }
 
         /// <summary>
@@ -285,7 +183,7 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void ForgetTheFuture()
         {
-            m_FutureValues.Clear();
+            m_History.ForgetTheFuture();
         }
 
         /// <summary>
