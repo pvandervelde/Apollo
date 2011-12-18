@@ -61,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The object that is being tracked in the timeline.
         /// </summary>
-        private T m_Object;
+        private WeakReference m_Object;
 
         /// <summary>
         /// The point on the timeline where the tracked object is created.
@@ -130,7 +130,17 @@ namespace Apollo.Utilities.History
             [DebuggerStepThrough]
             get
             {
-                return m_Object;
+                if (m_Object == null)
+                {
+                    return null;
+                }
+
+                if (!m_Object.IsAlive)
+                {
+                    m_Object = Resurrect();
+                }
+
+                return m_Object.Target as T;
             }
         }
 
@@ -249,7 +259,12 @@ namespace Apollo.Utilities.History
         {
             if (m_Object != null)
             {
-                m_Object.Dispose();
+                if (m_Object.IsAlive)
+                {
+                    var obj = m_Object.Target as T;
+                    obj.Dispose();
+                }
+
                 m_Object = null;
             }
         }
@@ -309,7 +324,7 @@ namespace Apollo.Utilities.History
             }
         }
 
-        private T Resurrect()
+        private WeakReference Resurrect()
         {
             {
                 Debug.Assert(m_Object == null, "Can only ressurect dead objects.");
@@ -323,7 +338,8 @@ namespace Apollo.Utilities.History
                 timelines.Add(new Tuple<string, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
             }
 
-            return m_ObjectBuilder(Id, timelines);
+            var obj = m_ObjectBuilder(Id, timelines);
+            return new WeakReference(obj);
         }
 
         /// <summary>

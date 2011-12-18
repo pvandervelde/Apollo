@@ -19,28 +19,21 @@ namespace Apollo.Utilities.History
     internal sealed class Timeline : IConnectObjectsToHistory, IFollowHistory, ITrackHistoryChanges, ICreateSnapshots
     {
         /// <summary>
-        /// The collection that tracks the dependencies for the time markers that are in the past.
+        /// The collection that tracks all the dependencies.
         /// </summary>
-        private readonly LinkedList<ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>> m_PastDependencies
-            = new LinkedList<ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>>();
+        private readonly ValueAtTimeStorage<IEnumerable<UpdateFromHistoryDependency>> m_Dependencies
+            = new ValueAtTimeStorage<IEnumerable<UpdateFromHistoryDependency>>();
 
         /// <summary>
-        /// The collection that tracks the dependencies that are in the future.
+        /// The collection that tracks the history of object creations.
         /// </summary>
-        private readonly LinkedList<ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>> m_FutureDependencies
-            = new LinkedList<ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>>();
-
-        /// <summary>
-        /// The collection that tracks all the IDs of objects that were created in the past.
-        /// </summary>
-        private readonly LinkedList<ValueAtTime<List<HistoryId>>> m_PastObjects
-            = new LinkedList<ValueAtTime<List<HistoryId>>>();
-
-        /// <summary>
-        /// The collection that tracks the IDs of all the objects that will be created in the future.
-        /// </summary>
-        private readonly LinkedList<ValueAtTime<List<HistoryId>>> m_FutureObjects
-            = new LinkedList<ValueAtTime<List<HistoryId>>>();
+        /// <remarks>
+        /// At the moment we never delete an object that has survived at least one mark. Objects that don't
+        /// survive a mark are only recorded in an temporary collection. Based on this we can track
+        /// objects based on their creation moment.
+        /// </remarks>
+        private readonly ValueAtTimeStorage<List<HistoryId>> m_CreatedObjectHistory
+            = new ValueAtTimeStorage<List<HistoryId>>();
 
         /// <summary>
         /// The collection of objects that track the timeline for an individual object that currently
@@ -59,14 +52,7 @@ namespace Apollo.Utilities.History
         ///     the allocation of the internal collection.
         ///     </para>
         /// </remarks>
-        private readonly Dictionary<HistoryId, IFollowObjectTimeline> m_PastObjectTimelines
-            = new Dictionary<HistoryId, IFollowObjectTimeline>();
-
-        /// <summary>
-        /// The collection of objects that track the timeline for an individual object that will
-        /// exist in the future.
-        /// </summary>
-        private readonly Dictionary<HistoryId, IFollowObjectTimeline> m_FutureObjectTimelines
+        private readonly Dictionary<HistoryId, IFollowObjectTimeline> m_ObjectTimelines
             = new Dictionary<HistoryId, IFollowObjectTimeline>();
 
         /// <summary>
@@ -141,14 +127,16 @@ namespace Apollo.Utilities.History
         /// <param name="id">The ID of the object that should be removed.</param>
         public void RemoveFromTimeline(HistoryId id)
         {
-            if ((id == null) || (!m_PastObjectTimelines.ContainsKey(id) && !m_NonMarkedObjectTimelines.ContainsKey(id)))
+            if ((id == null) || (!m_ObjectTimelines.ContainsKey(id) && !m_NonMarkedObjectTimelines.ContainsKey(id)))
             {
                 return;
             }
 
-            if (m_PastObjectTimelines.ContainsKey(id))
+            if (m_ObjectTimelines.ContainsKey(id))
             {
-                var timeline = m_PastObjectTimelines[id];
+                // Only delete living objects. Don't delete objects that are already dead
+                // and don't delete objects that don't exist yet.
+                var timeline = m_ObjectTimelines[id];
                 if (timeline.IsAlive())
                 {
                     timeline.DeleteFromTimeline();
@@ -171,16 +159,23 @@ namespace Apollo.Utilities.History
         ///     The object that belongs to the given <see cref="HistoryId"/> if the object exists at the current
         ///     <see cref="TimeMarker"/>; otherwise, <see langword="null" />.
         /// </returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ObjectUnknownToTimelineException">
+        ///     Thrown if <paramref name="id"/> is for an object that has never existed in the curren timeline.
+        /// </exception>
         public T IdToObject<T>(HistoryId id) where T : class, IAmHistoryEnabled
         {
             {
+                Lokad.Enforce.Argument(() => id);
                 Lokad.Enforce.With<ObjectUnknownToTimelineException>(
                     HasObjectEverExisted(id),
                     Resources.Exceptions_Messages_ObjectUnknownToTimeline_WithId,
                     id);
             }
 
-            var trackingObject = m_PastObjectTimelines.ContainsKey(id) ? m_PastObjectTimelines[id] : m_NonMarkedObjectTimelines[id];
+            var trackingObject = m_ObjectTimelines.ContainsKey(id) ? m_ObjectTimelines[id] : m_NonMarkedObjectTimelines[id];
             var timeline = trackingObject as ObjectTimeline<T>;
             Debug.Assert(timeline != null, "Could not find the correct timeline.");
 
@@ -204,12 +199,12 @@ namespace Apollo.Utilities.History
                 return false;
             }
 
-            if (!m_PastObjectTimelines.ContainsKey(id) && !m_NonMarkedObjectTimelines.ContainsKey(id))
+            if (!m_ObjectTimelines.ContainsKey(id) && !m_NonMarkedObjectTimelines.ContainsKey(id))
             {
                 return false;
             }
 
-            var timeline = m_PastObjectTimelines.ContainsKey(id) ? m_PastObjectTimelines[id] : m_NonMarkedObjectTimelines[id];
+            var timeline = m_ObjectTimelines.ContainsKey(id) ? m_ObjectTimelines[id] : m_NonMarkedObjectTimelines[id];
             return timeline.IsAlive();
         }
 
@@ -225,8 +220,8 @@ namespace Apollo.Utilities.History
             Justification = "Documentation can start with a language keyword")]
         public bool HasObjectEverExisted(HistoryId id)
         {
-            return (id != null) 
-                && (m_PastObjectTimelines.ContainsKey(id) || m_FutureObjectTimelines.ContainsKey(id) || m_NonMarkedObjectTimelines.ContainsKey(id));
+            return (id != null)
+                && (m_ObjectTimelines.ContainsKey(id) || m_NonMarkedObjectTimelines.ContainsKey(id));
         }
 
         /// <summary>
@@ -289,7 +284,7 @@ namespace Apollo.Utilities.History
             RollBackCreatedObjects(mark);
 
             // Roll back all the changes
-            foreach (var pair in m_PastObjectTimelines)
+            foreach (var pair in m_ObjectTimelines)
             {
                 pair.Value.RollBackTo(mark);
             }
@@ -311,57 +306,45 @@ namespace Apollo.Utilities.History
 
         private void VerifyThatPastDependenciesAllowRollBack(TimeMarker mark)
         {
-            var lastNode = m_PastDependencies.Last;
-            while ((lastNode != null) && (lastNode.Value.Time > mark))
-            {
-                var dependencies = lastNode.Value.Value;
-                foreach (var dependency in dependencies)
+            m_Dependencies.TrackBackwardsInTime(
+                (t, d) =>
                 {
-                    if (((dependency.Blocks == ChangeBlocker.RollBack) || (dependency.Blocks == ChangeBlocker.RollBackAndRollForward))
-                        && (!dependency.CanExecuteChange()))
+                    foreach (var dependency in d)
                     {
-                        throw new UnableToPerformRollBackDueToBlockingDependencyException();
+                        if (((dependency.Blocks == ChangeBlocker.RollBack) || (dependency.Blocks == ChangeBlocker.RollBackAndRollForward))
+                            && (!dependency.CanExecuteChange()))
+                        {
+                            throw new UnableToPerformRollBackDueToBlockingDependencyException();
+                        }
                     }
-                }
 
-                lastNode = lastNode.Previous;
-            }
+                    return t > mark;
+                });
         }
 
         private void RollBackDependencies(TimeMarker mark)
         {
-            // Shift the dependencies
-            var lastNode = m_PastDependencies.Last;
-            while ((lastNode != null) && (lastNode.Value.Time > mark))
+            if (!m_Dependencies.IsAtBeginOfTime())
             {
-                m_PastDependencies.RemoveLast();
-                m_FutureDependencies.AddFirst(lastNode);
-                lastNode = m_PastDependencies.Last;
+                m_Dependencies.RollBackTo(mark);
             }
         }
 
         private void RollBackCreatedObjects(TimeMarker mark)
         {
-            var lastNode = m_PastObjects.Last;
-            while ((lastNode != null) && (lastNode.Value.Time > mark))
+            if (!m_CreatedObjectHistory.IsAtBeginOfTime())
             {
-                m_PastObjects.RemoveLast();
-                m_FutureObjects.AddFirst(lastNode);
-
-                // Shift the objects that were created after the marked time to the
-                // futures collection.
-                foreach (var id in lastNode.Value.Value)
-                {
-                    // Roll-back on the object data so that next we move forward it
-                    // all goes as expected
-                    var timeline = m_PastObjectTimelines[id];
-                    timeline.RollBackTo(mark);
-
-                    m_FutureObjectTimelines.Add(id, timeline);
-                    m_PastObjectTimelines.Remove(id);
-                }
-
-                lastNode = m_PastObjects.Last;
+                m_CreatedObjectHistory.RollBackTo(
+                    mark,
+                    (t, ids) =>
+                    {
+                        foreach (var id in ids)
+                        {
+                            Debug.Assert(m_ObjectTimelines.ContainsKey(id), "Missing the timeline for an object.");
+                            var timeline = m_ObjectTimelines[id];
+                            timeline.RollBackTo(mark);
+                        }
+                    });
             }
         }
 
@@ -372,9 +355,9 @@ namespace Apollo.Utilities.History
             }
 
             var id = traveller.Owner;
-            if (m_PastObjectTimelines.ContainsKey(id))
+            if (m_ObjectTimelines.ContainsKey(id))
             {
-                var owner = m_PastObjectTimelines[id] as IReceiveMessagesFromTheFuture;
+                var owner = m_ObjectTimelines[id] as IReceiveMessagesFromTheFuture;
                 if (owner != null)
                 {
                     owner.ReceiveTraveller(traveller);
@@ -465,7 +448,7 @@ namespace Apollo.Utilities.History
             RollForwardCreatedObjects(mark);
 
             // Roll the changes forward
-            foreach (var pair in m_PastObjectTimelines)
+            foreach (var pair in m_ObjectTimelines)
             {
                 pair.Value.RollForwardTo(mark);
             }
@@ -487,52 +470,45 @@ namespace Apollo.Utilities.History
 
         private void VerifyThatFutureDependenciesAllowRollForward(TimeMarker mark)
         {
-            var firstNode = m_FutureDependencies.First;
-            while ((firstNode != null) && (firstNode.Value.Time <= mark))
-            {
-                var dependencies = firstNode.Value.Value;
-                foreach (var dependency in dependencies)
+            m_Dependencies.TrackForwardsInTime(
+                (t, d) =>
                 {
-                    if (((dependency.Blocks == ChangeBlocker.RollForward) || (dependency.Blocks == ChangeBlocker.RollBackAndRollForward))
-                        && (!dependency.CanExecuteChange()))
+                    foreach (var dependency in d)
                     {
-                        throw new UnableToPerformRollForwardDueToBlockingDependencyException();
+                        if (((dependency.Blocks == ChangeBlocker.RollForward) || (dependency.Blocks == ChangeBlocker.RollBackAndRollForward))
+                            && (!dependency.CanExecuteChange()))
+                        {
+                            throw new UnableToPerformRollForwardDueToBlockingDependencyException();
+                        }
                     }
-                }
 
-                firstNode = firstNode.Next;
-            }
+                    return t > mark;
+                });
         }
 
         private void RollFowardDependencies(TimeMarker mark)
         {
-            var firstNode = m_FutureDependencies.First;
-            while ((firstNode != null) && (firstNode.Value.Time <= mark))
+            if (!m_Dependencies.IsAtEndOfTime())
             {
-                m_FutureDependencies.RemoveFirst();
-                m_PastDependencies.AddLast(firstNode);
-                firstNode = m_FutureDependencies.First;
+                m_Dependencies.RollForwardTo(mark);
             }
         }
 
         private void RollForwardCreatedObjects(TimeMarker mark)
         {
-            var firstNode = m_FutureObjects.First;
-            while ((firstNode != null) && (firstNode.Value.Time <= mark))
+            if (!m_CreatedObjectHistory.IsAtEndOfTime())
             {
-                m_FutureObjects.RemoveFirst();
-                m_PastObjects.AddLast(firstNode);
-
-                foreach (var id in firstNode.Value.Value)
-                {
-                    var timeline = m_FutureObjectTimelines[id];
-                    timeline.RollForwardTo(mark);
-
-                    m_PastObjectTimelines.Add(id, timeline);
-                    m_FutureObjectTimelines.Remove(id);
-                }
-
-                firstNode = m_FutureObjects.First;
+                m_CreatedObjectHistory.RollForwardTo(
+                    mark,
+                    (t, ids) =>
+                    {
+                        foreach (var id in ids)
+                        {
+                            Debug.Assert(m_ObjectTimelines.ContainsKey(id), "Missing the timeline for an object.");
+                            var timeline = m_ObjectTimelines[id];
+                            timeline.RollForwardTo(mark);
+                        }
+                    });
             }
         }
 
@@ -635,45 +611,38 @@ namespace Apollo.Utilities.History
             var newIds = new List<HistoryId>(m_NonMarkedObjectTimelines.Count);
             foreach (var pair in m_NonMarkedObjectTimelines)
             {
-                m_PastObjectTimelines.Add(pair.Key, pair.Value);
+                m_ObjectTimelines.Add(pair.Key, pair.Value);
                 newIds.Add(pair.Key);
             }
 
             m_NonMarkedObjectTimelines.Clear();
 
+            // Remove all the objects that only exist in the future. They won't
+            // be created any more after the current mark.
+            m_CreatedObjectHistory.TrackForwardsInTime(
+                (t, ids) =>
+                {
+                    foreach (var id in ids)
+                    {
+                        if (m_ObjectTimelines.ContainsKey(id))
+                        {
+                            m_ObjectTimelines.Remove(id);
+                        }
+                    }
+
+                    return true;
+                });
+
             m_Current = !string.IsNullOrEmpty(name) ? m_Current.Next(name) : m_Current.Next();
-            foreach (var pair in m_PastObjectTimelines)
+            m_CreatedObjectHistory.StoreCurrent(m_Current, newIds);
+            foreach (var pair in m_ObjectTimelines)
             {
                 pair.Value.Mark(m_Current);
             }
 
-            // Add the objects that we have created in this timestep.
-            m_PastObjects.AddLast(
-                new LinkedListNode<ValueAtTime<List<HistoryId>>>(
-                    new ValueAtTime<List<HistoryId>>(
-                        m_Current,
-                        newIds)));
-
             if (dependencies != null)
             {
-                m_PastDependencies.AddLast(
-                    new LinkedListNode<ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>>(
-                        new ValueAtTime<IEnumerable<UpdateFromHistoryDependency>>(
-                            m_Current,
-                            dependencies)));
-            }
-
-            // Remove the objects that would have existed in the future
-            if (m_FutureObjectTimelines.Count > 0)
-            {
-                m_FutureObjectTimelines.Clear();
-                m_FutureObjects.Clear();
-            }
-
-            // Remove the dependencies that would have existed in the future
-            if (m_FutureDependencies.Count > 0)
-            {
-                m_FutureDependencies.Clear();
+                m_Dependencies.StoreCurrent(m_Current, dependencies);
             }
 
             if (!string.IsNullOrEmpty(name))
