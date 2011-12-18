@@ -852,8 +852,9 @@ task runFxCop -depends buildBinaries -action{
     
     # exclude the fxcop rules we don't want to use.
     # 1006: do not nest generic types in member signatures
+	# 1026: Default parameters should not be used
     # 1030: use events where appropriate
-    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1030"
+    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1026 /ruleid:-Microsoft.Rules.Managed.CA1030"
     
     $command = "& '" + "$fxcopExe" + "' " + "$files /rule:+" + "'" + "$rulesDir" + "'" + $excludedRules + " /out:" + "'" + "$outFile" + "' /forceoutput /dictionary:'" + "$dictionaryFile" + "'"
     $command

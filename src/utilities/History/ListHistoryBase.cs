@@ -26,6 +26,14 @@ namespace Apollo.Utilities.History
         /// </summary>
         private const int SnapshotInterval = 20;
 
+        private static void ApplyChangeSet(List<TStorage> current, List<ICollectionChange<TStorage>> changeset)
+        {
+            foreach (var change in changeset)
+            {
+                change.ApplyTo(current);
+            }
+        }
+
         /// <summary>
         /// The past and future snapshots.
         /// </summary>
@@ -392,14 +400,6 @@ namespace Apollo.Utilities.History
             }
 
             m_Current = current;
-        }
-
-        private void ApplyChangeSet(List<TStorage> current, List<ICollectionChange<TStorage>> changeset)
-        {
-            foreach (var change in changeset)
-            {
-                change.ApplyTo(current);
-            }
         }
 
         /// <summary>

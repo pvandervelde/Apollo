@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Globalization;
 using System.Threading;
 
@@ -24,6 +25,7 @@ namespace Apollo.Utilities.History
     /// application.
     /// </para>
     /// </remarks>
+    [Serializable]
     public sealed class HistoryId : Id<HistoryId, long>
     {
         /// <summary>

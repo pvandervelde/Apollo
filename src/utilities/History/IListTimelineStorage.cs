@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -14,6 +15,8 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="T">The type of object that is stored in the collection.</typeparam>
     [DefineAsHistoryTrackingInterface]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "IList isn't called collection either.")]
     public interface IListTimelineStorage<T> : IList<T>
     {
         // We're mirroring the IList<T> type here because otherwise we can't differentiate between lists that should

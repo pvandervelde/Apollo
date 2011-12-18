@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -15,6 +16,8 @@ namespace Apollo.Utilities.History
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of object that is stored in the collection.</typeparam>
     [DefineAsHistoryTrackingInterface]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "IDictionary isn't called collection either.")]
     public interface IDictionaryTimelineStorage<TKey, TValue> : IDictionary<TKey, TValue>
     {
         // We're mirroring the IDictionary<TKey, TValue> type here because otherwise we can't differentiate 

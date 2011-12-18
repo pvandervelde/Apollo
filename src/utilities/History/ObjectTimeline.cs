@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using Apollo.Utilities.Properties;
@@ -22,15 +23,15 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Stores the member information in the same order as the timelines are stored.
         /// </summary>
-        private static readonly IList<Tuple<string, Type>> s_Members;
+        private static readonly IList<Tuple<string, Type>> s_Members = new List<Tuple<string, Type>>();
 
         /// <summary>
         /// Initializes static members of the <see cref="ObjectTimeline{T}"/> class.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1810:InitializeReferenceTypeStaticFieldsInline",
+            Justification = "Unfortunately we can't do the initialization without the static constructor.")]
         static ObjectTimeline()
         {
-            s_Members = new List<Tuple<string, Type>>();
-
             var type = typeof(T);
             var fields = type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
             foreach (var field in fields)

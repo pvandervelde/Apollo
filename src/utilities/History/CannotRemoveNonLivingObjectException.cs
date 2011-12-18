@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Apollo.Utilities.Properties;
 
@@ -15,6 +16,8 @@ namespace Apollo.Utilities.History
     /// the current timeline.
     /// </summary>
     [Serializable]
+    [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "NonLiving",
+        Justification = "The correct term is non-living, i.e. it's two words.")]
     public sealed class CannotRemoveNonLivingObjectException : Exception
     {
         /// <summary>

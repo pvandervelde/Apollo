@@ -29,6 +29,14 @@ namespace Apollo.Utilities.History
         /// </summary>
         private const int SnapshotInterval = 20;
 
+        private static void ApplyChangeSet(Dictionary<TKey, TStorage> current, List<ICollectionChange<KeyValuePair<TKey, TStorage>>> changeset)
+        {
+            foreach (var change in changeset)
+            {
+                change.ApplyTo(current);
+            }
+        }
+
         /// <summary>
         /// The past and future snapshots.
         /// </summary>
@@ -462,14 +470,6 @@ namespace Apollo.Utilities.History
             }
 
             m_Current = current;
-        }
-
-        private void ApplyChangeSet(Dictionary<TKey, TStorage> current, List<ICollectionChange<KeyValuePair<TKey, TStorage>>> changeset)
-        {
-            foreach (var change in changeset)
-            {
-                change.ApplyTo(current);
-            }
         }
 
         /// <summary>

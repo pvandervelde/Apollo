@@ -225,7 +225,7 @@ namespace Apollo.Utilities.History
         {
             if (IsAtBeginOfTime())
             {
-                new NoPreviousValueRegisteredException();
+                throw new NoPreviousValueRegisteredException();
             }
 
             return RollBackInTimeTo(TimeMarker.TheBeginOfTime, action);
