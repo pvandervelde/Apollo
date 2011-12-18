@@ -72,6 +72,7 @@
     <Compile Include="History\HistoryObjectDictionaryHistoryTest.cs" />
     <Compile Include="History\HistoryObjectListHistoryTest.cs" />
     <Compile Include="History\HistoryObjectValueHistoryTest.cs" />
+    <Compile Include="History\InvalidTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ListHistoryTest.cs" />
     <Compile Include="History\NoFutureValueRegisteredExceptionTest.cs" />
     <Compile Include="History\NoPreviousValueRegisteredExceptionTest.cs" />
@@ -79,9 +80,12 @@
     <Compile Include="History\CannotRemoveNonLivingObjectExceptionTest.cs" />
     <Compile Include="History\ObjectHasNotBeenCreatedYetExceptionTest.cs" />
     <Compile Include="History\ObjectTimelineTest.cs" />
+    <Compile Include="History\ObjectUnknownToTimelineExceptionTest.cs" />
     <Compile Include="History\TimelineIdDoesNotMatchExceptionTest.cs" />
     <Compile Include="History\TimelineTest.cs" />
     <Compile Include="History\TimeMarkerTest.cs" />
+    <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyExceptionTest.cs" />
+    <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />
     <Compile Include="IdTest.cs" />
