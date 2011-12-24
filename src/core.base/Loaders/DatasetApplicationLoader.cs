@@ -29,6 +29,13 @@ namespace Apollo.Core.Base.Loaders
         private const string DatasetApplicationFileName = @"Apollo.Core.Dataset.exe";
 
         /// <summary>
+        /// The object that links the dataset processes to the current process so that they
+        /// all die at the same time.
+        /// </summary>
+        private static readonly DatasetTrackingJob s_ProcessTrackingJob
+            = new DatasetTrackingJob();
+
+        /// <summary>
         /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
         /// <param name="ownerConnection">
@@ -86,6 +93,9 @@ namespace Apollo.Core.Base.Loaders
             var exec = new Process();
             exec.StartInfo = startInfo;
             exec.Start();
+
+            // Link to the current process so that the datasets die if we die
+            s_ProcessTrackingJob.LinkChildProcessToJob(exec);
 
             return exec.CreateEndpointIdForProcess();
         }
