@@ -31,3 +31,4 @@ partcover.driver.log
 ./install/msi/VersionNumber.wxi
 tools/sourcemonitor/SourceMonitor.log
 ./packages
+./src/licenses.xml
