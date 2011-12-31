@@ -12,142 +12,126 @@ namespace Apollo.Utilities.History
     internal abstract partial class DictionaryHistoryBase<TKey, TExternal, TStorage>
     {
         /// <summary>
-        /// An <see cref="ICollectionChange{ TValue }"/> which indicates that a value was added to a
+        /// An <see cref="IHistoryChange{ TValue }"/> which indicates that a value was added to a
         /// <see cref="IDictionary{TKey, TValue}"/> collection.
         /// </summary>
-        /// <typeparam name="TChangeKey">The type of the key with which the value was added.</typeparam>
-        /// <typeparam name="TChangeValue">The type of the value that was added.</typeparam>
-        private sealed class AddToDictionaryChange<TChangeKey, TChangeValue> : ICollectionChange<KeyValuePair<TChangeKey, TChangeValue>>
+        private sealed class AddToDictionaryChange : IHistoryChange<Dictionary<TKey, TStorage>>
         {
             /// <summary>
             /// The key with which the value was added.
             /// </summary>
-            private readonly TChangeKey m_Key;
+            private readonly TKey m_Key;
 
             /// <summary>
             /// The value that was added.
             /// </summary>
-            private readonly TChangeValue m_Value;
+            private readonly TStorage m_Value;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="AddToDictionaryChange{TChangeKey, TChangeValue}"/> class.
+            /// Initializes a new instance of the <see cref="AddToDictionaryChange"/> class.
             /// </summary>
             /// <param name="key">The key at which the item was added.</param>
             /// <param name="value">The value that should be added.</param>
-            public AddToDictionaryChange(TChangeKey key, TChangeValue value)
+            public AddToDictionaryChange(TKey key, TStorage value)
             {
                 m_Key = key;
                 m_Value = value;
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<KeyValuePair<TChangeKey, TChangeValue>> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(Dictionary<TKey, TStorage> historyObject)
             {
-                var dict = collection as Dictionary<TChangeKey, TChangeValue>;
-                Debug.Assert(dict != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
-
-                dict.Add(m_Key, m_Value);
+                Debug.Assert(historyObject != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
+                historyObject.Add(m_Key, m_Value);
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{ TValue }"/> which indicates that the 
+        /// An <see cref="IHistoryChange{ TValue }"/> which indicates that the 
         /// <see cref="IDictionary{TKey, TValue}"/> collection was cleared.
         /// </summary>
-        /// <typeparam name="TChangeKey">The type of the key with which the value was added.</typeparam>
-        /// <typeparam name="TChangeValue">The type of the value that was added.</typeparam>
-        private sealed class ClearDictionaryChange<TChangeKey, TChangeValue> : ICollectionChange<KeyValuePair<TChangeKey, TChangeValue>>
+        private sealed class ClearDictionaryChange : IHistoryChange<Dictionary<TKey, TStorage>>
         {
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<KeyValuePair<TChangeKey, TChangeValue>> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(Dictionary<TKey, TStorage> historyObject)
             {
-                var dict = collection as Dictionary<TChangeKey, TChangeValue>;
-                Debug.Assert(dict != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
-
-                dict.Clear();
+                Debug.Assert(historyObject != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
+                historyObject.Clear();
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{ TValue }"/> which indicates that a value was removed from a
+        /// An <see cref="IHistoryChange{ TValue }"/> which indicates that a value was removed from a
         /// <see cref="IDictionary{TKey, TValue}"/> collection.
         /// </summary>
-        /// <typeparam name="TChangeKey">The type of the key with which the value was added.</typeparam>
-        /// <typeparam name="TChangeValue">The type of the value that was added.</typeparam>
-        private sealed class RemoveFromDictionaryChange<TChangeKey, TChangeValue> : ICollectionChange<KeyValuePair<TChangeKey, TChangeValue>>
+        private sealed class RemoveFromDictionaryChange : IHistoryChange<Dictionary<TKey, TStorage>>
         {
             /// <summary>
             /// The key for which the item should be deleted.
             /// </summary>
-            private readonly TChangeKey m_Key;
+            private readonly TKey m_Key;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="RemoveFromDictionaryChange{TChangeKey, TChangeValue}"/> class.
+            /// Initializes a new instance of the <see cref="RemoveFromDictionaryChange"/> class.
             /// </summary>
             /// <param name="key">The key for which an item should be removed.</param>
-            public RemoveFromDictionaryChange(TChangeKey key)
+            public RemoveFromDictionaryChange(TKey key)
             {
                 m_Key = key;
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<KeyValuePair<TChangeKey, TChangeValue>> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(Dictionary<TKey, TStorage> historyObject)
             {
-                var dict = collection as Dictionary<TChangeKey, TChangeValue>;
-                Debug.Assert(dict != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
-
-                dict.Remove(m_Key);
+                Debug.Assert(historyObject != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
+                historyObject.Remove(m_Key);
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{ TValue }"/> which indicates that a value was updated in a
+        /// An <see cref="IHistoryChange{ TValue }"/> which indicates that a value was updated in a
         /// <see cref="IDictionary{TKey, TValue}"/> collection.
         /// </summary>
-        /// <typeparam name="TChangeKey">The type of the key with which the value was added.</typeparam>
-        /// <typeparam name="TChangeValue">The type of the value that was added.</typeparam>
-        private sealed class ItemUpdatedChange<TChangeKey, TChangeValue> : ICollectionChange<KeyValuePair<TChangeKey, TChangeValue>>
+        private sealed class ItemUpdatedChange : IHistoryChange<Dictionary<TKey, TStorage>>
         {
             /// <summary>
             /// The index at which the item was changed.
             /// </summary>
-            private readonly TChangeKey m_Key;
+            private readonly TKey m_Key;
 
             /// <summary>
             /// The new value for the item.
             /// </summary>
-            private readonly TChangeValue m_Value;
+            private readonly TStorage m_Value;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="ItemUpdatedChange{TChangeKey, TChangeValue}"/> class.
+            /// Initializes a new instance of the <see cref="ItemUpdatedChange"/> class.
             /// </summary>
             /// <param name="key">The key at which the item was changed.</param>
             /// <param name="valueToAdd">The new value for the item.</param>
-            public ItemUpdatedChange(TChangeKey key, TChangeValue valueToAdd)
+            public ItemUpdatedChange(TKey key, TStorage valueToAdd)
             {
                 m_Key = key;
                 m_Value = valueToAdd;
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<KeyValuePair<TChangeKey, TChangeValue>> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(Dictionary<TKey, TStorage> historyObject)
             {
-                var dict = collection as Dictionary<TChangeKey, TChangeValue>;
-                Debug.Assert(dict != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
-
-                dict[m_Key] = m_Value;
+                Debug.Assert(historyObject != null, "This change can only be applied to a Dictionary<TKey, TValue> collection.");
+                historyObject[m_Key] = m_Value;
             }
         }
     }

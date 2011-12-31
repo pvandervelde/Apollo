@@ -12,11 +12,10 @@ namespace Apollo.Utilities.History
     internal abstract partial class ListHistoryBase<TExternal, TStorage>
     {
         /// <summary>
-        /// An <see cref="ICollectionChange{T}"/> which indicates that a value was inserted into a
-        /// <see cref="IList{T}"/> collection.
+        /// An <see cref="IHistoryChange{T}"/> which indicates that a value was inserted into a
+        /// <see cref="IList{TStorage}"/> collection.
         /// </summary>
-        /// <typeparam name="T">The type of the value that was inserted.</typeparam>
-        private sealed class InsertIntoListChange<T> : ICollectionChange<T>
+        private sealed class InsertIntoListChange : IHistoryChange<List<TStorage>>
         {
             /// <summary>
             /// The index at which the item was inserted.
@@ -26,56 +25,50 @@ namespace Apollo.Utilities.History
             /// <summary>
             /// The value that was inserted.
             /// </summary>
-            private readonly T m_Value;
+            private readonly TStorage m_Value;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="InsertIntoListChange{T}"/> class.
+            /// Initializes a new instance of the <see cref="InsertIntoListChange"/> class.
             /// </summary>
             /// <param name="index">The index at which the item was inserted.</param>
             /// <param name="valueToAdd">The value that should be inserted.</param>
-            public InsertIntoListChange(int index, T valueToAdd)
+            public InsertIntoListChange(int index, TStorage valueToAdd)
             {
                 m_Index = index;
                 m_Value = valueToAdd;
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<T> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(List<TStorage> historyObject)
             {
-                var list = collection as List<T>;
-                Debug.Assert(list != null, "This change can only be applied to a List<T> collection.");
-
-                list.Insert(m_Index, m_Value);
+                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                historyObject.Insert(m_Index, m_Value);
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{T}"/> which indicates a <see cref="IList{T}"/> collection was cleared.
+        /// An <see cref="IHistoryChange{T}"/> which indicates a <see cref="IList{T}"/> collection was cleared.
         /// </summary>
-        /// <typeparam name="T">The type of object that is stored by the collection that underwent the change.</typeparam>
-        private sealed class ClearListChange<T> : ICollectionChange<T>
+        private sealed class ClearListChange : IHistoryChange<List<TStorage>>
         {
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<T> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(List<TStorage> historyObject)
             {
-                var list = collection as List<T>;
-                Debug.Assert(list != null, "This change can only be applied to a List<T> collection.");
-
-                list.Clear();
+                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                historyObject.Clear();
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{T}"/> which indicates an item was removed from an <see cref="IList{T}"/> collection.
+        /// An <see cref="IHistoryChange{T}"/> which indicates an item was removed from an <see cref="IList{T}"/> collection.
         /// </summary>
-        /// <typeparam name="T">The type of object that was removed from the collection.</typeparam>
-        private sealed class RemoveFromListChange<T> : ICollectionChange<T>
+        private sealed class RemoveFromListChange : IHistoryChange<List<TStorage>>
         {
             /// <summary>
             /// The index at which the item should be deleted.
@@ -83,7 +76,7 @@ namespace Apollo.Utilities.History
             private readonly int m_Index;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="RemoveFromListChange{T}"/> class.
+            /// Initializes a new instance of the <see cref="RemoveFromListChange"/> class.
             /// </summary>
             /// <param name="index">The index at which an item should be removed.</param>
             public RemoveFromListChange(int index)
@@ -92,24 +85,21 @@ namespace Apollo.Utilities.History
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<T> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(List<TStorage> historyObject)
             {
-                var list = collection as List<T>;
-                Debug.Assert(list != null, "This change can only be applied to a List<T> collection.");
-
-                list.RemoveAt(m_Index);
+                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                historyObject.RemoveAt(m_Index);
             }
         }
 
         /// <summary>
-        /// An <see cref="ICollectionChange{T}"/> which indicates that a value was inserted into a
+        /// An <see cref="IHistoryChange{T}"/> which indicates that a value was inserted into a
         /// <see cref="IList{T}"/> collection.
         /// </summary>
-        /// <typeparam name="T">The type of the value that was updated.</typeparam>
-        private sealed class ItemUpdatedChange<T> : ICollectionChange<T>
+        private sealed class ItemUpdatedChange : IHistoryChange<List<TStorage>>
         {
             /// <summary>
             /// The index at which the item was changed.
@@ -119,29 +109,27 @@ namespace Apollo.Utilities.History
             /// <summary>
             /// The new value for the item.
             /// </summary>
-            private readonly T m_Value;
+            private readonly TStorage m_Value;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="ItemUpdatedChange{T}"/> class.
+            /// Initializes a new instance of the <see cref="ItemUpdatedChange"/> class.
             /// </summary>
             /// <param name="index">The index at which the item was changed.</param>
             /// <param name="valueToAdd">The new value for the item.</param>
-            public ItemUpdatedChange(int index, T valueToAdd)
+            public ItemUpdatedChange(int index, TStorage valueToAdd)
             {
                 m_Index = index;
                 m_Value = valueToAdd;
             }
 
             /// <summary>
-            /// Applies the changes in the current change to the given collection.
+            /// Applies the changes in the current change to the given history object.
             /// </summary>
-            /// <param name="collection">The collection to which the changes should be applied.</param>
-            public void ApplyTo(ICollection<T> collection)
+            /// <param name="historyObject">The object to which the changes should be applied.</param>
+            public void ApplyTo(List<TStorage> historyObject)
             {
-                var list = collection as List<T>;
-                Debug.Assert(list != null, "This change can only be applied to a List<T> collection.");
-
-                list[m_Index] = m_Value;
+                Debug.Assert(historyObject != null, "This change can only be applied to a List<T> collection.");
+                historyObject[m_Index] = m_Value;
             }
         }
     }
