@@ -16,7 +16,7 @@ namespace Apollo.Utilities.History
     /// Provides the history for a specific type of object.
     /// </summary>
     /// <typeparam name="T">The type of object stored in the storage.</typeparam>
-    internal sealed class ValueAtTimeStorage<T>
+    public sealed class ValueAtTimeStorage<T>
     {
         /// <summary>
         /// The collection that contains the values that are in the past.

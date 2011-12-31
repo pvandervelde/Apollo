@@ -16,7 +16,7 @@ namespace Apollo.Utilities.History
     /// <summary>
     /// Tracks the history of a series of objects.
     /// </summary>
-    internal sealed class Timeline : IConnectObjectsToHistory, IFollowHistory, ITrackHistoryChanges, ICreateSnapshots
+    internal sealed class Timeline : ITimeline, ICreateSnapshots
     {
         /// <summary>
         /// The collection that tracks all the dependencies.

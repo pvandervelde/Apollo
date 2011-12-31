@@ -63,6 +63,7 @@
     <Compile Include="History\InvalidTimeMarkerException.cs" />
     <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
     <Compile Include="History\IStoreTimelineValues.cs" />
+    <Compile Include="History\ITimeline.cs" />
     <Compile Include="History\ITrackHistoryChanges.cs" />
     <Compile Include="History\IVariableTimeline.cs" />
     <Compile Include="History\ListHistory.cs" />
