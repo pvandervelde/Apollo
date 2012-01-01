@@ -28,7 +28,7 @@ namespace Apollo.Core.Base.Communication
         /// <returns>An array of interceptors to invoke upon calling the method.</returns>
         public IInterceptor[] SelectInterceptors(Type type, MethodInfo method, IInterceptor[] interceptors)
         {
-            var name = ReflectionExtensions.MethodName<CommandSetProxy, object>(p => p.SelfReference());
+            var name = ReflectionExtensions.MemberName<CommandSetProxy, object>(p => p.SelfReference());
             if (string.Equals(name, method.Name, StringComparison.Ordinal))
             {
                 return interceptors.Where(i => i is ProxySelfReferenceInterceptor).ToArray();

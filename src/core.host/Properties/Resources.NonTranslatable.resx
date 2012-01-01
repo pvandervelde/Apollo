@@ -348,4 +348,10 @@
   <data name="Exceptions_Messages_ScriptExecutionFailure" xml:space="preserve">
     <value>The given script failed to execute.</value>
   </data>
+  <data name="Exception_Messages_UnknownMemberName" xml:space="preserve">
+    <value>No member with the specified member name exists.</value>
+  </data>
+  <data name="Exception_Messages_CannotCreateProjectWithoutTimeline" xml:space="preserve">
+    <value>It is not possible to create a project without a timeline.</value>
+  </data>
 </root>

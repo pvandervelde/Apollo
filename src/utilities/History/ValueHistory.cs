@@ -10,7 +10,7 @@ namespace Apollo.Utilities.History
     /// Stores the timeline values for an object of type <typeparamref name="T"/> that is not <see cref="IAmHistoryEnabled"/>.
     /// </summary>
     /// <typeparam name="T">The type of object for which the values are stored.</typeparam>
-    internal sealed class ValueHistory<T> : ValueHistoryBase<T>, IVariableTimeline<T>
+    public sealed class ValueHistory<T> : ValueHistoryBase<T>, IVariableTimeline<T>
     {
         /// <summary>
         /// Returns the current value of <typeparamref name="T"/> stored by the <see cref="HistoryObjectValueHistory{T}"/> object.

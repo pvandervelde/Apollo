@@ -19,7 +19,7 @@ namespace Apollo.Utilities.History
     ///     the object with a given ID even if that object has changed (i.e. the object reference has changed) due to 
     ///     changes in the timeline.
     /// </remarks>
-    internal sealed class HistoryObjectListHistory<T> : ListHistoryBase<T, HistoryId> where T : IAmHistoryEnabled
+    public sealed class HistoryObjectListHistory<T> : ListHistoryBase<T, HistoryId> where T : IAmHistoryEnabled
     {
         private static HistoryId ToId(T obj)
         {

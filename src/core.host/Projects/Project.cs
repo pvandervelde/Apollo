@@ -11,6 +11,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 using QuickGraph;
 
@@ -75,6 +76,7 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
         /// </summary>
+        /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
@@ -82,14 +84,17 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
-            : this(distributor, null)
+        public Project(
+            ITimeline timeline,
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
+            : this(timeline, distributor, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
         /// </summary>
+        /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
@@ -98,17 +103,26 @@ namespace Apollo.Core.Host.Projects
         /// The object that describes how the project was persisted.
         /// </param>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="timeline"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
         public Project(
+            ITimeline timeline,
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor, 
             IPersistenceInformation persistenceInfo)
         {
             {
+                Enforce.Argument(() => timeline);
                 Enforce.Argument(() => distributor);
             }
 
-            m_Graph = new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false);
+            m_Timeline = timeline;
+            m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
+            m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
+            
+            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(BuildDatasetHistoryStorage);
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)
@@ -131,7 +145,7 @@ namespace Apollo.Core.Host.Projects
                             CanBeAdopted = false,
                         });
 
-                var dataset = m_Datasets[m_RootDataset];
+                var dataset = m_Datasets.KnownDatasets[m_RootDataset];
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
@@ -256,7 +270,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Datasets.Count;
+                return m_Datasets.KnownDatasets.Count;
             }
         }
 
@@ -354,7 +368,7 @@ namespace Apollo.Core.Host.Projects
                     Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(
-                    m_Datasets.ContainsKey(datasetToExport), 
+                    m_Datasets.KnownDatasets.ContainsKey(datasetToExport), 
                     Resources_NonTranslatable.Exception_Messages_UnknownDataset_WithId, 
                     datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
@@ -389,16 +403,12 @@ namespace Apollo.Core.Host.Projects
             {
                 // Invalidate all datasets first.
                 m_DatasetProxies.Clear();
-                m_Datasets.Clear();
 
-                // Terminate all dataset applications (from the leaf nodes up to the root)
-                foreach (var online in m_ActiveDatasets.Values)
+                // Terminate all dataset applications
+                foreach (var online in m_Datasets.ActiveDatasets.Values)
                 {
                     online.Close();
                 }
-
-                m_ActiveDatasets.Clear();
-                m_Graph.Clear();
             }
 
             RaiseOnClosed();

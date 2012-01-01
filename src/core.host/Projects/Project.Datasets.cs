@@ -30,21 +30,9 @@ namespace Apollo.Core.Host.Projects
         private readonly ILockObject m_Lock = new LockObject();
 
         /// <summary>
-        /// The graph that describes the relations between the different datasets.
-        /// </summary>
-        private readonly BidirectionalGraph<DatasetId, Edge<DatasetId>> m_Graph;
-
-        /// <summary>
         /// The collection of all datasets that belong to the current project.
         /// </summary>
-        private readonly IDictionary<DatasetId, DatasetOfflineInformation> m_Datasets =
-            new ConcurrentDictionary<DatasetId, DatasetOfflineInformation>();
-
-        /// <summary>
-        /// The collection of all datasets which are currently loaded onto a machine.
-        /// </summary>
-        private readonly IDictionary<DatasetId, DatasetOnlineInformation> m_ActiveDatasets =
-            new ConcurrentDictionary<DatasetId, DatasetOnlineInformation>();
+        private readonly DatasetHistoryStorage m_Datasets;
 
         /// <summary>
         /// The collection that holds the proxies for the datasets that we are mirroring 
@@ -60,6 +48,11 @@ namespace Apollo.Core.Host.Projects
         /// <remarks>
         /// It is expected that there will never be that many entries in this collection.
         /// </remarks>
+        /// <design>
+        /// We really only care about the ID number so we don't store a value but just the 
+        /// key. The reason we use a dictionary here is so that we can find the ID really 
+        /// fast. May well be overkill.
+        /// </design>
         private readonly IDictionary<DatasetId, object> m_LoadingDatsets =
             new ConcurrentDictionary<DatasetId, object>();
 
@@ -80,7 +73,7 @@ namespace Apollo.Core.Host.Projects
         private bool IsValid(DatasetId id)
         {
             Debug.Assert(id != null, "The ID should not be a null reference.");
-            return !IsClosed && m_Datasets.ContainsKey(id);
+            return !IsClosed && m_Datasets.KnownDatasets.ContainsKey(id);
         }
 
         /// <summary>
@@ -115,7 +108,7 @@ namespace Apollo.Core.Host.Projects
         private bool IsLoaded(DatasetId id)
         {
             Debug.Assert(id != null, "The ID should not be a null reference.");
-            return m_ActiveDatasets.ContainsKey(id);
+            return m_Datasets.ActiveDatasets.ContainsKey(id);
         }
 
         /// <summary>
@@ -141,10 +134,10 @@ namespace Apollo.Core.Host.Projects
         private DatasetOfflineInformation OfflineInformation(DatasetId id)
         {
             {
-                Debug.Assert(m_Datasets.ContainsKey(id), "Unknown dataset ID found.");
+                Debug.Assert(m_Datasets.KnownDatasets.ContainsKey(id), "Unknown dataset ID found.");
             }
 
-            return m_Datasets[id];
+            return m_Datasets.KnownDatasets[id];
         }
 
         /// <summary>
@@ -156,10 +149,10 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to get the online information.");
-                Debug.Assert(m_ActiveDatasets.ContainsKey(id), "Unknown dataset ID found.");
+                Debug.Assert(m_Datasets.ActiveDatasets.ContainsKey(id), "Unknown dataset ID found.");
             }
 
-            return m_ActiveDatasets[id];
+            return m_Datasets.ActiveDatasets[id];
         }
 
         /// <summary>
@@ -176,31 +169,31 @@ namespace Apollo.Core.Host.Projects
 
             var id = new DatasetId();
             var newDataset = new DatasetOfflineInformation(id, newChild);
-            m_Datasets.Add(id, newDataset);
+            m_Datasets.KnownDatasets.Add(id, newDataset);
 
             // When adding a new dataset there is no way we can create cycles because
             // we can only add new children to parents, there is no way to link an
             // existing node to the parent.
             lock (m_Lock)
             {
-                m_Graph.AddVertex(id);
+                m_Datasets.Graph.AddVertex(id);
             }
 
             if (parent != null)
             {
                 // Check if the parent can have a child.
                 {
-                    Debug.Assert(m_Datasets.ContainsKey(parent), "The provided parent node does not exist.");
-                    Debug.Assert(m_Datasets[parent].CanBecomeParent, "The given parent is not allowed to have children.");
+                    Debug.Assert(m_Datasets.KnownDatasets.ContainsKey(parent), "The provided parent node does not exist.");
+                    Debug.Assert(m_Datasets.KnownDatasets[parent].CanBecomeParent, "The given parent is not allowed to have children.");
                 }
 
                 // Find the actual ID object that we have stored, the caller may have a copy
                 // of ID. Using a copy of the real ID might cause issues when connecting the
                 // graph so we only use the ID numbers that we have stored.
-                var realParent = m_Datasets[parent].Id;
+                var realParent = m_Datasets.KnownDatasets[parent].Id;
                 lock (m_Lock)
                 {
-                    m_Graph.AddEdge(new Edge<DatasetId>(realParent, id));
+                    m_Datasets.Graph.AddEdge(new Edge<DatasetId>(realParent, id));
                 }
             }
 
@@ -246,8 +239,8 @@ namespace Apollo.Core.Host.Projects
             {
                 var node = nodesToProcess.Dequeue();
 
-                Debug.Assert(m_Datasets.ContainsKey(node), "The dataset was in the graph but not in the collection.");
-                if (!m_Datasets[node].CanBeDeleted)
+                Debug.Assert(m_Datasets.KnownDatasets.ContainsKey(node), "The dataset was in the graph but not in the collection.");
+                if (!m_Datasets.KnownDatasets[node].CanBeDeleted)
                 {
                     throw new CannotDeleteDatasetException();
                 }
@@ -277,11 +270,11 @@ namespace Apollo.Core.Host.Projects
 
                 lock (m_Lock)
                 {
-                    m_Graph.RemoveVertex(datasetToDelete);
+                    m_Datasets.Graph.RemoveVertex(datasetToDelete);
                 }
 
                 m_DatasetProxies.Remove(datasetToDelete);
-                m_Datasets.Remove(datasetToDelete);
+                m_Datasets.KnownDatasets.Remove(datasetToDelete);
 
                 if (proxy != null)
                 {
@@ -306,11 +299,11 @@ namespace Apollo.Core.Host.Projects
             List<Edge<DatasetId>> outEdges;
             lock (m_Lock)
             {
-                outEdges = m_Graph.OutEdges(parent).ToList();
+                outEdges = m_Datasets.Graph.OutEdges(parent).ToList();
             }
 
             var result = from outEdge in outEdges
-                         select m_Datasets[outEdge.Target];
+                         select m_Datasets.KnownDatasets[outEdge.Target];
 
             return result;
         }
@@ -335,7 +328,7 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(machineSelector != null, "There should be a way to select the most suitable machine.");
             }
 
-            if (m_ActiveDatasets.ContainsKey(id))
+            if (m_Datasets.ActiveDatasets.ContainsKey(id))
             {
                 return;
             }
@@ -344,7 +337,7 @@ namespace Apollo.Core.Host.Projects
             m_LoadingDatsets.Add(id, null);
             try
             {
-                var offline = m_Datasets[id];
+                var offline = m_Datasets.KnownDatasets[id];
                 var request = new DatasetRequest
                     {
                         DatasetToLoad = offline,
@@ -394,7 +387,7 @@ namespace Apollo.Core.Host.Projects
                     t =>
                     {
                         var dataset = t.Result;
-                        m_ActiveDatasets.Add(id, dataset);
+                        m_Datasets.ActiveDatasets.Add(id, dataset);
 
                         if (m_LoadingDatsets.ContainsKey(id))
                         {
@@ -430,7 +423,7 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
             }
 
-            if (!m_ActiveDatasets.ContainsKey(id))
+            if (!m_Datasets.ActiveDatasets.ContainsKey(id))
             {
                 return;
             }
@@ -441,10 +434,10 @@ namespace Apollo.Core.Host.Projects
                 proxy.OwnerHasUnloadedDataset();
             }
 
-            var onlineInfo = m_ActiveDatasets[id];
+            var onlineInfo = m_Datasets.ActiveDatasets[id];
             onlineInfo.Close();
 
-            m_ActiveDatasets.Remove(id);
+            m_Datasets.ActiveDatasets.Remove(id);
         }
     }
 }

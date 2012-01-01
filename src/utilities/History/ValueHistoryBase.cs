@@ -21,7 +21,7 @@ namespace Apollo.Utilities.History
     /// If we find that this is too much then we can always change the design to something more 'cunning'.
     /// e.g. a system where we store everything in an array or something.
     /// </design>
-    internal abstract class ValueHistoryBase<T> : IStoreTimelineValues
+    public abstract class ValueHistoryBase<T> : IStoreTimelineValues
     {
         /// <summary>
         /// The object that stores the past and future values.

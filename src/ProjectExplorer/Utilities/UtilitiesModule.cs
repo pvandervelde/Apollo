@@ -13,6 +13,7 @@ using System.Security.Cryptography;
 using Apollo.ProjectExplorer.Utilities;
 using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
+using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
@@ -120,6 +121,17 @@ namespace Apollo.Utilities
                 .SingleInstance();
         }
 
+        private static void RegisterTimeline(ContainerBuilder builder)
+        {
+            builder.Register(
+                c => 
+                {
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; }); 
+                })
+                .As<ITimeline>();
+        }
+
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
@@ -170,6 +182,7 @@ namespace Apollo.Utilities
                 // Register the loggers
                 RegisterLoggers(builder);
                 RegisterAppDomainBuilder(builder);
+                RegisterTimeline(builder);
             }
         }
     }

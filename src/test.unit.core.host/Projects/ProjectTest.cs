@@ -14,8 +14,10 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -24,9 +26,30 @@ namespace Apollo.Core.Host.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectTest
     {
+        private static IStoreTimelineValues BuildStorage(Type type)
+        {
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+            }
+
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOnlineInformation>();
+            }
+
+            if (typeof(IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>).IsAssignableFrom(type))
+            {
+                return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
+            }
+
+            return null;
+        }
+
         [Test]
         public void Create()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -53,7 +76,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor = 
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             Assert.IsNotNull(project);
             Assert.IsNotNull(project.BaseDataset());
@@ -68,6 +91,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void SaveWithullPersistenceInformation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -94,7 +118,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Save(null));
         }
@@ -102,6 +126,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void SaveAfterClosing()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -130,7 +155,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             project.Close();
 
             Assert.Throws<CannotUseProjectAfterClosingItException>(() => project.Save(new Mock<IPersistenceInformation>().Object));
@@ -145,6 +170,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void ExportWithNullDatasetId()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -173,7 +199,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             Assert.Throws<ArgumentNullException>(() => project.Export(null, false, new Mock<IPersistenceInformation>().Object));
         }
@@ -181,6 +207,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void ExportWithUnknownDatasetId()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -209,7 +236,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             Assert.Throws<UnknownDatasetException>(() => project.Export(new DatasetId(), false, new Mock<IPersistenceInformation>().Object));
         }
@@ -217,6 +244,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void ExportWithNullPersistenceInformation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -245,7 +273,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => project.Export(dataset.Id, false, null));
@@ -254,6 +282,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void ExportAfterClosing()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -282,7 +311,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
             project.Close();
 
@@ -305,6 +334,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Name()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -333,7 +363,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             var name = string.Empty;
             project.OnNameChanged += (s, e) => { name = e.Value; };
@@ -350,6 +380,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Summary()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -378,7 +409,7 @@ namespace Apollo.Core.Host.Projects
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
 
             var summary = string.Empty;
             project.OnSummaryChanged += (s, e) => { summary = e.Value; };

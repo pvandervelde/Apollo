@@ -19,7 +19,7 @@ namespace Apollo.Utilities.History
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
-    internal abstract partial class DictionaryHistoryBase<TKey, TExternal, TStorage>
+    public abstract partial class DictionaryHistoryBase<TKey, TExternal, TStorage>
         : HistorySnapshotStorage<Dictionary<TKey, TStorage>>, IDictionaryTimelineStorage<TKey, TExternal>
     {
         /// <summary>

@@ -17,7 +17,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
-    internal abstract partial class ListHistoryBase<TExternal, TStorage> : HistorySnapshotStorage<List<TStorage>>, IListTimelineStorage<TExternal>
+    public abstract partial class ListHistoryBase<TExternal, TStorage> : HistorySnapshotStorage<List<TStorage>>, IListTimelineStorage<TExternal>
     {
         /// <summary>
         /// The function that maps an external object to a storage object.

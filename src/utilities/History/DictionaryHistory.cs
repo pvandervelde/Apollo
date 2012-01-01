@@ -14,7 +14,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of object that is passed into the collection.</typeparam>
-    internal sealed class DictionaryHistory<TKey, TValue> : DictionaryHistoryBase<TKey, TValue, TValue>
+    public sealed class DictionaryHistory<TKey, TValue> : DictionaryHistoryBase<TKey, TValue, TValue>
     {
         private static TValue Translate(TValue input)
         {

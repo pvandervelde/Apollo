@@ -13,7 +13,7 @@ namespace Apollo.Utilities.History
     /// which are not <see cref="IAmHistoryEnabled"/>.
     /// </summary>
     /// <typeparam name="T">The type of object for which the values are stored.</typeparam>
-    internal sealed class ListHistory<T> : ListHistoryBase<T, T>
+    public sealed class ListHistory<T> : ListHistoryBase<T, T>
     {
         private static T Translate(T input)
         {

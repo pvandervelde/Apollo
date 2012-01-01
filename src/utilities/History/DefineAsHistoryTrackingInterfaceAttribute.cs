@@ -15,7 +15,7 @@ namespace Apollo.Utilities.History
     /// </summary>
     [AttributeUsage(AttributeTargets.Interface, AllowMultiple = false, Inherited = true)]
     [ExcludeFromCodeCoverage]
-    internal sealed class DefineAsHistoryTrackingInterfaceAttribute : Attribute
+    public sealed class DefineAsHistoryTrackingInterfaceAttribute : Attribute
     {
     }
 }
