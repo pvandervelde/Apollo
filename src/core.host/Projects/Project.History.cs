@@ -200,20 +200,44 @@ namespace Apollo.Core.Host.Projects
 
         private void OnTimelineRolledBack(object sender, EventArgs args)
         {
-            // Recalculate the proxies
-            throw new NotImplementedException();
+            ReloadProxiesDueToHistoryChange();
+        }
+
+        private void ReloadProxiesDueToHistoryChange()
+        {
+            var proxiesToRemove = new List<DatasetId>();
+            foreach (var pair in m_DatasetProxies)
+            {
+                if (!m_Datasets.KnownDatasets.ContainsKey(pair.Key))
+                {
+                    proxiesToRemove.Add(pair.Key);
+                }
+            }
+
+            foreach (var proxy in proxiesToRemove)
+            {
+                m_DatasetProxies[proxy].OwnerHasDeletedDataset();
+            }
+
+            // We should really remove all the proxies and reload them
+            // but for now we'll just notify of deletions only
+            RaiseOnDatasetDeleted();
         }
 
         private void OnTimelineRolledForward(object sender, EventArgs args)
         {
-            // Recalculate the proxies
-            throw new NotImplementedException();
+            ReloadProxiesDueToHistoryChange();
         }
 
-        // Move timeline back
-
-        // Move timeline forward
-
-        // Get changeset
+        /// <summary>
+        /// Gets the timeline for the project.
+        /// </summary>
+        public ITimeline History
+        {
+            get
+            {
+                return m_Timeline;
+            }
+        }
     }
 }

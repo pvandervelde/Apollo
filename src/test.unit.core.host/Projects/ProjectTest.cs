@@ -59,7 +59,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger), 
+                        logger),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -74,7 +74,7 @@ namespace Apollo.Core.Host.Projects
                         }),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor = 
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
             var project = new Project(timeline, distributor);
 
@@ -85,7 +85,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         [Ignore("Not implemented yet.")]
         public void CreateFromPersistenceInformation()
-        { 
+        {
         }
 
         [Test]
@@ -164,7 +164,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         [Ignore("Not implemented yet.")]
         public void Save()
-        { 
+        {
         }
 
         [Test]
@@ -322,13 +322,13 @@ namespace Apollo.Core.Host.Projects
         [Test]
         [Ignore("Export is not implemented yet.")]
         public void ExportWithoutChildren()
-        { 
+        {
         }
 
         [Test]
         [Ignore("Export is not implemented yet.")]
         public void ExportWithChildren()
-        { 
+        {
         }
 
         [Test]
@@ -421,6 +421,429 @@ namespace Apollo.Core.Host.Projects
             summary = string.Empty;
             project.Summary = "MyNewName";
             Assert.AreEqual(string.Empty, summary);
+        }
+
+        [Test]
+        public void RollBackWithCreatesOnly()
+        {
+            ITimeline timeline = new Timeline(BuildStorage);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+            var project = new Project(timeline, distributor);
+
+            var marks = new List<TimeMarker>();
+            marks.Add(TimeMarker.TheBeginOfTime);
+            marks.Add(project.History.Mark());
+
+            // Create a 'binary' tree of datasets. This should create the following tree:
+            //                            X
+            //                          /   \
+            //                         /     \
+            //                        /       \
+            //                       /         \
+            //                      /           \
+            //                     X             X
+            //                   /   \         /   \
+            //                  /     \       /     \
+            //                 /       \     /       \
+            //                X         X   X         X
+            //              /   \     /   \
+            //             X     X   X     X
+            var children = new List<IProxyDataset>();
+            var datasets = new Queue<IProxyDataset>();
+            var root = project.BaseDataset();
+            datasets.Enqueue(root);
+
+            int count = 0;
+            while (count < 10)
+            {
+                var creationInformation = new DatasetCreationInformation()
+                {
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    CanBecomeParent = true,
+                    CanBeAdopted = false,
+                    CanBeCopied = false,
+                    CanBeDeleted = true,
+                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                };
+
+                var parent = datasets.Dequeue();
+                var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
+                foreach (var child in newChildren)
+                {
+                    datasets.Enqueue(child);
+                    children.Add(child);
+                    count++;
+                }
+
+                marks.Add(project.History.Mark());
+            }
+
+            for (int i = marks.Count - 1; i > -1; i--)
+            {
+                project.History.RollBackTo(marks[i]);
+                if (i > 1)
+                {
+                    Assert.AreEqual(((i - 1) * 2) + 1, project.NumberOfDatasets);
+                }
+                else
+                {
+                    Assert.AreEqual(i, project.NumberOfDatasets);
+                }
+
+                for (int j = 0; j < children.Count; j++)
+                {
+                    if (j < (i - 1) * 2)
+                    {
+                        Assert.IsTrue(children[j].IsValid);
+                    }
+                    else
+                    {
+                        Assert.IsFalse(children[j].IsValid);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void RollForwardWithCreatesOnly()
+        {
+            ITimeline timeline = new Timeline(BuildStorage);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+            var project = new Project(timeline, distributor);
+
+            var marks = new List<TimeMarker>();
+            marks.Add(TimeMarker.TheBeginOfTime);
+            marks.Add(project.History.Mark());
+
+            // Create a 'binary' tree of datasets. This should create the following tree:
+            //                            X
+            //                          /   \
+            //                         /     \
+            //                        /       \
+            //                       /         \
+            //                      /           \
+            //                     X             X
+            //                   /   \         /   \
+            //                  /     \       /     \
+            //                 /       \     /       \
+            //                X         X   X         X
+            //              /   \     /   \
+            //             X     X   X     X
+            var children = new List<IProxyDataset>();
+            var datasets = new Queue<IProxyDataset>();
+            var root = project.BaseDataset();
+            datasets.Enqueue(root);
+
+            int count = 0;
+            while (count < 10)
+            {
+                var creationInformation = new DatasetCreationInformation()
+                {
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    CanBecomeParent = true,
+                    CanBeAdopted = false,
+                    CanBeCopied = false,
+                    CanBeDeleted = true,
+                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                };
+
+                var parent = datasets.Dequeue();
+                var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
+                foreach (var child in newChildren)
+                {
+                    datasets.Enqueue(child);
+                    children.Add(child);
+                    count++;
+                }
+
+                marks.Add(project.History.Mark());
+            }
+
+            project.History.RollBackTo(TimeMarker.TheBeginOfTime);
+            for (int i = 1; i < marks.Count; i++)
+            {
+                project.History.RollForwardTo(marks[i]);
+                if (i > 1)
+                {
+                    Assert.AreEqual(((i - 1) * 2) + 1, project.NumberOfDatasets);
+                }
+                else
+                {
+                    Assert.AreEqual(i, project.NumberOfDatasets);
+                }
+
+                for (int j = 0; j < children.Count; j++)
+                {
+                    if (j < (i - 1) * 2)
+                    {
+                        Assert.IsTrue(children[j].IsValid);
+                    }
+                    else
+                    {
+                        Assert.IsFalse(children[j].IsValid);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void RollBackWithDeletesOnly()
+        {
+            ITimeline timeline = new Timeline(BuildStorage);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+            var project = new Project(timeline, distributor);
+
+            // Create a 'binary' tree of datasets. This should create the following tree:
+            //                            X
+            //                          /   \
+            //                         /     \
+            //                        /       \
+            //                       /         \
+            //                      /           \
+            //                     X             X
+            //                   /   \         /   \
+            //                  /     \       /     \
+            //                 /       \     /       \
+            //                X         X   X         X
+            //              /   \     /   \
+            //             X     X   X     X
+            var children = new List<IProxyDataset>();
+            var datasets = new Queue<IProxyDataset>();
+            var root = project.BaseDataset();
+            datasets.Enqueue(root);
+
+            int count = 0;
+            while (count < 10)
+            {
+                var creationInformation = new DatasetCreationInformation()
+                {
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    CanBecomeParent = true,
+                    CanBeAdopted = false,
+                    CanBeCopied = false,
+                    CanBeDeleted = true,
+                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                };
+
+                var parent = datasets.Dequeue();
+                var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
+                foreach (var child in newChildren)
+                {
+                    datasets.Enqueue(child);
+                    children.Add(child);
+                    count++;
+                }
+            }
+
+            var marks = new List<TimeMarker>();
+            marks.Add(project.History.Mark());
+            for (int i = children.Count - 1; i > -1; i--)
+            {
+                children[i].Delete();
+                marks.Add(project.History.Mark());
+            }
+
+            for (int i = marks.Count - 1; i > -1; i--)
+            {
+                project.History.RollBackTo(marks[i]);
+                Assert.AreEqual(marks.Count - i, project.NumberOfDatasets);
+                for (int j = 0; j < children.Count; j++)
+                {
+                    if (j < (marks.Count - i - 1))
+                    {
+                        Assert.IsTrue(children[j].IsValid);
+                    }
+                    else
+                    {
+                        Assert.IsFalse(children[j].IsValid);
+                    }
+                }
+            }
+        }
+
+        [Test]
+        public void RollForwardWithDeletesOnly()
+        {
+            ITimeline timeline = new Timeline(BuildStorage);
+            Action<LogSeverityProxy, string> logger = (p, s) => { };
+
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                new DatasetOfflineInformation(
+                    new DatasetId(),
+                    new DatasetCreationInformation()
+                    {
+                        CreatedOnRequestOf = DatasetCreator.User,
+                        CanBecomeParent = true,
+                        CanBeAdopted = false,
+                        CanBeCopied = false,
+                        CanBeDeleted = true,
+                        LoadFrom = new Mock<IPersistenceInformation>().Object,
+                    }),
+                new NetworkIdentifier("mymachine"),
+                new DatasetLoadingProposal());
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
+                (r, c) => new List<DistributionPlan> { plan };
+            var project = new Project(timeline, distributor);
+
+            // Create a 'binary' tree of datasets. This should create the following tree:
+            //                            X
+            //                          /   \
+            //                         /     \
+            //                        /       \
+            //                       /         \
+            //                      /           \
+            //                     X             X
+            //                   /   \         /   \
+            //                  /     \       /     \
+            //                 /       \     /       \
+            //                X         X   X         X
+            //              /   \     /   \
+            //             X     X   X     X
+            var children = new List<IProxyDataset>();
+            var datasets = new Queue<IProxyDataset>();
+            var root = project.BaseDataset();
+            datasets.Enqueue(root);
+
+            int count = 0;
+            while (count < 10)
+            {
+                var creationInformation = new DatasetCreationInformation()
+                {
+                    CreatedOnRequestOf = DatasetCreator.User,
+                    CanBecomeParent = true,
+                    CanBeAdopted = false,
+                    CanBeCopied = false,
+                    CanBeDeleted = true,
+                    LoadFrom = new Mock<IPersistenceInformation>().Object,
+                };
+
+                var parent = datasets.Dequeue();
+                var newChildren = parent.CreateNewChildren(new DatasetCreationInformation[] { creationInformation, creationInformation });
+                foreach (var child in newChildren)
+                {
+                    datasets.Enqueue(child);
+                    children.Add(child);
+                    count++;
+                }
+            }
+
+            var marks = new List<TimeMarker>();
+            marks.Add(project.History.Mark());
+            for (int i = children.Count - 1; i > -1; i--)
+            {
+                children[i].Delete();
+                marks.Add(project.History.Mark());
+            }
+
+            project.History.RollBackTo(marks[0]);
+
+            for (int i = 1; i < marks.Count; i++)
+            {
+                project.History.RollForwardTo(marks[i]);
+                Assert.AreEqual(children.Count - i + 1, project.NumberOfDatasets);
+                for (int j = 0; j < children.Count; j++)
+                {
+                    if (j < children.Count - i)
+                    {
+                        Assert.IsTrue(children[j].IsValid);
+                    }
+                    else
+                    {
+                        Assert.IsFalse(children[j].IsValid);
+                    }
+                }
+            }
         }
     }
 }
