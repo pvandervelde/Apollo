@@ -37,6 +37,11 @@ namespace Apollo.Core.Host.Projects
         private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
+        /// Stores the history of the project information.
+        /// </summary>
+        private readonly ProjectHistoryStorage m_ProjectInformation;
+
+        /// <summary>
         /// A flag that indicates if the project has been closed.
         /// </summary>
         /// <design>
@@ -50,11 +55,6 @@ namespace Apollo.Core.Host.Projects
         /// </para>
         /// </design>
         private volatile bool m_IsClosed;
-
-        /// <summary>
-        /// Stores the history of the project information.
-        /// </summary>
-        private readonly ProjectHistoryStorage m_ProjectInformation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
@@ -133,6 +133,9 @@ namespace Apollo.Core.Host.Projects
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
+
+            // Store the current state of the system, just after load.
+            m_Timeline.Mark();
         }
 
         private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)

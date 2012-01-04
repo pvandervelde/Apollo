@@ -71,7 +71,9 @@ namespace Apollo.UI.Common.Commands
             if (project.History.CanRollBack)
             {
                 var markers = project.History.MarkersInTheFuture();
-                project.History.RollForwardTo(markers.First());
+
+                var markerToRollBackTo = markers.First(m => !m.Equals(project.History.Current));
+                project.History.RollForwardTo(markerToRollBackTo);
             }
         }
 

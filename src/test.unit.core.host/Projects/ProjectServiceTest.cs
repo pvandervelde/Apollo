@@ -40,7 +40,12 @@ namespace Apollo.Core.Host.Projects
                 return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
             }
 
-            return null;
+            if (typeof(IVariableTimeline<string>).IsAssignableFrom(type))
+            {
+                return new ValueHistory<string>();
+            }
+
+            throw new UnknownHistoryMemberTypeException();
         }
 
         [Test]

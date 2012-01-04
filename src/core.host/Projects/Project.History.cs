@@ -94,6 +94,17 @@ namespace Apollo.Core.Host.Projects
             }
 
             /// <summary>
+            /// Gets the ID which relates the object to the timeline.
+            /// </summary>
+            public HistoryId HistoryId
+            {
+                get
+                {
+                    return m_HistoryId;
+                }
+            }
+
+            /// <summary>
             /// Gets or sets the name for the project.
             /// </summary>
             public string Name
@@ -123,6 +134,15 @@ namespace Apollo.Core.Host.Projects
                 {
                     m_Summary.Current = value;
                 }
+            }
+
+            /// <summary>
+            /// Performs application-defined tasks associated with freeing, releasing, or
+            /// resetting unmanaged resources.
+            /// </summary>
+            public void Dispose()
+            {
+                // Don't do anything at the moment.
             }
         }
 
@@ -346,7 +366,14 @@ namespace Apollo.Core.Host.Projects
 
         private void OnTimelineRolledBack(object sender, EventArgs args)
         {
+            ReloadProjectInformation();
             ReloadProxiesDueToHistoryChange();
+        }
+
+        private void ReloadProjectInformation()
+        {
+            RaiseOnNameChanged(m_ProjectInformation.Name);
+            RaiseOnSummaryChanged(m_ProjectInformation.Summary);
         }
 
         private void ReloadProxiesDueToHistoryChange()
@@ -372,6 +399,7 @@ namespace Apollo.Core.Host.Projects
 
         private void OnTimelineRolledForward(object sender, EventArgs args)
         {
+            ReloadProjectInformation();
             ReloadProxiesDueToHistoryChange();
         }
 

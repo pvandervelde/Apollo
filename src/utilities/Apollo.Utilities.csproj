@@ -84,6 +84,7 @@
     <Compile Include="History\TimeMarker.cs" />
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyException.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyException.cs" />
+    <Compile Include="History\UnknownHistoryMemberTypeException.cs" />
     <Compile Include="History\UnknownTimeMarkerException.cs" />
     <Compile Include="History\UpdateFromHistoryDependency.cs" />
     <Compile Include="History\ValueAtTime.cs" />

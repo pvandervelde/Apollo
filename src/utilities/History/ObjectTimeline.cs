@@ -107,6 +107,7 @@ namespace Apollo.Utilities.History
             foreach (var pair in s_Members)
             {
                 var storage = storageBuilder(pair.Item2);
+                Debug.Assert(storage != null, "The member timeline should not be null.");
                 m_Members.Add(storage);
             }
         }

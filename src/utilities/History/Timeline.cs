@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using Apollo.Utilities.Properties;
 
 namespace Apollo.Utilities.History
@@ -710,7 +711,7 @@ namespace Apollo.Utilities.History
                 pair.Value.Mark(m_Current);
             }
 
-            if (dependencies != null)
+            if ((dependencies != null) && dependencies.Any())
             {
                 m_Dependencies.StoreCurrent(m_Current, dependencies);
             }

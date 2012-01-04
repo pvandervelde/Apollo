@@ -188,7 +188,7 @@ namespace Apollo.Utilities.History
         private T RollBackInTimeTo(TimeMarker mark, Action<TimeMarker, T> action)
         {
             {
-                Debug.Assert(!IsAtBeginOfTime() && !WouldRollBackPastTheBeginningOfTime(mark), "Should not roll back past the beginning of time.");
+                Debug.Assert(!IsAtBeginOfTime(), "Should not roll back past the beginning of time.");
             }
 
             // We assume that it is more likely that we have a more recent

@@ -123,6 +123,12 @@ namespace Apollo.Utilities
 
         private static void RegisterTimeline(ContainerBuilder builder)
         {
+            builder.RegisterGeneric(typeof(ValueHistory<>))
+                .As(typeof(IVariableTimeline<>));
+
+            builder.RegisterGeneric(typeof(DictionaryHistory<,>))
+                .As(typeof(IDictionaryTimelineStorage<,>));
+
             builder.Register(
                 c => 
                 {
