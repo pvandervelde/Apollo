@@ -50,7 +50,8 @@ namespace Apollo.Core.Host.Projects
             builder.Register(c => new DictionaryHistory<DatasetId, DatasetOnlineInformation>())
                 .As<IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>>();
 
-            builder.Register(c => new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>());
+            builder.Register(c => new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>())
+                .As<IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>>();
         }
     }
 }

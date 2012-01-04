@@ -17,6 +17,12 @@
         <CommandBinding Command="Close"
                         CanExecute="CommandCloseProjectCanExecute"
                         Executed="CommandCloseProjectExecuted" />
+        <CommandBinding Command="Undo"
+                        CanExecute="CommandUndoCanExecute"
+                        Executed="CommandUndoExecuted" />
+        <CommandBinding Command="Redo"
+                        CanExecute="CommandRedoCanExecute"
+                        Executed="CommandRedoExecuted" />
     </Common:RegionView.CommandBindings>
     <Menu DockPanel.Dock="Top"
           IsMainMenu="True">
@@ -37,8 +43,9 @@
         </MenuItem>
 
         <!-- Edit -->
-        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Edit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Edit}"
-                  IsEnabled="False">
+        <MenuItem Header="{lex:LocText Key=MainWindow_Menu_Edit, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Menu_Edit}">
+            <MenuItem Command="Undo" />
+            <MenuItem Command="Redo" />
         </MenuItem>
 
         <!-- View -->

@@ -15,6 +15,24 @@ namespace Apollo.Utilities.History
     public interface IFollowHistory
     {
         /// <summary>
+        /// Returns all the time markers that are in the past, starting
+        /// with the current marker.
+        /// </summary>
+        /// <returns>
+        /// A colleciton containing all the marker that are in the past.
+        /// </returns>
+        IEnumerable<TimeMarker> MarkersInThePast();
+
+        /// <summary>
+        /// Returns all the time markers that are in the future, starting 
+        /// with the marker that is closest to the current marker.
+        /// </summary>
+        /// <returns>
+        /// A collection containing all the markers that are in the future.
+        /// </returns>
+        IEnumerable<TimeMarker> MarkersInTheFuture();
+
+        /// <summary>
         /// Gets the current time marker.
         /// </summary>
         TimeMarker Current

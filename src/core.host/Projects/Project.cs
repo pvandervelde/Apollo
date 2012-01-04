@@ -48,30 +48,13 @@ namespace Apollo.Core.Host.Projects
         /// the reads and writes aren't re-ordered. The 'volatile' switch also ensures that the
         /// data is written straight back into the RAM memory so that other processors can see it.
         /// </para>
-        /// <para>
-        /// VS2010 C# language specification. Section 5.5.
-        /// <quote>
-        /// Reads and writes of the following data types are atomic: bool, char, byte, sbyte, 
-        /// short, ushort, uint, int, float, and reference types. In addition, reads and writes 
-        /// of enum types with an underlying type in the previous list are also atomic. Reads and 
-        /// writes of other types, including long, ulong, double, and decimal, as well as user-defined 
-        /// types, are not guaranteed to be atomic. Aside from the library functions designed for that 
-        /// purpose, there is no guarantee of atomic read-modify-write, such as in the case of 
-        /// increment or decrement.
-        /// </quote>
-        /// </para>
         /// </design>
         private volatile bool m_IsClosed;
 
         /// <summary>
-        /// The name of the project.
+        /// Stores the history of the project information.
         /// </summary>
-        private string m_Name;
-
-        /// <summary>
-        /// The summary for the project.
-        /// </summary>
-        private string m_Summary;
+        private readonly ProjectHistoryStorage m_ProjectInformation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
@@ -121,7 +104,8 @@ namespace Apollo.Core.Host.Projects
             m_Timeline = timeline;
             m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
             m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
-            
+
+            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(BuildProjectHistoryStorage);
             m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(BuildDatasetHistoryStorage);
 
             m_DatasetDistributor = distributor;
@@ -202,14 +186,14 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Name;
+                return m_ProjectInformation.Name;
             }
 
             set
             {
-                if (!string.Equals(m_Name, value))
+                if (!string.Equals(m_ProjectInformation.Name, value))
                 {
-                    m_Name = value;
+                    m_ProjectInformation.Name = value;
                     RaiseOnNameChanged(value);
                 }
             }
@@ -236,14 +220,14 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Summary;
+                return m_ProjectInformation.Summary;
             }
 
             set
             {
-                if (!string.Equals(m_Summary, value))
+                if (!string.Equals(m_ProjectInformation.Summary, value))
                 {
-                    m_Summary = value;
+                    m_ProjectInformation.Summary = value;
                     RaiseOnSummaryChanged(value);
                 }
             }

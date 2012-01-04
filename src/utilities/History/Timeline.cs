@@ -19,6 +19,13 @@ namespace Apollo.Utilities.History
     public sealed class Timeline : ITimeline, ICreateSnapshots
     {
         /// <summary>
+        /// Tracks the markers that are active in the past and the ones that are active in the
+        /// future.
+        /// </summary>
+        private readonly ValueAtTimeStorage<object> m_Markers
+            = new ValueAtTimeStorage<object>();
+
+        /// <summary>
         /// The collection that tracks all the dependencies.
         /// </summary>
         private readonly ValueAtTimeStorage<IEnumerable<UpdateFromHistoryDependency>> m_Dependencies
@@ -96,6 +103,46 @@ namespace Apollo.Utilities.History
             }
 
             m_StorageBuilder = storageBuilder;
+        }
+
+        /// <summary>
+        /// Returns all the time markers that are in the past, starting
+        /// with the current marker.
+        /// </summary>
+        /// <returns>
+        /// A colleciton containing all the marker that are in the past.
+        /// </returns>
+        public IEnumerable<TimeMarker> MarkersInThePast()
+        {
+            var result = new List<TimeMarker>();
+            m_Markers.TrackBackwardsInTime(
+                (t, d) =>
+                {
+                    result.Add(t);
+                    return true;
+                });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Returns all the time markers that are in the future, starting 
+        /// with the marker that is closest to the current marker.
+        /// </summary>
+        /// <returns>
+        /// A collection containing all the markers that are in the future.
+        /// </returns>
+        public IEnumerable<TimeMarker> MarkersInTheFuture()
+        {
+            var result = new List<TimeMarker>();
+            m_Markers.TrackForwardsInTime(
+                (t, d) =>
+                {
+                    result.Add(t);
+                    return true;
+                });
+
+            return result;
         }
 
         /// <summary>
@@ -280,6 +327,7 @@ namespace Apollo.Utilities.History
 
             RaiseOnRollingBack();
 
+            RollBackMarkers(mark);
             RollBackDependencies(mark);
             RollBackCreatedObjects(mark);
 
@@ -320,6 +368,14 @@ namespace Apollo.Utilities.History
 
                     return t > mark;
                 });
+        }
+
+        private void RollBackMarkers(TimeMarker mark)
+        {
+            if (!m_Markers.IsAtBeginOfTime())
+            {
+                m_Markers.RollBackTo(mark);
+            }
         }
 
         private void RollBackDependencies(TimeMarker mark)
@@ -444,6 +500,7 @@ namespace Apollo.Utilities.History
 
             RaiseOnRollingForward();
 
+            RollForwardMarkers(mark);
             RollFowardDependencies(mark);
             RollForwardCreatedObjects(mark);
 
@@ -484,6 +541,14 @@ namespace Apollo.Utilities.History
 
                     return t > mark;
                 });
+        }
+
+        private void RollForwardMarkers(TimeMarker mark)
+        {
+            if (!m_Markers.IsAtEndOfTime())
+            {
+                m_Markers.RollForwardTo(mark);
+            }
         }
 
         private void RollFowardDependencies(TimeMarker mark)
@@ -634,7 +699,12 @@ namespace Apollo.Utilities.History
                 });
 
             m_Current = !string.IsNullOrEmpty(name) ? m_Current.Next(name) : m_Current.Next();
-            m_CreatedObjectHistory.StoreCurrent(m_Current, newIds);
+            m_Markers.StoreCurrent(m_Current, null);
+            if (newIds.Count > 0)
+            {
+                m_CreatedObjectHistory.StoreCurrent(m_Current, newIds);
+            }
+
             foreach (var pair in m_ObjectTimelines)
             {
                 pair.Value.Mark(m_Current);
