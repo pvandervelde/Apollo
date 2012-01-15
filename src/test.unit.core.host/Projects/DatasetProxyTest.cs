@@ -69,6 +69,7 @@ namespace Apollo.Core.Host.Projects
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -77,7 +78,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -147,6 +151,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -155,7 +160,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -186,6 +194,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -194,7 +203,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -233,6 +245,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -241,7 +254,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -280,6 +296,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -288,7 +305,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -324,6 +344,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -332,7 +353,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
@@ -375,6 +399,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -383,7 +408,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
@@ -414,7 +442,7 @@ namespace Apollo.Core.Host.Projects
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => 
+                    () =>
                     {
                         r(100, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(-1));
                         return new DatasetOnlineInformation(
@@ -429,6 +457,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -437,7 +466,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
@@ -492,6 +524,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -500,7 +533,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
@@ -543,6 +579,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -551,7 +588,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -594,6 +634,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -602,7 +643,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -632,6 +676,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -640,7 +685,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -678,6 +726,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -686,7 +735,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -739,6 +791,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -747,7 +800,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -777,6 +833,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -785,7 +842,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -815,6 +875,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -823,7 +884,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -871,6 +935,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -879,7 +944,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -922,6 +990,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -930,7 +999,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -960,6 +1032,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -968,7 +1041,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -1022,6 +1098,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -1030,7 +1107,10 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =

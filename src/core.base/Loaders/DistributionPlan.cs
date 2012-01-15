@@ -54,7 +54,7 @@ namespace Apollo.Core.Base.Loaders
             Justification = "Loading a dataset is a time consuming task hence the return value of the function is a Task<T>.")]
         public DistributionPlan(
             Func<DistributionPlan, CancellationToken, Action<int, IProgressMark, TimeSpan>, Task<DatasetOnlineInformation>> loader,
-            DatasetOfflineInformation dataset,
+            IDatasetOfflineInformation dataset,
             NetworkIdentifier machine,
             DatasetLoadingProposal proposal)
         {
@@ -75,7 +75,7 @@ namespace Apollo.Core.Base.Loaders
         /// Gets a value indicating the ID number of the dataset for which
         /// this distribution plan is valid.
         /// </summary>
-        public DatasetOfflineInformation DistributionFor
+        public IDatasetOfflineInformation DistributionFor
         {
             get;
             private set;

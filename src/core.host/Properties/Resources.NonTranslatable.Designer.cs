@@ -583,6 +583,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to A dataset cannot be created without a creator..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotCreateDatasetWithoutCreator {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotCreateDatasetWithoutCreator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to It is not possible to run multiple scripts at the same time. Please stop the currently executing script before trying to run another script..
         /// </summary>
         internal static string Exceptions_Messages_CannotInteruptRunningScript {

@@ -88,6 +88,7 @@
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="Projects\DatasetIdTest.cs" />
     <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
     <Compile Include="Projects\DatasetNotLoadedExceptionTest.cs" />
+    <Compile Include="Projects\DatasetOfflineInformationTest.cs" />
     <Compile Include="Projects\DatasetProxyTest.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Projects\ProjectBuilderTest.cs" />

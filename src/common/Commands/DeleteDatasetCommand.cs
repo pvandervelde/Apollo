@@ -55,6 +55,9 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
+            // Store the current state of the system, just after load.
+            // projectFacade.ActiveProject().History.RemoveFromTimeline(datasetFacade.HistoryId);
+            // projectFacade.ActiveProject().History.Mark();
             datasetFacade.Delete();
         }
 

@@ -92,11 +92,6 @@ namespace Apollo.Utilities.History
                 }
             }
 
-            public void Dispose()
-            {
-                // don't really care about this.
-            }
-
             /// <summary>
             /// Determines whether the specified <see cref=""/> is equal to this instance.
             /// </summary>

@@ -21,7 +21,7 @@ namespace Apollo.Utilities.History
     ///     changes in the timeline.
     /// </remarks>
     public sealed class HistoryObjectDictionaryHistory<TKey, TValue> 
-        : DictionaryHistoryBase<TKey, TValue, HistoryId> where TValue : IAmHistoryEnabled
+        : DictionaryHistoryBase<TKey, TValue, HistoryId> where TValue : class, IAmHistoryEnabled
     {
         private static HistoryId ToId(TValue obj)
         {

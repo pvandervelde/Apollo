@@ -23,8 +23,11 @@ namespace Apollo.Utilities.History
         /// The function that is used to create a new object of type <typeparamref name="T"/> with the given
         /// collection of member field objects.
         /// </param>
+        /// <param name="constructorArguments">The arguments that are passed to the constructor.</param>
         /// <returns>The newly created object of type <typeparamref name="T"/>.</returns>
-        T AddToTimeline<T>(Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> objectBuilder)
+        T AddToTimeline<T>(
+            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            params object[] constructorArguments)
             where T : class, IAmHistoryEnabled;
 
         /// <summary>

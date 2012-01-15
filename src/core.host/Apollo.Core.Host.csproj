@@ -56,6 +56,7 @@
     <Compile Include="INotificationArguments.cs" />
     <Compile Include="Projects\BidirectionalGraphHistory.CollectionChange.cs" />
     <Compile Include="Projects\BidirectionalGraphHistory.cs" />
+    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineException.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
@@ -63,6 +64,7 @@
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
     <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
     <Compile Include="Projects\DatasetNotLoadedException.cs" />
+    <Compile Include="Projects\DatasetOfflineInformation.cs" />
     <Compile Include="Projects\IBidirectionalGraphHistory.cs" />
     <Compile Include="Projects\IGraphHistoryChange.cs" />
     <Compile Include="Projects\IOwnedProxyDataset.cs" />

@@ -123,11 +123,13 @@ namespace Apollo.Utilities
 
         private static void RegisterTimeline(ContainerBuilder builder)
         {
-            builder.RegisterGeneric(typeof(ValueHistory<>))
-                .As(typeof(IVariableTimeline<>));
-
-            builder.RegisterGeneric(typeof(DictionaryHistory<,>))
-                .As(typeof(IDictionaryTimelineStorage<,>));
+            // Apparently we can do this by registering the most generic class
+            // first and the least generic (i.e. the most limited) class last
+            // But then we also need a way to provide the correct parameters
+            // and that is a bit more tricky with a RegisterGeneric method call.
+            builder.RegisterSource(new DictionaryTimelineRegistrationSource());
+            builder.RegisterSource(new ListTimelineRegistrationSource());
+            builder.RegisterSource(new ValueTimelineRegistrationSource());
 
             builder.Register(
                 c => 
@@ -135,7 +137,8 @@ namespace Apollo.Utilities
                     var ctx = c.Resolve<IComponentContext>();
                     return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; }); 
                 })
-                .As<ITimeline>();
+                .As<ITimeline>()
+                .SingleInstance();
         }
 
         /// <summary>

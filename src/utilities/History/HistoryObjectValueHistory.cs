@@ -17,7 +17,7 @@ namespace Apollo.Utilities.History
     ///     the object with a given ID even if that object has changed (i.e. the object reference has changed) due to 
     ///     changes in the timeline.
     /// </remarks>
-    public sealed class HistoryObjectValueHistory<T> : ValueHistoryBase<HistoryId>, IVariableTimeline<T> where T : IAmHistoryEnabled
+    public sealed class HistoryObjectValueHistory<T> : ValueHistoryBase<HistoryId>, IVariableTimeline<T> where T : class, IAmHistoryEnabled
     {
         /// <summary>
         /// Returns the current value of <typeparamref name="T"/> stored by the <see cref="HistoryObjectValueHistory{T}"/> object.

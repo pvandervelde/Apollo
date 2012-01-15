@@ -56,6 +56,9 @@ namespace Apollo.UI.Common.Commands
             }
 
             projectFacade.NewProject();
+
+            // Store the current state of the system, just after load.
+            projectFacade.ActiveProject().History.Mark();
         }
 
         /// <summary>

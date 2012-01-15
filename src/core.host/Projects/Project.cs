@@ -102,6 +102,8 @@ namespace Apollo.Core.Host.Projects
             }
 
             m_Timeline = timeline;
+            m_Timeline.ForgetAllHistory();
+
             m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
             m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
 
@@ -133,9 +135,6 @@ namespace Apollo.Core.Host.Projects
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
-
-            // Store the current state of the system, just after load.
-            m_Timeline.Mark();
         }
 
         private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)

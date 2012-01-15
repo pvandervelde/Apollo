@@ -57,7 +57,12 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The function that builds the object.
         /// </summary>
-        private readonly Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> m_ObjectBuilder;
+        private readonly Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> m_ObjectBuilder;
+
+        /// <summary>
+        /// The arguments that are passed to the constructor.
+        /// </summary>
+        private readonly object[] m_ConstructorArguments;
 
         /// <summary>
         /// The object that is being tracked in the timeline.
@@ -80,6 +85,7 @@ namespace Apollo.Utilities.History
         /// <param name="id">The ID of the object.</param>
         /// <param name="storageBuilder">The function that is used to generate the correct type of timeline storage based on a given type.</param>
         /// <param name="objectBuilder">The function that is used to create new instances of the type <typeparamref name="T"/>.</param>
+        /// <param name="constructorArguments">The arguments that will be passed to the constructor of the type <typeparamref name="T"/>.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
         /// </exception>
@@ -92,7 +98,8 @@ namespace Apollo.Utilities.History
         public ObjectTimeline(
             HistoryId id,
             Func<Type, IStoreTimelineValues> storageBuilder,
-            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> objectBuilder)
+            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            params object[] constructorArguments)
         {
             {
                 Lokad.Enforce.Argument(() => id);
@@ -102,6 +109,7 @@ namespace Apollo.Utilities.History
 
             m_Id = id;
             m_ObjectBuilder = objectBuilder;
+            m_ConstructorArguments = constructorArguments;
 
             m_Members = new List<IStoreTimelineValues>(s_Members.Count);
             foreach (var pair in s_Members)
@@ -129,7 +137,6 @@ namespace Apollo.Utilities.History
         /// </summary>
         public T Object
         {
-            [DebuggerStepThrough]
             get
             {
                 if (m_Object == null)
@@ -263,8 +270,11 @@ namespace Apollo.Utilities.History
             {
                 if (m_Object.IsAlive)
                 {
-                    var obj = m_Object.Target as T;
-                    obj.Dispose();
+                    var obj = m_Object.Target as INeedCleanupBeforeRemovalFromHistory;
+                    if (obj != null)
+                    {
+                        obj.CleanupBeforeRemovalFromHistory();
+                    }
                 }
 
                 m_Object = null;
@@ -329,7 +339,7 @@ namespace Apollo.Utilities.History
         private WeakReference Resurrect()
         {
             {
-                Debug.Assert(m_Object == null, "Can only ressurect dead objects.");
+                Debug.Assert(m_Object == null || !m_Object.IsAlive, "Can only ressurect dead objects.");
             }
 
             var timelines = new List<Tuple<string, IStoreTimelineValues>>();
@@ -340,7 +350,7 @@ namespace Apollo.Utilities.History
                 timelines.Add(new Tuple<string, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
             }
 
-            var obj = m_ObjectBuilder(Id, timelines);
+            var obj = m_ObjectBuilder(Id, timelines, m_ConstructorArguments);
             return new WeakReference(obj);
         }
 

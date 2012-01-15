@@ -4,22 +4,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-
 namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// Defines the method that need to be implemented for an object to 
-    /// have a history timeline.
+    /// Defines the interface for objects that need clean-up before removal from the 
+    /// timeline.
     /// </summary>
-    public interface IAmHistoryEnabled
+    public interface INeedCleanupBeforeRemovalFromHistory
     {
         /// <summary>
-        /// Gets the ID which relates the object to the timeline.
+        /// Provides implementing classes with the ability to clean-up before
+        /// the object is removed from history.
         /// </summary>
-        HistoryId HistoryId
-        {
-            get;
-        }
+        void CleanupBeforeRemovalFromHistory();
     }
 }

@@ -32,11 +32,6 @@ namespace Apollo.Utilities.History
                     return m_Id;
                 }
             }
-
-            public void Dispose()
-            {
-                // don't really care about this.
-            }
         }
 
         [Test]

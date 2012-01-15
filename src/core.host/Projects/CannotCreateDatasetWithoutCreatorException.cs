@@ -6,9 +6,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Base.Properties;
+using Apollo.Core.Host.Properties;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// An exception thrown when the user tries to create a dataset without specifying the
@@ -21,7 +21,7 @@ namespace Apollo.Core.Base
         /// Initializes a new instance of the <see cref="CannotCreateDatasetWithoutCreatorException"/> class.
         /// </summary>
         public CannotCreateDatasetWithoutCreatorException()
-            : this(Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator)
+            : this(Resources_NonTranslatable.Exceptions_Messages_CannotCreateDatasetWithoutCreator)
         {
         }
 

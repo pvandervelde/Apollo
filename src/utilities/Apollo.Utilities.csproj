@@ -61,6 +61,7 @@
     <Compile Include="History\IFollowObjectTimeline.cs" />
     <Compile Include="History\IHistoryChange.cs" />
     <Compile Include="History\IListTimelineStorage.cs" />
+    <Compile Include="History\INeedCleanupBeforeRemovalFromHistory.cs" />
     <Compile Include="History\InvalidTimeMarkerException.cs" />
     <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
     <Compile Include="History\IStoreTimelineValues.cs" />

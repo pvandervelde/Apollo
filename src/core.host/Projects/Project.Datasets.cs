@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
@@ -24,6 +25,43 @@ namespace Apollo.Core.Host.Projects
     /// </content>
     internal sealed partial class Project
     {
+        private static DatasetOfflineInformation BuildDatasetOfflineInformationHistoryStorage(
+            HistoryId historyId,
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
+        {
+            {
+                Debug.Assert(members.Count() == 2, "There should only be two members.");
+            }
+
+            IVariableTimeline<string> name = null;
+            IVariableTimeline<string> summary = null;
+            foreach (var member in members)
+            {
+                if (string.Equals(DatasetOfflineInformation.NameOfNameField(), member.Item1, StringComparison.Ordinal))
+                {
+                    name = member.Item2 as IVariableTimeline<string>;
+                    continue;
+                }
+
+                if (string.Equals(DatasetOfflineInformation.NameOfSummaryField(), member.Item1, StringComparison.Ordinal))
+                {
+                    summary = member.Item2 as IVariableTimeline<string>;
+                    continue;
+                }
+
+                throw new UnknownMemberNameException();
+            }
+
+            return new DatasetOfflineInformation(
+                constructorArguments[0] as DatasetId, 
+                historyId, 
+                constructorArguments[1] as DatasetCreationInformation, 
+                constructorArguments[2] as Action<DatasetId>, 
+                name, 
+                summary);
+        }
+
         /// <summary>
         /// The object used to lock on.
         /// </summary>
@@ -168,7 +206,12 @@ namespace Apollo.Core.Host.Projects
             }
 
             var id = new DatasetId();
-            var newDataset = new DatasetOfflineInformation(id, newChild);
+            Action<DatasetId> cleanupAction = DeleteDatasetAndChildren;
+            var newDataset = m_Timeline.AddToTimeline<DatasetOfflineInformation>(
+                BuildDatasetOfflineInformationHistoryStorage,
+                id,
+                newChild,
+                cleanupAction);
             m_Datasets.KnownDatasets.Add(id, newDataset);
 
             // When adding a new dataset there is no way we can create cycles because
@@ -273,6 +316,9 @@ namespace Apollo.Core.Host.Projects
                     m_Datasets.Graph.RemoveVertex(datasetToDelete);
                 }
 
+                var datasetObject = m_Datasets.KnownDatasets[datasetToDelete];
+                m_Timeline.RemoveFromTimeline(datasetObject.HistoryId);
+                
                 m_DatasetProxies.Remove(datasetToDelete);
                 m_Datasets.KnownDatasets.Remove(datasetToDelete);
 

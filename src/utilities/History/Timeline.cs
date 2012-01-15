@@ -154,14 +154,18 @@ namespace Apollo.Utilities.History
         /// The function that is used to create a new object of type <typeparamref name="T"/> with the given
         /// collection of member field objects.
         /// </param>
+        /// <param name="constructorArguments">The arguments that are passed to the constructor.</param>
         /// <returns>The newly created object of type <typeparamref name="T"/>.</returns>
-        public T AddToTimeline<T>(Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, T> objectBuilder)
+        public T AddToTimeline<T>(
+            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            params object[] constructorArguments)
             where T : class, IAmHistoryEnabled
         {
             var history = new ObjectTimeline<T>(
                 new HistoryId(),
                 m_StorageBuilder,
-                objectBuilder);
+                objectBuilder,
+                constructorArguments);
 
             m_NonMarkedObjectTimelines.Add(history.Id, history);
             history.AddToTimeline();
@@ -743,6 +747,24 @@ namespace Apollo.Utilities.History
             {
                 local(this, new TimelineMarkEventArgs(mark));
             }
+        }
+
+        /// <summary>
+        /// Clears all the history storage and forgets all the 
+        /// stored historic information.
+        /// </summary>
+        public void ForgetAllHistory()
+        {
+            m_Markers.ForgetAllHistory();
+            m_CreatedObjectHistory.ForgetAllHistory();
+            m_Dependencies.ForgetAllHistory();
+
+            m_NonMarkedObjectTimelines.Clear();
+            m_ObjectTimelines.Clear();
+            m_NameToTimeMap.Clear();
+
+            m_Current = TimeMarker.TheBeginOfTime;
+            m_Latest = TimeMarker.TheBeginOfTime;
         }
 
         /// <summary>

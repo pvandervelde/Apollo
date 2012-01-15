@@ -62,7 +62,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Utilities\DictionaryTimelineRegistrationSource.cs" />
+    <Compile Include="Utilities\ListTimelineRegistrationSource.cs" />
     <Compile Include="Utilities\StepBasedProgressTracker.cs" />
+    <Compile Include="Utilities\ValueTimelineRegistrationSource.cs" />
     <Compile Include="Views\StatusBar\IStatusBarView.cs" />
     <Compile Include="Views\StatusBar\StatusBarModel.cs" />
     <Compile Include="Views\StatusBar\StatusBarParameter.cs" />

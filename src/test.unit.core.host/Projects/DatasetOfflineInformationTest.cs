@@ -4,13 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -28,7 +29,13 @@ namespace Apollo.Core.Base
                 LoadFrom = persistence.Object,
             };
 
-            var information = new DatasetOfflineInformation(id, reason);
+            var information = new DatasetOfflineInformation(
+                id,
+                new HistoryId(),
+                reason,
+                datasetId => { },
+                new ValueHistory<string>(),
+                new ValueHistory<string>());
 
             Assert.AreSame(id, information.Id);
             Assert.AreEqual(reason.CanBeAdopted, information.CanBeAdopted);

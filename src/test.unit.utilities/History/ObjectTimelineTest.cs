@@ -114,11 +114,6 @@ namespace Apollo.Utilities.History
                 }
             }
 
-            public void Dispose()
-            {
-                // don't really care about this.
-            }
-
             /// <summary>
             /// Determines whether the specified <see cref=""/> is equal to this instance.
             /// </summary>
@@ -203,7 +198,10 @@ namespace Apollo.Utilities.History
             throw new ArgumentException();
         }
 
-        private static MockHistoryObject BuildObject(HistoryId id, IEnumerable<Tuple<string, IStoreTimelineValues>> members)
+        private static MockHistoryObject BuildObject(
+            HistoryId id, 
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members, 
+            params object[] constructorArguments)
         {
             IVariableTimeline<int> someValue = null;
             IListTimelineStorage<int> lotsOfValues = null;

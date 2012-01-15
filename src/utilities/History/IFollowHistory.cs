@@ -143,5 +143,11 @@ namespace Apollo.Utilities.History
         /// An event that is raised when the current change set is stored in the timeline.
         /// </summary>
         event EventHandler<TimelineMarkEventArgs> OnMark;
+
+        /// <summary>
+        /// Clears all the history storage and forgets all the 
+        /// stored historic information.
+        /// </summary>
+        void ForgetAllHistory();
     }
 }

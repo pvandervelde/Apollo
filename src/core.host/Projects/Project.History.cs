@@ -135,15 +135,6 @@ namespace Apollo.Core.Host.Projects
                     m_Summary.Current = value;
                 }
             }
-
-            /// <summary>
-            /// Performs application-defined tasks associated with freeing, releasing, or
-            /// resetting unmanaged resources.
-            /// </summary>
-            public void Dispose()
-            {
-                // Don't do anything at the moment.
-            }
         }
 
         /// <summary>
@@ -285,18 +276,12 @@ namespace Apollo.Core.Host.Projects
                     return m_ActiveDatasets;
                 }
             }
-
-            /// <summary>
-            /// Performs application-defined tasks associated with freeing, releasing, or
-            /// resetting unmanaged resources.
-            /// </summary>
-            public void Dispose()
-            {
-                // Don't do anything at the moment.
-            }
         }
 
-        private static ProjectHistoryStorage BuildProjectHistoryStorage(HistoryId id, IEnumerable<Tuple<string, IStoreTimelineValues>> members)
+        private static ProjectHistoryStorage BuildProjectHistoryStorage(
+            HistoryId id, 
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
         {
             {
                 Debug.Assert(members.Count() == 2, "There should only be two members.");
@@ -324,7 +309,10 @@ namespace Apollo.Core.Host.Projects
             return new ProjectHistoryStorage(id, name, summary);
         }
 
-        private static DatasetHistoryStorage BuildDatasetHistoryStorage(HistoryId id, IEnumerable<Tuple<string, IStoreTimelineValues>> members)
+        private static DatasetHistoryStorage BuildDatasetHistoryStorage(
+            HistoryId id, 
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
         {
             {
                 Debug.Assert(members.Count() == 3, "There should only be 3 members.");

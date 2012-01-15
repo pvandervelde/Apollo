@@ -5,35 +5,86 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Core.Base.Properties;
+using Apollo.Core.Base;
+using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// Stores persistent information about a dataset. This information will be loaded
     /// even if the dataset isn't loaded.
     /// </summary>
-    public sealed class DatasetOfflineInformation
+    internal sealed class DatasetOfflineInformation : IDatasetOfflineInformation, IAmHistoryEnabled, INeedCleanupBeforeRemovalFromHistory
     {
+        /// <summary>
+        /// Returns the name of the <see cref="Name"/> field.
+        /// </summary>
+        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
+        /// <returns>The name of the field.</returns>
+        internal static string NameOfNameField()
+        {
+            return ReflectionExtensions.MemberName<DatasetOfflineInformation, IVariableTimeline<string>>(
+                p => p.m_Name);
+        }
+
+        /// <summary>
+        /// Returns the name of the <see cref="Summary"/> field.
+        /// </summary>
+        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
+        /// <returns>The name of the field.</returns>
+        internal static string NameOfSummaryField()
+        {
+            return ReflectionExtensions.MemberName<DatasetOfflineInformation, IVariableTimeline<string>>(
+                p => p.m_Summary);
+        }
+
         /// <summary>
         /// The ID number of the dataset.
         /// </summary>
         private readonly DatasetId m_Id;
 
         /// <summary>
+        /// The ID used by the timeline to uniquely identify the current object.
+        /// </summary>
+        private readonly HistoryId m_HistoryId;
+
+        /// <summary>
+        /// The function that handles the clean-up if the dataset is removed.
+        /// </summary>
+        private readonly Action<DatasetId> m_Cleanup;
+
+        /// <summary>
+        /// The name of the project.
+        /// </summary>
+        private readonly IVariableTimeline<string> m_Name;
+
+        /// <summary>
+        /// The summary for the project.
+        /// </summary>
+        private readonly IVariableTimeline<string> m_Summary;
+
+        /// <summary>
         /// The object that describes how the dataset was persisted.
         /// </summary>
-        private IPersistenceInformation m_LoadFrom;
+        private readonly IPersistenceInformation m_LoadFrom;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetOfflineInformation"/> class.
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
+        /// <param name="historyId">The ID for use in the history system.</param>
         /// <param name="constructionReason">The object describing why the dataset was created.</param>
+        /// <param name="cleanup">The function that handles the clean-up if the dataset is removed.</param>
+        /// <param name="name">The datastructure that stores the history information for the name of the dataset.</param>
+        /// <param name="summary">The datastructure that stores the history information for the summary of the dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="historyId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="constructionReason"/> is <see langword="null" />.
@@ -41,14 +92,32 @@ namespace Apollo.Core.Base
         /// <exception cref="CannotCreateDatasetWithoutCreatorException">
         ///     Thrown if <paramref name="constructionReason"/> defines a creator as <see cref="DatasetCreator.None"/>.
         /// </exception>
-        public DatasetOfflineInformation(DatasetId id, DatasetCreationInformation constructionReason)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="cleanup"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="name"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="summary"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetOfflineInformation(
+            DatasetId id, 
+            HistoryId historyId, 
+            DatasetCreationInformation constructionReason,
+            Action<DatasetId> cleanup,
+            IVariableTimeline<string> name,
+            IVariableTimeline<string> summary)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => constructionReason);
                 Enforce.With<CannotCreateDatasetWithoutCreatorException>(
                     constructionReason.CreatedOnRequestOf != DatasetCreator.None,
-                    Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
+                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
+                Enforce.Argument(() => cleanup);
+                Enforce.Argument(() => name);
+                Enforce.Argument(() => summary);
             }
 
             m_Id = id;
@@ -58,6 +127,11 @@ namespace Apollo.Core.Base
             CanBeCopied = constructionReason.CanBeCopied;
             CanBeDeleted = constructionReason.CanBeDeleted;
             m_LoadFrom = constructionReason.LoadFrom;
+
+            m_Cleanup = cleanup;
+            m_HistoryId = historyId;
+            m_Name = name;
+            m_Summary = summary;
         }
 
         /// <summary>
@@ -69,6 +143,17 @@ namespace Apollo.Core.Base
             get
             {
                 return m_Id;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ID which relates the object to the timeline.
+        /// </summary>
+        public HistoryId HistoryId
+        {
+            get
+            {
+                return m_HistoryId;
             }
         }
 
@@ -147,8 +232,15 @@ namespace Apollo.Core.Base
         /// </summary>
         public string Name
         {
-            get;
-            set;
+            get
+            {
+                return m_Name.Current;
+            }
+
+            set
+            {
+                m_Name.Current = value;
+            }
         }
 
         /// <summary>
@@ -156,11 +248,24 @@ namespace Apollo.Core.Base
         /// </summary>
         public string Summary
         {
-            get;
-            set;
+            get
+            {
+                return m_Summary.Current;
+            }
+
+            set
+            {
+                m_Summary.Current = value;
+            }
         }
 
-        // Meta data?
-        // - Loaded size?
+        /// <summary>
+        /// Provides implementing classes with the ability to clean-up before
+        /// the object is removed from history.
+        /// </summary>
+        public void CleanupBeforeRemovalFromHistory()
+        {
+            m_Cleanup(m_Id);
+        }
     }
 }

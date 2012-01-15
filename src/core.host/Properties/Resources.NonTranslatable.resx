@@ -354,4 +354,7 @@
   <data name="Exception_Messages_CannotCreateProjectWithoutTimeline" xml:space="preserve">
     <value>It is not possible to create a project without a timeline.</value>
   </data>
+  <data name="Exceptions_Messages_CannotCreateDatasetWithoutCreator" xml:space="preserve">
+    <value>A dataset cannot be created without a creator.</value>
+  </data>
 </root>
