@@ -61,6 +61,9 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
       <Link>Utilities\ExceptionHandler.cs</Link>
     </Compile>

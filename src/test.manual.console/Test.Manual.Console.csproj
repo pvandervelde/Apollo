@@ -65,6 +65,9 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
     </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
       <Link>Utilities\ExceptionHandler.cs</Link>
     </Compile>
@@ -154,7 +157,7 @@
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>
     </None>
-	<EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
+    <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
       <Link>Properties\NSarracReportPublicKey.xml</Link>
     </EmbeddedResource>
     <None Include="app.config" />

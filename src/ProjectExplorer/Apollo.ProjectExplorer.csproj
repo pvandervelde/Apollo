@@ -62,6 +62,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
     <Compile Include="Utilities\StepBasedProgressTracker.cs" />
     <Compile Include="Views\StatusBar\IStatusBarView.cs" />
     <Compile Include="Views\StatusBar\StatusBarModel.cs" />
