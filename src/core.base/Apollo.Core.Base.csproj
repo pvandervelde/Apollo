@@ -183,6 +183,7 @@
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="DatasetApplicationCommands.cs" />
     <Compile Include="DatasetApplicationNotifications.cs" />
+    <Compile Include="Loaders\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IDatasetApplicationNotificationInvoker.cs" />
     <Compile Include="IDatasetApplicationNotifications.cs" />
@@ -212,6 +213,9 @@
     <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Loaders\RemoteDatasetDistributor.cs" />
     <Compile Include="Loaders\SelectedProposal.cs" />
+    <Compile Include="Loaders\UnableToCreateJobException.cs" />
+    <Compile Include="Loaders\UnableToLinkChildProcessToJobException.cs" />
+    <Compile Include="Loaders\UnableToSetJobException.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
