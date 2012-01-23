@@ -143,7 +143,14 @@ function Get-BzrVersion{
 
 function Get-SnExe
 {
-	"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	if (${Env:ProgramFiles(x86)} -ne $null)
+	{
+		"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	}
+	else
+	{
+		"$Env:ProgramFiles\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	}
 }
 
 function Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
@@ -208,6 +215,18 @@ function Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
     $startIndex = $publicKeyInfo.IndexOf($startString)
     $endIndex = $publicKeyInfo.IndexOf($endString)
     $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
+}
+
+function Get-7ZipExe
+{
+	if ($Env:ProgramW6432 -ne $null)
+	{
+		"$Env:ProgramW6432\7-Zip\7z.exe"
+	}
+	else
+	{
+		"$Env:ProgramFiles\7-Zip\7z.exe"
+	}
 }
 
 function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
@@ -943,7 +962,7 @@ task buildPackage -depends buildBinaries -action{
     "Compressing..."
 
     # zip the temp dir
-    $7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
+    $7zipExe = Get-7ZipExe
     & $7zipExe a -tzip $output (Get-ChildItem $dirTempZip | foreach { $_.FullName })
     if ($LastExitCode -ne 0)
     {
