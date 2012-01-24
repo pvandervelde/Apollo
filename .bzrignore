@@ -32,3 +32,5 @@ partcover.driver.log
 tools/sourcemonitor/SourceMonitor.log
 ./packages
 ./src/licenses.xml
+./Dependencies.wxi
+./VersionNumber.wxi
