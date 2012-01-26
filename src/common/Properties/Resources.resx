@@ -650,4 +650,13 @@ Please wait ...</value>
   <data name="FeedbackIconView_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="SaveProjectCommand_HistoryMark" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="AddDatasetCommand_HistoryMark" xml:space="preserve">
+    <value>Add dataset</value>
+  </data>
+  <data name="DeleteDatasetCommand_HistoryMark_WithDatasetName" xml:space="preserve">
+    <value>Deleted {0}</value>
+  </data>
 </root>

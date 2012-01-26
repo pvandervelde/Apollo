@@ -206,7 +206,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var id = new DatasetId();
-            Action<DatasetId> cleanupAction = DeleteDatasetAndChildren;
+            Action<DatasetId> cleanupAction = localId => DeleteDatasetAndChildren(localId, d => { });
             var newDataset = m_Timeline.AddToTimeline<DatasetOfflineInformation>(
                 BuildDatasetOfflineInformationHistoryStorage,
                 id,
@@ -264,6 +264,12 @@ namespace Apollo.Core.Host.Projects
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
             }
 
+            DeleteDatasetAndChildren(dataset, d => m_Timeline.RemoveFromTimeline(d.HistoryId));
+            RaiseOnDatasetDeleted();
+        }
+
+        private void DeleteDatasetAndChildren(DatasetId dataset, Action<DatasetOfflineInformation> onRemoval)
+        {
             if (!IsValid(dataset))
             {
                 return;
@@ -274,7 +280,7 @@ namespace Apollo.Core.Host.Projects
             // remove the children before we can remove a parent.
             var datasetsToDelete = new Stack<DatasetId>();
             datasetsToDelete.Push(dataset);
-            
+
             var nodesToProcess = new Queue<DatasetId>();
             nodesToProcess.Enqueue(dataset);
 
@@ -311,14 +317,17 @@ namespace Apollo.Core.Host.Projects
                     proxy = m_DatasetProxies[datasetToDelete];
                 }
 
+                var datasetObject = m_Datasets.KnownDatasets[datasetToDelete];
+                if (onRemoval != null)
+                {
+                    onRemoval(datasetObject);
+                }
+
                 lock (m_Lock)
                 {
                     m_Datasets.Graph.RemoveVertex(datasetToDelete);
                 }
 
-                var datasetObject = m_Datasets.KnownDatasets[datasetToDelete];
-                m_Timeline.RemoveFromTimeline(datasetObject.HistoryId);
-                
                 m_DatasetProxies.Remove(datasetToDelete);
                 m_Datasets.KnownDatasets.Remove(datasetToDelete);
 
@@ -327,8 +336,6 @@ namespace Apollo.Core.Host.Projects
                     proxy.OwnerHasDeletedDataset();
                 }
             }
-
-            RaiseOnDatasetDeleted();
         }
 
         /// <summary>
