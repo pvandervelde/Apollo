@@ -55,6 +55,11 @@ namespace Apollo.Utilities.History
         void RollForwardTo(TimeMarker marker);
 
         /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        void StoreCurrentAsDefault();
+
+        /// <summary>
         /// Stores the current value in the history list with the given marker.
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>

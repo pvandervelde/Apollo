@@ -141,6 +141,12 @@
   <data name="Exceptions_Messages_CannotRollForwardToAPointInThePast" xml:space="preserve">
     <value>Cannot roll-forward to a point in the past.</value>
   </data>
+  <data name="Exceptions_Messages_CannotSetDefaultAfterStartOfTime" xml:space="preserve">
+    <value>A default value cannot be set once the timeline has started recording values.</value>
+  </data>
+  <data name="Exceptions_Messages_CannotSetDefaultBeforeStartOfTime" xml:space="preserve">
+    <value>A default value cannot be set before the timeline exists.</value>
+  </data>
   <data name="Exceptions_Messages_CannotStoreValuesAtTheStartOfTime" xml:space="preserve">
     <value>No values may be stored on the first point in time.</value>
   </data>

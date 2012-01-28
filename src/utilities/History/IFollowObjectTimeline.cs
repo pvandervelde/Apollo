@@ -78,6 +78,11 @@ namespace Apollo.Utilities.History
         event EventHandler<EventArgs> OnRollForward;
 
         /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        void SetCurrentAsDefault();
+
+        /// <summary>
         /// Stores the current object state for the given marker.
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>

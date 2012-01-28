@@ -41,6 +41,8 @@
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationException.cs" />
+    <Compile Include="History\CannotSetDefaultAfterStartOfTimeException.cs" />
+    <Compile Include="History\CannotSetDefaultBeforeStartOfTimeException.cs" />
     <Compile Include="History\CannotStoreValuesAtTheStartOfTimeException.cs" />
     <Compile Include="History\ChangeBlocker.cs" />
     <Compile Include="History\ChangeSet.cs" />

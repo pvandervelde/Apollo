@@ -290,17 +290,8 @@ namespace Apollo.Utilities.History
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>
         /// <param name="current">The current value.</param>
-        /// <exception cref="CannotStoreValuesAtTheStartOfTimeException">
-        ///     Thrown when <paramref name="marker"/> is equal to <see cref="TimeMarker.TheBeginOfTime"/>.
-        /// </exception>
         public void StoreCurrent(TimeMarker marker, T current)
         {
-            {
-                Lokad.Enforce.With<CannotStoreValuesAtTheStartOfTimeException>(
-                    marker > TimeMarker.TheBeginOfTime,
-                    Resources.Exceptions_Messages_CannotStoreValuesAtTheStartOfTime);
-            }
-
             m_PastValues.AddLast(new LinkedListNode<ValueAtTime<T>>(new ValueAtTime<T>(marker, current)));
             ForgetTheFuture();
         }

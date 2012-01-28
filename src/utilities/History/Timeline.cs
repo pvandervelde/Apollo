@@ -123,6 +123,7 @@ namespace Apollo.Utilities.History
                     return true;
                 });
 
+            result.Add(TimeMarker.TheBeginOfTime);
             return result;
         }
 
@@ -637,6 +638,46 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        /// <exception cref="CannotSetDefaultAfterStartOfTimeException">
+        /// Thrown when the user tries to store the default value after one or more value have been stored.
+        /// </exception>
+        public void SetCurrentAsDefault()
+        {
+            {
+                Lokad.Enforce.With<CannotSetDefaultAfterStartOfTimeException>(
+                    m_Markers.LastValue == null,
+                    Resources.Exceptions_Messages_CannotSetDefaultAfterStartOfTime);
+            }
+
+            // All these objects have been created between the last mark and the new one.
+            // They're about to become embedded in history forever.
+            var newIds = new List<HistoryId>(m_NonMarkedObjectTimelines.Count);
+            foreach (var pair in m_NonMarkedObjectTimelines)
+            {
+                m_ObjectTimelines.Add(pair.Key, pair.Value);
+                newIds.Add(pair.Key);
+            }
+
+            m_NonMarkedObjectTimelines.Clear();
+
+            m_Markers.StoreCurrent(TimeMarker.TheBeginOfTime, null);
+            if (newIds.Count > 0)
+            {
+                m_CreatedObjectHistory.StoreCurrent(TimeMarker.TheBeginOfTime, newIds);
+            }
+
+            foreach (var pair in m_ObjectTimelines)
+            {
+                pair.Value.SetCurrentAsDefault();
+            }
+
+            m_Current = TimeMarker.TheBeginOfTime;
+            m_Latest = TimeMarker.TheBeginOfTime;
+        }
+
+        /// <summary>
         /// Stores the current state and returns the <see cref="TimeMarker"/> that belongs to this change set.
         /// </summary>
         /// <returns>The time marker for the stored state.</returns>
@@ -676,6 +717,14 @@ namespace Apollo.Utilities.History
         /// <returns>The time marker for the stored state.</returns>
         public TimeMarker Mark(string name, IEnumerable<UpdateFromHistoryDependency> dependencies)
         {
+            m_Current = !string.IsNullOrEmpty(name) ? m_Current.Next(name) : m_Current.Next();
+            MarkAtTime(m_Current, dependencies);
+
+            return m_Current;
+        }
+
+        private void MarkAtTime(TimeMarker marker, IEnumerable<UpdateFromHistoryDependency> dependencies)
+        {
             // All these objects have been created between the last mark and the new one.
             // They're about to become embedded in history forever.
             var newIds = new List<HistoryId>(m_NonMarkedObjectTimelines.Count);
@@ -703,32 +752,29 @@ namespace Apollo.Utilities.History
                     return true;
                 });
 
-            m_Current = !string.IsNullOrEmpty(name) ? m_Current.Next(name) : m_Current.Next();
-            m_Markers.StoreCurrent(m_Current, null);
+            m_Markers.StoreCurrent(marker, null);
             if (newIds.Count > 0)
             {
-                m_CreatedObjectHistory.StoreCurrent(m_Current, newIds);
+                m_CreatedObjectHistory.StoreCurrent(marker, newIds);
             }
 
             foreach (var pair in m_ObjectTimelines)
             {
-                pair.Value.Mark(m_Current);
+                pair.Value.Mark(marker);
             }
 
             if ((dependencies != null) && dependencies.Any())
             {
-                m_Dependencies.StoreCurrent(m_Current, dependencies);
+                m_Dependencies.StoreCurrent(marker, dependencies);
             }
 
-            if (!string.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(marker.Name))
             {
-                m_NameToTimeMap.Add(name, m_Current);
+                m_NameToTimeMap.Add(marker.Name, marker);
             }
 
-            m_Latest = m_Current;
-            RaiseOnMark(m_Current);
-
-            return m_Current;
+            m_Latest = marker;
+            RaiseOnMark(marker);
         }
 
         /// <summary>

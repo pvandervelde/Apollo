@@ -282,6 +282,24 @@ namespace Apollo.Utilities.History
         }
 
         /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        /// <exception cref="CannotSetDefaultAfterStartOfTimeException">
+        /// Thrown when the user tries to store the default value after one or more value have been stored.
+        /// </exception>
+        public void StoreCurrentAsDefault()
+        {
+            {
+                Lokad.Enforce.With<CannotSetDefaultAfterStartOfTimeException>(
+                    m_SnapshotHistory.LastValue == null, 
+                    Resources.Exceptions_Messages_CannotSetDefaultAfterStartOfTime);
+            }
+
+            var snapshot = m_ContainerBuilder(m_Current);
+            m_SnapshotHistory.StoreCurrent(TimeMarker.TheBeginOfTime, snapshot);
+        }
+
+        /// <summary>
         /// Stores the current value in the history list with the given marker.
         /// </summary>
         /// <param name="marker">The marker which indicates at which point on the timeline the data is stored.</param>

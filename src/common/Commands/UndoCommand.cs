@@ -43,7 +43,15 @@ namespace Apollo.UI.Common.Commands
             }
 
             var project = projectFacade.ActiveProject();
-            return project.History.CanRollBack;
+            if (project.History.CanRollBack)
+            {
+                var markers = project.History.MarkersInThePast();
+
+                var markerToRollBackTo = markers.FirstOrDefault(m => !m.Equals(project.History.Current));
+                return markerToRollBackTo != null;
+            }
+
+            return false;
         }
         
         /// <summary>

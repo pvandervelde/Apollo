@@ -135,6 +135,8 @@ namespace Apollo.Core.Host.Projects
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
+
+            m_Timeline.SetCurrentAsDefault();
         }
 
         private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)

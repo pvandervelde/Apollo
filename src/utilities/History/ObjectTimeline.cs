@@ -345,7 +345,7 @@ namespace Apollo.Utilities.History
             var timelines = new List<Tuple<string, IStoreTimelineValues>>();
 
             Debug.Assert(s_Members.Count == m_Members.Count, "There should be as many timelines as there are members.");
-            for (var i = 0; i < s_Members.Count; i++)
+            for (int i = 0; i < s_Members.Count; i++)
             {
                 timelines.Add(new Tuple<string, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
             }
@@ -429,6 +429,37 @@ namespace Apollo.Utilities.History
             if (local != null)
             {
                 local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        /// <exception cref="CannotSetDefaultAfterStartOfTimeException">
+        /// Thrown when the user tries to store the default value after one or more value have been stored.
+        /// </exception>
+        public void SetCurrentAsDefault()
+        {
+            {
+                Lokad.Enforce.With<CannotSetDefaultBeforeStartOfTimeException>(
+                    IsAlive(),
+                    Resources.Exceptions_Messages_CannotSetDefaultBeforeStartOfTime);
+            }
+
+            foreach (var timeline in m_Members)
+            {
+                Debug.Assert(timeline != null, "One of the member timelines has not been initialized.");
+                timeline.StoreCurrentAsDefault();
+            }
+
+            if ((m_Object != null) && (m_CreationTime == null))
+            {
+                m_CreationTime = TimeMarker.TheBeginOfTime;
+            }
+
+            if (m_DeletionTime != null)
+            {
+                m_DeletionTime = null;
             }
         }
 

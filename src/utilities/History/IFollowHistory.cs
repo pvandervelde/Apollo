@@ -109,6 +109,11 @@ namespace Apollo.Utilities.History
         event EventHandler<EventArgs> OnRolledForward;
 
         /// <summary>
+        /// Stores the current value as the default value which will be returned if there are no values stored.
+        /// </summary>
+        void SetCurrentAsDefault();
+
+        /// <summary>
         /// Stores the current state and returns the <see cref="TimeMarker"/> that belongs to this change set.
         /// </summary>
         /// <returns>The time marker for the stored state.</returns>
