@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -38,6 +39,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// <source>
     /// http://blogs.msdn.com/b/rmbyers/archive/2010/01/30/sample-reflection-emit-code-for-using-exception-filters-from-c.aspx
     /// </source>
+    [ExcludeFromCodeCoverage]
     internal static class ExceptionFilter
     {
         private static Action<Action, Func<Exception, bool>, Action<Exception>> s_Filter = GenerateFilter();

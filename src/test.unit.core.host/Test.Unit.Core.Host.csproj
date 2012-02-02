@@ -90,6 +90,7 @@
     <Compile Include="NotificationNameTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
+    <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
@@ -103,6 +104,7 @@
     <Compile Include="Projects\ProjectServiceTest.cs" />
     <Compile Include="Projects\ProjectTest.cs" />
     <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
+    <Compile Include="Projects\UnknownMemberNameExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />

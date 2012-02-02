@@ -66,6 +66,8 @@
     <Compile Include="FileConstantsTest.cs" />
     <Compile Include="FusionHelperTest.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationExceptionTest.cs" />
+    <Compile Include="History\CannotSetDefaultAfterStartOfTimeExceptionTest.cs" />
+    <Compile Include="History\CannotSetDefaultBeforeStartOfTimeExceptionTest.cs" />
     <Compile Include="History\CannotStoreValuesAtTheStartOfTimeExceptionTest.cs" />
     <Compile Include="History\DictionaryHistoryTest.cs" />
     <Compile Include="History\HistoryIdTest.cs" />
@@ -86,6 +88,8 @@
     <Compile Include="History\TimeMarkerTest.cs" />
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyExceptionTest.cs" />
+    <Compile Include="History\UnknownHistoryMemberTypeExceptionTest.cs" />
+    <Compile Include="History\UnknownTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />
     <Compile Include="IdTest.cs" />

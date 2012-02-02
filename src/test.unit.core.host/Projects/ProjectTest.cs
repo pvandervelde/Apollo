@@ -559,7 +559,7 @@ namespace Apollo.Core.Host.Projects
                 }
                 else
                 {
-                    Assert.AreEqual(i, project.NumberOfDatasets);
+                    Assert.AreEqual(1, project.NumberOfDatasets);
                 }
 
                 for (int j = 0; j < children.Count; j++)
