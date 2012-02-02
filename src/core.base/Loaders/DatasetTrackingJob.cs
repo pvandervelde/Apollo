@@ -42,8 +42,8 @@ namespace Apollo.Core.Base.Loaders
             public long PerProcessUserTimeLimit;
             public long PerJobUserTimeLimit;
             public short LimitFlags;
-            public uint MinimumWorkingSetSize;
-            public uint MaximumWorkingSetSize;
+            public UIntPtr MinimumWorkingSetSize;
+            public UIntPtr MaximumWorkingSetSize;
             public short ActiveProcessLimit;
             public long Affinity;
             public short PriorityClass;
@@ -66,10 +66,10 @@ namespace Apollo.Core.Base.Loaders
         {
             public JobObjectBasicLimitInformation BasicLimitInformation;
             public IoCounters IoInfo;
-            public uint ProcessMemoryLimit;
-            public uint JobMemoryLimit;
-            public uint PeakProcessMemoryUsed;
-            public uint PeakJobMemoryUsed;
+            public UIntPtr ProcessMemoryLimit;
+            public UIntPtr JobMemoryLimit;
+            public UIntPtr PeakProcessMemoryUsed;
+            public UIntPtr PeakJobMemoryUsed;
         }
 
         /// <summary>
@@ -78,12 +78,12 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         private const short JobObjectLimitKillOnJobClose = 0x00002000;
 
-        [DllImport("kernel32.dll", CharSet = CharSet.Unicode)]
+        [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
         private static extern IntPtr CreateJobObject(
             IntPtr jobAttributes, 
             string name);
 
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         private static extern bool SetInformationJobObject(
             IntPtr hJob, 
             JobObjectInfoType infoType, 
