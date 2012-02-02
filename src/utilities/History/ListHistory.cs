@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -13,6 +14,8 @@ namespace Apollo.Utilities.History
     /// which are not <see cref="IAmHistoryEnabled"/>.
     /// </summary>
     /// <typeparam name="T">The type of object for which the values are stored.</typeparam>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "The original is called List<T> not collection something.")]
     public sealed class ListHistory<T> : ListHistoryBase<T, T>
     {
         private static T Translate(T input)

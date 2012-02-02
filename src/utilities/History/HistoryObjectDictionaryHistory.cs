@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -20,6 +21,8 @@ namespace Apollo.Utilities.History
     ///     the object with a given ID even if that object has changed (i.e. the object reference has changed) due to 
     ///     changes in the timeline.
     /// </remarks>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Is a collection but also a history enabled dictionary that stores history objects.")]
     public sealed class HistoryObjectDictionaryHistory<TKey, TValue> 
         : DictionaryHistoryBase<TKey, TValue, HistoryId> where TValue : class, IAmHistoryEnabled
     {

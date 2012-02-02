@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -20,6 +21,18 @@ namespace Apollo.Utilities.History
         /// <param name="storage">The storage object that holds the value of <typeparamref name="T"/>.</param>
         /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
         public static implicit operator T(ValueHistory<T> storage)
+        {
+            return storage.Current;
+        }
+
+        /// <summary>
+        /// Returns the current value of <typeparamref name="T"/> stored by the <see cref="ValueHistory{T}"/> object.
+        /// </summary>
+        /// <param name="storage">The storage object that holds the value of <typeparamref name="T"/>.</param>
+        /// <returns>The value of <typeparamref name="T"/> stored by the <paramref name="storage"/> object.</returns>
+        [SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes",
+            Justification = "FxCop wants it otherwise we get CA2225 but then it doesn't want static and generic.")]
+        public static T FromStorage(ValueHistory<T> storage)
         {
             return storage.Current;
         }

@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.Properties;
 
 namespace Apollo.Utilities.History
@@ -17,6 +18,8 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "Base class for history enabled lists. The name seems about right.")]
     public abstract partial class ListHistoryBase<TExternal, TStorage> : HistorySnapshotStorage<List<TStorage>>, IListTimelineStorage<TExternal>
     {
         /// <summary>

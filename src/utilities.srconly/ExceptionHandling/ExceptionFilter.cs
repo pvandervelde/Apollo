@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
@@ -122,6 +123,7 @@ namespace Apollo.Utilities.ExceptionHandling
                 Debug.Assert(
                     typeof(TExceptionBase).IsAssignableFrom(tc), 
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "Error: {0} is not a sub-class of {1}",
                         tc.FullName, 
                         typeof(TExceptionBase).FullName));
@@ -199,7 +201,6 @@ namespace Apollo.Utilities.ExceptionHandling
             MethodBuilder meth = type.DefineMethod("InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
 
             var il = meth.GetILGenerator();
-            var exLoc = il.DeclareLocal(typeof(Exception));
 
             // Invoke the body delegate inside the try
             il.BeginExceptionBlock();

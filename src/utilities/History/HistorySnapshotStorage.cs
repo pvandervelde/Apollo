@@ -132,6 +132,8 @@ namespace Apollo.Utilities.History
         /// Gets the collection of changes that have occurred since the last 
         /// time the changes were stored.
         /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists",
+            Justification = "If you can implement a history enabled collection, then you can deal with a generic list too.")]
         protected List<IHistoryChange<T>> Changes
         {
             get

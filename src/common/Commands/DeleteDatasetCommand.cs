@@ -55,7 +55,6 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            var name = datasetFacade.Name;
             datasetFacade.Delete();
             projectFacade.ActiveProject().History.Mark();
         }

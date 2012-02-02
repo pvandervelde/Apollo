@@ -54,7 +54,7 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            var child = datasetFacade.AddChild();
+            datasetFacade.AddChild();
             projectFacade.ActiveProject().History.Mark();
         }
 

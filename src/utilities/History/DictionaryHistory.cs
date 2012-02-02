@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Utilities.History
 {
@@ -14,6 +15,8 @@ namespace Apollo.Utilities.History
     /// </summary>
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of object that is passed into the collection.</typeparam>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "The original is called Dictionary<TKey, TValue> not collection something.")]
     public sealed class DictionaryHistory<TKey, TValue> : DictionaryHistoryBase<TKey, TValue, TValue>
     {
         private static TValue Translate(TValue input)

@@ -7,6 +7,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Utilities.Properties;
 
@@ -19,6 +20,10 @@ namespace Apollo.Utilities.History
     /// <typeparam name="TKey">The type of object that is used as key in the dictionary.</typeparam>
     /// <typeparam name="TExternal">The type of object that is passed into the collection.</typeparam>
     /// <typeparam name="TStorage">The type of object for which the values are stored.</typeparam>
+    [SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes",
+        Justification = "Unfortunately we need the 3 parameters to allow for storing history enabled objects.")]
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "The original is called Dictionary<TKey, TValue> not collection something.")]
     public abstract partial class DictionaryHistoryBase<TKey, TExternal, TStorage>
         : HistorySnapshotStorage<Dictionary<TKey, TStorage>>, IDictionaryTimelineStorage<TKey, TExternal>
     {
@@ -233,6 +238,8 @@ namespace Apollo.Utilities.History
         ///     <see langword="true"/> if item is found in the <see cref="IDictionary{TKey,TValue}" />; otherwise,
         ///     <see langword="false"/>.
         /// </returns>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes",
+            Justification = "The whole goal is to hide this method from use. We don't really want people calling it.")]
         bool ICollection<KeyValuePair<TKey, TExternal>>.Contains(KeyValuePair<TKey, TExternal> item)
         {
             return ContainsKey(item.Key);
@@ -258,6 +265,8 @@ namespace Apollo.Utilities.History
         ///     Thrown when the number of elements in the source <see cref="IDictionary{TKey,TValue}" />
         ///     is greater than the available space from arrayIndex to the end of the destination array.
         /// </exception>
+        [SuppressMessage("Microsoft.Design", "CA1033:InterfaceMethodsShouldBeCallableByChildTypes",
+            Justification = "The whole goal is to hide this method from use. We don't really want people calling it.")]
         void ICollection<KeyValuePair<TKey, TExternal>>.CopyTo(KeyValuePair<TKey, TExternal>[] array, int arrayIndex)
         {
             {
