@@ -61,15 +61,6 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add dataset.
-        /// </summary>
-        internal static string AddDatasetCommand_HistoryMark {
-            get {
-                return ResourceManager.GetString("AddDatasetCommand_HistoryMark", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Name:.
         /// </summary>
         internal static string DatasetGraphView_DatasetName {
@@ -138,15 +129,6 @@ namespace Apollo.UI.Common.Properties {
         internal static string DatasetModel_DatasetIsNotLoaded {
             get {
                 return ResourceManager.GetString("DatasetModel_DatasetIsNotLoaded", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Deleted {0}.
-        /// </summary>
-        internal static string DeleteDatasetCommand_HistoryMark_WithDatasetName {
-            get {
-                return ResourceManager.GetString("DeleteDatasetCommand_HistoryMark_WithDatasetName", resourceCulture);
             }
         }
         

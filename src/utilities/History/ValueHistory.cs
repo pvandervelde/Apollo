@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Utilities.History
 {
     /// <summary>
@@ -21,6 +23,24 @@ namespace Apollo.Utilities.History
         {
             return storage.Current;
         }
+
+        /// <summary>
+        /// A method called when the current value is changed externally, e.g. through a
+        /// roll-back or roll-forward.
+        /// </summary>
+        protected override void IndicateExternalChangeToCurrentValue()
+        {
+            var local = OnExternalValueUpdate;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the the stored value is changed externally.
+        /// </summary>
+        public event EventHandler<EventArgs> OnExternalValueUpdate;
 
         /// <summary>
         /// Gets or sets the current value for the variable.

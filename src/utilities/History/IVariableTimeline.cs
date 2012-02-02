@@ -4,6 +4,8 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
+
 namespace Apollo.Utilities.History
 {
     /// <summary>
@@ -14,6 +16,11 @@ namespace Apollo.Utilities.History
     [DefineAsHistoryTrackingInterface]
     public interface IVariableTimeline<T>
     {
+        /// <summary>
+        /// An event raised when the the stored value is changed externally.
+        /// </summary>
+        event EventHandler<EventArgs> OnExternalValueUpdate;
+
         /// <summary>
         /// Gets or sets the current value for the variable.
         /// </summary>

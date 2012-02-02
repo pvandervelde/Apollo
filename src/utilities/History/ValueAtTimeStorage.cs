@@ -191,6 +191,8 @@ namespace Apollo.Utilities.History
                 Debug.Assert(!IsAtBeginOfTime(), "Should not roll back past the beginning of time.");
             }
 
+            bool hasChanged = false;
+
             // We assume that it is more likely that we have a more recent
             // point in time that we want to roll back to. So start searching
             // from the end of the collection
@@ -206,6 +208,12 @@ namespace Apollo.Utilities.History
                 }
 
                 lastNode = m_PastValues.Last;
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+            {
+                RaiseOnCurrentValueChange();
             }
 
             return (m_PastValues.Last != null) ? m_PastValues.Last.Value.Value : default(T);
@@ -267,6 +275,8 @@ namespace Apollo.Utilities.History
                 Debug.Assert(!IsAtEndOfTime(), "Should not be at the end of time.");
             }
 
+            bool hasChanged = false;
+
             // We assume that it is more likely that we have a more recent
             // point in time that we want to roll forward to. So start searching
             // from the start of the collection
@@ -280,9 +290,30 @@ namespace Apollo.Utilities.History
                 {
                     action(lastNode.Value.Time, lastNode.Value.Value);
                 }
+
+                hasChanged = true;
+            }
+
+            if (hasChanged)
+            {
+                RaiseOnCurrentValueChange();
             }
 
             return (m_PastValues.Last != null) ? m_PastValues.Last.Value.Value : default(T);
+        }
+
+        /// <summary>
+        /// An event raised when the current value is changed due to a roll-back or roll-forward.
+        /// </summary>
+        public event EventHandler<EventArgs> OnCurrentValueChange;
+
+        private void RaiseOnCurrentValueChange()
+        {
+            var local = OnCurrentValueChange;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

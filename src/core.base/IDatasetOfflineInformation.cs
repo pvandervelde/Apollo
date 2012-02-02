@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Utilities;
 
 namespace Apollo.Core.Base
@@ -101,5 +102,11 @@ namespace Apollo.Core.Base
             get;
             set;
         }
+
+        /// <summary>
+        /// Raised when the information about the dataset is changed due to changes in the timeline.
+        /// </summary>
+        /// <design>It feels like this is in the wrong place, but there's no other place it would fit better.</design>
+        event EventHandler<EventArgs> OnHistoryHasUpdatedData;
     }
 }

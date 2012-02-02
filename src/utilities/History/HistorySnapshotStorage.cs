@@ -73,6 +73,11 @@ namespace Apollo.Utilities.History
             = new List<IHistoryChange<T>>();
 
         /// <summary>
+        /// A flag that indicates if the current value has changed.
+        /// </summary>
+        private bool m_HasChanged = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="HistorySnapshotStorage{T}"/> class.
         /// </summary>
         /// <param name="containerBuilder">
@@ -89,7 +94,28 @@ namespace Apollo.Utilities.History
 
             m_ContainerBuilder = containerBuilder;
             m_Current = m_ContainerBuilder(null);
+
+            m_SnapshotHistory.OnCurrentValueChange += (s, e) => m_HasChanged = true;
+            m_ValueHistory.OnCurrentValueChange += (s, e) => m_HasChanged = true;
         }
+
+        /// <summary>
+        /// A method called when the current value is changed externally, e.g. through a
+        /// roll-back or roll-forward.
+        /// </summary>
+        private void IndicateExternalChangeToCurrentValue()
+        {
+            var local = OnExternalValueUpdate;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the the stored value is changed externally.
+        /// </summary>
+        public event EventHandler<EventArgs> OnExternalValueUpdate;
 
         /// <summary>
         /// Gets the current value.
@@ -170,7 +196,6 @@ namespace Apollo.Utilities.History
             }
 
             RollBackInTimeTo(marker);
-            RaiseOnValueChanged();
         }
 
         /// <summary>
@@ -206,6 +231,12 @@ namespace Apollo.Utilities.History
                     });
             }
 
+            if (m_HasChanged)
+            {
+                IndicateExternalChangeToCurrentValue();
+                m_HasChanged = false;
+            }
+
             m_Current = current;
         }
 
@@ -217,7 +248,6 @@ namespace Apollo.Utilities.History
             if (!IsAtBeginOfTime())
             {
                 RollBackInTimeTo(TimeMarker.TheBeginOfTime);
-                RaiseOnValueChanged();
             }
         }
 
@@ -233,7 +263,6 @@ namespace Apollo.Utilities.History
             }
 
             RollForwardInTimeTo(marker);
-            RaiseOnValueChanged();
         }
 
         /// <summary>
@@ -278,6 +307,12 @@ namespace Apollo.Utilities.History
                     });
             }
 
+            if (m_HasChanged)
+            {
+                IndicateExternalChangeToCurrentValue();
+                m_HasChanged = false;
+            }
+
             m_Current = current;
         }
 
@@ -297,6 +332,7 @@ namespace Apollo.Utilities.History
 
             var snapshot = m_ContainerBuilder(m_Current);
             m_SnapshotHistory.StoreCurrent(TimeMarker.TheBeginOfTime, snapshot);
+            m_Changes = new List<IHistoryChange<T>>();
         }
 
         /// <summary>
@@ -360,20 +396,6 @@ namespace Apollo.Utilities.History
             // a copy anyway so might as well do it here.
             var snapshot = m_ContainerBuilder(m_Current);
             m_SnapshotHistory.StoreCurrent(marker, snapshot);
-        }
-
-        /// <summary>
-        /// An event that is raised if a roll-back or roll-forward has taken place.
-        /// </summary>
-        public event EventHandler<EventArgs> OnValueChanged;
-
-        private void RaiseOnValueChanged()
-        {
-            var local = OnValueChanged;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
-            }
         }
 
         /// <summary>

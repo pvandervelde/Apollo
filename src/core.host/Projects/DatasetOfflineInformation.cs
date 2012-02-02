@@ -132,6 +132,19 @@ namespace Apollo.Core.Host.Projects
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
+
+            m_Name.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnNameUpdate);
+            m_Summary.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnSummaryUpdate);
+        }
+
+        private void HandleOnSummaryUpdate(object sender, EventArgs e)
+        {
+            RaiseOnHistoryHasUpdatedData();
+        }
+
+        private void HandleOnNameUpdate(object sender, EventArgs e)
+        {
+            RaiseOnHistoryHasUpdatedData();
         }
 
         /// <summary>
@@ -260,11 +273,27 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
+        /// Raised when the information about the dataset is changed due to changes in the timeline.
+        /// </summary>
+        public event EventHandler<EventArgs> OnHistoryHasUpdatedData;
+
+        private void RaiseOnHistoryHasUpdatedData()
+        {
+            var local = OnHistoryHasUpdatedData;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
         /// Provides implementing classes with the ability to clean-up before
         /// the object is removed from history.
         /// </summary>
         public void CleanupBeforeRemovalFromHistory()
         {
+            m_Name.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnNameUpdate);
+            m_Summary.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnSummaryUpdate);
             m_Cleanup(m_Id);
         }
     }

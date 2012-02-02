@@ -66,11 +66,6 @@ namespace Apollo.Utilities.History
         void StoreCurrent(TimeMarker marker);
 
         /// <summary>
-        /// An event that is raised if a roll-back or roll-forward has taken place.
-        /// </summary>
-        event EventHandler<EventArgs> OnValueChanged;
-
-        /// <summary>
         /// Clears all the history storage and forgets all the 
         /// stored historic information.
         /// </summary>

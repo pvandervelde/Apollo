@@ -43,7 +43,15 @@ namespace Apollo.UI.Common.Commands
             }
 
             var project = projectFacade.ActiveProject();
-            return project.History.CanRollForward;
+            if (project.History.CanRollForward)
+            {
+                var markers = project.History.MarkersInTheFuture();
+
+                var markerToRollBackTo = markers.FirstOrDefault(m => !m.Equals(project.History.Current));
+                return markerToRollBackTo != null;
+            }
+
+            return false;
         }
         
         /// <summary>
@@ -68,7 +76,7 @@ namespace Apollo.UI.Common.Commands
             }
 
             var project = projectFacade.ActiveProject();
-            if (project.History.CanRollBack)
+            if (project.History.CanRollForward)
             {
                 var markers = project.History.MarkersInTheFuture();
 

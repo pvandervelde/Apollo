@@ -57,11 +57,7 @@ namespace Apollo.UI.Common.Commands
 
             var name = datasetFacade.Name;
             datasetFacade.Delete();
-            projectFacade.ActiveProject().History.Mark(
-                string.Format(
-                    CultureInfo.CurrentUICulture,
-                    Resources.DeleteDatasetCommand_HistoryMark_WithDatasetName,
-                    name));
+            projectFacade.ActiveProject().History.Mark();
         }
 
         /// <summary>

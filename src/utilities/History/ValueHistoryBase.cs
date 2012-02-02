@@ -34,6 +34,26 @@ namespace Apollo.Utilities.History
         private T m_Current;
 
         /// <summary>
+        /// A flag that indicates that there has been a change to the current value 
+        /// due to the change in history.
+        /// </summary>
+        private bool m_HasChanged;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValueHistoryBase{T}"/> class.
+        /// </summary>
+        protected ValueHistoryBase()
+        {
+            m_History.OnCurrentValueChange += (s, e) => { m_HasChanged = true; };
+        }
+
+        /// <summary>
+        /// A method called when the current value is changed externally, e.g. through a
+        /// roll-back or roll-forward.
+        /// </summary>
+        protected abstract void IndicateExternalChangeToCurrentValue();
+
+        /// <summary>
         /// Returns a value indicating if the history is currently at the beginning of known time, 
         /// meaning that we can only move forward.
         /// </summary>
@@ -86,7 +106,11 @@ namespace Apollo.Utilities.History
             if (!IsAtBeginOfTime())
             {
                 m_Current = m_History.RollBackTo(marker);
-                RaiseOnValueChanged();
+                if (m_HasChanged)
+                {
+                    m_HasChanged = false;
+                    IndicateExternalChangeToCurrentValue();
+                }
             }
         }
 
@@ -98,7 +122,11 @@ namespace Apollo.Utilities.History
             if (!IsAtBeginOfTime())
             {
                 m_Current = m_History.RollBackToStart();
-                RaiseOnValueChanged();
+                if (m_HasChanged)
+                {
+                    m_HasChanged = false;
+                    IndicateExternalChangeToCurrentValue();
+                }
             }
         }
 
@@ -111,7 +139,11 @@ namespace Apollo.Utilities.History
             if (!IsAtEndOfTime())
             {
                 m_Current = m_History.RollForwardTo(marker);
-                RaiseOnValueChanged();
+                if (m_HasChanged)
+                {
+                    m_HasChanged = false;
+                    IndicateExternalChangeToCurrentValue();
+                }
             }
         }
 
@@ -168,20 +200,6 @@ namespace Apollo.Utilities.History
             else 
             {
                 return !lastValue.Equals(m_Current);
-            }
-        }
-
-        /// <summary>
-        /// An event that is raised if a roll-back or roll-forward has taken place.
-        /// </summary>
-        public event EventHandler<EventArgs> OnValueChanged;
-
-        private void RaiseOnValueChanged()
-        {
-            var local = OnValueChanged;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
             }
         }
 

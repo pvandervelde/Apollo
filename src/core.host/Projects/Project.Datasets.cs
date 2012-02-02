@@ -212,6 +212,8 @@ namespace Apollo.Core.Host.Projects
                 id,
                 newChild,
                 cleanupAction);
+
+            newDataset.OnHistoryHasUpdatedData += new EventHandler<EventArgs>(HandleDatasetHistoryHasUpdatedData);
             m_Datasets.KnownDatasets.Add(id, newDataset);
 
             // When adding a new dataset there is no way we can create cycles because
@@ -243,6 +245,16 @@ namespace Apollo.Core.Host.Projects
             RaiseOnDatasetCreated();
 
             return id;
+        }
+
+        private void HandleDatasetHistoryHasUpdatedData(object sender, EventArgs e)
+        {
+            var dataset = (sender as DatasetOfflineInformation).Id;
+            if (m_DatasetProxies.ContainsKey(dataset))
+            {
+                var proxy = m_DatasetProxies[dataset];
+                proxy.OwnerHasBeenNotifiedOfHistoryChange();
+            }
         }
 
         /// <summary>
@@ -318,6 +330,7 @@ namespace Apollo.Core.Host.Projects
                 }
 
                 var datasetObject = m_Datasets.KnownDatasets[datasetToDelete];
+                datasetObject.OnHistoryHasUpdatedData -= new EventHandler<EventArgs>(HandleDatasetHistoryHasUpdatedData);
                 if (onRemoval != null)
                 {
                     onRemoval(datasetObject);
