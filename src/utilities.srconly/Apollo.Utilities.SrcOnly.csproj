@@ -21,6 +21,7 @@
     <Compile Include="AssemblyNameElements.cs" />
     <Compile Include="ExceptionHandling\EventType.cs" />
     <Compile Include="ExceptionHandling\EventTypeToEventCategoryMap.cs" />
+    <Compile Include="ExceptionHandling\ExceptionFilter.cs" />
     <Compile Include="ExceptionHandling\ExceptionHandler.cs" />
     <Compile Include="ExceptionHandling\ExceptionTypeToEventIdMap.cs" />
     <Compile Include="ExceptionHandling\GuardResult.cs" />

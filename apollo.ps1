@@ -414,6 +414,7 @@ properties{
     $props.dirPartCoverExclusionWriter = Join-Path $props.dirPackages 'partcoverexclusionwriter'
     $props.dirSourceMonitor = Join-Path $props.dirPackages 'SourceMonitor'
     $props.dirCcm = Join-Path $props.dirPackages 'Ccm'
+	$props.dirNTreva = Join-Path $props.dirPackages 'nTreva'
 	
     $props.dirTools = Join-Path $props.dirBase 'tools'
     
@@ -446,6 +447,8 @@ properties{
     $props.internalsVisibleToTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
     $props.internalsVisibleToFile = Join-Path $props.dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
     
+	$props.licenseInfoFile = Join-Path $props.dirSrc 'licenses.xml'
+	
     $props.partCoverConfigTemplateFile = Join-Path $props.dirTemplates 'PartCover.Settings.xml.in'
     $props.partCoverConfigFile = Join-Path $props.dirTemp 'PartCover.Settings.xml'
     
@@ -544,6 +547,27 @@ task getBuildDependencies -action{
             throw "NuGet failed on Apollo with return code: $LastExitCode"
         }
     }
+}
+
+task getLicenses -depends getBuildDependencies -action{
+	$ntrevaExe = Join-Path $props.dirNTreva 'ntreva.exe'
+	
+	$command = '& "' + $ntrevaExe + '" '
+	$command += '-p "' + $props.dirPackages + '" '
+	$command += '-o "' + $props.licenseInfoFile + '" '
+	
+	# for each directory in the src directory
+	# that doesn't contain the string 'test'
+	$nonTestDirectories = Get-ChildItem -path $props.dirSrc |
+            Where-Object { (($_.PSIsContainer) -and
+                            !( $_.Name -like "*Test.*"))}
+	foreach($dir in $nonTestDirectories)
+	{
+		$command += '-c "' + $dir.FullName + '" '
+	}
+	
+	$command
+	Invoke-Expression $command
 }
 
 ###############################################################################
@@ -677,7 +701,7 @@ task runPrepareDisk -depends displayInfo,runClean -action{
 	""
 }
 
-task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -action{
+task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, getVersion -action{
     "Building Apollo..."
     
     # Set the version numbers

@@ -7,7 +7,6 @@
 using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using NSarrac.Framework;
 
 namespace Apollo.Utilities.ExceptionHandling
 {
@@ -38,16 +37,20 @@ namespace Apollo.Utilities.ExceptionHandling
 
             using (var processor = new ExceptionHandler(eventLogSource, errorLogFileName))
             {
-                try
-                {
-                    actionToExecute();
-                    return GuardResult.Success;
-                }
-                catch (Exception e)
-                {
-                    processor.OnException(e, false);
-                    return GuardResult.Failure;
-                }
+                GuardResult result = GuardResult.None;
+                ExceptionFilter.ExecuteWithFilter(
+                    () =>
+                    {
+                        actionToExecute();
+                        result = GuardResult.Success;
+                    },
+                    e =>
+                    {
+                        processor.OnException(e, false);
+                        result = GuardResult.Failure;
+                    });
+
+                return result;
             }
         }
     }
