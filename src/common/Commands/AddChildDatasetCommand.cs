@@ -6,6 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Properties;
 using Microsoft.Practices.Prism.Commands;
 
 namespace Apollo.UI.Common.Commands
@@ -42,11 +43,9 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Called when the existing project should be closed.
         /// </summary>
-        /// <param name="datasetFacade">
-        /// The object that contains the methods that allow interaction with
-        /// a dataset.
-        /// </param>
-        private static void OnAddNewChild(DatasetFacade datasetFacade)
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
+        /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
+        private static void OnAddNewChild(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
         {
             // If there is no dataset facade, then we're in 
             // designer mode, or something else silly.
@@ -56,17 +55,16 @@ namespace Apollo.UI.Common.Commands
             }
 
             datasetFacade.AddChild();
+            projectFacade.ActiveProject().History.Mark();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AddChildDatasetCommand"/> class.
         /// </summary>
-        /// <param name="datasetFacade">
-        /// The object that contains the methods that allow interaction with
-        /// a dataset.
-        /// </param>
-        public AddChildDatasetCommand(DatasetFacade datasetFacade)
-            : base(obj => OnAddNewChild(datasetFacade), obj => CanAddNewChild(datasetFacade))
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
+        /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
+        public AddChildDatasetCommand(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
+            : base(obj => OnAddNewChild(projectFacade, datasetFacade), obj => CanAddNewChild(datasetFacade))
         { 
         }
     }

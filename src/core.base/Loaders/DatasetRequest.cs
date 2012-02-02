@@ -17,7 +17,7 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Gets or sets the dataset that should be loaded.
         /// </summary>
-        public DatasetOfflineInformation DatasetToLoad
+        public IDatasetOfflineInformation DatasetToLoad
         {
             get;
             set;

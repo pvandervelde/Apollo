@@ -51,6 +51,10 @@
     <Reference Include="ParallelExtensionsExtras">
       <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
+    <Reference Include="QuickGraph, Version=3.3.51106.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
@@ -84,19 +88,23 @@
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
+    <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />
     <Compile Include="Projects\CannotDeleteDatasetException.cs" />
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationExceptionTest.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItExceptionTest.cs" />
     <Compile Include="Projects\DatasetIdTest.cs" />
     <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
     <Compile Include="Projects\DatasetNotLoadedExceptionTest.cs" />
+    <Compile Include="Projects\DatasetOfflineInformationTest.cs" />
     <Compile Include="Projects\DatasetProxyTest.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Projects\ProjectBuilderTest.cs" />
     <Compile Include="Projects\ProjectServiceTest.cs" />
     <Compile Include="Projects\ProjectTest.cs" />
     <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
+    <Compile Include="Projects\UnknownMemberNameExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />

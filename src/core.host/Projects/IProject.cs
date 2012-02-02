@@ -7,6 +7,7 @@
 using System;
 using Apollo.Core.Base;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -15,6 +16,14 @@ namespace Apollo.Core.Host.Projects
     /// </summary>
     internal interface IProject
     {
+        /// <summary>
+        /// Gets the timeline for the project.
+        /// </summary>
+        ITimeline History
+        {
+            get;
+        }
+
         /// <summary>
         /// Gets a value indicating whether the project has been closed.
         /// </summary>

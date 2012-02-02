@@ -6,6 +6,8 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Runtime.InteropServices;
 
 namespace Apollo.Core.Base.Loaders
@@ -79,11 +81,16 @@ namespace Apollo.Core.Base.Loaders
         private const short JobObjectLimitKillOnJobClose = 0x00002000;
 
         [DllImport("kernel32.dll", SetLastError = true, CharSet = CharSet.Unicode)]
+        [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
+            Justification = "That just seems overkill. These methods belong here.")]
         private static extern IntPtr CreateJobObject(
             IntPtr jobAttributes, 
             string name);
 
         [DllImport("kernel32.dll", SetLastError = true)]
+        [return:MarshalAs(UnmanagedType.Bool)]
+        [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
+            Justification = "That just seems overkill. These methods belong here.")]
         private static extern bool SetInformationJobObject(
             IntPtr hJob, 
             JobObjectInfoType infoType, 
@@ -91,10 +98,15 @@ namespace Apollo.Core.Base.Loaders
             uint cbJobObjectInfoLength);
 
         [DllImport("kernel32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
+            Justification = "That just seems overkill. These methods belong here.")]
         private static extern bool AssignProcessToJobObject(IntPtr job, IntPtr process);
         
         [DllImport("kernel32.dll", SetLastError = true)]
         [return: MarshalAs(UnmanagedType.Bool)]
+        [SuppressMessage("Microsoft.Design", "CA1060:MovePInvokesToNativeMethodsClass",
+            Justification = "That just seems overkill. These methods belong here.")]
         private static extern bool CloseHandle(IntPtr hObject);
 
         /// <summary>
@@ -135,8 +147,12 @@ namespace Apollo.Core.Base.Loaders
                 extendedInfoPtr, 
                 (uint)length))
             {
+                var error = Marshal.GetLastWin32Error();
                 throw new UnableToSetJobException(
-                    string.Format("Unable to set information.  Error: {0}", Marshal.GetLastWin32Error()));
+                    string.Format(
+                        CultureInfo.InvariantCulture,    
+                        "Unable to set information.  Error: {0}", 
+                        error));
             }
         }
 
@@ -145,7 +161,7 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         ~DatasetTrackingJob()
         {
-            Dispose(false);
+            CleanUpResources();
         }
 
         /// <summary>
@@ -154,11 +170,11 @@ namespace Apollo.Core.Base.Loaders
         /// </summary>
         public void Dispose()
         {
-            Dispose(true);
+            CleanUpResources();
             GC.SuppressFinalize(this);
         }
 
-        private void Dispose(bool disposing)
+        private void CleanUpResources()
         {
             if (m_IsDisposed)
             {

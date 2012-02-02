@@ -515,6 +515,16 @@ namespace Apollo.Core.Host.Projects
             }
 
             /// <summary>
+            /// Called when the owner got notification of a change in the history of the current dataset.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasBeenNotifiedOfHistoryChange()
+            {
+                var dataset = m_Owner.OfflineInformation(m_IdOfDataset);
+                RaiseOnNameChanged(dataset.Name);
+                RaiseOnSummaryChanged(dataset.Summary);
+            }
+
+            /// <summary>
             /// Returns the collection of sub-datasets.
             /// </summary>
             /// <returns>

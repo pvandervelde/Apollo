@@ -44,11 +44,13 @@ namespace Apollo.UI.Common.Views.Datasets
         public DatasetModel CreateModel(DatasetFacade dataset)
         {
             var context = m_Container.Resolve<IContextAware>();
+            var projectFacade = m_Container.Resolve<ILinkToProjects>();
             var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
-            var result = new DatasetModel(context, progressTracker, dataset)
+
+            var result = new DatasetModel(context, progressTracker, projectFacade, dataset)
             {
-                NewChildDatasetCommand = new AddChildDatasetCommand(dataset),
-                DeleteDatasetCommand = new DeleteDatasetCommand(dataset),
+                NewChildDatasetCommand = new AddChildDatasetCommand(projectFacade, dataset),
+                DeleteDatasetCommand = new DeleteDatasetCommand(projectFacade, dataset),
                 LoadDatasetCommand = CreateLoadDatasetCommand(dataset),
                 UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(dataset),
             };

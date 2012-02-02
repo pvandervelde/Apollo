@@ -20,6 +20,11 @@ namespace Apollo.UI.Common.Views.Datasets
     public sealed class DatasetModel : Model
     {
         /// <summary>
+        /// The project that owns the datset.
+        /// </summary>
+        private readonly ILinkToProjects m_Project;
+
+        /// <summary>
         /// The dataset that holds the actual data.
         /// </summary>
         private readonly DatasetFacade m_Dataset;
@@ -44,6 +49,7 @@ namespace Apollo.UI.Common.Views.Datasets
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="progressTracker">The object that handles the progress notifications for the applications.</param>
+        /// <param name="project">The project that holds all the data.</param>
         /// <param name="dataset">The dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
@@ -51,7 +57,7 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
-        public DatasetModel(IContextAware context, ITrackSteppingProgress progressTracker, DatasetFacade dataset)
+        public DatasetModel(IContextAware context, ITrackSteppingProgress progressTracker, ILinkToProjects project, DatasetFacade dataset)
             : base(context)
         {
             {
@@ -60,6 +66,7 @@ namespace Apollo.UI.Common.Views.Datasets
             }
 
             m_ProgressTracker = progressTracker;
+            m_Project = project;
             m_Dataset = dataset;
             m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
@@ -192,7 +199,11 @@ namespace Apollo.UI.Common.Views.Datasets
 
             set
             {
-                m_Dataset.Name = value;
+                using (var set = m_Project.ActiveProject().History.RecordHistory())
+                {
+                    m_Dataset.Name = value;
+                    set.StoreChanges();
+                }
             }
         }
 
@@ -208,7 +219,11 @@ namespace Apollo.UI.Common.Views.Datasets
 
             set
             {
-                m_Dataset.Summary = value;
+                using (var set = m_Project.ActiveProject().History.RecordHistory())
+                {
+                    m_Dataset.Summary = value;
+                    set.StoreChanges();
+                }
             }
         }
 

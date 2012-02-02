@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Reflection;
@@ -15,6 +16,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// <summary>
     /// Defines methods and variables for the generation of application logs and report dump files.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     internal static class ReportingUtilities
     {
         /// <summary>

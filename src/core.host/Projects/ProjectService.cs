@@ -8,6 +8,7 @@ using System;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 
 namespace Apollo.Core.Host.Projects
@@ -21,6 +22,11 @@ namespace Apollo.Core.Host.Projects
         /// The object used to lock on.
         /// </summary>
         private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
+        /// The function that returns a new timeline each time it is called.
+        /// </summary>
+        private readonly Func<ITimeline> m_TimelineBuilder;
 
         /// <summary>
         /// The object that handles loading of datasets either on the local machine or
@@ -41,8 +47,12 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="ProjectService"/> class.
         /// </summary>
+        /// <param name="timelineBuilder">The function that returns a new <see cref="ITimeline"/> object each time it is called.</param>
         /// <param name="datasetDistributor">The object that handles the distribution of datasets.</param>
         /// <param name="projectBuilder">The object that builds new projects.</param>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="timelineBuilder"/> is <see langword="null"/>.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="datasetDistributor"/> is <see langword="null"/>.
         /// </exception>
@@ -50,17 +60,20 @@ namespace Apollo.Core.Host.Projects
         /// Thrown if <paramref name="projectBuilder"/> is <see langword="null"/>.
         /// </exception>
         public ProjectService(
+            Func<ITimeline> timelineBuilder,
             IHelpDistributingDatasets datasetDistributor,
             IBuildProjects projectBuilder)
             : base()
         {
             {
+                Enforce.Argument(() => timelineBuilder);
                 Enforce.Argument(() => datasetDistributor);
                 Enforce.Argument(() => projectBuilder);
             }
 
             // No locks are necessary because we're in the constructor, no other
             // methods have been called or can be called.
+            m_TimelineBuilder = timelineBuilder;
             m_DatasetDistributor = datasetDistributor;
             m_Builder = projectBuilder;
         }
@@ -75,6 +88,7 @@ namespace Apollo.Core.Host.Projects
             lock (m_Lock)
             {
                 m_Current = m_Builder.Define()
+                    .WithTimeline(m_TimelineBuilder())
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .Build();
             }
@@ -102,6 +116,7 @@ namespace Apollo.Core.Host.Projects
             lock (m_Lock)
             {
                 m_Current = m_Builder.Define()
+                    .WithTimeline(m_TimelineBuilder())
                     .WithDatasetDistributor((request, token) => m_DatasetDistributor.ProposeDistributionFor(request, token))
                     .FromStorage(persistenceInfo)
                     .Build();

@@ -41,8 +41,11 @@ namespace Apollo.ProjectExplorer.Views.Menu
             View.Model.OpenProjectCommand = m_Container.Resolve<OpenProjectCommand>();
             View.Model.SaveProjectCommand = m_Container.Resolve<SaveProjectCommand>();
             View.Model.CloseProjectCommand = m_Container.Resolve<CloseProjectCommand>();
-
             View.Model.ExitCommand = m_Container.Resolve<ExitCommand>();
+
+            View.Model.UndoCommand = m_Container.Resolve<UndoCommand>();
+            View.Model.RedoCommand = m_Container.Resolve<RedoCommand>();
+
             View.Model.ShowProjectsCommand = m_Container.Resolve<ShowProjectsTabCommand>();
             View.Model.ShowScriptsCommand = m_Container.Resolve<ShowScriptsTabCommand>();
             View.Model.AboutCommand = m_Container.Resolve<ShowAboutWindowCommand>();

@@ -57,7 +57,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Communication\ChannelClosedEventArgsTest.cs" />
     <Compile Include="Communication\ChannelConnectionInformationTest.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredExceptionTest.cs" />
@@ -130,7 +129,6 @@
     <Compile Include="Communication\WaitingUploadsTest.cs" />
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
-    <Compile Include="DatasetOfflineInformationTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />
     <Compile Include="Loaders\DatasetDistributionGeneratorTest.cs" />
     <Compile Include="Loaders\DatasetLoadingProposalComparerTest.cs" />

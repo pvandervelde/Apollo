@@ -22,6 +22,49 @@ namespace Apollo.Core.Base.Loaders
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetDistributionGeneratorTest
     {
+        private static DistributionPlan CreateNewDistributionPlan(
+           DatasetLoadingProposal proposal,
+            IDatasetOfflineInformation offlineInfo,
+            Action<LogSeverityProxy, string> logger)
+        {
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        logger),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                    offlineInfo,
+                NetworkIdentifier.ForLocalMachine(),
+                proposal);
+            return plan;
+        }
+
+        private static IDatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
+        {
+            var mock = new Mock<IDatasetOfflineInformation>();
+            {
+                mock.Setup(d => d.CanBeAdopted)
+                    .Returns(false);
+                mock.Setup(d => d.CanBecomeParent)
+                    .Returns(true);
+                mock.Setup(d => d.CanBeCopied)
+                    .Returns(false);
+                mock.Setup(d => d.CanBeDeleted)
+                    .Returns(true);
+                mock.Setup(d => d.CreatedBy)
+                    .Returns(DatasetCreator.User);
+                mock.Setup(d => d.StoredAt)
+                    .Returns(storage);
+            }
+
+            return mock.Object;
+        }
+
         [Test]
         public void ProposeDistributionFor()
         {
@@ -33,30 +76,10 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(
                         new DistributionPlan[] 
                         {
-                            new DistributionPlan(
-                                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                                    () => new DatasetOnlineInformation(
-                                        new DatasetId(),
-                                        new EndpointId("id"),
-                                        new NetworkIdentifier("machine"),
-                                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                                        logger),
-                                    t,
-                                    TaskCreationOptions.None,
-                                    new CurrentThreadTaskScheduler()),
-                                new DatasetOfflineInformation(
-                                    new DatasetId(),
-                                    new DatasetCreationInformation()
-                                    {
-                                        CreatedOnRequestOf = DatasetCreator.User,
-                                        CanBecomeParent = true,
-                                        CanBeAdopted = false,
-                                        CanBeCopied = false,
-                                        CanBeDeleted = true,
-                                        LoadFrom = new Mock<IPersistenceInformation>().Object,
-                                    }),
-                                new NetworkIdentifier("mymachine"),
-                                new DatasetLoadingProposal())
+                            CreateNewDistributionPlan(
+                                new DatasetLoadingProposal(),
+                                CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
+                                logger)
                         })
                         .Verifiable();
             }
@@ -67,30 +90,10 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(
                         new DistributionPlan[] 
                         {
-                            new DistributionPlan(
-                                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                                    () => new DatasetOnlineInformation(
-                                        new DatasetId(),
-                                        new EndpointId("id"),
-                                        new NetworkIdentifier("machine"),
-                                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                                        logger),
-                                    t,
-                                    TaskCreationOptions.None,
-                                    new CurrentThreadTaskScheduler()),
-                                new DatasetOfflineInformation(
-                                    new DatasetId(),
-                                    new DatasetCreationInformation()
-                                    {
-                                        CreatedOnRequestOf = DatasetCreator.User,
-                                        CanBecomeParent = true,
-                                        CanBeAdopted = false,
-                                        CanBeCopied = false,
-                                        CanBeDeleted = true,
-                                        LoadFrom = new Mock<IPersistenceInformation>().Object,
-                                    }),
-                                new NetworkIdentifier("mymachine"),
-                                new DatasetLoadingProposal())
+                            CreateNewDistributionPlan(
+                                new DatasetLoadingProposal(),
+                                CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
+                                logger)
                         })
                         .Verifiable();
             }
