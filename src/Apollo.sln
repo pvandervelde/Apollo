@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 10
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 11
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Host", "core.host\Apollo.Core.Host.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Base", "core.base\Apollo.Core.Base.csproj", "{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}"
@@ -36,6 +36,12 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.UI", "test.unit.ui\Test.Unit.UI.csproj", "{C68BDDDD-3A37-453B-88B0-9A824683912C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test.Unit.Utilities", "test.unit.utilities\Test.Unit.Utilities.csproj", "{F5A27990-A97F-4497-9733-BA524D56BF0F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FA065AF0-8827-4E09-ABAA-812E5E9AA363}"
+	ProjectSection(SolutionItems) = preProject
+		..\packages.config = ..\packages.config
+		..\version.xml = ..\version.xml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
