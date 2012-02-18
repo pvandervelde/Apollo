@@ -40,6 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>

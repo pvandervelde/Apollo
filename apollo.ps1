@@ -239,7 +239,7 @@ function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Ver
     Set-Content -Path $newPath -Value $text
 }
 
-function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config, [string]$buildNumber, [string]$vcsRevision){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
     
@@ -247,6 +247,9 @@ function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [stri
     
     $now = [DateTimeOffset]::Now
     $text = $text -replace '@BUILDTIME@', $now.ToString("o")
+	
+	$text = $text -replace '@BUILDNUMBER@', $buildNumber
+	$text = $text -replace '@VCSREVISION@', $vcsRevision
 
     Set-Content -Path $newPath -Value $text
 }
@@ -520,8 +523,8 @@ task getVersion -action{
     [xml]$xmlFile = Get-Content $props.versionFile
     $major = $xmlFile.version | %{$_.major} | Select-Object -Unique
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
-    $build = Get-BuildNumber
-    $revision = Get-BzrVersion
+    $build = $xmlFile.version | %{$_.patch} | Select-Object -Unique
+    $revision = Get-BuildNumber
 	
 	$input = "$major.$minor.$build.$revision"
     $props.versionNumber = New-Object -TypeName System.Version -ArgumentList $input
@@ -708,7 +711,7 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, g
     Create-VersionResourceFile $props.versionTemplateFile $props.versionAssemblyFile $props.versionNumber
     
     # Set the configuration
-    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration
+    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration (Get-BuildNumber) (Get-BzrVersion)
     
     # Set the InternalsVisibleTo attribute
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH

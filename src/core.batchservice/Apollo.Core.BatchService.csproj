@@ -9,12 +9,22 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Reference Include="Lokad.Shared, Version=1.5.181.0, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration.Install" />
     <Reference Include="System.Core" />
     <Reference Include="System.ServiceProcess" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -60,6 +70,8 @@
     <EmbeddedResource Include="$(COMPANY_PUBLIC_KEY_PATH)">
       <Link>Properties\NSarracReportPublicKey.xml</Link>
     </EmbeddedResource>
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
 </Project>

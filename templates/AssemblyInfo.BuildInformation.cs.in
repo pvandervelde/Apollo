@@ -14,7 +14,7 @@
 //-----------------------------------------------------------------------
 
 using System.Reflection;
-using Apollo.Utilities;
+using Tools;
 
 /*
  * THIS IS A GENERATED FILE. DO NOT MAKE CHANGES IN THIS FILE BECAUSE ANY
@@ -28,4 +28,7 @@ using Apollo.Utilities;
 [assembly: AssemblyConfiguration("@CONFIGURATION@")]
 
 // The time the assembly was build
-[assembly: AssemblyBuildTime("@BUILDTIME@")]
+[assembly: AssemblyBuildTime(buildTime: "@BUILDTIME@")]
+
+// The version from which the assembly was build
+[assembly: AssemblyBuildInformation(buildNumber: @BUILDNUMBER@, versionControlRevision: "@VCSREVISION@")]

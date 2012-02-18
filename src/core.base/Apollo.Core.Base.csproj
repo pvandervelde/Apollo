@@ -35,6 +35,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -235,7 +241,9 @@
     <Compile Include="Loaders\IHelpDistributingDatasets.cs" />
     <Compile Include="Loaders\Machine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

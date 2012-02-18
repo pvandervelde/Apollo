@@ -9,6 +9,12 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -23,7 +29,6 @@
     </Compile>
     <Compile Include="AppDomainPaths.cs" />
     <Compile Include="ApplicationConstants.cs" />
-    <Compile Include="AssemblyBuildTimeAttribute.cs" />
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="Commands\EmptyCommandContext.cs" />
     <Compile Include="Commands\CommandFactory.cs" />
