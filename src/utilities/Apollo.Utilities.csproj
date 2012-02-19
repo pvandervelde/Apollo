@@ -6,6 +6,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Apollo.Utilities</AssemblyName>
+	<RestorePackages>true</RestorePackages>
+	<GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
+	<PsakeBuildFile>apollo.ps1</PsakeBuildFile>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>

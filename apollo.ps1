@@ -531,28 +531,7 @@ task getVersion -action{
     ("version is: " + $props.versionNumber )
 }
 
-task getBuildDependencies -action{
-    # Pull in all the packages
-    $packages = Get-ChildItem -Path $props.dirBase -Filter "packages.config" -Recurse
-    
-    foreach($package in $packages)
-    {
-        $nuget = 'nuget.exe'
-        $command = '& "' + $nuget + '" '
-        $command += 'install "' + ($package.FullName) + '" '
-        $command += '-ExcludeVersion '
-        $command += '-OutputDirectory "' + $props.dirPackages + '"'
-        
-        ("Grabbing package from: " + $package.FullName)
-        Invoke-Expression $command
-        if ($LastExitCode -ne 0)
-        {
-            throw "NuGet failed on Apollo with return code: $LastExitCode"
-        }
-    }
-}
-
-task getLicenses -depends getBuildDependencies -action{
+task getLicenses -action{
 	$ntrevaExe = Join-Path $props.dirNTreva 'ntreva.exe'
 	
 	$command = '& "' + $ntrevaExe + '" '
@@ -663,7 +642,7 @@ task runCleanPackages -depends displayInfo -precondition { $reloadpackages } -ac
 	}
 }
 
-task runPrepareDisk -depends displayInfo,runClean -action{
+task runPrepareDisk -action{
     "Initializing build..."
 
     if (!(Test-Path -Path $props.dirBuild -PathType Container))
@@ -704,10 +683,9 @@ task runPrepareDisk -depends displayInfo,runClean -action{
 	""
 }
 
-task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, getVersion -action{
-    "Building Apollo..."
-    
-    # Set the version numbers
+# Is called through msbuild.
+task createGeneratedSource -depends runPrepareDisk, getLicenses, getVersion -action{
+	# Set the version numbers
     Create-VersionResourceFile $props.versionTemplateFile $props.versionAssemblyFile $props.versionNumber
     
     # Set the configuration
@@ -726,6 +704,10 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, g
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
     Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitHostAssemblyName, $testUnitBaseAssemblyName, $testUnitUIAssemblyName, $testUnitUtilsAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
+}
+
+task buildBinaries -depends displayInfo, runPrepareDisk -action{
+    "Building Apollo..."
     
     $logPath = Join-Path $props.dirLogs $props.logMsBuild
     $msbuildExe = Get-MsbuildExe
