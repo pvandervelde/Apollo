@@ -22,9 +22,11 @@
         <WarningLevel>4</WarningLevel>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
-        <!-- Files -->
+        <!-- Flags -->
         <ShouldDoDocumentation Condition=" '$(ShouldDoDocumentation)' == '' ">true</ShouldDoDocumentation>
         <ShouldSign Condition=" '$(ShouldSign)' == '' ">true</ShouldSign>
+		<RestorePackages Condition=" '$(RestorePackages)' == '' ">false</RestorePackages>
+		<GenerateSourceFromTemplates Condition=" '$(GenerateSourceFromTemplates)' == '' ">false</GenerateSourceFromTemplates>
     </PropertyGroup>
     <PropertyGroup Condition="$(ShouldDoDocumentation)">
         <DocumentationFile>$(OutputPath)\$(AssemblyName).XML</DocumentationFile>
@@ -46,13 +48,111 @@
         <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     </PropertyGroup>
     <PropertyGroup>
-        <BaseDir>$(SolutionDir)\..</BaseDir>
+        <BaseDir>$(SolutionDir)..</BaseDir>
         <ToolsDir>$(BaseDir)\Tools</ToolsDir>
         <StyleCopToolsDir>$(ToolsDir)\StyleCop</StyleCopToolsDir>
+		<MsBuildExtensionPack>$(ToolsDir)\msbuildextensionpack</MsBuildExtensionPack>
+		<PsakePath>$(ToolsDir)\psake</PsakePath>
     </PropertyGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <Import Project="$(StyleCopToolsDir)\StyleCop.targets" />
     <PropertyGroup>
         <StyleCopTreatErrorsAsWarnings>false</StyleCopTreatErrorsAsWarnings>
     </PropertyGroup>
+	
+	<!-- Generate the AssemblyInfo and other files -->
+	<PropertyGroup>
+        <PowershellFile>C:\WINDOWS\system32\windowspowershell\v1.0\powershell.exe</PowershellFile>
+        <PsakeBuildFile Condition=" '$(PsakeBuildFile)' == '' ">psakebuild.ps1</PsakeBuildFile>
+        <Targets>createGeneratedSource</Targets>
+    </PropertyGroup>
+    <PropertyGroup>
+		<AssemblyFile>$(MsBuildExtensionPack)\MSBuild.ExtensionPack.TaskFactory.PowerShell.dll</AssemblyFile>
+		<!-- Make the build depend on restore packages -->
+        <BuildDependsOn Condition="$(GenerateSourceFromTemplates) == 'true'">
+            GenerateTemplatedSourceFiles;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+    </PropertyGroup>
+	<UsingTask TaskFactory="PowershellTaskFactory" TaskName="GenerateFiles" AssemblyFile="$(AssemblyFile)">
+        <ParameterGroup>
+            <PsakeDir Required="true" ParameterType="System.String" />
+            <WorkingDir Required="true" ParameterType="System.String" />
+			<BuildFile Required="true" ParameterType="System.String" />
+			<Targets Required="true" ParameterType="System.String" />
+			<Text Output="true" />
+        </ParameterGroup>
+		<!-- 
+			The script takes the following actions:
+			- Get the path to the Psake direcotry
+			- Import the Psake module (in case it is not automatically imported)
+			- Get the file path to the script file that has the version file changing code
+			- Run psake on the script file, discarding all output to ensure that we don't 
+			  polute the output buffer
+			- Indicate success
+			
+			The whole script is wrapped in a try .. catch so that we can gracefully bail
+			out if there is a problem of any kind.
+		-->
+        <Task>
+          <![CDATA[
+		  $path = [IO.Path]::GetFullPath($PsakeDir)
+		  $text = "Psake module directory: " + $path
+		  $text += [System.Environment]::NewLine + "..."
+		  
+		  import-module (Join-Path $path 'psake.psm1')
+		  $text += [System.Environment]::NewLine + "Psake module loaded successfully"
+		  
+		  $file = [IO.Path]::GetFullPath((Join-Path $workingDir $buildFile))
+		  $text += [System.Environment]::NewLine + "Build file: " + $file
+		  
+		  $text += invoke-psake $file -properties @{ "incremental"=$true;"reloadpackages"=$false } $targets 4.0
+		  remove-module psake
+          ]]>
+        </Task>
+    </UsingTask>
+	<Target Name="GenerateTemplatedSourceFiles" Condition="Exists('$(PowershellFile)')">
+		<Message Text="Generating the templated source files" />
+
+        <!-- If powershell is installed get the proper version number -->
+		<GenerateFiles 
+			PsakeDir="$(PsakePath)" 
+			WorkingDir="$(BaseDir)" 
+			BuildFile="$(PsakeBuildFile)"
+			Targets="$(Targets)">
+			<Output TaskParameter="Text" PropertyName="TaskOutputText" />
+		</GenerateFiles>
+		
+		<Message Text="Successfully generated files" />
+		<Message Text="$(TaskOutputText)" />
+		<OnError ExecuteTargets="OnGenerateFilesFailure" />
+    </Target>
+	<Target Name="OnGenerateFilesFailure">
+		<Message Text="$(TaskOutputText)" />
+	</Target>
+	
+	<!-- Use NuGet to load packages -->
+	<ItemGroup>
+	  <NugetPackages
+		Include="$(BaseDir)\**\packages.config" />
+	</ItemGroup>
+	<PropertyGroup>
+	    <NuGetExePath>"nuget.exe"</NuGetExePath>
+	    <PackagesConfig>$([System.IO.Path]::Combine($(ProjectDir), "packages.config"))</PackagesConfig>
+		<PackageDir>$(SolutionDir)\..\packages</PackageDir>
+		
+		<!-- Commands -->
+        <RestoreCommand>""</RestoreCommand>
+		
+		<!-- Make the build depend on restore packages -->
+        <BuildDependsOn Condition="$(RestorePackages) == 'true'">
+            RestorePackages;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+	</PropertyGroup>
+	<Target Name="RestorePackages">
+        <Exec Command="$(NuGetExePath) install %(NugetPackages.Identity) -ExcludeVersion -o $(PackageDir)"
+              LogStandardErrorAsError="true"
+              Condition="Exists('%(NugetPackages.Identity)')" />
+    </Target>
 </Project>
