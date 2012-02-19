@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// to send the reports when the application is in a corrupted state. Once the application
     /// restarts again then the reports will be send by another component.
     /// </remarks>
+    [ExcludeFromCodeCoverage]
     internal sealed class ReportingExceptionProcessor : IExceptionProcessor
     {
         private static ApplicationData ApplicationData()

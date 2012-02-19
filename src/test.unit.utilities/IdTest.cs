@@ -165,7 +165,7 @@ namespace Apollo.Utilities
             MockId first = null;
             MockId second = new MockId(10);
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

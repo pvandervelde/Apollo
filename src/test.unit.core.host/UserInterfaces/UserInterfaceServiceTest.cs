@@ -7,14 +7,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
+using Apollo.Utilities.History;
 using Autofac.Core;
 using MbUnit.Framework;
 using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.UserInterfaces
 {
@@ -53,6 +56,26 @@ namespace Apollo.Core.Host.UserInterfaces
         }
         
         #endregion
+
+        private static IStoreTimelineValues BuildStorage(Type type)
+        {
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+            }
+
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOnlineInformation>();
+            }
+
+            if (typeof(IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>).IsAssignableFrom(type))
+            {
+                return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
+            }
+
+            return null;
+        }
 
         [Test]
         public void Create()
@@ -160,7 +183,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -216,7 +241,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -269,7 +296,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -351,7 +380,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -382,7 +413,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -414,7 +447,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -450,7 +485,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);

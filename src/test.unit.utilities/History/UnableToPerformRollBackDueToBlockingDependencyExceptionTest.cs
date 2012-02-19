@@ -8,15 +8,15 @@ using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
-namespace Apollo.Core.Base
+namespace Apollo.Utilities.History
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class CannotCreateDatasetWithoutCreatorExceptionTest
+    public sealed class UnableToPerformRollBackDueToBlockingDependencyExceptionTest
     {
         [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<CannotCreateDatasetWithoutCreatorException>
+        public readonly IContract ExceptionTests = new ExceptionContract<UnableToPerformRollBackDueToBlockingDependencyException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

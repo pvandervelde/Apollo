@@ -6,6 +6,7 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Properties;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
 
@@ -67,6 +68,8 @@ namespace Apollo.UI.Common.Commands
 
             var project = projectFacade.ActiveProject();
             project.SaveProject(persistenceInformation);
+
+            projectFacade.ActiveProject().History.Mark(Resources.SaveProjectCommand_HistoryMark);
         }
 
         /// <summary>

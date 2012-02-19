@@ -15,9 +15,11 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -26,8 +28,34 @@ namespace Apollo.Core.Host.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class DatasetProxyTest
     {
+        private static IStoreTimelineValues BuildStorage(Type type)
+        {
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+            }
+
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOnlineInformation>();
+            }
+
+            if (typeof(IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>).IsAssignableFrom(type))
+            {
+                return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
+            }
+
+            if (typeof(IVariableTimeline<string>).IsAssignableFrom(type))
+            {
+                return new ValueHistory<string>();
+            }
+
+            throw new UnknownHistoryMemberTypeException();
+        }
+
         private static IProject CreateProject()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -41,6 +69,7 @@ namespace Apollo.Core.Host.Projects
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -49,12 +78,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            return new Project(distributor);
+            return new Project(timeline, distributor);
         }
 
         private static Project.DatasetProxy GenerateDataset(IProject project)
@@ -103,6 +135,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void GetDataset()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -118,6 +151,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -126,12 +160,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             Assert.IsNotNull(dataset);
@@ -141,6 +178,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Name()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -156,6 +194,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -164,12 +203,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             var name = string.Empty;
@@ -187,6 +229,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Summary()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -202,6 +245,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -210,12 +254,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             var summary = string.Empty;
@@ -233,6 +280,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -248,6 +296,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -256,12 +305,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -276,6 +328,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadOntoMachineWhenAlreadyLoaded()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -291,6 +344,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -299,14 +353,17 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -326,6 +383,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadOntoMachineWithSelectionCancellation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -341,6 +399,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -349,14 +408,17 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             // Explicitly return nothing so that we cancel the process
@@ -375,11 +437,12 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadOntoMachine()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => 
+                    () =>
                     {
                         r(100, new DatasetLoadingProgressMark(), TimeSpan.FromTicks(-1));
                         return new DatasetOnlineInformation(
@@ -394,6 +457,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -402,14 +466,17 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -429,6 +496,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void UnloadFromMachine()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var commands = new Mock<IDatasetApplicationCommands>();
@@ -456,6 +524,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -464,14 +533,17 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
 
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
 
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
                 l => new SelectedProposal(plan);
@@ -491,6 +563,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void Children()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -506,6 +579,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -514,12 +588,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -541,6 +618,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChildWithNullCreationInformation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -556,6 +634,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -564,12 +643,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChild(null));
@@ -578,6 +660,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -593,6 +676,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -601,12 +685,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -623,6 +710,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChild()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -638,6 +726,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -646,12 +735,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             bool wasInvoked = false;
@@ -683,6 +775,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChildrenWithNullCollection()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -698,6 +791,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -706,12 +800,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentNullException>(() => dataset.CreateNewChildren(null));
@@ -720,6 +817,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChildrenWithEmptyCollection()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -735,6 +833,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -743,12 +842,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             Assert.Throws<ArgumentException>(() => dataset.CreateNewChildren(new List<DatasetCreationInformation>()));
@@ -757,6 +859,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewChildren()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -772,6 +875,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -780,12 +884,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var dataset = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -812,6 +919,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void DeleteWhenClosed()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -827,6 +935,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -835,12 +944,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -862,6 +974,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void DeleteUndeletableDataset()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -877,6 +990,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -885,12 +999,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var root = project.BaseDataset();
 
             Assert.Throws<CannotDeleteDatasetException>(() => root.Delete());
@@ -899,6 +1016,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void DeleteDatasetWithUndeletableChild()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -914,6 +1032,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -922,12 +1041,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var root = project.BaseDataset();
 
             var creationInformation = new DatasetCreationInformation()
@@ -960,6 +1082,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void DeleteDatasetWithChildren()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             Action<LogSeverityProxy, string> logger = (p, s) => { };
 
             var plan = new DistributionPlan(
@@ -975,6 +1098,7 @@ namespace Apollo.Core.Host.Projects
                     new CurrentThreadTaskScheduler()),
                 new DatasetOfflineInformation(
                     new DatasetId(),
+                    new HistoryId(),
                     new DatasetCreationInformation()
                     {
                         CreatedOnRequestOf = DatasetCreator.User,
@@ -983,12 +1107,15 @@ namespace Apollo.Core.Host.Projects
                         CanBeCopied = false,
                         CanBeDeleted = true,
                         LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    }),
+                    },
+                    datasetId => { },
+                    new ValueHistory<string>(),
+                    new ValueHistory<string>()),
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
                 (r, c) => new List<DistributionPlan> { plan };
-            var project = new Project(distributor);
+            var project = new Project(timeline, distributor);
             var root = project.BaseDataset();
 
             bool projectWasNotified = false;

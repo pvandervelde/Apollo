@@ -6,9 +6,18 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Apollo.Utilities</AssemblyName>
+	<RestorePackages>true</RestorePackages>
+	<GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
+	<PsakeBuildFile>apollo.ps1</PsakeBuildFile>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -23,7 +32,6 @@
     </Compile>
     <Compile Include="AppDomainPaths.cs" />
     <Compile Include="ApplicationConstants.cs" />
-    <Compile Include="AssemblyBuildTimeAttribute.cs" />
     <Compile Include="AssemblyExtensions.cs" />
     <Compile Include="Commands\EmptyCommandContext.cs" />
     <Compile Include="Commands\CommandFactory.cs" />
@@ -40,6 +48,61 @@
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="History\CannotDeleteObjectBeforeCreationException.cs" />
+    <Compile Include="History\CannotSetDefaultAfterStartOfTimeException.cs" />
+    <Compile Include="History\CannotSetDefaultBeforeStartOfTimeException.cs" />
+    <Compile Include="History\CannotStoreValuesAtTheStartOfTimeException.cs" />
+    <Compile Include="History\ChangeBlocker.cs" />
+    <Compile Include="History\ChangeSet.cs" />
+    <Compile Include="History\DictionaryHistory.cs" />
+    <Compile Include="History\DictionaryHistoryBase.CollectionChange.cs" />
+    <Compile Include="History\DictionaryHistoryBase.cs" />
+    <Compile Include="History\HistoryId.cs" />
+    <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
+    <Compile Include="History\HistoryObjectListHistory.cs" />
+    <Compile Include="History\HistoryObjectValueHistory.cs" />
+    <Compile Include="History\HistorySnapshotStorage.cs" />
+    <Compile Include="History\IAmHistoryEnabled.cs" />
+    <Compile Include="History\IChangeSet.cs" />
+    <Compile Include="History\IConnectObjectsToHistory.cs" />
+    <Compile Include="History\ICreateSnapshots.cs" />
+    <Compile Include="History\IDictionaryTimelineStorage.cs" />
+    <Compile Include="History\IFollowHistory.cs" />
+    <Compile Include="History\IFollowObjectTimeline.cs" />
+    <Compile Include="History\IHistoryChange.cs" />
+    <Compile Include="History\IListTimelineStorage.cs" />
+    <Compile Include="History\INeedCleanupBeforeRemovalFromHistory.cs" />
+    <Compile Include="History\InvalidTimeMarkerException.cs" />
+    <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
+    <Compile Include="History\IStoreTimelineValues.cs" />
+    <Compile Include="History\ITimeline.cs" />
+    <Compile Include="History\ITrackHistoryChanges.cs" />
+    <Compile Include="History\IVariableTimeline.cs" />
+    <Compile Include="History\ListHistory.cs" />
+    <Compile Include="History\ListHistoryBase.CollectionChange.cs" />
+    <Compile Include="History\ListHistoryBase.cs" />
+    <Compile Include="History\NoFutureValueRegisteredException.cs" />
+    <Compile Include="History\NoPreviousValueRegisteredException.cs" />
+    <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineException.cs" />
+    <Compile Include="History\CannotRemoveNonLivingObjectException.cs" />
+    <Compile Include="History\ObjectHasNotBeenCreatedYetException.cs" />
+    <Compile Include="History\ObjectTimeline.cs" />
+    <Compile Include="History\ObjectUnknownToTimelineException.cs" />
+    <Compile Include="History\Timeline.cs" />
+    <Compile Include="History\TimelineIdDoesNotMatchException.cs" />
+    <Compile Include="History\TimelineMarkEventArgs.cs" />
+    <Compile Include="History\TimelineTraveller.cs" />
+    <Compile Include="History\TimeMarker.cs" />
+    <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyException.cs" />
+    <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyException.cs" />
+    <Compile Include="History\UnknownHistoryMemberTypeException.cs" />
+    <Compile Include="History\UnknownTimeMarkerException.cs" />
+    <Compile Include="History\UpdateFromHistoryDependency.cs" />
+    <Compile Include="History\ValueAtTime.cs" />
+    <Compile Include="History\DefineAsHistoryTrackingInterfaceAttribute.cs" />
+    <Compile Include="History\ValueAtTimeStorage.cs" />
+    <Compile Include="History\ValueHistory.cs" />
+    <Compile Include="History\ValueHistoryBase.cs" />
     <Compile Include="IApplicationConstants.cs" />
     <Compile Include="ICollectProgressReports.cs" />
     <Compile Include="ICompanyConstants.cs" />
@@ -72,6 +135,7 @@
     <Compile Include="TimerElapsedEventArgs.cs" />
     <Compile Include="TypeComparer.cs" />
     <Compile Include="TypeEqualityComparer.cs" />
+    <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Lokad.Shared">
@@ -79,9 +143,7 @@
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="History\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

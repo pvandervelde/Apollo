@@ -5,7 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Properties;
 using Microsoft.Practices.Prism.Commands;
 
 namespace Apollo.UI.Common.Commands
@@ -42,11 +44,9 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Called when the dataset should be deleted.
         /// </summary>
-        /// <param name="datasetFacade">
-        /// The object that contains the methods that allow interaction with
-        /// a dataset.
-        /// </param>
-        private static void OnDeleteDataset(DatasetFacade datasetFacade)
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
+        /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
+        private static void OnDeleteDataset(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
         {
             // If there is no dataset facade, then we're in 
             // designer mode, or something else silly.
@@ -56,17 +56,16 @@ namespace Apollo.UI.Common.Commands
             }
 
             datasetFacade.Delete();
+            projectFacade.ActiveProject().History.Mark();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DeleteDatasetCommand"/> class.
         /// </summary>
-        /// <param name="datasetFacade">
-        /// The object that contains the methods that allow interaction with
-        /// a dataset.
-        /// </param>
-        public DeleteDatasetCommand(DatasetFacade datasetFacade)
-            : base(obj => OnDeleteDataset(datasetFacade), obj => CanDeleteDataset(datasetFacade))
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
+        /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
+        public DeleteDatasetCommand(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
+            : base(obj => OnDeleteDataset(projectFacade, datasetFacade), obj => CanDeleteDataset(datasetFacade))
         { 
         }
     }

@@ -11,6 +11,7 @@ using System.Threading;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 
 namespace Apollo.Core.Host.Projects
@@ -20,6 +21,11 @@ namespace Apollo.Core.Host.Projects
     /// </summary>
     internal sealed class ProjectBuilder : IBuildProjects
     {
+        /// <summary>
+        /// The timeline that stores all the changes.
+        /// </summary>
+        private ITimeline m_Timeline;
+
         /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
@@ -42,6 +48,23 @@ namespace Apollo.Core.Host.Projects
             m_Distributor = null;
             m_ProjectStorage = null;
 
+            return this;
+        }
+
+        /// <summary>
+        /// Provides the timeline which tracks the changes to the project over time.
+        /// </summary>
+        /// <param name="timeline">The timeline.</param>
+        /// <returns>
+        /// The current builder instance with the timeline stored.
+        /// </returns>
+        public IBuildProjects WithTimeline(ITimeline timeline)
+        {
+            {
+                Enforce.Argument(() => timeline);
+            }
+
+            m_Timeline = timeline;
             return this;
         }
 
@@ -94,12 +117,16 @@ namespace Apollo.Core.Host.Projects
         public IProject Build()
         {
             {
+                Enforce.With<CannotCreateProjectWithoutTimelineException>(
+                    m_Timeline != null,
+                    Resources_NonTranslatable.Exception_Messages_CannotCreateProjectWithoutTimeline);
+
                 Enforce.With<CannotCreateProjectWithoutDatasetDistributorException>(
                     m_Distributor != null,
                     Resources_NonTranslatable.Exception_Messages_CannotCreateProjectWithoutDatasetDistributor);
             }
 
-            return new Project(m_Distributor, m_ProjectStorage);
+            return new Project(m_Timeline, m_Distributor, m_ProjectStorage);
         }
     }
 }

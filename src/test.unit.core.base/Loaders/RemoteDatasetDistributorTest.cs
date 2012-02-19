@@ -26,7 +26,7 @@ namespace Apollo.Core.Base.Loaders
     {
         private static DistributionPlan CreateNewDistributionPlan(
            DatasetLoadingProposal proposal,
-            DatasetOfflineInformation offlineInfo,
+            IDatasetOfflineInformation offlineInfo,
             Action<LogSeverityProxy, string> logger)
         {
             var plan = new DistributionPlan(
@@ -46,19 +46,27 @@ namespace Apollo.Core.Base.Loaders
             return plan;
         }
 
-        private static DatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
+        private static IDatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
         {
-            return new DatasetOfflineInformation(
-                new DatasetId(),
-                new DatasetCreationInformation()
-                {
-                    CreatedOnRequestOf = DatasetCreator.User,
-                    CanBecomeParent = true,
-                    CanBeAdopted = false,
-                    CanBeCopied = false,
-                    CanBeDeleted = true,
-                    LoadFrom = storage,
-                });
+            var mock = new Mock<IDatasetOfflineInformation>();
+            {
+                mock.Setup(d => d.Id)
+                    .Returns(new DatasetId());
+                mock.Setup(d => d.CanBeAdopted)
+                    .Returns(false);
+                mock.Setup(d => d.CanBecomeParent)
+                    .Returns(true);
+                mock.Setup(d => d.CanBeCopied)
+                    .Returns(false);
+                mock.Setup(d => d.CanBeDeleted)
+                    .Returns(true);
+                mock.Setup(d => d.CreatedBy)
+                    .Returns(DatasetCreator.User);
+                mock.Setup(d => d.StoredAt)
+                    .Returns(storage);
+            }
+
+            return mock.Object;
         }
 
         [Test]

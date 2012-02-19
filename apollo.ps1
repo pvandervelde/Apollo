@@ -239,7 +239,7 @@ function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Ver
     Set-Content -Path $newPath -Value $text
 }
 
-function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config, [string]$buildNumber, [string]$vcsRevision){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
     
@@ -247,6 +247,9 @@ function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [stri
     
     $now = [DateTimeOffset]::Now
     $text = $text -replace '@BUILDTIME@', $now.ToString("o")
+	
+	$text = $text -replace '@BUILDNUMBER@', $buildNumber
+	$text = $text -replace '@VCSREVISION@', $vcsRevision
 
     Set-Content -Path $newPath -Value $text
 }
@@ -520,36 +523,15 @@ task getVersion -action{
     [xml]$xmlFile = Get-Content $props.versionFile
     $major = $xmlFile.version | %{$_.major} | Select-Object -Unique
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
-    $build = Get-BuildNumber
-    $revision = Get-BzrVersion
+    $build = $xmlFile.version | %{$_.patch} | Select-Object -Unique
+    $revision = Get-BuildNumber
 	
 	$input = "$major.$minor.$build.$revision"
     $props.versionNumber = New-Object -TypeName System.Version -ArgumentList $input
     ("version is: " + $props.versionNumber )
 }
 
-task getBuildDependencies -action{
-    # Pull in all the packages
-    $packages = Get-ChildItem -Path $props.dirBase -Filter "packages.config" -Recurse
-    
-    foreach($package in $packages)
-    {
-        $nuget = 'nuget.exe'
-        $command = '& "' + $nuget + '" '
-        $command += 'install "' + ($package.FullName) + '" '
-        $command += '-ExcludeVersion '
-        $command += '-OutputDirectory "' + $props.dirPackages + '"'
-        
-        ("Grabbing package from: " + $package.FullName)
-        Invoke-Expression $command
-        if ($LastExitCode -ne 0)
-        {
-            throw "NuGet failed on Apollo with return code: $LastExitCode"
-        }
-    }
-}
-
-task getLicenses -depends getBuildDependencies -action{
+task getLicenses -action{
 	$ntrevaExe = Join-Path $props.dirNTreva 'ntreva.exe'
 	
 	$command = '& "' + $ntrevaExe + '" '
@@ -660,7 +642,7 @@ task runCleanPackages -depends displayInfo -precondition { $reloadpackages } -ac
 	}
 }
 
-task runPrepareDisk -depends displayInfo,runClean -action{
+task runPrepareDisk -action{
     "Initializing build..."
 
     if (!(Test-Path -Path $props.dirBuild -PathType Container))
@@ -701,14 +683,13 @@ task runPrepareDisk -depends displayInfo,runClean -action{
 	""
 }
 
-task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, getVersion -action{
-    "Building Apollo..."
-    
-    # Set the version numbers
+# Is called through msbuild.
+task createGeneratedSource -depends runPrepareDisk, getLicenses, getVersion -action{
+	# Set the version numbers
     Create-VersionResourceFile $props.versionTemplateFile $props.versionAssemblyFile $props.versionNumber
     
     # Set the configuration
-    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration
+    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration (Get-BuildNumber) (Get-BzrVersion)
     
     # Set the InternalsVisibleTo attribute
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
@@ -723,6 +704,10 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getLicenses, g
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
     Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitHostAssemblyName, $testUnitBaseAssemblyName, $testUnitUIAssemblyName, $testUnitUtilsAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
+}
+
+task buildBinaries -depends displayInfo, runPrepareDisk -action{
+    "Building Apollo..."
     
     $logPath = Join-Path $props.dirLogs $props.logMsBuild
     $msbuildExe = Get-MsbuildExe
@@ -895,8 +880,9 @@ task runFxCop -depends buildBinaries -action{
     
     # exclude the fxcop rules we don't want to use.
     # 1006: do not nest generic types in member signatures
+	# 1026: Default parameters should not be used
     # 1030: use events where appropriate
-    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1030"
+    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1026 /ruleid:-Microsoft.Rules.Managed.CA1030"
     
     $command = "& '" + "$fxcopExe" + "' " + "$files /rule:+" + "'" + "$rulesDir" + "'" + $excludedRules + " /out:" + "'" + "$outFile" + "' /forceoutput /dictionary:'" + "$dictionaryFile" + "'"
     $command

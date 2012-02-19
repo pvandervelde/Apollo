@@ -8,6 +8,7 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.Projects;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
@@ -49,6 +50,17 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             m_Current.OnDatasetDeleted += (s, e) => RaiseOnDatasetDeleted();
             m_Current.OnNameChanged += (s, e) => RaiseOnProjectNameUpdated();
             m_Current.OnSummaryChanged += (s, e) => RaiseOnProjectSummaryUpdated();
+        }
+
+        /// <summary>
+        /// Gets the timeline that the project uses to track history.
+        /// </summary>
+        public ITimeline History
+        {
+            get
+            {
+                return m_Current.History;
+            }
         }
 
         /// <summary>

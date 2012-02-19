@@ -73,7 +73,7 @@ namespace Apollo.Core.Base
         public void LargerThanOperatorWithFirstObjectNull()
         {
             DatasetId first = null;
-            DatasetId second = Create(10);
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -81,7 +81,7 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             DatasetId second = null;
 
             Assert.IsTrue(first > second);
@@ -99,8 +99,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            DatasetId first = Create(10);
-            DatasetId second = Create(10);
+            var first = Create(10);
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -108,8 +108,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            DatasetId first = Create(11);
-            DatasetId second = Create(10);
+            var first = Create(11);
+            var second = Create(10);
 
             Assert.IsTrue(first > second);
         }
@@ -117,8 +117,8 @@ namespace Apollo.Core.Base
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            DatasetId first = Create(9);
-            DatasetId second = Create(10);
+            var first = Create(9);
+            var second = Create(10);
 
             Assert.IsFalse(first > second);
         }
@@ -127,15 +127,15 @@ namespace Apollo.Core.Base
         public void SmallerThanOperatorWithFirstObjectNull()
         {
             DatasetId first = null;
-            DatasetId second = Create(10);
+            var second = Create(10);
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             DatasetId second = null;
 
             Assert.IsFalse(first < second);
@@ -153,8 +153,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            DatasetId first = Create(10);
-            DatasetId second = Create(10);
+            var first = Create(10);
+            var second = Create(10);
 
             Assert.IsFalse(first < second);
         }
@@ -162,8 +162,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            DatasetId first = Create(11);
-            DatasetId second = Create(10);
+            var first = Create(11);
+            var second = Create(10);
 
             Assert.IsFalse(first < second);
         }
@@ -171,8 +171,8 @@ namespace Apollo.Core.Base
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            DatasetId first = Create(9);
-            DatasetId second = Create(10);
+            var first = Create(9);
+            var second = Create(10);
 
             Assert.IsTrue(first < second);
         }
@@ -180,8 +180,8 @@ namespace Apollo.Core.Base
         [Test]
         public void Clone()
         {
-            DatasetId first = Create(10);
-            DatasetId second = first.Clone();
+            var first = Create(10);
+            var second = first.Clone();
 
             Assert.AreEqual(first, second);
         }
@@ -189,7 +189,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithNullObject()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -198,7 +198,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             object second = Create(10);
 
             Assert.AreEqual(0, first.CompareTo(second));
@@ -207,7 +207,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            DatasetId first = Create(11);
+            var first = Create(11);
             object second = Create(10);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
@@ -216,7 +216,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             object second = Create(11);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
@@ -225,7 +225,7 @@ namespace Apollo.Core.Base
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            DatasetId first = Create(10);
+            var first = Create(10);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

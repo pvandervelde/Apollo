@@ -650,4 +650,7 @@ Please wait ...</value>
   <data name="FeedbackIconView_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="SaveProjectCommand_HistoryMark" xml:space="preserve">
+    <value>Save</value>
+  </data>
 </root>

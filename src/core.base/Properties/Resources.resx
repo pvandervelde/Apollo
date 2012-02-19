@@ -147,9 +147,6 @@
   <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
     <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
   </data>
-  <data name="Exceptions_Messages_CannotCreateDatasetWithoutCreator" xml:space="preserve">
-    <value>A dataset cannot be created without a creator.</value>
-  </data>
   <data name="Exceptions_Messages_ChannelAddresssMustBeDefined" xml:space="preserve">
     <value>The address of a communication channel must be defined in order to connect to the channel.</value>
   </data>

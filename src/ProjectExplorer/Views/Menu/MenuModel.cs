@@ -30,7 +30,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the new project command.
         /// </summary>
-        /// <value>The new project command.</value>
         public ICommand NewProjectCommand
         {
             get;
@@ -40,7 +39,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the open project command.
         /// </summary>
-        /// <value>The open project command.</value>
         public ICommand OpenProjectCommand
         {
             get;
@@ -50,7 +48,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the save project command.
         /// </summary>
-        /// <value>The save project command.</value>
         public ICommand SaveProjectCommand
         {
             get;
@@ -60,7 +57,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the close project command.
         /// </summary>
-        /// <value>The close project command.</value>
         public ICommand CloseProjectCommand
         {
             get;
@@ -70,11 +66,28 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the exit command.
         /// </summary>
-        /// <value>The exit command.</value>
         public ICommand ExitCommand 
         { 
             get; 
             set; 
+        }
+
+        /// <summary>
+        /// Gets or sets the undo command.
+        /// </summary>
+        public ICommand UndoCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the redo command.
+        /// </summary>
+        public ICommand RedoCommand
+        {
+            get;
+            set;
         }
 
         /// <summary>
@@ -98,7 +111,6 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// <summary>
         /// Gets or sets the about command.
         /// </summary>
-        /// <value>The about command.</value>
         public ICommand AboutCommand
         {
             get;
