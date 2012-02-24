@@ -73,7 +73,7 @@ namespace Apollo.Utilities
                     .As<ILogger>()
                     .SingleInstance();
 
-                builder.Register<Action<LogSeverityProxy, string>>(
+                builder.Register<SystemDiagnostics>(
                     c =>
                     {
                         var loggers = c.Resolve<IEnumerable<ILogger>>();
@@ -96,9 +96,9 @@ namespace Apollo.Utilities
                             }
                         };
 
-                        return action;
+                        return new SystemDiagnostics(action, null);
                     })
-                    .As<Action<LogSeverityProxy, string>>()
+                    .As<SystemDiagnostics>()
                     .SingleInstance();
             }
         }

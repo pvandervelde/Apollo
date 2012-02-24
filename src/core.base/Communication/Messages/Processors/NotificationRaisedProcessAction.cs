@@ -24,32 +24,32 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly INotifyOfRemoteEndpointEvents m_AvailableProxies;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostic methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationRaisedProcessAction"/> class.
         /// </summary>
         /// <param name="availableNotificationProxies">The collection that holds all the registered notification proxies.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics method for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="availableNotificationProxies"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public NotificationRaisedProcessAction(
             INotifyOfRemoteEndpointEvents availableNotificationProxies,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => availableNotificationProxies);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_AvailableProxies = availableNotificationProxies;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -80,7 +80,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             var invocation = msg.Notification;
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -101,7 +101,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
             catch (Exception e)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,

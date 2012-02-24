@@ -64,24 +64,24 @@ namespace Apollo.Core.Base.Communication
             = new Dictionary<MessageId, Tuple<EndpointId, TaskCompletionSource<ICommunicationMessage>>>();
 
         /// <summary>
-        /// The function that logs messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MessageHandler"/> class.
         /// </summary>
-        /// <param name="logger">The function that handles the logging of messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
-        public MessageHandler(Action<LogSeverityProxy, string> logger)
+        public MessageHandler(SystemDiagnostics systemDiagnostics)
         {
             {
-                Lokad.Enforce.Argument(() => logger);
+                Lokad.Enforce.Argument(() => systemDiagnostics);
             }
 
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Apollo.Core.Base.Communication
             // First check that the message isn't a response
             if (!message.InResponseTo.Equals(MessageId.None))
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Trace,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -212,7 +212,7 @@ namespace Apollo.Core.Base.Communication
             {
                 if (pair.Key.PassThrough(message))
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -246,7 +246,7 @@ namespace Apollo.Core.Base.Communication
 
         private void TerminateWaitingResponsesForEndpoint(EndpointId endpointId)
         {
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,

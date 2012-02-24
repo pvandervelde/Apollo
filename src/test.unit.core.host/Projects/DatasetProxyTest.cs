@@ -56,7 +56,7 @@ namespace Apollo.Core.Host.Projects
         private static IProject CreateProject()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => new Task<DatasetOnlineInformation>(
@@ -65,7 +65,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -136,7 +136,7 @@ namespace Apollo.Core.Host.Projects
         public void GetDataset()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -145,7 +145,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -179,7 +179,7 @@ namespace Apollo.Core.Host.Projects
         public void Name()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -188,7 +188,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -230,7 +230,7 @@ namespace Apollo.Core.Host.Projects
         public void Summary()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -239,7 +239,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -281,7 +281,7 @@ namespace Apollo.Core.Host.Projects
         public void LoadOntoMachineWithIllegalLoadingLocation()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -290,7 +290,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -329,7 +329,7 @@ namespace Apollo.Core.Host.Projects
         public void LoadOntoMachineWhenAlreadyLoaded()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -338,7 +338,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -384,7 +384,7 @@ namespace Apollo.Core.Host.Projects
         public void LoadOntoMachineWithSelectionCancellation()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -393,7 +393,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -438,7 +438,7 @@ namespace Apollo.Core.Host.Projects
         public void LoadOntoMachine()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -450,7 +450,7 @@ namespace Apollo.Core.Host.Projects
                             new EndpointId("id"),
                             new NetworkIdentifier("machine"),
                             new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                            logger);
+                            systemDiagnostics);
                     },
                     t,
                     TaskCreationOptions.None,
@@ -497,7 +497,7 @@ namespace Apollo.Core.Host.Projects
         public void UnloadFromMachine()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var commands = new Mock<IDatasetApplicationCommands>();
             {
@@ -518,7 +518,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         hub.Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -564,7 +564,7 @@ namespace Apollo.Core.Host.Projects
         public void Children()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -573,7 +573,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -619,7 +619,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChildWithNullCreationInformation()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -628,7 +628,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -661,7 +661,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChildWhenDatasetCannotBeParent()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -670,7 +670,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -711,7 +711,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChild()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -720,7 +720,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -776,7 +776,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChildrenWithNullCollection()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -785,7 +785,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -818,7 +818,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChildrenWithEmptyCollection()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -827,7 +827,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -860,7 +860,7 @@ namespace Apollo.Core.Host.Projects
         public void CreateNewChildren()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -869,7 +869,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -920,7 +920,7 @@ namespace Apollo.Core.Host.Projects
         public void DeleteWhenClosed()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -929,7 +929,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -975,7 +975,7 @@ namespace Apollo.Core.Host.Projects
         public void DeleteUndeletableDataset()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -984,7 +984,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -1017,7 +1017,7 @@ namespace Apollo.Core.Host.Projects
         public void DeleteDatasetWithUndeletableChild()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -1026,7 +1026,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -1083,7 +1083,7 @@ namespace Apollo.Core.Host.Projects
         public void DeleteDatasetWithChildren()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -1092,7 +1092,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),

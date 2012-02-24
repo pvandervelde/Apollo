@@ -61,9 +61,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Indicates if the layer is signed on or not.
@@ -78,7 +78,7 @@ namespace Apollo.Core.Base.Communication
         ///     The function that returns a tuple of a <see cref="ICommunicationChannel"/> and a <see cref="IDirectIncomingMessages"/>
         ///     based on the type of the <see cref="IChannelType"/> that is related to the channel.
         /// </param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="discoverySources"/> is <see langword="null" />.
         /// </exception>
@@ -86,22 +86,22 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="channelBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommunicationLayer(
             IEnumerable<IDiscoverOtherServices> discoverySources,
             Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => discoverySources);
                 Enforce.Argument(() => channelBuilder);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_ChannelBuilder = channelBuilder;
             m_DiscoverySources = discoverySources;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Apollo.Core.Base.Communication
                 source.StartDiscovery();
             }
 
-            m_Logger(LogSeverityProxy.Trace, "Sign on process finished.");
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign on process finished.");
             m_AlreadySignedOn = true;
         }
 
@@ -249,7 +249,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             // Notify the world
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -362,7 +362,7 @@ namespace Apollo.Core.Base.Communication
                 m_OpenConnections.Clear();
             }
 
-            m_Logger(LogSeverityProxy.Trace, "Sign off process finished.");
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign off process finished.");
             m_AlreadySignedOn = false;
         }
 
@@ -448,7 +448,7 @@ namespace Apollo.Core.Base.Communication
             var channel = ChannelForChannelType(connection.ChannelType);
             channel.ConnectTo(connection);
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -510,7 +510,7 @@ namespace Apollo.Core.Base.Communication
                 channel.ConnectTo(connection);
             }
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -556,7 +556,7 @@ namespace Apollo.Core.Base.Communication
             var pair = ChannelInformationForType(connection.ChannelType);
             var result = pair.Item2.ForwardResponse(endpoint, message.Id);
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -703,12 +703,12 @@ namespace Apollo.Core.Base.Communication
                     }
                 }
 
-                m_Logger(
-                LogSeverityProxy.Trace,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Disconnecting from endpoint ({0}).",
-                    endpoint));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Disconnecting from endpoint ({0}).",
+                        endpoint));
 
                 // Technically the endpoint hasn't signed out, however we have told it
                 // we are going to and so it comes down to the same thing.

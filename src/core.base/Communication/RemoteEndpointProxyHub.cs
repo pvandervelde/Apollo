@@ -45,9 +45,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<EndpointId, Type, TProxyObject> m_Builder;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostic methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The object used to lock on.
@@ -60,7 +60,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="layer">The communication layer that will handle the actual connections.</param>
         /// <param name="commandReporter">The object that reports when a new command is registered on a remote endpoint.</param>
         /// <param name="builder">The fun ction that is responsible for building the command proxies.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
@@ -71,18 +71,18 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="builder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         protected RemoteEndpointProxyHub(
             ICommunicationLayer layer,
             IReportNewProxies commandReporter,
-            Func<EndpointId, Type, TProxyObject> builder, 
-            Action<LogSeverityProxy, string> logger)
+            Func<EndpointId, Type, TProxyObject> builder,
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => layer);
                 Enforce.Argument(() => builder);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Layer = layer;
@@ -97,7 +97,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             m_Builder = builder;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         private void HandleEndpointSignIn(ChannelConnectionInformation channelConnectionInformation)
@@ -115,7 +115,7 @@ namespace Apollo.Core.Base.Communication
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
                         // We've already contacted the endpoint and we're still waiting.
-                        m_Logger(
+                        m_Diagnostics.Log(
                             LogSeverityProxy.Trace,
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -155,7 +155,7 @@ namespace Apollo.Core.Base.Communication
                         // there's nothing we can do about it. We'll just pretend we
                         // didn't get a response and remove the endpoint from the
                         // collection.
-                        m_Logger(
+                        m_Diagnostics.Log(
                             LogSeverityProxy.Warning, 
                             string.Format(
                                 CultureInfo.InvariantCulture, 
@@ -180,7 +180,7 @@ namespace Apollo.Core.Base.Communication
                             // needs to travel to another application and come back (possibly over the network). it seems the
                             // sorted list is the best trade-off (memory vs performance) in this case.
                             var commands = msg.ProxyTypes;
-                            m_Logger(
+                            m_Diagnostics.Log(
                                 LogSeverityProxy.Trace,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
@@ -221,7 +221,7 @@ namespace Apollo.Core.Base.Communication
                 {
                     if (m_WaitingForCommandInformation.Contains(endpoint))
                     {
-                        m_Logger(
+                        m_Diagnostics.Log(
                            LogSeverityProxy.Trace,
                            string.Format(
                                CultureInfo.InvariantCulture,
@@ -252,7 +252,7 @@ namespace Apollo.Core.Base.Communication
             {
                 if (m_WaitingForCommandInformation.Contains(endpoint))
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -265,7 +265,7 @@ namespace Apollo.Core.Base.Communication
 
                 if (HasProxyFor(endpoint))
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -301,7 +301,7 @@ namespace Apollo.Core.Base.Communication
             {
                 proxyType = ProxyExtensions.ToType(serializedType);
 
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Trace,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -312,7 +312,7 @@ namespace Apollo.Core.Base.Communication
             }
             catch (UnableToLoadProxyTypeException)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,

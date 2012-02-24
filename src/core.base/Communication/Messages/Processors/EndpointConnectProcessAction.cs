@@ -32,9 +32,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly IAcceptExternalEndpointInformation m_ConnectionInformationSink;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EndpointConnectProcessAction"/> class.
@@ -46,7 +46,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// The collection that contains all possible <see cref="IChannelType"/> types for the 
         /// communication channel from which the messages that are being processed originate.
         /// </param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="connectionInformationSink"/> is <see langword="null" />.
         /// </exception>
@@ -57,12 +57,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if one of the entries in <paramref name="channelTypes"/> does not implement the <see cref="IChannelType"/> interface.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public EndpointConnectProcessAction(
             IAcceptExternalEndpointInformation connectionInformationSink, 
             IEnumerable<Type> channelTypes,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => connectionInformationSink);
@@ -72,12 +72,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     channelTypes.All(t => typeof(IChannelType).IsAssignableFrom(t)),
                     Resources.Exceptions_Messages_AChannelTypeMustDeriveFromIChannelType);
 
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_ConnectedChannelTypes.AddRange(channelTypes);
             m_ConnectionInformationSink = connectionInformationSink;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -106,7 +106,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             Type channelType = m_ConnectedChannelTypes.Find(t => string.Equals(t.FullName, msg.ChannelType, StringComparison.Ordinal));
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,

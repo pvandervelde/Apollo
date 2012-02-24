@@ -90,9 +90,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<DateTimeOffset> m_CurrentTime;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The object used to receive messages over the network.
@@ -138,7 +138,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="receiverBuilder">The function that builds receiving endpoints.</param>
         /// <param name="senderBuilder">The function that builds sending endpoints.</param>
         /// <param name="currentTime">The function that returns the current time.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
         /// </exception>
@@ -155,7 +155,7 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="currentTime"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommunicationChannel(
             EndpointId id, 
@@ -163,7 +163,7 @@ namespace Apollo.Core.Base.Communication
             Func<IMessagePipe> receiverBuilder,
             Func<Func<EndpointId, IChannelProxy>, ISendingEndpoint> senderBuilder,
             Func<DateTimeOffset> currentTime,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => id);
@@ -171,7 +171,7 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => receiverBuilder);
                 Enforce.Argument(() => senderBuilder);
                 Enforce.Argument(() => currentTime);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Id = id;
@@ -179,7 +179,7 @@ namespace Apollo.Core.Base.Communication
             m_ReceiverBuilder = receiverBuilder;
             m_SenderBuilder = senderBuilder;
             m_CurrentTime = currentTime;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -219,7 +219,7 @@ namespace Apollo.Core.Base.Communication
             // Create the new host
             m_HostFaultingHandler = (s, e) =>
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Warning,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -232,7 +232,7 @@ namespace Apollo.Core.Base.Communication
 
             m_HostClosedHandler = (s, e) =>
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Warning,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -250,7 +250,7 @@ namespace Apollo.Core.Base.Communication
 
             m_Host.Open();
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -365,7 +365,7 @@ namespace Apollo.Core.Base.Communication
 
             m_LocalConnection = null;
 
-            m_Logger(LogSeverityProxy.Trace, "Closed channel");
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Closed channel");
             RaiseOnClosed();
         }
 
@@ -532,7 +532,7 @@ namespace Apollo.Core.Base.Communication
             var binding = m_Type.GenerateBinding();
 
             var factory = new ChannelFactory<IReceivingWcfEndpointProxy>(binding, endpoint);
-            return new SelfResurrectingSendingEndpoint(factory, m_Logger);
+            return new SelfResurrectingSendingEndpoint(factory, m_Diagnostics);
         }
 
         /// <summary>

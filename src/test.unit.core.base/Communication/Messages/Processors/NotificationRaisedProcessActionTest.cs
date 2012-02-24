@@ -27,9 +27,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         public void MessageTypeToProcess()
         {
             var commands = new Mock<INotifyOfRemoteEndpointEvents>();
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var action = new NotificationRaisedProcessAction(commands.Object, logger);
+            var action = new NotificationRaisedProcessAction(commands.Object, systemDiagnostics);
             Assert.AreEqual(typeof(NotificationRaisedMessage), action.MessageTypeToProcess);
         }
         
@@ -39,8 +39,8 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             var local = new EndpointId("local");
             Action<EndpointId, ICommunicationMessage> messageSender = (e, m) => { };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var builder = new NotificationProxyBuilder(local, messageSender, systemDiagnostics);
 
             var remoteEndpoint = new EndpointId("other");
             var proxy = builder.ProxyConnectingTo(remoteEndpoint, typeof(IMockNotificationSetWithTypedEventHandler));
@@ -65,7 +65,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Returns(commandSets[0].Value);
             }
 
-            var action = new NotificationRaisedProcessAction(notifications.Object, logger);
+            var action = new NotificationRaisedProcessAction(notifications.Object, systemDiagnostics);
 
             var eventArgs = new EventArgs();
             action.Invoke(

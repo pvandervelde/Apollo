@@ -58,9 +58,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
             
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -102,9 +106,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
             var connectionInfo = new ChannelConnectionInformation(
@@ -145,9 +153,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -195,9 +207,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var otherId = new EndpointId("other");
             reporter.Raise(
@@ -237,9 +253,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -291,9 +311,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -348,9 +372,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 
@@ -393,9 +421,13 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var hub = new RemoteCommandHub(layer.Object, reporter.Object, new CommandProxyBuilder(localEndpoint, sender, logger), logger);
+            var hub = new RemoteCommandHub(
+                layer.Object, 
+                reporter.Object, 
+                new CommandProxyBuilder(localEndpoint, sender, systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"), 

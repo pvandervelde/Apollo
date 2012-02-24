@@ -94,9 +94,9 @@ namespace Apollo.Core.Base.Communication
                 intermediateMsg = m as RegisterForNotificationMessage;
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+            var builder = new NotificationProxyBuilder(local, messageSender, systemDiagnostics);
 
             var remoteEndpoint = new EndpointId("other");
             var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);
@@ -133,8 +133,8 @@ namespace Apollo.Core.Base.Communication
                 intermediateMsg = m as RegisterForNotificationMessage;
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var builder = new NotificationProxyBuilder(local, messageSender, systemDiagnostics);
 
             var remoteEndpoint = new EndpointId("other");
             var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithTypedEventHandler>(remoteEndpoint);
@@ -171,8 +171,8 @@ namespace Apollo.Core.Base.Communication
                 intermediateMsg = m as UnregisterFromNotificationMessage;
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var builder = new NotificationProxyBuilder(local, messageSender, systemDiagnostics);
 
             var remoteEndpoint = new EndpointId("other");
             var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);
@@ -221,8 +221,8 @@ namespace Apollo.Core.Base.Communication
                 intermediateMsg = m as UnregisterFromNotificationMessage;
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var builder = new NotificationProxyBuilder(local, messageSender, logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var builder = new NotificationProxyBuilder(local, messageSender, systemDiagnostics);
 
             var remoteEndpoint = new EndpointId("other");
             var proxy = builder.ProxyConnectingTo<IMockNotificationSetWithEventHandler>(remoteEndpoint);

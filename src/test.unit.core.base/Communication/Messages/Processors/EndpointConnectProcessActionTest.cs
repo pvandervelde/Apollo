@@ -25,9 +25,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 { 
                     typeof(TcpChannelType),
                 };
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var action = new EndpointConnectProcessAction(sink.Object, channelTypes, logger);
+            var action = new EndpointConnectProcessAction(sink.Object, channelTypes, systemDiagnostics);
             Assert.AreEqual(typeof(EndpointConnectMessage), action.MessageTypeToProcess);
         }
 
@@ -52,9 +52,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 { 
                     typeof(TcpChannelType),
                 };
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var action = new EndpointConnectProcessAction(sink.Object, channelTypes, logger);
+            var action = new EndpointConnectProcessAction(sink.Object, channelTypes, systemDiagnostics);
             
             var id = new EndpointId("id");
             var uri = "http://localhost";

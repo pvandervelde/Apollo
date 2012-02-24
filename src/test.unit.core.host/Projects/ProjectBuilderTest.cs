@@ -61,7 +61,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void BuildWithoutTimeline()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -71,7 +71,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -100,7 +100,7 @@ namespace Apollo.Core.Host.Projects
         public void BuildWithDistributorOnly()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -110,7 +110,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),
@@ -143,7 +143,7 @@ namespace Apollo.Core.Host.Projects
         public void BuildWithDistributorAndStorage()
         {
             ITimeline timeline = new Timeline(BuildStorage);
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -153,7 +153,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
                     new DatasetId(),

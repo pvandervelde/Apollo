@@ -65,7 +65,7 @@ namespace Apollo.Core.Base
                                 ctx.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
                                 ctx.ResolveKeyed<IDirectIncomingMessages>(t));
                         },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<ICommunicationLayer>()
                 .SingleInstance();
@@ -113,7 +113,7 @@ namespace Apollo.Core.Base
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
             // we pretend that there is a connection between IChannelType and the MessageHandler.
             builder.Register(c => new MessageHandler(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -123,7 +123,7 @@ namespace Apollo.Core.Base
                 .SingleInstance();
 
             builder.Register(c => new MessageHandler(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -138,7 +138,7 @@ namespace Apollo.Core.Base
             builder.Register(c => new DataDownloadProcessAction(
                     c.Resolve<WaitingUploads>(),
                     c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IMessageProcessAction>();
 
             builder.Register(
@@ -150,7 +150,7 @@ namespace Apollo.Core.Base
                         return new EndpointConnectProcessAction(
                             c.Resolve<IAcceptExternalEndpointInformation>(),
                             from channelType in ctx.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
-                            c.Resolve<Action<LogSeverityProxy, string>>());
+                            c.Resolve<SystemDiagnostics>());
                     })
                 .As<IMessageProcessAction>();
 
@@ -163,7 +163,7 @@ namespace Apollo.Core.Base
                     return new UnknownMessageTypeProcessAction(
                         EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                         (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<IMessageProcessAction>();
         }
@@ -191,7 +191,7 @@ namespace Apollo.Core.Base
                                     endpointToProxy));
                         },
                         () => DateTimeOffset.Now,
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .OnActivated(a =>
                 {
@@ -218,7 +218,7 @@ namespace Apollo.Core.Base
                                     endpointToProxy));
                         },
                         () => DateTimeOffset.Now,
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .OnActivated(a =>
                 {
@@ -235,7 +235,7 @@ namespace Apollo.Core.Base
                 .As<ISendingEndpoint>();
 
             builder.Register(c => new ReceivingEndpoint(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IMessagePipe>();
         }
 

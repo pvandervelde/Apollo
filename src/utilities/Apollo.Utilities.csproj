@@ -6,9 +6,9 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Apollo.Utilities</AssemblyName>
-	<RestorePackages>true</RestorePackages>
-	<GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
-	<PsakeBuildFile>apollo.ps1</PsakeBuildFile>
+    <RestorePackages>true</RestorePackages>
+    <GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
+    <PsakeBuildFile>apollo.ps1</PsakeBuildFile>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -124,6 +124,7 @@
     <Compile Include="ProgressMarkEventArgs.cs" />
     <Compile Include="ProgressReportingHub.cs" />
     <Compile Include="ReflectionExtensions.cs" />
+    <Compile Include="SystemDiagnostics.cs" />
     <Compile Include="TimeBasedProgressTracker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -140,6 +141,10 @@
   <ItemGroup>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="NManto, Version=0.1.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\nManto\lib\NManto.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

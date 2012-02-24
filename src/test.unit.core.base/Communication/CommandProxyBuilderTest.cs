@@ -122,9 +122,9 @@ namespace Apollo.Core.Base.Communication
                         new CurrentThreadTaskScheduler());
                 };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var builder = new CommandProxyBuilder(local, sender, logger);
+            var builder = new CommandProxyBuilder(local, sender, systemDiagnostics);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -157,9 +157,9 @@ namespace Apollo.Core.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var builder = new CommandProxyBuilder(local, sender, logger);
+            var builder = new CommandProxyBuilder(local, sender, systemDiagnostics);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -193,9 +193,9 @@ namespace Apollo.Core.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var builder = new CommandProxyBuilder(local, sender, logger);
+            var builder = new CommandProxyBuilder(local, sender, systemDiagnostics);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTypedTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);
@@ -229,9 +229,9 @@ namespace Apollo.Core.Base.Communication
                     new CurrentThreadTaskScheduler());
             };
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var builder = new CommandProxyBuilder(local, sender, logger);
+            var builder = new CommandProxyBuilder(local, sender, systemDiagnostics);
             var proxy = builder.ProxyConnectingTo<IMockCommandSetWithTypedTaskReturn>(remoteEndpoint);
 
             var result = proxy.MyMethod(10);

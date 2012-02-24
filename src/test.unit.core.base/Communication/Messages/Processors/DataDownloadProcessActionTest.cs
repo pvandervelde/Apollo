@@ -49,12 +49,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Verifiable();
             }
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var action = new DataDownloadProcessAction(
                 uploads,
                 layer.Object,
-                logger,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var path = @"c:\temp\myfile.txt";
@@ -110,12 +110,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Verifiable();
             }
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var action = new DataDownloadProcessAction(
                 uploads,
                 layer.Object,
-                logger,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var token = new UploadToken();
@@ -169,12 +169,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Verifiable();
             }
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var action = new DataDownloadProcessAction(
                 uploads,
                 layer.Object,
-                logger,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var path = @"c:\temp\myfile.txt";
@@ -230,12 +230,12 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Verifiable();
             }
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var action = new DataDownloadProcessAction(
                 uploads,
                 layer.Object,
-                logger,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var path = @"c:\temp\myfile.txt";

@@ -24,9 +24,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             var endpoint = new EndpointId("id");
             Action<EndpointId, ICommunicationMessage> sendAction = (e, m) => { };
             var commands = new Mock<ICommandCollection>();
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, systemDiagnostics);
             Assert.AreEqual(typeof(CommandInformationRequestMessage), action.MessageTypeToProcess);
         }
 
@@ -53,9 +53,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     .Returns(commandSets.GetEnumerator());
             }
 
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, systemDiagnostics);
 
             var otherEndpoint = new EndpointId("otherId");
             action.Invoke(new CommandInformationRequestMessage(otherEndpoint));
@@ -101,9 +101,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             int loggerCount = 0;
-            Action<LogSeverityProxy, string> logger = (p, t) => { loggerCount++; };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { loggerCount++; }, null);
 
-            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, systemDiagnostics);
             action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);
@@ -128,9 +128,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             int count = 0;
-            Action<LogSeverityProxy, string> logger = (p, t) => { count++; };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { count++; }, null);
 
-            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, logger);
+            var action = new CommandInformationRequestProcessAction(endpoint, sendAction, commands.Object, systemDiagnostics);
             action.Invoke(new CommandInformationRequestMessage(new EndpointId("otherId")));
 
             Assert.AreEqual(2, count);

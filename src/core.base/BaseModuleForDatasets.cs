@@ -66,7 +66,7 @@ namespace Apollo.Core.Base
                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                            (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                            c.Resolve<ICommandCollection>(),
-                           c.Resolve<Action<LogSeverityProxy, string>>());
+                           c.Resolve<SystemDiagnostics>());
                    })
                .As<IMessageProcessAction>();
 
@@ -80,7 +80,7 @@ namespace Apollo.Core.Base
                             EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                             (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                             c.Resolve<ICommandCollection>(),
-                            c.Resolve<Action<LogSeverityProxy, string>>());
+                            c.Resolve<SystemDiagnostics>());
                     })
                 .As<IMessageProcessAction>();
 
@@ -94,7 +94,7 @@ namespace Apollo.Core.Base
                             EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                             (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
                             c.Resolve<INotificationSendersCollection>(),
-                            c.Resolve<Action<LogSeverityProxy, string>>());
+                            c.Resolve<SystemDiagnostics>());
                     })
                 .As<IMessageProcessAction>();
 

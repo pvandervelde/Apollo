@@ -78,7 +78,7 @@ namespace Apollo.Utilities
                 .SingleInstance();
         }
 
-        private static void RegisterLoggers(ContainerBuilder builder)
+        private static void RegisterDiagnostics(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
                     Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
@@ -92,8 +92,8 @@ namespace Apollo.Utilities
                 .As<ILogger>()
                 .SingleInstance();
 
-            builder.Register<Action<LogSeverityProxy, string>>(
-                c =>
+            builder.Register<SystemDiagnostics>(
+                c => 
                 {
                     var loggers = c.Resolve<IEnumerable<ILogger>>();
                     Action<LogSeverityProxy, string> action = (p, s) =>
@@ -115,9 +115,9 @@ namespace Apollo.Utilities
                         }
                     };
 
-                    return action;
+                    return new SystemDiagnostics(action, null);
                 })
-                .As<Action<LogSeverityProxy, string>>()
+                .As<SystemDiagnostics>()
                 .SingleInstance();
         }
 
@@ -189,7 +189,7 @@ namespace Apollo.Utilities
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 
                 // Register the loggers
-                RegisterLoggers(builder);
+                RegisterDiagnostics(builder);
                 RegisterAppDomainBuilder(builder);
                 RegisterTimeline(builder);
             }
