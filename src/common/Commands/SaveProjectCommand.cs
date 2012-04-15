@@ -4,11 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -52,7 +54,11 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="persistenceInformation">The object that describes how the project should be persisted.</param>
-        private static void OnSaveProject(ILinkToProjects projectFacade, IPersistenceInformation persistenceInformation)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnSaveProject(
+            ILinkToProjects projectFacade, 
+            IPersistenceInformation persistenceInformation, 
+            Func<string, IDisposable> timer)
         {
             // If there is no facade then we're in design mode or something
             // else weird.
@@ -66,18 +72,22 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            var project = projectFacade.ActiveProject();
-            project.SaveProject(persistenceInformation);
+            using (var interval = timer("Saving project"))
+            {
+                var project = projectFacade.ActiveProject();
+                project.SaveProject(persistenceInformation);
 
-            projectFacade.ActiveProject().History.Mark(Resources.SaveProjectCommand_HistoryMark);
+                projectFacade.ActiveProject().History.Mark(Resources.SaveProjectCommand_HistoryMark);
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SaveProjectCommand"/> class.
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
-        public SaveProjectCommand(ILinkToProjects projectFacade)
-            : base(obj => OnSaveProject(projectFacade, obj as IPersistenceInformation), obj => ShouldSaveProject(projectFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public SaveProjectCommand(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
+            : base(obj => OnSaveProject(projectFacade, obj as IPersistenceInformation, timer), obj => ShouldSaveProject(projectFacade))
         { 
         }
     }

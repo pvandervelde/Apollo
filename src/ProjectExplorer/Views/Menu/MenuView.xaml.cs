@@ -4,8 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Apollo.Utilities;
+using NManto;
 
 namespace Apollo.ProjectExplorer.Views.Menu
 {
@@ -46,9 +49,36 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private static readonly RoutedCommand s_AboutCommand = new RoutedCommand();
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the system.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MenuView"/> class.
         /// </summary>
-        public MenuView()
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public MenuView(SystemDiagnostics systemDiagnostics)
+            : this()
+        {
+            {
+                Lokad.Enforce.Argument(() => systemDiagnostics);
+            }
+
+            m_Diagnostics = systemDiagnostics;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MenuView"/> class.
+        /// </summary>
+        /// <remarks>
+        /// Leaving this constructor so that the Visual Studio XAML editor can get to it when it
+        /// displays the control. This may or may not be needed. If it turns out that it is not
+        /// needed then we should remove this constructor.
+        /// </remarks>
+        internal MenuView()
         {
             InitializeComponent();
 
@@ -171,7 +201,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandNewProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.NewProjectCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Creating new project"))
+            {
+                Model.NewProjectCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -187,7 +220,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandLoadProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.OpenProjectCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Loading project"))
+            {
+                Model.OpenProjectCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -203,7 +239,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandSaveProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.SaveProjectCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Saving project"))
+            {
+                Model.SaveProjectCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -219,7 +258,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandCloseProjectExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.CloseProjectCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Closing project"))
+            {
+                Model.CloseProjectCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -235,6 +277,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandExitExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
+
+            // We could put an timing interval around this but it may not be useful
+            // given that we're about to exit from the application. This means that
+            // the profiler might be destroyed halfway the timing process.
             Model.ExitCommand.Execute(null);
         }
 
@@ -251,7 +297,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandShowProjectsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.ShowProjectsCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Showing projects"))
+            {
+                Model.ShowProjectsCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -267,7 +316,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandShowScriptsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.ShowScriptsCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Showing scripts"))
+            {
+                Model.ShowScriptsCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -299,7 +351,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandUndoExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.UndoCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Undo"))
+            {
+                Model.UndoCommand.Execute(null);
+            }
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -315,7 +370,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandRedoExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.RedoCommand.Execute(null);
+            using (var interval = m_Diagnostics.Profiler.Measure("Redo"))
+            {
+                Model.RedoCommand.Execute(null);
+            }
         }
     }
 }

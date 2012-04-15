@@ -21,7 +21,7 @@ namespace Apollo.Core.Base.Communication
     internal sealed class NotificationEventAddMethodInterceptor : IInterceptor
     {
         /// <summary>
-        /// The prefix for the method that removes event handlers from the event.
+        /// The prefix for the method that adds event handlers to the event.
         /// </summary>
         private const string MethodPrefix = "add_";
 

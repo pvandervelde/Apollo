@@ -144,6 +144,7 @@ namespace Apollo.Core.Base.Loaders
                         systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints
@@ -275,6 +276,7 @@ namespace Apollo.Core.Base.Loaders
                         systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints

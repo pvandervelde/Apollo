@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
+using NManto;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -162,85 +163,94 @@ namespace Apollo.Core.Base.Communication
                 Lokad.Enforce.Argument(() => message);
             }
 
-            // First check that the message isn't a response
-            if (!message.InResponseTo.Equals(MessageId.None))
+            using (var interval = m_Diagnostics.Profiler.Measure("MessageHandler: processing message"))
             {
-                m_Diagnostics.Log(
-                    LogSeverityProxy.Trace,
-                    string.Format(
-                        CultureInfo.InvariantCulture,
-                        "Message [{0}] is a response to message [{1}].",
-                        message.Id,
-                        message.InResponseTo));
-
-                TaskCompletionSource<ICommunicationMessage> source = null;
-                lock (m_Lock)
-                {
-                    if (m_TasksWaitingForResponse.ContainsKey(message.InResponseTo))
-                    {
-                        source = m_TasksWaitingForResponse[message.InResponseTo].Item2;
-                        m_TasksWaitingForResponse.Remove(message.InResponseTo);
-                    }
-                }
-
-                // Invoke the SetResult outside the lock because the setting of the 
-                // result may lead to other messages being send and more responses 
-                // being required to be handled. All of that may need access to the lock.
-                if (source != null)
-                {
-                    source.SetResult(message);
-                }
-
-                return;
-            }
-
-            // The message isn't a response so go to the filters
-            // First copy the filters and their associated actions so that we can
-            // invoke the actions outside the lock. This is necessary because
-            // a message might invoke the requirement for more messages and eventual
-            // responses. Setting up a response requires that we can take out the lock
-            // again.
-            // Once we have the filters then we can just run past all of them and invoke
-            // the actions based on the filter pass through.
-            Dictionary<IMessageFilter, IMessageProcessAction> localCollection = null;
-            lock (m_Lock)
-            {
-                localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_Filters);
-            }
-
-            foreach (var pair in localCollection)
-            {
-                if (pair.Key.PassThrough(message))
+                // First check that the message isn't a response
+                if (!message.InResponseTo.Equals(MessageId.None))
                 {
                     m_Diagnostics.Log(
                         LogSeverityProxy.Trace,
                         string.Format(
                             CultureInfo.InvariantCulture,
-                            "Processing message of type {0} with action of type {1}.",
-                            message.GetType(),
-                            pair.Value.GetType()));
+                            "Message [{0}] is a response to message [{1}].",
+                            message.Id,
+                            message.InResponseTo));
 
-                    pair.Value.Invoke(message);
+                    using (var childInterval = m_Diagnostics.Profiler.Measure("Processing response message"))
+                    {
+                        TaskCompletionSource<ICommunicationMessage> source = null;
+                        lock (m_Lock)
+                        {
+                            if (m_TasksWaitingForResponse.ContainsKey(message.InResponseTo))
+                            {
+                                source = m_TasksWaitingForResponse[message.InResponseTo].Item2;
+                                m_TasksWaitingForResponse.Remove(message.InResponseTo);
+                            }
+                        }
 
-                    // Each message type should only be procesed by one process action
-                    // so if we find it, then we're done.
+                        // Invoke the SetResult outside the lock because the setting of the 
+                        // result may lead to other messages being send and more responses 
+                        // being required to be handled. All of that may need access to the lock.
+                        if (source != null)
+                        {
+                            source.SetResult(message);
+                        }
+
+                        return;
+                    }
+                }
+
+                // The message isn't a response so go to the filters
+                // First copy the filters and their associated actions so that we can
+                // invoke the actions outside the lock. This is necessary because
+                // a message might invoke the requirement for more messages and eventual
+                // responses. Setting up a response requires that we can take out the lock
+                // again.
+                // Once we have the filters then we can just run past all of them and invoke
+                // the actions based on the filter pass through.
+                Dictionary<IMessageFilter, IMessageProcessAction> localCollection = null;
+                lock (m_Lock)
+                {
+                    localCollection = new Dictionary<IMessageFilter, IMessageProcessAction>(m_Filters);
+                }
+
+                using (var childInterval = m_Diagnostics.Profiler.Measure("Using message filters"))
+                {
+                    foreach (var pair in localCollection)
+                    {
+                        if (pair.Key.PassThrough(message))
+                        {
+                            m_Diagnostics.Log(
+                                LogSeverityProxy.Trace,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Processing message of type {0} with action of type {1}.",
+                                    message.GetType(),
+                                    pair.Value.GetType()));
+
+                            pair.Value.Invoke(message);
+
+                            // Each message type should only be procesed by one process action
+                            // so if we find it, then we're done.
+                            return;
+                        }
+                    }
+                }
+
+                // Only now do we check if anything should be cleaned up. By waiting till here we
+                // give the system a chance to process the message the normal way first, that means
+                // that the rest of the system can be notified.
+                if (IsMessageIndicatingEndpointDisconnect(message))
+                {
+                    TerminateWaitingResponsesForEndpoint(message.OriginatingEndpoint);
                     return;
                 }
-            }
 
-            // Only now do we check if anything should be cleaned up. By waiting till here we
-            // give the system a chance to process the message the normal way first, that means
-            // that the rest of the system can be notified.
-            if (IsMessageIndicatingEndpointDisconnect(message))
-            {
-                TerminateWaitingResponsesForEndpoint(message.OriginatingEndpoint);
-                return;
-            }
-
-            // The message type is unknown. See if the last chance handler wants it ...
-            if (m_LastChanceProcessor != null)
-            {
-                m_LastChanceProcessor.Invoke(message);
+                // The message type is unknown. See if the last chance handler wants it ...
+                if (m_LastChanceProcessor != null)
+                {
+                    m_LastChanceProcessor.Invoke(message);
+                }
             }
         }
 

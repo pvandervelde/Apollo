@@ -43,6 +43,7 @@
     <Compile Include="Commands\IInvokeCommands.cs" />
     <Compile Include="Commands\ICommandContainer.cs" />
     <Compile Include="Commands\UnknownCommandException.cs" />
+    <Compile Include="Configuration\ConfigurationHelpers.cs" />
     <Compile Include="Configuration\ConfigurationKey.cs" />
     <Compile Include="Configuration\IConfiguration.cs" />
     <Compile Include="Configuration\XmlConfiguration.cs" />
@@ -142,11 +143,11 @@
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
-    <Reference Include="NManto, Version=0.1.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nManto\lib\NManto.dll</HintPath>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

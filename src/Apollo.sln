@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 11
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 10
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Host", "core.host\Apollo.Core.Host.csproj", "{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apollo.Core.Base", "core.base\Apollo.Core.Base.csproj", "{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}"

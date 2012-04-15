@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utilities;
 using Lokad;
+using NManto;
 
 namespace Apollo.Core.Base.Communication.Messages.Processors
 {
@@ -90,14 +91,17 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             try
             {
-                var type = ProxyExtensions.ToType(invocation.Type);
-                var notificationSet = m_AvailableProxies.NotificationsFor(msg.OriginatingEndpoint, type);
-                Debug.Assert(notificationSet != null, "There should be a proxy for this notification set.");
+                using (var interval = m_Diagnostics.Profiler.Measure("Raise notification"))
+                {
+                    var type = ProxyExtensions.ToType(invocation.Type);
+                    var notificationSet = m_AvailableProxies.NotificationsFor(msg.OriginatingEndpoint, type);
+                    Debug.Assert(notificationSet != null, "There should be a proxy for this notification set.");
 
-                var proxyObj = notificationSet as NotificationSetProxy;
-                Debug.Assert(proxyObj != null, "The object should be a NotificationSetProxy.");
+                    var proxyObj = notificationSet as NotificationSetProxy;
+                    Debug.Assert(proxyObj != null, "The object should be a NotificationSetProxy.");
 
-                proxyObj.RaiseEvent(invocation.MemberName, msg.Arguments);
+                    proxyObj.RaiseEvent(invocation.MemberName, msg.Arguments);
+                }
             }
             catch (Exception e)
             {

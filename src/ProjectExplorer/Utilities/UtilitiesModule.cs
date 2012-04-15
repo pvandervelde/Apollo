@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -17,6 +18,8 @@ using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
+using NManto;
+using NManto.Reporting;
 using NSarrac.Framework;
 
 namespace Apollo.Utilities
@@ -32,6 +35,11 @@ namespace Apollo.Utilities
         /// The default name for the error log.
         /// </summary>
         private const string DefaultInfoFileName = "projectexplorer.info.log";
+
+        /// <summary>
+        /// The default name for the profiler log.
+        /// </summary>
+        private const string DefaultProfilerFileName = "projectexplorer.profile";
 
         private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
         {
@@ -80,18 +88,6 @@ namespace Apollo.Utilities
 
         private static void RegisterDiagnostics(ContainerBuilder builder)
         {
-            builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
-                    new DebugLogTemplate(() => DateTimeOffset.Now)))
-                .As<ILogger>()
-                .SingleInstance();
-
-            builder.Register(c => LoggerBuilder.ForEventLog(
-                    Assembly.GetExecutingAssembly().GetName().Name,
-                    new DebugLogTemplate(() => DateTimeOffset.Now)))
-                .As<ILogger>()
-                .SingleInstance();
-
             builder.Register<SystemDiagnostics>(
                 c => 
                 {
@@ -115,10 +111,62 @@ namespace Apollo.Utilities
                         }
                     };
 
-                    return new SystemDiagnostics(action, null);
+                    Profiler profiler = null;
+                    if (c.IsRegistered<Profiler>())
+                    {
+                        profiler = c.Resolve<Profiler>();
+                    }
+
+                    return new SystemDiagnostics(action, profiler);
                 })
                 .As<SystemDiagnostics>()
                 .SingleInstance();
+        }
+
+        private static void RegisterLoggers(ContainerBuilder builder)
+        {
+            builder.Register(c => LoggerBuilder.ForFile(
+                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
+                    new DebugLogTemplate(() => DateTimeOffset.Now)))
+                .As<ILogger>()
+                .SingleInstance();
+
+            builder.Register(c => LoggerBuilder.ForEventLog(
+                    Assembly.GetExecutingAssembly().GetName().Name,
+                    new DebugLogTemplate(() => DateTimeOffset.Now)))
+                .As<ILogger>()
+                .SingleInstance();
+        }
+
+        private static void RegisterProfiler(ContainerBuilder builder)
+        {
+            if (ConfigurationHelpers.ShouldBeProfiling())
+            {
+                builder.Register((c, p) => new TextReporter(p.TypedAs<Func<Stream>>()))
+                        .As<TextReporter>()
+                        .As<ITransformReports>();
+
+                builder.Register(c => new TimingStorage())
+                    .OnRelease(
+                        storage => 
+                        {
+                            // Write all the profiling results out to disk. Do this the ugly way 
+                            // because we don't know if any of the other items in the container have
+                            // been removed yet.
+                            Func<Stream> factory =
+                                () => new FileStream(
+                                    Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
+                                    FileMode.OpenOrCreate,
+                                    FileAccess.Write,
+                                    FileShare.Read);
+                            var reporter = new TextReporter(factory);
+                            reporter.Transform(storage.FromStartTillEnd());
+                        })
+                    .As<IStoreIntervals>();
+
+                builder.Register(c => new Profiler(
+                        c.Resolve<IStoreIntervals>()));
+            }
         }
 
         private static void RegisterTimeline(ContainerBuilder builder)
@@ -188,7 +236,8 @@ namespace Apollo.Utilities
                 RSAParameters rsaParameters = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => rsaParameters));
 
-                // Register the loggers
+                RegisterLoggers(builder);
+                RegisterProfiler(builder);
                 RegisterDiagnostics(builder);
                 RegisterAppDomainBuilder(builder);
                 RegisterTimeline(builder);

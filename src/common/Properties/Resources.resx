@@ -653,4 +653,34 @@ Please wait ...</value>
   <data name="SaveProjectCommand_HistoryMark" xml:space="preserve">
     <value>Save</value>
   </data>
+  <data name="Img_Backward_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

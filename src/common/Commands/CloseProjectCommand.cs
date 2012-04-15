@@ -4,9 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -46,7 +49,8 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction with
         /// the project system.
         /// </param>
-        private static void OnCloseProject(ILinkToProjects projectFacade)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnCloseProject(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
         {
             // If there is no project facade, then we're in 
             // designer mode, or something else silly.
@@ -55,7 +59,10 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            projectFacade.UnloadProject();
+            using (var interval = timer("Unloading project"))
+            {
+                projectFacade.UnloadProject();
+            }
         }
 
         /// <summary>
@@ -65,8 +72,9 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction
         /// with the project system.
         /// </param>
-        public CloseProjectCommand(ILinkToProjects projectFacade)
-            : base(obj => OnCloseProject(projectFacade), obj => CanCloseProject(projectFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public CloseProjectCommand(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
+            : base(obj => OnCloseProject(projectFacade, timer), obj => CanCloseProject(projectFacade))
         { 
         }
     }

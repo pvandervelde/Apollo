@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Utilities;
 using Lokad;
+using NManto;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -24,9 +25,9 @@ namespace Apollo.Core.Base.Communication
     {
         /// <summary>
         /// The collection of endpoints which have been contacted for information about 
-        /// their available commands.
+        /// their available proxies.
         /// </summary>
-        private readonly IList<EndpointId> m_WaitingForCommandInformation
+        private readonly IList<EndpointId> m_WaitingForEndpointInformation
             = new List<EndpointId>();
 
         /// <summary>
@@ -37,10 +38,10 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The object that reports when a new proxy is registered on a remote endpoint.
         /// </summary>
-        private readonly IReportNewProxies m_CommandReporter;
+        private readonly IReportNewProxies m_ProxyReporter;
 
         /// <summary>
-        /// The function that creates command proxy objects.
+        /// The function that creates proxy objects.
         /// </summary>
         private readonly Func<EndpointId, Type, TProxyObject> m_Builder;
 
@@ -58,14 +59,14 @@ namespace Apollo.Core.Base.Communication
         /// Initializes a new instance of the <see cref="RemoteEndpointProxyHub{TProxyObject}"/> class.
         /// </summary>
         /// <param name="layer">The communication layer that will handle the actual connections.</param>
-        /// <param name="commandReporter">The object that reports when a new command is registered on a remote endpoint.</param>
-        /// <param name="builder">The fun ction that is responsible for building the command proxies.</param>
+        /// <param name="proxyReporter">The object that reports when a new proxy is registered on a remote endpoint.</param>
+        /// <param name="builder">The function that is responsible for building the proxies.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="commandReporter"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="proxyReporter"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="builder"/> is <see langword="null" />.
@@ -75,7 +76,7 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         protected RemoteEndpointProxyHub(
             ICommunicationLayer layer,
-            IReportNewProxies commandReporter,
+            IReportNewProxies proxyReporter,
             Func<EndpointId, Type, TProxyObject> builder,
             SystemDiagnostics systemDiagnostics)
         {
@@ -91,9 +92,9 @@ namespace Apollo.Core.Base.Communication
                 m_Layer.OnEndpointSignedOut += (s, e) => HandleEndpointSignOut(e.Endpoint);
             }
 
-            m_CommandReporter = commandReporter;
+            m_ProxyReporter = proxyReporter;
             {
-                m_CommandReporter.OnNewProxyRegistered += (s, e) => HandleNewProxyReported(e.Endpoint, e.Proxy);
+                m_ProxyReporter.OnNewProxyRegistered += (s, e) => HandleNewProxyReported(e.Endpoint, e.Proxy);
             }
 
             m_Builder = builder;
@@ -102,187 +103,202 @@ namespace Apollo.Core.Base.Communication
 
         private void HandleEndpointSignIn(ChannelConnectionInformation channelConnectionInformation)
         {
-            // See if we already had the endpoint information. If so then we don't really care
-            // If not then we should get the command information
-            var endpoint = channelConnectionInformation.Id;
-            if (!HasProxyFor(endpoint))
+            using (var interval = m_Diagnostics.Profiler.Measure("Getting endpoint information async."))
             {
-                // Contact the endpoint and ask for information about the 
-                // available commands. Because this will take some time we'll just ignore
-                // the fact that the endpoint signed on and we'll pretend it didn't happen (yet).
-                lock (m_Lock)
+                // See if we already had the endpoint information. If so then we don't really care
+                // If not then we should get the command information
+                var endpoint = channelConnectionInformation.Id;
+                if (!HasProxyFor(endpoint))
                 {
-                    if (m_WaitingForCommandInformation.Contains(endpoint))
+                    // Contact the endpoint and ask for information about the 
+                    // available proxies. Because this will take some time we'll just ignore
+                    // the fact that the endpoint signed on and we'll pretend it didn't happen (yet).
+                    lock (m_Lock)
                     {
-                        // We've already contacted the endpoint and we're still waiting.
-                        m_Diagnostics.Log(
-                            LogSeverityProxy.Trace,
-                            string.Format(
-                                CultureInfo.InvariantCulture,
-                                "Already waiting for {0} from endpoint [{1}].",
-                                TraceNameForProxyObjects(),
-                                endpoint));
-                        return;
-                    }
-
-                    // Send out a message and ask for more information
-                    var msg = CreateInformationRequestMessage(m_Layer.Id);
-                    var task = m_Layer.SendMessageAndWaitForResponse(endpoint, msg);
-                    m_WaitingForCommandInformation.Add(endpoint);
-
-                    task.ContinueWith(
-                        t =>
+                        if (m_WaitingForEndpointInformation.Contains(endpoint))
                         {
-                            ProcessInformationResponse(t, endpoint);
-                        },
-                        TaskContinuationOptions.ExecuteSynchronously);
+                            // We've already contacted the endpoint and we're still waiting.
+                            m_Diagnostics.Log(
+                                LogSeverityProxy.Trace,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Already waiting for {0} from endpoint [{1}].",
+                                    TraceNameForProxyObjects(),
+                                    endpoint));
+                            return;
+                        }
+
+                        // Send out a message and ask for more information
+                        var msg = CreateInformationRequestMessage(m_Layer.Id);
+                        var task = m_Layer.SendMessageAndWaitForResponse(endpoint, msg);
+                        m_WaitingForEndpointInformation.Add(endpoint);
+
+                        task.ContinueWith(
+                            t =>
+                            {
+                                ProcessInformationResponse(t, endpoint);
+                            },
+                            TaskContinuationOptions.ExecuteSynchronously);
+                    }
                 }
             }
         }
 
         private void ProcessInformationResponse(Task<ICommunicationMessage> task, EndpointId endpoint)
         {
-            bool haveStoredCommandInformation = false;
-            var commandList = new List<Type>();
-            try
+            using (var interval = m_Diagnostics.Profiler.Measure("Received endpoint information"))
             {
-                if (task.IsCompleted)
+                bool haveStoredEndpointInformation = false;
+                var proxyList = new List<Type>();
+                try
                 {
-                    var msg = task.Result as EndpointProxyTypesResponseMessage;
-                    if (msg == null)
+                    if (task.IsCompleted)
                     {
-                        // The message isn't the one we were expecting. Unfortunately 
-                        // there's nothing we can do about it. We'll just pretend we
-                        // didn't get a response and remove the endpoint from the
-                        // collection.
-                        m_Diagnostics.Log(
-                            LogSeverityProxy.Warning, 
-                            string.Format(
-                                CultureInfo.InvariantCulture, 
-                                "The information about endpoint: {0} was missing",
-                                endpoint));
-
-                        return;
-                    }
-
-                    lock (m_Lock)
-                    {
-                        // Only push the changes in to the collection if we
-                        // are indeed waiting for the changes. If the endpoint
-                        // was removed at some point before we get here then 
-                        // we apparently don't care anymore and we just ignore it
-                        if (m_WaitingForCommandInformation.Contains(endpoint))
+                        var msg = task.Result as EndpointProxyTypesResponseMessage;
+                        if (msg == null)
                         {
-                            Debug.Assert(!HasProxyFor(endpoint), "There shouldn't be any endpoint information");
-
-                            // We expect that each endpoint will only have a few proxy types but there might be a lot of 
-                            // endpoints. Also accessing any method in a command set proxy is going to be slow because it 
-                            // needs to travel to another application and come back (possibly over the network). it seems the
-                            // sorted list is the best trade-off (memory vs performance) in this case.
-                            var commands = msg.ProxyTypes;
+                            // The message isn't the one we were expecting. Unfortunately 
+                            // there's nothing we can do about it. We'll just pretend we
+                            // didn't get a response and remove the endpoint from the
+                            // collection.
                             m_Diagnostics.Log(
-                                LogSeverityProxy.Trace,
+                                LogSeverityProxy.Warning,
                                 string.Format(
                                     CultureInfo.InvariantCulture,
-                                    "Received {0} {1} from endpoint [{2}].",
-                                    commands.Count,
-                                    TraceNameForProxyObjects(),
+                                    "The information about endpoint: {0} was missing",
                                     endpoint));
 
-                            var list = new SortedList<Type, TProxyObject>(commands.Count, new TypeComparer());
-                            foreach (var command in commands)
-                            { 
-                                // Hydrate the command type. This requires loading the assembly which a) might
-                                // be slow and b) might fail
-                                Type commandSetType = LoadProxyType(endpoint, command);
-                                list.Add(commandSetType, m_Builder(endpoint, commandSetType));
-                            }
+                            return;
+                        }
 
-                            if (list.Count > 0)
+                        lock (m_Lock)
+                        {
+                            // Only push the changes in to the collection if we
+                            // are indeed waiting for the changes. If the endpoint
+                            // was removed at some point before we get here then 
+                            // we apparently don't care anymore and we just ignore it
+                            if (m_WaitingForEndpointInformation.Contains(endpoint))
                             {
-                                AddProxiesToStorage(endpoint, list);
-                                haveStoredCommandInformation = true;
-                                commandList.AddRange(list.Keys);
+                                Debug.Assert(!HasProxyFor(endpoint), "There shouldn't be any endpoint information");
+
+                                // We expect that each endpoint will only have a few proxy types but there might be a lot of 
+                                // endpoints. Also accessing any method in a proxy is going to be slow because it 
+                                // needs to travel to another application and come back (possibly over the network). it seems the
+                                // sorted list is the best trade-off (memory vs performance) in this case.
+                                var proxyTypes = msg.ProxyTypes;
+                                m_Diagnostics.Log(
+                                    LogSeverityProxy.Trace,
+                                    string.Format(
+                                        CultureInfo.InvariantCulture,
+                                        "Received {0} {1} from endpoint [{2}].",
+                                        proxyTypes.Count,
+                                        TraceNameForProxyObjects(),
+                                        endpoint));
+
+                                var list = new SortedList<Type, TProxyObject>(proxyTypes.Count, new TypeComparer());
+                                foreach (var proxy in proxyTypes)
+                                {
+                                    // Hydrate the proxy type. This requires loading the assembly which a) might
+                                    // be slow and b) might fail
+                                    Type proxyType = LoadProxyType(endpoint, proxy);
+                                    list.Add(proxyType, m_Builder(endpoint, proxyType));
+                                }
+
+                                if (list.Count > 0)
+                                {
+                                    AddProxiesToStorage(endpoint, list);
+                                    haveStoredEndpointInformation = true;
+                                    proxyList.AddRange(list.Keys);
+                                }
                             }
                         }
                     }
                 }
-            }
-            catch (AggregateException)
-            {
-                // We don't really care about any exceptions that were thrown
-                // If there was a problem we just remove the endpoint from the
-                // 'waiting list' and move on.
-                haveStoredCommandInformation = false;
-            }
-            finally 
-            {
-                lock (m_Lock)
+                catch (AggregateException)
                 {
-                    if (m_WaitingForCommandInformation.Contains(endpoint))
+                    // We don't really care about any exceptions that were thrown
+                    // If there was a problem we just remove the endpoint from the
+                    // 'waiting list' and move on.
+                    haveStoredEndpointInformation = false;
+                }
+                finally
+                {
+                    lock (m_Lock)
                     {
-                        m_Diagnostics.Log(
-                           LogSeverityProxy.Trace,
-                           string.Format(
-                               CultureInfo.InvariantCulture,
-                               "No longer waiting for {0} from endpoint: {1}",
-                               TraceNameForProxyObjects(),
-                               endpoint));
+                        if (m_WaitingForEndpointInformation.Contains(endpoint))
+                        {
+                            m_Diagnostics.Log(
+                               LogSeverityProxy.Trace,
+                               string.Format(
+                                   CultureInfo.InvariantCulture,
+                                   "No longer waiting for {0} from endpoint: {1}",
+                                   TraceNameForProxyObjects(),
+                                   endpoint));
 
-                        m_WaitingForCommandInformation.Remove(endpoint);
+                            m_WaitingForEndpointInformation.Remove(endpoint);
+                        }
                     }
                 }
-            }
 
-            // Notify the outside world that we have more commands. Do this outside
-            // the lock because a) the notification may take a while and b) it 
-            // may trigger all kinds of other mayhem.
-            if (haveStoredCommandInformation)
-            {
-                if (commandList.Count > 0)
+                // Notify the outside world that we have more proxies. Do this outside
+                // the lock because a) the notification may take a while and b) it 
+                // may trigger all kinds of other mayhem.
+                if (haveStoredEndpointInformation)
                 {
-                    RaiseOnEndpointSignedIn(endpoint, commandList);
+                    if (proxyList.Count > 0)
+                    {
+                        using (var innerInterval = m_Diagnostics.Profiler.Measure("Notifying of new endpoint"))
+                        {
+                            RaiseOnEndpointSignedIn(endpoint, proxyList);
+                        }
+                    }
                 }
             }
         }
 
         private void HandleEndpointSignOut(EndpointId endpoint)
         {
-            lock (m_Lock)
+            using (var interval = m_Diagnostics.Profiler.Measure("Endpoint disconnected - removing proxies."))
             {
-                if (m_WaitingForCommandInformation.Contains(endpoint))
+                lock (m_Lock)
                 {
-                    m_Diagnostics.Log(
-                        LogSeverityProxy.Trace,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "No longer waiting for {0} from endpoint [{1}].",
-                            TraceNameForProxyObjects(),
-                            endpoint));
+                    if (m_WaitingForEndpointInformation.Contains(endpoint))
+                    {
+                        m_Diagnostics.Log(
+                            LogSeverityProxy.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "No longer waiting for {0} from endpoint [{1}].",
+                                TraceNameForProxyObjects(),
+                                endpoint));
 
-                    m_WaitingForCommandInformation.Remove(endpoint);
+                        m_WaitingForEndpointInformation.Remove(endpoint);
+                    }
+
+                    if (HasProxyFor(endpoint))
+                    {
+                        m_Diagnostics.Log(
+                            LogSeverityProxy.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Removing {0} for endpoint [{1}].",
+                                TraceNameForProxyObjects(),
+                                endpoint));
+
+                        RemoveProxiesFor(endpoint);
+                    }
                 }
 
-                if (HasProxyFor(endpoint))
+                using (var innerInterval = m_Diagnostics.Profiler.Measure("Notifying of proxy removal."))
                 {
-                    m_Diagnostics.Log(
-                        LogSeverityProxy.Trace,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Removing {0} for endpoint [{1}].",
-                            TraceNameForProxyObjects(),
-                            endpoint));
-
-                    RemoveProxiesFor(endpoint);
+                    RaiseOnEndpointSignedOff(endpoint);
                 }
             }
-
-            RaiseOnEndpointSignedOff(endpoint);
         }
 
         private void HandleNewProxyReported(EndpointId endpoint, ISerializedType serializedProxyType)
         {
-            // We're going to assume that if we hear about a new command then we already have information
+            // We're going to assume that if we hear about a new proxy then we already have information
             // about the endpoint. This may well be an incorrect assumption but for now it will do.
             Type proxyType = LoadProxyType(endpoint, serializedProxyType);
             lock (m_Lock)
@@ -294,7 +310,7 @@ namespace Apollo.Core.Base.Communication
 
         private Type LoadProxyType(EndpointId endpoint, ISerializedType serializedType)
         {
-            // Hydrate the command type. This requires loading the assembly which a) might
+            // Hydrate the proxy type. This requires loading the assembly which a) might
             // be slow and b) might fail
             Type proxyType = null;
             try

@@ -12,6 +12,7 @@ using System.Linq;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Lokad;
+using NManto;
 
 namespace Apollo.Core.Base.Communication.Messages.Processors
 {
@@ -105,17 +106,20 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 return;
             }
 
-            Type channelType = m_ConnectedChannelTypes.Find(t => string.Equals(t.FullName, msg.ChannelType, StringComparison.Ordinal));
-            m_Diagnostics.Log(
-                LogSeverityProxy.Trace,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "New endpoint connected via the {0} channel. Endpoint {1} is at {2}.",
-                    channelType,
-                    msg.OriginatingEndpoint,
-                    msg.Address));
+            using (var interval = m_Diagnostics.Profiler.Measure("Endpoint connecting"))
+            {
+                Type channelType = m_ConnectedChannelTypes.Find(t => string.Equals(t.FullName, msg.ChannelType, StringComparison.Ordinal));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "New endpoint connected via the {0} channel. Endpoint {1} is at {2}.",
+                        channelType,
+                        msg.OriginatingEndpoint,
+                        msg.Address));
 
-            m_ConnectionInformationSink.RecentlyConnectedEndpoint(msg.OriginatingEndpoint, channelType, new Uri(msg.Address));
+                m_ConnectionInformationSink.RecentlyConnectedEndpoint(msg.OriginatingEndpoint, channelType, new Uri(msg.Address));
+            }
         }
     }
 }

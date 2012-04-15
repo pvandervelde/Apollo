@@ -45,5 +45,10 @@ namespace Apollo.UI.Common
         /// Defines the name of the error report region of the status bar.
         /// </summary>
         public const string StatusBarErrorReport = "StatusBar_ErrorReport";
+
+        /// <summary>
+        /// Defines the name of the profiler report region of the status bar.
+        /// </summary>
+        public const string StatusBarProfilerReport = "StatusBar_ProfilerReport";
     }
 }

@@ -116,6 +116,7 @@ namespace Apollo.Core.Base.Loaders
                         systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var request = new DatasetRequest
@@ -213,6 +214,7 @@ namespace Apollo.Core.Base.Loaders
                         systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };

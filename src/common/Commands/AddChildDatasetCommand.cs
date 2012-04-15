@@ -4,10 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -45,7 +48,8 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
-        private static void OnAddNewChild(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnAddNewChild(ILinkToProjects projectFacade, DatasetFacade datasetFacade, Func<string, IDisposable> timer)
         {
             // If there is no dataset facade, then we're in 
             // designer mode, or something else silly.
@@ -54,8 +58,11 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            datasetFacade.AddChild();
-            projectFacade.ActiveProject().History.Mark();
+            using (var interval = timer("Add dataset to graph"))
+            {
+                datasetFacade.AddChild();
+                projectFacade.ActiveProject().History.Mark();
+            }
         }
 
         /// <summary>
@@ -63,8 +70,9 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
-        public AddChildDatasetCommand(ILinkToProjects projectFacade, DatasetFacade datasetFacade)
-            : base(obj => OnAddNewChild(projectFacade, datasetFacade), obj => CanAddNewChild(datasetFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public AddChildDatasetCommand(ILinkToProjects projectFacade, DatasetFacade datasetFacade, Func<string, IDisposable> timer)
+            : base(obj => OnAddNewChild(projectFacade, datasetFacade, timer), obj => CanAddNewChild(datasetFacade))
         { 
         }
     }

@@ -46,19 +46,20 @@ namespace Apollo.UI.Common.Views.Datasets
             var context = m_Container.Resolve<IContextAware>();
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
+            var timer = m_Container.Resolve<Func<string, IDisposable>>();
 
             var result = new DatasetModel(context, progressTracker, projectFacade, dataset)
             {
-                NewChildDatasetCommand = new AddChildDatasetCommand(projectFacade, dataset),
-                DeleteDatasetCommand = new DeleteDatasetCommand(projectFacade, dataset),
-                LoadDatasetCommand = CreateLoadDatasetCommand(dataset),
-                UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(dataset),
+                NewChildDatasetCommand = new AddChildDatasetCommand(projectFacade, dataset, timer),
+                DeleteDatasetCommand = new DeleteDatasetCommand(projectFacade, dataset, timer),
+                LoadDatasetCommand = CreateLoadDatasetCommand(dataset, timer),
+                UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(dataset, timer),
             };
 
             return result;
         }
 
-        private LoadDatasetOntoMachineCommand CreateLoadDatasetCommand(DatasetFacade dataset)
+        private LoadDatasetOntoMachineCommand CreateLoadDatasetCommand(DatasetFacade dataset, Func<string, IDisposable> timer)
         {
             var context = m_Container.Resolve<IContextAware>();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
@@ -82,7 +83,8 @@ namespace Apollo.UI.Common.Views.Datasets
 
             var command = m_Container.Resolve<LoadDatasetOntoMachineCommand>(
                 new TypedParameter(typeof(DatasetFacade), dataset),
-                new TypedParameter(typeof(Func<IEnumerable<DistributionSuggestion>, SelectedProposal>), selector));
+                new TypedParameter(typeof(Func<IEnumerable<DistributionSuggestion>, SelectedProposal>), selector),
+                new TypedParameter(typeof(SystemDiagnostics), timer));
             return command;
         }
     }

@@ -4,10 +4,17 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
+using System.Text;
 using Apollo.UI.Common.Feedback;
+using Apollo.UI.Common.Profiling;
 using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Autofac;
+using NManto;
+using NManto.Reporting;
 using NSarrac.Framework;
 
 namespace Apollo.UI.Common
@@ -39,6 +46,49 @@ namespace Apollo.UI.Common
                 builder.Register(c => new FeedbackReportTransmitter(
                         c.Resolve<IReportSender>()))
                     .As<ISendFeedbackReports>();
+
+                builder.Register(c => new TimingReportCollection())
+                    .SingleInstance();
+
+                builder.Register<Func<string, IDisposable>>(
+                    c => 
+                    {
+                        Func<string, IDisposable> result = description => null;
+                        if (ConfigurationHelpers.ShouldBeProfiling())
+                        {
+                            // Autofac 2.4.5 forces the 'c' variable to disappear. See here:
+                            // http://stackoverflow.com/questions/5383888/autofac-registration-issue-in-release-v2-4-5-724
+                            var ctx = c.Resolve<IComponentContext>();
+                            Func<Report, string> reportBuilder =
+                                report =>
+                                {
+                                    var stream = new MemoryStream();
+                                    Func<Stream> streamFactory = () => stream;
+                                    var transformer = ctx.Resolve<TextReporter>(
+                                        new Autofac.Core.Parameter[] 
+                                    { 
+                                        new TypedParameter(typeof(Func<Stream>), streamFactory) 
+                                    });
+                                    transformer.Transform(report);
+
+                                    // normally you can't touch the stream anymore, but it turns out you
+                                    // can touch the actual buffer
+                                    return Encoding.Unicode.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+                                };
+
+                            result =
+                                description =>
+                                    new TimingIntervalHelper(
+                                        ctx.Resolve<SystemDiagnostics>(),
+                                        ctx.Resolve<TimingStorage>(),
+                                        ctx.Resolve<TimingReportCollection>(),
+                                        reportBuilder,
+                                        description);
+                        }
+
+                        return result;
+                    })
+                    .SingleInstance();
             }
         }
     }

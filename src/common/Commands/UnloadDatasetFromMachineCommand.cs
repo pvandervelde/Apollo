@@ -4,9 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -40,7 +43,8 @@ namespace Apollo.UI.Common.Commands
         /// Called when the dataset should be unloaded.
         /// </summary>
         /// <param name="dataset">The dataset.</param>
-        private static void OnUnload(DatasetFacade dataset)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnUnload(DatasetFacade dataset, Func<string, IDisposable> timer)
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
@@ -54,15 +58,19 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            dataset.UnloadFromMachine();
+            using (var interval = timer("Unloading dataset"))
+            {
+                dataset.UnloadFromMachine();
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnloadDatasetFromMachineCommand"/> class.
         /// </summary>
         /// <param name="dataset">The dataset.</param>
-        public UnloadDatasetFromMachineCommand(DatasetFacade dataset)
-            : base(obj => OnUnload(dataset), obj => CanUnload(dataset))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public UnloadDatasetFromMachineCommand(DatasetFacade dataset, Func<string, IDisposable> timer)
+            : base(obj => OnUnload(dataset, timer), obj => CanUnload(dataset))
         {
         }
     }

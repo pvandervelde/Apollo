@@ -51,7 +51,8 @@ namespace Apollo.Core.Base
                             return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
                                     where connection.ChannelType.Equals(typeof(TcpChannelType))
                                     select connection).First();
-                        });
+                        },
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
@@ -83,7 +84,8 @@ namespace Apollo.Core.Base
                            return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
                                    where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
                                    select connection).First();
-                       });
+                       },
+                       c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()

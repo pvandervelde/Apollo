@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Apollo.Utilities.Configuration;
+using NManto;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -183,6 +184,11 @@ namespace Apollo.Core.Base.Loaders
         private readonly Func<ChannelConnectionInformation> m_ChannelInformation;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the system.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The scheduler that will be used to schedule tasks.
         /// </summary>
         private readonly TaskScheduler m_Scheduler;
@@ -196,6 +202,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
         /// <param name="channelInformation">The function that returns information about the correct channel to use for communication.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="commandHub"/> is <see langword="null" />.
@@ -215,6 +222,9 @@ namespace Apollo.Core.Base.Loaders
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
+        /// </exception>
         public RemoteDatasetDistributor(
             ISendCommandsToRemoteEndpoints commandHub,
             INotifyOfRemoteEndpointEvents notificationHub,
@@ -222,6 +232,7 @@ namespace Apollo.Core.Base.Loaders
             WaitingUploads uploads,
             Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
             Func<ChannelConnectionInformation> channelInformation,
+            SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
             {
@@ -230,12 +241,14 @@ namespace Apollo.Core.Base.Loaders
                 Lokad.Enforce.Argument(() => configuration);
                 Lokad.Enforce.Argument(() => datasetInformationBuilder);
                 Lokad.Enforce.Argument(() => channelInformation);
+                Lokad.Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Configuration = configuration;
             m_Uploads = uploads;
             m_DatasetInformationBuilder = datasetInformationBuilder;
             m_ChannelInformation = channelInformation;
+            m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
             m_CommandHub = commandHub;
             {
@@ -319,13 +332,16 @@ namespace Apollo.Core.Base.Loaders
                 }
             }
 
-            var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
-            return from proposal in proposals
-                   select new DistributionPlan(
-                       (p, t, r) => ImplementPlan(p, t, r),
-                       request.DatasetToLoad,
-                       new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
-                       proposal);
+            using (var interval = m_Diagnostics.Profiler.Measure("Generating remote proposal"))
+            {
+                var proposals = RetrieveProposals(availableEndpoints, m_Configuration, request, token);
+                return from proposal in proposals
+                       select new DistributionPlan(
+                           (p, t, r) => ImplementPlan(p, t, r),
+                           request.DatasetToLoad,
+                           new NetworkIdentifier(proposal.Endpoint.OriginatesOnMachine()),
+                           proposal);
+            }
         }
 
         /// <summary>
