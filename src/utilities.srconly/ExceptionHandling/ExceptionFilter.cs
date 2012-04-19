@@ -204,7 +204,6 @@ namespace Apollo.Utilities.ExceptionHandling
             MethodBuilder meth = type.DefineMethod("InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
 
             var il = meth.GetILGenerator();
-            var exLoc = il.DeclareLocal(typeof(Exception));
 
             // Invoke the body delegate inside the try
             il.BeginExceptionBlock();

@@ -73,14 +73,19 @@ namespace Apollo.UI.Common
 
                                     // normally you can't touch the stream anymore, but it turns out you
                                     // can touch the actual buffer
-                                    return Encoding.Unicode.GetString(stream.GetBuffer(), 0, (int)stream.Length);
+                                    var buffer = stream.GetBuffer();
+                                    var outputString = Encoding.Unicode.GetString(buffer, 0, buffer.Length);
+
+                                    // Note that the result may have terminating characters, multiple of them
+                                    // because we don't know the amount of data written to the buffer.
+                                    return outputString.Replace("\0", string.Empty);
                                 };
 
                             result =
                                 description =>
                                     new TimingIntervalHelper(
                                         ctx.Resolve<SystemDiagnostics>(),
-                                        ctx.Resolve<TimingStorage>(),
+                                        ctx.Resolve<IGenerateReports>(),
                                         ctx.Resolve<TimingReportCollection>(),
                                         reportBuilder,
                                         description);

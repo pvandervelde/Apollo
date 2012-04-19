@@ -210,7 +210,6 @@
       <DependentUpon>DatasetGraphView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Datasets\DatasetModel.cs" />
-    <Compile Include="Views\Datasets\DatasetParameter.cs" />
     <Compile Include="Views\Datasets\DatasetPresenter.cs" />
     <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
       <DependentUpon>DatasetVertexView.xaml</DependentUpon>
@@ -220,7 +219,6 @@
     <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
     <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
-    <Compile Include="Views\Datasets\IDatasetView.cs" />
     <Compile Include="Views\Datasets\IMachineSelectorView.cs" />
     <Compile Include="Views\Datasets\MachineSelectorModel.cs" />
     <Compile Include="Views\Datasets\MachineSelectorParameter.cs" />
@@ -769,6 +767,24 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Previous_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_256x256.png" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

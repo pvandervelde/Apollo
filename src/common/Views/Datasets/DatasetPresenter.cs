@@ -18,7 +18,7 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <summary>
     /// The presenter for the <see cref="DatasetModel"/>.
     /// </summary>
-    public sealed class DatasetPresenter : Presenter<IDatasetView, DatasetModel, DatasetParameter>
+    internal sealed class DatasetPresenter
     {
         /// <summary>
         /// The IOC container that is used to retrieve the commands for the menu.

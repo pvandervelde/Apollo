@@ -1019,6 +1019,48 @@ namespace Apollo.UI.Common.Properties {
             }
         }
         
+        internal static System.Drawing.Bitmap Img_TextDocument_128 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_128", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_TextDocument_16 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_16", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_TextDocument_24 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_24", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_TextDocument_256 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_256", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_TextDocument_32 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_32", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        internal static System.Drawing.Bitmap Img_TextDocument_48 {
+            get {
+                object obj = ResourceManager.GetObject("Img_TextDocument_48", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
         internal static System.Drawing.Bitmap Img_Undo_128 {
             get {
                 object obj = ResourceManager.GetObject("Img_Undo_128", resourceCulture);

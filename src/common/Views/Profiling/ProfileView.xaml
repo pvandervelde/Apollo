@@ -19,7 +19,10 @@
                 Grid.Column="0"
                 IsEnabled="{Binding Path=HasProfileReports}"
                 Click="OnShowProfileResultsButtonClick">
-            <TextBlock Text="{Binding Path=Summary, Mode=OneWay}" />
+            <Image Source="{lex:LocImage Key=Img_TextDocument_48, Dict=Resources, Assembly=Apollo.UI.Common}"
+                   Width="16"
+                   Height="16"
+                   Margin="3, 0, 3, 0" />
         </Button>
         
         <Popup x:Name="profileResultsPopup"
@@ -60,13 +63,12 @@
                             <TextBlock Text="{Binding Path=Results/TimingResults, Mode=OneWay}" />
                         </ScrollViewer>
                     </Border>
-                    
-                    <Grid>
+
+                    <Grid Grid.Row="2">
                         <Button x:Name="navigateBackwardsButton" 
                                 x:FieldModifier="private"
-                                HorizontalAlignment="Left"
-                                Click="OnNavigateBackwardsButtonClick">
-                            <Image Source="{lex:LocImage Key=Img_Backward_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                HorizontalAlignment="Left">
+                            <Image Source="{lex:LocImage Key=Img_Backward_48, Dict=Resources, Assembly=Apollo.UI.Common}"
                                    Width="16"
                                    Height="16"
                                    Margin="3, 0, 3, 0" />
@@ -74,9 +76,8 @@
                         
                         <Button x:Name="navigateForwardsButton" 
                                 x:FieldModifier="private"
-                                HorizontalAlignment="Right"
-                                Click="OnNavigateForwardsButtonClick">
-                            <Image Source="{lex:LocImage Key=Img_Forward_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                HorizontalAlignment="Right">
+                            <Image Source="{lex:LocImage Key=Img_Forward_48, Dict=Resources, Assembly=Apollo.UI.Common}"
                                    Width="16"
                                    Height="16"
                                    Margin="3, 0, 3, 0" />

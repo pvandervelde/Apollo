@@ -43,7 +43,7 @@ namespace Apollo.UI.Common.Views.Datasets
             Func<DatasetFacade, DatasetModel> builder =
                 f =>
                 {
-                    var presenter = m_Container.Resolve<DatasetPresenter>();
+                    var presenter = new DatasetPresenter(m_Container);
                     return presenter.CreateModel(f);
                 };
 

@@ -4,20 +4,21 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Apollo.Utilities;
-using NManto;
 
 namespace Apollo.UI.Common.Views.Datasets
 {
     /// <summary>
     /// Interaction logic for DatasetVertexView.xaml.
     /// </summary>
+    /// <remarks>
+    /// Note that this class is instantiated directly by the WPF subsystem because it is being used in the
+    /// template for the graph vertices (see DatasetGraphView.xaml). 
+    /// </remarks>
     [ExcludeFromCodeCoverage]
-    public partial class DatasetVertexView : UserControl, IDatasetView
+    public partial class DatasetVertexView : UserControl
     {
         /// <summary>
         /// The routed command used to create a new dataset.
@@ -35,34 +36,12 @@ namespace Apollo.UI.Common.Views.Datasets
         private static readonly RoutedCommand s_LoadOrUnloadDatasetCommand = new RoutedCommand();
 
         /// <summary>
-        /// The object that provides the diagnostics methods for the system.
-        /// </summary>
-        private readonly SystemDiagnostics m_Diagnostics;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetVertexView"/> class.
-        /// </summary>
-        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
-        /// </exception>
-        public DatasetVertexView(SystemDiagnostics systemDiagnostics)
-            : this()
-        {
-            {
-                Lokad.Enforce.Argument(() => systemDiagnostics);
-            }
-
-            m_Diagnostics = systemDiagnostics;
-        }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetVertexView"/> class.
         /// </summary>
         /// <remarks>
-        /// Leaving this constructor so that the Visual Studio XAML editor can get to it
-        /// in order to display the control. This may or may not be necessary. If it's not
-        /// necessary then this constructor should be removed.
+        /// This constructor is called internally by the WPF system because this class is part of a template
+        /// in the DatasetGraphView. No point in changing this constructor to take external arguments because
+        /// it won't work that way.
         /// </remarks>
         internal DatasetVertexView()
         {
@@ -119,11 +98,7 @@ namespace Apollo.UI.Common.Views.Datasets
         private void CommandNewDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-
-            using (var interval = m_Diagnostics.Profiler.Measure("Creating new dataset"))
-            {
-                Model.NewChildDatasetCommand.Execute(null);
-            }
+            Model.NewChildDatasetCommand.Execute(null);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -139,11 +114,7 @@ namespace Apollo.UI.Common.Views.Datasets
         private void CommandDeleteDatasetExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-
-            using (var interval = m_Diagnostics.Profiler.Measure("Deleting dataset"))
-            {
-                Model.DeleteDatasetCommand.Execute(null);
-            }
+            Model.DeleteDatasetCommand.Execute(null);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
@@ -177,17 +148,11 @@ namespace Apollo.UI.Common.Views.Datasets
             {
                 // Should do something like this: http://presentationlayer.wordpress.com/2011/05/24/wpf-overlay-message-view-controller/
                 // For an overlay ...
-                using (var interval = m_Diagnostics.Profiler.Measure("Loading dataset onto machine"))
-                {
-                    Model.LoadDatasetCommand.Execute(null);
-                }
+                Model.LoadDatasetCommand.Execute(null);
             }
-            else 
+            else
             {
-                using (var interval = m_Diagnostics.Profiler.Measure("Unloading dataset from machine"))
-                {
-                    Model.UnloadDatasetCommand.Execute(null);
-                }
+                Model.UnloadDatasetCommand.Execute(null);
             }
         }
     }

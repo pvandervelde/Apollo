@@ -189,7 +189,13 @@ namespace Apollo.ProjectExplorer
                         Action action =
                             () =>
                             {
+                                // First nuke all the UI stuff
+                                m_Container.Dispose();
+
+                                // Now wait for the kernel to shut down.
                                 m_ResetEvent.WaitOne();
+
+                                // And then kill the app.
                                 app.Shutdown();
                             };
 

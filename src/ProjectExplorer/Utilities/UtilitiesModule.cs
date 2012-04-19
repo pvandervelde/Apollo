@@ -156,16 +156,19 @@ namespace Apollo.Utilities
                             Func<Stream> factory =
                                 () => new FileStream(
                                     Path.Combine(new FileConstants(new ApplicationConstants()).LogPath(), DefaultProfilerFileName),
-                                    FileMode.OpenOrCreate,
+                                    FileMode.Append,
                                     FileAccess.Write,
                                     FileShare.Read);
                             var reporter = new TextReporter(factory);
                             reporter.Transform(storage.FromStartTillEnd());
                         })
-                    .As<IStoreIntervals>();
+                    .As<IStoreIntervals>()
+                    .As<IGenerateReports>()
+                    .SingleInstance();
 
                 builder.Register(c => new Profiler(
-                        c.Resolve<IStoreIntervals>()));
+                        c.Resolve<IStoreIntervals>()))
+                    .SingleInstance();
             }
         }
 

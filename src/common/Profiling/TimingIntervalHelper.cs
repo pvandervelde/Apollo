@@ -19,7 +19,7 @@ namespace Apollo.UI.Common.Profiling
         /// <summary>
         /// The object that stores all the timing intervals.
         /// </summary>
-        private readonly TimingStorage m_Storage;
+        private readonly IGenerateReports m_Storage;
 
         /// <summary>
         /// The collection that stores the timing reports.
@@ -46,7 +46,7 @@ namespace Apollo.UI.Common.Profiling
         /// <param name="description">The description for the current interval.</param>
         public TimingIntervalHelper(
             SystemDiagnostics diagnostics,
-            TimingStorage timingStorage,
+            IGenerateReports timingStorage,
             TimingReportCollection collection, 
             Func<Report, string> reportTransformer,
             string description)
