@@ -27,10 +27,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Core" />
     <Reference Include="System.Management" />

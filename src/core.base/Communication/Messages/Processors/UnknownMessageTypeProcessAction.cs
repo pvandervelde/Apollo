@@ -30,16 +30,16 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly EndpointId m_Current;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnknownMessageTypeProcessAction"/> class.
         /// </summary>
         /// <param name="localEndpoint">The endpoint ID of the local endpoint.</param>
         /// <param name="sendMessage">The action that is used to send messages.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
         /// </exception>
@@ -47,22 +47,22 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="sendMessage"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public UnknownMessageTypeProcessAction(
             EndpointId localEndpoint,
             Action<EndpointId, ICommunicationMessage> sendMessage,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendMessage);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Current = localEndpoint;
             m_SendMessage = sendMessage;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             {
                 try
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Error,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -113,7 +113,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 }
                 catch (Exception errorSendingException)
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Error,
                         string.Format(
                             CultureInfo.InvariantCulture,

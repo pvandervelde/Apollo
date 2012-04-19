@@ -25,7 +25,7 @@ namespace Apollo.Core.Base.Loaders
         private static DistributionPlan CreateNewDistributionPlan(
             DatasetLoadingProposal proposal,
             IDatasetOfflineInformation offlineInfo,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -34,7 +34,7 @@ namespace Apollo.Core.Base.Loaders
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -70,7 +70,7 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void ProposeDistributionFor()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
             var result = new DatasetLoadingProposal
                 {
@@ -82,7 +82,7 @@ namespace Apollo.Core.Base.Loaders
                     PercentageOfMaximumMemory = 50,
                     PercentageOfPhysicalMemory = 50,
                 };
-            var plan = CreateNewDistributionPlan(result, offlineInfo, logger);
+            var plan = CreateNewDistributionPlan(result, offlineInfo, systemDiagnostics);
 
             var localDistributor = new Mock<ICalculateDistributionParameters>();
             {
@@ -113,9 +113,10 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             var request = new DatasetRequest
@@ -137,7 +138,7 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void ImplementPlan()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var filePath = @"c:\temp\myfile.txt";
             var storage = new Mock<IPersistenceInformation>();
@@ -147,7 +148,7 @@ namespace Apollo.Core.Base.Loaders
             }
 
             var offlineInfo = CreateOfflineInfo(storage.Object);
-            var plan = CreateNewDistributionPlan(new DatasetLoadingProposal(), offlineInfo, logger);
+            var plan = CreateNewDistributionPlan(new DatasetLoadingProposal(), offlineInfo, systemDiagnostics);
             var localDistributor = new Mock<ICalculateDistributionParameters>();
 
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
@@ -210,9 +211,10 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };

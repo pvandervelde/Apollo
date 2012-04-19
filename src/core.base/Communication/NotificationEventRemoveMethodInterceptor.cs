@@ -41,9 +41,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Action<ISerializedEventRegistration> m_SendMessageWithoutResponse;
 
         /// <summary>
-        /// The function used to write log messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationEventRemoveMethodInterceptor"/> class.
@@ -52,7 +52,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="sendMessageWithoutResponse">
         ///     The function used to send the information about the event registration to the owning endpoint.
         /// </param>
-        /// <param name="logger">The function that is used to log messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="proxyInterfaceType"/> is <see langword="null" />.
         /// </exception>
@@ -60,22 +60,22 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="sendMessageWithoutResponse"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public NotificationEventRemoveMethodInterceptor(
             Type proxyInterfaceType,
             Action<ISerializedEventRegistration> sendMessageWithoutResponse,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => proxyInterfaceType);
                 Enforce.Argument(() => sendMessageWithoutResponse);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_InterfaceType = proxyInterfaceType;
             m_SendMessageWithoutResponse = sendMessageWithoutResponse;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -90,7 +90,7 @@ namespace Apollo.Core.Base.Communication
                 Debug.Assert(invocation.Arguments[0] is Delegate, "The argument should be a delegate.");
             }
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,

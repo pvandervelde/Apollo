@@ -4,10 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -45,7 +47,11 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="persistenceInformation">The object that describes how the project was persisted.</param>
-        private static void OnLoadProject(ILinkToProjects projectFacade, IPersistenceInformation persistenceInformation)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnLoadProject(
+            ILinkToProjects projectFacade, 
+            IPersistenceInformation persistenceInformation, 
+            Func<string, IDisposable> timer)
         {
             // If there is no facade then we're in design mode or something
             // else weird.
@@ -54,15 +60,19 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            projectFacade.LoadProject(persistenceInformation);
+            using (var interval = timer("Loading project"))
+            {
+                projectFacade.LoadProject(persistenceInformation);
+            }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenProjectCommand"/> class.
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
-        public OpenProjectCommand(ILinkToProjects projectFacade)
-            : base(obj => OnLoadProject(projectFacade, obj as IPersistenceInformation), obj => CanLoadProject(projectFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public OpenProjectCommand(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
+            : base(obj => OnLoadProject(projectFacade, obj as IPersistenceInformation, timer), obj => CanLoadProject(projectFacade))
         { 
         }
     }

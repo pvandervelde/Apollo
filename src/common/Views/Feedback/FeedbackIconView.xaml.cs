@@ -4,10 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using Apollo.Utilities;
+using NManto;
 
 namespace Apollo.UI.Common.Views.Feedback
 {
@@ -22,9 +25,36 @@ namespace Apollo.UI.Common.Views.Feedback
         private static readonly RoutedCommand s_SendReportsCommand = new RoutedCommand();
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the system.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackIconView"/> class.
         /// </summary>
-        public FeedbackIconView()
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public FeedbackIconView(SystemDiagnostics systemDiagnostics)
+            : this()
+        {
+            {
+                Lokad.Enforce.Argument(() => systemDiagnostics);
+            }
+
+            m_Diagnostics = systemDiagnostics;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FeedbackIconView"/> class.
+        /// </summary>
+        /// <remarks>
+        /// Leaving this constructor seperate so that the Visual Studio XAML editor
+        /// can reach it. This may or may not be necessary. If it's not necessary then we
+        /// should remove this constructor.
+        /// </remarks>
+        internal FeedbackIconView()
         {
             InitializeComponent();
 
@@ -65,7 +95,11 @@ namespace Apollo.UI.Common.Views.Feedback
         private void CommandSendReportsExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            Model.SendReport();
+
+            using (var interval = m_Diagnostics.Profiler.Measure("Sending feedback report"))
+            {
+                Model.SendReport();
+            }
         }
 
         private void OnShowFeedbackButtonClick(object sender, RoutedEventArgs e)

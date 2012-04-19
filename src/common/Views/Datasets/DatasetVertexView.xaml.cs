@@ -13,8 +13,12 @@ namespace Apollo.UI.Common.Views.Datasets
     /// <summary>
     /// Interaction logic for DatasetVertexView.xaml.
     /// </summary>
+    /// <remarks>
+    /// Note that this class is instantiated directly by the WPF subsystem because it is being used in the
+    /// template for the graph vertices (see DatasetGraphView.xaml). 
+    /// </remarks>
     [ExcludeFromCodeCoverage]
-    public partial class DatasetVertexView : UserControl, IDatasetView
+    public partial class DatasetVertexView : UserControl
     {
         /// <summary>
         /// The routed command used to create a new dataset.
@@ -34,7 +38,12 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetVertexView"/> class.
         /// </summary>
-        public DatasetVertexView()
+        /// <remarks>
+        /// This constructor is called internally by the WPF system because this class is part of a template
+        /// in the DatasetGraphView. No point in changing this constructor to take external arguments because
+        /// it won't work that way.
+        /// </remarks>
+        internal DatasetVertexView()
         {
             InitializeComponent();
 
@@ -141,7 +150,7 @@ namespace Apollo.UI.Common.Views.Datasets
                 // For an overlay ...
                 Model.LoadDatasetCommand.Execute(null);
             }
-            else 
+            else
             {
                 Model.UnloadDatasetCommand.Execute(null);
             }

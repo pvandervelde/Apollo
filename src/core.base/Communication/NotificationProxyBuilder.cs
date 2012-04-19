@@ -179,9 +179,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Action<EndpointId, ICommunicationMessage> m_SendWithoutResponse;
 
         /// <summary>
-        /// The function used to write log messages.
+        /// The object that provides the diagnostic methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationProxyBuilder"/> class.
@@ -190,7 +190,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="sendWithoutResponse">
         ///     The function that sends out a message to the given endpoint.
         /// </param>
-        /// <param name="logger">The function that is used to log messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
         /// </exception>
@@ -198,22 +198,22 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="sendWithoutResponse"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public NotificationProxyBuilder(
             EndpointId localEndpoint,
             Action<EndpointId, ICommunicationMessage> sendWithoutResponse,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendWithoutResponse);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Local = localEndpoint;
             m_SendWithoutResponse = sendWithoutResponse;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -261,7 +261,7 @@ namespace Apollo.Core.Base.Communication
                     var msg = new RegisterForNotificationMessage(m_Local, eventInfo);
                     m_SendWithoutResponse(endpoint, msg);
                 },
-                m_Logger);
+                m_Diagnostics);
             var removeEventHandler = new NotificationEventRemoveMethodInterceptor(
                 interfaceType,
                 eventInfo =>
@@ -269,7 +269,7 @@ namespace Apollo.Core.Base.Communication
                     var msg = new UnregisterFromNotificationMessage(m_Local, eventInfo);
                     m_SendWithoutResponse(endpoint, msg);
                 },
-                m_Logger);
+                m_Diagnostics);
 
             var options = new ProxyGenerationOptions
                 {

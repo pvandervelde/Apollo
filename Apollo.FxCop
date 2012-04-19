@@ -135,6 +135,15 @@
      </Message>
     </Messages>
    </Namespace>
+   <Namespace Name="Apollo.UI.Common.Profiling">
+    <Messages>
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-04-19 08:14:05Z">
+      <Issue>
+       <Item>Apollo.UI.Common.Profiling</Item>
+      </Issue>
+     </Message>
+    </Messages>
+   </Namespace>
   </Namespaces>
   <Targets>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe">

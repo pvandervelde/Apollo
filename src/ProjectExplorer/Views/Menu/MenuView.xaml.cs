@@ -4,8 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Apollo.Utilities;
+using NManto;
 
 namespace Apollo.ProjectExplorer.Views.Menu
 {
@@ -235,6 +238,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandExitExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
+
+            // We could put an timing interval around this but it may not be useful
+            // given that we're about to exit from the application. This means that
+            // the profiler might be destroyed halfway the timing process.
             Model.ExitCommand.Execute(null);
         }
 

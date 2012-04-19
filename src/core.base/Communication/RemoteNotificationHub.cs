@@ -37,7 +37,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="layer">The communication layer that will handle the actual connections.</param>
         /// <param name="notificationReporter">The object that reports when a new notifications are registered on a remote endpoint.</param>
         /// <param name="builder">The object that is responsible for building the command proxies.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
@@ -48,18 +48,18 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="builder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         internal RemoteNotificationHub(
             ICommunicationLayer layer,
             IReportNewProxies notificationReporter,
-            NotificationProxyBuilder builder, 
-            Action<LogSeverityProxy, string> logger)
+            NotificationProxyBuilder builder,
+            SystemDiagnostics systemDiagnostics)
             : base(
                 layer,
                 notificationReporter,
                 (endpoint, type) => (NotificationSetProxy)builder.ProxyConnectingTo(endpoint, type),
-                logger)
+                systemDiagnostics)
         {
             {
                 Enforce.Argument(() => builder);

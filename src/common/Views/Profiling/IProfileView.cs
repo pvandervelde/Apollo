@@ -6,15 +6,15 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Common.Views.Profiling
 {
     /// <summary>
-    /// The interface that defines the methods for views that display information 
-    /// about <c>Dataset</c> objects.
+    /// Defines the interface for objects that provide a view onto a 
+    /// single feedback entry.
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1040:AvoidEmptyInterfaces",
-       Justification = "We need an interface for the view because Prism needs it.")]
-    public interface IDatasetView : IView<DatasetModel>
+        Justification = "We need an interface for the view because Prism needs it.")]
+    public interface IProfileView : IView<ProfileModel>
     {
     }
 }

@@ -20,10 +20,12 @@ using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Feedback;
+using Apollo.UI.Common.Views.Profiling;
 using Apollo.UI.Common.Views.Progress;
 using Apollo.UI.Common.Views.Projects;
 using Apollo.UI.Common.Views.Scripting;
 using Apollo.Utilities;
+using Apollo.Utilities.Configuration;
 using Apollo.Utilities.ExceptionHandling;
 using Autofac;
 using Microsoft.Practices.Prism.Events;
@@ -60,6 +62,11 @@ namespace Apollo.ProjectExplorer
         private readonly AutoResetEvent m_ResetEvent;
 
         /// <summary>
+        /// A flag that indicates if the application is profiling itself.
+        /// </summary>
+        private readonly bool m_IsProfiling;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProjectExplorerModule"/> class.
         /// </summary>
         /// <param name="container">The IOC container that will hold the references.</param>
@@ -73,6 +80,7 @@ namespace Apollo.ProjectExplorer
 
             m_Container = container;
             m_ResetEvent = resetEvent;
+            m_IsProfiling = ConfigurationHelpers.ShouldBeProfiling();
         }
 
         #region Implementation of IModule
@@ -181,7 +189,13 @@ namespace Apollo.ProjectExplorer
                         Action action =
                             () =>
                             {
+                                // First nuke all the UI stuff
+                                m_Container.Dispose();
+
+                                // Now wait for the kernel to shut down.
                                 m_ResetEvent.WaitOne();
+
+                                // And then kill the app.
                                 app.Shutdown();
                             };
 
@@ -240,6 +254,20 @@ namespace Apollo.ProjectExplorer
                       typeof(ProgressPresenter),
                       CommonRegionNames.StatusBarProgressReport,
                       new ProgressParameter(m_Container.Resolve<IContextAware>())));
+
+            // Only add the necessary controls if we are actually profiling. If we are not
+            // profiling then we don't add any controls and anything that we did allocate
+            // just goes the way of the dodo
+            if (m_IsProfiling)
+            {
+                m_Container.Resolve<IEventAggregator>()
+                    .GetEvent<ShowViewEvent>()
+                    .Publish(
+                        new ShowViewRequest(
+                            typeof(ProfilePresenter),
+                            CommonRegionNames.StatusBarProfilerReport,
+                            new ProfileParameter(m_Container.Resolve<IContextAware>())));
+            }
 
             ActivateProjectRegions();
         }

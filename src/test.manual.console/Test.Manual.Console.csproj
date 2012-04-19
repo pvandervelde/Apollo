@@ -14,13 +14,13 @@
   </PropertyGroup>
   <PropertyGroup>
     <NoWarn>1685</NoWarn>
-	<!-- 
+    <!-- 
 		We don't want warnings saying that there a duplicate versions of a class 
 		because we have AssemblyBuildInformationAttribute and AssemblyBuildTimeAttribute definitions
 		in this project and in Apollo.Core.Base and Apollo.Utilities. We just want it to use
 		the ones in the current project (which it does but warns about it too).
 	-->
-	<NoWarn>0436</NoWarn>
+    <NoWarn>0436</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Autofac, Version=2.4.3.700, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
@@ -34,6 +34,10 @@
     <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NManto, Version=0.1.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\nManto\lib\NManto.dll</HintPath>
     </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>

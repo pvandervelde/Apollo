@@ -245,7 +245,7 @@ namespace Apollo.Core.Host
             var userInterface = new UserInterfaceService(
                 container.Resolve<ICommandContainer>(),
                 container.Resolve<INotificationNameConstants>(),
-                container.Resolve<Action<LogSeverityProxy, string>>(),
+                container.Resolve<SystemDiagnostics>(),
                 StoreContainer);
 
             return userInterface;

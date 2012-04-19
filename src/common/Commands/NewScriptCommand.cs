@@ -8,7 +8,9 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Scripting;
 using Apollo.UI.Common.Views.Scripting;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -37,17 +39,19 @@ namespace Apollo.UI.Common.Commands
 
             return !scriptHost.IsExecutingScript;
         }
-        
+
         /// <summary>
         /// Called when the creation of a new project is required.
         /// </summary>
         /// <param name="scriptHost">The object handles the script running.</param>
         /// <param name="selectScriptLanguage">The function that provides the selected script language.</param>
         /// <param name="storeScriptInformation">The function that stores the information about the new script.</param>
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
         private static void OnCreateNewScript(
             IHostScripts scriptHost,
             Func<Tuple<bool, ScriptDescriptionModel>> selectScriptLanguage,
-            Action<ScriptDescriptionModel, ISyntaxVerifier> storeScriptInformation)
+            Action<ScriptDescriptionModel, ISyntaxVerifier> storeScriptInformation,
+            Func<string, IDisposable> timer)
         {
             // If there is no project facade, then we're in 
             // designer mode, or something else silly.
@@ -56,15 +60,18 @@ namespace Apollo.UI.Common.Commands
                 throw new CreationOfNewScriptCanceledException();
             }
 
-            var tuple = selectScriptLanguage();
-            if (!tuple.Item1)
+            using (var interval = timer("Creating new script"))
             {
-                // The user didn't select anything so just bail.
-                throw new CreationOfNewScriptCanceledException();
+                var tuple = selectScriptLanguage();
+                if (!tuple.Item1)
+                {
+                    // The user didn't select anything so just bail.
+                    throw new CreationOfNewScriptCanceledException();
+                }
+
+                var verifier = scriptHost.VerifySyntax(tuple.Item2.Language);
+                storeScriptInformation(tuple.Item2, verifier);
             }
-            
-            var verifier = scriptHost.VerifySyntax(tuple.Item2.Language);
-            storeScriptInformation(tuple.Item2, verifier);
         }
 
         /// <summary>
@@ -73,14 +80,18 @@ namespace Apollo.UI.Common.Commands
         /// <param name="scriptHost">The object handles the script running.</param>
         /// <param name="selectScriptLanguage">The function that provides the selected script language.</param>
         /// <param name="storeScriptInformation">The function that stores the information about the new script.</param>
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "We need to return multiple values and a Tuple works just fine for that.")]
         public NewScriptCommand(
             IHostScripts scriptHost,
             Func<Tuple<bool, ScriptDescriptionModel>> selectScriptLanguage,
-            Action<ScriptDescriptionModel, ISyntaxVerifier> storeScriptInformation)
-            : base(obj => OnCreateNewScript(scriptHost, selectScriptLanguage, storeScriptInformation), obj => CanCreateNewScript(scriptHost))
-        { 
+            Action<ScriptDescriptionModel, ISyntaxVerifier> storeScriptInformation,
+            Func<string, IDisposable> timer)
+            : base(
+                obj => OnCreateNewScript(scriptHost, selectScriptLanguage, storeScriptInformation, timer),
+                obj => CanCreateNewScript(scriptHost))
+        {
         }
     }
 }

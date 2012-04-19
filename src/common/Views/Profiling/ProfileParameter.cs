@@ -6,23 +6,23 @@
 
 using System;
 
-namespace Apollo.UI.Common.Views.Datasets
+namespace Apollo.UI.Common.Views.Profiling
 {
     /// <summary>
-    /// A parameter for the dataset view.
+    /// Defines a parameter for the <see cref="ProfileModel"/>.
     /// </summary>
-    public sealed class DatasetParameter : Parameter
+    public sealed class ProfileParameter : Parameter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetParameter"/> class.
+        /// Initializes a new instance of the <see cref="ProfileParameter"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
-        public DatasetParameter(IContextAware context)
+        public ProfileParameter(IContextAware context)
             : base(context)
-        { 
+        {
         }
     }
 }

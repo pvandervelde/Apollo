@@ -27,24 +27,24 @@ namespace Apollo.Core.Base.Communication
     internal sealed class ReceivingEndpoint : IMessagePipe
     {
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ReceivingEndpoint"/> class.
         /// </summary>
-        /// <param name="logger">The function that logs messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
-        public ReceivingEndpoint(Action<LogSeverityProxy, string> logger)
+        public ReceivingEndpoint(SystemDiagnostics systemDiagnostics)
         {
             {
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Apollo.Core.Base.Communication
         {
             try
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Trace,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Communication
             }
             catch (Exception e)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,

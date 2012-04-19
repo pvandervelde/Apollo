@@ -4,10 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -61,7 +64,8 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction with
         /// the project system.
         /// </param>
-        private static void OnUndo(ILinkToProjects projectFacade)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnUndo(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
         {
             // If there is no facade then we're in design mode or something
             // else weird.
@@ -75,15 +79,18 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            var project = projectFacade.ActiveProject();
-            if (project.History.CanRollBack)
+            using (var interval = timer("Undoing change"))
             {
-                var markers = project.History.MarkersInThePast();
-
-                var markerToRollBackTo = markers.FirstOrDefault(m => !m.Equals(project.History.Current));
-                if (markerToRollBackTo != null)
+                var project = projectFacade.ActiveProject();
+                if (project.History.CanRollBack)
                 {
-                    project.History.RollBackTo(markerToRollBackTo);
+                    var markers = project.History.MarkersInThePast();
+
+                    var markerToRollBackTo = markers.FirstOrDefault(m => !m.Equals(project.History.Current));
+                    if (markerToRollBackTo != null)
+                    {
+                        project.History.RollBackTo(markerToRollBackTo);
+                    }
                 }
             }
         }
@@ -95,8 +102,9 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction
         /// with the project system.
         /// </param>
-        public UndoCommand(ILinkToProjects projectFacade)
-            : base(obj => OnUndo(projectFacade), obj => CanUndo(projectFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public UndoCommand(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
+            : base(obj => OnUndo(projectFacade, timer), obj => CanUndo(projectFacade))
         { 
         }
     }

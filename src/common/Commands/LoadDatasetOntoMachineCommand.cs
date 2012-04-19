@@ -10,7 +10,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -47,9 +49,11 @@ namespace Apollo.UI.Common.Commands
         /// <param name="selector">
         ///     The function that is used to select the most suitable machine to load the dataset onto.
         /// </param>
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
         private static void OnLoad(
             DatasetFacade dataset,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector)
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
+            Func<string, IDisposable> timer)
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
@@ -63,13 +67,14 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            // the only catch is that the Shutdown method will return before
-            // we know if the shutdown will be canceled?
-            var source = new CancellationTokenSource();
-            dataset.LoadOntoMachine(
-                LoadingLocations.All,
-                selector,
-                source.Token);
+            using (var interval = timer("Loading dataset onto machine"))
+            {
+                var source = new CancellationTokenSource();
+                dataset.LoadOntoMachine(
+                    LoadingLocations.All,
+                    selector,
+                    source.Token);
+            }
         }
 
         /// <summary>
@@ -79,12 +84,14 @@ namespace Apollo.UI.Common.Commands
         /// <param name="selector">
         ///     The function that is used to select the most suitable machine to load the dataset onto.
         /// </param>
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "To select an appropriate machine we need a function which requires nested generics.")]
         public LoadDatasetOntoMachineCommand(
             DatasetFacade dataset,
-            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector)
-            : base(obj => OnLoad(dataset, selector), obj => CanLoad(dataset))
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
+            Func<string, IDisposable> timer)
+            : base(obj => OnLoad(dataset, selector, timer), obj => CanLoad(dataset))
         {
         }
     }

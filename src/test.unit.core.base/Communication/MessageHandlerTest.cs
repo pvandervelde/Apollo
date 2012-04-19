@@ -22,8 +22,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void ForwardResponse()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var handler = new MessageHandler(logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var handler = new MessageHandler(systemDiagnostics);
 
             var endpoint = new EndpointId("endpoint");
             var messageId = new MessageId();
@@ -41,8 +41,8 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void ForwardResponseWithDisconnectingEndpoint()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var handler = new MessageHandler(logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var handler = new MessageHandler(systemDiagnostics);
 
             var endpoint = new EndpointId("endpoint");
             var messageId = new MessageId();
@@ -68,8 +68,8 @@ namespace Apollo.Core.Base.Communication
                     .Callback<ICommunicationMessage>(m => { storedMessage = m; });
             }
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var handler = new MessageHandler(logger);
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var handler = new MessageHandler(systemDiagnostics);
             handler.ActOnArrival(new MessageKindFilter(typeof(EndpointConnectMessage)), processAction.Object);
 
             var endpoint = new EndpointId("endpoint");
@@ -93,10 +93,10 @@ namespace Apollo.Core.Base.Communication
                 storedMsg = m;
             };
 
-            Action<LogSeverityProxy, string> logger = (p, t) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
-            var processAction = new UnknownMessageTypeProcessAction(localEndpoint, sendAction, logger);
-            var handler = new MessageHandler(logger);
+            var processAction = new UnknownMessageTypeProcessAction(localEndpoint, sendAction, systemDiagnostics);
+            var handler = new MessageHandler(systemDiagnostics);
             handler.ActOnArrival(new MessageKindFilter(processAction.MessageTypeToProcess), processAction);
 
             var endpoint = new EndpointId("endpoint");

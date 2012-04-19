@@ -175,11 +175,13 @@ namespace Apollo.Utilities.ExceptionHandling
         {
             // Create a dynamic assembly with reflection emit
             var name = new AssemblyName("DynamicFilter");
-            AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(
-                name, 
-                AssemblyBuilderAccess.Run);
-            
-            ModuleBuilder module = assembly.DefineDynamicModule("DynamicFilter");
+#if (DEBUG)
+            AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.RunAndSave);
+            var module = assembly.DefineDynamicModule("DynamicFilter", "DynamicFilter.dll");
+#else
+            AssemblyBuilder assembly = AppDomain.CurrentDomain.DefineDynamicAssembly(name, AssemblyBuilderAccess.Run);
+            var module = assembly.DefineDynamicModule("DynamicFilter");
+#endif
 
             // Add an assembly attribute that tells the CLR to wrap non-CLS-compliant exceptions in a RuntimeWrappedException object
             // (so the cast to Exception in the code will always succeed).  C# and VB always do this, C++/CLI doesn't.
@@ -191,9 +193,10 @@ namespace Apollo.Utilities.ExceptionHandling
                     new object[] { true }));
 
             // Add an assembly attribute that tells the CLR not to attempt to load PDBs when compiling this assembly 
-            assembly.SetCustomAttribute(new CustomAttributeBuilder(
-                typeof(DebuggableAttribute).GetConstructor(new Type[] { typeof(DebuggableAttribute.DebuggingModes) }),
-                new object[] { DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints }));
+            assembly.SetCustomAttribute(
+                new CustomAttributeBuilder(
+                    typeof(DebuggableAttribute).GetConstructor(new Type[] { typeof(DebuggableAttribute.DebuggingModes) }),
+                    new object[] { DebuggableAttribute.DebuggingModes.IgnoreSymbolStoreSequencePoints }));
 
             // Create the type and method which will contain the filter
             TypeBuilder type = module.DefineType("Filter", TypeAttributes.Class | TypeAttributes.Public);
@@ -227,6 +230,9 @@ namespace Apollo.Utilities.ExceptionHandling
             il.Emit(OpCodes.Ret);
 
             var bakedType = type.CreateType();
+#if (DEBUG)
+            assembly.Save("DynamicFilter.dll");
+#endif
 
             // Construct a delegate to the filter function and return it
             var bakedMeth = bakedType.GetMethod("InvokeWithFilter");

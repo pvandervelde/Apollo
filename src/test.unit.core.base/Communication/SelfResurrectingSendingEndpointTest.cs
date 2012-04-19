@@ -22,11 +22,11 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void SendWithNoChannel()
         {
-            Action<LogSeverityProxy, string> logger = (level, m) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint(logger);
+            var receiver = new ReceivingEndpoint(systemDiagnostics);
             receiver.OnNewMessage += (s, e) => Assert.AreEqual(endpointId, e.Message.OriginatingEndpoint);
 
             var uri = new Uri("net.pipe://localhost/apollo/test/pipe");
@@ -41,7 +41,7 @@ namespace Apollo.Core.Base.Communication
             {
                 var localAddress = string.Format("{0}/{1}", uri.OriginalString, address);
                 var factory = new ChannelFactory<IReceivingWcfEndpointProxy>(binding, localAddress);
-                var sender = new SelfResurrectingSendingEndpoint(factory, logger);
+                var sender = new SelfResurrectingSendingEndpoint(factory, systemDiagnostics);
 
                 sender.Send(msg);
             }
@@ -55,11 +55,11 @@ namespace Apollo.Core.Base.Communication
         public void SendWithFaultedChannel()
         {
             var count = 0;
-            Action<LogSeverityProxy, string> logger = (level, m) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var receiver = new ReceivingEndpoint(logger);
+            var receiver = new ReceivingEndpoint(systemDiagnostics);
             receiver.OnNewMessage +=
                 (s, e) =>
                 {
@@ -86,7 +86,7 @@ namespace Apollo.Core.Base.Communication
             {
                 var localAddress = string.Format("{0}/{1}", uri.OriginalString, address);
                 var factory = new ChannelFactory<IReceivingWcfEndpointProxy>(binding, localAddress);
-                var sender = new SelfResurrectingSendingEndpoint(factory, logger);
+                var sender = new SelfResurrectingSendingEndpoint(factory, systemDiagnostics);
 
                 // This message should fault the channel
                 sender.Send(msg);

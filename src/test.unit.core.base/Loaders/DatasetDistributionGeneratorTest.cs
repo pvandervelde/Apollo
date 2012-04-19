@@ -25,7 +25,7 @@ namespace Apollo.Core.Base.Loaders
         private static DistributionPlan CreateNewDistributionPlan(
            DatasetLoadingProposal proposal,
             IDatasetOfflineInformation offlineInfo,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -34,7 +34,7 @@ namespace Apollo.Core.Base.Loaders
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -68,7 +68,7 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void ProposeDistributionFor()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var first = new Mock<IGenerateDistributionProposals>();
             {
@@ -79,7 +79,7 @@ namespace Apollo.Core.Base.Loaders
                             CreateNewDistributionPlan(
                                 new DatasetLoadingProposal(),
                                 CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
-                                logger)
+                                systemDiagnostics)
                         })
                         .Verifiable();
             }
@@ -93,7 +93,7 @@ namespace Apollo.Core.Base.Loaders
                             CreateNewDistributionPlan(
                                 new DatasetLoadingProposal(),
                                 CreateOfflineInfo(new Mock<IPersistenceInformation>().Object),
-                                logger)
+                                systemDiagnostics)
                         })
                         .Verifiable();
             }
