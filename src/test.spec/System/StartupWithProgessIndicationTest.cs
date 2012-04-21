@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Utilities;
@@ -58,12 +59,14 @@ namespace Test.Spec.System
             tracker.OnProgress += new EventHandler<ProgressEventArgs>(OnTrackerStartupProgress);
 
             // Load the core
-            ApolloLoader.Load(ConnectToKernel, tracker);
+            var shutdownEvent = new AutoResetEvent(false);
+            ApolloLoader.Load(ConnectToKernel, tracker, shutdownEvent);
 
             // Once everything is up and running then we don't need it anymore
             // so dump it.
             var applicationFacade = m_CoreContainer.Resolve<IAbstractApplications>();
             applicationFacade.Shutdown();
+            shutdownEvent.WaitOne();
         }
 
         private ITrackProgress CreateTracker()

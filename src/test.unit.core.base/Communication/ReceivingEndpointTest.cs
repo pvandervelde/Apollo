@@ -20,12 +20,12 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void AcceptMessage()
         {
-            Action<LogSeverityProxy, string> logger = (level, m) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var endpoint = new ReceivingEndpoint(logger);
+            var endpoint = new ReceivingEndpoint(systemDiagnostics);
             endpoint.OnNewMessage += (s, e) => Assert.AreSame(msg, e.Message);
 
             endpoint.AcceptMessage(msg);
@@ -34,12 +34,12 @@ namespace Apollo.Core.Base.Communication
         [Test]
         public void AcceptMessageThrowingException()
         {
-            Action<LogSeverityProxy, string> logger = (level, m) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var endpointId = new EndpointId("id");
             var msg = new EndpointDisconnectMessage(endpointId);
 
-            var endpoint = new ReceivingEndpoint(logger);
+            var endpoint = new ReceivingEndpoint(systemDiagnostics);
             endpoint.OnNewMessage += 
                 (s, e) => 
                 { 

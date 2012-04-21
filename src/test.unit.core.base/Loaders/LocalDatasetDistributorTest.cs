@@ -22,21 +22,56 @@ namespace Apollo.Core.Base.Loaders
         Justification = "Unit tests do not need documentation.")]
     public sealed class LocalDatasetDistributorTest
     {
+        private static DistributionPlan CreateNewDistributionPlan(
+            DatasetLoadingProposal proposal,
+            IDatasetOfflineInformation offlineInfo,
+            SystemDiagnostics systemDiagnostics)
+        {
+            var plan = new DistributionPlan(
+                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
+                    () => new DatasetOnlineInformation(
+                        new DatasetId(),
+                        new EndpointId("id"),
+                        new NetworkIdentifier("machine"),
+                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        systemDiagnostics),
+                    t,
+                    TaskCreationOptions.None,
+                    new CurrentThreadTaskScheduler()),
+                    offlineInfo,
+                NetworkIdentifier.ForLocalMachine(),
+                proposal);
+            return plan;
+        }
+
+        private static IDatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
+        {
+            var mock = new Mock<IDatasetOfflineInformation>();
+            {
+                mock.Setup(d => d.Id)
+                    .Returns(new DatasetId());
+                mock.Setup(d => d.CanBeAdopted)
+                    .Returns(false);
+                mock.Setup(d => d.CanBecomeParent)
+                    .Returns(true);
+                mock.Setup(d => d.CanBeCopied)
+                    .Returns(false);
+                mock.Setup(d => d.CanBeDeleted)
+                    .Returns(true);
+                mock.Setup(d => d.CreatedBy)
+                    .Returns(DatasetCreator.User);
+                mock.Setup(d => d.StoredAt)
+                    .Returns(storage);
+            }
+
+            return mock.Object;
+        }
+
         [Test]
         public void ProposeDistributionFor()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
-            var offlineInfo = new DatasetOfflineInformation(
-                new DatasetId(),
-                new DatasetCreationInformation()
-                {
-                    CreatedOnRequestOf = DatasetCreator.User,
-                    CanBecomeParent = true,
-                    CanBeAdopted = false,
-                    CanBeCopied = false,
-                    CanBeDeleted = true,
-                    LoadFrom = new Mock<IPersistenceInformation>().Object,
-                });
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
             var result = new DatasetLoadingProposal
                 {
                     Endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
@@ -47,27 +82,14 @@ namespace Apollo.Core.Base.Loaders
                     PercentageOfMaximumMemory = 50,
                     PercentageOfPhysicalMemory = 50,
                 };
-            var plan = new DistributionPlan(
-                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => new DatasetOnlineInformation(
-                        new DatasetId(),
-                        new EndpointId("id"),
-                        new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
-                    t,
-                    TaskCreationOptions.None,
-                    new CurrentThreadTaskScheduler()),
-                offlineInfo,
-                NetworkIdentifier.ForLocalMachine(),
-                result);
+            var plan = CreateNewDistributionPlan(result, offlineInfo, systemDiagnostics);
 
             var localDistributor = new Mock<ICalculateDistributionParameters>();
             {
                 localDistributor.Setup(l => l.ProposeForLocalMachine(It.IsAny<ExpectedDatasetLoad>()))
                     .Returns(result);
             }
-            
+
             var loader = new Mock<IApplicationLoader>();
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
@@ -91,12 +113,13 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
-            var request = new DatasetRequest 
+            var request = new DatasetRequest
                 {
                     DatasetToLoad = offlineInfo,
                     ExpectedLoadPerMachine = new ExpectedDatasetLoad(),
@@ -104,9 +127,9 @@ namespace Apollo.Core.Base.Loaders
                 };
             var plans = distributor.ProposeDistributionFor(request, new CancellationToken());
             Assert.AreElementsEqualIgnoringOrder(
-                new DistributionPlan[] { plan }, 
-                plans, 
-                (x, y) => 
+                new DistributionPlan[] { plan },
+                plans,
+                (x, y) =>
                 {
                     return ReferenceEquals(x.Proposal, y.Proposal);
                 });
@@ -115,7 +138,7 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void ImplementPlan()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var filePath = @"c:\temp\myfile.txt";
             var storage = new Mock<IPersistenceInformation>();
@@ -124,31 +147,8 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(new FileInfo(filePath));
             }
 
-            var plan = new DistributionPlan(
-                (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
-                    () => new DatasetOnlineInformation(
-                        new DatasetId(),
-                        new EndpointId("id"),
-                        new NetworkIdentifier("machine"),
-                        new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
-                    t,
-                    TaskCreationOptions.None,
-                    new CurrentThreadTaskScheduler()),
-                new DatasetOfflineInformation(
-                    new DatasetId(),
-                    new DatasetCreationInformation()
-                    {
-                        CreatedOnRequestOf = DatasetCreator.User,
-                        CanBecomeParent = true,
-                        CanBeAdopted = false,
-                        CanBeCopied = false,
-                        CanBeDeleted = true,
-                        LoadFrom = storage.Object,
-                    }),
-                NetworkIdentifier.ForLocalMachine(),
-                new DatasetLoadingProposal());
-
+            var offlineInfo = CreateOfflineInfo(storage.Object);
+            var plan = CreateNewDistributionPlan(new DatasetLoadingProposal(), offlineInfo, systemDiagnostics);
             var localDistributor = new Mock<ICalculateDistributionParameters>();
 
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
@@ -211,9 +211,10 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             Action<int, IProgressMark, TimeSpan> progress = (p, m, t) => { };

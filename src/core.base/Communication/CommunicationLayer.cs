@@ -17,6 +17,7 @@ using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
 using Lokad;
+using NManto;
 
 namespace Apollo.Core.Base.Communication
 {
@@ -61,9 +62,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Indicates if the layer is signed on or not.
@@ -78,7 +79,7 @@ namespace Apollo.Core.Base.Communication
         ///     The function that returns a tuple of a <see cref="ICommunicationChannel"/> and a <see cref="IDirectIncomingMessages"/>
         ///     based on the type of the <see cref="IChannelType"/> that is related to the channel.
         /// </param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="discoverySources"/> is <see langword="null" />.
         /// </exception>
@@ -86,22 +87,22 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="channelBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommunicationLayer(
             IEnumerable<IDiscoverOtherServices> discoverySources,
             Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => discoverySources);
                 Enforce.Argument(() => channelBuilder);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_ChannelBuilder = channelBuilder;
             m_DiscoverySources = discoverySources;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -171,38 +172,43 @@ namespace Apollo.Core.Base.Communication
                 return;
             }
 
-            // First we load up our own channels so that we 
-            // can send out our own information.
-            lock (m_Lock)
+            using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: Signing in"))
             {
-                m_OpenConnections.Add(typeof(NamedPipeChannelType), m_ChannelBuilder(typeof(NamedPipeChannelType), m_Id));
-                m_OpenConnections.Add(typeof(TcpChannelType), m_ChannelBuilder(typeof(TcpChannelType), m_Id));
-                foreach (var tuple in m_OpenConnections.Values)
+                // First we load up our own channels so that we 
+                // can send out our own information.
+                lock (m_Lock)
                 {
-                    tuple.Item1.OpenChannel();
+                    m_OpenConnections.Add(typeof(NamedPipeChannelType), m_ChannelBuilder(typeof(NamedPipeChannelType), m_Id));
+                    m_OpenConnections.Add(typeof(TcpChannelType), m_ChannelBuilder(typeof(TcpChannelType), m_Id));
+                    foreach (var tuple in m_OpenConnections.Values)
+                    {
+                        tuple.Item1.OpenChannel();
+                    }
                 }
+
+                // Now we initiate discovery of other services. Note that discovery only works for 
+                // TCP based connections. It does not work with named pipes, however we have a 
+                // discovery source that can manually be controlled. This source will be able
+                // to provide the named pipe discoveries. 
+                //
+                // NOTE: in our case we don't need it to work with named pipes because the current 
+                // application is responsible for the creation of all apps that it communicates with 
+                // through a named pipe, i.e. we never need to discover anything on a named pipe.
+                //
+                // NOTE: the only thing we discover on a TCP connection is the application that is in 
+                // control of creating dataset applications on the remote machine.
+                foreach (var source in m_DiscoverySources)
+                {
+                    source.OnEndpointBecomingAvailable += HandleEndpointSignIn;
+                    source.OnEndpointBecomingUnavailable += HandleEndpointSignedOut;
+                    source.StartDiscovery();
+                }
+
+                m_AlreadySignedOn = true;
             }
 
-            // Now we initiate discovery of other services. Note that discovery only works for 
-            // TCP based connections. It does not work with named pipes, however we have a 
-            // discovery source that can manually be controlled. This source will be able
-            // to provide the named pipe discoveries. 
-            //
-            // NOTE: in our case we don't need it to work with named pipes because the current 
-            // application is responsible for the creation of all apps that it communicates with 
-            // through a named pipe, i.e. we never need to discover anything on a named pipe.
-            //
-            // NOTE: the only thing we discover on a TCP connection is the application that is in 
-            // control of creating dataset applications on the remote machine.
-            foreach (var source in m_DiscoverySources)
-            {
-                source.OnEndpointBecomingAvailable += HandleEndpointSignIn;
-                source.OnEndpointBecomingUnavailable += HandleEndpointSignedOut;
-                source.StartDiscovery();
-            }
-
-            m_Logger(LogSeverityProxy.Trace, "Sign on process finished.");
-            m_AlreadySignedOn = true;
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign on process finished.");
+            RaiseOnSignedIn();
         }
 
         private void HandleEndpointSignIn(object sender, ConnectionInformationEventArgs args)
@@ -249,7 +255,7 @@ namespace Apollo.Core.Base.Communication
             }
 
             // Notify the world
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -337,33 +343,66 @@ namespace Apollo.Core.Base.Communication
                 return;
             }
 
-            // Stop discovering other services. We just stopped caring.
-            foreach (var source in m_DiscoverySources)
+            using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: signing out"))
             {
-                source.EndDiscovery();
-                source.OnEndpointBecomingAvailable -= HandleEndpointSignIn;
-                source.OnEndpointBecomingUnavailable -= HandleEndpointSignedOut;
-            }
-
-            // There may be a race condition here. We could be disconnecting while
-            // others may be trying to connect, so we might have to put a 
-            // lock in here to block things from happening.
-            //
-            // Disconnect from all channels
-            lock (m_Lock)
-            {
-                foreach (var pair in m_OpenConnections)
+                // Stop discovering other services. We just stopped caring.
+                foreach (var source in m_DiscoverySources)
                 {
-                    var connection = pair.Value.Item1;
-                    connection.CloseChannel();
+                    source.EndDiscovery();
+                    source.OnEndpointBecomingAvailable -= HandleEndpointSignIn;
+                    source.OnEndpointBecomingUnavailable -= HandleEndpointSignedOut;
                 }
 
-                // Clear all connections
-                m_OpenConnections.Clear();
+                // There may be a race condition here. We could be disconnecting while
+                // others may be trying to connect, so we might have to put a 
+                // lock in here to block things from happening.
+                //
+                // Disconnect from all channels
+                lock (m_Lock)
+                {
+                    foreach (var pair in m_OpenConnections)
+                    {
+                        var connection = pair.Value.Item1;
+                        connection.CloseChannel();
+                    }
+
+                    // Clear all connections
+                    m_OpenConnections.Clear();
+                }
+
+                m_AlreadySignedOn = false;
             }
 
-            m_Logger(LogSeverityProxy.Trace, "Sign off process finished.");
-            m_AlreadySignedOn = false;
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign off process finished.");
+            RaiseOnSignedOut();
+        }
+
+        /// <summary>
+        /// An event raised when the layer has signed in.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSignedIn;
+
+        private void RaiseOnSignedIn()
+        {
+            var local = OnSignedIn;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the layer has signed out.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSignedOut;
+
+        private void RaiseOnSignedOut()
+        {
+            var local = OnSignedOut;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
@@ -448,7 +487,7 @@ namespace Apollo.Core.Base.Communication
             var channel = ChannelForChannelType(connection.ChannelType);
             channel.ConnectTo(connection);
 
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -501,25 +540,28 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => message);
             }
 
-            var connection = SelectMostAppropriateConnection(endpoint);
-            Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
-
-            var channel = ChannelForChannelType(connection.ChannelType);
-            if (!channel.HasConnectionTo(endpoint))
+            using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: sending message without waiting for response"))
             {
-                channel.ConnectTo(connection);
+                var connection = SelectMostAppropriateConnection(endpoint);
+                Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
+
+                var channel = ChannelForChannelType(connection.ChannelType);
+                if (!channel.HasConnectionTo(endpoint))
+                {
+                    channel.ConnectTo(connection);
+                }
+
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Sending msg of type {0} to endpoint ({1}) via the {2} channel without waiting for the response.",
+                        message.GetType(),
+                        endpoint,
+                        connection.ChannelType));
+
+                channel.Send(endpoint, message);
             }
-
-            m_Logger(
-                LogSeverityProxy.Trace,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Sending msg of type {0} to endpoint ({1}) via the {2} channel without waiting for the response.",
-                    message.GetType(),
-                    endpoint,
-                    connection.ChannelType));
-
-            channel.Send(endpoint, message);
         }
 
         /// <summary>
@@ -550,23 +592,26 @@ namespace Apollo.Core.Base.Communication
                 Enforce.Argument(() => message);
             }
 
-            var connection = SelectMostAppropriateConnection(endpoint);
-            Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
+            using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: sending message and waiting for response"))
+            {
+                var connection = SelectMostAppropriateConnection(endpoint);
+                Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var pair = ChannelInformationForType(connection.ChannelType);
-            var result = pair.Item2.ForwardResponse(endpoint, message.Id);
+                var pair = ChannelInformationForType(connection.ChannelType);
+                var result = pair.Item2.ForwardResponse(endpoint, message.Id);
 
-            m_Logger(
-                LogSeverityProxy.Trace,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Sending msg of type {0} to endpoint ({1}) via the {2} channel while waiting for the response.",
-                    message.GetType(),
-                    endpoint,
-                    connection.ChannelType));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Sending msg of type {0} to endpoint ({1}) via the {2} channel while waiting for the response.",
+                        message.GetType(),
+                        endpoint,
+                        connection.ChannelType));
 
-            pair.Item1.Send(endpoint, message);
-            return result;
+                pair.Item1.Send(endpoint, message);
+                return result;
+            }
         }
 
         /// <summary>
@@ -703,12 +748,12 @@ namespace Apollo.Core.Base.Communication
                     }
                 }
 
-                m_Logger(
-                LogSeverityProxy.Trace,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Disconnecting from endpoint ({0}).",
-                    endpoint));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Trace,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Disconnecting from endpoint ({0}).",
+                        endpoint));
 
                 // Technically the endpoint hasn't signed out, however we have told it
                 // we are going to and so it comes down to the same thing.

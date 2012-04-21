@@ -143,7 +143,14 @@ function Get-BzrVersion{
 
 function Get-SnExe
 {
-	"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	if (${Env:ProgramFiles(x86)} -ne $null)
+	{
+		"${Env:ProgramFiles(x86)}\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	}
+	else
+	{
+		"$Env:ProgramFiles\Microsoft SDKs\Windows\v7.0A\bin\sn.exe"
+	}
 }
 
 function Get-PublicKeySignatureFromKeyFile([string]$tempDir, [string]$pathToKeyFile)
@@ -210,6 +217,18 @@ function Get-PublicKeySignatureFromAssembly([string]$pathToAssembly)
     $publicKeyInfo.SubString($startIndex + $startString.length, $endIndex - ($startIndex + $startString.length))
 }
 
+function Get-7ZipExe
+{
+	if ($Env:ProgramW6432 -ne $null)
+	{
+		"$Env:ProgramW6432\7-Zip\7z.exe"
+	}
+	else
+	{
+		"$Env:ProgramFiles\7-Zip\7z.exe"
+	}
+}
+
 function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Version]$versionNumber){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@MAJOR@', $versionNumber.Major
@@ -220,7 +239,7 @@ function Create-VersionResourceFile([string]$path, [string]$newPath, [System.Ver
     Set-Content -Path $newPath -Value $text
 }
 
-function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config){
+function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [string]$config, [string]$buildNumber, [string]$vcsRevision){
     $text = [string]::Join([Environment]::NewLine, (Get-Content -Path $path))
     $text = $text -replace '@COPYRIGHTYEAR@', [DateTimeOffset]::Now.Year
     
@@ -228,6 +247,9 @@ function Create-ConfigurationResourceFile([string]$path, [string]$newPath, [stri
     
     $now = [DateTimeOffset]::Now
     $text = $text -replace '@BUILDTIME@', $now.ToString("o")
+	
+	$text = $text -replace '@BUILDNUMBER@', $buildNumber
+	$text = $text -replace '@VCSREVISION@', $vcsRevision
 
     Set-Content -Path $newPath -Value $text
 }
@@ -351,12 +373,14 @@ properties{
     # provide a value.
     $coverage = $false
     $incremental = $false
+	$reloadPackages = $false
     $configuration = 'debug'
     $platform = 'Any CPU'
     
     # Store the defaults in the hashtable for later use
     $props.coverage = $coverage
     $props.incremental = $incremental
+	$props.reloadPackages = $reloadPackages
     $props.configuration = $configuration
     $props.platform = $platform
 
@@ -393,6 +417,7 @@ properties{
     $props.dirPartCoverExclusionWriter = Join-Path $props.dirPackages 'partcoverexclusionwriter'
     $props.dirSourceMonitor = Join-Path $props.dirPackages 'SourceMonitor'
     $props.dirCcm = Join-Path $props.dirPackages 'Ccm'
+	$props.dirNTreva = Join-Path $props.dirPackages 'nTreva'
 	
     $props.dirTools = Join-Path $props.dirBase 'tools'
     
@@ -425,6 +450,8 @@ properties{
     $props.internalsVisibleToTemplateFile = Join-Path $props.dirTemplates 'AssemblyInfo.InternalsVisibleTo.cs.in'
     $props.internalsVisibleToFile = Join-Path $props.dirSrc 'AssemblyInfo.InternalsVisibleTo.cs'
     
+	$props.licenseInfoFile = Join-Path $props.dirSrc 'licenses.xml'
+	
     $props.partCoverConfigTemplateFile = Join-Path $props.dirTemplates 'PartCover.Settings.xml.in'
     $props.partCoverConfigFile = Join-Path $props.dirTemp 'PartCover.Settings.xml'
     
@@ -465,7 +492,7 @@ properties{
 task default -depends Help
 
 # Cleans all the generated files
-task Clean -depends runClean
+task Clean -depends runClean, runCleanPackages
 
 # Builds all the binaries
 task Build -depends buildBinaries
@@ -496,33 +523,33 @@ task getVersion -action{
     [xml]$xmlFile = Get-Content $props.versionFile
     $major = $xmlFile.version | %{$_.major} | Select-Object -Unique
     $minor = $xmlFile.version | %{$_.minor} | Select-Object -Unique
-    $build = Get-BuildNumber
-    $revision = Get-BzrVersion
+    $build = $xmlFile.version | %{$_.patch} | Select-Object -Unique
+    $revision = Get-BuildNumber
 	
 	$input = "$major.$minor.$build.$revision"
     $props.versionNumber = New-Object -TypeName System.Version -ArgumentList $input
     ("version is: " + $props.versionNumber )
 }
 
-task getBuildDependencies -action{
-    # Pull in all the packages
-    $packages = Get-ChildItem -Path $props.dirBase -Filter "packages.config" -Recurse
-    
-    foreach($package in $packages)
-    {
-        $nuget = 'nuget.exe'
-        $command = '& "' + $nuget + '" '
-        $command += 'install "' + ($package.FullName) + '" '
-        $command += '-ExcludeVersion '
-        $command += '-OutputDirectory "' + $props.dirPackages + '"'
-        
-        ("Grabbing package from: " + $package.FullName)
-        Invoke-Expression $command
-        if ($LastExitCode -ne 0)
-        {
-            throw "NuGet failed on Apollo with return code: $LastExitCode"
-        }
-    }
+task getLicenses -action{
+	$ntrevaExe = Join-Path $props.dirNTreva 'ntreva.exe'
+	
+	$command = '& "' + $ntrevaExe + '" '
+	$command += '-p "' + $props.dirPackages + '" '
+	$command += '-o "' + $props.licenseInfoFile + '" '
+	
+	# for each directory in the src directory
+	# that doesn't contain the string 'test'
+	$nonTestDirectories = Get-ChildItem -path $props.dirSrc |
+            Where-Object { (($_.PSIsContainer) -and
+                            !( $_.Name -like "*Test.*"))}
+	foreach($dir in $nonTestDirectories)
+	{
+		$command += '-c "' + $dir.FullName + '" '
+	}
+	
+	$command
+	Invoke-Expression $command
 }
 
 ###############################################################################
@@ -538,6 +565,7 @@ In order to run this build script please call a specific target.
 The following build properties are available:
     'incremental':      Turns on or off the incremental building of the binaries. Default is off.
     'coverage':         Turns on or off the unit testing coverage check. Default is off.
+	'reloadpackages':   Turns on or off the reloading of the Nuget packages. Default is off.
     'configuration':    Defines the configuration for the build. Valid values are 'debug' and 'release', default value is 'debug'.
     'platform':         Defines the platform for the build. Valid values are 'Any CPU', default value is 'Any CPU'.
 
@@ -555,13 +583,14 @@ The following build tasks are available
 Multiple build tasks can be specified separated by a comma. 
        
 In order to run this build script please call this script via PSAKE like:
-    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify,doc,package,statistics 4.0
+    invoke-psake apollo.ps1 -properties @{ "incremental"=$trueText;"coverage"=$trueText;"reloadpackages"=$trueText;"configuration"="debug";"platform"="Any CPU" } clean,build,unittest,spectest,verify,doc,package,statistics 4.0
 "@
 }
 
 task runInit -action{
     $props.incremental = $incremental
     $props.coverage = $coverage
+	$props.reloadPackages = $reloadpackages;
     $props.configuration = $configuration
     $props.platform = $platform
     
@@ -580,6 +609,8 @@ task displayInfo -depends runInit -action{
     "Running as user: $user"
     ("Configuration:   " + $props.configuration)
     ("Platform:        " + $props.platform)
+	("Incremental:     " + $props.incremental)
+	("Reload packages: " + $props.reloadpackages)
     ""
 }
 
@@ -603,7 +634,15 @@ task runClean -depends displayInfo -precondition{ !$incremental } -action{
 	""
 }
 
-task runPrepareDisk -depends displayInfo,runClean -action{
+task runCleanPackages -depends displayInfo -precondition { $reloadpackages } -action{
+	if (Test-Path $props.dirPackages)
+	{
+		"Removing packages"
+		Remove-Item $props.dirPackages -Force -Recurse
+	}
+}
+
+task runPrepareDisk -action{
     "Initializing build..."
 
     if (!(Test-Path -Path $props.dirBuild -PathType Container))
@@ -644,14 +683,13 @@ task runPrepareDisk -depends displayInfo,runClean -action{
 	""
 }
 
-task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -action{
-    "Building Apollo..."
-    
-    # Set the version numbers
+# Is called through msbuild.
+task createGeneratedSource -depends runPrepareDisk, getLicenses, getVersion -action{
+	# Set the version numbers
     Create-VersionResourceFile $props.versionTemplateFile $props.versionAssemblyFile $props.versionNumber
     
     # Set the configuration
-    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration
+    Create-ConfigurationResourceFile $props.configurationTemplateFile $props.configurationAssemblyFile $props.configuration (Get-BuildNumber) (Get-BzrVersion)
     
     # Set the InternalsVisibleTo attribute
     $publicKeyToken = Get-PublicKeySignatureFromKeyFile $props.dirTemp $env:SOFTWARE_SIGNING_KEY_PATH
@@ -666,6 +704,10 @@ task buildBinaries -depends runPrepareDisk, getBuildDependencies, getVersion -ac
     $publicKeyToken = Get-PublicKeySignatureFromAssembly (Join-Path $props.dirMoq 'Moq.dll')
     $moqAssemblyName = $props.assemblyNameMoq + $publicKeyToken
     Create-InternalsVisibleToFile $props.internalsVisibleToTemplateFile $props.internalsVisibleToFile ($testUnitHostAssemblyName, $testUnitBaseAssemblyName, $testUnitUIAssemblyName, $testUnitUtilsAssemblyName, $testUnitDatasetAssemblyName, $manualTestAssemblyName, $moqAssemblyName, $props.assemblyNameDynamicProxy)
+}
+
+task buildBinaries -depends displayInfo, runPrepareDisk -action{
+    "Building Apollo..."
     
     $logPath = Join-Path $props.dirLogs $props.logMsBuild
     $msbuildExe = Get-MsbuildExe
@@ -838,8 +880,9 @@ task runFxCop -depends buildBinaries -action{
     
     # exclude the fxcop rules we don't want to use.
     # 1006: do not nest generic types in member signatures
+	# 1026: Default parameters should not be used
     # 1030: use events where appropriate
-    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1030"
+    $excludedRules = " /ruleid:-Microsoft.Rules.Managed.CA1006 /ruleid:-Microsoft.Rules.Managed.CA1026 /ruleid:-Microsoft.Rules.Managed.CA1030"
     
     $command = "& '" + "$fxcopExe" + "' " + "$files /rule:+" + "'" + "$rulesDir" + "'" + $excludedRules + " /out:" + "'" + "$outFile" + "' /forceoutput /dictionary:'" + "$dictionaryFile" + "'"
     $command
@@ -929,7 +972,7 @@ task buildPackage -depends buildBinaries -action{
     "Compressing..."
 
     # zip the temp dir
-    $7zipExe = "$Env:ProgramW6432\7-Zip\7z.exe"
+    $7zipExe = Get-7ZipExe
     & $7zipExe a -tzip $output (Get-ChildItem $dirTempZip | foreach { $_.FullName })
     if ($LastExitCode -ne 0)
     {

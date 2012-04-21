@@ -5,11 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
@@ -228,9 +226,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> m_SendWithResponse;
 
         /// <summary>
-        /// The function used to write log messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandProxyBuilder"/> class.
@@ -239,7 +237,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="sendWithResponse">
         ///     The function that sends out a message to the given endpoint and returns a task that will, eventually, hold the return message.
         /// </param>
-        /// <param name="logger">The function that is used to log messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
         /// </exception>
@@ -247,22 +245,22 @@ namespace Apollo.Core.Base.Communication
         ///     Thrown if <paramref name="sendWithResponse"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommandProxyBuilder(
             EndpointId localEndpoint,
             Func<EndpointId, ICommunicationMessage, Task<ICommunicationMessage>> sendWithResponse,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendWithResponse);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Local = localEndpoint;
             m_SendWithResponse = sendWithResponse;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -312,14 +310,14 @@ namespace Apollo.Core.Base.Communication
                     var msg = new CommandInvokedMessage(m_Local, methodInvocation);
                     return m_SendWithResponse(endpoint, msg);
                 },
-                m_Logger);
+                m_Diagnostics);
             var methodWithResult = new CommandSetMethodWithResultInterceptor(
                 methodInvocation =>
                 {
                     var msg = new CommandInvokedMessage(m_Local, methodInvocation);
                     return m_SendWithResponse(endpoint, msg);
                 },
-                m_Logger);
+                m_Diagnostics);
 
             var options = new ProxyGenerationOptions
                 {

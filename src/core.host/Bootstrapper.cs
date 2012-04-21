@@ -102,13 +102,8 @@ namespace Apollo.Core.Host
                 }
             }
 
+            // Building the container automatically starts all the startables.
             var container = builder.Build();
-            if (container.IsRegistered<Autofac.IStartable>())
-            {
-                var startable = container.Resolve<Autofac.IStartable>();
-                startable.Start();
-            }
-
             return container;
         }
 
@@ -245,7 +240,7 @@ namespace Apollo.Core.Host
             var userInterface = new UserInterfaceService(
                 container.Resolve<ICommandContainer>(),
                 container.Resolve<INotificationNameConstants>(),
-                container.Resolve<Action<LogSeverityProxy, string>>(),
+                container.Resolve<SystemDiagnostics>(),
                 StoreContainer);
 
             return userInterface;

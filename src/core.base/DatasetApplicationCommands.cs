@@ -9,7 +9,9 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
+using Apollo.Utilities;
 using Lokad;
+using NManto;
 
 namespace Apollo.Core.Base
 {
@@ -35,6 +37,11 @@ namespace Apollo.Core.Base
         private readonly Action<FileInfo> m_LoadAction;
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the system.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
         /// The scheduler that will be used to schedule tasks.
         /// </summary>
         private readonly TaskScheduler m_Scheduler;
@@ -45,6 +52,7 @@ namespace Apollo.Core.Base
         /// <param name="layer">The object that handles the communication with remote endpoints.</param>
         /// <param name="closeAction">The action that closes the application.</param>
         /// <param name="loadAction">The action that is used to load the dataset from a given file path.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
@@ -55,21 +63,27 @@ namespace Apollo.Core.Base
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="loadAction"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown is <paramref name="systemDiagnostics"/> is <see langword="null"/>
+        /// </exception>
         public DatasetApplicationCommands(
             ICommunicationLayer layer, 
             Action closeAction,
             Action<FileInfo> loadAction,
+            SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => layer);
                 Enforce.Argument(() => closeAction);
                 Enforce.Argument(() => loadAction);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Layer = layer;
             m_CloseAction = closeAction;
             m_LoadAction = loadAction;
+            m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
@@ -99,7 +113,10 @@ namespace Apollo.Core.Base
                     task.ContinueWith(
                         t =>
                         {
-                            m_LoadAction(new FileInfo(filePath));
+                            using (var interval = m_Diagnostics.Profiler.Measure("Loading dataset from file."))
+                            {
+                                m_LoadAction(new FileInfo(filePath));
+                            }
                         }, 
                         TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously);
                 });

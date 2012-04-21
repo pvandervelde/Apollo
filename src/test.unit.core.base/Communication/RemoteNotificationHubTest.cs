@@ -63,7 +63,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object, 
@@ -71,8 +71,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger), 
-                logger);
+                    systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -114,7 +114,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object, 
@@ -122,8 +122,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger), 
-                logger);
+                    systemDiagnostics), 
+                systemDiagnostics);
             hub.OnEndpointSignedIn += (s, e) => Assert.Fail();
 
             var connectionInfo = new ChannelConnectionInformation(
@@ -164,7 +164,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object, 
@@ -172,8 +172,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger), 
-                logger);
+                    systemDiagnostics), 
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -221,7 +221,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object,
@@ -229,8 +229,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger),
-                logger);
+                    systemDiagnostics),
+                systemDiagnostics);
 
             var otherId = new EndpointId("other");
             reporter.Raise(
@@ -270,7 +270,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object,
@@ -278,8 +278,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger),
-                logger);
+                    systemDiagnostics),
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -331,7 +331,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object,
@@ -339,8 +339,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger),
-                logger);
+                    systemDiagnostics),
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -395,7 +395,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object,
@@ -403,8 +403,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger),
-                logger);
+                    systemDiagnostics),
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),
@@ -448,7 +448,7 @@ namespace Apollo.Core.Base.Communication
                     new CancellationToken(),
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler());
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var hub = new RemoteNotificationHub(
                 layer.Object,
@@ -456,8 +456,8 @@ namespace Apollo.Core.Base.Communication
                 new NotificationProxyBuilder(
                     localEndpoint,
                     (e, msg) => { },
-                    logger),
-                logger);
+                    systemDiagnostics),
+                systemDiagnostics);
 
             var connectionInfo = new ChannelConnectionInformation(
                 new EndpointId("other"),

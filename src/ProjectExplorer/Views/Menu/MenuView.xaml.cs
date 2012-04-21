@@ -4,8 +4,11 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Input;
+using Apollo.Utilities;
+using NManto;
 
 namespace Apollo.ProjectExplorer.Views.Menu
 {
@@ -19,6 +22,16 @@ namespace Apollo.ProjectExplorer.Views.Menu
         /// The routed command used to exit the application.
         /// </summary>
         private static readonly RoutedCommand s_ExitCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to undo the last action.
+        /// </summary>
+        private static readonly RoutedCommand s_UndoCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command used to redo the last undo action.
+        /// </summary>
+        private static readonly RoutedCommand s_RedoCommand = new RoutedCommand();
 
         /// <summary>
         /// The routed command used to show the projects tab.
@@ -42,6 +55,14 @@ namespace Apollo.ProjectExplorer.Views.Menu
         {
             InitializeComponent();
 
+            BindFileMenuCommands();
+            BindEditMenuCommands();
+            BindViewMenuCommands();
+            BindHelpMenuCommands();
+        }
+
+        private void BindFileMenuCommands()
+        {
             // Bind the exit command
             {
                 var cb = new CommandBinding(s_ExitCommand, CommandExitExecuted, CommandExitCanExecute);
@@ -55,7 +76,41 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 miFileExit.Command = s_ExitCommand;
                 miFileExit.CommandTarget = this;
             }
+        }
 
+        private void BindEditMenuCommands()
+        {
+            // Bind the undo command
+            {
+                var cb = new CommandBinding(s_UndoCommand, CommandUndoExecuted, CommandUndoCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_UndoCommand, new KeyGesture(Key.Z, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miEditUndo.Command = s_UndoCommand;
+                miEditUndo.CommandTarget = this;
+            }
+
+            // Bind the redo command
+            {
+                var cb = new CommandBinding(s_RedoCommand, CommandRedoExecuted, CommandRedoCanExecute);
+                CommandBindings.Add(cb);
+
+                InputBindings.Add(new InputBinding(s_RedoCommand, new KeyGesture(Key.Y, ModifierKeys.Control)));
+
+                // Set the command and set the command target to the control so that we don't run into focus issues
+                // as given here:
+                // http://social.msdn.microsoft.com/Forums/en-US/wpf/thread/f5de6ffc-fa03-4f08-87e9-77bbad752033
+                miEditRedo.Command = s_RedoCommand;
+                miEditRedo.CommandTarget = this;
+            }
+        }
+
+        private void BindViewMenuCommands()
+        {
             // Bind the projects command
             {
                 var cb = new CommandBinding(s_ShowProjectsCommand, CommandShowProjectsExecuted, CommandShowProjectsCanExecute);
@@ -73,7 +128,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
                 miViewScript.Command = s_ShowScriptsCommand;
                 miViewScript.CommandTarget = this;
             }
+        }
 
+        private void BindHelpMenuCommands()
+        {
             // Bind the About command
             {
                 var cb = new CommandBinding(s_AboutCommand, CommandAboutExecuted, CommandAboutCanExecute);
@@ -180,6 +238,10 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private void CommandExitExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
+
+            // We could put an timing interval around this but it may not be useful
+            // given that we're about to exit from the application. This means that
+            // the profiler might be destroyed halfway the timing process.
             Model.ExitCommand.Execute(null);
         }
 
@@ -229,6 +291,38 @@ namespace Apollo.ProjectExplorer.Views.Menu
         {
             e.Handled = true;
             Model.AboutCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandUndoCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.UndoCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandUndoExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.UndoCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandRedoCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.RedoCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandRedoExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.RedoCommand.Execute(null);
         }
     }
 }

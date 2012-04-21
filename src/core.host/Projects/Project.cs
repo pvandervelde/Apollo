@@ -11,6 +11,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using Lokad;
 using QuickGraph;
 
@@ -36,6 +37,11 @@ namespace Apollo.Core.Host.Projects
         private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
 
         /// <summary>
+        /// Stores the history of the project information.
+        /// </summary>
+        private readonly ProjectHistoryStorage m_ProjectInformation;
+
+        /// <summary>
         /// A flag that indicates if the project has been closed.
         /// </summary>
         /// <design>
@@ -47,34 +53,13 @@ namespace Apollo.Core.Host.Projects
         /// the reads and writes aren't re-ordered. The 'volatile' switch also ensures that the
         /// data is written straight back into the RAM memory so that other processors can see it.
         /// </para>
-        /// <para>
-        /// VS2010 C# language specification. Section 5.5.
-        /// <quote>
-        /// Reads and writes of the following data types are atomic: bool, char, byte, sbyte, 
-        /// short, ushort, uint, int, float, and reference types. In addition, reads and writes 
-        /// of enum types with an underlying type in the previous list are also atomic. Reads and 
-        /// writes of other types, including long, ulong, double, and decimal, as well as user-defined 
-        /// types, are not guaranteed to be atomic. Aside from the library functions designed for that 
-        /// purpose, there is no guarantee of atomic read-modify-write, such as in the case of 
-        /// increment or decrement.
-        /// </quote>
-        /// </para>
         /// </design>
         private volatile bool m_IsClosed;
 
         /// <summary>
-        /// The name of the project.
-        /// </summary>
-        private string m_Name;
-
-        /// <summary>
-        /// The summary for the project.
-        /// </summary>
-        private string m_Summary;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
         /// </summary>
+        /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
@@ -82,14 +67,17 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
-        public Project(Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
-            : this(distributor, null)
+        public Project(
+            ITimeline timeline,
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor)
+            : this(timeline, distributor, null)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Project"/> class.
         /// </summary>
+        /// <param name="timeline">The timeline for the current project.</param>
         /// <param name="distributor">
         /// The function which returns a <see cref="DistributionPlan"/> for a given
         /// <see cref="DatasetRequest"/>.
@@ -98,17 +86,29 @@ namespace Apollo.Core.Host.Projects
         /// The object that describes how the project was persisted.
         /// </param>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="timeline"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
         /// </exception>
         public Project(
+            ITimeline timeline,
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor, 
             IPersistenceInformation persistenceInfo)
         {
             {
+                Enforce.Argument(() => timeline);
                 Enforce.Argument(() => distributor);
             }
 
-            m_Graph = new BidirectionalGraph<DatasetId, Edge<DatasetId>>(false);
+            m_Timeline = timeline;
+            m_Timeline.ForgetAllHistory();
+
+            m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
+            m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
+
+            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(BuildProjectHistoryStorage);
+            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(BuildDatasetHistoryStorage);
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)
@@ -131,10 +131,12 @@ namespace Apollo.Core.Host.Projects
                             CanBeAdopted = false,
                         });
 
-                var dataset = m_Datasets[m_RootDataset];
+                var dataset = m_Datasets.KnownDatasets[m_RootDataset];
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
+
+            m_Timeline.SetCurrentAsDefault();
         }
 
         private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)
@@ -188,14 +190,14 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Name;
+                return m_ProjectInformation.Name;
             }
 
             set
             {
-                if (!string.Equals(m_Name, value))
+                if (!string.Equals(m_ProjectInformation.Name, value))
                 {
-                    m_Name = value;
+                    m_ProjectInformation.Name = value;
                     RaiseOnNameChanged(value);
                 }
             }
@@ -222,14 +224,14 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Summary;
+                return m_ProjectInformation.Summary;
             }
 
             set
             {
-                if (!string.Equals(m_Summary, value))
+                if (!string.Equals(m_ProjectInformation.Summary, value))
                 {
-                    m_Summary = value;
+                    m_ProjectInformation.Summary = value;
                     RaiseOnSummaryChanged(value);
                 }
             }
@@ -256,7 +258,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Datasets.Count;
+                return m_Datasets.KnownDatasets.Count;
             }
         }
 
@@ -354,7 +356,7 @@ namespace Apollo.Core.Host.Projects
                     Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(
-                    m_Datasets.ContainsKey(datasetToExport), 
+                    m_Datasets.KnownDatasets.ContainsKey(datasetToExport), 
                     Resources_NonTranslatable.Exception_Messages_UnknownDataset_WithId, 
                     datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
@@ -389,16 +391,12 @@ namespace Apollo.Core.Host.Projects
             {
                 // Invalidate all datasets first.
                 m_DatasetProxies.Clear();
-                m_Datasets.Clear();
 
-                // Terminate all dataset applications (from the leaf nodes up to the root)
-                foreach (var online in m_ActiveDatasets.Values)
+                // Terminate all dataset applications
+                foreach (var online in m_Datasets.ActiveDatasets.Values)
                 {
                     online.Close();
                 }
-
-                m_ActiveDatasets.Clear();
-                m_Graph.Clear();
             }
 
             RaiseOnClosed();

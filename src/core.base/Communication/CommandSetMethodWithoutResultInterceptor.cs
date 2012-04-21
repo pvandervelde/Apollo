@@ -74,9 +74,9 @@ namespace Apollo.Core.Base.Communication
         private readonly Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> m_SendMessageWithResponse;
 
         /// <summary>
-        /// The function used to write log messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The scheduler that will be used to schedule tasks.
@@ -89,26 +89,26 @@ namespace Apollo.Core.Base.Communication
         /// <param name="sendMessageWithResponse">
         ///     The function used to send the information about the method invocation to the owning endpoint.
         /// </param>
-        /// <param name="logger">The function that is used to log messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="sendMessageWithResponse"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommandSetMethodWithoutResultInterceptor(
             Func<ISerializedMethodInvocation, Task<ICommunicationMessage>> sendMessageWithResponse,
-            Action<LogSeverityProxy, string> logger,
+            SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => sendMessageWithResponse);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_SendMessageWithResponse = sendMessageWithResponse;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
 
@@ -118,7 +118,7 @@ namespace Apollo.Core.Base.Communication
         /// <param name="invocation">Information about the call that was intercepted.</param>
         public void Intercept(IInvocation invocation)
         {
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -135,23 +135,23 @@ namespace Apollo.Core.Base.Communication
             }
             catch (EndpointNotContactableException e)
             {
-                m_Logger(
-                LogSeverityProxy.Error,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Tried to invoke {0}, but failed to contact the remote endpoint.",
-                    MethodToText(invocation.Method)));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Tried to invoke {0}, but failed to contact the remote endpoint.",
+                        MethodToText(invocation.Method)));
 
                 throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
             }
             catch (FailedToSendMessageException e)
             {
-                m_Logger(
-                LogSeverityProxy.Error,
-                string.Format(
-                    CultureInfo.InvariantCulture,
-                    "Tried to invoke {0}, but failed to send the message.",
-                    MethodToText(invocation.Method)));
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Error,
+                    string.Format(
+                        CultureInfo.InvariantCulture,
+                        "Tried to invoke {0}, but failed to send the message.",
+                        MethodToText(invocation.Method)));
 
                 throw new CommandInvocationFailedException(Resources.Exceptions_Messages_CommandInvocationFailed, e);
             }

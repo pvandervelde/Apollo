@@ -44,14 +44,15 @@ namespace Apollo.Core.Base
                                 endpoint,
                                 network,
                                 ctx.Resolve<ISendCommandsToRemoteEndpoints>(),
-                                ctx.Resolve<Action<LogSeverityProxy, string>>());
+                                ctx.Resolve<SystemDiagnostics>());
                         },
                         () =>
                         {
                             return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
                                     where connection.ChannelType.Equals(typeof(TcpChannelType))
                                     select connection).First();
-                        });
+                        },
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
@@ -76,14 +77,15 @@ namespace Apollo.Core.Base
                                endpoint,
                                network,
                                ctx.Resolve<ISendCommandsToRemoteEndpoints>(),
-                               ctx.Resolve<Action<LogSeverityProxy, string>>());
+                               ctx.Resolve<SystemDiagnostics>());
                        },
                        () =>
                        {
                            return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
                                    where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
                                    select connection).First();
-                       });
+                       },
+                       c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()
                 .As<ILoadDatasets>()
@@ -96,7 +98,7 @@ namespace Apollo.Core.Base
                     c.Resolve<ICommunicationLayer>(),
                     c.ResolveKeyed<IReportNewProxies>(typeof(ICommandSet)),
                     c.Resolve<CommandProxyBuilder>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<ISendCommandsToRemoteEndpoints>()
                 .SingleInstance();
 
@@ -112,7 +114,7 @@ namespace Apollo.Core.Base
                         {
                             return ctx.Resolve<ICommunicationLayer>().SendMessageAndWaitForResponse(endpoint, msg);
                         },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 });
         }
 
@@ -122,7 +124,7 @@ namespace Apollo.Core.Base
                     c.Resolve<ICommunicationLayer>(),
                     c.ResolveKeyed<IReportNewProxies>(typeof(INotificationSet)),
                     c.Resolve<NotificationProxyBuilder>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<INotifyOfRemoteEndpointEvents>()
                 .SingleInstance();
 
@@ -138,7 +140,7 @@ namespace Apollo.Core.Base
                         {
                             ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg);
                         },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 });
         }
 
@@ -167,7 +169,7 @@ namespace Apollo.Core.Base
 
             builder.Register(c => new NotificationRaisedProcessAction(
                     c.Resolve<INotifyOfRemoteEndpointEvents>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IMessageProcessAction>();
         }
 

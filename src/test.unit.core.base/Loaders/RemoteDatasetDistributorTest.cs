@@ -26,8 +26,8 @@ namespace Apollo.Core.Base.Loaders
     {
         private static DistributionPlan CreateNewDistributionPlan(
            DatasetLoadingProposal proposal,
-            DatasetOfflineInformation offlineInfo,
-            Action<LogSeverityProxy, string> logger)
+            IDatasetOfflineInformation offlineInfo,
+            SystemDiagnostics systemDiagnostics)
         {
             var plan = new DistributionPlan(
                 (p, t, r) => Task<DatasetOnlineInformation>.Factory.StartNew(
@@ -36,7 +36,7 @@ namespace Apollo.Core.Base.Loaders
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
-                        logger),
+                        systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
                     new CurrentThreadTaskScheduler()),
@@ -46,25 +46,33 @@ namespace Apollo.Core.Base.Loaders
             return plan;
         }
 
-        private static DatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
+        private static IDatasetOfflineInformation CreateOfflineInfo(IPersistenceInformation storage)
         {
-            return new DatasetOfflineInformation(
-                new DatasetId(),
-                new DatasetCreationInformation()
-                {
-                    CreatedOnRequestOf = DatasetCreator.User,
-                    CanBecomeParent = true,
-                    CanBeAdopted = false,
-                    CanBeCopied = false,
-                    CanBeDeleted = true,
-                    LoadFrom = storage,
-                });
+            var mock = new Mock<IDatasetOfflineInformation>();
+            {
+                mock.Setup(d => d.Id)
+                    .Returns(new DatasetId());
+                mock.Setup(d => d.CanBeAdopted)
+                    .Returns(false);
+                mock.Setup(d => d.CanBecomeParent)
+                    .Returns(true);
+                mock.Setup(d => d.CanBeCopied)
+                    .Returns(false);
+                mock.Setup(d => d.CanBeDeleted)
+                    .Returns(true);
+                mock.Setup(d => d.CreatedBy)
+                    .Returns(DatasetCreator.User);
+                mock.Setup(d => d.StoredAt)
+                    .Returns(storage);
+            }
+
+            return mock.Object;
         }
 
         [Test]
         public void ProposeDistributionFor()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var offlineInfo = CreateOfflineInfo(new Mock<IPersistenceInformation>().Object);
             var result = new DatasetLoadingProposal
@@ -81,7 +89,7 @@ namespace Apollo.Core.Base.Loaders
             var plan = CreateNewDistributionPlan(
                 result,
                 offlineInfo,
-                logger);
+                systemDiagnostics);
 
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
@@ -133,9 +141,10 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints
@@ -174,7 +183,7 @@ namespace Apollo.Core.Base.Loaders
         [Test]
         public void ImplementPlan()
         {
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
             var loaderEndpoint = new EndpointId("myMachine:8080");
             var proposal = new DatasetLoadingProposal
@@ -195,7 +204,7 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(new FileInfo(filePath));
             }
 
-            var plan = CreateNewDistributionPlan(proposal, CreateOfflineInfo(storage.Object), logger);
+            var plan = CreateNewDistributionPlan(proposal, CreateOfflineInfo(storage.Object), systemDiagnostics);
             var datasetEndpoint = new EndpointId("OtherMachine:5678");
             var loaderCommands = new Mock<IDatasetLoaderCommands>();
             {
@@ -264,9 +273,10 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
-                        logger);
+                        systemDiagnostics);
                 },
                 channelInfo,
+                systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
             // Add the remote endpoints

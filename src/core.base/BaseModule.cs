@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
@@ -65,7 +67,7 @@ namespace Apollo.Core.Base
                                 ctx.ResolveKeyed<ICommunicationChannel>(t, new TypedParameter(typeof(EndpointId), id)),
                                 ctx.ResolveKeyed<IDirectIncomingMessages>(t));
                         },
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<ICommunicationLayer>()
                 .SingleInstance();
@@ -99,6 +101,38 @@ namespace Apollo.Core.Base
                     var ctx = c.Resolve<IComponentContext>();
                     return (id, channelType, address) =>
                     {
+                        // We need to make sure that the communication layer is ready to start
+                        // sending / receiving messages, otherwise the we won't be able to
+                        // tell it that there are new endpoints.
+                        //
+                        // NOTE: this is kinda yucky because really we're only interested in
+                        // the IAcceptExternalEndpointInformation object and its willingness
+                        // to process information. However the only way that object is going to
+                        // be willing is if the communication layer is signed in so ...
+                        var layer = ctx.Resolve<ICommunicationLayer>();
+                        if (!layer.IsSignedIn)
+                        {
+                            var resetEvent = new AutoResetEvent(false);
+                            var availability =
+                                Observable.FromEventPattern<EventArgs>(
+                                    h => layer.OnSignedIn += h,
+                                    h => layer.OnSignedIn -= h)
+                                .Take(1)
+                                .Subscribe(
+                                    args =>
+                                    {
+                                        resetEvent.Set();
+                                    });
+
+                            using (availability)
+                            {
+                                if (!layer.IsSignedIn)
+                                {
+                                    resetEvent.WaitOne();
+                                }
+                            }
+                        }
+
                         ctx.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
                             EndpointIdExtensions.Deserialize(id),
                             Type.GetType(channelType, null, null, true, false),
@@ -113,7 +147,7 @@ namespace Apollo.Core.Base
             // however every CommunicationChannel needs exactly one MessageHandler attached ... Hence
             // we pretend that there is a connection between IChannelType and the MessageHandler.
             builder.Register(c => new MessageHandler(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -123,7 +157,7 @@ namespace Apollo.Core.Base
                 .SingleInstance();
 
             builder.Register(c => new MessageHandler(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .OnActivated(a =>
                 {
                     AttachMessageProcessingActions(a);
@@ -138,7 +172,7 @@ namespace Apollo.Core.Base
             builder.Register(c => new DataDownloadProcessAction(
                     c.Resolve<WaitingUploads>(),
                     c.Resolve<ICommunicationLayer>(),
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IMessageProcessAction>();
 
             builder.Register(
@@ -150,7 +184,7 @@ namespace Apollo.Core.Base
                         return new EndpointConnectProcessAction(
                             c.Resolve<IAcceptExternalEndpointInformation>(),
                             from channelType in ctx.Resolve<IEnumerable<IChannelType>>() select channelType.GetType(),
-                            c.Resolve<Action<LogSeverityProxy, string>>());
+                            c.Resolve<SystemDiagnostics>());
                     })
                 .As<IMessageProcessAction>();
 
@@ -163,7 +197,7 @@ namespace Apollo.Core.Base
                     return new UnknownMessageTypeProcessAction(
                         EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
                         (endpoint, msg) => ctx.Resolve<ICommunicationLayer>().SendMessageTo(endpoint, msg),
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<IMessageProcessAction>();
         }
@@ -191,7 +225,7 @@ namespace Apollo.Core.Base
                                     endpointToProxy));
                         },
                         () => DateTimeOffset.Now,
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .OnActivated(a =>
                 {
@@ -218,7 +252,7 @@ namespace Apollo.Core.Base
                                     endpointToProxy));
                         },
                         () => DateTimeOffset.Now,
-                        c.Resolve<Action<LogSeverityProxy, string>>());
+                        c.Resolve<SystemDiagnostics>());
                 })
                 .OnActivated(a =>
                 {
@@ -235,7 +269,7 @@ namespace Apollo.Core.Base
                 .As<ISendingEndpoint>();
 
             builder.Register(c => new ReceivingEndpoint(
-                    c.Resolve<Action<LogSeverityProxy, string>>()))
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IMessagePipe>();
         }
 

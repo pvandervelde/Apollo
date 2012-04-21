@@ -4,9 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Scripting;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -34,7 +37,8 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="scriptHost">The object that controls the script system.</param>
         /// <param name="info">The information describing the running script.</param>
-        private static void OnCancelScriptRun(IHostScripts scriptHost, ScriptRunInformation info)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnCancelScriptRun(IHostScripts scriptHost, ScriptRunInformation info, Func<string, IDisposable> timer)
         {
             // If there is no facade then we're in design mode or something
             // else weird.
@@ -45,9 +49,12 @@ namespace Apollo.UI.Common.Commands
 
             if (info != null)
             {
-                // Note that the cancellation may take some time ...?
-                info.CancellationToken.Cancel();
-                info.ScriptRunningTask.Wait();
+                using (var interval = timer("Cancelling script run"))
+                {
+                    // Note that the cancellation may take some time ...?
+                    info.CancellationToken.Cancel();
+                    info.ScriptRunningTask.Wait();
+                }
             }
         }
 
@@ -55,8 +62,9 @@ namespace Apollo.UI.Common.Commands
         /// Initializes a new instance of the <see cref="CancelScriptRunCommand"/> class.
         /// </summary>
         /// <param name="scriptHost">The object that controls the script system.</param>
-        public CancelScriptRunCommand(IHostScripts scriptHost)
-            : base(obj => OnCancelScriptRun(scriptHost, obj as ScriptRunInformation), obj => CanCancelScriptRun(scriptHost))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public CancelScriptRunCommand(IHostScripts scriptHost, Func<string, IDisposable> timer)
+            : base(obj => OnCancelScriptRun(scriptHost, obj as ScriptRunInformation, timer), obj => CanCancelScriptRun(scriptHost))
         { 
         }
     }

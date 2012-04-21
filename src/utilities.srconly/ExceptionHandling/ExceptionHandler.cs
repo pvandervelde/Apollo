@@ -23,6 +23,7 @@ namespace Apollo.Utilities.ExceptionHandling
     /// This class must be public because we use it in the AppDomainBuilder.
     /// </design>
     [Serializable]
+    [ExcludeFromCodeCoverage]
     public sealed class ExceptionHandler : IExceptionHandler, IDisposable
     {
         /// <summary>

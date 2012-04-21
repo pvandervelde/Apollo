@@ -20,6 +20,9 @@
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
@@ -35,6 +38,12 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -53,6 +62,7 @@
     <Compile Include="BaseModuleForLoaders.cs" />
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
+    <Compile Include="Communication\ChannelOpenedEventArgs.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
     <Compile Include="Communication\CommandInformationPerEndpoint.cs" />
     <Compile Include="Communication\CommandInvocationFailedException.cs" />
@@ -183,9 +193,11 @@
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="DatasetApplicationCommands.cs" />
     <Compile Include="DatasetApplicationNotifications.cs" />
+    <Compile Include="Loaders\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IDatasetApplicationNotificationInvoker.cs" />
     <Compile Include="IDatasetApplicationNotifications.cs" />
+    <Compile Include="IDatasetOfflineInformation.cs" />
     <Compile Include="IHostCommands.cs" />
     <Compile Include="Communication\InternalNotificationAttribute.cs" />
     <Compile Include="Loaders\DatasetApplicationLoader.cs" />
@@ -198,7 +210,6 @@
     <Compile Include="Loaders\DistributionSuggestion.cs" />
     <Compile Include="Loaders\HardwareSpecification.cs" />
     <Compile Include="ICanClose.cs" />
-    <Compile Include="CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="DatasetCreationInformation.cs" />
     <Compile Include="Loaders\IApplicationLoader.cs" />
     <Compile Include="Loaders\ICalculateDistributionParameters.cs" />
@@ -212,6 +223,9 @@
     <Compile Include="Communication\ManualDiscoverySource.cs" />
     <Compile Include="Loaders\RemoteDatasetDistributor.cs" />
     <Compile Include="Loaders\SelectedProposal.cs" />
+    <Compile Include="Loaders\UnableToCreateJobException.cs" />
+    <Compile Include="Loaders\UnableToLinkChildProcessToJobException.cs" />
+    <Compile Include="Loaders\UnableToSetJobException.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -224,7 +238,6 @@
     <Compile Include="DatasetCannotBecomeParentException.cs" />
     <Compile Include="DatasetCreator.cs" />
     <Compile Include="DatasetId.cs" />
-    <Compile Include="DatasetOfflineInformation.cs" />
     <Compile Include="DatasetOnlineInformation.cs" />
     <Compile Include="Loaders\DatasetRequest.cs" />
     <Compile Include="Loaders\DistributionPlan.cs" />
@@ -232,7 +245,9 @@
     <Compile Include="Loaders\IHelpDistributingDatasets.cs" />
     <Compile Include="Loaders\Machine.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <None Include="packages.config" />
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

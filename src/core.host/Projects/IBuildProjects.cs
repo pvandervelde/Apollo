@@ -10,6 +10,7 @@ using System.IO;
 using System.Threading;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -25,6 +26,15 @@ namespace Apollo.Core.Host.Projects
         /// The current builder instance with all the storage cleared.
         /// </returns>
         IBuildProjects Define();
+
+        /// <summary>
+        /// Provides the timeline which tracks the changes to the project over time.
+        /// </summary>
+        /// <param name="timeline">The timeline.</param>
+        /// <returns>
+        /// The current builder instance with the timeline stored.
+        /// </returns>
+        IBuildProjects WithTimeline(ITimeline timeline);
 
         /// <summary>
         /// Provides the function which handles <see cref="DatasetRequest"/> objects and generates the 

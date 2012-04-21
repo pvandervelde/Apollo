@@ -40,6 +40,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NManto, Version=0.1.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\nManto\lib\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="ParallelExtensionsExtras">
       <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
     </Reference>
@@ -57,7 +61,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Communication\ChannelClosedEventArgsTest.cs" />
     <Compile Include="Communication\ChannelConnectionInformationTest.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredExceptionTest.cs" />
@@ -130,7 +133,6 @@
     <Compile Include="Communication\WaitingUploadsTest.cs" />
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
-    <Compile Include="DatasetOfflineInformationTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />
     <Compile Include="Loaders\DatasetDistributionGeneratorTest.cs" />
     <Compile Include="Loaders\DatasetLoadingProposalComparerTest.cs" />

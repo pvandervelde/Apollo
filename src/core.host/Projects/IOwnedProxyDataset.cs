@@ -40,5 +40,10 @@ namespace Apollo.Core.Host.Projects
         /// Called when the owner has successfully unloaded the dataset from the machines it was loaded onto.
         /// </summary>
         void OwnerHasUnloadedDataset();
+
+        /// <summary>
+        /// Called when the owner got notification of a change in the history of the current dataset.
+        /// </summary>
+        void OwnerHasBeenNotifiedOfHistoryChange();
     }
 }

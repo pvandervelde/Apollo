@@ -51,6 +51,9 @@
       <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="NSarrac.Framework, Version=0.1.20.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
@@ -101,6 +104,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -137,9 +146,11 @@
     <Compile Include="Commands\OpenProjectCommand.cs" />
     <Compile Include="Commands\DeleteDatasetCommand.cs" />
     <Compile Include="Commands\OpenScriptCommand.cs" />
+    <Compile Include="Commands\RedoCommand.cs" />
     <Compile Include="Commands\RunScriptCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
     <Compile Include="Commands\SendFeedbackReportCommand.cs" />
+    <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
     <Compile Include="CommonUIModule.cs" />
@@ -163,6 +174,10 @@
     <Compile Include="Feedback\ICollectFeedbackReports.cs" />
     <Compile Include="Feedback\ISendFeedbackReports.cs" />
     <Compile Include="IContextAware.cs" />
+    <Compile Include="Profiling\ITimingReport.cs" />
+    <Compile Include="Profiling\TimingIntervalHelper.cs" />
+    <Compile Include="Profiling\TimingReport.cs" />
+    <Compile Include="Profiling\TimingReportCollection.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="IRegionView.cs" />
@@ -195,7 +210,6 @@
       <DependentUpon>DatasetGraphView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Datasets\DatasetModel.cs" />
-    <Compile Include="Views\Datasets\DatasetParameter.cs" />
     <Compile Include="Views\Datasets\DatasetPresenter.cs" />
     <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
       <DependentUpon>DatasetVertexView.xaml</DependentUpon>
@@ -205,7 +219,6 @@
     <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
     <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
-    <Compile Include="Views\Datasets\IDatasetView.cs" />
     <Compile Include="Views\Datasets\IMachineSelectorView.cs" />
     <Compile Include="Views\Datasets\MachineSelectorModel.cs" />
     <Compile Include="Views\Datasets\MachineSelectorParameter.cs" />
@@ -228,6 +241,13 @@
     <Compile Include="Views\Feedback\FeedbackPresenter.cs" />
     <Compile Include="Views\Feedback\IErrorReportsView.cs" />
     <Compile Include="Views\Feedback\IFeedbackView.cs" />
+    <Compile Include="Views\Profiling\IProfileView.cs" />
+    <Compile Include="Views\Profiling\ProfileModel.cs" />
+    <Compile Include="Views\Profiling\ProfileParameter.cs" />
+    <Compile Include="Views\Profiling\ProfilePresenter.cs" />
+    <Compile Include="Views\Profiling\ProfileView.xaml.cs">
+      <DependentUpon>ProfileView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Progress\IProgressView.cs" />
     <Compile Include="Views\Progress\ProgressModel.cs" />
     <Compile Include="Views\Progress\ProgressParameter.cs" />
@@ -321,6 +341,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Feedback\FeedbackIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Profiling\ProfileView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -714,7 +738,54 @@
   <ItemGroup>
     <None Include="Resources\SmileySad_128x128.png" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Next_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_256x256.png" />
+  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -120,7 +120,7 @@ namespace Apollo.Core.Base.Communication
             EndpointId first = null;
             EndpointId second = new EndpointId("a");
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

@@ -31,21 +31,21 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private sealed class TaskReturn
         {
             /// <summary>
-            /// The action used to write information to the log.
+            /// The object that provides the diagnostics methods for the system.
             /// </summary>
-            private readonly Action<LogSeverityProxy, string> m_Logger;
+            private readonly SystemDiagnostics m_Diagnostics;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="TaskReturn"/> class.
             /// </summary>
-            /// <param name="logger">The action used to write information to the log.</param>
-            public TaskReturn(Action<LogSeverityProxy, string> logger)
+            /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
+            public TaskReturn(SystemDiagnostics systemDiagnostics)
             {
                 {
-                    Debug.Assert(logger != null, "The logger variable should not be null.");
+                    Debug.Assert(systemDiagnostics != null, "The diagnostics object should not be null.");
                 }
 
-                m_Logger = logger;
+                m_Diagnostics = systemDiagnostics;
             }
 
             /// <summary>
@@ -62,7 +62,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             {
                 if (returnValue.IsCanceled || returnValue.IsFaulted)
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Error,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -92,7 +92,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             {
                 if (returnValue.IsCanceled || returnValue.IsFaulted)
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Error,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -122,9 +122,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly EndpointId m_Current;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CommandInvokedProcessAction"/> class.
@@ -132,7 +132,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// <param name="localEndpoint">The endpoint ID of the local endpoint.</param>
         /// <param name="sendMessage">The action that is used to send messages.</param>
         /// <param name="availableCommands">The collection that holds all the registered commands.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="localEndpoint"/> is <see langword="null" />.
         /// </exception>
@@ -143,25 +143,25 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="availableCommands"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public CommandInvokedProcessAction(
             EndpointId localEndpoint,
             Action<EndpointId, ICommunicationMessage> sendMessage,
             ICommandCollection availableCommands,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => localEndpoint);
                 Enforce.Argument(() => sendMessage);
                 Enforce.Argument(() => availableCommands);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Current = localEndpoint;
             m_SendMessage = sendMessage;
             m_Commands = availableCommands;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -192,7 +192,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
 
             var invocation = msg.Invocation;
-            m_Logger(
+            m_Diagnostics.Log(
                 LogSeverityProxy.Trace,
                 string.Format(
                     CultureInfo.InvariantCulture,
@@ -248,20 +248,20 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                         "There should either be zero or one generic argument.");
                     if (genericArguments.Length == 0)
                     {
-                        m_Logger(
-                        LogSeverityProxy.Trace,
-                        "Returning Task value.");
+                        m_Diagnostics.Log(
+                            LogSeverityProxy.Trace,
+                            "Returning Task value.");
 
-                        returnMsg = new TaskReturn(m_Logger).HandleTaskReturnValue(m_Current, msg, result);
+                        returnMsg = new TaskReturn(m_Diagnostics).HandleTaskReturnValue(m_Current, msg, result);
                     }
                     else
                     {
-                        m_Logger(
-                        LogSeverityProxy.Trace,
-                        string.Format(
-                            CultureInfo.InvariantCulture,
-                            "Returning Task<T> value. T is {0}",
-                            genericArguments[0]));
+                        m_Diagnostics.Log(
+                            LogSeverityProxy.Trace,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Returning Task<T> value. T is {0}",
+                                genericArguments[0]));
 
                         // The result is Task<T>. This is where things are about to get very messy
                         // We need to use the HandleTaskReturnValue(EndpointId, MessageId, Task<T>) method to get our message
@@ -270,7 +270,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                         // keyword because the generic parameters for the method are determined by the input parameters
                         // so if we create a 'dynamic' object and call the method with the desired name then the runtime
                         // will determine what the type parameter has to be.
-                        dynamic taskBuilder = new TaskReturn(m_Logger);
+                        dynamic taskBuilder = new TaskReturn(m_Diagnostics);
 
                         // Call the desired method, making sure that we force the runtime to use the runtime type of the result
                         // variable, not the compile time one.
@@ -292,7 +292,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             try
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -304,7 +304,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
             catch (Exception errorSendingException)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,

@@ -31,9 +31,9 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         private readonly ICommunicationLayer m_Layer;
 
         /// <summary>
-        /// The function that logs messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The scheduler that will be used to schedule tasks.
@@ -45,7 +45,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         /// </summary>
         /// <param name="uploads">The object that stores the files that need uploading.</param>
         /// <param name="layer">The object that handles the communication with remote endpoints.</param>
-        /// <param name="logger">The function that handles the logging of messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks on.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="uploads"/> is <see langword="null" />.
@@ -54,23 +54,23 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public DataDownloadProcessAction(
             WaitingUploads uploads,
             ICommunicationLayer layer,
-            Action<LogSeverityProxy, string> logger,
+            SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
             {
                 Enforce.Argument(() => uploads);
                 Enforce.Argument(() => layer);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Uploads = uploads;
             m_Layer = layer;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler;
         }
 
@@ -101,7 +101,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             if (!m_Uploads.HasRegistration(msg.Token))
             {
-                m_Logger(
+                m_Diagnostics.Log(
                    LogSeverityProxy.Warning,
                    string.Format(
                        CultureInfo.InvariantCulture,
@@ -151,7 +151,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             try
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -161,7 +161,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
             }
             catch (Exception errorSendingException)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,

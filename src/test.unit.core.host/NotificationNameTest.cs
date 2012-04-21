@@ -164,7 +164,7 @@ namespace Apollo.Core.Host
             NotificationName first = null;
             var second = new NotificationName("name");
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

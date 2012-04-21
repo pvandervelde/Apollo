@@ -95,7 +95,53 @@ namespace Apollo.Utilities
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return false;
+            }
+
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(first, null) && first.CompareTo(second) > 0;
+        }
+
+        /// <summary>
+        /// Implements the operator &gt;=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator >=(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        {
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return true;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return false;
+            }
+
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            return !ReferenceEquals(first, null) && first.CompareTo(second) >= 0;
         }
 
         /// <summary>
@@ -109,7 +155,53 @@ namespace Apollo.Utilities
             // Check if first and second are null references by using ReferenceEquals because
             // we overload the == operator. If either isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return true;
+            }
+
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(first, null) && first.CompareTo(second) < 0;
+        }
+
+        /// <summary>
+        /// Implements the operator &lt;=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator <=(Id<TId, TInternalValue> first, Id<TId, TInternalValue> second)
+        {
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return true;
+            }
+
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null))
+            {
+                return true;
+            }
+
+            // Check if first and second are null references by using ReferenceEquals because
+            // we overload the == operator. If either isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            return !ReferenceEquals(first, null) && first.CompareTo(second) <= 0;
         }
 
         /// <summary>

@@ -128,7 +128,7 @@ namespace Apollo.Core.Base.Communication
             MessageId first = null;
             MessageId second = new MessageId();
 
-            Assert.IsFalse(first < second);
+            Assert.IsTrue(first < second);
         }
 
         [Test]

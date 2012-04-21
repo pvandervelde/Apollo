@@ -24,6 +24,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
     </Reference>
@@ -40,6 +43,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
     <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
       <Link>Properties\AssemblyInfo.Base.cs</Link>
     </Compile>
@@ -60,6 +69,9 @@
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\EventTypeToEventCategoryMap.cs">
       <Link>Utilities\EventTypeToEventCategoryMap.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
     </Compile>
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionHandler.cs">
       <Link>Utilities\ExceptionHandler.cs</Link>

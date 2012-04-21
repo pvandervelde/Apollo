@@ -34,10 +34,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
     <Reference Include="System.Xaml" />
@@ -62,7 +66,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
+      <Link>Utilities\ExceptionFilter.cs</Link>
+    </Compile>
+    <Compile Include="Utilities\DictionaryTimelineRegistrationSource.cs" />
+    <Compile Include="Utilities\ListTimelineRegistrationSource.cs" />
     <Compile Include="Utilities\StepBasedProgressTracker.cs" />
+    <Compile Include="Utilities\ValueTimelineRegistrationSource.cs" />
     <Compile Include="Views\StatusBar\IStatusBarView.cs" />
     <Compile Include="Views\StatusBar\StatusBarModel.cs" />
     <Compile Include="Views\StatusBar\StatusBarParameter.cs" />

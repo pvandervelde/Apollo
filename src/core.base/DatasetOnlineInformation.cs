@@ -30,9 +30,9 @@ namespace Apollo.Core.Base
         private readonly ISendCommandsToRemoteEndpoints m_Hub;
 
         /// <summary>
-        /// The function used to write log messages.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetOnlineInformation"/> class.
@@ -41,7 +41,7 @@ namespace Apollo.Core.Base
         /// <param name="endpoint">The ID number of the endpoint that has the actual dataset loaded.</param>
         /// <param name="networkId">The network identifier of the machine on which the dataset runs.</param>
         /// <param name="hub">The object that handles sending commands to the remote endpoint.</param>
-        /// <param name="logger">The function that is used to log messages.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
         /// </exception>
@@ -55,28 +55,28 @@ namespace Apollo.Core.Base
         ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public DatasetOnlineInformation(
             DatasetId id, 
             EndpointId endpoint,
             NetworkIdentifier networkId,
             ISendCommandsToRemoteEndpoints hub,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => endpoint);
                 Enforce.Argument(() => networkId);
                 Enforce.Argument(() => hub);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             Id = id;
             Endpoint = endpoint;
             RunsOn = networkId;
             m_Hub = hub;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -149,7 +149,7 @@ namespace Apollo.Core.Base
                 {
                     if (t.Exception != null)
                     {
-                        m_Logger(
+                        m_Diagnostics.Log(
                             LogSeverityProxy.Error,
                             string.Format(
                                 CultureInfo.InvariantCulture,

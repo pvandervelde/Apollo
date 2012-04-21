@@ -32,9 +32,9 @@ namespace Apollo.Core.Host.UserInterfaces
             new Dictionary<NotificationName, Action<INotificationArguments>>();
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostic methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The container that stores all the commands for this service.
@@ -66,7 +66,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// </summary>
         /// <param name="commands">The container that stores all the commands.</param>
         /// <param name="notificationNames">The object that stores all the <see cref="NotificationName"/> objects for the application.</param>
-        /// <param name="logger">The object that logs the debug information for the current service.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
         /// <param name="onStartService">
         ///     The method that stores the IOC module that will be used by the User Interface to refer
         ///     to the core User Interface objects. This module contains for instance the
@@ -79,7 +79,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// Thrown if <paramref name="notificationNames"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         /// Thrown when <paramref name="onStartService"/> is <see langword="null"/>.
@@ -87,20 +87,20 @@ namespace Apollo.Core.Host.UserInterfaces
         public UserInterfaceService(
             ICommandContainer commands,
             INotificationNameConstants notificationNames,
-            Action<LogSeverityProxy, string> logger,
+            SystemDiagnostics systemDiagnostics,
             Action<IModule> onStartService)
             : base()
         {
             {
                 Enforce.Argument(() => commands);
                 Enforce.Argument(() => notificationNames);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
                 Enforce.Argument(() => onStartService);
             }
 
             m_NotificationNames = notificationNames;
             m_OnStartService = onStartService;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
 
             m_Commands = commands;
             {
@@ -285,7 +285,7 @@ namespace Apollo.Core.Host.UserInterfaces
             }
             catch (Exception e)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture, 
@@ -337,7 +337,7 @@ namespace Apollo.Core.Host.UserInterfaces
             }
             catch (Exception e)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 

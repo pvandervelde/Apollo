@@ -147,9 +147,6 @@
   <data name="Exceptions_Messages_BaseLineIdValueMustNotBeLessThanTheUnknownIdValue" xml:space="preserve">
     <value>The value for a base line ID must not be smaller than that of the ID for an unknown value.</value>
   </data>
-  <data name="Exceptions_Messages_CannotCreateDatasetWithoutCreator" xml:space="preserve">
-    <value>A dataset cannot be created without a creator.</value>
-  </data>
   <data name="Exceptions_Messages_ChannelAddresssMustBeDefined" xml:space="preserve">
     <value>The address of a communication channel must be defined in order to connect to the channel.</value>
   </data>
@@ -294,11 +291,20 @@
   <data name="Exceptions_Messages_TypeIsNotAValidNotificationSet_TypeMustBeClosedConstructed" xml:space="preserve">
     <value>The type {0} is not a valid notification set because it contains open generic parameters.</value>
   </data>
+  <data name="Exceptions_Messages_UnableToCreateJob" xml:space="preserve">
+    <value>Unable to create dataset tracking job.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToLinkChildProcessToJob" xml:space="preserve">
+    <value>Unable to link the given child process to the existing job.</value>
+  </data>
   <data name="Exceptions_Messages_UnableToLoadProxyType" xml:space="preserve">
     <value>An ICommandSet type could not be loaded.</value>
   </data>
   <data name="Exceptions_Messages_UnableToLoadProxyType_WithTypeName" xml:space="preserve">
     <value>An proxy of type {0} could not be loaded.</value>
+  </data>
+  <data name="Exceptions_Messages_UnableToSetJob" xml:space="preserve">
+    <value>Unable to set the information for the job.</value>
   </data>
   <data name="Exceptions_Messages_UnknownEndpointIdFormat" xml:space="preserve">
     <value>The given endpoint had an unsupported format.</value>

@@ -57,7 +57,11 @@ namespace Apollo.UI.Common.Views.Projects
 
             set 
             {
-                m_Project.Name = value;
+                using (var set = m_Project.History.RecordHistory())
+                {
+                    m_Project.Name = value;
+                    set.StoreChanges();
+                }
             }
         }
 
@@ -73,7 +77,11 @@ namespace Apollo.UI.Common.Views.Projects
 
             set
             {
-                m_Project.Summary = value;
+                using (var set = m_Project.History.RecordHistory())
+                {
+                    m_Project.Summary = value;
+                    set.StoreChanges();
+                }
             }
         }
 

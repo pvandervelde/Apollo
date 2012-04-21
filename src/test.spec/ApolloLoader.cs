@@ -20,7 +20,11 @@ namespace Test.Spec
         /// Loads the Apollo core.
         /// </summary>
         /// <param name="onKernelLoad">The method called when the User Interface section of the core is loaded.</param>
-        public static void Load(Action<IModule> onKernelLoad)
+        /// <param name="shutdownEvent">
+        ///     The synchronization object that is used to notify the rest of the system that the core has 
+        ///     finished the shutdown process.
+        /// </param>
+        public static void Load(Action<IModule> onKernelLoad, AutoResetEvent shutdownEvent)
         {
             // At a later stage we need to clean this up.
             // there are two constants and a DI reference.
@@ -29,7 +33,7 @@ namespace Test.Spec
                 -1,
                 new StartupTimeStorage());
 
-            Load(onKernelLoad, progressTracker);
+            Load(onKernelLoad, progressTracker, shutdownEvent);
         }
 
         /// <summary>
@@ -37,11 +41,15 @@ namespace Test.Spec
         /// </summary>
         /// <param name="onKernelLoad">The method called when the User Interface section of the core is loaded.</param>
         /// <param name="progressTracker">The object used for progress tracking.</param>
-        public static void Load(Action<IModule> onKernelLoad, ITrackProgress progressTracker)
+        /// <param name="shutdownEvent">
+        ///     The synchronization object that is used to notify the rest of the system that the core has 
+        ///     finished the shutdown process.
+        /// </param>
+        public static void Load(Action<IModule> onKernelLoad, ITrackProgress progressTracker, AutoResetEvent shutdownEvent)
         {
             var bootstrapper = new KernelBootstrapper(
                 progressTracker,
-                new AutoResetEvent(false),
+                shutdownEvent,
                 onKernelLoad);
 
             // Load the kernel

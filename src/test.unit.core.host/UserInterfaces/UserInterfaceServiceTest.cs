@@ -7,14 +7,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.Utilities;
 using Apollo.Utilities.Commands;
+using Apollo.Utilities.History;
 using Autofac.Core;
 using MbUnit.Framework;
 using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.UserInterfaces
 {
@@ -54,6 +57,26 @@ namespace Apollo.Core.Host.UserInterfaces
         
         #endregion
 
+        private static IStoreTimelineValues BuildStorage(Type type)
+        {
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+            }
+
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOnlineInformation>();
+            }
+
+            if (typeof(IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>).IsAssignableFrom(type))
+            {
+                return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
+            }
+
+            return null;
+        }
+
         [Test]
         public void Create()
         {
@@ -69,13 +92,13 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             // Check that everything is the right place
@@ -102,13 +125,13 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.IsFalse(service.Contains(new CommandId("bla")));
@@ -125,13 +148,13 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla")));
@@ -148,19 +171,21 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -181,13 +206,13 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.Throws<ArgumentException>(() => service.Invoke(new CommandId("bla"), new Mock<ICommandContext>().Object));
@@ -204,19 +229,21 @@ namespace Apollo.Core.Host.UserInterfaces
             }
 
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -232,13 +259,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.AreElementsEqualIgnoringOrder(
@@ -256,20 +283,22 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
             Assert.IsFalse(service.IsConnectedToAllDependencies);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -282,13 +311,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(null, obj => { }));
@@ -300,13 +329,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Assert.Throws<ArgumentNullException>(() => service.RegisterNotification(new NotificationName("bla"), null));
@@ -318,13 +347,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             Action<INotificationArguments> callback = obj => { };
@@ -339,19 +368,21 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -368,13 +399,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             service.RegisterNotification(notificationNames.SystemShuttingDown, obj => { throw new Exception(); });
@@ -382,7 +413,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -399,13 +432,13 @@ namespace Apollo.Core.Host.UserInterfaces
             var commandCollection = new List<CommandId>();
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             var service = new UserInterfaceService(
                 commands.Object, 
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
 
             bool wasInvoked = false;
@@ -414,7 +447,9 @@ namespace Apollo.Core.Host.UserInterfaces
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);
@@ -434,7 +469,7 @@ namespace Apollo.Core.Host.UserInterfaces
             var commands = new Mock<ICommandContainer>();
             var notificationNames = new MockNotificationNameConstants();
 
-            Action<LogSeverityProxy, string> logger = (p, s) => { };
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             Action<IModule> onStartService = module => { };
 
             bool isStarted = false;
@@ -443,14 +478,16 @@ namespace Apollo.Core.Host.UserInterfaces
             var service = new UserInterfaceService(
                 commands.Object,
                 notificationNames,
-                logger,
+                systemDiagnostics,
                 onStartService);
             service.RegisterNotification(notificationNames.StartupComplete, onApplicationStartup);
 
             var proxy = new CoreProxy(new Mock<IKernel>().Object);
             service.ConnectTo(proxy);
 
+            ITimeline timeline = new Timeline(BuildStorage);
             var projects = new ProjectService(
+                () => timeline,
                 new Mock<IHelpDistributingDatasets>().Object,
                 new Mock<IBuildProjects>().Object);
             service.ConnectTo(projects);

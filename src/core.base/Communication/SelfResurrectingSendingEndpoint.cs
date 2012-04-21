@@ -33,14 +33,14 @@ namespace Apollo.Core.Base.Communication
         private readonly ChannelFactory<IReceivingWcfEndpointProxy> m_Factory;
 
         /// <summary>
-        /// The function used to write messages to the log.
+        /// The object that provides the diagnostics methods for the system.
         /// </summary>
-        private readonly Action<LogSeverityProxy, string> m_Logger;
+        private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
         /// The service on the other side of the channel.
         /// </summary>
-        private IReceivingEndpoint m_Service; // @TODO: should this be marked volatile?
+        private IReceivingEndpoint m_Service;
 
         /// <summary>
         /// The channel that handles the connections.
@@ -56,24 +56,24 @@ namespace Apollo.Core.Base.Communication
         /// Initializes a new instance of the <see cref="SelfResurrectingSendingEndpoint"/> class.
         /// </summary>
         /// <param name="channelFactory">The factory that is used to create new channels.</param>
-        /// <param name="logger">The function that is used to write messages to the log.</param>
+        /// <param name="systemDiagnostics">The object that provides the diagnostic methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="channelFactory"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="logger"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public SelfResurrectingSendingEndpoint(
             ChannelFactory<IReceivingWcfEndpointProxy> channelFactory,
-            Action<LogSeverityProxy, string> logger)
+            SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => channelFactory);
-                Enforce.Argument(() => logger);
+                Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Factory = channelFactory;
-            m_Logger = logger;
+            m_Diagnostics = systemDiagnostics;
         }
 
         /// <summary>
@@ -89,7 +89,7 @@ namespace Apollo.Core.Base.Communication
                 var service = m_Service;
                 if (!m_IsDisposed)
                 {
-                    m_Logger(
+                    m_Diagnostics.Log(
                            LogSeverityProxy.Trace,
                            string.Format(
                                CultureInfo.InvariantCulture,
@@ -101,7 +101,7 @@ namespace Apollo.Core.Base.Communication
             }
             catch (FaultException e)
             {
-                m_Logger(
+                m_Diagnostics.Log(
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture,
@@ -140,7 +140,7 @@ namespace Apollo.Core.Base.Communication
                         if (m_Channel != null)
                         { 
                             // The channel is probably faulted so terminate it.
-                            m_Logger(
+                            m_Diagnostics.Log(
                                 LogSeverityProxy.Info, 
                                 string.Format(
                                     CultureInfo.InvariantCulture,
@@ -149,7 +149,7 @@ namespace Apollo.Core.Base.Communication
                             m_Channel.Abort();
                         }
 
-                        m_Logger(
+                        m_Diagnostics.Log(
                             LogSeverityProxy.Info,
                             string.Format(
                                 CultureInfo.InvariantCulture,
@@ -195,7 +195,7 @@ namespace Apollo.Core.Base.Communication
                 try
                 {
                     local.Close();
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Debug,
                         string.Format(
                             CultureInfo.InvariantCulture, 
@@ -206,7 +206,7 @@ namespace Apollo.Core.Base.Communication
                 {
                     // The channel is now faulted but there is nothing
                     // we can do about that so just ignore it.
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Debug,
                         string.Format(
                             CultureInfo.InvariantCulture,
@@ -219,7 +219,7 @@ namespace Apollo.Core.Base.Communication
                     // The default close timeout elapsed before we were 
                     // finished closing the channel. So the channel
                     // is aborted. Nothing we can do, just ignore it.
-                    m_Logger(
+                    m_Diagnostics.Log(
                         LogSeverityProxy.Debug,
                         string.Format(
                             CultureInfo.InvariantCulture,

@@ -4,9 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.Utilities;
 using Microsoft.Practices.Prism.Commands;
+using NManto;
 
 namespace Apollo.UI.Common.Commands
 {
@@ -46,7 +49,8 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction with
         /// the project system.
         /// </param>
-        private static void OnCreateNewProject(ILinkToProjects projectFacade)
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        private static void OnCreateNewProject(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
         {
             // If there is no project facade, then we're in 
             // designer mode, or something else silly.
@@ -55,7 +59,10 @@ namespace Apollo.UI.Common.Commands
                 return;
             }
 
-            projectFacade.NewProject();
+            using (var interval = timer("Creating new project"))
+            {
+                projectFacade.NewProject();
+            }
         }
 
         /// <summary>
@@ -65,8 +72,9 @@ namespace Apollo.UI.Common.Commands
         /// The object that contains the methods that allow interaction
         /// with the project system.
         /// </param>
-        public NewProjectCommand(ILinkToProjects projectFacade)
-            : base(obj => OnCreateNewProject(projectFacade), obj => CanCreateNewProject(projectFacade))
+        /// <param name="timer">The function that creates and stores timing intervals.</param>
+        public NewProjectCommand(ILinkToProjects projectFacade, Func<string, IDisposable> timer)
+            : base(obj => OnCreateNewProject(projectFacade, timer), obj => CanCreateNewProject(projectFacade))
         { 
         }
     }

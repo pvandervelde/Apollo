@@ -650,4 +650,55 @@ Please wait ...</value>
   <data name="FeedbackIconView_Ok" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="SaveProjectCommand_HistoryMark" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="Img_Backward_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Backward_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Previous_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_Forward_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Next_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_256" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_256x256.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_TextDocument_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Text_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
 </root>

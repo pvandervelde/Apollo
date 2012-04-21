@@ -8,12 +8,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
-using System.Threading.Tasks;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
 using Apollo.Utilities;
+using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -22,13 +23,40 @@ namespace Apollo.Core.Host.Projects
             Justification = "Unit tests do not need documentation.")]
     public sealed class ProjectServiceTest
     {
+        private static IStoreTimelineValues BuildStorage(Type type)
+        {
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+            }
+
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
+            {
+                return new DictionaryHistory<DatasetId, DatasetOnlineInformation>();
+            }
+
+            if (typeof(IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>>).IsAssignableFrom(type))
+            {
+                return new BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>();
+            }
+
+            if (typeof(IVariableTimeline<string>).IsAssignableFrom(type))
+            {
+                return new ValueHistory<string>();
+            }
+
+            throw new UnknownHistoryMemberTypeException();
+        }
+
         [Test]
         public void Stop()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 
@@ -42,6 +70,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void StopWithProject()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             bool wasClosed = false;
@@ -58,6 +87,10 @@ namespace Apollo.Core.Host.Projects
                     .Returns(builder.Object)
                     .Verifiable();
 
+                builder.Setup(b => b.WithTimeline(It.IsAny<ITimeline>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object)
                     .Verifiable();
@@ -68,6 +101,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 
@@ -87,6 +121,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void CreateNewProject()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -94,6 +129,10 @@ namespace Apollo.Core.Host.Projects
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.WithTimeline(It.IsAny<ITimeline>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -107,6 +146,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 
@@ -122,10 +162,12 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadProjectWithNullPersistenceInformation()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
             var builder = new Mock<IBuildProjects>();
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 
@@ -135,6 +177,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void LoadProject()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -142,6 +185,10 @@ namespace Apollo.Core.Host.Projects
             var builder = new Mock<IBuildProjects>();
             {
                 builder.Setup(b => b.Define())
+                    .Returns(builder.Object)
+                    .Verifiable();
+
+                builder.Setup(b => b.WithTimeline(It.IsAny<ITimeline>()))
                     .Returns(builder.Object)
                     .Verifiable();
 
@@ -159,6 +206,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 
@@ -176,6 +224,7 @@ namespace Apollo.Core.Host.Projects
         [Test]
         public void UnloadProject()
         {
+            ITimeline timeline = new Timeline(BuildStorage);
             var distributor = new Mock<IHelpDistributingDatasets>();
 
             var project = new Mock<IProject>();
@@ -190,6 +239,10 @@ namespace Apollo.Core.Host.Projects
                 builder.Setup(b => b.Define())
                     .Returns(builder.Object);
 
+                builder.Setup(b => b.WithTimeline(It.IsAny<ITimeline>()))
+                    .Returns(builder.Object)
+                    .Verifiable();
+
                 builder.Setup(b => b.WithDatasetDistributor(It.IsAny<Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>>()))
                     .Returns(builder.Object);
 
@@ -198,6 +251,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             var service = new ProjectService(
+                () => timeline,
                 distributor.Object,
                 builder.Object);
 

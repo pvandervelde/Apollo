@@ -63,6 +63,16 @@ namespace Apollo.Core.Base.Communication
         void SignOut();
 
         /// <summary>
+        /// An event raised when the layer has signed in.
+        /// </summary>
+        event EventHandler<EventArgs> OnSignedIn;
+
+        /// <summary>
+        /// An event raised when the layer has signed out.
+        /// </summary>
+        event EventHandler<EventArgs> OnSignedOut;
+
+        /// <summary>
         /// An event raised when an endpoint has joined the network.
         /// </summary>
         event EventHandler<ConnectionInformationEventArgs> OnEndpointSignedIn;
