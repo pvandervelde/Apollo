@@ -126,11 +126,11 @@
      </Message>
     </Messages>
    </Namespace>
-   <Namespace Name="Apollo.UI.Common.Listeners">
+   <Namespace Name="Apollo.UI.Common.Events.Listeners">
     <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-06-14 10:22:36Z">
+     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-04-21 07:45:20Z">
       <Issue>
-       <Item>Apollo.UI.Common.Listeners</Item>
+       <Item>Apollo.UI.Common.Events.Listeners</Item>
       </Issue>
      </Message>
     </Messages>

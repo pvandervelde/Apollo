@@ -171,6 +171,8 @@ namespace Apollo.Utilities.ExceptionHandling
         /// Generate a function which has an EH filter.
         /// </summary>
         /// <returns>The delegate that holds the EH filter.</returns>
+        [SuppressMessage("Microsoft.Performance", "CA1804:RemoveUnusedLocals", MessageId = "exLoc",
+            Justification = "If we remove this statement then we're generating illegal IL and the application crashes on startup.")]
         private static Action<Action, Func<Exception, bool>, Action<Exception>> GenerateFilter()
         {
             // Create a dynamic assembly with reflection emit
@@ -204,6 +206,11 @@ namespace Apollo.Utilities.ExceptionHandling
             MethodBuilder meth = type.DefineMethod("InvokeWithFilter", MethodAttributes.Public | MethodAttributes.Static, typeof(void), argTypes);
 
             var il = meth.GetILGenerator();
+
+            // This variable shouldn't be necessary (it's never used)
+            // but for some reason the compiler generates illegal IL if this 
+            // variable isn't there ...
+            var exLoc = il.DeclareLocal(typeof(Exception));
 
             // Invoke the body delegate inside the try
             il.BeginExceptionBlock();
