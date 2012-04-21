@@ -102,13 +102,8 @@ namespace Apollo.Core.Host
                 }
             }
 
+            // Building the container automatically starts all the startables.
             var container = builder.Build();
-            if (container.IsRegistered<Autofac.IStartable>())
-            {
-                var startable = container.Resolve<Autofac.IStartable>();
-                startable.Start();
-            }
-
             return container;
         }
 

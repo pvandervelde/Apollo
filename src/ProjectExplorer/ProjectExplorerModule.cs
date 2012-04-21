@@ -17,7 +17,7 @@ using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.ProjectExplorer.Views.StatusBar;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
-using Apollo.UI.Common.Listeners;
+using Apollo.UI.Common.Events.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Feedback;
 using Apollo.UI.Common.Views.Profiling;
@@ -209,47 +209,41 @@ namespace Apollo.ProjectExplorer
             m_Container.Resolve<ShowViewEventListener>().Start();
             m_Container.Resolve<CloseViewEventListener>().Start();
 
-            m_Container.Resolve<IEventAggregator>()
-                .GetEvent<ShowViewEvent>()
-                .Publish(
+            // Get the aggregator and the show view event once so that
+            // we don't keep hitting the container over and over.
+            var aggregator = m_Container.Resolve<IEventAggregator>();
+            var showViewEvent = aggregator.GetEvent<ShowViewEvent>();
+            showViewEvent.Publish(
                     new ShowViewRequest(
                         typeof(ShellPresenter), 
                         RegionNames.Shell, 
                         new ShellParameter(m_Container.Resolve<IContextAware>())));
-            m_Container.Resolve<IEventAggregator>()
-                .GetEvent<ShowViewEvent>()
-                .Publish(
+
+            showViewEvent.Publish(
                     new ShowViewRequest(
                         typeof(MenuPresenter), 
                         RegionNames.MainMenu, 
                         new MenuParameter(m_Container.Resolve<IContextAware>())));
-            m_Container.Resolve<IEventAggregator>()
-                .GetEvent<ShowViewEvent>()
-                .Publish(
+
+            showViewEvent.Publish(
                     new ShowViewRequest(
                         typeof(StatusBarPresenter),
                         RegionNames.StatusBar,
                         new StatusBarParameter(m_Container.Resolve<IContextAware>())));
 
-            m_Container.Resolve<IEventAggregator>()
-               .GetEvent<ShowViewEvent>()
-               .Publish(
+            showViewEvent.Publish(
                    new ShowViewRequest(
                        typeof(ErrorReportsPresenter),
                        CommonRegionNames.StatusBarErrorReport,
                        new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
 
-            m_Container.Resolve<IEventAggregator>()
-              .GetEvent<ShowViewEvent>()
-              .Publish(
+            showViewEvent.Publish(
                   new ShowViewRequest(
                       typeof(FeedbackPresenter),
                       CommonRegionNames.StatusBarFeedback,
                       new FeedbackParameter(m_Container.Resolve<IContextAware>())));
 
-            m_Container.Resolve<IEventAggregator>()
-              .GetEvent<ShowViewEvent>()
-              .Publish(
+            showViewEvent.Publish(
                   new ShowViewRequest(
                       typeof(ProgressPresenter),
                       CommonRegionNames.StatusBarProgressReport,
@@ -260,9 +254,7 @@ namespace Apollo.ProjectExplorer
             // just goes the way of the dodo
             if (m_IsProfiling)
             {
-                m_Container.Resolve<IEventAggregator>()
-                    .GetEvent<ShowViewEvent>()
-                    .Publish(
+                showViewEvent.Publish(
                         new ShowViewRequest(
                             typeof(ProfilePresenter),
                             CommonRegionNames.StatusBarProfilerReport,
@@ -279,19 +271,23 @@ namespace Apollo.ProjectExplorer
             projectFacade.OnNewProjectLoaded +=
                 (s, e) =>
                 {
-                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                    // Get the aggregator and the show view event once so that
+                    // we don't keep hitting the container over and over.
+                    var aggregator = m_Container.Resolve<IEventAggregator>();
+                    var showViewEvent = aggregator.GetEvent<ShowViewEvent>();
+                    showViewEvent.Publish(
                         new ShowViewRequest(
                             typeof(ProjectPresenter),
                             CommonRegionNames.Content,
                             new ProjectParameter(context)));
 
-                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                    showViewEvent.Publish(
                         new ShowViewRequest(
                             typeof(ProjectDescriptionPresenter),
                             CommonRegionNames.ProjectViewTopPane,
                             new ProjectDescriptionParameter(context)));
 
-                    m_Container.Resolve<IEventAggregator>().GetEvent<ShowViewEvent>().Publish(
+                    showViewEvent.Publish(
                         new ShowViewRequest(
                             typeof(DatasetGraphPresenter),
                             CommonRegionNames.ProjectViewContent,
@@ -301,17 +297,22 @@ namespace Apollo.ProjectExplorer
             projectFacade.OnProjectUnloaded +=
                 (s, e) =>
                 {
-                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                    // Get the aggregator and the close view event once so that
+                    // we don't keep hitting the container over and over.
+                    var aggregator = m_Container.Resolve<IEventAggregator>();
+                    var closeViewEvent = aggregator.GetEvent<CloseViewEvent>();
+
+                    closeViewEvent.Publish(
                         new CloseViewRequest(
                             CommonRegionNames.ProjectViewTopPane,
                             new ProjectDescriptionParameter(context)));
 
-                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                    closeViewEvent.Publish(
                         new CloseViewRequest(
                             CommonRegionNames.ProjectViewContent,
                             new DatasetGraphParameter(context)));
 
-                    m_Container.Resolve<IEventAggregator>().GetEvent<CloseViewEvent>().Publish(
+                    closeViewEvent.Publish(
                         new CloseViewRequest(
                             CommonRegionNames.Content,
                             new ProjectParameter(context)));

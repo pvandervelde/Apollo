@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Apollo.Utilities;
 using Lokad;
 
@@ -44,7 +45,10 @@ namespace Apollo.Core.Base.Communication
         /// </summary>
         public void Start()
         {
-            m_Layer.SignIn();
+            // Starting the communication layer takes quite a while
+            // so lets not block the current thread which is being used
+            // to start the application.
+            Task.Factory.StartNew(() => m_Layer.SignIn());
         }
     }
 }

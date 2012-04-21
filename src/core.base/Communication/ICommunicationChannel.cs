@@ -117,12 +117,17 @@ namespace Apollo.Core.Base.Communication
         void Send(EndpointId endpoint, ICommunicationMessage message);
 
         /// <summary>
+        /// An event raised when the current side of the channel is opened.
+        /// </summary>
+        event EventHandler<ChannelOpenedEventArgs> OnOpened;
+
+        /// <summary>
         /// An event raised when a new message is received.
         /// </summary>
         event EventHandler<MessageEventArgs> OnReceive;
 
         /// <summary>
-        /// An event raised when the other side of the connection is closed.
+        /// An event raised when the the channel is closed.
         /// </summary>
         event EventHandler<ChannelClosedEventArgs> OnClosed;
     }

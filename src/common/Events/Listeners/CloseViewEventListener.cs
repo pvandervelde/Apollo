@@ -12,7 +12,7 @@ using Apollo.UI.Common.Events;
 using Autofac;
 using Microsoft.Practices.Prism.Regions;
 
-namespace Apollo.UI.Common.Listeners
+namespace Apollo.UI.Common.Events.Listeners
 {
     /// <summary>
     /// An <see cref="EventListener"/> which is responsible for closing views.

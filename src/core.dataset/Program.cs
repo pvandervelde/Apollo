@@ -46,6 +46,8 @@ namespace Apollo.Core.Dataset
                 Debug.Assert(args != null, "The arguments array should not be null.");
             }
 
+            System.Threading.Thread.Sleep(3000);
+
             Func<int> applicationLogic =
                 () =>
                 {
@@ -100,11 +102,9 @@ namespace Apollo.Core.Dataset
             }
 
             // Load the communication system and get it going
+            // All startables are automatically started once the container gets
+            // build
             var container = DependencyInjection.Load(context);
-            if (container.IsRegistered<IStartable>())
-            {
-                container.Resolve<IStartable>().Start();
-            }
 
             // Register all global commands and notifications
             // Just resolving the commands makes it all happen.

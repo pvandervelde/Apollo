@@ -72,6 +72,7 @@ namespace Test.Manual.Console
                     .As<IMessageProcessAction>();
             }
 
+            // Building the container will automatically start all the startables!
             return builder.Build();
         }
     }

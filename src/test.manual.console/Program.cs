@@ -93,10 +93,8 @@ namespace Test.Manual.Console
                 address = args[1];
             }
 
+            // Building the container will automatically start all the startables!
             s_Container = DependencyInjection.CreateContainer(context);
-
-            // Load a communication layer and start listening.
-            s_Container.Resolve<IStartable>().Start();
             if (!string.IsNullOrWhiteSpace(endpoint) && !string.IsNullOrWhiteSpace(address))
             {
                 var manualResolver = s_Container.Resolve<IAcceptExternalEndpointInformation>();

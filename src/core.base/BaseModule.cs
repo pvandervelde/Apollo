@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Communication.Messages.Processors;
@@ -99,6 +101,38 @@ namespace Apollo.Core.Base
                     var ctx = c.Resolve<IComponentContext>();
                     return (id, channelType, address) =>
                     {
+                        // We need to make sure that the communication layer is ready to start
+                        // sending / receiving messages, otherwise the we won't be able to
+                        // tell it that there are new endpoints.
+                        //
+                        // NOTE: this is kinda yucky because really we're only interested in
+                        // the IAcceptExternalEndpointInformation object and its willingness
+                        // to process information. However the only way that object is going to
+                        // be willing is if the communication layer is signed in so ...
+                        var layer = ctx.Resolve<ICommunicationLayer>();
+                        if (!layer.IsSignedIn)
+                        {
+                            var resetEvent = new AutoResetEvent(false);
+                            var availability =
+                                Observable.FromEventPattern<EventArgs>(
+                                    h => layer.OnSignedIn += h,
+                                    h => layer.OnSignedIn -= h)
+                                .Take(1)
+                                .Subscribe(
+                                    args =>
+                                    {
+                                        resetEvent.Set();
+                                    });
+
+                            using (availability)
+                            {
+                                if (!layer.IsSignedIn)
+                                {
+                                    resetEvent.WaitOne();
+                                }
+                            }
+                        }
+
                         ctx.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
                             EndpointIdExtensions.Deserialize(id),
                             Type.GetType(channelType, null, null, true, false),

@@ -209,6 +209,8 @@ namespace Apollo.Core.Base.Communication
 
             var uri = m_Type.GenerateNewChannelUri();
             ReopenChannel(uri);
+
+            RaiseOnOpened();
         }
 
         private void ReopenChannel(Uri uri)
@@ -536,6 +538,20 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
+        /// An event raised when the current side of the channel is opened.
+        /// </summary>
+        public event EventHandler<ChannelOpenedEventArgs> OnOpened;
+
+        private void RaiseOnOpened()
+        {
+            var local = OnOpened;
+            if (local != null)
+            {
+                local(this, new ChannelOpenedEventArgs(m_Id, m_Type.GetType()));
+            }
+        }
+
+        /// <summary>
         /// An event raised when a new message is received.
         /// </summary>
         public event EventHandler<MessageEventArgs> OnReceive;
@@ -550,7 +566,7 @@ namespace Apollo.Core.Base.Communication
         }
 
         /// <summary>
-        /// An event raised when the other side of the connection is closed.
+        /// An event raised when the the channel is closed.
         /// </summary>
         public event EventHandler<ChannelClosedEventArgs> OnClosed;
 

@@ -204,9 +204,11 @@ namespace Apollo.Core.Base.Communication
                     source.StartDiscovery();
                 }
 
-                m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign on process finished.");
                 m_AlreadySignedOn = true;
             }
+
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign on process finished.");
+            RaiseOnSignedIn();
         }
 
         private void HandleEndpointSignIn(object sender, ConnectionInformationEventArgs args)
@@ -368,8 +370,38 @@ namespace Apollo.Core.Base.Communication
                     m_OpenConnections.Clear();
                 }
 
-                m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign off process finished.");
                 m_AlreadySignedOn = false;
+            }
+
+            m_Diagnostics.Log(LogSeverityProxy.Trace, "Sign off process finished.");
+            RaiseOnSignedOut();
+        }
+
+        /// <summary>
+        /// An event raised when the layer has signed in.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSignedIn;
+
+        private void RaiseOnSignedIn()
+        {
+            var local = OnSignedIn;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the layer has signed out.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSignedOut;
+
+        private void RaiseOnSignedOut()
+        {
+            var local = OnSignedOut;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
             }
         }
 

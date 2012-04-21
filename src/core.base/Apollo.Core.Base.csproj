@@ -62,6 +62,7 @@
     <Compile Include="BaseModuleForLoaders.cs" />
     <Compile Include="Communication\ChannelClosedEventArgs.cs" />
     <Compile Include="Communication\ChannelConnectionInformation.cs" />
+    <Compile Include="Communication\ChannelOpenedEventArgs.cs" />
     <Compile Include="Communication\CommandAlreadyRegisteredException.cs" />
     <Compile Include="Communication\CommandInformationPerEndpoint.cs" />
     <Compile Include="Communication\CommandInvocationFailedException.cs" />
