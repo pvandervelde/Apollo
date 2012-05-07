@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
+    <Compile Include="Scheduling\ScheduleActionStorage.cs" />
     <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="utilities\SrcOnlyResources.cs" />
     <Compile Include="utilities\UtilitiesModule.cs" />
@@ -168,11 +169,16 @@
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
       <Name>Apollo.Core.Base</Name>
     </ProjectReference>
+    <ProjectReference Include="..\core.extensions\Apollo.Core.Extensions.csproj">
+      <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
+      <Name>Apollo.Core.Extensions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

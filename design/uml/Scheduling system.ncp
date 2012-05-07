@@ -5,39 +5,34 @@
     <Language>CSharp</Language>
     <Entities>
       <Entity type="Interface">
-        <Name>IProcessSchedule</Name>
-        <Access>Public</Access>
-        <Location left="1183" top="1760" />
+        <Name>IExecutableSchedule</Name>
+        <Access>Internal</Access>
+        <Location left="623" top="1333" />
         <Size width="221" height="163" />
         <Collapsed>False</Collapsed>
         <Member type="Property">ScheduleId Id { get; }</Member>
         <Member type="Property">bool IsBeingExecuted { get; }</Member>
-        <Member type="Property">bool IsLocked { get; }</Member>
-        <Member type="Method">LockToken Lock()</Member>
-        <Member type="Method">void Unlock(LockToken key)</Member>
         <Member type="Property">IScheduleGraphVertex Start { get; }</Member>
       </Entity>
       <Entity type="Interface">
-        <Name>IScheduleGraphVertex</Name>
-        <Access>Public</Access>
-        <Location left="656" top="2414" />
-        <Size width="346" height="95" />
+        <Name>IExecutableGraphVertex</Name>
+        <Access>Internal</Access>
+        <Location left="337" top="2100" />
+        <Size width="163" height="61" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">IEnumerable&lt;ScheduleGraphEdge&gt; IncomingEdges { get; }</Member>
-        <Member type="Property">IEnumerable&lt;ScheduleGraphEdge&gt; OutgoingEdges { get; }</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IExecutor</Name>
         <Access>Internal</Access>
-        <Location left="1298" top="666" />
-        <Size width="363" height="78" />
+        <Location left="1164" top="689" />
+        <Size width="280" height="78" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">ExecutionToken Execute(IProcessSchedule scheduleToExecute)</Member>
+        <Member type="Method">ExecutionToken Execute(ScheduleId schedule)</Member>
       </Entity>
       <Entity type="Class">
-        <Name>ProcessSchedule</Name>
+        <Name>ExecutableSchedule</Name>
         <Access>Internal</Access>
-        <Location left="1183" top="2035" />
+        <Location left="687" top="1744" />
         <Size width="226" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Field">private readonly ScheduleGraphStartNode m_Start</Member>
@@ -48,67 +43,47 @@
         <Text>The graph always starts at a start node and always ends at an end node. 
 Start and end nodes cannot have an action.
 Also a start node does not have any parents and an end node does not have any children.</Text>
-        <Location left="694" top="2100" />
+        <Location left="379" top="1721" />
         <Size width="228" height="134" />
       </Entity>
       <Entity type="Class">
-        <Name>ScheduleGraphEdge</Name>
-        <Access>Public</Access>
-        <Location left="1255" top="2414" />
-        <Size width="226" height="128" />
+        <Name>ExecutableGraphEdge</Name>
+        <Access>Internal</Access>
+        <Location left="758" top="2123" />
+        <Size width="291" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public IScheduleGraphVertex Start { get; }</Member>
-        <Member type="Property">public IScheduleGraphVertex End { get; }</Member>
-        <Member type="Method">public bool CanTraverse()</Member>
+        <Member type="Property">public ScheduleElementId TraversingCondition { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ScheduleActionVertex</Name>
+        <Name>ExecutableStartVertex</Name>
         <Access>Internal</Access>
-        <Location left="333" top="2587" />
-        <Size width="355" height="77" />
+        <Location left="484" top="1952" />
+        <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ScheduleStartVertex</Name>
+        <Name>ExecutableEndVertex</Name>
         <Access>Internal</Access>
-        <Location left="822" top="2266" />
-        <Size width="355" height="77" />
+        <Location left="245" top="1952" />
+        <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>ScheduleEndVertex</Name>
-        <Access>Internal</Access>
-        <Location left="434" top="2266" />
-        <Size width="355" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IHaveActions</Name>
-        <Access>Internal</Access>
-        <Location left="374" top="2769" />
-        <Size width="256" height="112" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">ScheduleActionId ActionToExecute { get; }</Member>
-        <Member type="Property">bool IsValid { get; }</Member>
-        <Member type="Method">void Invalidate()</Member>
       </Entity>
       <Entity type="Class">
         <Name>ExecutorPool</Name>
         <Access>Internal</Access>
-        <Location left="1286" top="896" />
-        <Size width="375" height="94" />
+        <Location left="1160" top="884" />
+        <Size width="289" height="94" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public ExecutionToken Execute(IProcessSchedule scheduleToExecute)</Member>
+        <Member type="Method">public ExecutionToken Execute(ScheduleId schedule)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>ExecutionToken</Name>
         <Access>Internal</Access>
-        <Location left="1327" top="1114" />
+        <Location left="1217" top="1037" />
         <Size width="175" height="196" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public bool IsTokenValid { get; }</Member>
@@ -123,40 +98,36 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Class">
         <Name>ScheduleExecutor</Name>
         <Access>Internal</Access>
-        <Location left="635" top="862" />
-        <Size width="336" height="162" />
+        <Location left="555" top="856" />
+        <Size width="336" height="196" />
         <Collapsed>False</Collapsed>
         <Member type="Constructor">public ScheduleExecutor(IProcessSchedule scheduleToExecute)</Member>
         <Member type="Property">public ExecutionToken Token { get; }</Member>
         <Member type="Method">public void Start()</Member>
         <Member type="Method">public void Pause()</Member>
         <Member type="Method">public void Stop(bool terminateImmediately)</Member>
+        <Member type="Event">public event EventHandler OnFinish</Member>
+        <Member type="Event">public event EventHandler OnComplete</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Lock should lock everything. Schedule and components.</Text>
-        <Location left="1553" top="1804" />
+        <Location left="937" top="1371" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Using actions also allows us to exchange components etc.. However we'll have to remember to invoke actions on in a way that allows components to be replaced.</Text>
-        <Location left="2429" top="1828" />
+        <Location left="1630" top="220" />
         <Size width="188" height="119" />
       </Entity>
       <Entity type="Comment">
         <Text>Need to indicate if we can move this to another (child) dataset.</Text>
-        <Location left="3565" top="3049" />
+        <Location left="250" top="2577" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
-        <Text>Nodes may need:
-- Creation conditions (e.g. parameters?)</Text>
-        <Location left="3037" top="2368" />
-        <Size width="242" height="66" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Do we allow farming calcs out to other datasets if we're running in interactive mode? i.e. when the user is doing some calc to display on screen immediately? The 'main' schedule is never considered to be 'interactive'</Text>
-        <Location left="3330" top="3024" />
+        <Location left="15" top="2552" />
         <Size width="190" height="158" />
       </Entity>
       <Entity type="Comment">
@@ -169,7 +140,7 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Interface">
         <Name>IScheduleDependency</Name>
         <Access>Public</Access>
-        <Location left="3883" top="641" />
+        <Location left="2925" top="1903" />
         <Size width="162" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">bool IsResolved()</Member>
@@ -177,7 +148,7 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Interface">
         <Name>IVariableScheduleDependency</Name>
         <Access>Public</Access>
-        <Location left="4205" top="576" />
+        <Location left="3211" top="1838" />
         <Size width="219" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Property">IScheduleVariable Variable { get; }</Member>
@@ -185,126 +156,101 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Interface">
         <Name>IActionScheduleDependency</Name>
         <Access>Public</Access>
-        <Location left="4205" top="702" />
+        <Location left="3211" top="1964" />
         <Size width="178" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
         <Name>DependencyResolver</Name>
-        <Access>Public</Access>
-        <Location left="3883" top="355" />
+        <Access>Internal</Access>
+        <Location left="2925" top="1617" />
         <Size width="162" height="77" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>IStoreScheduleActions</Name>
         <Access>Public</Access>
-        <Location left="2618" top="2039" />
-        <Size width="365" height="146" />
+        <Location left="980" top="10" />
+        <Size width="831" height="146" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">ScheduleActionId Add(IScheduleAction action)</Member>
-        <Member type="Method">void Update(ScheduleActionId id, IScheduleAction newAction)</Member>
-        <Member type="Method">void Remove(ScheduleActionId id)</Member>
-        <Member type="Method">bool Contains(ScheduleActionId id)</Member>
-        <Member type="Property">IScheduleAction this[ScheduleActionId id] { get; }</Member>
+        <Member type="Method">ScheduleActionInformation Add(IScheduleAction action, IEnumerable&lt;IScheduleVariable&gt; produces, IEnumerable&lt;IScheduleDependency&gt; dependsOn)</Member>
+        <Member type="Method">void Update(ScheduleelementId id, IScheduleAction newAction)</Member>
+        <Member type="Method">void Remove(ScheduleElementId id)</Member>
+        <Member type="Method">bool Contains(ScheduleElementId id)</Member>
+        <Member type="Property">IScheduleAction this[ScheduleElementId id] { get; }</Member>
       </Entity>
       <Entity type="Class">
         <Name>ScheduleActionStorage</Name>
         <Access>Internal</Access>
-        <Location left="2722" top="2287" />
+        <Location left="2084" top="174" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>ScheduleInsertVertex</Name>
-        <Access>Internal</Access>
-        <Location left="747" top="2587" />
-        <Size width="165" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Interface">
-        <Name>IScheduleAction</Name>
+        <Name>ScheduleElementId</Name>
         <Access>Public</Access>
-        <Location left="3352" top="2485" />
-        <Size width="309" height="146" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">ScheduleActionId Id { get; }</Member>
-        <Member type="Method">IEnumerable&lt;IScheduleVariable&gt; Produces()</Member>
-        <Member type="Method">IEnumerable&lt;IScheduleDependency&gt; DependsOn()</Member>
-        <Member type="Method">bool RunInParallel()</Member>
-        <Member type="Method">bool RunInChildDataset()</Member>
-      </Entity>
-      <Entity type="Class">
-        <Name>ScheduleActionId</Name>
-        <Access>Public</Access>
-        <Location left="3480" top="2184" />
+        <Location left="2180" top="924" />
         <Size width="163" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SimpleAction</Name>
+        <Name>ExecutingAction</Name>
         <Access>Internal</Access>
-        <Location left="3066" top="2628" />
+        <Location left="673" top="2649" />
         <Size width="163" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public void Invoke()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SubScheduleAction</Name>
+        <Name>SubScheduleVertex</Name>
         <Access>Internal</Access>
-        <Location left="3415" top="2806" />
+        <Location left="54" top="2319" />
         <Size width="210" height="111" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public ScheduleId SubSchedule { get; }</Member>
-        <Member type="Method">public bool WaitForFinish()</Member>
+        <Member type="Property">public bool WaitForFinish { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SynchronizeAction</Name>
+        <Name>SynchronizationStartVertex</Name>
         <Access>Internal</Access>
-        <Location left="3651" top="2644" />
+        <Location left="686" top="2397" />
         <Size width="356" height="94" />
         <Collapsed>False</Collapsed>
         <Member type="Method">public IEnumerable&lt;IScheduleVariable&gt; VariablesToSynchronize()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>RevertHistoryAction</Name>
+        <Name>MarkHistoryVertex</Name>
         <Access>Internal</Access>
-        <Location left="3651" top="2342" />
-        <Size width="205" height="111" />
+        <Location left="26" top="2161" />
+        <Size width="235" height="128" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public bool ShouldRevert { get; }</Member>
-        <Member type="Method">public TimeMarker PointToRevertTo()</Member>
+        <Member type="Method">public bool ShouldStore()</Member>
+        <Member type="Method">public TimeMarker StoreHistory()</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>All parts of the schedule can link to the end node if they want to be able to force a quick exit from the schedule without having to execute an 'unhandled error'</Text>
-        <Location left="214" top="2078" />
+        <Location left="97" top="1774" />
         <Size width="208" height="110" />
       </Entity>
       <Entity type="Interface">
         <Name>IBuildSchedules</Name>
         <Access>Public</Access>
-        <Location left="2624" top="939" />
-        <Size width="318" height="88" />
+        <Location left="2310" top="2005" />
+        <Size width="171" height="78" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">IProcessSchedule Build()</Member>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Where do we store all of these?</Text>
-        <Location left="1183" top="1563" />
-        <Size width="160" height="75" />
+        <Member type="Method">IEditableSchedule Build()</Member>
       </Entity>
       <Entity type="Interface">
         <Name>IProcesScheduleGraphVertices</Name>
         <Access>Internal</Access>
-        <Location left="671" top="561" />
+        <Location left="591" top="555" />
         <Size width="265" height="95" />
         <Collapsed>False</Collapsed>
         <Member type="Property">Type VertexTypeToProcess { get; }</Member>
@@ -313,7 +259,7 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Class">
         <Name>ScheduleStartVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="549" top="352" />
+        <Location left="426" top="352" />
         <Size width="186" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -321,109 +267,64 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Class">
         <Name>ScheduleEndVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="409" top="459" />
+        <Location left="286" top="459" />
         <Size width="186" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
-      <Entity type="Class">
-        <Name>ScheduleInsertVertexProcessor</Name>
-        <Access>Internal</Access>
-        <Location left="370" top="601" />
-        <Size width="191" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>ScheduleActionVertexProcessor</Name>
-        <Access>Internal</Access>
-        <Location left="960" top="383" />
-        <Size width="196" height="77" />
-        <Collapsed>False</Collapsed>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Comment">
-        <Text>Doesn't do anything</Text>
-        <Location left="133" top="612" />
-        <Size width="160" height="50" />
-      </Entity>
       <Entity type="Comment">
         <Text>Terminates the schedule execution</Text>
-        <Location left="161" top="459" />
+        <Location left="38" top="459" />
         <Size width="160" height="58" />
       </Entity>
-      <Entity type="Interface">
-        <Name>IProcessScheduleActions</Name>
-        <Access>Internal</Access>
-        <Location left="1193" top="212" />
-        <Size width="234" height="95" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">Type ActionToProcess { get; }</Member>
-        <Member type="Method">void Process(IScheduleAction action)</Member>
-      </Entity>
       <Entity type="Class">
-        <Name>SimpleActionProcessor</Name>
+        <Name>ExecutableActionVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="1580" top="165" />
-        <Size width="163" height="77" />
+        <Location left="647" top="257" />
+        <Size width="206" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SynchronizeActionProcessor</Name>
+        <Name>SynchronizeStartVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="1339" top="47" />
-        <Size width="176" height="77" />
+        <Location left="139" top="573" />
+        <Size width="204" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>SubScheduleActionProcessor</Name>
+        <Name>SubScheduleVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="1580" top="309" />
+        <Location left="980" top="412" />
         <Size width="180" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
-        <Name>RevertHistoryActionProcessor</Name>
+        <Name>MarkHistoryVertexProcessor</Name>
         <Access>Internal</Access>
-        <Location left="1339" top="419" />
+        <Location left="997" top="555" />
         <Size width="186" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Do we need an edge processor of some kind. Somehow we need to determine where we go next.</Text>
-        <Location left="1002" top="727" />
+        <Location left="866" top="715" />
         <Size width="176" height="88" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Do we need some kind of library for the conditions on an edge too?</Text>
-        <Location left="1599" top="2446" />
-        <Size width="160" height="75" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>"Global" to the scheduling system</Text>
-        <Location left="2486" top="2259" />
-        <Size width="160" height="75" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Do we want to make this collection immutable. Updates just redirect?</Text>
-        <Location left="2344" top="2129" />
-        <Size width="160" height="75" />
       </Entity>
       <Entity type="Interface">
         <Name>IScheduleVariable</Name>
         <Access>Public</Access>
-        <Location left="4343" top="393" />
+        <Location left="3233" top="1643" />
         <Size width="162" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Interface">
         <Name>IBuildVariableSchedules</Name>
         <Access>Public</Access>
-        <Location left="3000" top="562" />
+        <Location left="2462" top="1814" />
         <Size width="374" height="112" />
         <Collapsed>False</Collapsed>
         <Member type="Method">void AddVariableToResolveFor(IScheduleVariable variable)</Member>
@@ -433,10 +334,10 @@ Also a start node does not have any parents and an end node does not have any ch
       <Entity type="Interface">
         <Name>IBuildFixedSchedules</Name>
         <Access>Public</Access>
-        <Location left="3057" top="895" />
+        <Location left="2378" top="2176" />
         <Size width="475" height="163" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">IScheduleAction AddSimpleAction()</Member>
+        <Member type="Method">IScheduleAction AddSimpleAction(ScheduleActionId actionId)</Member>
         <Member type="Method">IScheduleAction AddSubSchedule(ScheduleId idOfSchedule)</Member>
         <Member type="Method">IScheduleAction AddRevertHistory()</Member>
         <Member type="Method">void LinkTo(IScheduleAction from, IScheduleAction to)</Member>
@@ -445,88 +346,365 @@ Also a start node does not have any parents and an end node does not have any ch
       </Entity>
       <Entity type="Comment">
         <Text>How do we let sub-components add things at an insert point?</Text>
-        <Location left="3146" top="1227" />
+        <Location left="2109" top="2214" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
         <Name>VariableScheduleAssembler</Name>
-        <Access>Public</Access>
-        <Location left="3516" top="562" />
-        <Size width="172" height="216" />
+        <Access>Internal</Access>
+        <Location left="2602" top="1611" />
+        <Size width="172" height="77" />
         <Collapsed>False</Collapsed>
-        <Modifier>None</Modifier>
+        <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>Need a way to get to the graph that we have so far ...</Text>
-        <Location left="3092" top="413" />
+        <Location left="2367" top="1710" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>This one is tricky. Not sure how this is going to work yet ...</Text>
-        <Location left="3730" top="232" />
+        <Location left="2767" top="1439" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>Could be one of many things. For example:
 - Physical variable (e.g. x, y, z, u, v, w, etc.)
 - ?</Text>
-        <Location left="4264" top="244" />
+        <Location left="3154" top="1494" />
         <Size width="283" height="76" />
       </Entity>
       <Entity type="Comment">
         <Text>Need some way to provide state so that we can tell if it is resolved</Text>
-        <Location left="3883" top="827" />
+        <Location left="3067" top="1714" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Interface">
         <Name>IVerifyScheduleIntegrity</Name>
         <Access>Public</Access>
-        <Location left="2464" top="466" />
-        <Size width="163" height="61" />
+        <Location left="2579" top="2073" />
+        <Size width="694" height="78" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">bool IsValid(IEditableSchedule schedule, Action&lt;ScheduleIntegrityFailureType, IEditableScheduleVertex&gt; onValidationFailure)</Member>
       </Entity>
       <Entity type="Comment">
-        <Text>Revert history not only affects the components but also the executor. That needs to stop executing, terminate all state and then restart!</Text>
-        <Location left="1660" top="453" />
+        <Text>Revert history not only affects the components but also the executor. That needs to stop executing, terminate all non-history state and then restart!</Text>
+        <Location left="1278" top="538" />
         <Size width="191" height="104" />
       </Entity>
       <Entity type="Interface">
-        <Name>IScheduleExecutionCommandSet</Name>
+        <Name>IScheduleExecutionCommands</Name>
         <Access>Public</Access>
-        <Location left="2008" top="939" />
-        <Size width="260" height="197" />
+        <Location left="1656" top="929" />
+        <Size width="297" height="163" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">ExecutionId Execute(ScheduleId id)</Member>
-        <Member type="Method">bool IsScheduleIdValid(ExecutionId id)</Member>
-        <Member type="Method">void Start(ExecutionId id)</Member>
-        <Member type="Method">void Pause(ExecutionId id)</Member>
-        <Member type="Method">void Stop(ExecutionId id)</Member>
-        <Member type="Method">void Terminate(ExecutionId id)</Member>
-        <Member type="Method">bool IsRunning(ExecutionId id)</Member>
-        <Member type="Method">bool IsPaused(ExecutionId id)</Member>
+        <Member type="Method">Task&lt;ExecutionId&gt; Execute(ScheduleId id)</Member>
+        <Member type="Method">Task&lt;ScheduleInfo&gt; ScheduleInfo(ScheduleId id)</Member>
+        <Member type="Method">Task Start(ExecutionId id)</Member>
+        <Member type="Method">Task Pause(ExecutionId id)</Member>
+        <Member type="Method">Task Stop(ExecutionId id)</Member>
+        <Member type="Method">Task Terminate(ExecutionId id)</Member>
       </Entity>
       <Entity type="Interface">
         <Name>ICommandSet</Name>
         <Access>Public</Access>
-        <Location left="1895" top="1285" />
+        <Location left="1576" top="1170" />
         <Size width="456" height="97" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
-        <Name>ScheduleExecutionCommandSet</Name>
+        <Name>ScheduleExecutionCommands</Name>
         <Access>Internal</Access>
-        <Location left="2008" top="616" />
-        <Size width="248" height="213" />
+        <Location left="1680" top="689" />
+        <Size width="248" height="179" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public ExecutionId Execute(ScheduleId id)</Member>
-        <Member type="Method">public bool IsScheduleIdValid(ExecutionId id)</Member>
-        <Member type="Method">public void Start(ExecutionId id)</Member>
-        <Member type="Method">public void Pause(ExecutionId id)</Member>
-        <Member type="Method">public void Stop(ExecutionId id)</Member>
-        <Member type="Method">public void Terminate(ExecutionId id)</Member>
-        <Member type="Method">public bool IsRunning(ExecutionId id)</Member>
-        <Member type="Method">public bool IsPaused(ExecutionId id)</Member>
+        <Member type="Method">public Task&lt;ExecutionId&gt; Execute(ScheduleId id)</Member>
+        <Member type="Method">public Task&lt;ScheduleInfo&gt; ScheduleInfo(ScheduleId id)</Member>
+        <Member type="Method">public Task Start(ExecutionId id)</Member>
+        <Member type="Method">public Task Pause(ExecutionId id)</Member>
+        <Member type="Method">public Task Stop(ExecutionId id)</Member>
+        <Member type="Method">public Task Terminate(ExecutionId id)</Member>
         <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>What are we going to do with the UI? We need some way of displaying the graph in the UI, with progressive discovery, i.e. initially we just want to show the very high levels and then drill down. Eventually obviously it'll get complicated but we should try to keep it as simple as possible.</Text>
+        <Location left="301" top="10" />
+        <Size width="232" height="158" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IEditableSchedule</Name>
+        <Access>Public</Access>
+        <Location left="1401" top="1795" />
+        <Size width="464" height="112" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">ScheduleId Id { get; }</Member>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Serializable</Text>
+        <Location left="1978" top="1978" />
+        <Size width="93" height="62" />
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableSchedule</Name>
+        <Access>Internal</Access>
+        <Location left="1441" top="1964" />
+        <Size width="447" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Field">AdjacencyGraph&lt;IEditableScheduleVertex, EditableScheduleEdge&gt; m_Graph</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The executable schedule is read-only (can't be changed). It is also internal to the dataset application. In order to make one get an editable schedule and convert it.</Text>
+        <Location left="941" top="1469" />
+        <Size width="160" height="138" />
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleHelpers</Name>
+        <Access>Internal</Access>
+        <Location left="230" top="1576" />
+        <Size width="404" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public static IExecutableSchedule Convert(IEditableSchedule scheduleToConvert)</Member>
+        <Modifier>Static</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IEditableScheduleVertex</Name>
+        <Access>Public</Access>
+        <Location left="1630" top="2200" />
+        <Size width="162" height="94" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableScheduleEdge</Name>
+        <Access>Internal</Access>
+        <Location left="1141" top="2211" />
+        <Size width="294" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleElementId ConditionToEvaluate { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>Edge&lt;IEditableScheduleVertex&gt;</Name>
+        <Access>Public</Access>
+        <Location left="1222" top="2378" />
+        <Size width="199" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Do we need templates?</Text>
+        <Location left="1647" top="1569" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Class">
+        <Name>Edge&lt;IExecutableGraphVertex&gt;</Name>
+        <Access>Public</Access>
+        <Location left="802" top="2286" />
+        <Size width="197" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableInsertVertex</Name>
+        <Access>Public</Access>
+        <Location left="1852" top="2200" />
+        <Size width="189" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public int RemainingInserts { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableStartVertex</Name>
+        <Access>Public</Access>
+        <Location left="1441" top="2378" />
+        <Size width="163" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableEndVertex</Name>
+        <Access>Public</Access>
+        <Location left="1296" top="2473" />
+        <Size width="234" height="94" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Are templates the same as sub-schedules?</Text>
+        <Location left="1401" top="1569" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Structure">
+        <Name>ScheduleInfo</Name>
+        <Access>Public</Access>
+        <Location left="2180" top="702" />
+        <Size width="163" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleId Id { get; }</Member>
+        <Member type="Property">public bool IsValid { get; }</Member>
+        <Member type="Property">public bool IsRunning { get; }</Member>
+        <Member type="Property">public bool IsPaused { get; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>FixedScheduleBuilder</Name>
+        <Access>Internal</Access>
+        <Location left="2562" top="2467" />
+        <Size width="162" height="216" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Should be public because components need to be able to add their actions</Text>
+        <Location left="1449" top="220" />
+        <Size width="162" height="79" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>Need to transmit this info to the host app somehow.</Text>
+        <Location left="1272" top="220" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScheduleEditingCommands</Name>
+        <Access>Public</Access>
+        <Location left="1622" top="1407" />
+        <Size width="364" height="95" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">Task&lt;IEnumerable&lt;IEditableSchedule&gt;&gt; AvailableSchedules()</Member>
+        <Member type="Method">Task AddSchedule(IEditableSchedule schedule)</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleActionInformation</Name>
+        <Access>Public</Access>
+        <Location left="2180" top="1021" />
+        <Size width="317" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleElementId Id { get; }</Member>
+        <Member type="Property">public string Name { get; }</Member>
+        <Member type="Property">public string Summary { get; }</Member>
+        <Member type="Property">public string Description { get; }</Member>
+        <Member type="Method">public IEnumerable&lt;IScheduleVariable&gt; Produces()</Member>
+        <Member type="Method">public IEnumerable&lt;IScheduleDependency&gt; DependsOn()</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableMarkHistoryVertex</Name>
+        <Access>Public</Access>
+        <Location left="1246" top="2583" />
+        <Size width="287" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public TimeMarker TimeToRevertTo { get; }</Member>
+        <Member type="Property">public ScheduleElementId RevertingCondition { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableSynchronizationEndVertex</Name>
+        <Access>Public</Access>
+        <Location left="1852" top="2607" />
+        <Size width="211" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableSubScheduleVertex</Name>
+        <Access>Public</Access>
+        <Location left="1852" top="2378" />
+        <Size width="244" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleId ScheduleToExecute { get; }</Member>
+        <Member type="Property">public bool ShouldWaitForFinish { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableExecutingVertex</Name>
+        <Access>Public</Access>
+        <Location left="1852" top="2501" />
+        <Size width="273" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleElementId ActionToExecute { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IStoreScheduleConditions</Name>
+        <Access>Public</Access>
+        <Location left="38" top="856" />
+        <Size width="409" height="146" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">ScheduleConditionInformation Add(IScheduleCondition condition)</Member>
+        <Member type="Method">void Update(ScheduleElementId id, IScheduleCondition newCondition)</Member>
+        <Member type="Method">void Remove(ScheduleElementId id)</Member>
+        <Member type="Method">bool Contains(ScheduleElementId id)</Member>
+        <Member type="Property">IScheduleCondition this[ScheduleElementId id] { get; }</Member>
+      </Entity>
+      <Entity type="Class">
+        <Name>SynchronizationEndVertex</Name>
+        <Access>Internal</Access>
+        <Location left="686" top="2526" />
+        <Size width="166" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>The start vertex indicates that the revision numbers of the given variables should be makred. The end vertex then gives the executor a chance to get all the variables up to the next revision.</Text>
+        <Location left="913" top="2544" />
+        <Size width="204" height="119" />
+      </Entity>
+      <Entity type="Class">
+        <Name>EditableSynchronizationStartVertex</Name>
+        <Access>Public</Access>
+        <Location left="1852" top="2712" />
+        <Size width="356" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Method">public IEnumerable&lt;IScheduleVariable&gt; VariablesToSynchronize()</Member>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScheduleCondition</Name>
+        <Access>Public</Access>
+        <Location left="139" top="1086" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>ScheduleConditionInformation</Name>
+        <Access>Public</Access>
+        <Location left="2533" top="1021" />
+        <Size width="195" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ScheduleElementId Id { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Interface">
+        <Name>IScheduleAction</Name>
+        <Access>Public</Access>
+        <Location left="2084" top="367" />
+        <Size width="163" height="61" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Class">
+        <Name>SynchronizeEndVertexProcessor</Name>
+        <Access>Public</Access>
+        <Location left="139" top="661" />
+        <Size width="197" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>None</Modifier>
+      </Entity>
+      <Entity type="Enum">
+        <Name>ScheduleIntegrityFailureType</Name>
+        <Access>Public</Access>
+        <Location left="2896" top="2234" />
+        <Size width="257" height="248" />
+        <Collapsed>False</Collapsed>
+        <Value>None</Value>
+        <Value>ScheduleIsMissingStart</Value>
+        <Value>ScheduleIsMissingEnd</Value>
+        <Value>ScheduleStartDoesNotConnectToEnd</Value>
+        <Value>ScheduleVertexIsNotReachableFromStart</Value>
+        <Value>ScheduleEndIsNotReachableFromVertex</Value>
+        <Value>SubScheduleLinksBackToParentSchedule</Value>
+        <Value>VertexLinksToOtherVertexInMultipleWays</Value>
+        <Value>SynchronizationBlockMissingStart</Value>
+        <Value>SynchronizationBlockMissingEnd</Value>
+        <Value>Unknown</Value>
       </Entity>
     </Entities>
     <Relationships>
@@ -540,12 +718,12 @@ Also a start node does not have any parents and an end node does not have any ch
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1211</X>
-          <Y>2173</Y>
+          <X>715</X>
+          <Y>1882</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1051</X>
-          <Y>2437</Y>
+          <X>549</X>
+          <Y>2123</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -556,8 +734,8 @@ Also a start node does not have any parents and an end node does not have any ch
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1360</X>
-          <Y>2171</Y>
+          <X>864</X>
+          <Y>1880</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
@@ -565,76 +743,56 @@ Also a start node does not have any parents and an end node does not have any ch
       <Relationship type="Association" first="5" second="1">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>525</X>
+          <Y>2147</Y>
+        </BendPoint>
         <Direction>Bidirectional</Direction>
         <AssociationType>Association</AssociationType>
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
+      <Relationship type="Realization" first="6" second="1">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>429</X>
+          <Y>2075</Y>
+        </BendPoint>
+      </Relationship>
       <Relationship type="Realization" first="7" second="1">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>935</X>
-          <Y>2368</Y>
-        </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>935</X>
-          <Y>2387</Y>
+          <X>374</X>
+          <Y>2070</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="8" second="1">
+      <Relationship type="Comment" first="4" second="6">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>693</X>
-          <Y>2384</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="6" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>499</X>
-          <Y>2562</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>631</X>
-          <Y>2486</Y>
+          <X>538</X>
+          <Y>1893</Y>
         </BendPoint>
       </Relationship>
       <Relationship type="Comment" first="4" second="7">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>947</X>
-          <Y>2166</Y>
+          <X>463</X>
+          <Y>1880</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1004</X>
-          <Y>2241</Y>
+          <X>433</X>
+          <Y>1996</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="4" second="8">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>663</X>
-          <Y>2173</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>588</X>
-          <Y>2241</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="6" second="9">
+      <Relationship type="Realization" first="8" second="2">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="10" second="2">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="10" second="12">
+      <Relationship type="Association" first="8" second="10">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -644,378 +802,216 @@ Also a start node does not have any parents and an end node does not have any ch
         <StartMultiplicity>1</StartMultiplicity>
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
-      <Relationship type="Association" first="11" second="12">
+      <Relationship type="Association" first="9" second="10">
         <Label>via ID</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>996</X>
-          <Y>994</Y>
+          <X>916</X>
+          <Y>988</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="13" second="0">
+      <Relationship type="Comment" first="11" second="0">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="12" second="0">
+      <Relationship type="Association" first="10" second="0">
         <Label>
         </Label>
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>781</X>
-          <Y>1049</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1064</X>
-          <Y>1824</Y>
+          <X>701</X>
+          <Y>1077</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="20" second="19">
+      <Relationship type="Generalization" first="17" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>4070</X>
-          <Y>655</Y>
+          <X>3112</X>
+          <Y>1917</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Generalization" first="21" second="19">
+      <Relationship type="Generalization" first="18" second="16">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>4070</X>
-          <Y>687</Y>
+          <X>3112</X>
+          <Y>1949</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="24" second="23">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="3" second="23">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="25" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>832</X>
-          <Y>2562</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>832</X>
-          <Y>2537</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="26" second="27">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="28" second="26">
+      <Relationship type="Realization" first="21" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>3315</X>
-          <Y>2526</Y>
+          <X>1865</X>
+          <Y>78</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="29" second="26">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3495</X>
-          <Y>2780</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3495</X>
-          <Y>2656</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="30" second="26">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3814</X>
-          <Y>2619</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3702</X>
-          <Y>2546</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="31" second="26">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3781</X>
-          <Y>2478</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3728</X>
-          <Y>2518</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="14" second="23">
+      <Relationship type="Comment" first="12" second="20">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="16" second="26">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3314</X>
-          <Y>2405</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>3395</X>
-          <Y>2450</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="32" second="8">
+      <Relationship type="Comment" first="27" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>512</X>
-          <Y>2234</Y>
+          <X>323</X>
+          <Y>1920</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="34" second="0">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="12" second="35">
+      <Relationship type="Association" first="10" second="29">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="38" second="35">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="37" second="35">
+      <Relationship type="Realization" first="31" second="29">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>635</X>
-          <Y>587</Y>
+          <X>555</X>
+          <Y>581</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="36" second="35">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="40" second="38">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="41" second="37">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="39" second="35">
+      <Relationship type="Realization" first="30" second="29">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>884</X>
-          <Y>533</Y>
+          <X>641</X>
+          <Y>530</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="39" second="42">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1057</X>
-          <Y>358</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1168</X>
-          <Y>267</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="44" second="42">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="43" second="42">
+      <Relationship type="Comment" first="32" second="31">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1452</X>
-          <Y>247</Y>
-        </BendPoint>
       </Relationship>
-      <Relationship type="Realization" first="45" second="42">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1452</X>
-          <Y>284</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="46" second="42">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="47" second="12">
+      <Relationship type="Comment" first="37" second="10">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>977</X>
-          <Y>775</Y>
+          <X>841</X>
+          <Y>763</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>900</X>
-          <Y>797</Y>
+          <X>820</X>
+          <Y>791</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="48" second="5">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="49" second="23">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>2672</X>
-          <Y>2210</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="50" second="23">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="17" second="29">
+      <Relationship type="Comment" first="14" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Comment" first="15" second="29">
+      <Relationship type="Comment" first="13" second="24">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="22" second="19">
+      <Relationship type="Association" first="19" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="33" second="23">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Generalization" first="39" second="28">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2852</X>
-          <Y>1052</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="24" second="26">
+      <Relationship type="Generalization" first="40" second="28">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3026</X>
-          <Y>2326</Y>
+          <X>2353</X>
+          <Y>2244</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="42" second="39">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2680</X>
+          <Y>1789</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="42" second="19">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2829</X>
+          <Y>1650</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="52" second="33">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="53" second="33">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>3032</X>
-          <Y>963</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>2967</X>
-          <Y>989</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="54" second="53">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="55" second="52">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="55" second="22">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>3858</X>
-          <Y>392</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="56" second="52">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="57" second="22">
+      <Relationship type="Comment" first="43" second="39">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>3923</X>
-          <Y>261</Y>
+          <X>2568</X>
+          <Y>1748</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>3987</X>
-          <Y>316</Y>
+          <X>2628</X>
+          <Y>1789</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="58" second="51">
+      <Relationship type="Comment" first="44" second="19">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2960</X>
+          <Y>1468</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>3029</X>
+          <Y>1578</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="45" second="38">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="20" second="51">
+      <Relationship type="Association" first="17" second="38">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="59" second="19">
+      <Relationship type="Comment" first="46" second="16">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>3056</X>
+          <Y>1876</Y>
+        </BendPoint>
       </Relationship>
-      <Relationship type="Association" first="33" second="60">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="28" second="47">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2721</X>
-          <Y>906</Y>
+          <X>2563</X>
+          <Y>2038</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="61" second="46">
+      <Relationship type="Comment" first="48" second="36">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
-      <Relationship type="Generalization" first="62" second="63">
+      <Relationship type="Generalization" first="49" second="50">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Realization" first="64" second="62">
+      <Relationship type="Realization" first="51" second="49">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="64" second="2">
+      <Relationship type="Association" first="51" second="2">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
@@ -1023,21 +1019,343 @@ Also a start node does not have any parents and an end node does not have any ch
         <Direction>Unidirectional</Direction>
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="64" second="11">
+      <Relationship type="Association" first="51" second="9">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1977</X>
-          <Y>772</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1527</X>
-          <Y>1188</Y>
+          <X>1655</X>
+          <Y>803</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="54" second="55">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="55" second="53">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="56" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>870</X>
+          <Y>1443</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="59" second="60">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="55" second="58">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1566</X>
+          <Y>2083</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="55" second="59">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1513</X>
+          <Y>2092</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="58" second="59">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Bidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+        <StartMultiplicity>1</StartMultiplicity>
+        <EndMultiplicity>1</EndMultiplicity>
+      </Relationship>
+      <Relationship type="Comment" first="61" second="53">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1742</X>
+          <Y>1725</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="5" second="62">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="63" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1827</X>
+          <Y>2255</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="64" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1630</X>
+          <Y>2417</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1664</X>
+          <Y>2319</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="65" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1680</X>
+          <Y>2321</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="66" second="61">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="41" second="63">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2104</X>
+          <Y>2260</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="68" second="40">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="68" second="53">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2537</X>
+          <Y>2590</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2049</X>
+          <Y>1870</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="42" second="53">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2574</X>
+          <Y>1652</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1890</X>
+          <Y>1830</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="69" second="20">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="70" second="20">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1351</X>
+          <Y>195</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="71" second="50">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="73" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1572</X>
+          <Y>2640</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1697</X>
+          <Y>2324</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="74" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1809</X>
+          <Y>2653</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1735</X>
+          <Y>2325</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="75" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1800</X>
+          <Y>2454</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1777</X>
+          <Y>2338</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="76" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1819</X>
+          <Y>2548</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1753</X>
+          <Y>2335</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="10" second="77">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="26" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>286</X>
+          <Y>2260</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>361</X>
+          <Y>2186</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="24" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>342</X>
+          <Y>2384</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>388</X>
+          <Y>2188</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="25" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>661</X>
+          <Y>2444</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>490</X>
+          <Y>2191</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="23" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>648</X>
+          <Y>2709</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>430</X>
+          <Y>2186</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="78" second="1">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>652</X>
+          <Y>2574</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>465</X>
+          <Y>2190</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="79" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="79" second="78">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="80" second="58">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1827</X>
+          <Y>2758</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="33" second="20">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="34" second="29">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="84" second="29">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>566</X>
+          <Y>627</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="36" second="29">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="33" second="29">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>740</X>
+          <Y>530</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="35" second="29">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>955</X>
+          <Y>445</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>784</X>
+          <Y>530</Y>
+        </BendPoint>
       </Relationship>
     </Relationships>
   </ProjectItem>
