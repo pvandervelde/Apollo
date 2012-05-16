@@ -20,7 +20,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// The graph of schedule nodes. Traversable from parent to child only.
         /// </summary>
-        private readonly AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Graph;
+        private readonly BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Graph;
 
         /// <summary>
         /// The ID of the current schedule.
@@ -54,7 +54,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <param name="end">The end node for the schedule.</param>
         public EditableSchedule(
             ScheduleId id, 
-            AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
+            BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
             EditableStartVertex start,
             EditableEndVertex end)
         {
@@ -110,17 +110,92 @@ namespace Apollo.Core.Extensions.Scheduling
         }
 
         /// <summary>
-        /// Gets the internal graph for the schedule.
+        /// Traverses the schedule and applies an action to each vertex visited.
         /// </summary>
-        /// <remarks>
-        /// Do not make changes to the returned graph because it will change the schedule!
-        /// </remarks>
-        internal AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> Graph
+        /// <param name="start">The vertex where the traverse should be started.</param>
+        /// <param name="traverseViaOutBoundVertices">
+        /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
+        /// </param>
+        /// <param name="vertexAction">
+        /// The action taken for each vertex that is encountered. The action is provided with the current vertex and
+        /// a collection of all outbound, if <paramref name="traverseViaOutBoundVertices"/> is <see langword="true" />,
+        /// or inbound vertices and the ID of the traversing condition. The function should return <see langword="false" />
+        /// to terminate the traverse.
+        /// </param>
+        public void TraverseSchedule(
+            IEditableScheduleVertex start,
+            bool traverseViaOutBoundVertices,
+            Func<IEditableScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IEditableScheduleVertex>>, bool> vertexAction)
         {
-            get
             {
-                return m_Graph;
+                Lokad.Enforce.Argument(() => start);
+                Lokad.Enforce.With<UnknownScheduleVertexException>(
+                    m_Graph.ContainsVertex(start), 
+                    Resources.Exceptions_Messages_UnknownScheduleVertex);
+
+                Lokad.Enforce.Argument(() => vertexAction);
             }
+
+            var nodeCounter = new List<IEditableScheduleVertex>();
+
+            var uncheckedVertices = new Queue<IEditableScheduleVertex>();
+            uncheckedVertices.Enqueue(start);
+            while (uncheckedVertices.Count > 0)
+            {
+                var source = uncheckedVertices.Dequeue();
+                if (nodeCounter.Contains(source))
+                {
+                    continue;
+                }
+
+                nodeCounter.Add(source);
+
+                var outEdges = traverseViaOutBoundVertices ? m_Graph.OutEdges(source) : m_Graph.InEdges(source);
+                var traverseMap = from edge in outEdges
+                                  select new Tuple<ScheduleElementId, IEditableScheduleVertex>(
+                                      edge.TraversingCondition,
+                                      traverseViaOutBoundVertices ? edge.Target : edge.Source);
+
+                var result = vertexAction(source, traverseMap);
+                if (!result)
+                {
+                    return;
+                }
+
+                foreach (var outEdge in outEdges)
+                {
+                    uncheckedVertices.Enqueue(traverseViaOutBoundVertices ? outEdge.Target : outEdge.Source);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns a collection that contains all the known vertices for the schedule.
+        /// </summary>
+        /// <returns>The collection that contains all the known vertices for the schedule.</returns>
+        public IEnumerable<IEditableScheduleVertex> Vertices()
+        {
+            return m_Graph.Vertices;
+        }
+
+        /// <summary>
+        /// Returns the number of vertices which connect to the current vertex.
+        /// </summary>
+        /// <param name="origin">The vertex for which the number of inbound connections should be returned.</param>
+        /// <returns>The number of inbound connections for the current vertex.</returns>
+        public int NumberOfInboundConnections(IEditableScheduleVertex origin)
+        {
+            return m_Graph.InDegree(origin);
+        }
+
+        /// <summary>
+        /// Returns the number of vertices to which the current vertex connects.
+        /// </summary>
+        /// <param name="origin">The vertex for which the number of outbound connections should be returned.</param>
+        /// <returns>The number of outbound connections for the current vertex.</returns>
+        public int NumberOfOutboundConnections(IEditableScheduleVertex origin)
+        {
+            return m_Graph.OutDegree(origin);
         }
 
         /// <summary>

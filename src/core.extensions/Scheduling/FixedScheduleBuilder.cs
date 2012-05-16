@@ -18,32 +18,29 @@ namespace Apollo.Core.Extensions.Scheduling
     /// </summary>
     internal sealed class FixedScheduleBuilder : IBuildFixedSchedules
     {
-        private static AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> CopyGraph(
-            AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
-            EditableStartVertex start,
-            EditableEndVertex end)
+        private static BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> CopySchedule(
+            IEditableSchedule schedule)
         {
-            var newGraph = new AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
-            newGraph.AddVertex(start);
-
-            var newVertices = new Queue<IEditableScheduleVertex>();
-            newVertices.Enqueue(start);
-            while (newVertices.Count > 0)
-            {
-                var source = newVertices.Dequeue();
-                var outEdges = graph.OutEdges(source);
-                foreach (var outEdge in outEdges)
-                {
-                    var target = (!ReferenceEquals(end, outEdge.Target)) ? outEdge.Target : end;
-                    if (!newGraph.ContainsVertex(target))
+            var newGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
+            newGraph.AddVertex(schedule.Start);
+            schedule.TraverseSchedule(
+                schedule.Start,
+                true,
+                (vertex, edges) => 
                     {
-                        newGraph.AddVertex(target);
-                    }
+                        foreach (var pair in edges)
+                        {
+                            var target = pair.Item2;
+                            if (!newGraph.ContainsVertex(target))
+                            {
+                                newGraph.AddVertex(target);
+                            }
 
-                    newGraph.AddEdge(new EditableScheduleEdge(source, target, outEdge.TraversingCondition));
-                    newVertices.Enqueue(target);
-                }
-            }
+                            newGraph.AddEdge(new EditableScheduleEdge(vertex, target, pair.Item1));
+                        }
+
+                        return true;
+                    });
 
             return newGraph;
         }
@@ -51,7 +48,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// The schedule that is being edited.
         /// </summary>
-        private readonly AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Schedule;
+        private readonly BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Schedule;
 
         /// <summary>
         /// The start point of the schedule.
@@ -70,7 +67,7 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             m_Start = new EditableStartVertex();
             m_End = new EditableEndVertex();
-            m_Schedule = new AdjacencyGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
+            m_Schedule = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
 
             m_Schedule.AddVertex(m_Start);
             m_Schedule.AddVertex(m_End);
@@ -89,12 +86,9 @@ namespace Apollo.Core.Extensions.Scheduling
                 Lokad.Enforce.Argument(() => scheduleToStartWith);
             }
 
-            var schedule = scheduleToStartWith as EditableSchedule;
-            var graph = schedule.Graph;
-
             m_Start = scheduleToStartWith.Start;
             m_End = scheduleToStartWith.End;
-            m_Schedule = CopyGraph(graph, scheduleToStartWith.Start, scheduleToStartWith.End);
+            m_Schedule = CopySchedule(scheduleToStartWith);
         }
 
         /// <summary>
@@ -257,8 +251,7 @@ namespace Apollo.Core.Extensions.Scheduling
             }
 
             // Find the inbound and outbound edges
-            var inbound = from edge in m_Schedule.Edges
-                          where ReferenceEquals(edge.Target, insertVertex)
+            var inbound = from edge in m_Schedule.InEdges(insertVertex)
                           select edge;
 
             var outbound = from edge in m_Schedule.OutEdges(insertVertex)
@@ -497,12 +490,49 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </returns>
         public IEditableSchedule Build()
         {
-            var schedule = CopyGraph(m_Schedule, m_Start, m_End);
+            var schedule = CopyGraph();
             return new EditableSchedule(
                 new ScheduleId(),
                 schedule,
                 m_Start,
                 m_End);
+        }
+
+        private BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> CopyGraph()
+        {
+            var newGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
+            newGraph.AddVertex(m_Start);
+
+            var nodeCounter = new List<IEditableScheduleVertex>();
+
+            var uncheckedVertices = new Queue<IEditableScheduleVertex>();
+            uncheckedVertices.Enqueue(m_Start);
+            while (uncheckedVertices.Count > 0)
+            {
+                var source = uncheckedVertices.Dequeue();
+                if (nodeCounter.Contains(source))
+                {
+                    continue;
+                }
+
+                nodeCounter.Add(source);
+
+                var outEdges = m_Schedule.OutEdges(source);
+                foreach (var outEdge in outEdges)
+                {
+                    var target = outEdge.Target;
+                    if (!newGraph.ContainsVertex(target))
+                    {
+                        newGraph.AddVertex(target);
+                    }
+
+                    newGraph.AddEdge(new EditableScheduleEdge(source, target, outEdge.TraversingCondition));
+
+                    uncheckedVertices.Enqueue(outEdge.Target);
+                }
+            }
+
+            return newGraph;
         }
     }
 }

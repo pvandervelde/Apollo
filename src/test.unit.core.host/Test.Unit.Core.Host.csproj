@@ -57,7 +57,7 @@
     </Reference>
     <Reference Include="QuickGraph, Version=3.3.51106.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

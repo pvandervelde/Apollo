@@ -28,12 +28,6 @@ namespace Apollo.Core.Extensions.Scheduling
         ScheduleIsMissingEnd,
         
         /// <summary>
-        /// It is not possible to follow a path from the start point to the
-        /// end point.
-        /// </summary>
-        ScheduleStartDoesNotConnectToEnd,
-        
-        /// <summary>
         /// The current vertex cannot be reached from the start point.
         /// </summary>
         ScheduleVertexIsNotReachableFromStart,
@@ -42,6 +36,11 @@ namespace Apollo.Core.Extensions.Scheduling
         /// The schedule end point cannot be reached from the current vertex.
         /// </summary>
         ScheduleEndIsNotReachableFromVertex,
+
+        /// <summary>
+        /// The schedule ID is for a sub-schedule that is unknown.
+        /// </summary>
+        UnknownSubSchedule,
         
         /// <summary>
         /// The sub-schedule at the current vertex links back to the current 

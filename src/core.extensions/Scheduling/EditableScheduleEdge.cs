@@ -10,6 +10,9 @@ using QuickGraph;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
+    /// <summary>
+    /// Defines a graph connection between two <see cref="IEditableScheduleVertex"/> objects.
+    /// </summary>
     [Serializable]
     internal sealed class EditableScheduleEdge : Edge<IEditableScheduleVertex>
     {

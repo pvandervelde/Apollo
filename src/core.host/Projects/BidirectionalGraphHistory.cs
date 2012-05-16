@@ -491,6 +491,23 @@ namespace Apollo.Core.Host.Projects
 
             Changes.Add(new GraphClearChange());
             Current.Clear();
+            RaiseCleared();
+        }
+
+        /// <summary>
+        /// Called when the graph vertices and edges have been cleared.
+        /// </summary>
+        [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP0100:AdvancedNamingRules",
+            Justification = "Event is inherited from the IMutableGraph<TVertex, TEdge> interface.")]
+        public event EventHandler Cleared;
+
+        private void RaiseCleared()
+        {
+            var local = Cleared;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>
