@@ -33,6 +33,10 @@
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
@@ -80,9 +84,35 @@
     </Compile>
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
+    <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
+    <Compile Include="Scheduling\ExecutableNoOpVertex.cs" />
+    <Compile Include="Scheduling\IExecuteSchedules.cs" />
+    <Compile Include="Scheduling\Processors\ActionVertexProcessor.cs" />
+    <Compile Include="Scheduling\Processors\EndVertexProcessor.cs" />
+    <Compile Include="Scheduling\ExecutableActionVertex.cs" />
+    <Compile Include="Scheduling\ExecutableEndVertex.cs" />
+    <Compile Include="Scheduling\ExecutableMarkHistoryVertex.cs" />
     <Compile Include="Scheduling\ExecutableSchedule.cs" />
+    <Compile Include="Scheduling\ExecutableScheduleEdge.cs" />
+    <Compile Include="Scheduling\ExecutableStartVertex.cs" />
+    <Compile Include="Scheduling\ExecutableSubScheduleVertex.cs" />
+    <Compile Include="Scheduling\ExecutableSynchronizationEndVertex.cs" />
+    <Compile Include="Scheduling\ExecutableSynchronizationStartVertex.cs" />
+    <Compile Include="Scheduling\Processors\NoOpVertexProcessor.cs" />
+    <Compile Include="Scheduling\ScheduleDistributor.cs" />
     <Compile Include="Scheduling\IExecutableScheduleVertex.cs" />
+    <Compile Include="Scheduling\IProcesExecutableScheduleVertices.cs" />
+    <Compile Include="Scheduling\IDistributeScheduleExecutions.cs" />
+    <Compile Include="Scheduling\Processors\MarkHistoryVertexProcessor.cs" />
     <Compile Include="Scheduling\ScheduleActionStorage.cs" />
+    <Compile Include="Scheduling\ScheduleExecutionInfo.cs" />
+    <Compile Include="Scheduling\ScheduleExecutionProgressMark.cs" />
+    <Compile Include="Scheduling\ScheduleExecutionState.cs" />
+    <Compile Include="Scheduling\ScheduleExecutor.cs" />
+    <Compile Include="Scheduling\Processors\StartVertexProcessor.cs" />
+    <Compile Include="Scheduling\Processors\SubScheduleVertexProcessor.cs" />
+    <Compile Include="Scheduling\SchedulePauseHandler.cs" />
+    <Compile Include="Scheduling\UnknownScheduleActionException.cs" />
     <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="utilities\SrcOnlyResources.cs" />
     <Compile Include="utilities\UtilitiesModule.cs" />

@@ -30,25 +30,38 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Initializes a new instance of the <see cref="EditableInsertVertex"/> class with
         /// an unlimited number of inserts.
         /// </summary>
-        internal EditableInsertVertex()
+        /// <param name="index">The index of the vertex in the graph.</param>
+        internal EditableInsertVertex(int index)
         {
+            Index = index;
             m_RemainingInserts = -1;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableInsertVertex"/> class.
         /// </summary>
+        /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="maximumNumberOfInserts">The maximum number of times this node can be replaced with another node.</param>
         /// <exception cref="CannotCreateInsertVertexWithLessThanOneInsertException">
         /// Thrown when <paramref name="maximumNumberOfInserts"/> is not a positive integer larger than zero.
         /// </exception>
-        internal EditableInsertVertex(int maximumNumberOfInserts)
+        internal EditableInsertVertex(int index, int maximumNumberOfInserts)
         {
             {
                 Debug.Assert(maximumNumberOfInserts > 0, "Cannot create an insert point with less than one insert.");
             }
 
+            Index = index;
             m_RemainingInserts = maximumNumberOfInserts;
+        }
+
+        /// <summary>
+        /// Gets the index of the vertex in the graph.
+        /// </summary>
+        public int Index
+        {
+            get;
+            private set;
         }
 
         /// <summary>

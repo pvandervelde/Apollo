@@ -4,22 +4,18 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
-
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which marks the position where a set of variables
-    /// should be synchronized.
+    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates the endpoint of a schedule.
     /// </summary>
-    [Serializable]
-    public sealed class EditableSynchronizationEndVertex : IEditableScheduleVertex
+    internal sealed class ExecutableEndVertex : IExecutableScheduleVertex
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableSynchronizationEndVertex"/> class.
+        /// Initializes a new instance of the <see cref="ExecutableEndVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableSynchronizationEndVertex(int index)
+        public ExecutableEndVertex(int index)
         {
             Index = index;
         }

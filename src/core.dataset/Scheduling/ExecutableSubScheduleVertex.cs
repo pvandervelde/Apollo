@@ -5,36 +5,38 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which links to a sub-schedule.
+    /// Defines an <see cref="IExecutableScheduleVertex"/> which has the ID of a sub-schedule that should be executed.
     /// </summary>
-    /// <remarks>
-    /// All editable schedule vertices should be immutable because a schedule is copied
-    /// by reusing the vertices.
-    /// </remarks>
-    [Serializable]
-    public sealed class EditableSubScheduleVertex : IEditableScheduleVertex
+    internal sealed class ExecutableSubScheduleVertex : IExecutableScheduleVertex
     {
         /// <summary>
-        /// The ID of the schedule that must be executed.
+        /// The ID of the sub-schedule.
         /// </summary>
         private readonly ScheduleId m_SubSchedule;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableSubScheduleVertex"/> class.
+        /// Initializes a new instance of the <see cref="ExecutableSubScheduleVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        /// <param name="subSchedule">The ID of the schedule that should be executed.</param>
-        internal EditableSubScheduleVertex(int index, ScheduleId subSchedule)
+        /// <param name="subSchedule">The ID of the sub-schedule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="subSchedule"/> is <see langword="null" />.
+        /// </exception>
+        public ExecutableSubScheduleVertex(int index, ScheduleId subSchedule)
         {
             {
-                Debug.Assert(subSchedule != null, "The ID of the sub-schedule cannot be a null reference.");
+                Lokad.Enforce.Argument(() => subSchedule);
             }
 
+            Index = index;
             m_SubSchedule = subSchedule;
         }
 
@@ -48,9 +50,9 @@ namespace Apollo.Core.Extensions.Scheduling
         }
 
         /// <summary>
-        /// Gets the ID of the schedule that should be executed.
+        /// Gets the ID of the sub-schedule.
         /// </summary>
-        public ScheduleId ScheduleToExecute
+        public ScheduleId SubSchedule
         {
             get
             {

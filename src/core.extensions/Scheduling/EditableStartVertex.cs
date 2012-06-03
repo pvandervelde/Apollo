@@ -21,8 +21,19 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableStartVertex"/> class.
         /// </summary>
-        internal EditableStartVertex()
-        { 
+        /// <param name="index">The index of the vertex in the graph.</param>
+        internal EditableStartVertex(int index)
+        {
+            Index = index;
+        }
+
+        /// <summary>
+        /// Gets the index of the vertex in the graph.
+        /// </summary>
+        public int Index
+        {
+            get;
+            private set;
         }
     }
 }

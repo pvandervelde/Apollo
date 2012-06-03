@@ -5,34 +5,32 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
+using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which provides the ID number of an action that should be executed.
+    /// Defines an <see cref="IExecutableScheduleVertex"/> which has an action that should be executed.
     /// </summary>
-    /// <remarks>
-    /// All editable schedule vertices should be immutable because a schedule is copied
-    /// by reusing the vertices.
-    /// </remarks>
-    [Serializable]
-    public sealed class EditableExecutingActionVertex : IEditableScheduleVertex
+    internal sealed class ExecutableActionVertex : IExecutableScheduleVertex
     {
         /// <summary>
-        /// The ID of the action that should be executed.
+        /// The ID of the action which should be executed.
         /// </summary>
         private readonly ScheduleElementId m_Action;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableExecutingActionVertex"/> class.
+        /// Initializes a new instance of the <see cref="ExecutableActionVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="actionToExecute">The ID of the action that should be executed.</param>
-        internal EditableExecutingActionVertex(int index, ScheduleElementId actionToExecute)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="actionToExecute"/> is <see langword="null" />.
+        /// </exception>
+        public ExecutableActionVertex(int index, ScheduleElementId actionToExecute)
         {
             {
-                Debug.Assert(actionToExecute != null, "The ID of the action should not be a null reference.");
+                Lokad.Enforce.Argument(() => actionToExecute);
             }
 
             Index = index;

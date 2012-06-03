@@ -65,11 +65,12 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         public FixedScheduleBuilder()
         {
-            m_Start = new EditableStartVertex();
-            m_End = new EditableEndVertex();
             m_Schedule = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
-
+            
+            m_Start = new EditableStartVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(m_Start);
+
+            m_End = new EditableEndVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(m_End);
         }
 
@@ -105,7 +106,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 Lokad.Enforce.Argument(() => action);
             }
 
-            var result = new EditableExecutingActionVertex(action);
+            var result = new EditableExecutingActionVertex(m_Schedule.VertexCount, action);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -115,21 +116,17 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Adds the schedule with the specified ID as a sub-schedule to the current schedule.
         /// </summary>
         /// <param name="schedule">The ID of the sub-schedule.</param>
-        /// <param name="waitForFinish">
-        /// A flag that indicates if the schedule execution should immediately wait for the sub-schedule to finish executing, or
-        /// if there is a suitable synchronization point later on.
-        /// </param>
         /// <returns>The vertex that contains the information about the given sub-schedule.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
-        public EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule, bool waitForFinish)
+        public EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
             }
 
-            var result = new EditableSubScheduleVertex(schedule, waitForFinish);
+            var result = new EditableSubScheduleVertex(m_Schedule.VertexCount, schedule);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -156,7 +153,7 @@ namespace Apollo.Core.Extensions.Scheduling
                     Resources.Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables);
             }
 
-            var result = new EditableSynchronizationStartVertex(variables);
+            var result = new EditableSynchronizationStartVertex(m_Schedule.VertexCount, variables);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -176,7 +173,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 Lokad.Enforce.Argument(() => startPoint);
             }
 
-            var result = new EditableSynchronizationEndVertex();
+            var result = new EditableSynchronizationEndVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -190,7 +187,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <returns>The vertex that indicates that the current state should be stored in the <see cref="Timeline"/>.</returns>
         public EditableMarkHistoryVertex AddHistoryMarkingPoint()
         {
-            var result = new EditableMarkHistoryVertex();
+            var result = new EditableMarkHistoryVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -202,7 +199,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
         public EditableInsertVertex AddInsertPoint()
         {
-            var result = new EditableInsertVertex();
+            var result = new EditableInsertVertex(m_Schedule.VertexCount);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -267,12 +264,11 @@ namespace Apollo.Core.Extensions.Scheduling
             EditableInsertVertex outboundInsert = null;
             if ((count == -1) || (count > 0))
             {
-                inboundInsert = new EditableInsertVertex(count);
-                outboundInsert = new EditableInsertVertex(count);
-
+                inboundInsert = new EditableInsertVertex(m_Schedule.VertexCount, count);
                 m_Schedule.AddVertex(inboundInsert);
                 m_Schedule.AddEdge(new EditableScheduleEdge(inboundInsert, vertexToInsert, null));
 
+                outboundInsert = new EditableInsertVertex(m_Schedule.VertexCount, count);
                 m_Schedule.AddVertex(outboundInsert);
                 m_Schedule.AddEdge(new EditableScheduleEdge(vertexToInsert, outboundInsert, null));
             }
@@ -305,10 +301,6 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="insertVertex">The vertex which will be replaced.</param>
         /// <param name="scheduleToInsert">The schedule that will be inserted.</param>
-        /// <param name="waitForFinish">
-        /// A flag that indicates if the schedule execution should immediately wait for the sub-schedule to finish executing, or
-        /// if there is a suitable synchronization point later on.
-        /// </param>
         /// <returns>
         /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after 
         /// the newly inserted sub-schedule vertex.
@@ -327,10 +319,9 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </exception>
         public Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
             EditableInsertVertex insertVertex, 
-            IEditableSchedule scheduleToInsert,
-            bool waitForFinish)
+            IEditableSchedule scheduleToInsert)
         {
-            var subScheduleVertex = new EditableSubScheduleVertex(scheduleToInsert.Id, waitForFinish);
+            var subScheduleVertex = new EditableSubScheduleVertex(m_Schedule.VertexCount, scheduleToInsert.Id);
             var internalResult = InsertIn(insertVertex, subScheduleVertex);
 
             return new Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex>(

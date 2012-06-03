@@ -142,6 +142,15 @@ namespace Apollo.Core.Extensions.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified schedule ID does not map to a known schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownSchedule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified vertex does not belong to the current schedule..
         /// </summary>
         internal static string Exceptions_Messages_UnknownScheduleVertex {

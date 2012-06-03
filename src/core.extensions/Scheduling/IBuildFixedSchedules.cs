@@ -27,12 +27,8 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Adds the schedule with the specified ID as a sub-schedule to the current schedule.
         /// </summary>
         /// <param name="schedule">The ID of the sub-schedule.</param>
-        /// <param name="waitForFinish">
-        /// A flag that indicates if the schedule execution should immediately wait for the sub-schedule to finish executing, or
-        /// if there is a suitable synchronization point later on.
-        /// </param>
         /// <returns>The vertex that contains the information about the given sub-schedule.</returns>
-        EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule, bool waitForFinish);
+        EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule);
 
         /// <summary>
         /// Adds a vertex that indicates the start of a synchronization block over which the given variables 
@@ -81,18 +77,13 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="insertVertex">The vertex which will be replaced.</param>
         /// <param name="scheduleToInsert">The schedule that will be inserted.</param>
-        /// <param name="waitForFinish">
-        /// A flag that indicates if the schedule execution should immediately wait for the sub-schedule to finish executing, or
-        /// if there is a suitable synchronization point later on.
-        /// </param>
         /// <returns>
         /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after 
         /// the newly inserted sub-schedule vertex.
         /// </returns>
         Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
             EditableInsertVertex insertVertex,
-            IEditableSchedule scheduleToInsert,
-            bool waitForFinish);
+            IEditableSchedule scheduleToInsert);
 
         /// <summary>
         /// Links the given start vertex to the end vertex.

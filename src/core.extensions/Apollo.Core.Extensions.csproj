@@ -67,12 +67,14 @@
     <Compile Include="Scheduling\EditableSubScheduleVertex.cs" />
     <Compile Include="Scheduling\EditableSynchronizationEndVertex.cs" />
     <Compile Include="Scheduling\EditableSynchronizationStartVertex.cs" />
+    <Compile Include="Scheduling\ExecutingVertexEventArgs.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilder.cs" />
     <Compile Include="Scheduling\IBuildFixedSchedules.cs" />
     <Compile Include="Scheduling\IBuildSchedules.cs" />
     <Compile Include="Scheduling\IEditableSchedule.cs" />
     <Compile Include="Scheduling\IEditableScheduleVertex.cs" />
     <Compile Include="Scheduling\IScheduleAction.cs" />
+    <Compile Include="Scheduling\IScheduleCondition.cs" />
     <Compile Include="Scheduling\IScheduleDependency.cs" />
     <Compile Include="Scheduling\IScheduleVariable.cs" />
     <Compile Include="Scheduling\IStoreScheduleActions.cs" />
@@ -84,6 +86,7 @@
     <Compile Include="Scheduling\ScheduleId.cs" />
     <Compile Include="Scheduling\ScheduleIntegrityFailureType.cs" />
     <Compile Include="Scheduling\ScheduleVerifier.cs" />
+    <Compile Include="Scheduling\UnknownScheduleException.cs" />
     <Compile Include="Scheduling\UnknownScheduleVertexException.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
       <Link>Properties\App.snk</Link>

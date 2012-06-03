@@ -26,15 +26,26 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableSynchronizationStartVertex"/> class.
         /// </summary>
+        /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="variables">The collection of variables which need to be synchronized at the end of the block.</param>
-        internal EditableSynchronizationStartVertex(IEnumerable<IScheduleVariable> variables)
+        internal EditableSynchronizationStartVertex(int index, IEnumerable<IScheduleVariable> variables)
         {
             {
                 Debug.Assert(variables != null, "The collection of synchronization variables should not be a null reference.");
                 Debug.Assert(variables.Any(), "There should at least be one variable to synchronize on.");
             }
 
+            Index = index;
             m_Variables = variables;
+        }
+
+        /// <summary>
+        /// Gets the index of the vertex in the graph.
+        /// </summary>
+        public int Index
+        {
+            get;
+            private set;
         }
 
         /// <summary>

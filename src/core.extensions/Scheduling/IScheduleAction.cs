@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
@@ -14,5 +15,10 @@ namespace Apollo.Core.Extensions.Scheduling
     /// </summary>
     public interface IScheduleAction
     {
+        /// <summary>
+        /// Executes the action.
+        /// </summary>
+        /// <param name="token">The token that is used to cancel the action.</param>
+        void Execute(CancellationToken token);
     }
 }

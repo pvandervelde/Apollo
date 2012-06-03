@@ -18,7 +18,7 @@ namespace Apollo.Core.Extensions.Scheduling
     internal sealed class EditableSchedule : IEditableSchedule
     {
         /// <summary>
-        /// The graph of schedule nodes. Traversable from parent to child only.
+        /// The graph of schedule nodes.
         /// </summary>
         private readonly BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Graph;
 

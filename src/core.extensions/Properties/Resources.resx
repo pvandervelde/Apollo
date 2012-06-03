@@ -144,6 +144,9 @@
   <data name="Exceptions_Messages_NoInsertsLeftOnVertex" xml:space="preserve">
     <value>There are no more inserts left on the current insert vertex.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
+    <value>The specified schedule ID does not map to a known schedule.</value>
+  </data>
   <data name="Exceptions_Messages_UnknownScheduleVertex" xml:space="preserve">
     <value>The specified vertex does not belong to the current schedule.</value>
   </data>

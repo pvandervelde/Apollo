@@ -4,22 +4,21 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
+using Apollo.Utilities.History;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which marks the position where a set of variables
-    /// should be synchronized.
+    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates that the changes should be 
+    /// stored in a <see cref="Timeline"/>.
     /// </summary>
-    [Serializable]
-    public sealed class EditableSynchronizationEndVertex : IEditableScheduleVertex
+    internal sealed class ExecutableMarkHistoryVertex : IExecutableScheduleVertex
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableSynchronizationEndVertex"/> class.
+        /// Initializes a new instance of the <see cref="ExecutableMarkHistoryVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableSynchronizationEndVertex(int index)
+        public ExecutableMarkHistoryVertex(int index)
         {
             Index = index;
         }
