@@ -23,17 +23,17 @@ using Tools;
  */
 
 // The copyright
-[assembly: AssemblyCopyright("Copyright © P. van der Velde 2009 - @COPYRIGHTYEAR@")]
+[assembly: AssemblyCopyright("Copyright P. van der Velde 2009 - ${CopyrightYear}")]
  
 // The build configuration (e.g. debug/release)
-[assembly: AssemblyConfiguration("@CONFIGURATION@")]
+[assembly: AssemblyConfiguration("${Configuration}")]
 
 // The time the assembly was build
-[assembly: AssemblyBuildTime(buildTime: "@BUILDTIME@")]
+[assembly: AssemblyBuildTime(buildTime: "${BuildTime}")]
 
 // The version from which the assembly was build
 [module: SuppressMessage(
     "Microsoft.Usage", 
     "CA2243:AttributeStringLiteralsShouldParseCorrectly", 
     Justification = "It's a VCS revision, not a version you stupid FxCop")]
-[assembly: AssemblyBuildInformation(buildNumber: @BUILDNUMBER@, versionControlRevision: "@VCSREVISION@")]
+[assembly: AssemblyBuildInformation(buildNumber: ${BuildNumber}, versionControlRevision: "${VcsRevision}")]

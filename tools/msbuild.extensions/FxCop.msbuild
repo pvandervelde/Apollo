@@ -1,0 +1,93 @@
+<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' 
+         ToolsVersion="4.0">
+    <!--
+        Invokes FxCopCmd and handles the error cases
+        Define:
+        - FxCopDir [Property]: The directory that contains FxCopCmd.exe
+        - FxCopOutputFile [Property]: The file that should contain the FxCop results
+        - FxCopCustomDictionary [Property]: The custom dictionary file
+        - FxCopTargetAssemblies [ItemGroup]: Collection of all files that should be analysed
+        - FxCopRuleAssemblies [ItemGroup]: Collection of all rule DLLs that should be used
+        - FxCopRules [ItemGroup]: Collection of all rules that should be included / excluded
+    -->
+    <UsingTask TaskName="FxCop" 
+               TaskFactory="CodeTaskFactory" 
+               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <FxCopDir ParameterType="System.String" Required="true" />
+            <FxCopOutputFile ParameterType="System.String" Required="true" />
+            <FxCopCustomDictionary ParameterType="System.String" Required="true" />
+            <FxCopTargetAssemblies ParameterType="System.String[]" Required="true" />
+            <FxCopRuleAssemblies ParameterType="System.String[]" Required="true" />
+            <FxCopRules ParameterType="System.String[]" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Code Type="Method" Language="cs">
+                <![CDATA[
+                    public override bool Execute()
+                    {
+                        var builder = new System.Text.StringBuilder();
+                        {
+                            foreach (var targetAssembly in FxCopTargetAssemblies)
+                            {
+                                builder.Append(string.Format("/file:\"{0}\" ", targetAssembly));
+                            }
+
+                            foreach(var ruleAssembly in FxCopRuleAssemblies)
+                            {
+                                builder.Append(string.Format("/rule:\"{0}\" ", ruleAssembly));
+                            }
+
+                            foreach (var rule in FxCopRules)
+                            {
+                                builder.Append(string.Format("/ruleid:{0} ", rule));
+                            }
+
+                            builder.Append(string.Format("/out:\"{0}\" ", FxCopOutputFile));
+                            builder.Append(string.Format("/ignoregeneratedcode "));
+                            builder.Append(string.Format("/dictionary:\"{0}\" ", FxCopCustomDictionary));
+                            builder.Append(string.Format("/forceoutput "));
+                        }
+
+                        var info = new System.Diagnostics.ProcessStartInfo
+                                {
+                                    FileName = System.IO.Path.Combine(FxCopDir, "FxCopCmd.exe"),
+                                    Arguments = builder.ToString(),
+                                    UseShellExecute = false,
+                                    RedirectStandardOutput = true,
+                                    RedirectStandardError = true,
+                                };
+                        var process = new System.Diagnostics.Process();
+                        process.StartInfo = info;
+                        process.OutputDataReceived += 
+                            (s, e) => 
+                            { 
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogMessage(MessageImportance.Normal, e.Data); 
+                                }
+                            };
+                        process.ErrorDataReceived += 
+                            (s, e) => 
+                            { 
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogError(e.Data); 
+                                }
+                            };
+                        process.Start();
+
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        
+                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
+                        // from a task's constructor or property setter. As long as this task is written to always log an error
+                        // when it fails, we can reliably return HasLoggedErrors.
+                        return !Log.HasLoggedErrors;
+                    }
+                ]]>  
+            </Code>
+        </Task>
+    </UsingTask>
+</Project>

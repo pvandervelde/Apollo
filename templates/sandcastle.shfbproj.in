@@ -2,8 +2,8 @@
          xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
          ToolsVersion="3.5">
     <PropertyGroup>
-        <SHFBROOT>@TOOLS_DIR@\sandcastlehelpfilebuilder</SHFBROOT>
-        <SandcastlePath>@TOOLS_DIR@\sandcastle\</SandcastlePath>
+        <SHFBROOT>${DirTools}\sandcastlehelpfilebuilder</SHFBROOT>
+        <SandcastlePath>${DirTools}\sandcastle\</SandcastlePath>
         <NamingMethod>MemberName</NamingMethod>
     </PropertyGroup>
     <PropertyGroup>
@@ -21,9 +21,9 @@
         <RootNamespace>Documentation</RootNamespace>
         <Name>Documentation</Name>
         <!-- SHFB properties -->
-        <OutputPath>@DOC_DIR@\Help\</OutputPath>
+        <OutputPath>${DirDoc}\Help\</OutputPath>
         <HtmlHelpName>apollo</HtmlHelpName>
-        <BuildLogFile>@LOGS_DIR@\doc.sandcastle.log</BuildLogFile>
+        <BuildLogFile>${DirLogs}\doc.sandcastle.log</BuildLogFile>
         <FrameworkVersion>3.5</FrameworkVersion>
         <HelpFileFormat>Website</HelpFileFormat>
         <CopyrightText>Copyright %28c%29 - P. van der Velde</CopyrightText>
@@ -34,18 +34,18 @@
         <ShowFeedbackControl>True</ShowFeedbackControl>
         <VisibleItems>Attributes, ExplicitInterfaceImplementations, InheritedMembers, InheritedFrameworkMembers, Protected, SealedProtected</VisibleItems>
         <DocumentationSources>
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Host.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Host.xml" />
-			<DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Base.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Base.xml" />
-			<DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Dataset.exe" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Core.Dataset.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.ProjectExplorer.exe" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.ProjectExplorer.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.UI.Common.xml" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.dll" />
-            <DocumentationSource sourceFile="@BIN_DIR@\Apollo.Utilities.xml" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Host.dll" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Host.xml" />
+			<DocumentationSource sourceFile="${DirBin}\Apollo.Core.Base.dll" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Base.xml" />
+			<DocumentationSource sourceFile="${DirBin}\Apollo.Core.Dataset.exe" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Core.Dataset.xml" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.ProjectExplorer.exe" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.ProjectExplorer.xml" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.UI.Common.dll" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.UI.Common.xml" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Utilities.dll" />
+            <DocumentationSource sourceFile="${DirBin}\Apollo.Utilities.xml" />
         </DocumentationSources>
         <FeedbackEMailAddress>petrikvandervelde+apollofeedback%40gmail.com</FeedbackEMailAddress>
         <FeedbackEMailLinkText>Send feedback</FeedbackEMailLinkText>

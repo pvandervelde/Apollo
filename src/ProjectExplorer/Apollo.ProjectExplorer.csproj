@@ -293,13 +293,19 @@
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utilities</Name>
     </ProjectReference>
-    <ProjectReference Include="..\common\Apollo.UI.Common.csproj">
+    <ProjectReference Include="..\ui.common\Apollo.UI.Common.csproj">
       <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
       <Name>Apollo.UI.Common</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutBanner.png" />
+  </ItemGroup>
+  <!-- Indicate that we depend on the SolutionLevel build projects -->
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\SolutionLevel\SolutionLevel.csproj">
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

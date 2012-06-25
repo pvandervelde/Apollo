@@ -62,7 +62,7 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\common\Apollo.UI.Common.csproj">
+    <ProjectReference Include="..\ui.common\Apollo.UI.Common.csproj">
       <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
       <Name>Apollo.UI.Common</Name>
     </ProjectReference>

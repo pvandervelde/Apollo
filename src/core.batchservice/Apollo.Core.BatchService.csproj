@@ -74,4 +74,10 @@
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
+  <!-- Indicate that we depend on the SolutionLevel build projects -->
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\SolutionLevel\SolutionLevel.csproj"> 
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly> 
+    </ProjectReference>
+  </ItemGroup>
 </Project>

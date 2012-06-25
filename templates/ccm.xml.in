@@ -12,7 +12,7 @@
     NOTE: Keep in mind that the path is relative to the location of the configuration file.
   -->
   <analyze>
-    <folder>@SOURCE_FOLDER_NAME@</folder>
+    <folder>${DirSrc}</folder>
   </analyze>
   <recursive>yes</recursive>
   <outputXML>yes</outputXML>
