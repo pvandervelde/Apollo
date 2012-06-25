@@ -172,4 +172,10 @@
       <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <!-- Indicate that we depend on the SolutionLevel build projects -->
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\SolutionLevel\SolutionLevel.csproj"> 
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly> 
+    </ProjectReference>
+  </ItemGroup>
 </Project>

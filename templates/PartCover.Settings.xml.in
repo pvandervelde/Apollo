@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PartCoverSettings>
-  <Target>@{GALLIO_DIR}@\@{GALLIO_EXE}@</Target>
-  <TargetWorkDir>@{BIN_DIR}@</TargetWorkDir>
-  <TargetArgs>/hd:"@{GALLIO_DIR}@" /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rd:"@{REPORTS_DIR}@" /r:Local @{FILES}@</TargetArgs>
-  <Output>@{REPORT}@</Output>
+  <Target>${DirGallio}\${GallioExe}</Target>
+  <TargetWorkDir>${DirBin}</TargetWorkDir>
+  <TargetArgs>/hd:"${DirGallio}" /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rd:"${DirReports}" /r:Local ${Files}</TargetArgs>
+  <Output>${Report}</Output>
   <LogLevel>0</LogLevel>
   <Rule>+[Apollo.*]*</Rule>
   <Rule>-[*Test.Unit*]*</Rule>

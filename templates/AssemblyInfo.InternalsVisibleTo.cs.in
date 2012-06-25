@@ -20,4 +20,4 @@ using System.Runtime.CompilerServices;
  * CHANGES WILL BE UNDONE THE NEXT TIME THE FILE IS GENERATED! 
  */
 
-@ATTRIBUTES@
+${Attributes}

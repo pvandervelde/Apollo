@@ -6,9 +6,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Apollo.Utilities</AssemblyName>
-    <RestorePackages>true</RestorePackages>
-    <GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
-    <PsakeBuildFile>apollo.ps1</PsakeBuildFile>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -161,6 +158,12 @@
       <Link>Properties\App.snk</Link>
     </None>
     <None Include="packages.config" />
+  </ItemGroup>
+  <!-- Indicate that we depend on the SolutionLevel build projects -->
+  <ItemGroup>
+    <ProjectReference Include="$(SolutionDir)\SolutionLevel\SolutionLevel.csproj"> 
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly> 
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
