@@ -102,7 +102,7 @@
             $(BuildDependsOn);
         </BuildDependsOn>
     </PropertyGroup>
-    <Target Name="GenerateAssemblyInfoVersionNumber">
+    <Target Name="GenerateAssemblyInfoVersionNumber" DependsOnTargets="RestorePackages">
         <!-- Generate the version number file -->
         <ItemGroup>
             <VersionTokens Include="Major">
@@ -121,7 +121,7 @@
         <TemplateFile Template="$(FileTemplateAssemblyVersion)" OutputFileName="$(FileGeneratedAssemblyVersion)" Tokens="@(VersionTokens)" />
     </Target>
     
-    <Target Name="GenerateAssemblyInfoBuildInfo">
+    <Target Name="GenerateAssemblyInfoBuildInfo" DependsOnTargets="RestorePackages">
         <BzrRevisionNumber LocalPath="$(DirWorkspace)">
             <Output TaskParameter="RevNo" PropertyName="VcsRevision" />
         </BzrRevisionNumber>
@@ -149,7 +149,7 @@
     <PropertyGroup>
         <SnExe Condition="">$(MSBuildProgramFiles32)\Microsoft SDKs\Windows\v7.0A\bin\sn.exe</SnExe>
     </PropertyGroup>
-    <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment">
+    <Target Name="GenerateAssemblyInternalsVisbibleTo" DependsOnTargets="_PrepareBuildEnvironment;RestorePackages">
         <PublicKeySignatureFromKeyFile SnExe="$(SnExe)" DirTemp="$(DirBuildTemp)" Input="$(SOFTWARE_SIGNING_KEY_PATH)">
             <Output TaskParameter="PublicKey" PropertyName="PublicKeyLocal" />
         </PublicKeySignatureFromKeyFile>

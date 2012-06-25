@@ -9,50 +9,78 @@
             <PackageDirectory ParameterType="System.String" Required="true" />
         </ParameterGroup>
         <Task>
-            <Code Type="Method" Language="cs">
+            <Reference Include="System.Xml" />
+            <Reference Include="System.Xml.Linq" />
+			<Code Type="Method" Language="cs">
                 <![CDATA[
                     public override bool Execute()
                     {
-                        var builder = new System.Text.StringBuilder();
-                        {
-                            builder.Append(string.Format("install \"{0}\" ", PackageFile));
-                            builder.Append(string.Format("-ExcludeVersion "));
-                            builder.Append(string.Format("-OutputDirectory \"{0}\" ", PackageDirectory));
-                        }
-                        
-                        var info = new System.Diagnostics.ProcessStartInfo
-                                {
-                                    FileName = NugetPath,
-                                    Arguments = builder.ToString(),
-                                    UseShellExecute = false,
-                                    RedirectStandardOutput = true,
-                                    RedirectStandardError = true,
-                                };
-                        var process = new System.Diagnostics.Process();
-                        process.StartInfo = info;
-                        process.OutputDataReceived += 
-                            (s, e) => 
-                            { 
-                                if (!string.IsNullOrWhiteSpace(e.Data))
-                                {
-                                    Log.LogMessage(MessageImportance.Normal, e.Data); 
-                                }
-                            };
-                        process.ErrorDataReceived += 
-                            (s, e) => 
-                            { 
-                                if (!string.IsNullOrWhiteSpace(e.Data))
-                                {
-                                    Log.LogError(e.Data); 
-                                }
-                            };
-                        process.Start();
+                        if (!System.IO.File.Exists(PackageFile))
+						{
+							Log.LogMessage("File does not exist: {0}", PackageFile);
+						}
 
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
-                        process.WaitForExit();
+						System.Xml.Linq.XDocument xDoc = null;
+						try
+						{
+							xDoc = System.Xml.Linq.XDocument.Load(PackageFile);
+						}
+						catch (System.Exception)
+						{
+							Log.LogError("Failed to load document {0}.", PackageFile);
+						}
+
+						var packages = from package in xDoc.Element("packages").Descendants("package")
+									   select new
+									   {
+										   Id = package.Attribute("id").Value,
+										   Version = package.Attribute("version").Value,
+									   };
+
+						foreach (var package in packages)
+						{
+							var builder = new System.Text.StringBuilder();
+							{
+								builder.Append(string.Format("install \"{0}\" ", package.Id));
+								builder.Append(string.Format("-Version {0} ", package.Version));
+								builder.Append(string.Format("-ExcludeVersion "));
+								builder.Append(string.Format("-OutputDirectory \"{0}\" ", PackageDirectory));
+							}
+
+							var info = new System.Diagnostics.ProcessStartInfo
+							{
+								FileName = NugetPath,
+								Arguments = builder.ToString(),
+								UseShellExecute = false,
+								RedirectStandardOutput = true,
+								RedirectStandardError = true,
+							};
+							var process = new System.Diagnostics.Process();
+							process.StartInfo = info;
+							process.OutputDataReceived +=
+								(s, e) =>
+								{
+									if (!string.IsNullOrWhiteSpace(e.Data))
+									{
+										Log.LogMessage(MessageImportance.Normal, e.Data);
+									}
+								};
+							process.ErrorDataReceived +=
+								(s, e) =>
+								{
+									if (!string.IsNullOrWhiteSpace(e.Data))
+									{
+										Log.LogError(e.Data);
+									}
+								};
+							process.Start();
+
+							process.BeginOutputReadLine();
+							process.BeginErrorReadLine();
+							process.WaitForExit();
+						}
                         
-                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
+						// Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
                         // from a task's constructor or property setter. As long as this task is written to always log an error
                         // when it fails, we can reliably return HasLoggedErrors.
                         return !Log.HasLoggedErrors;
