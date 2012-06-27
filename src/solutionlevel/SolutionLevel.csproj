@@ -188,6 +188,6 @@
         <ItemGroup>
             <SolutionPackages Include="$(SolutionDir)\**\packages.config" />
         </ItemGroup>
-        <Exec Command="&quot;$(ExePathNTreva)&quot; -p &quot;$(DirPackages)&quot; -o &quot;$(FileGeneratedLicenses)&quot; @(SolutionPackages-> '-c &quot;%(RootDir)%(Directory)\&quot;')" />
+        <Exec Command="&quot;$(ExePathNTreva)&quot; -p &quot;$(DirPackages)&quot; -o &quot;$(FileGeneratedLicenses)&quot; @(SolutionPackages-> '-c &quot;%(RootDir)%(Directory)\&quot;', ' ')" />
     </Target>
 </Project>

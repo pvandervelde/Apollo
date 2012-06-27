@@ -33,6 +33,13 @@
         <VersionBuild>0</VersionBuild>
         <VersionRevision>0</VersionRevision>
         
+        <!-- nfermi information necessary to get the release notes -->
+        <ApplicationName>Apollo</ApplicationName>
+        <!-- We don't expect this to change but if we do change it then we can at least override it -->
+        <ProjectName Condition=" '$(ProjectName)' == ''">Apollo</ProjectName>
+        <FixedIn Condition=" '$(FixedIn)' == '' "></FixedIn>
+        <ShouldMarkAsReleased Condition=" '$(ShouldMarkAsReleased)' == ''">false</ShouldMarkAsReleased>
+        
         <!-- Tools -->
         <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
     </PropertyGroup>
@@ -73,18 +80,23 @@
     <Target Name="_DisplayInfo">
         <Message Text="Configuration = $(Configuration)" />
         <Message Text="Platform = $(Platform)" />
+        
+        <Message Text="External properties:" />
+        <Message Text="Version: $(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision)" />
+        <Message Text="Fixed in placeholder: $(FixedIn)" />
+        <Message Text="NFermi tools directory: $(DirNFermi)" />
     </Target>
     
     <!-- Clean -->
     <PropertyGroup>
         <FileSln>$(DirSrc)\apollo.sln</FileSln>
-		<FileMsiSln>$(DirInstall)\apollo.sln</FileMsiSln>
+        <FileMsiSln>$(DirInstall)\apollo.sln</FileMsiSln>
     </PropertyGroup>
     <Target Name="_Clean" DependsOnTargets="_DisplayInfo" Condition="$(ShouldClean)">
-		<!-- 
-			Only clean the source solution and not the installer solution because for that
-			we need to be able to load Wix which might not be there yet (because it is obtained via NuGet)
-		-->
+        <!-- 
+            Only clean the source solution and not the installer solution because for that
+            we need to be able to load Wix which might not be there yet (because it is obtained via NuGet)
+        -->
         <MSBuild Projects="$(FileSln)" Targets="Clean" Properties="Configuration=$(Configuration);Platform=$(Platform)" />
        
         <!-- 
@@ -108,7 +120,7 @@
     </Target>
     
     <!-- Build binaries -->
-    <Target Name="_BuildBinaries">
+    <Target Name="_BuildBinaries" DependsOnTargets="_DisplayInfo">
         <MakeDir Directories="$(DirBuild);" Condition="!Exists('$(DirBuild)')" />
         <MakeDir Directories="$(DirBuildBin)" Condition="!Exists('$(DirBuildBin)')" />
         
@@ -283,8 +295,8 @@
         <ItemGroup>
             <!-- Exclude: 1006: do not nest generic types in member signatures -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1006" />
-			<!-- Default parameters should not be used -->
-			<FxCopRules Include="-Microsoft.Rules.Managed.CA1026" />
+            <!-- Default parameters should not be used -->
+            <FxCopRules Include="-Microsoft.Rules.Managed.CA1026" />
             <!-- Exclude: 1030: use events where appropriate -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1030" />
         </ItemGroup>
@@ -354,18 +366,26 @@
     </Target>
     
     <!-- Link all packaging targets -->
-    <Target Name="_Package" DependsOnTargets="_BuildBinaries;_PackageMsi">
+    <Target Name="_Package" DependsOnTargets="_BuildBinaries;_RetrieveReleaseNotes;_PackageMsi">
+    </Target>
+    
+    <PropertyGroup>
+        <ExeNFermi>$(DirNFermi)\nfermi.exe</ExeNFermi>
+    </PropertyGroup>
+    <Target Name="_RetrieveReleaseNotes" Condition="Exists('$(DirNFermi)')" >
+        <Exec Command="$(ExeNFermi) --ApplicationName=&quot;$(ApplicationName)&quot; --ApplicationVersion=$(VersionMajor).$(VersionMinor).$(VersionBuild).$(VersionRevision) --ProjectName=&quot;$(ProjectName)&quot; --FixedInTag=&quot;$(FixedIn)&quot; --ReleaseVersion=$(ShouldMarkAsReleased) --Output=&quot;$(DirBuildTemp)&quot;"
+              WorkingDirectory="$(DirBuildTemp)" />
     </Target>
     
     <!-- Build MSI installers -->
     <Target Name="_PackageMsi" DependsOnTargets="_BuildBinaries">
         <MakeDir Directories="$(DirBuildDeploy)" Condition="!Exists('$(DirBuildDeploy)')" />
         <MSBuild Projects="$(FileMsiSln)" 
-                 Properties="Configuration=$(Configuration);Platform=x86;BuildPlatform=$(Platform)"
-				 Targets="Rebuild" />
+                 Properties="Configuration=Release;Platform=x86;BuildConfiguration=$(Configuration);BuildPlatform=$(Platform)"
+                 Targets="Rebuild" />
                  
         <MSBuild Projects="$(FileMsiSln)" 
-                 Properties="Configuration=$(Configuration);Platform=x64;BuildPlatform=$(Platform)"
-				 Targets="Rebuild" />
+                 Properties="Configuration=Release;Platform=x64;BuildConfiguration=$(Configuration);BuildPlatform=$(Platform)"
+                 Targets="Rebuild" />
     </Target>
 </Project>
