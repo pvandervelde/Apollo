@@ -222,8 +222,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     var processor = m_Executors[type];
                     try
                     {
-                        ScheduleExecutionState shouldContinue;
-                        processor.Process(current, m_ExecutionInfo, out shouldContinue);
+                        ScheduleExecutionState shouldContinue = processor.Process(current, m_ExecutionInfo);
                         if (shouldContinue != ScheduleExecutionState.Executing)
                         {
                             state = shouldContinue;
@@ -282,11 +281,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 RaiseOnExecutionProgress(-1, new ScheduleExecutionProgressMark());
             }
 
-            RaiseOnFinish();
-            if (state == ScheduleExecutionState.Completed)
-            {
-                RaiseOnComplete();
-            }
+            RaiseOnFinish(state);
 
             // clean-up, but only after we have notified everybody so that all the 
             // data is still there. Also we won't be able to restart after finishing
@@ -327,8 +322,6 @@ namespace Apollo.Core.Dataset.Scheduling
 
             m_ExecutionInfo.CancelScheduleExecution();
             task.Wait();
-
-            RaiseOnFinish();
         }
 
         /// <summary>
@@ -392,29 +385,14 @@ namespace Apollo.Core.Dataset.Scheduling
         /// due to the user stopping the execution directly or if the schedule executor 
         /// reaches the end of the schedule.
         /// </summary>
-        public event EventHandler<EventArgs> OnFinish;
+        public event EventHandler<ScheduleExecutionStateEventArgs> OnFinish;
 
-        private void RaiseOnFinish()
+        private void RaiseOnFinish(ScheduleExecutionState state)
         {
             var local = OnFinish;
             if (local != null)
             {
-                local(this, EventArgs.Empty);
-            }
-        }
-
-        /// <summary>
-        /// An event raised when the schedule executor stops the excution of the schedule
-        /// because the end of the schedule has been reached.
-        /// </summary>
-        public event EventHandler<EventArgs> OnComplete;
-
-        private void RaiseOnComplete()
-        {
-            var local = OnComplete;
-            if (local != null)
-            {
-                local(this, EventArgs.Empty);
+                local(this, new ScheduleExecutionStateEventArgs(state));
             }
         }
     }

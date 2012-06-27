@@ -99,12 +99,6 @@ namespace Apollo.Core.Dataset.Scheduling
         /// due to the user stopping the execution directly or if the schedule executor 
         /// reaches the end of the schedule.
         /// </summary>
-        event EventHandler<EventArgs> OnFinish;
-
-        /// <summary>
-        /// An event raised when the schedule executor stops the excution of the schedule
-        /// because the end of the schedule has been reached.
-        /// </summary>
-        event EventHandler<EventArgs> OnComplete;
+        event EventHandler<ScheduleExecutionStateEventArgs> OnFinish;
     }
 }

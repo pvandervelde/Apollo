@@ -18,6 +18,46 @@ namespace Apollo.Core.Extensions.Scheduling
     /// </summary>
     internal sealed class FixedScheduleBuilder : IBuildFixedSchedules
     {
+        // @todo: Simply re-using the vertices in the copied graph may be simplistic. We may need to clone the vertices
+        private static BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> CopyGraph(
+            BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
+            IEditableScheduleVertex start)
+        {
+            var newGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
+            newGraph.AddVertex(start);
+
+            var nodeCounter = new List<IEditableScheduleVertex>();
+
+            var uncheckedVertices = new Queue<IEditableScheduleVertex>();
+            uncheckedVertices.Enqueue(start);
+            while (uncheckedVertices.Count > 0)
+            {
+                var source = uncheckedVertices.Dequeue();
+                if (nodeCounter.Contains(source))
+                {
+                    continue;
+                }
+
+                nodeCounter.Add(source);
+
+                var outEdges = graph.OutEdges(source);
+                foreach (var outEdge in outEdges)
+                {
+                    var target = outEdge.Target;
+                    if (!newGraph.ContainsVertex(target))
+                    {
+                        newGraph.AddVertex(target);
+                    }
+
+                    newGraph.AddEdge(new EditableScheduleEdge(source, target, outEdge.TraversingCondition));
+
+                    uncheckedVertices.Enqueue(outEdge.Target);
+                }
+            }
+
+            return newGraph;
+        }
+
         private static BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> CopySchedule(
             IEditableSchedule schedule)
         {
@@ -167,10 +207,16 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="startPoint"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="UnknownScheduleVertexException">
+        ///     Thrown if <paramref name="startPoint"/> is not part of the current schedule.
+        /// </exception>
         public EditableSynchronizationEndVertex AddSynchronizationEndPoint(EditableSynchronizationStartVertex startPoint)
         {
             {
                 Lokad.Enforce.Argument(() => startPoint);
+                Lokad.Enforce.With<UnknownScheduleVertexException>(
+                    m_Schedule.ContainsVertex(startPoint),
+                    Resources.Exceptions_Messages_UnknownScheduleVertex);
             }
 
             var result = new EditableSynchronizationEndVertex(m_Schedule.VertexCount);
@@ -200,6 +246,28 @@ namespace Apollo.Core.Extensions.Scheduling
         public EditableInsertVertex AddInsertPoint()
         {
             var result = new EditableInsertVertex(m_Schedule.VertexCount);
+            m_Schedule.AddVertex(result);
+
+            return result;
+        }
+
+        /// <summary>
+        /// Adds a vertex which can be replaced by another set of vertices.
+        /// </summary>
+        /// <param name="maximumNumberOfInserts">The maximum number of times another vertex can be inserted in place of the insert vertex.</param>
+        /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">
+        ///     Thrown if <paramref name="maximumNumberOfInserts"/> is zero or smaller.
+        /// </exception>
+        public EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts)
+        {
+            {
+                Lokad.Enforce.With<ArgumentOutOfRangeException>(
+                    maximumNumberOfInserts > 0,
+                    Resources.Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert);
+            }
+
+            var result = new EditableInsertVertex(m_Schedule.VertexCount, maximumNumberOfInserts);
             m_Schedule.AddVertex(result);
 
             return result;
@@ -300,7 +368,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// if it has no more inserts left.
         /// </summary>
         /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="scheduleToInsert">The schedule that will be inserted.</param>
+        /// <param name="scheduleToInsert">The ID of the schedule that will be inserted.</param>
         /// <returns>
         /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after 
         /// the newly inserted sub-schedule vertex.
@@ -319,9 +387,9 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </exception>
         public Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
             EditableInsertVertex insertVertex, 
-            IEditableSchedule scheduleToInsert)
+            ScheduleId scheduleToInsert)
         {
-            var subScheduleVertex = new EditableSubScheduleVertex(m_Schedule.VertexCount, scheduleToInsert.Id);
+            var subScheduleVertex = new EditableSubScheduleVertex(m_Schedule.VertexCount, scheduleToInsert);
             var internalResult = InsertIn(insertVertex, subScheduleVertex);
 
             return new Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex>(
@@ -365,7 +433,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="CannotLinkAVertexToItselfException">
         ///     Thrown if <paramref name="start"/> and <paramref name="end"/> are the same vertex.
         /// </exception>
-        public void LinkTo(IEditableScheduleVertex start, IEditableScheduleVertex end, ScheduleElementId traverseCondition)
+        public void LinkTo(IEditableScheduleVertex start, IEditableScheduleVertex end, ScheduleElementId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => start);
@@ -417,7 +485,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="CannotLinkAVertexToItselfException">
         ///     Thrown if the start vertex of the schedule and <paramref name="vertex"/> are the same vertex.
         /// </exception>
-        public void LinkFromStart(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition)
+        public void LinkFromStart(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => vertex);
@@ -455,7 +523,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="CannotLinkAVertexToItselfException">
         ///     Thrown if the end vertex of the schedule and <paramref name="vertex"/> are the same vertex.
         /// </exception>
-        public void LinkToEnd(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition)
+        public void LinkToEnd(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => vertex);
@@ -481,49 +549,12 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </returns>
         public IEditableSchedule Build()
         {
-            var schedule = CopyGraph();
+            var schedule = CopyGraph(m_Schedule, m_Start);
             return new EditableSchedule(
                 new ScheduleId(),
                 schedule,
                 m_Start,
                 m_End);
-        }
-
-        private BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> CopyGraph()
-        {
-            var newGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>(false);
-            newGraph.AddVertex(m_Start);
-
-            var nodeCounter = new List<IEditableScheduleVertex>();
-
-            var uncheckedVertices = new Queue<IEditableScheduleVertex>();
-            uncheckedVertices.Enqueue(m_Start);
-            while (uncheckedVertices.Count > 0)
-            {
-                var source = uncheckedVertices.Dequeue();
-                if (nodeCounter.Contains(source))
-                {
-                    continue;
-                }
-
-                nodeCounter.Add(source);
-
-                var outEdges = m_Schedule.OutEdges(source);
-                foreach (var outEdge in outEdges)
-                {
-                    var target = outEdge.Target;
-                    if (!newGraph.ContainsVertex(target))
-                    {
-                        newGraph.AddVertex(target);
-                    }
-
-                    newGraph.AddEdge(new EditableScheduleEdge(source, target, outEdge.TraversingCondition));
-
-                    uncheckedVertices.Enqueue(outEdge.Target);
-                }
-            }
-
-            return newGraph;
         }
     }
 }

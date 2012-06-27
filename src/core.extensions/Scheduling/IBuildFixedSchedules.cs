@@ -58,6 +58,13 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
         EditableInsertVertex AddInsertPoint();
+
+        /// <summary>
+        /// Adds a vertex which can be replaced by another set of vertices.
+        /// </summary>
+        /// <param name="maximumNumberOfInserts">The maximum number of times another vertex can be inserted in place of the insert vertex.</param>
+        /// <returns>The vertex that indicates a place in the schedule where new vertices can be inserted.</returns>
+        EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts);
         
         /// <summary>
         /// Inserts the given vertex in the position of the given insert vertex. The insert vertex will
@@ -76,14 +83,14 @@ namespace Apollo.Core.Extensions.Scheduling
         /// if it has no more inserts left.
         /// </summary>
         /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="scheduleToInsert">The schedule that will be inserted.</param>
+        /// <param name="scheduleToInsert">The ID of the schedule that will be inserted.</param>
         /// <returns>
         /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after 
         /// the newly inserted sub-schedule vertex.
         /// </returns>
         Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
             EditableInsertVertex insertVertex,
-            IEditableSchedule scheduleToInsert);
+            ScheduleId scheduleToInsert);
 
         /// <summary>
         /// Links the given start vertex to the end vertex.
@@ -93,7 +100,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="start"/> to <paramref name="end"/>.
         /// </param>
-        void LinkTo(IEditableScheduleVertex start, IEditableScheduleVertex end, ScheduleElementId traverseCondition);
+        void LinkTo(IEditableScheduleVertex start, IEditableScheduleVertex end, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the start point of the schedule to the given vertex.
@@ -102,7 +109,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="vertex"/>.
         /// </param>
-        void LinkFromStart(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition);
+        void LinkFromStart(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the given vertex to the end point of the schedule.
@@ -111,6 +118,6 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="vertex"/> to the end point.
         /// </param>
-        void LinkToEnd(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition);
+        void LinkToEnd(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null);
     }
 }

@@ -6,6 +6,7 @@
 
 using System;
 using System.Threading;
+using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
@@ -28,10 +29,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
-        /// <param name="executionState">A value indicating if the execution of the schedule should continue.</param>
-        void Process(
-            IExecutableScheduleVertex vertex, 
-            ScheduleExecutionInfo executionInfo, 
-            out ScheduleExecutionState executionState);
+        /// <returns>A value indicating if the execution of the schedule should continue.</returns>
+        ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo);
     }
 }

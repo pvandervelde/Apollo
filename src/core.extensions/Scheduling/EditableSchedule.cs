@@ -229,7 +229,7 @@ namespace Apollo.Core.Extensions.Scheduling
             }
 
             var schedule = obj as IEditableSchedule;
-            return Equals(schedule);
+            return (schedule != null) && m_Id.Equals(schedule.Id);
         }
 
         /// <summary>

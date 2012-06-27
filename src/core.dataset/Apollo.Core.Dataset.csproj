@@ -107,7 +107,7 @@
     <Compile Include="Scheduling\ScheduleActionStorage.cs" />
     <Compile Include="Scheduling\ScheduleExecutionInfo.cs" />
     <Compile Include="Scheduling\ScheduleExecutionProgressMark.cs" />
-    <Compile Include="Scheduling\ScheduleExecutionState.cs" />
+    <Compile Include="Scheduling\ScheduleExecutionStateEventArgs.cs" />
     <Compile Include="Scheduling\ScheduleExecutor.cs" />
     <Compile Include="Scheduling\Processors\StartVertexProcessor.cs" />
     <Compile Include="Scheduling\Processors\SubScheduleVertexProcessor.cs" />

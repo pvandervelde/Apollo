@@ -7,7 +7,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling
@@ -18,18 +20,103 @@ namespace Apollo.Core.Dataset.Scheduling
     internal sealed class ScheduleActionStorage : IStoreScheduleActions
     {
         /// <summary>
+        /// Maps the action to the information describing the action.
+        /// </summary>
+        private sealed class ActionMap
+        {
+            /// <summary>
+            /// The action.
+            /// </summary>
+            private readonly IScheduleAction m_Action;
+
+            /// <summary>
+            /// The information describing the action.
+            /// </summary>
+            private readonly ScheduleActionInformation m_Info;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ActionMap"/> class.
+            /// </summary>
+            /// <param name="information">The information describing the action.</param>
+            /// <param name="action">The action.</param>
+            public ActionMap(ScheduleActionInformation information, IScheduleAction action)
+            {
+                {
+                    Debug.Assert(information != null, "The action information should not be a null reference.");
+                    Debug.Assert(action != null, "The action should not be a null reference.");
+                }
+
+                m_Info = information;
+                m_Action = action;
+            }
+
+            /// <summary>
+            /// Gets the action information.
+            /// </summary>
+            public ScheduleActionInformation Information
+            {
+                get
+                {
+                    return m_Info;
+                }
+            }
+
+            /// <summary>
+            /// Gets the action.
+            /// </summary>
+            public IScheduleAction Action
+            {
+                get
+                {
+                    return m_Action;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The collection of schedule actions.
+        /// </summary>
+        private readonly Dictionary<ScheduleElementId, ActionMap> m_Actions
+            = new Dictionary<ScheduleElementId, ActionMap>();
+
+        /// <summary>
         /// Adds the <see cref="IScheduleAction"/> object with the variables it affects and the dependencies for that action.
         /// </summary>
         /// <param name="action">The action that should be stored.</param>
+        /// <param name="name">The name of the action that is being described by this information object.</param>
+        /// <param name="summary">The summary of the action that is being described by this information object.</param>
+        /// <param name="description">The description of the action that is being described by this information object.</param>
         /// <param name="produces">The variables that are affected by the action.</param>
         /// <param name="dependsOn">The variables for which data should be available in order to execute the action.</param>
         /// <returns>An object identifying and describing the action.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="action"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="produces"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
+        /// </exception>
         public ScheduleActionInformation Add(
-            IScheduleAction action, 
-            IEnumerable<IScheduleVariable> produces, 
+            IScheduleAction action,
+            string name,
+            string summary,
+            string description,
+            IEnumerable<IScheduleVariable> produces,
             IEnumerable<IScheduleDependency> dependsOn)
         {
-            throw new NotImplementedException();
+            {
+                Lokad.Enforce.Argument(() => action);
+                Lokad.Enforce.Argument(() => produces);
+                Lokad.Enforce.Argument(() => dependsOn);
+            }
+
+            var id = new ScheduleElementId();
+            var info = new ScheduleActionInformation(id, name, summary, description, produces, dependsOn);
+            m_Actions.Add(id, new ActionMap(info, action));
+
+            return info;
         }
 
         /// <summary>
@@ -37,9 +124,36 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         /// <param name="actionToReplace">The ID of the action that should be replaced.</param>
         /// <param name="newAction">The new action.</param>
-        public void Update(ScheduleElementId actionToReplace, IScheduleAction newAction)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="actionToReplace"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="newAction"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="UnknownScheduleActionException">
+        ///     Thrown if <paramref name="actionToReplace"/> is not linked to a known action.
+        /// </exception>
+        public void Update(
+            ScheduleElementId actionToReplace,
+            IScheduleAction newAction)
         {
-            throw new NotImplementedException();
+            {
+                Lokad.Enforce.Argument(() => actionToReplace);
+                Lokad.Enforce.Argument(() => newAction);
+                Lokad.Enforce.With<UnknownScheduleActionException>(
+                    m_Actions.ContainsKey(actionToReplace), 
+                    Resources.Exceptions_Messages_UnknownScheduleAction);
+            }
+
+            var oldInfo = m_Actions[actionToReplace].Information;
+            var info = new ScheduleActionInformation(
+                actionToReplace, 
+                oldInfo.Name, 
+                oldInfo.Summary, 
+                oldInfo.Description, 
+                oldInfo.Produces(), 
+                oldInfo.DependsOn());
+            m_Actions[actionToReplace] = new ActionMap(info, newAction);
         }
 
         /// <summary>
@@ -48,7 +162,10 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="id">The ID of the action that should be removed.</param>
         public void Remove(ScheduleElementId id)
         {
-            throw new NotImplementedException();
+            if ((id != null) && m_Actions.ContainsKey(id))
+            {
+                m_Actions.Remove(id);
+            }
         }
 
         /// <summary>
@@ -62,20 +179,53 @@ namespace Apollo.Core.Dataset.Scheduling
             Justification = "Documentation can start with a language keyword")]
         public bool Contains(ScheduleElementId id)
         {
-            throw new NotImplementedException();
+            return (id != null) && m_Actions.ContainsKey(id);
         }
 
         /// <summary>
-        /// Gets the action that is registered with the given ID.
+        /// Returns the action that is mapped to the given ID.
         /// </summary>
-        /// <param name="id">The ID of the action.</param>
-        /// <returns>The required action.</returns>
-        public IScheduleAction this[ScheduleElementId id]
+        /// <param name="id">The ID for the action.</param>
+        /// <returns>The action.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="UnknownScheduleActionException">
+        ///     Thrown if <paramref name="id"/> is not linked to a known action.
+        /// </exception>
+        public IScheduleAction Action(ScheduleElementId id)
         {
-            get
             {
-                throw new NotImplementedException();
+                Lokad.Enforce.Argument(() => id);
+                Lokad.Enforce.With<UnknownScheduleActionException>(
+                    m_Actions.ContainsKey(id),
+                    Resources.Exceptions_Messages_UnknownScheduleAction);
             }
+
+            return m_Actions[id].Action;
+        }
+
+        /// <summary>
+        /// Returns the action information for the action that is mapped to the given ID.
+        /// </summary>
+        /// <param name="id">The ID for the action.</param>
+        /// <returns>The action information.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="UnknownScheduleActionException">
+        ///     Thrown if <paramref name="id"/> is not linked to a known action.
+        /// </exception>
+        public ScheduleActionInformation Information(ScheduleElementId id)
+        {
+            {
+                Lokad.Enforce.Argument(() => id);
+                Lokad.Enforce.With<UnknownScheduleActionException>(
+                    m_Actions.ContainsKey(id),
+                    Resources.Exceptions_Messages_UnknownScheduleAction);
+            }
+
+            return m_Actions[id].Information;
         }
 
         /// <summary>
@@ -84,9 +234,12 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <returns>
         /// The element in the collection at the current position of the enumerator.
         /// </returns>
-        public IEnumerator<IScheduleAction> GetEnumerator()
+        public IEnumerator<ScheduleElementId> GetEnumerator()
         {
-            throw new NotImplementedException();
+            foreach (var key in m_Actions.Keys)
+            {
+                yield return key;
+            }
         }
 
         /// <summary>

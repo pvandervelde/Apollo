@@ -4,12 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Dataset.Scheduling
+namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
     /// Defines the different states the execution of the schedule can be in.
     /// </summary>
-    internal enum ScheduleExecutionState
+    public enum ScheduleExecutionState
     {
         /// <summary>
         /// There is no state because the schedule hasn't been started yet.

@@ -83,6 +83,7 @@
     <Compile Include="Scheduling\ScheduleConditionInformation.cs" />
     <Compile Include="Scheduling\ScheduleElementId.cs" />
     <Compile Include="Scheduling\ScheduleActionInformation.cs" />
+    <Compile Include="Scheduling\ScheduleExecutionState.cs" />
     <Compile Include="Scheduling\ScheduleId.cs" />
     <Compile Include="Scheduling\ScheduleIntegrityFailureType.cs" />
     <Compile Include="Scheduling\ScheduleVerifier.cs" />

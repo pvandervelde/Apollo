@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
 {
@@ -32,28 +33,22 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
-        /// <param name="executionState">A value indicating if the execution of the schedule should continue.</param>
-        public void Process(
-            IExecutableScheduleVertex vertex,
-            ScheduleExecutionInfo executionInfo,
-            out ScheduleExecutionState executionState)
+        /// <returns>A value indicating if the execution of the schedule should continue.</returns>
+        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
             var startVertex = vertex as ExecutableStartVertex;
             if (startVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");
-                executionState = ScheduleExecutionState.IncorrectProcessorForVertex;
-                return;
+                return ScheduleExecutionState.IncorrectProcessorForVertex;
             }
 
             if (executionInfo.Cancellation.IsCancellationRequested)
             {
-                executionState = ScheduleExecutionState.Cancelled;
-                return;
+                return ScheduleExecutionState.Cancelled;
             }
 
-            executionState = ScheduleExecutionState.Executing;
-            return;
+            return ScheduleExecutionState.Executing;
         }
     }
 }

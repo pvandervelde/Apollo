@@ -79,8 +79,8 @@ namespace Apollo.Core.Extensions.Scheduling
 
             var result = VerifyStartVertexOnlyHasOutboundEdges(schedule, onValidationFailure);
             result &= VerifyEndVertexOnlyHasInboundEdges(schedule, onValidationFailure);
-            result &= VerifyTrackFromStart(schedule, onValidationFailure);
-            result &= VerifyTrackFromTillEnd(schedule, onValidationFailure);
+            result &= VerifyTrackForwardsFromStart(schedule, onValidationFailure);
+            result &= VerifyTrackBackwardsFromEnd(schedule, onValidationFailure);
             result &= VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(schedule, onValidationFailure);
             result &= VerifySynchronizationBlockHasStartAndEnd(schedule, onValidationFailure);
             result &= VerifySynchronizationVariablesAreUpdatedInBlock(schedule, onValidationFailure);
@@ -115,7 +115,7 @@ namespace Apollo.Core.Extensions.Scheduling
             return result;
         }
 
-        private bool VerifyTrackFromStart(
+        private bool VerifyTrackForwardsFromStart(
             IEditableSchedule schedule,
             Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
@@ -145,7 +145,7 @@ namespace Apollo.Core.Extensions.Scheduling
             return result;
         }
 
-        private bool VerifyTrackFromTillEnd(
+        private bool VerifyTrackBackwardsFromEnd(
             IEditableSchedule schedule,
             Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
@@ -245,7 +245,9 @@ namespace Apollo.Core.Extensions.Scheduling
                         }
 
                         var subScheduleId = scheduleNode.ScheduleToExecute;
-                        if (!m_Schedules.ContainsKey(subScheduleId))
+                        var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
+                        result &= isKnownSchedule;
+                        if (!isKnownSchedule)
                         {
                             onValidationFailure(ScheduleIntegrityFailureType.UnknownSubSchedule, node);
                             return false;
@@ -285,15 +287,17 @@ namespace Apollo.Core.Extensions.Scheduling
                             return false;
                         }
 
-                        if (!m_Schedules.ContainsKey(subScheduleId))
+                        var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
+                        result &= isKnownSchedule;
+                        if (!isKnownSchedule)
                         {
                             return true;
                         }
 
                         var doesSubScheduleLink = DoesSubScheduleLinkTo(scheduleId, m_Schedules[subScheduleId]);
+                        result &= doesSubScheduleLink;
                         if (!doesSubScheduleLink)
                         {
-                            result = doesSubScheduleLink;
                             return false;
                         }
 

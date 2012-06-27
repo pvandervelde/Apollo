@@ -57,24 +57,19 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
-        /// <param name="executionState">A value indicating if the execution of the schedule should continue.</param>
-        public void Process(
-            IExecutableScheduleVertex vertex,
-            ScheduleExecutionInfo executionInfo,
-            out ScheduleExecutionState executionState)
+        /// <returns>A value indicating if the execution of the schedule should continue.</returns>
+        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
             var subScheduleVertex = vertex as ExecutableSubScheduleVertex;
             if (subScheduleVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");
-                executionState = ScheduleExecutionState.IncorrectProcessorForVertex;
-                return;
+                return ScheduleExecutionState.IncorrectProcessorForVertex;
             }
 
             if (executionInfo.Cancellation.IsCancellationRequested)
             {
-                executionState = ScheduleExecutionState.Cancelled;
-                return;
+                return ScheduleExecutionState.Cancelled;
             }
 
             if (executionInfo.PauseHandler.IsPaused)
@@ -128,7 +123,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             if (executor.IsLocal)
             {
                 var resetEvent = new AutoResetEvent(false);
-                var wrapperWait = Observable.FromEventPattern<EventArgs>(
+                var wrapperWait = Observable.FromEventPattern<ScheduleExecutionStateEventArgs>(
                         h => executor.OnFinish += h,
                         h => executor.OnFinish -= h)
                     .Take(1)
@@ -140,7 +135,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
                 }
             }
 
-            executionState = ScheduleExecutionState.Executing;
+            return ScheduleExecutionState.Executing;
         }
     }
 }

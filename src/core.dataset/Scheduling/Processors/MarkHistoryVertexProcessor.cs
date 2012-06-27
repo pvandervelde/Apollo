@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors
@@ -65,24 +66,19 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
         /// </summary>
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
-        /// <param name="executionState">A value indicating if the execution of the schedule should continue.</param>
-        public void Process(
-            IExecutableScheduleVertex vertex,
-            ScheduleExecutionInfo executionInfo,
-            out ScheduleExecutionState executionState)
+        /// <returns>A value indicating if the execution of the schedule should continue.</returns>
+        public ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo)
         {
             var markVertex = vertex as ExecutableMarkHistoryVertex;
             if (markVertex == null)
             {
                 Debug.Assert(false, "The vertex is of the incorrect type.");
-                executionState = ScheduleExecutionState.IncorrectProcessorForVertex;
-                return;
+                return ScheduleExecutionState.IncorrectProcessorForVertex;
             }
 
             if (executionInfo.Cancellation.IsCancellationRequested)
             {
-                executionState = ScheduleExecutionState.Cancelled;
-                return;
+                return ScheduleExecutionState.Cancelled;
             }
 
             if (executionInfo.PauseHandler.IsPaused)
@@ -92,7 +88,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var marker = m_Timeline.Mark();
             m_OnMarkerStorage(marker);
-            executionState = ScheduleExecutionState.Executing;
+            return ScheduleExecutionState.Executing;
         }
     }
 }

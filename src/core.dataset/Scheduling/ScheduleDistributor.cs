@@ -231,6 +231,12 @@ namespace Apollo.Core.Dataset.Scheduling
                     vertex => new ExecutableMarkHistoryVertex(vertex.Index) 
                 },
                 { 
+                    typeof(EditableSynchronizationStartVertex), 
+                    vertex => new ExecutableSynchronizationStartVertex(
+                        vertex.Index, 
+                        ((EditableSynchronizationStartVertex)vertex).VariablesToSynchronizeOn)
+                },
+                { 
                     typeof(EditableSynchronizationEndVertex), 
                     vertex => new ExecutableSynchronizationEndVertex(vertex.Index) 
                 },
@@ -245,12 +251,6 @@ namespace Apollo.Core.Dataset.Scheduling
                     vertex => new ExecutableSubScheduleVertex(
                         vertex.Index, 
                         ((EditableSubScheduleVertex)vertex).ScheduleToExecute) 
-                },
-                { 
-                    typeof(EditableSynchronizationStartVertex), 
-                    vertex => new ExecutableSynchronizationStartVertex(
-                        vertex.Index, 
-                        ((EditableSynchronizationStartVertex)vertex).VariablesToSynchronizeOn)
                 },
             };
 
@@ -357,6 +357,8 @@ namespace Apollo.Core.Dataset.Scheduling
             // Indicate which schedule should be executed + parameters
             // Start
             // Return distributed schedule executor
+            // --> This is all based on a set of components that can handle all kinds of distribution methods / desires
+            //     For instance we eventually also want to do Domain Decomp this way.
             throw new NotImplementedException();
         }
 
