@@ -12,29 +12,30 @@
     <EmbeddedResource Include="SolutionLevel.readme" />
   </ItemGroup>
   <PropertyGroup>
+    <BuildConfiguration Condition=" '$(BuildConfiguration)' == ''">Debug</BuildConfiguration>
     <BuildPlatform Condition=" '$(BuildPlatform)' == ''">Any CPU</BuildPlatform>
     <BuildPlatformTranslated>$(BuildPlatform.Replace(" ",""))</BuildPlatformTranslated>
     
-	<DirTemplates>$(DirWorkspace)\templates</DirTemplates>
+    <DirTemplates>$(DirWorkspace)\templates</DirTemplates>
     <DirBuild>$(DirWorkspace)\build</DirBuild>
-    <DirBuildBin>$(DirBuild)\bin\$(BuildPlatformTranslated)\$(Configuration)</DirBuildBin>
+    <DirBuildBin>$(DirBuild)\bin\$(BuildPlatformTranslated)\$(BuildConfiguration)</DirBuildBin>
     <DirBuildTemp>$(DirBuild)\temp</DirBuildTemp>
-	<DirResource>$(DirWorkspace)\resource</DirResource>
+    <DirResource>$(DirWorkspace)\resource</DirResource>
     
-	<!-- File templates -->
+    <!-- File templates -->
     <FileTemplateVersion>$(DirTemplates)\VersionNumber.wxi.in</FileTemplateVersion>
     <FileTemplateDependencies>$(DirTemplates)\Dependencies.wxi.in</FileTemplateDependencies>
     
-	<!-- Generated files -->
+    <!-- Generated files -->
     <FileGeneratedVersion>$(SolutionDir)\VersionNumber.wxi</FileGeneratedVersion>
     <FileGeneratedDependencies>$(SolutionDir)\Dependencies.wxi</FileGeneratedDependencies>
     
-	<!-- Version number -->
+    <!-- Version number -->
     <VersionMajor>0</VersionMajor>
     <VersionMinor>0</VersionMinor>
     <VersionBuild>0</VersionBuild>
     <VersionRevision>0</VersionRevision>
-	
+    
     <MsBuildExtensionsPath>$(DirTools)\msbuild.extensions</MsBuildExtensionsPath>
   </PropertyGroup>
   <Import Project="$(MsBuildExtensionsPath)\TemplateFile.msbuild" Condition="Exists('$(MsBuildExtensionsPath)\TemplateFile.msbuild')" />
@@ -84,7 +85,7 @@
       <BuildInfoTokens Include="DirBin">
         <ReplacementValue>$(DirBuildBin)</ReplacementValue>
       </BuildInfoTokens>
-	  <BuildInfoTokens Include="DirResource">
+      <BuildInfoTokens Include="DirResource">
         <ReplacementValue>$(DirResource)</ReplacementValue>
       </BuildInfoTokens>
       <BuildInfoTokens Include="DirInstall">
