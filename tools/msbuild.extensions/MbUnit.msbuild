@@ -1,0 +1,71 @@
+<Project xmlns='http://schemas.microsoft.com/developer/msbuild/2003' 
+         ToolsVersion="4.0">
+    <UsingTask TaskName="MbUnit" 
+               TaskFactory="CodeTaskFactory" 
+               AssemblyFile="$(MSBuildToolsPath)\Microsoft.Build.Tasks.v4.0.dll">
+        <ParameterGroup>
+            <MbUnitExe ParameterType="System.String" Required="true" />
+            <MbUnitDir ParameterType="System.String" Required="true" />
+            <OutputDir ParameterType="System.String" Required="true" />
+            <TargetAssemblies ParameterType="System.String[]" Required="true" />
+        </ParameterGroup>
+        <Task>
+            <Code Type="Method" Language="cs">
+                <![CDATA[
+                    public override bool Execute()
+                    {
+                        var builder = new System.Text.StringBuilder();
+                        {
+                            builder.Append(string.Format("/hd:\"{0}\" ", MbUnitDir));
+                            builder.Append(string.Format("/sc "));
+                            builder.Append(string.Format("/r:IsolatedProcess "));
+                            builder.Append(string.Format("/rd:\"{0}\" ", OutputDir));
+                            builder.Append(string.Format("/v:Verbose /rt:XHtml /rt:Xml-inline "));
+                            foreach (var targetAssembly in TargetAssemblies)
+                            {
+                                builder.Append(string.Format("\"{0}\" ", targetAssembly.ToString()));
+                            }
+                        }
+
+                        var info = new System.Diagnostics.ProcessStartInfo
+                        {
+                            FileName = System.IO.Path.Combine(MbUnitDir, MbUnitExe),
+                            Arguments = builder.ToString(),
+                            UseShellExecute = false,
+                            RedirectStandardOutput = true,
+                            RedirectStandardError = true,
+                        };
+                        var process = new System.Diagnostics.Process();
+                        process.StartInfo = info;
+                        process.OutputDataReceived +=
+                            (s, e) =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogMessage(MessageImportance.Normal, e.Data);
+                                }
+                            };
+                        process.ErrorDataReceived +=
+                            (s, e) =>
+                            {
+                                if (!string.IsNullOrWhiteSpace(e.Data))
+                                {
+                                    Log.LogError(e.Data);
+                                }
+                            };
+                        process.Start();
+
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
+                        process.WaitForExit();
+                        
+                        // Log.HasLoggedErrors is true if the task logged any errors -- even if they were logged 
+                        // from a task's constructor or property setter. As long as this task is written to always log an error
+                        // when it fails, we can reliably return HasLoggedErrors.
+                        return !Log.HasLoggedErrors && (process.ExitCode == 0);
+                    }
+                ]]>  
+            </Code>
+        </Task>
+    </UsingTask>
+</Project>

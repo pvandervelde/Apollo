@@ -6,9 +6,6 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Apollo.Utilities</RootNamespace>
     <AssemblyName>Apollo.Utilities</AssemblyName>
-    <RestorePackages>true</RestorePackages>
-    <GenerateSourceFromTemplates>true</GenerateSourceFromTemplates>
-    <PsakeBuildFile>apollo.ps1</PsakeBuildFile>
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
@@ -149,7 +146,12 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

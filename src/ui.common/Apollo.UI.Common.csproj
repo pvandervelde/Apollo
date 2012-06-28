@@ -1,0 +1,805 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{ACD26D23-36BA-4035-84CA-6E462A03B033}</ProjectGuid>
+    <OutputType>library</OutputType>
+    <RootNamespace>Apollo.UI.Common</RootNamespace>
+    <AssemblyName>Apollo.UI.Common</AssemblyName>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphSharp">
+      <HintPath>..\..\packages\GraphSharp\lib\net35\GraphSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="GraphSharp.Controls">
+      <HintPath>..\..\packages\GraphSharp\lib\net35\GraphSharp.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="GreyableImage">
+      <HintPath>..\..\packages\GreyableImage\lib\GreyableImage.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.AvalonEdit">
+      <HintPath>..\..\packages\AvalonEdit\lib\Net40\ICSharpCode.AvalonEdit.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\IronPython.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Lokad.Shared">
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Dynamic.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism">
+      <HintPath>..\..\packages\Prism\lib\NET40\Microsoft.Practices.Prism.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Prism.Interactivity">
+      <HintPath>..\..\packages\Prism\lib\NET40\Microsoft.Practices.Prism.Interactivity.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation">
+      <HintPath>..\..\packages\CommonServiceLocator\lib\NET35\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\IronPython\lib\Net40\Microsoft.Scripting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
+    <Reference Include="NSarrac.Framework, Version=0.1.20.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Common">
+      <HintPath>..\..\packages\PixelLab.Common\lib\net4\PixelLab.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="PixelLab.Wpf">
+      <HintPath>..\..\packages\PixelLab.BOT\lib\net40\PixelLab.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.3.51106.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Reactive, Version=1.0.2838.104, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Xml.Linq">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data.DataSetExtensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WindowsBase">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationCore">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="PresentationFramework">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="WPFExtensions">
+      <HintPath>..\..\packages\WpfExtensions\lib\WPFExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="WPFLocalizeExtension">
+      <HintPath>..\..\packages\WpfLocalizeExtension\lib\net35\WPFLocalizeExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="XAMLMarkupExtensions">
+      <HintPath>..\..\packages\XAMLMarkupExtensions\lib\net40\XAMLMarkupExtensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildInformationAttribute.cs">
+      <Link>AssemblyBuildInformationAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\packages\Tools\AssemblyBuildTimeAttribute.cs">
+      <Link>AssemblyBuildTimeAttribute.cs</Link>
+    </Compile>
+    <Compile Include="..\..\templates\AssemblyInfo.Base.cs">
+      <Link>Properties\AssemblyInfo.Base.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.BuildInformation.cs">
+      <Link>Properties\AssemblyInfo.BuildInformation.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.InternalsVisibleTo.cs">
+      <Link>Properties\AssemblyInfo.InternalsVisibleTo.cs</Link>
+    </Compile>
+    <Compile Include="..\AssemblyInfo.VersionNumber.cs">
+      <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
+    </Compile>
+    <Compile Include="Bootstrappers\AutofacContainerAdapter.cs" />
+    <Compile Include="Bootstrappers\AutofacServiceLocator.cs" />
+    <Compile Include="Bootstrappers\CompositeBootstrapper.cs" />
+    <Compile Include="Bootstrappers\ContainerAdapterExtensions.cs" />
+    <Compile Include="Bootstrappers\ContainerRegistrationScope.cs" />
+    <Compile Include="Bootstrappers\ContainerRegistrationScopeExtensions.cs" />
+    <Compile Include="Bootstrappers\IContainerAdapter.cs" />
+    <Compile Include="Bootstrappers\RegionAdapterMapper.cs" />
+    <Compile Include="Bootstrappers\RegionBehaviorFactoryMapper.cs" />
+    <Compile Include="Bootstrappers\ResolveAnythingSource.cs" />
+    <Compile Include="Commands\AddChildDatasetCommand.cs" />
+    <Compile Include="Commands\CancelScriptRunCommand.cs" />
+    <Compile Include="Commands\CloseProjectCommand.cs" />
+    <Compile Include="Commands\CloseScriptCommand.cs" />
+    <Compile Include="Commands\CloseViewCommand.cs" />
+    <Compile Include="Commands\CreationOfNewScriptCanceledException.cs" />
+    <Compile Include="Commands\ExitCommand.cs" />
+    <Compile Include="Commands\LoadDatasetOntoMachineCommand.cs" />
+    <Compile Include="Commands\LoadingOfScriptCanceledException.cs" />
+    <Compile Include="Commands\NewProjectCommand.cs" />
+    <Compile Include="Commands\NewScriptCommand.cs" />
+    <Compile Include="Commands\OpenProjectCommand.cs" />
+    <Compile Include="Commands\DeleteDatasetCommand.cs" />
+    <Compile Include="Commands\OpenScriptCommand.cs" />
+    <Compile Include="Commands\RedoCommand.cs" />
+    <Compile Include="Commands\RunScriptCommand.cs" />
+    <Compile Include="Commands\SaveProjectCommand.cs" />
+    <Compile Include="Commands\SendFeedbackReportCommand.cs" />
+    <Compile Include="Commands\UndoCommand.cs" />
+    <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
+    <Compile Include="CommonRegionNames.cs" />
+    <Compile Include="CommonUIModule.cs" />
+    <Compile Include="Converters\CommandToToolTipTextConverter.cs" />
+    <Compile Include="Converters\DistributionSuggestionToTextConverter.cs" />
+    <Compile Include="Converters\FeedbackReportToTextConverter.cs" />
+    <Compile Include="Converters\IsWorkingToHiddenPanelVisibilityConverter.cs" />
+    <Compile Include="Converters\ScriptDescriptionModelToTextConverter.cs" />
+    <Compile Include="EventListener.cs" />
+    <Compile Include="Events\CloseViewEvent.cs" />
+    <Compile Include="Events\CloseViewRequest.cs" />
+    <Compile Include="Events\CloseViewRequest.Presenter.cs" />
+    <Compile Include="Events\Listeners\CloseViewEventListener.cs" />
+    <Compile Include="Events\Listeners\ShowViewEventListener.cs" />
+    <Compile Include="Events\ShowViewEvent.cs" />
+    <Compile Include="Events\ShowViewRequest.cs" />
+    <Compile Include="Events\ShowViewRequest.Presenter.cs" />
+    <Compile Include="Feedback\FailedToSendFeedbackReportException.cs" />
+    <Compile Include="Feedback\FeedbackReportCollector.cs" />
+    <Compile Include="Feedback\FeedbackReportTransmitter.cs" />
+    <Compile Include="Feedback\ICollectFeedbackReports.cs" />
+    <Compile Include="Feedback\ISendFeedbackReports.cs" />
+    <Compile Include="IContextAware.cs" />
+    <Compile Include="Profiling\ITimingReport.cs" />
+    <Compile Include="Profiling\TimingIntervalHelper.cs" />
+    <Compile Include="Profiling\TimingReport.cs" />
+    <Compile Include="Profiling\TimingReportCollection.cs" />
+    <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
+    <Compile Include="IPresenter.cs" />
+    <Compile Include="IRegionView.cs" />
+    <Compile Include="IStandardView.cs" />
+    <Compile Include="IView.cs" />
+    <Compile Include="Model.cs" />
+    <Compile Include="Observable.cs" />
+    <Compile Include="Parameter.cs" />
+    <Compile Include="Presenter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="RegionExtensions.cs" />
+    <Compile Include="RegionView.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphLayout.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphModel.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphParameter.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetGraphView.xaml.cs">
+      <DependentUpon>DatasetGraphView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Datasets\DatasetModel.cs" />
+    <Compile Include="Views\Datasets\DatasetPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
+      <DependentUpon>DatasetVertexView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Datasets\DatasetViewEdge.cs" />
+    <Compile Include="Views\Datasets\DatasetViewGraph.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
+    <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
+    <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
+    <Compile Include="Views\Datasets\IMachineSelectorView.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorModel.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorParameter.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorPresenter.cs" />
+    <Compile Include="Views\Datasets\MachineSelectorView.xaml.cs">
+      <DependentUpon>MachineSelectorView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Feedback\ErrorReportsIconView.xaml.cs">
+      <DependentUpon>ErrorReportsIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Feedback\ErrorReportsModel.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsParameter.cs" />
+    <Compile Include="Views\Feedback\ErrorReportsPresenter.cs" />
+    <Compile Include="Views\Feedback\FeedbackFileModel.cs" />
+    <Compile Include="Views\Feedback\FeedbackIconView.xaml.cs">
+      <DependentUpon>FeedbackIconView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Feedback\FeedbackModel.cs" />
+    <Compile Include="Views\Feedback\FeedbackParameter.cs" />
+    <Compile Include="Views\Feedback\FeedbackPresenter.cs" />
+    <Compile Include="Views\Feedback\IErrorReportsView.cs" />
+    <Compile Include="Views\Feedback\IFeedbackView.cs" />
+    <Compile Include="Views\Profiling\IProfileView.cs" />
+    <Compile Include="Views\Profiling\ProfileModel.cs" />
+    <Compile Include="Views\Profiling\ProfileParameter.cs" />
+    <Compile Include="Views\Profiling\ProfilePresenter.cs" />
+    <Compile Include="Views\Profiling\ProfileView.xaml.cs">
+      <DependentUpon>ProfileView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Progress\IProgressView.cs" />
+    <Compile Include="Views\Progress\ProgressModel.cs" />
+    <Compile Include="Views\Progress\ProgressParameter.cs" />
+    <Compile Include="Views\Progress\ProgressPresenter.cs" />
+    <Compile Include="Views\Progress\ProgressView.xaml.cs">
+      <DependentUpon>ProgressView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Projects\IProjectDescriptionView.cs" />
+    <Compile Include="Views\Projects\IProjectView.cs" />
+    <Compile Include="Views\Projects\ProjectDescriptionView.xaml.cs">
+      <DependentUpon>ProjectDescriptionView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Projects\ProjectDescriptionModel.cs" />
+    <Compile Include="Views\Projects\ProjectDescriptionParameter.cs" />
+    <Compile Include="Views\Projects\ProjectDescriptionPresenter.cs" />
+    <Compile Include="Views\Projects\ProjectModel.cs" />
+    <Compile Include="Views\Projects\ProjectParameter.cs" />
+    <Compile Include="Views\Projects\ProjectPresenter.cs" />
+    <Compile Include="Views\Projects\ProjectView.xaml.cs">
+      <DependentUpon>ProjectView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Scripting\ISelectScriptLanguageView.cs" />
+    <Compile Include="Views\Scripting\ScriptDescriptionModel.cs" />
+    <Compile Include="Views\Scripting\ScriptModel.cs" />
+    <Compile Include="Views\Scripting\IScriptView.cs" />
+    <Compile Include="Views\Scripting\ScriptParameter.cs" />
+    <Compile Include="Views\Scripting\ScriptPresenter.cs" />
+    <Compile Include="Views\Scripting\ScriptView.xaml.cs">
+      <DependentUpon>ScriptView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Scripting\SelectScriptLanguageModel.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguageParameter.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguagePresenter.cs" />
+    <Compile Include="Views\Scripting\SelectScriptLanguageView.xaml.cs">
+      <DependentUpon>SelectScriptLanguageView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="WindowsVersionNumbers.cs" />
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <AppDesigner Include="Properties\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
+      <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
+      <Name>Apollo.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Styles\ButtonStyles.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Views\Datasets\DatasetGraphView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Datasets\DatasetVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Datasets\MachineSelectorView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Feedback\ErrorReportsIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Feedback\FeedbackIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Profiling\ProfileView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Progress\ProgressView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Projects\ProjectDescriptionView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Projects\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scripting\ScriptView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scripting\SelectScriptLanguageView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Add_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cancel_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Copy_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Cut_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Delete_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\New_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Open_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Paste_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Pause_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Play_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Redo_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Refresh_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Search_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Stop_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Undo_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomIn_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ZoomOut_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Download_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Save_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Upload_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Bug_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileyHappy_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileyNeutral_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\SmileySad_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Next_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Previous_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Text_256x256.png" />
+  </ItemGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

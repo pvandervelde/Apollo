@@ -133,7 +133,7 @@ namespace Apollo.Core.Extensions.Scheduling
                         return true;
                     });
 
-            var result = unvisitedNodes.Count > 0;
+            var result = unvisitedNodes.Count == 0;
             if (!result)
             {
                 foreach (var node in unvisitedNodes)
@@ -163,7 +163,7 @@ namespace Apollo.Core.Extensions.Scheduling
                     return true;
                 });
 
-            var result = unvisitedNodes.Count > 0;
+            var result = unvisitedNodes.Count == 0;
             if (!result)
             {
                 foreach (var node in unvisitedNodes)
@@ -246,17 +246,17 @@ namespace Apollo.Core.Extensions.Scheduling
 
                         var subScheduleId = scheduleNode.ScheduleToExecute;
                         var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
-                        result &= isKnownSchedule;
                         if (!isKnownSchedule)
                         {
+                            result = false;
                             onValidationFailure(ScheduleIntegrityFailureType.UnknownSubSchedule, node);
                             return false;
                         }
 
                         var doesSubScheduleLink = DoesSubScheduleLinkTo(schedule.Id, m_Schedules[subScheduleId]);
-                        result &= doesSubScheduleLink;
-                        if (!doesSubScheduleLink)
+                        if (doesSubScheduleLink)
                         {
+                            result = false;
                             onValidationFailure(ScheduleIntegrityFailureType.SubScheduleLinksBackToParentSchedule, node);
                         }
 
@@ -288,16 +288,16 @@ namespace Apollo.Core.Extensions.Scheduling
                         }
 
                         var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
-                        result &= isKnownSchedule;
                         if (!isKnownSchedule)
                         {
+                            result = false;
                             return true;
                         }
 
                         var doesSubScheduleLink = DoesSubScheduleLinkTo(scheduleId, m_Schedules[subScheduleId]);
-                        result &= doesSubScheduleLink;
-                        if (!doesSubScheduleLink)
+                        if (doesSubScheduleLink)
                         {
+                            result = true;
                             return false;
                         }
 

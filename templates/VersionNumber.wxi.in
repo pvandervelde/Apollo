@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Include xmlns="http://schemas.microsoft.com/wix/2006/wi">
+    <!--
+      This is a generated file.
+      Do NOT make changes to this file.
+      They will be undone next time the file is generated.
+    -->
+	
+	<!-- The current version -->
+    <?define Apollo_CurrentVersion = "${Major}.${Minor}.${Build}"?>
+
+    <!-- The install version string -->
+    <?define Apollo_ProductVersionFolder = "${Major}.${Minor}"?>
+
+    <!-- The oldest version from which we allow automatic upgrades -->
+    <?define Apollo_OldestUpgradeVersion = "0.0.1"?>
+</Include>

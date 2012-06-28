@@ -35,6 +35,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 Debug.Assert(subSchedule != null, "The ID of the sub-schedule cannot be a null reference.");
             }
 
+            Index = index;
             m_SubSchedule = subSchedule;
         }
 

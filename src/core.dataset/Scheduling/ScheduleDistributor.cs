@@ -156,8 +156,8 @@ namespace Apollo.Core.Dataset.Scheduling
                 // we get an infinite loop where we're constantly trying to compare to null.
                 return !ReferenceEquals(other, null) 
                     && m_Id.Equals(other.m_Id)
-                    && (((m_Variables == null) && (other.m_Variables == null)) || ((m_Variables != null) && (other.m_Variables != null)))
-                    && m_Variables.SequenceEqual(other.m_Variables);
+                    && (((m_Variables == null) && (other.m_Variables == null)) 
+                        || ((m_Variables != null) && (other.m_Variables != null) && m_Variables.SequenceEqual(other.m_Variables)));
             }
 
             /// <summary>

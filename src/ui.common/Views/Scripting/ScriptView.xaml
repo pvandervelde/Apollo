@@ -1,0 +1,224 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Scripting.ScriptView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+             xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
+             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
+             mc:Ignorable="d"
+             d:DesignHeight="480"
+             d:DesignWidth="640">
+    <UserControl.Resources>
+        <converters:ScriptDescriptionModelToTextConverter x:Key="scriptDescriptionModelToText" />
+        <converters:CommandToToolTipTextConverter x:Key="commandToToolTipText" />
+    </UserControl.Resources>
+    <UserControl.CommandBindings>
+        <!-- 
+            we're defining these in XAML because the .NET framework defines these commands
+            By using them here we get free translations and input gestures etc.
+        -->
+        <CommandBinding Command="New"
+                        CanExecute="CommandNewScriptCanExecute"
+                        Executed="CommandNewScriptExecuted" />
+        <CommandBinding Command="Open"
+                        CanExecute="CommandOpenScriptCanExecute"
+                        Executed="CommandOpenScriptExecuted" />
+    </UserControl.CommandBindings>
+    <DockPanel>
+        <ToolBar DockPanel.Dock="Top">
+            <Button Command="New"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_New_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button Command="Open"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Open_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Separator />
+            <Button Command="Cut"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Cut_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button Command="Copy"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Copy_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button Command="Paste"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Paste_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button Command="Delete"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Delete_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Separator />
+            <Button Command="Undo"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Undo_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button Command="Redo"
+                    CommandTarget="{Binding ElementName=textEditor, Path=TextArea}"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}"/>
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Redo_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Separator />
+            <Button x:Name="runButton"
+                    x:FieldModifier="private"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Play_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+            <Button x:Name="cancelRunButton"
+                    x:FieldModifier="private"
+                    ToolTipService.ShowOnDisabled="True">
+                <Button.ToolTip>
+                    <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
+                             Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
+                </Button.ToolTip>
+                <Image Source="{lex:Loc Img_Stop_24}"
+                       gi:ImageGreyer.IsGreyable="true"
+                       Width="16"
+                       Height="16" />
+            </Button>
+        </ToolBar>
+        <StatusBar DockPanel.Dock="Bottom">
+            <Label Content="{lex:Loc ScriptView_CurrentScriptLanguage}" />
+            <TextBlock Text="{Binding Path=ScriptLanguage, Converter={StaticResource scriptDescriptionModelToText}}" />
+        </StatusBar>
+        <Grid DockPanel.Dock="Left">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="5*" />
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Grid.Column="0"
+                    Grid.Row="0"
+                    BorderBrush="LightSteelBlue"
+                    BorderThickness="3"
+                    CornerRadius="3"
+                    Margin="3, 3, 3, 3"
+                    Padding="5, 5, 5, 5">
+                <avalonEdit:TextEditor x:Name="textEditor"
+                                       x:FieldModifier="private"
+                                       FontFamily="Consolas"
+                                       FontSize="10pt">
+                </avalonEdit:TextEditor>
+            </Border>
+            
+            <GridSplitter Grid.Column="0"
+                          Grid.Row="1"
+                          HorizontalAlignment="Stretch"
+                          VerticalAlignment="Center"
+                          ShowsPreview="True"
+                          ResizeDirection="Rows"
+                          Height="3"
+                          Margin="3, 0, 3, 0"/>
+            
+            <Border Grid.Column="0"
+                    Grid.Row="2"
+                    BorderBrush="LightSteelBlue"
+                    BorderThickness="3"
+                    CornerRadius="3"
+                    Margin="3, 3, 3, 3"
+                    Padding="5, 5, 5, 5">
+                <avalonEdit:TextEditor x:Name="outputTextBox"
+                                       x:FieldModifier="private"
+                                       FontFamily="Consolas"
+                                       FontSize="10"
+                                       IsReadOnly="True">
+                    <avalonEdit:TextEditor.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Command="Copy"
+                                      CommandTarget="{Binding ElementName=outputTextBox, Path=TextArea}" />
+                            <Separator />
+                            <MenuItem x:Name="clearOutputMenu"
+                                      x:FieldModifier="private"
+                                      Header="{lex:Loc ScriptView_Output_Menu_Clear}"/>
+                        </ContextMenu>
+                    </avalonEdit:TextEditor.ContextMenu>
+                </avalonEdit:TextEditor>
+            </Border>
+        </Grid>
+    </DockPanel>
+</UserControl>

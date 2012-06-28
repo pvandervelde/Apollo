@@ -4,8 +4,10 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
@@ -18,6 +20,11 @@ namespace Apollo.Core.Dataset.Scheduling
         /// The info object for the parent schedule.
         /// </summary>
         private readonly ScheduleExecutionInfo m_Parent;
+
+        /// <summary>
+        /// The task scheduler that is used to execute the schedule.
+        /// </summary>
+        private readonly TaskScheduler m_Scheduler;
 
         /// <summary>
         /// The token that is used to indicate if the local schedule execution has been cancelled.
@@ -39,6 +46,29 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         public ScheduleExecutionInfo()
         {
+            m_Scheduler = TaskScheduler.Default;
+
+            m_LocalCancellationSource = new CancellationTokenSource();
+            m_CombinedCancellationSource = m_LocalCancellationSource;
+
+            m_PauseHandler = new SchedulePauseHandler();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleExecutionInfo"/> class.
+        /// </summary>
+        /// <param name="scheduler">The <see cref="TaskScheduler"/> that should be used to execute the schedule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="scheduler"/> is <see langword="null" />.
+        /// </exception>
+        public ScheduleExecutionInfo(TaskScheduler scheduler)
+        {
+            {
+                Lokad.Enforce.Argument(() => scheduler);
+            }
+
+            m_Scheduler = scheduler;
+
             m_LocalCancellationSource = new CancellationTokenSource();
             m_CombinedCancellationSource = m_LocalCancellationSource;
 
@@ -58,6 +88,17 @@ namespace Apollo.Core.Dataset.Scheduling
                 m_CombinedCancellationSource = CancellationTokenSource.CreateLinkedTokenSource(
                     m_Parent.Cancellation, 
                     m_LocalCancellationSource.Token);
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="TaskScheduler"/> that should be used to execute the schedule.
+        /// </summary>
+        public TaskScheduler TaskScheduler
+        {
+            get
+            {
+                return (m_Parent != null) ? m_Parent.TaskScheduler : m_Scheduler;
             }
         }
 

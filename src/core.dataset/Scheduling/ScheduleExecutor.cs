@@ -181,7 +181,11 @@ namespace Apollo.Core.Dataset.Scheduling
 
                     // @Todo: Lock the dataset against changes from the outside
                     var token = m_ExecutionInfo.Cancellation;
-                    m_ExecutionTask = Task.Factory.StartNew(ExecuteSchedule, token);
+                    m_ExecutionTask = Task.Factory.StartNew(
+                        ExecuteSchedule, 
+                        token,
+                        TaskCreationOptions.LongRunning,
+                        m_ExecutionInfo.TaskScheduler ?? TaskScheduler.Default);
                 }
             }
         }
@@ -250,18 +254,21 @@ namespace Apollo.Core.Dataset.Scheduling
                             break;
                         }
 
-                        Debug.Assert(m_Conditions.ContainsKey(edge.TraversingCondition), "The traversing condition for the edge does not exist");
-                        var condition = m_Conditions[edge.TraversingCondition];
-                        bool canTraverse = false;
-                        try
+                        bool canTraverse = true;
+                        if (edge.TraversingCondition != null)
                         {
-                            canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
-                        }
-                        catch (Exception e)
-                        {
-                            unhandledException = e;
-                            state = ScheduleExecutionState.UnhandledException;
-                            break;
+                            Debug.Assert(m_Conditions.ContainsKey(edge.TraversingCondition), "The traversing condition for the edge does not exist");
+                            var condition = m_Conditions[edge.TraversingCondition];
+                            try
+                            {
+                                canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
+                            }
+                            catch (Exception e)
+                            {
+                                unhandledException = e;
+                                state = ScheduleExecutionState.UnhandledException;
+                                break;
+                            }
                         }
 
                         if (canTraverse)

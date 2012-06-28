@@ -167,6 +167,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
       <Name>Apollo.Utilities</Name>
