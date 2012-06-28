@@ -60,16 +60,6 @@
                       KeyPath="yes" />
             </Component>
             
-            <!-- IronPython.dll -->
-            <Component Id="C.IronPython.dll"
-                       Guid="{76AC7D70-BFA5-4F54-9BC7-97859B251F3B}">
-                <File Id="File.IronPython.dll"
-                      Name="IronPython.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\IronPython.dll"
-                      KeyPath="yes" />
-            </Component>
-            
             <!-- Microsoft.Dynamic.dll -->
             <Component Id="C.Microsoft.Dynamic.dll"
                        Guid="{3B32CCAB-BF89-4027-AD01-EB5374AAC557}">
@@ -107,16 +97,6 @@
                       Name="Microsoft.Practices.ServiceLocation.dll"
                       DiskId="1"
                       Source="$(var.Apollo_BinFolder)\Microsoft.Practices.ServiceLocation.dll"
-                      KeyPath="yes" />
-            </Component>
-            
-            <!-- Microsoft.Scripting.dll -->
-            <Component Id="C.Microsoft.Scripting.dll"
-                       Guid="{78707D13-D90B-499D-8F1F-15297E03330A}">
-                <File Id="File.Microsoft.Scripting.dll"
-                      Name="Microsoft.Scripting.dll"
-                      DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\Microsoft.Scripting.dll"
                       KeyPath="yes" />
             </Component>
 
@@ -168,13 +148,11 @@
             <ComponentRef Id="C.GraphSharp.Controls.dll" />
             <ComponentRef Id="C.GreyableImage.dll" />
             <ComponentRef Id="C.ICSharpCode.AvalonEdit.dll" />
-            <ComponentRef Id="C.IronPython.dll" />
 
             <ComponentRef Id="C.Microsoft.Dynamic.dll" />
             <ComponentRef Id="C.Microsoft.Practices.Prism.dll" />
             <ComponentRef Id="C.Microsoft.Practices.Prism.Interactivity.dll" />
             <ComponentRef Id="C.Microsoft.Practices.ServiceLocation.dll" />
-            <ComponentRef Id="C.Microsoft.Scripting.dll" />
             
             <ComponentRef Id="C.PixelLab.Common.dll" />
             <ComponentRef Id="C.PixelLab.Wpf.dll" />

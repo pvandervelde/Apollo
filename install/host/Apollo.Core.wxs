@@ -20,20 +20,31 @@
                       KeyPath="yes" />
             </Component>
 
-            <!-- QuickGraph.dll -->
-            <Component Id="C.QuickGraph.dll"
-                       Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
-                <File Id="File.QuickGraph.dll"
-                      Name="QuickGraph.dll"
+            <!-- IronPython.dll -->
+            <Component Id="C.IronPython.dll"
+                       Guid="{76AC7D70-BFA5-4F54-9BC7-97859B251F3B}">
+                <File Id="File.IronPython.dll"
+                      Name="IronPython.dll"
                       DiskId="1"
-                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      Source="$(var.Apollo_BinFolder)\IronPython.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- Microsoft.Scripting.dll -->
+            <Component Id="C.Microsoft.Scripting.dll"
+                       Guid="{78707D13-D90B-499D-8F1F-15297E03330A}">
+                <File Id="File.Microsoft.Scripting.dll"
+                      Name="Microsoft.Scripting.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Microsoft.Scripting.dll"
                       KeyPath="yes" />
             </Component>
         </DirectoryRef>
 
         <ComponentGroup Id="CGroup.Apollo.Core.Host">
             <ComponentRef Id="C.Apollo.Core.Host.dll" />
-            <ComponentRef Id="C.QuickGraph.dll" />
+            <ComponentRef Id="C.IronPython.dll" />
+            <ComponentRef Id="C.Microsoft.Scripting.dll" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
             <ComponentGroupRef Id="CGroup.Apollo.Core.Dataset" />

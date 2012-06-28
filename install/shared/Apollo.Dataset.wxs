@@ -44,6 +44,16 @@
                       Source="$(var.Apollo_BinFolder)\Apollo.Core.Dataset.exe.config"
                       KeyPath="yes" />
             </Component>
+
+            <!-- Apollo.Core.Base.dll -->
+            <Component Id="C.Apollo.Core.Extensions.dll"
+                       Guid="{5A528E8B-CEEC-4431-B78F-EF17D9E365FD}">
+                <File Id="File.Apollo.Core.Extensions.dll"
+                      Name="Apollo.Core.Extensions.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Extensions.dll"
+                      KeyPath="yes" />
+            </Component>
             
             <!-- Mono.Options.dll -->
             <Component Id="C.Mono.Options.dll"
@@ -54,13 +64,25 @@
                       Source="$(var.Apollo_BinFolder)\Mono.Options.dll"
                       KeyPath="yes" />
             </Component>
+
+            <!-- QuickGraph.dll -->
+            <Component Id="C.QuickGraph.dll"
+                       Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
+                <File Id="File.QuickGraph.dll"
+                      Name="QuickGraph.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      KeyPath="yes" />
+            </Component>
         </DirectoryRef>
 
         <!-- The feature for the main program. -->
         <ComponentGroup Id="CGroup.Apollo.Core.Dataset">
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe" />
             <ComponentRef Id="C.Apollo.Core.Dataset.Exe.Config" />
+            <ComponentRef Id="C.Apollo.Core.Extensions.dll" />
             <ComponentRef Id="C.Mono.Options.dll" />
+            <ComponentRef Id="C.QuickGraph.dll" />
 
             <ComponentGroupRef Id="CGroup.Apollo.Base" />
         </ComponentGroup>
