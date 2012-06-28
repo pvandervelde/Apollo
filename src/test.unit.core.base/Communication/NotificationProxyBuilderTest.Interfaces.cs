@@ -69,5 +69,11 @@ namespace Apollo.Core.Base.Communication
         {
             event EventHandler<MySerializableEventArgs> OnMyEvent;
         }
+
+        [InternalNotification]
+        public interface IMockNotificationSetForInternalUse : INotificationSet
+        {
+            event EventHandler<MySerializableEventArgs> OnMyEvent;
+        }
     }
 }

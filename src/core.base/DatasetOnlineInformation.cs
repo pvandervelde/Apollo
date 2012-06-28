@@ -27,7 +27,12 @@ namespace Apollo.Core.Base
         /// <summary>
         /// The object that handles sending commands to the remote endpoints.
         /// </summary>
-        private readonly ISendCommandsToRemoteEndpoints m_Hub;
+        private readonly ISendCommandsToRemoteEndpoints m_CommandHub;
+
+        /// <summary>
+        /// The object that handles the event notifications for remote endpoints.
+        /// </summary>
+        private readonly INotifyOfRemoteEndpointEvents m_NotificationHub;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -40,7 +45,8 @@ namespace Apollo.Core.Base
         /// <param name="id">The ID number of the dataset.</param>
         /// <param name="endpoint">The ID number of the endpoint that has the actual dataset loaded.</param>
         /// <param name="networkId">The network identifier of the machine on which the dataset runs.</param>
-        /// <param name="hub">The object that handles sending commands to the remote endpoint.</param>
+        /// <param name="commandHub">The object that handles sending commands to the remote endpoint.</param>
+        /// <param name="notificationHub">The object that handles the event notifications for remote endpoints.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="id"/> is <see langword="null" />.
@@ -52,7 +58,10 @@ namespace Apollo.Core.Base
         ///     Thrown if <paramref name="networkId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="hub"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="commandHub"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="notificationHub"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
@@ -61,21 +70,24 @@ namespace Apollo.Core.Base
             DatasetId id, 
             EndpointId endpoint,
             NetworkIdentifier networkId,
-            ISendCommandsToRemoteEndpoints hub,
+            ISendCommandsToRemoteEndpoints commandHub,
+            INotifyOfRemoteEndpointEvents notificationHub,
             SystemDiagnostics systemDiagnostics)
         {
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => endpoint);
                 Enforce.Argument(() => networkId);
-                Enforce.Argument(() => hub);
+                Enforce.Argument(() => commandHub);
+                Enforce.Argument(() => notificationHub);
                 Enforce.Argument(() => systemDiagnostics);
             }
 
             Id = id;
             Endpoint = endpoint;
             RunsOn = networkId;
-            m_Hub = hub;
+            m_CommandHub = commandHub;
+            m_NotificationHub = notificationHub;
             m_Diagnostics = systemDiagnostics;
         }
 
@@ -117,9 +129,9 @@ namespace Apollo.Core.Base
         /// </returns>
         public IEnumerable<ICommandSet> AvailableCommands()
         {
-            return from commandType in m_Hub.AvailableCommandsFor(Endpoint)
+            return from commandType in m_CommandHub.AvailableCommandsFor(Endpoint)
                    where (commandType.GetCustomAttributes(typeof(InternalCommandAttribute), true).Length == 0)
-                   select m_Hub.CommandsFor(Endpoint, commandType);
+                   select m_CommandHub.CommandsFor(Endpoint, commandType);
         }
 
         /// <summary>
@@ -131,18 +143,38 @@ namespace Apollo.Core.Base
         /// </returns>
         public TCommand Command<TCommand>() where TCommand : class, ICommandSet
         {
-            return m_Hub.CommandsFor<TCommand>(Endpoint);
+            return m_CommandHub.CommandsFor<TCommand>(Endpoint);
         }
 
-        // TODO: DEFINE NOTIFICATIONS
+        /// <summary>
+        /// Returns a collection containing all the notifications that a dataset has
+        /// defined.
+        /// </summary>
+        /// <returns>The collection with all the notifications that the dataset has defined.</returns>
+        public IEnumerable<INotificationSet> AvailableNotifications()
+        {
+            return from notificationType in m_NotificationHub.AvailableNotificationsFor(Endpoint)
+                   where (notificationType.GetCustomAttributes(typeof(InternalNotificationAttribute), true).Length == 0)
+                   select m_NotificationHub.NotificationsFor(Endpoint, notificationType);
+        }
+
+        /// <summary>
+        /// Returns the notification of the given type.
+        /// </summary>
+        /// <typeparam name="TNotification">The type of the desired notification.</typeparam>
+        /// <returns>The notification of the given type or <see langword="null" /> if that notification doesn't exist.</returns>
+        public TNotification Notification<TNotification>() where TNotification : class, INotificationSet
+        {
+            return m_NotificationHub.NotificationsFor<TNotification>(Endpoint);
+        }
 
         /// <summary>
         /// Closes the remote dataset application.
         /// </summary>
         public void Close()
         {
-            Debug.Assert(m_Hub.HasCommandFor(Endpoint, typeof(IDatasetApplicationCommands)), "Missing essential command set.");
-            var commands = m_Hub.CommandsFor<IDatasetApplicationCommands>(Endpoint);
+            Debug.Assert(m_CommandHub.HasCommandFor(Endpoint, typeof(IDatasetApplicationCommands)), "Missing essential command set.");
+            var commands = m_CommandHub.CommandsFor<IDatasetApplicationCommands>(Endpoint);
             var result = commands.Close();
             result.ContinueWith(
                 t =>

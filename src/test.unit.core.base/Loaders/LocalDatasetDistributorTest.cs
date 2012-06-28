@@ -34,6 +34,7 @@ namespace Apollo.Core.Base.Loaders
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -113,6 +114,7 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
+                        notificationHub.Object,
                         systemDiagnostics);
                 },
                 channelInfo,
@@ -211,6 +213,7 @@ namespace Apollo.Core.Base.Loaders
                         e,
                         n,
                         commandHub.Object,
+                        notificationHub.Object,
                         systemDiagnostics);
                 },
                 channelInfo,

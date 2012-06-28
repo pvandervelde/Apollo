@@ -65,6 +65,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
@@ -145,6 +146,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -188,6 +190,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -239,6 +242,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -290,6 +294,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -338,6 +343,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -393,6 +399,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -450,6 +457,7 @@ namespace Apollo.Core.Host.Projects
                             new EndpointId("id"),
                             new NetworkIdentifier("machine"),
                             new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                            new Mock<INotifyOfRemoteEndpointEvents>().Object,
                             systemDiagnostics);
                     },
                     t,
@@ -505,9 +513,9 @@ namespace Apollo.Core.Host.Projects
                     .Returns(Task.Factory.StartNew(() => { }));
             }
 
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
                     .Returns(commands.Object);
             }
 
@@ -517,7 +525,8 @@ namespace Apollo.Core.Host.Projects
                         new DatasetId(),
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
-                        hub.Object,
+                        commandHub.Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -573,6 +582,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -628,6 +638,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -670,6 +681,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -720,6 +732,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -785,6 +798,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -827,6 +841,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -869,6 +884,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -929,6 +945,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -984,6 +1001,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -1026,6 +1044,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
@@ -1092,6 +1111,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,
