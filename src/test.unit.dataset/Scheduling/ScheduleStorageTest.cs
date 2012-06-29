@@ -92,7 +92,7 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
             var otherSchedule = new Mock<IEditableSchedule>();
-            Assert.Throws<UnknownScheduleActionException>(() => collection.Update(new ScheduleId(), otherSchedule.Object));
+            Assert.Throws<UnknownScheduleException>(() => collection.Update(new ScheduleId(), otherSchedule.Object));
         }
 
         [Test]

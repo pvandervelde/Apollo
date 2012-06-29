@@ -84,7 +84,7 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
             var otherCondition = new Mock<IScheduleCondition>();
-            Assert.Throws<UnknownScheduleActionException>(() => collection.Update(new ScheduleElementId(), otherCondition.Object));
+            Assert.Throws<UnknownScheduleConditionException>(() => collection.Update(new ScheduleElementId(), otherCondition.Object));
         }
 
         [Test]
