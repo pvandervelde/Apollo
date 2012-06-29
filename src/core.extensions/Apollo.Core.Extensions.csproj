@@ -9,14 +9,14 @@
   </PropertyGroup>
   <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="NManto">
-      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
-    </Reference>
     <Reference Include="QuickGraph, Version=3.3.51106.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
@@ -83,6 +83,7 @@
     <Compile Include="Scheduling\IScheduleExecutionCommands.cs" />
     <Compile Include="Scheduling\IStoreScheduleActions.cs" />
     <Compile Include="Scheduling\IStoreScheduleConditions.cs" />
+    <Compile Include="Scheduling\IStoreSchedules.cs" />
     <Compile Include="Scheduling\IVertifyScheduleIntegrity.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexException.cs" />
     <Compile Include="Scheduling\ScheduleConditionInformation.cs" />
@@ -94,6 +95,7 @@
     <Compile Include="Scheduling\ScheduleInformation.cs" />
     <Compile Include="Scheduling\ScheduleIntegrityFailureType.cs" />
     <Compile Include="Scheduling\ScheduleVerifier.cs" />
+    <Compile Include="Scheduling\SchedulingModule.cs" />
     <Compile Include="Scheduling\UnknownScheduleException.cs" />
     <Compile Include="Scheduling\UnknownScheduleVertexException.cs" />
     <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">

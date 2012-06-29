@@ -114,6 +114,7 @@
     <Compile Include="Scheduling\Processors\StartVertexProcessor.cs" />
     <Compile Include="Scheduling\Processors\SubScheduleVertexProcessor.cs" />
     <Compile Include="Scheduling\SchedulePauseHandler.cs" />
+    <Compile Include="Scheduling\ScheduleStorage.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionException.cs" />
     <Compile Include="Scheduling\UnknownScheduleConditionException.cs" />
     <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />

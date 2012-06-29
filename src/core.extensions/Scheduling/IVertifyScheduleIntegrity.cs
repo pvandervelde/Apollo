@@ -17,6 +17,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Determines if the given schedule is a valid schedule.
         /// </summary>
+        /// <param name="id">The ID of the schedule.</param>
         /// <param name="schedule">The schedule that should be verified.</param>
         /// <param name="onValidationFailure">The action which is invoked for each validation failure.</param>
         /// <returns>
@@ -24,6 +25,6 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        bool IsValid(IEditableSchedule schedule, Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure);
+        bool IsValid(ScheduleId id, IEditableSchedule schedule, Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure);
     }
 }

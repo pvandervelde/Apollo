@@ -268,7 +268,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The collection of known schedules.
         /// </summary>
-        private readonly Dictionary<ScheduleId, IEditableSchedule> m_KnownSchedules;
+        private readonly IStoreSchedules m_KnownSchedules;
 
         /// <summary>
         /// The function that creates an <see cref="IExecuteSchedules"/> object with the given 
@@ -288,7 +288,7 @@ namespace Apollo.Core.Dataset.Scheduling
         ///     Thrown if <paramref name="executorBuilder"/> is <see langword="null" />.
         /// </exception>
         public ScheduleDistributor(
-            Dictionary<ScheduleId, IEditableSchedule> knownSchedules,
+            IStoreSchedules knownSchedules,
             Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
         {
             {
@@ -323,7 +323,7 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             lock (m_Lock)
             {
-                if (!m_KnownSchedules.ContainsKey(scheduleId))
+                if (!m_KnownSchedules.Contains(scheduleId))
                 {
                     throw new UnknownScheduleException();
                 }
@@ -368,8 +368,8 @@ namespace Apollo.Core.Dataset.Scheduling
             ScheduleExecutionInfo executionInfo)
         {
             // Translate the schedule to an executable schedule
-            var editableSchedule = m_KnownSchedules[scheduleId];
-            var executableSchedule = TransformToExecutableSchedule(editableSchedule);
+            var editableSchedule = m_KnownSchedules.Schedule(scheduleId);
+            var executableSchedule = TransformToExecutableSchedule(scheduleId, editableSchedule);
 
             // Create a new executor and provide it with the schedule
             var executor = m_LoadExecutor(executableSchedule, executionInfo);
@@ -384,7 +384,7 @@ namespace Apollo.Core.Dataset.Scheduling
             return executor;
         }
 
-        private ExecutableSchedule TransformToExecutableSchedule(IEditableSchedule editableSchedule)
+        private ExecutableSchedule TransformToExecutableSchedule(ScheduleId id, IEditableSchedule editableSchedule)
         {
             var map = new Dictionary<IEditableScheduleVertex, IExecutableScheduleVertex>();
             var newSchedule = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
@@ -420,7 +420,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         return true;
                     });
 
-            return new ExecutableSchedule(editableSchedule.Id, newSchedule, start, end);
+            return new ExecutableSchedule(id, newSchedule, start, end);
         }
 
         private void HandleScheduleExecutionFinish(object sender, EventArgs e)

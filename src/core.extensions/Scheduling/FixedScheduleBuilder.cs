@@ -551,7 +551,6 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             var schedule = CopyGraph(m_Schedule, m_Start);
             return new EditableSchedule(
-                new ScheduleId(),
                 schedule,
                 m_Start,
                 m_End);

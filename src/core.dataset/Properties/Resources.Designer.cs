@@ -124,6 +124,15 @@ namespace Apollo.Core.Dataset.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The specified schedule ID does not have an associated schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownSchedule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified action ID does not have an associated action..
         /// </summary>
         internal static string Exceptions_Messages_UnknownScheduleAction {

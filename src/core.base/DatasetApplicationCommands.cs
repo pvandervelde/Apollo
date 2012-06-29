@@ -177,5 +177,14 @@ namespace Apollo.Core.Base
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Indicates what the lock state of the the dataset is.
+        /// </summary>
+        /// <returns>A task that will return the information about the lock state of the dataset.</returns>
+        public Task<DatasetLockInformation> LockedState()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

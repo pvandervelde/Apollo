@@ -24,14 +24,14 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Pauses the execution of the given schedule.
         /// </summary>
-        /// <param name="scheduleToExecute">The ID of the schedule that should be executed.</param>
+        /// <param name="scheduleToPause">The ID of the schedule that should be executed.</param>
         /// <returns>A task that will finish once the schedule execution has been paused.</returns>
         Task Pause(ScheduleId scheduleToPause);
 
         /// <summary>
         /// Stops the execution of the given schedule.
         /// </summary>
-        /// <param name="scheduleToExecute">The ID of the schedule that should be executed.</param>
+        /// <param name="scheduleToStop">The ID of the schedule that should be executed.</param>
         /// <returns>A task that will finish once the schedule execution has been stopped.</returns>
         Task Stop(ScheduleId scheduleToStop);
     }

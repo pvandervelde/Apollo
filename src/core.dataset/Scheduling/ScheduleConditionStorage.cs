@@ -20,17 +20,17 @@ namespace Apollo.Core.Dataset.Scheduling
     internal sealed class ScheduleConditionStorage : IStoreScheduleConditions
     {
         /// <summary>
-        /// Maps the action to the information describing the action.
+        /// Maps the condition to the information describing the condition.
         /// </summary>
         private sealed class ConditionMap
         {
             /// <summary>
-            /// The action.
+            /// The condition.
             /// </summary>
             private readonly IScheduleCondition m_Condition;
 
             /// <summary>
-            /// The information describing the action.
+            /// The information describing the condition.
             /// </summary>
             private readonly ScheduleConditionInformation m_Info;
 
@@ -215,7 +215,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 Lokad.Enforce.Argument(() => id);
                 Lokad.Enforce.With<UnknownScheduleConditionException>(
                     m_Conditions.ContainsKey(id),
-                    Resources.Exceptions_Messages_UnknownScheduleAction);
+                    Resources.Exceptions_Messages_UnknownScheduleCondition);
             }
 
             return m_Conditions[id].Information;

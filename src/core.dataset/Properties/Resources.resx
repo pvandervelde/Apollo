@@ -147,4 +147,7 @@
   <data name="Exceptions_Messages_UnknownScheduleCondition" xml:space="preserve">
     <value>The specified condition ID does not have an associated condition.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
+    <value>The specified schedule ID does not have an associated schedule.</value>
+  </data>
 </root>

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using MbUnit.Framework;
+using Moq;
 using QuickGraph;
 
 namespace Apollo.Core.Extensions.Scheduling
@@ -20,12 +21,11 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void StartVertexWithInboundEdges()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -45,11 +45,13 @@ namespace Apollo.Core.Extensions.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex2, start));
                 graph.AddEdge(new EditableScheduleEdge(vertex2, end));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -62,12 +64,11 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void EndVertexWithOutboundEdges()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -87,11 +88,13 @@ namespace Apollo.Core.Extensions.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex2, end));
                 graph.AddEdge(new EditableScheduleEdge(end, vertex1));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -104,11 +107,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void VertexWithNoEdges()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -126,10 +127,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(start, vertex1));
             graph.AddEdge(new EditableScheduleEdge(vertex1, end));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -145,11 +148,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void NonStartVertexWithOutboundEdges()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -168,10 +169,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(vertex1, end));
             graph.AddEdge(new EditableScheduleEdge(vertex2, end));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -184,11 +187,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void CycleWithNoEdgesToEnd()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -212,10 +213,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(vertex2, vertex3));
             graph.AddEdge(new EditableScheduleEdge(vertex3, vertex1));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -234,11 +237,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void NonEndVertexWithOnlyInboundEdges()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -257,10 +258,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(vertex1, end));
             graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -273,11 +276,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void CycleWithNoEdgesFromStart()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -301,10 +302,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(vertex2, vertex3));
             graph.AddEdge(new EditableScheduleEdge(vertex3, vertex1));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -323,11 +326,9 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void VertexWithMultipleEdgesInOneDirection()
         {
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var knownSchedules = new Mock<IStoreSchedules>();
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
 
-            EditableSchedule schedule = null;
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -343,10 +344,12 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddEdge(new EditableScheduleEdge(vertex1, end));
             graph.AddEdge(new EditableScheduleEdge(vertex1, end));
 
-            schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
+            var id = new ScheduleId();
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -378,11 +381,10 @@ namespace Apollo.Core.Extensions.Scheduling
         public void SubScheduleWithLinkBackToParent()
         {
             var id = new ScheduleId();
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
 
-            EditableSchedule subSchedule = null;
+            var subScheduleId = new ScheduleId();
+            IEditableSchedule subSchedule = null;
             {
-                var subScheduleId = new ScheduleId();
                 var subGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
                 var start = new EditableStartVertex(1);
                 var end = new EditableEndVertex(2);
@@ -392,9 +394,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 subGraph.AddVertex(vertex1);
                 subGraph.AddEdge(new EditableScheduleEdge(start, vertex1));
                 subGraph.AddEdge(new EditableScheduleEdge(vertex1, end));
-                subSchedule = new EditableSchedule(subScheduleId, subGraph, start, end);
-                
-                knownSchedules.Add(subScheduleId, subSchedule);
+                subSchedule = new EditableSchedule(subGraph, start, end);
             }
 
             IEditableScheduleVertex errorVertex = null;
@@ -403,21 +403,30 @@ namespace Apollo.Core.Extensions.Scheduling
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
                 var start = new EditableStartVertex(1);
                 var end = new EditableEndVertex(2);
-                var vertex1 = new EditableSubScheduleVertex(3, subSchedule.Id);
+                var vertex1 = new EditableSubScheduleVertex(3, subScheduleId);
                 graph.AddVertex(start);
                 graph.AddVertex(end);
                 graph.AddVertex(vertex1);
                 graph.AddEdge(new EditableScheduleEdge(start, vertex1));
                 graph.AddEdge(new EditableScheduleEdge(vertex1, end));
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
 
                 errorVertex = vertex1;
+            }
+            
+            var knownSchedules = new Mock<IStoreSchedules>();
+            {
+                knownSchedules.Setup(s => s.Contains(It.IsAny<ScheduleId>()))
+                    .Returns<ScheduleId>(scheduleId => subScheduleId.Equals(scheduleId));
+                knownSchedules.Setup(s => s.Schedule(It.IsAny<ScheduleId>()))
+                    .Returns<ScheduleId>(scheduleId => subSchedule);
             }
 
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
 
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 
@@ -431,11 +440,10 @@ namespace Apollo.Core.Extensions.Scheduling
         public void NestedSubScheduleWithLinkBackToRootSchedule()
         {
             var id = new ScheduleId();
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule>();
 
-            EditableSchedule subSubSchedule = null;
+            var subSubScheduleId = new ScheduleId();
+            IEditableSchedule subSubSchedule = null;
             {
-                var subScheduleId = new ScheduleId();
                 var subGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
                 var start = new EditableStartVertex(1);
                 var end = new EditableEndVertex(2);
@@ -445,26 +453,22 @@ namespace Apollo.Core.Extensions.Scheduling
                 subGraph.AddVertex(vertex1);
                 subGraph.AddEdge(new EditableScheduleEdge(start, vertex1));
                 subGraph.AddEdge(new EditableScheduleEdge(vertex1, end));
-                subSubSchedule = new EditableSchedule(subScheduleId, subGraph, start, end);
-
-                knownSchedules.Add(subScheduleId, subSubSchedule);
+                subSubSchedule = new EditableSchedule(subGraph, start, end);
             }
 
-            EditableSchedule subSchedule = null;
+            var subScheduleId = new ScheduleId();
+            IEditableSchedule subSchedule = null;
             {
-                var subScheduleId = new ScheduleId();
                 var subGraph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
                 var start = new EditableStartVertex(1);
                 var end = new EditableEndVertex(2);
-                var vertex1 = new EditableSubScheduleVertex(3, subSubSchedule.Id);
+                var vertex1 = new EditableSubScheduleVertex(3, subSubScheduleId);
                 subGraph.AddVertex(start);
                 subGraph.AddVertex(end);
                 subGraph.AddVertex(vertex1);
                 subGraph.AddEdge(new EditableScheduleEdge(start, vertex1));
                 subGraph.AddEdge(new EditableScheduleEdge(vertex1, end));
-                subSchedule = new EditableSchedule(subScheduleId, subGraph, start, end);
-
-                knownSchedules.Add(subScheduleId, subSchedule);
+                subSchedule = new EditableSchedule(subGraph, start, end);
             }
 
             IEditableScheduleVertex errorVertex = null;
@@ -473,21 +477,34 @@ namespace Apollo.Core.Extensions.Scheduling
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
                 var start = new EditableStartVertex(1);
                 var end = new EditableEndVertex(2);
-                var vertex1 = new EditableSubScheduleVertex(3, subSchedule.Id);
+                var vertex1 = new EditableSubScheduleVertex(3, subScheduleId);
                 graph.AddVertex(start);
                 graph.AddVertex(end);
                 graph.AddVertex(vertex1);
                 graph.AddEdge(new EditableScheduleEdge(start, vertex1));
                 graph.AddEdge(new EditableScheduleEdge(vertex1, end));
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
 
                 errorVertex = vertex1;
             }
 
+            var knownSchedules = new Mock<IStoreSchedules>();
+            {
+                knownSchedules.Setup(s => s.Contains(It.IsAny<ScheduleId>()))
+                    .Returns<ScheduleId>(scheduleId => subScheduleId.Equals(scheduleId) || subSubScheduleId.Equals(scheduleId));
+                knownSchedules.Setup(s => s.Schedule(It.IsAny<ScheduleId>()))
+                    .Returns<ScheduleId>(
+                        scheduleId => 
+                        {
+                            return subSubScheduleId.Equals(scheduleId) ? subSubSchedule : subSchedule;
+                        });
+            }
+
             var failures = new List<Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>>();
 
-            var verifier = new ScheduleVerifier(knownSchedules);
+            var verifier = new ScheduleVerifier(knownSchedules.Object);
             var result = verifier.IsValid(
+                id,
                 schedule,
                 (f, v) => failures.Add(new Tuple<ScheduleIntegrityFailureType, IEditableScheduleVertex>(f, v)));
 

@@ -8,6 +8,9 @@ using System;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
+    /// <summary>
+    /// An <see cref="EventArgs"/> class that stores a <see cref="ScheduleId"/>.
+    /// </summary>
     [Serializable]
     public sealed class ScheduleEventArgs : EventArgs
     {

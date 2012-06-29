@@ -48,7 +48,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new StartVertexProcessor(),
                         new EndVertexProcessor(),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition>(),
+                new ScheduleConditionStorage(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -85,7 +85,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new ActionVertexProcessor(collection),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition>(),
+                new ScheduleConditionStorage(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -116,7 +116,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new MarkHistoryVertexProcessor(timeline.Object, m => storedMarker = m),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition>(),
+                new ScheduleConditionStorage(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -157,7 +157,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new SubScheduleVertexProcessor(distributor.Object),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition>(),
+                new ScheduleConditionStorage(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -179,7 +179,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new NoOpVertexProcessor(),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition>(),
+                new ScheduleConditionStorage(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -193,12 +193,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RunWithBlockingConditionOnFirstEdge()
         {
-            var conditionId = new ScheduleElementId();
             var condition = new Mock<IScheduleCondition>();
             {
                 condition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
                     .Returns(false);
             }
+
+            var conditionStorage = new ScheduleConditionStorage();
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;
             {
@@ -215,7 +217,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 var middle2 = new ExecutableNoOpVertex(4);
                 graph.AddVertex(middle2);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionInfo.Id));
                 graph.AddEdge(new ExecutableScheduleEdge(start, middle2, null));
 
                 graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
@@ -231,10 +233,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new NoOpVertexProcessor(),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition> 
-                    {
-                        { conditionId, condition.Object }
-                    },
+                conditionStorage,
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -248,12 +247,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RunWithBlockingConditionOnSecondEdge()
         {
-            var conditionId = new ScheduleElementId();
             var condition = new Mock<IScheduleCondition>();
             {
                 condition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
                     .Returns(false);
             }
+
+            var conditionStorage = new ScheduleConditionStorage();
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;
             {
@@ -271,7 +272,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 graph.AddVertex(middle2);
 
                 graph.AddEdge(new ExecutableScheduleEdge(start, middle1, null));
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionInfo.Id));
 
                 graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
                 graph.AddEdge(new ExecutableScheduleEdge(middle2, end, null));
@@ -286,10 +287,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new NoOpVertexProcessor(),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition> 
-                    {
-                        { conditionId, condition.Object }
-                    },
+                conditionStorage,
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -304,12 +302,14 @@ namespace Apollo.Core.Dataset.Scheduling
         public void RunWithLoop()
         {
             bool passThrough = false;
-            var conditionId = new ScheduleElementId();
             var condition = new Mock<IScheduleCondition>();
             {
                 condition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
                     .Returns(() => passThrough);
             }
+
+            var conditionStorage = new ScheduleConditionStorage();
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             var action = new Mock<IScheduleAction>();
             {
@@ -345,7 +345,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 graph.AddEdge(new ExecutableScheduleEdge(start, vertex1, null));
                 graph.AddEdge(new ExecutableScheduleEdge(vertex1, vertex2, null));
 
-                graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, conditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, conditionInfo.Id));
                 graph.AddEdge(new ExecutableScheduleEdge(vertex2, vertex3, null));
 
                 graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex1, null));
@@ -361,10 +361,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new NoOpVertexProcessor(),
                         new ActionVertexProcessor(collection),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition> 
-                    {
-                        { conditionId, condition.Object }
-                    },
+                conditionStorage,
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -379,7 +376,6 @@ namespace Apollo.Core.Dataset.Scheduling
         public void RunWithInnerAndOuterLoop()
         {
             bool outerLoopPassThrough = false;
-            var outerLoopConditionId = new ScheduleElementId();
             var outerLoopCondition = new Mock<IScheduleCondition>();
             {
                 outerLoopCondition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
@@ -387,12 +383,15 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             bool innerLoopPassThrough = false;
-            var innerLoopConditionId = new ScheduleElementId();
             var innerLoopCondition = new Mock<IScheduleCondition>();
             {
                 innerLoopCondition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
                     .Returns(() => innerLoopPassThrough);
             }
+
+            var conditionStorage = new ScheduleConditionStorage();
+            var outerLoopConditionInfo = conditionStorage.Add(outerLoopCondition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var innerLoopConditionInfo = conditionStorage.Add(innerLoopCondition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             var outerLoopAction = new Mock<IScheduleAction>();
             {
@@ -445,10 +444,10 @@ namespace Apollo.Core.Dataset.Scheduling
                 graph.AddEdge(new ExecutableScheduleEdge(start, vertex1, null));
                 graph.AddEdge(new ExecutableScheduleEdge(vertex1, vertex2, null));
                 
-                graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, outerLoopConditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, outerLoopConditionInfo.Id));
                 graph.AddEdge(new ExecutableScheduleEdge(vertex2, vertex3, null));
                 
-                graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex1, innerLoopConditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex1, innerLoopConditionInfo.Id));
                 graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex4, null));
 
                 graph.AddEdge(new ExecutableScheduleEdge(vertex4, vertex5, null));
@@ -465,11 +464,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new NoOpVertexProcessor(),
                         new ActionVertexProcessor(collection),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition> 
-                    {
-                        { innerLoopConditionId, innerLoopCondition.Object },
-                        { outerLoopConditionId, outerLoopCondition.Object }
-                    },
+                conditionStorage,
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -489,12 +484,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RunWithNonPassableEdgeSet()
         {
-            var conditionId = new ScheduleElementId();
             var condition = new Mock<IScheduleCondition>();
             {
                 condition.Setup(c => c.CanTraverse(It.IsAny<CancellationToken>()))
                     .Returns(false);
             }
+
+            var conditionStorage = new ScheduleConditionStorage();
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;
             {
@@ -511,8 +508,8 @@ namespace Apollo.Core.Dataset.Scheduling
                 var middle2 = new ExecutableNoOpVertex(4);
                 graph.AddVertex(middle2);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionId));
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionId));
+                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionInfo.Id));
+                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionInfo.Id));
 
                 graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
                 graph.AddEdge(new ExecutableScheduleEdge(middle2, end, null));
@@ -527,10 +524,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new NoOpVertexProcessor(),
                     },
-                new Dictionary<ScheduleElementId, IScheduleCondition> 
-                    {
-                        { conditionId, condition.Object }
-                    },
+                conditionStorage,
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 

@@ -19,7 +19,6 @@ namespace Apollo.Core.Extensions.Scheduling
         [Test]
         public void Create()
         {
-            var id = new ScheduleId();
             var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
             var start = new EditableStartVertex(1);
@@ -29,9 +28,8 @@ namespace Apollo.Core.Extensions.Scheduling
             graph.AddVertex(end);
             graph.AddEdge(new EditableScheduleEdge(start, end));
 
-            var schedule = new EditableSchedule(id, graph, start, end);
+            var schedule = new EditableSchedule(graph, start, end);
 
-            Assert.AreSame(id, schedule.Id);
             Assert.AreSame(start, schedule.Start);
             Assert.AreSame(end, schedule.End);
             Assert.AreElementsSameIgnoringOrder(new IEditableScheduleVertex[] { start, end }, schedule.Vertices());
@@ -44,7 +42,6 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -63,7 +60,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
                 graph.AddEdge(new EditableScheduleEdge(vertex2, end));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
             var vertices = new List<int>();
@@ -84,7 +81,6 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -103,7 +99,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
                 graph.AddEdge(new EditableScheduleEdge(vertex2, end));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
             var vertices = new List<int>();
@@ -128,7 +124,6 @@ namespace Apollo.Core.Extensions.Scheduling
             //            |-- node3 <-|
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -154,7 +149,7 @@ namespace Apollo.Core.Extensions.Scheduling
 
                 graph.AddEdge(new EditableScheduleEdge(vertex3, vertex1));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
             var vertices = new List<int>();
@@ -183,7 +178,6 @@ namespace Apollo.Core.Extensions.Scheduling
             //           |--------------|
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -219,7 +213,7 @@ namespace Apollo.Core.Extensions.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex4, vertex5));
                 graph.AddEdge(new EditableScheduleEdge(vertex5, vertex3));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
             var vertices = new List<int>();

@@ -4,12 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
 using Autofac;
 
@@ -32,6 +32,7 @@ namespace Apollo.Core.Dataset
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new UtilitiesModule());
+                builder.RegisterModule(new SchedulingModule());
 
                 // Don't allow discovery on the dataset application because:
                 // - The dataset application wouldn't know what to do with it anyway

@@ -81,8 +81,10 @@
     <Compile Include="Scheduling\Processors\StartVertexProcessorTest.cs" />
     <Compile Include="Scheduling\Processors\SubScheduleVertexProcessorTest.cs" />
     <Compile Include="Scheduling\ScheduleActionStorageTest.cs" />
+    <Compile Include="Scheduling\ScheduleConditionStorageTest.cs" />
     <Compile Include="Scheduling\ScheduleDistributorTest.cs" />
     <Compile Include="Scheduling\ScheduleExecutorTest.cs" />
+    <Compile Include="Scheduling\ScheduleStorageTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionExceptionTest.cs" />
     <Compile Include="Utils\Logging\DebugLogTemplateTest.cs" />
     <Compile Include="Utils\Logging\LogMessageTest.cs" />

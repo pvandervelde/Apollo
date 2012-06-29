@@ -38,7 +38,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The collection that contains all the schedule conditions.
         /// </summary>
-        private readonly Dictionary<ScheduleElementId, IScheduleCondition> m_Conditions;
+        private readonly IStoreScheduleConditions m_Conditions;
 
         /// <summary>
         /// The schedule that is being executed.
@@ -76,7 +76,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </exception>
         public ScheduleExecutor(
             IEnumerable<IProcesExecutableScheduleVertices> executors,
-            Dictionary<ScheduleElementId, IScheduleCondition> conditions,
+            IStoreScheduleConditions conditions,
             ExecutableSchedule schedule,
             ScheduleExecutionInfo executionInfo = null)
         {
@@ -257,8 +257,8 @@ namespace Apollo.Core.Dataset.Scheduling
                         bool canTraverse = true;
                         if (edge.TraversingCondition != null)
                         {
-                            Debug.Assert(m_Conditions.ContainsKey(edge.TraversingCondition), "The traversing condition for the edge does not exist");
-                            var condition = m_Conditions[edge.TraversingCondition];
+                            Debug.Assert(m_Conditions.Contains(edge.TraversingCondition), "The traversing condition for the edge does not exist");
+                            var condition = m_Conditions.Condition(edge.TraversingCondition);
                             try
                             {
                                 canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);

@@ -21,7 +21,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// The collection that contains all the schedules.
         /// </summary>
-        private readonly IDictionary<ScheduleId, IEditableSchedule> m_Schedules;
+        private readonly IStoreSchedules m_Schedules;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleVerifier"/> class.
@@ -30,7 +30,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="scheduleStorage"/> is <see langword="null" />.
         /// </exception>
-        public ScheduleVerifier(IDictionary<ScheduleId, IEditableSchedule> scheduleStorage)
+        public ScheduleVerifier(IStoreSchedules scheduleStorage)
         {
             {
                 Lokad.Enforce.Argument(() => scheduleStorage);
@@ -42,6 +42,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Determines if the given schedule is a valid schedule.
         /// </summary>
+        /// <param name="id">The ID of the schedule.</param>
         /// <param name="schedule">The schedule that should be verified.</param>
         /// <param name="onValidationFailure">The action which is invoked for each validation failure.</param>
         /// <remarks>
@@ -70,7 +71,10 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </exception>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool IsValid(IEditableSchedule schedule, Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        public bool IsValid(
+            ScheduleId id, 
+            IEditableSchedule schedule, 
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
@@ -84,7 +88,7 @@ namespace Apollo.Core.Extensions.Scheduling
             result &= VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(schedule, onValidationFailure);
             result &= VerifySynchronizationBlockHasStartAndEnd(schedule, onValidationFailure);
             result &= VerifySynchronizationVariablesAreUpdatedInBlock(schedule, onValidationFailure);
-            result &= VerifySubSchedulesDoNotLinkBackToParentSchedule(schedule, onValidationFailure);
+            result &= VerifySubSchedulesDoNotLinkBackToParentSchedule(id, schedule, onValidationFailure);
 
             return result;
         }
@@ -229,6 +233,7 @@ namespace Apollo.Core.Extensions.Scheduling
         }
 
         private bool VerifySubSchedulesDoNotLinkBackToParentSchedule(
+            ScheduleId id,
             IEditableSchedule schedule,
             Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
@@ -245,7 +250,7 @@ namespace Apollo.Core.Extensions.Scheduling
                         }
 
                         var subScheduleId = scheduleNode.ScheduleToExecute;
-                        var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
+                        var isKnownSchedule = m_Schedules.Contains(subScheduleId);
                         if (!isKnownSchedule)
                         {
                             result = false;
@@ -253,7 +258,7 @@ namespace Apollo.Core.Extensions.Scheduling
                             return false;
                         }
 
-                        var doesSubScheduleLink = DoesSubScheduleLinkTo(schedule.Id, m_Schedules[subScheduleId]);
+                        var doesSubScheduleLink = DoesSubScheduleLinkTo(id, m_Schedules.Schedule(subScheduleId));
                         if (doesSubScheduleLink)
                         {
                             result = false;
@@ -287,14 +292,14 @@ namespace Apollo.Core.Extensions.Scheduling
                             return false;
                         }
 
-                        var isKnownSchedule = m_Schedules.ContainsKey(subScheduleId);
+                        var isKnownSchedule = m_Schedules.Contains(subScheduleId);
                         if (!isKnownSchedule)
                         {
                             result = false;
                             return true;
                         }
 
-                        var doesSubScheduleLink = DoesSubScheduleLinkTo(scheduleId, m_Schedules[subScheduleId]);
+                        var doesSubScheduleLink = DoesSubScheduleLinkTo(scheduleId, m_Schedules.Schedule(subScheduleId));
                         if (doesSubScheduleLink)
                         {
                             result = true;

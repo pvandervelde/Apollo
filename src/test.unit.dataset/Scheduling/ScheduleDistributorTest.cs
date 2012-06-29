@@ -40,7 +40,6 @@ namespace Apollo.Core.Dataset.Scheduling
             //                      |--------------|
             EditableSchedule schedule = null;
             {
-                var id = new ScheduleId();
                 var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
@@ -85,7 +84,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 graph.AddEdge(new EditableScheduleEdge(vertex6, vertex7));
                 graph.AddEdge(new EditableScheduleEdge(vertex7, vertex4));
 
-                schedule = new EditableSchedule(id, graph, start, end);
+                schedule = new EditableSchedule(graph, start, end);
             }
 
             return schedule;
@@ -227,7 +226,7 @@ namespace Apollo.Core.Dataset.Scheduling
         public void ExecuteWithUnknownSchedule()
         {
             var distributor = new ScheduleDistributor(
-                new Dictionary<ScheduleId, IEditableSchedule>(),
+                new ScheduleStorage(),
                 (s, e) => null);
             Assert.Throws<UnknownScheduleException>(() => distributor.Execute(new ScheduleId()));
         }
@@ -248,10 +247,8 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule> 
-                {
-                    { schedule.Id, schedule }
-                };
+            var knownSchedules = new ScheduleStorage();
+            var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
@@ -263,7 +260,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 };
 
             var distributor = new ScheduleDistributor(knownSchedules, builder);
-            var returnedExecutor = distributor.Execute(schedule.Id);
+            var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             VerifySchedule(schedule, storedSchedule);
         }
@@ -290,10 +287,8 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = new Dictionary<ScheduleId, IEditableSchedule> 
-                {
-                    { schedule.Id, schedule }
-                };
+            var knownSchedules = new ScheduleStorage();
+            var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
@@ -308,11 +303,11 @@ namespace Apollo.Core.Dataset.Scheduling
                 };
 
             var distributor = new ScheduleDistributor(knownSchedules, builder);
-            var returnedExecutor = distributor.Execute(schedule.Id);
+            var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             Assert.AreEqual(1, index);
 
-            var otherReturnedExecutor = distributor.Execute(schedule.Id);
+            var otherReturnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, otherReturnedExecutor);
             Assert.AreEqual(1, index);
         }

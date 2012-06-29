@@ -47,9 +47,9 @@ namespace Apollo.Core.Base
         Task Save();
 
         /// <summary>
-        /// Indicates if the dataset has been locked against changes from the outside.
+        /// Indicates what the lock state of the the dataset is.
         /// </summary>
         /// <returns>A task that will return the information about the lock state of the dataset.</returns>
-        Task<DatasetLockInformation> IsLocked();
+        Task<DatasetLockInformation> LockedState();
     }
 }
