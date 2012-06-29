@@ -144,4 +144,7 @@
   <data name="Exceptions_Messages_CannotExecuteScheduleWithoutProcessors" xml:space="preserve">
     <value>Cannot execute a schedule without vertex processors.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownScheduleCondition" xml:space="preserve">
+    <value>The specified condition ID does not have an associated condition.</value>
+  </data>
 </root>

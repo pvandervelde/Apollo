@@ -45,5 +45,11 @@ namespace Apollo.Core.Base
         /// </summary>
         /// <returns>A task which will complete once the transfer is complete.</returns>
         Task Save();
+
+        /// <summary>
+        /// Indicates if the dataset has been locked against changes from the outside.
+        /// </summary>
+        /// <returns>A task that will return the information about the lock state of the dataset.</returns>
+        Task<DatasetLockInformation> IsLocked();
     }
 }

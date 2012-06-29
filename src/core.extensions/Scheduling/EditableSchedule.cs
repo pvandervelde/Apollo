@@ -23,11 +23,6 @@ namespace Apollo.Core.Extensions.Scheduling
         private readonly BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Graph;
 
         /// <summary>
-        /// The ID of the current schedule.
-        /// </summary>
-        private readonly ScheduleId m_Id;
-
-        /// <summary>
         /// The vertex that is forms the start of the schedule.
         /// </summary>
         /// <remarks>
@@ -48,18 +43,15 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableSchedule"/> class.
         /// </summary>
-        /// <param name="id">The ID of the schedule.</param>
         /// <param name="graph">The graph that describes the current schedule.</param>
         /// <param name="start">The start node for the schedule.</param>
         /// <param name="end">The end node for the schedule.</param>
         public EditableSchedule(
-            ScheduleId id, 
             BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
             EditableStartVertex start,
             EditableEndVertex end)
         {
             {
-                Debug.Assert(id != null, "The ID should not be a null reference.");
                 Debug.Assert(graph != null, "The graph should not be a null reference.");
 
                 Debug.Assert(start != null, "The start vertex should not be a null reference.");
@@ -69,22 +61,10 @@ namespace Apollo.Core.Extensions.Scheduling
                 Debug.Assert(graph.ContainsVertex(end), "The end vertex should be part of the graph.");
             }
 
-            m_Id = id;
             m_Start = start;
             m_End = end;
 
             m_Graph = graph;
-        }
-
-        /// <summary>
-        /// Gets the ID of the current schedule.
-        /// </summary>
-        public ScheduleId Id
-        {
-            get
-            {
-                return m_Id;
-            }
         }
 
         /// <summary>

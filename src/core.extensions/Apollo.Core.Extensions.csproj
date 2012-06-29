@@ -75,16 +75,23 @@
     <Compile Include="Scheduling\IEditableScheduleVertex.cs" />
     <Compile Include="Scheduling\IScheduleAction.cs" />
     <Compile Include="Scheduling\IScheduleCondition.cs" />
+    <Compile Include="Scheduling\IScheduleCreationCommands.cs" />
     <Compile Include="Scheduling\IScheduleDependency.cs" />
+    <Compile Include="Scheduling\IScheduleExecutionNotifications.cs" />
+    <Compile Include="Scheduling\IScheduleInformationCommands.cs" />
     <Compile Include="Scheduling\IScheduleVariable.cs" />
+    <Compile Include="Scheduling\IScheduleExecutionCommands.cs" />
     <Compile Include="Scheduling\IStoreScheduleActions.cs" />
+    <Compile Include="Scheduling\IStoreScheduleConditions.cs" />
     <Compile Include="Scheduling\IVertifyScheduleIntegrity.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexException.cs" />
     <Compile Include="Scheduling\ScheduleConditionInformation.cs" />
     <Compile Include="Scheduling\ScheduleElementId.cs" />
     <Compile Include="Scheduling\ScheduleActionInformation.cs" />
+    <Compile Include="Scheduling\ScheduleEventArgs.cs" />
     <Compile Include="Scheduling\ScheduleExecutionState.cs" />
     <Compile Include="Scheduling\ScheduleId.cs" />
+    <Compile Include="Scheduling\ScheduleInformation.cs" />
     <Compile Include="Scheduling\ScheduleIntegrityFailureType.cs" />
     <Compile Include="Scheduling\ScheduleVerifier.cs" />
     <Compile Include="Scheduling\UnknownScheduleException.cs" />
@@ -104,6 +111,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
+      <Project>{5125e82c-2e8a-4ce4-8fa8-39ab82c9b856}</Project>
+      <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
       <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
       <Name>SolutionLevel</Name>

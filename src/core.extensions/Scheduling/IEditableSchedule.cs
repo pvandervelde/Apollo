@@ -18,14 +18,6 @@ namespace Apollo.Core.Extensions.Scheduling
     public interface IEditableSchedule
     {
         /// <summary>
-        /// Gets the ID of the current schedule.
-        /// </summary>
-        ScheduleId Id
-        {
-            get;
-        }
-
-        /// <summary>
         /// Gets the start vertex for the schedule.
         /// </summary>
         EditableStartVertex Start
