@@ -108,6 +108,28 @@ namespace Apollo.Core.Dataset.Scheduling
                 m_Hash = CalculateHashCode();
             }
 
+            /// <summary>
+            /// Gets the ID of the schedule being executed.
+            /// </summary>
+            public ScheduleId Schedule
+            {
+                get
+                {
+                    return m_Id;
+                }
+            }
+
+            /// <summary>
+            /// Gets the collection of variables for this execution.
+            /// </summary>
+            public IEnumerable<IScheduleVariable> Variables
+            {
+                get
+                {
+                    return m_Variables;
+                }
+            }
+
             private int CalculateHashCode()
             {
                 // As obtained from the Jon Skeet answer to:
@@ -271,6 +293,11 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly IStoreSchedules m_KnownSchedules;
 
         /// <summary>
+        /// The object that handles sending out the events.
+        /// </summary>
+        private readonly IScheduleExecutionNotificationInvoker m_Notifications;
+
+        /// <summary>
         /// The function that creates an <see cref="IExecuteSchedules"/> object with the given 
         /// executable schedule.
         /// </summary>
@@ -374,8 +401,12 @@ namespace Apollo.Core.Dataset.Scheduling
             // Create a new executor and provide it with the schedule
             var executor = m_LoadExecutor(executableSchedule, executionInfo);
             {
-                // Attach to events. We want to remove the executor from the collection as soon as it's finished(??)
+                // Attach to events. We want to remove the executor from the collection as soon as it's finished
+                executor.OnStart += HandleScheduleExecutionStart;
+                executor.OnPause += HandleScheduleExecutionPause;
                 executor.OnFinish += HandleScheduleExecutionFinish;
+                executor.OnExecutionProgress += HandleScheduleExecutionProgress;
+                executor.OnVertexProcess += HandleScheduleExecutionVertexProgress;
                 m_RunningExecutors.Add(new ExecutingScheduleKey(scheduleId, scheduleParameters), executor);
                 
                 executor.Start(scheduleParameters);
@@ -423,16 +454,46 @@ namespace Apollo.Core.Dataset.Scheduling
             return new ExecutableSchedule(id, newSchedule, start, end);
         }
 
-        private void HandleScheduleExecutionFinish(object sender, EventArgs e)
+        private void HandleScheduleExecutionStart(object sender, EventArgs e)
+        {
+            var executor = sender as IExecuteSchedules;
+            m_Notifications.RaiseOnStart(executor.Schedule);
+        }
+
+        private void HandleScheduleExecutionPause(object sender, EventArgs e)
+        {
+            var executor = sender as IExecuteSchedules;
+            m_Notifications.RaiseOnPause(executor.Schedule);
+        }
+
+        private void HandleScheduleExecutionFinish(object sender, ScheduleExecutionStateEventArgs e)
         {
             lock (m_Lock)
             {
                 var executor = sender as IExecuteSchedules;
                 Debug.Assert(executor != null, "Received the event from a non-IExecuteSchedules object.");
 
+                executor.OnStart -= HandleScheduleExecutionStart;
+                executor.OnPause -= HandleScheduleExecutionPause;
                 executor.OnFinish -= HandleScheduleExecutionFinish;
+                executor.OnExecutionProgress -= HandleScheduleExecutionProgress;
+                executor.OnVertexProcess -= HandleScheduleExecutionVertexProgress;
+
+                m_Notifications.RaiseOnFinish(executor.Schedule);
                 m_RunningExecutors.Remove(new ExecutingScheduleKey(executor.Schedule, executor.Parameters));
             }
+        }
+
+        private void HandleScheduleExecutionProgress(object sender, ProgressEventArgs e)
+        {
+            var executor = sender as IExecuteSchedules;
+            m_Notifications.RaiseOnExecutionProgress(e.Progress, e.CurrentlyProcessing);
+        }
+
+        private void HandleScheduleExecutionVertexProgress(object sender, ExecutingVertexEventArgs e)
+        {
+            var executor = sender as IExecuteSchedules;
+            m_Notifications.RaiseOnVertexProcess(executor.Schedule, e.Vertex);
         }
     }
 }

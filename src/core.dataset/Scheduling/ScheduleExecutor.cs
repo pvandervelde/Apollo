@@ -305,8 +305,19 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </summary>
         public void Pause()
         {
+            lock (m_Lock)
+            {
+                if (m_ExecutionTask == null)
+                {
+                    return;
+                }
+
+                m_ExecutionInfo.PauseHandler.Pause();
+            }
+
+            // Raise the event outside the lock, just in case
+            // anybody else starts holding locks etc.
             RaiseOnPause();
-            m_ExecutionInfo.PauseHandler.Pause();
         }
 
         /// <summary>

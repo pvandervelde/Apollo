@@ -33,5 +33,39 @@ namespace Apollo.Core.Base
                 local(this, new ProgressEventArgs(progress, currentlyProcessing));
             }
         }
+
+        /// <summary>
+        /// An event raised when the dataset is locked.
+        /// </summary>
+        public event EventHandler<EventArgs> OnLock;
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnLock"/> event.
+        /// </summary>
+        public void RaiseOnLock()
+        {
+            var local = OnLock;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the dataset is unlocked.
+        /// </summary>
+        public event EventHandler<EventArgs> OnUnlock;
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnUnlock"/> event.
+        /// </summary>
+        public void RaiseOnUnlock()
+        {
+            var local = OnUnlock;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
     }
 }

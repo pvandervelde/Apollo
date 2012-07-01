@@ -20,5 +20,15 @@ namespace Apollo.Core.Base
         /// An event raised when progress is made on some action.
         /// </summary>
         event EventHandler<ProgressEventArgs> OnProgress;
+
+        /// <summary>
+        /// An event raised when the dataset is locked.
+        /// </summary>
+        event EventHandler<EventArgs> OnLock;
+
+        /// <summary>
+        /// An event raised when the dataset is unlocked.
+        /// </summary>
+        event EventHandler<EventArgs> OnUnlock;
     }
 }
