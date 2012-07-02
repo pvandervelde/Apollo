@@ -6,9 +6,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Host.Properties;
+using Apollo.Utilities.Properties;
 
-namespace Apollo.Core.Host.Projects
+namespace Apollo.Utilities.History
 {
     /// <summary>
     /// An exception thrown when a history enabled object is created with a member object for which 
@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="UnknownMemberNameException"/> class.
         /// </summary>
         public UnknownMemberNameException()
-            : this(Resources_NonTranslatable.Exception_Messages_UnknownMemberName)
+            : this(Resources.Exceptions_Messages_UnknownMemberName)
         {
         }
 

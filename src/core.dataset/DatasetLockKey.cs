@@ -45,7 +45,7 @@ namespace Apollo.Core.Dataset
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UploadToken"/> class.
+        /// Initializes a new instance of the <see cref="DatasetLockKey"/> class.
         /// </summary>
         public DatasetLockKey()
             : this(NextIdValue())
@@ -53,7 +53,7 @@ namespace Apollo.Core.Dataset
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="UploadToken"/> class with the given integer as ID number.
+        /// Initializes a new instance of the <see cref="DatasetLockKey"/> class with the given integer as ID number.
         /// </summary>
         /// <param name="id">The ID number. Must be larger than -1.</param>
         internal DatasetLockKey(int id)

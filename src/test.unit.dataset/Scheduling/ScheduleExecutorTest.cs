@@ -48,7 +48,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new StartVertexProcessor(),
                         new EndVertexProcessor(),
                     },
-                new ScheduleConditionStorage(),
+                ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -74,7 +74,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Verifiable();
             }
 
-            var collection = new ScheduleActionStorage();
+            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             var schedule = BuildThreeVertexSchedule(new ExecutableActionVertex(3, info.Id));
@@ -85,7 +85,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new ActionVertexProcessor(collection),
                     },
-                new ScheduleConditionStorage(),
+                ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -116,7 +116,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new MarkHistoryVertexProcessor(timeline.Object, m => storedMarker = m),
                     },
-                new ScheduleConditionStorage(),
+                ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -157,7 +157,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new SubScheduleVertexProcessor(distributor.Object),
                     },
-                new ScheduleConditionStorage(),
+                ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -179,7 +179,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         new EndVertexProcessor(),
                         new NoOpVertexProcessor(),
                     },
-                new ScheduleConditionStorage(),
+                ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
@@ -199,7 +199,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Returns(false);
             }
 
-            var conditionStorage = new ScheduleConditionStorage();
+            var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;
@@ -253,7 +253,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Returns(false);
             }
 
-            var conditionStorage = new ScheduleConditionStorage();
+            var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;
@@ -308,7 +308,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Returns(() => passThrough);
             }
 
-            var conditionStorage = new ScheduleConditionStorage();
+            var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             var action = new Mock<IScheduleAction>();
@@ -317,7 +317,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Callback(() => passThrough = true);
             }
 
-            var collection = new ScheduleActionStorage();
+            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             // Making a schedule that looks like:
@@ -389,7 +389,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Returns(() => innerLoopPassThrough);
             }
 
-            var conditionStorage = new ScheduleConditionStorage();
+            var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var outerLoopConditionInfo = conditionStorage.Add(outerLoopCondition.Object, "a", "b", "c", new List<IScheduleDependency>());
             var innerLoopConditionInfo = conditionStorage.Add(innerLoopCondition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
@@ -405,7 +405,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Callback(() => innerLoopPassThrough = true);
             }
 
-            var collection = new ScheduleActionStorage();
+            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var outerLoopInfo = collection.Add(outerLoopAction.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
             var innerLoopInfo = collection.Add(innerLoopAction.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
@@ -490,7 +490,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     .Returns(false);
             }
 
-            var conditionStorage = new ScheduleConditionStorage();
+            var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var conditionInfo = conditionStorage.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
 
             ExecutableSchedule schedule = null;

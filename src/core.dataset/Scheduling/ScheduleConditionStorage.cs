@@ -9,15 +9,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
+using Apollo.Utilities;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
     /// Stores schedule conditions by ID.
     /// </summary>
-    internal sealed class ScheduleConditionStorage : IStoreScheduleConditions
+    internal sealed class ScheduleConditionStorage : IStoreScheduleConditions, IAmHistoryEnabled
     {
         /// <summary>
         /// Maps the condition to the information describing the condition.
@@ -74,10 +77,95 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
+        /// Returns the name of the m_Conditions field.
+        /// </summary>
+        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
+        /// <returns>The name of the field.</returns>
+        internal static string NameOfConditionsField()
+        {
+            return ReflectionExtensions.MemberName<ScheduleConditionStorage, IDictionaryTimelineStorage<ScheduleElementId, ConditionMap>>(
+                p => p.m_Conditions);
+        }
+
+        /// <summary>
+        /// Creates a default schedule storage that isn't linked to a timeline.
+        /// </summary>
+        /// <returns>The newly created instance.</returns>
+        internal static ScheduleConditionStorage BuildStorageWithoutTimeline()
+        {
+            return new ScheduleConditionStorage(new HistoryId(), new DictionaryHistory<ScheduleElementId, ConditionMap>());
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ScheduleConditionStorage"/> instance with the given parameters.
+        /// </summary>
+        /// <param name="id">The ID that will be used to uniquely identify the object to the history system.</param>
+        /// <param name="members">The collection containing all the member collections.</param>
+        /// <param name="constructorArguments">The constructor arguments.</param>
+        /// <returns>The newly created instance.</returns>
+        public static ScheduleConditionStorage BuildStorage(
+            HistoryId id,
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
+        {
+            {
+                Debug.Assert(members.Count() == 1, "There should only be 1 member.");
+            }
+
+            var pair = members.First();
+            if (!string.Equals(ScheduleConditionStorage.NameOfConditionsField(), pair.Item1, StringComparison.Ordinal))
+            {
+                throw new UnknownMemberNameException();
+            }
+
+            var schedules = pair.Item2 as IDictionaryTimelineStorage<ScheduleElementId, ConditionMap>;
+            return new ScheduleConditionStorage(id, schedules);
+        }
+
+        /// <summary>
         /// The collection of schedule conditions.
         /// </summary>
-        private readonly Dictionary<ScheduleElementId, ConditionMap> m_Conditions
-            = new Dictionary<ScheduleElementId, ConditionMap>();
+        private readonly IDictionaryTimelineStorage<ScheduleElementId, ConditionMap> m_Conditions;
+
+        /// <summary>
+        /// The ID used by the timeline to uniquely identify the current object.
+        /// </summary>
+        private readonly HistoryId m_HistoryId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleConditionStorage"/> class.
+        /// </summary>
+        /// <param name="id">The ID used by the timeline to uniquely identify the current object.</param>
+        /// <param name="knownConditions">The collection that contains the conditions.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="knownConditions"/> is <see langword="null" />.
+        /// </exception>
+        private ScheduleConditionStorage(
+            HistoryId id,
+            IDictionaryTimelineStorage<ScheduleElementId, ConditionMap> knownConditions)
+        {
+            {
+                Lokad.Enforce.Argument(() => id);
+                Lokad.Enforce.Argument(() => knownConditions);
+            }
+
+            m_HistoryId = id;
+            m_Conditions = knownConditions;
+        }
+
+        /// <summary>
+        /// Gets the ID which relates the object to the timeline.
+        /// </summary>
+        public HistoryId HistoryId
+        {
+            get
+            {
+                return m_HistoryId;
+            }
+        }
 
         /// <summary>
         /// Adds the <see cref="IScheduleCondition"/> object with the dependencies for that condition.

@@ -9,15 +9,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
+using Apollo.Utilities;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
     /// Stores schedule actions by ID.
     /// </summary>
-    internal sealed class ScheduleActionStorage : IStoreScheduleActions
+    internal sealed class ScheduleActionStorage : IStoreScheduleActions, IAmHistoryEnabled
     {
         /// <summary>
         /// Maps the action to the information describing the action.
@@ -74,10 +77,95 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
+        /// Returns the name of the m_Actions field.
+        /// </summary>
+        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
+        /// <returns>The name of the field.</returns>
+        internal static string NameOfActionsField()
+        {
+            return ReflectionExtensions.MemberName<ScheduleActionStorage, IDictionaryTimelineStorage<ScheduleElementId, ActionMap>>(
+                p => p.m_Actions);
+        }
+
+        /// <summary>
+        /// Creates a default storage that isn't linked to a timeline.
+        /// </summary>
+        /// <returns>The newly created instance.</returns>
+        internal static ScheduleActionStorage BuildStorageWithoutTimeline()
+        {
+            return new ScheduleActionStorage(new HistoryId(), new DictionaryHistory<ScheduleElementId, ActionMap>());
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ScheduleActionStorage"/> instance with the given parameters.
+        /// </summary>
+        /// <param name="id">The ID that will be used to uniquely identify the object to the history system.</param>
+        /// <param name="members">The collection containing all the member collections.</param>
+        /// <param name="constructorArguments">The constructor arguments.</param>
+        /// <returns>The newly created instance.</returns>
+        public static ScheduleActionStorage BuildStorage(
+            HistoryId id,
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
+        {
+            {
+                Debug.Assert(members.Count() == 1, "There should only be 1 member.");
+            }
+
+            var pair = members.First();
+            if (!string.Equals(ScheduleActionStorage.NameOfActionsField(), pair.Item1, StringComparison.Ordinal))
+            {
+                throw new UnknownMemberNameException();
+            }
+
+            var actions = pair.Item2 as IDictionaryTimelineStorage<ScheduleElementId, ActionMap>;
+            return new ScheduleActionStorage(id, actions);
+        }
+
+        /// <summary>
         /// The collection of schedule actions.
         /// </summary>
-        private readonly Dictionary<ScheduleElementId, ActionMap> m_Actions
-            = new Dictionary<ScheduleElementId, ActionMap>();
+        private readonly IDictionaryTimelineStorage<ScheduleElementId, ActionMap> m_Actions;
+
+        /// <summary>
+        /// The ID used by the timeline to uniquely identify the current object.
+        /// </summary>
+        private readonly HistoryId m_HistoryId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleActionStorage"/> class.
+        /// </summary>
+        /// <param name="id">The ID used by the timeline to uniquely identify the current object.</param>
+        /// <param name="knownActions">The collection that contains the actions.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="knownActions"/> is <see langword="null" />.
+        /// </exception>
+        private ScheduleActionStorage(
+            HistoryId id,
+            IDictionaryTimelineStorage<ScheduleElementId, ActionMap> knownActions)
+        {
+            {
+                Lokad.Enforce.Argument(() => id);
+                Lokad.Enforce.Argument(() => knownActions);
+            }
+
+            m_HistoryId = id;
+            m_Actions = knownActions;
+        }
+
+        /// <summary>
+        /// Gets the ID which relates the object to the timeline.
+        /// </summary>
+        public HistoryId HistoryId
+        {
+            get
+            {
+                return m_HistoryId;
+            }
+        }
 
         /// <summary>
         /// Adds the <see cref="IScheduleAction"/> object with the variables it affects and the dependencies for that action.

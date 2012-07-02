@@ -93,6 +93,7 @@
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnknownHistoryMemberTypeExceptionTest.cs" />
+    <Compile Include="History\UnknownMemberNameExceptionTest.cs" />
     <Compile Include="History\UnknownTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />

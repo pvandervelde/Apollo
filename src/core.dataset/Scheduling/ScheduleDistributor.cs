@@ -307,23 +307,30 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Initializes a new instance of the <see cref="ScheduleDistributor"/> class.
         /// </summary>
         /// <param name="knownSchedules">The collection of known schedules.</param>
+        /// <param name="notifications">The object that handles the notifications for the schedule execution.</param>
         /// <param name="executorBuilder">The function that is used to create a new <see cref="IExecuteSchedules"/> object.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="knownSchedules"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="executorBuilder"/> is <see langword="null" />.
         /// </exception>
         public ScheduleDistributor(
             IStoreSchedules knownSchedules,
+            IScheduleExecutionNotificationInvoker notifications,
             Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => knownSchedules);
+                Lokad.Enforce.Argument(() => notifications);
                 Lokad.Enforce.Argument(() => executorBuilder);
             }
 
             m_KnownSchedules = knownSchedules;
+            m_Notifications = notifications;
             m_LoadExecutor = executorBuilder;
         }
 

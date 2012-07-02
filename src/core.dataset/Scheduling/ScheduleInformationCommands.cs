@@ -32,7 +32,7 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly IStoreSchedules m_Schedules;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScheduleInformationCommands"/> class
+        /// Initializes a new instance of the <see cref="ScheduleInformationCommands"/> class.
         /// </summary>
         /// <param name="actions">The collection that contains the actions that can be scheduled.</param>
         /// <param name="conditions">The collection that contains the conditions that can be used in a schedule.</param>

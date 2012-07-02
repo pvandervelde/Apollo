@@ -7,44 +7,43 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Apollo.Utilities.History;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 
-namespace Apollo.ProjectExplorer.Utilities
+namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// Defines the <see cref="IRegistrationSource"/> for <see cref="IDictionaryTimelineStorage{TKey, TValue}"/>
+    /// Defines the <see cref="IRegistrationSource"/> for <see cref="IListTimelineStorage{T}"/>
     /// objects.
     /// </summary>
-    internal sealed class DictionaryTimelineRegistrationSource : IRegistrationSource
+    public sealed class ListTimelineRegistrationSource : IRegistrationSource
     {
         private static readonly MethodInfo s_CreateRegistrationForHistoryObjectMethod =
-            typeof(DictionaryTimelineRegistrationSource)
+            typeof(ListTimelineRegistrationSource)
             .GetMethod("CreateRegistrationForHistoryObject", BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly MethodInfo s_CreateRegistrationForNonHistoryObjectMethod =
-            typeof(DictionaryTimelineRegistrationSource)
+            typeof(ListTimelineRegistrationSource)
             .GetMethod("CreateRegistrationForNonHistoryObject", BindingFlags.Static | BindingFlags.NonPublic);
-        
-        private static IComponentRegistration CreateRegistrationForHistoryObject<TKey, TValue>(
-            Service providedService) where TValue : class, IAmHistoryEnabled
+
+        private static IComponentRegistration CreateRegistrationForHistoryObject<T>(
+            Service providedService) where T : class, IAmHistoryEnabled
         {
             var rb = RegistrationBuilder.ForDelegate(
-                (c, p) => 
+                (c, p) =>
                 {
                     var timeline = c.Resolve<ITimeline>();
-                    return new HistoryObjectDictionaryHistory<TKey, TValue>(id => timeline.IdToObject<TValue>(id));
+                    return new HistoryObjectListHistory<T>(id => timeline.IdToObject<T>(id));
                 })
                 .As(providedService);
 
             return RegistrationBuilder.CreateRegistration(rb);
         }
 
-        private static IComponentRegistration CreateRegistrationForNonHistoryObject<TKey, TValue>(Service providedService)
+        private static IComponentRegistration CreateRegistrationForNonHistoryObject<T>(Service providedService)
         {
-            var rb = RegistrationBuilder.ForType(typeof(DictionaryHistory<TKey, TValue>))
+            var rb = RegistrationBuilder.ForType(typeof(ListHistory<T>))
                 .As(providedService);
 
             return RegistrationBuilder.CreateRegistration(rb);
@@ -54,7 +53,7 @@ namespace Apollo.ProjectExplorer.Utilities
         /// Gets a value indicating whether the registrations provided by this source are 1:1 adapters on
         /// top of other components (I.e. like Meta, Func or Owned).
         /// </summary>
-        public bool IsAdapterForIndividualComponents 
+        public bool IsAdapterForIndividualComponents
         {
             get
             {
@@ -77,7 +76,7 @@ namespace Apollo.ProjectExplorer.Utilities
         /// an error to return components that do not implement service.
         /// </remarks>
         public IEnumerable<IComponentRegistration> RegistrationsFor(
-            Service service, 
+            Service service,
             Func<Service, IEnumerable<IComponentRegistration>> registrationAccessor)
         {
             var swt = service as IServiceWithType;
@@ -87,13 +86,13 @@ namespace Apollo.ProjectExplorer.Utilities
             }
 
             var def = swt.ServiceType.GetGenericTypeDefinition();
-            if (def != typeof(IDictionaryTimelineStorage<,>))
+            if (def != typeof(IListTimelineStorage<>))
             {
                 yield break;
             }
 
             var genericArguments = swt.ServiceType.GetGenericArguments();
-            if (typeof(IAmHistoryEnabled).IsAssignableFrom(genericArguments[1]))
+            if (typeof(IAmHistoryEnabled).IsAssignableFrom(genericArguments[0]))
             {
                 var registrationCreator = s_CreateRegistrationForHistoryObjectMethod.MakeGenericMethod(genericArguments);
                 yield return registrationCreator.Invoke(null, new object[] { service }) as IComponentRegistration;

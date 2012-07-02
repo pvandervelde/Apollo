@@ -23,7 +23,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullCondition()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
                 () => collection.Add(null, "a", "b", "c", new List<IScheduleDependency>()));
@@ -32,7 +32,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullDependencies()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             Assert.Throws<ArgumentNullException>(
@@ -42,7 +42,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Add()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -53,7 +53,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithDuplicate()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -68,7 +68,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullId()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -79,7 +79,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithUnknownId()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -90,7 +90,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullAction()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -100,7 +100,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Update()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -121,14 +121,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RemoveWithNullId()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             Assert.DoesNotThrow(() => collection.Remove(null));
         }
 
         [Test]
         public void Remove()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());
@@ -141,7 +141,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Contains()
         {
-            var collection = new ScheduleConditionStorage();
+            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
 
             var info = collection.Add(condition.Object, "a", "b", "c", new List<IScheduleDependency>());

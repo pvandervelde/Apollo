@@ -226,7 +226,8 @@ namespace Apollo.Core.Dataset.Scheduling
         public void ExecuteWithUnknownSchedule()
         {
             var distributor = new ScheduleDistributor(
-                new ScheduleStorage(),
+                ScheduleStorage.BuildStorageWithoutTimeline(),
+                new Mock<IScheduleExecutionNotificationInvoker>().Object,
                 (s, e) => null);
             Assert.Throws<UnknownScheduleException>(() => distributor.Execute(new ScheduleId()));
         }
@@ -247,7 +248,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = new ScheduleStorage();
+            var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
@@ -259,7 +260,8 @@ namespace Apollo.Core.Dataset.Scheduling
                     return executor.Object;
                 };
 
-            var distributor = new ScheduleDistributor(knownSchedules, builder);
+            var notifications = new Mock<IScheduleExecutionNotificationInvoker>();
+            var distributor = new ScheduleDistributor(knownSchedules, notifications.Object, builder);
             var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             VerifySchedule(schedule, storedSchedule);
@@ -287,7 +289,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 exitCondition,
                 passThroughCondition);
 
-            var knownSchedules = new ScheduleStorage();
+            var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
@@ -302,7 +304,8 @@ namespace Apollo.Core.Dataset.Scheduling
                     return executor.Object;
                 };
 
-            var distributor = new ScheduleDistributor(knownSchedules, builder);
+            var notifications = new Mock<IScheduleExecutionNotificationInvoker>();
+            var distributor = new ScheduleDistributor(knownSchedules, notifications.Object, builder);
             var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             Assert.AreEqual(1, index);

@@ -225,6 +225,9 @@
   <data name="Exceptions_Messages_UnknownHistoryMemberType" xml:space="preserve">
     <value>The provided type cannot be substituted with a known, concrete, history enabled type.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownMemberName" xml:space="preserve">
+    <value>No member with the specified member name exists.</value>
+  </data>
   <data name="Exceptions_Messages_UnknownTimeMarker" xml:space="preserve">
     <value>The specified name does not belong to a known time marker.</value>
   </data>

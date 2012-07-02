@@ -9,15 +9,18 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using Apollo.Core.Dataset.Properties;
 using Apollo.Core.Extensions.Scheduling;
+using Apollo.Utilities;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
     /// Stores schedules by ID.
     /// </summary>
-    internal sealed class ScheduleStorage : IStoreSchedules
+    internal sealed class ScheduleStorage : IStoreSchedules, IAmHistoryEnabled
     {
         /// <summary>
         /// Maps the schedule to the information describing the schedule.
@@ -74,10 +77,95 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
+        /// Returns the name of the m_Schedules field.
+        /// </summary>
+        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
+        /// <returns>The name of the field.</returns>
+        internal static string NameOfScheduleField()
+        {
+            return ReflectionExtensions.MemberName<ScheduleStorage, IDictionaryTimelineStorage<ScheduleId, ScheduleMap>>(
+                p => p.m_Schedules);
+        }
+
+        /// <summary>
+        /// Creates a default storage that isn't linked to a timeline.
+        /// </summary>
+        /// <returns>The newly created instance.</returns>
+        internal static ScheduleStorage BuildStorageWithoutTimeline()
+        {
+            return new ScheduleStorage(new HistoryId(), new DictionaryHistory<ScheduleId, ScheduleMap>());
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="ScheduleStorage"/> instance with the given parameters.
+        /// </summary>
+        /// <param name="id">The ID that will be used to uniquely identify the object to the history system.</param>
+        /// <param name="members">The collection containing all the member collections.</param>
+        /// <param name="constructorArguments">The constructor arguments.</param>
+        /// <returns>The newly created instance.</returns>
+        public static ScheduleStorage BuildStorage(
+            HistoryId id,
+            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            params object[] constructorArguments)
+        {
+            {
+                Debug.Assert(members.Count() == 1, "There should only be 1 member.");
+            }
+
+            var pair = members.First();
+            if (!string.Equals(ScheduleStorage.NameOfScheduleField(), pair.Item1, StringComparison.Ordinal))
+            {
+                throw new UnknownMemberNameException();
+            }
+
+            var schedules = pair.Item2 as IDictionaryTimelineStorage<ScheduleId, ScheduleMap>;
+            return new ScheduleStorage(id, schedules);
+        }
+
+        /// <summary>
         /// The collection of schedules.
         /// </summary>
-        private readonly Dictionary<ScheduleId, ScheduleMap> m_Schedules
-            = new Dictionary<ScheduleId, ScheduleMap>();
+        private readonly IDictionaryTimelineStorage<ScheduleId, ScheduleMap> m_Schedules;
+
+        /// <summary>
+        /// The ID used by the timeline to uniquely identify the current object.
+        /// </summary>
+        private readonly HistoryId m_HistoryId;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleStorage"/> class.
+        /// </summary>
+        /// <param name="id">The ID used by the timeline to uniquely identify the current object.</param>
+        /// <param name="knownSchedules">The collection that contains the schedules.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="knownSchedules"/> is <see langword="null" />.
+        /// </exception>
+        private ScheduleStorage(
+            HistoryId id,
+            IDictionaryTimelineStorage<ScheduleId, ScheduleMap> knownSchedules)
+        {
+            {
+                Lokad.Enforce.Argument(() => id);
+                Lokad.Enforce.Argument(() => knownSchedules);
+            }
+
+            m_HistoryId = id;
+            m_Schedules = knownSchedules;
+        }
+
+        /// <summary>
+        /// Gets the ID which relates the object to the timeline.
+        /// </summary>
+        public HistoryId HistoryId
+        {
+            get
+            {
+                return m_HistoryId;
+            }
+        }
 
         /// <summary>
         /// Adds the <see cref="IEditableSchedule"/> object with the variables it affects and the dependencies for that schedule.

@@ -7,25 +7,24 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Apollo.Utilities.History;
 using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 
-namespace Apollo.ProjectExplorer.Utilities
+namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// Defines the <see cref="IRegistrationSource"/> for <see cref="IListTimelineStorage{T}"/>
+    /// Defines the <see cref="IRegistrationSource"/> for <see cref="IVariableTimeline{T}"/>
     /// objects.
     /// </summary>
-    internal sealed class ListTimelineRegistrationSource : IRegistrationSource
+    public sealed class ValueTimelineRegistrationSource : IRegistrationSource
     {
         private static readonly MethodInfo s_CreateRegistrationForHistoryObjectMethod =
-            typeof(ListTimelineRegistrationSource)
+            typeof(ValueTimelineRegistrationSource)
             .GetMethod("CreateRegistrationForHistoryObject", BindingFlags.Static | BindingFlags.NonPublic);
 
         private static readonly MethodInfo s_CreateRegistrationForNonHistoryObjectMethod =
-            typeof(ListTimelineRegistrationSource)
+            typeof(ValueTimelineRegistrationSource)
             .GetMethod("CreateRegistrationForNonHistoryObject", BindingFlags.Static | BindingFlags.NonPublic);
 
         private static IComponentRegistration CreateRegistrationForHistoryObject<T>(
@@ -35,7 +34,7 @@ namespace Apollo.ProjectExplorer.Utilities
                 (c, p) =>
                 {
                     var timeline = c.Resolve<ITimeline>();
-                    return new HistoryObjectListHistory<T>(id => timeline.IdToObject<T>(id));
+                    return new HistoryObjectValueHistory<T>(id => timeline.IdToObject<T>(id));
                 })
                 .As(providedService);
 
@@ -44,7 +43,7 @@ namespace Apollo.ProjectExplorer.Utilities
 
         private static IComponentRegistration CreateRegistrationForNonHistoryObject<T>(Service providedService)
         {
-            var rb = RegistrationBuilder.ForType(typeof(ListHistory<T>))
+            var rb = RegistrationBuilder.ForType(typeof(ValueHistory<T>))
                 .As(providedService);
 
             return RegistrationBuilder.CreateRegistration(rb);
@@ -87,7 +86,7 @@ namespace Apollo.ProjectExplorer.Utilities
             }
 
             var def = swt.ServiceType.GetGenericTypeDefinition();
-            if (def != typeof(IListTimelineStorage<>))
+            if (def != typeof(IVariableTimeline<>))
             {
                 yield break;
             }

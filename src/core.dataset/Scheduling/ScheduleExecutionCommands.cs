@@ -77,7 +77,7 @@ namespace Apollo.Core.Dataset.Scheduling
                         .Take(1)
                         .Subscribe(args => resetEvent.Set());
 
-                    m_RunningExecutors[scheduleToExecute] = new Tuple<IExecuteSchedules,DatasetLockKey>(executor, key);
+                    m_RunningExecutors[scheduleToExecute] = new Tuple<IExecuteSchedules, DatasetLockKey>(executor, key);
                     using (wrapperWait)
                     {
                         resetEvent.WaitOne();

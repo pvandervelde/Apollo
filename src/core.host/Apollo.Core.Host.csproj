@@ -77,7 +77,6 @@
     <Compile Include="Projects\IOwnedProxyDataset.cs" />
     <Compile Include="Projects\IProxyCommandSet.cs" />
     <Compile Include="Projects\Project.History.cs" />
-    <Compile Include="Projects\UnknownMemberNameException.cs" />
     <Compile Include="SrcOnlyResources.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />

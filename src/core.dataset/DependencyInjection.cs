@@ -13,6 +13,7 @@ using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Dataset.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
+using Apollo.Core.Dataset.Utilities;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -86,14 +87,17 @@ namespace Apollo.Core.Dataset
 
         private static void RegisterScheduleStorage(ContainerBuilder builder)
         {
-            builder.Register(c => new ScheduleActionStorage())
-                .As<IStoreScheduleActions>();
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.BuildStorage))
+                .As<IStoreScheduleActions>()
+                .SingleInstance();
 
-            builder.Register(c => new ScheduleConditionStorage())
-                .As<IStoreScheduleConditions>();
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleConditionStorage>(ScheduleConditionStorage.BuildStorage))
+                .As<IStoreScheduleConditions>()
+                .SingleInstance();
 
-            builder.Register(c => new ScheduleStorage())
-                .As<IStoreSchedules>();
+            builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.BuildStorage))
+                .As<IStoreSchedules>()
+                .SingleInstance();
         }
 
         private static void RegisterScheduleExecutors(ContainerBuilder builder)
@@ -118,12 +122,12 @@ namespace Apollo.Core.Dataset
             builder.Register(
                     c => 
                     {
-                        var ctx = c.Resolve<IComponentContext>();
+                        var storage = c.Resolve<IStoreHistoryMarkers>();
                         return new MarkHistoryVertexProcessor(
                             c.Resolve<ITimeline>(),
                             m => 
                             {
-                                foobar();
+                                storage.Add(m);
                             });
                     })
                 .As<IProcesExecutableScheduleVertices>();
@@ -141,6 +145,7 @@ namespace Apollo.Core.Dataset
                         var ctx = c.Resolve<IComponentContext>();
                         return new ScheduleDistributor(
                             c.Resolve<IStoreSchedules>(),
+                            c.Resolve<IScheduleExecutionNotificationInvoker>(),
                             (s, i) =>
                             {
                                 return ctx.Resolve<IExecuteSchedules>(
@@ -190,7 +195,6 @@ namespace Apollo.Core.Dataset
                 RegisterScheduleStorage(builder);
                 RegisterScheduleExecutors(builder);
                 RegisterDatasetLock(builder);
-
             }
 
             result = builder.Build();

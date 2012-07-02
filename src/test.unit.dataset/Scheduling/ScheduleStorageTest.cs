@@ -21,7 +21,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullSchedule()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
                 () => collection.Add(null, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
@@ -30,7 +30,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullProductionVariables()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             Assert.Throws<ArgumentNullException>(
@@ -40,7 +40,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithNullDependencies()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             Assert.Throws<ArgumentNullException>(
@@ -50,7 +50,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Add()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -61,7 +61,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void AddWithDuplicate()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -76,7 +76,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullId()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -87,7 +87,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithUnknownId()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -98,7 +98,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void UpdateWithNullSchedule()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -108,7 +108,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Update()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -130,14 +130,14 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void RemoveWithNullId()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             Assert.DoesNotThrow(() => collection.Remove(null));
         }
 
         [Test]
         public void Remove()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
@@ -150,7 +150,7 @@ namespace Apollo.Core.Dataset.Scheduling
         [Test]
         public void Contains()
         {
-            var collection = new ScheduleStorage();
+            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
 
             var info = collection.Add(schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
