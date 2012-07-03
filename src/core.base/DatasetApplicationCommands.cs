@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
@@ -22,9 +24,19 @@ namespace Apollo.Core.Base
     internal sealed class DatasetApplicationCommands : IDatasetApplicationCommands
     {
         /// <summary>
+        /// The collection of locking keys.
+        /// </summary>
+        private readonly ConcurrentStack<DatasetLockKey> m_EditKeys = new ConcurrentStack<DatasetLockKey>();
+
+        /// <summary>
         /// The object that handles the communication with the remote endpoints.
         /// </summary>
         private readonly ICommunicationLayer m_Layer;
+
+        /// <summary>
+        /// The object that tracks dataset locks.
+        /// </summary>
+        private readonly ITrackDatasetLocks m_DatasetLock;
 
         /// <summary>
         /// The action that closes the application.
@@ -50,12 +62,16 @@ namespace Apollo.Core.Base
         /// Initializes a new instance of the <see cref="DatasetApplicationCommands"/> class.
         /// </summary>
         /// <param name="layer">The object that handles the communication with remote endpoints.</param>
+        /// <param name="datasetLock">The object that handles the locking of the dataset for editing or running.</param>
         /// <param name="closeAction">The action that closes the application.</param>
         /// <param name="loadAction">The action that is used to load the dataset from a given file path.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="layer"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="datasetLock"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="closeAction"/> is <see langword="null" />.
@@ -68,6 +84,7 @@ namespace Apollo.Core.Base
         /// </exception>
         public DatasetApplicationCommands(
             ICommunicationLayer layer, 
+            ITrackDatasetLocks datasetLock,
             Action closeAction,
             Action<FileInfo> loadAction,
             SystemDiagnostics systemDiagnostics,
@@ -81,6 +98,7 @@ namespace Apollo.Core.Base
             }
 
             m_Layer = layer;
+            m_DatasetLock = datasetLock;
             m_CloseAction = closeAction;
             m_LoadAction = loadAction;
             m_Diagnostics = systemDiagnostics;
@@ -179,12 +197,36 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// Indicates what the lock state of the the dataset is.
+        /// Indicates that the dataset will be edited in the near future.
         /// </summary>
-        /// <returns>A task that will return the information about the lock state of the dataset.</returns>
-        public Task<DatasetLockInformation> LockedState()
+        /// <returns>A task which will complete once the dataset is ready for editing.</returns>
+        public Task StartEditing()
         {
-            throw new NotImplementedException();
+            return Task.Factory.StartNew(
+                () =>
+                {
+                    var key = m_DatasetLock.LockForWriting();
+                    m_EditKeys.Push(key);
+                },
+                TaskCreationOptions.LongRunning);
+        }
+
+        /// <summary>
+        /// Indicates that the editing is done.
+        /// </summary>
+        /// <returns>A task that will complete once the dataset is done with the edit process.</returns>
+        public Task FinishEditing()
+        {
+            return Task.Factory.StartNew(
+                () =>
+                {
+                    DatasetLockKey key;
+                    if (m_EditKeys.TryPop(out key))
+                    {
+                        m_DatasetLock.RemoveWriteLock(key);
+                    }
+                },
+                TaskCreationOptions.LongRunning);
         }
     }
 }

@@ -10,7 +10,7 @@ using System.Globalization;
 using Apollo.Utilities.Logging;
 using MbUnit.Framework;
 
-namespace Apollo.Core.Logging
+namespace Apollo.Core.Dataset.Utilities
 {
     // There is little point in adding a contract verifier for IEquatable<DebugLogTemplate> here because there
     // is really only one implementation of that type and they're pretty much all the same

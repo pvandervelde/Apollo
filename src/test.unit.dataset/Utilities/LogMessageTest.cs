@@ -7,9 +7,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Utilities.Logging;
 using MbUnit.Framework;
 
-namespace Apollo.Utilities.Logging
+namespace Apollo.Core.Dataset.Utilities
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",

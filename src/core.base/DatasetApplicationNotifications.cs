@@ -35,16 +35,16 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// An event raised when the dataset is locked.
+        /// An event raised when the dataset is locked for reading.
         /// </summary>
-        public event EventHandler<EventArgs> OnLock;
+        public event EventHandler<EventArgs> OnReadLock;
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnLock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnReadLock"/> event.
         /// </summary>
-        public void RaiseOnLock()
+        public void RaiseOnReadLock()
         {
-            var local = OnLock;
+            var local = OnReadLock;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -52,16 +52,16 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// An event raised when the dataset is unlocked.
+        /// An event raised when the dataset is unlocked from reading.
         /// </summary>
-        public event EventHandler<EventArgs> OnUnlock;
+        public event EventHandler<EventArgs> OnRemoveReadLock;
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnUnlock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnRemoveReadLock"/> event.
         /// </summary>
-        public void RaiseOnUnlock()
+        public void RaiseOnRemoveReadLock()
         {
-            var local = OnUnlock;
+            var local = OnRemoveReadLock;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

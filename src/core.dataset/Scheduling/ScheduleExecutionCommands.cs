@@ -9,6 +9,7 @@ using System.Collections.Concurrent;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling
@@ -67,7 +68,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var result = Task.Factory.StartNew(
                 () =>
                 {
-                    var key = m_DatasetLock.Lock();
+                    var key = m_DatasetLock.LockForReading();
 
                     var executor = m_Executor.Execute(scheduleToExecute);
                     var resetEvent = new AutoResetEvent(false);
@@ -85,7 +86,7 @@ namespace Apollo.Core.Dataset.Scheduling
 
                     Tuple<IExecuteSchedules, DatasetLockKey> pair;
                     m_RunningExecutors.TryRemove(scheduleToExecute, out pair);
-                    m_DatasetLock.Unlock(key);
+                    m_DatasetLock.RemoveReadLock(key);
                 },
                 TaskCreationOptions.LongRunning);
 

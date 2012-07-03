@@ -193,8 +193,8 @@
     <Compile Include="Communication\UseNetDataContractSerializerAttribute.cs" />
     <Compile Include="DatasetApplicationCommands.cs" />
     <Compile Include="DatasetApplicationNotifications.cs" />
-    <Compile Include="DatasetLockInformation.cs" />
-    <Compile Include="DatasetLockReason.cs" />
+    <Compile Include="DatasetLockKey.cs" />
+    <Compile Include="ITrackDatasetLocks.cs" />
     <Compile Include="Loaders\DatasetTrackingJob.cs" />
     <Compile Include="IDatasetApplicationCommands.cs" />
     <Compile Include="IDatasetApplicationNotificationInvoker.cs" />

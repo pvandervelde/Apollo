@@ -84,9 +84,7 @@
       <Link>Utilities\LogSeverityProxyToLogLevelMap.cs</Link>
     </Compile>
     <Compile Include="DatasetLock.cs" />
-    <Compile Include="DatasetLockKey.cs" />
     <Compile Include="DependencyInjection.cs" />
-    <Compile Include="ITrackDatasetLocks.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
     <Compile Include="Scheduling\ExecutableNoOpVertex.cs" />
@@ -125,6 +123,7 @@
     <Compile Include="Scheduling\ScheduleStorage.cs" />
     <Compile Include="Scheduling\UnknownScheduleActionException.cs" />
     <Compile Include="Scheduling\UnknownScheduleConditionException.cs" />
+    <Compile Include="Utilities\HistoryMarkerStorage.cs" />
     <Compile Include="Utilities\IStoreHistoryMarkers.cs" />
     <Compile Include="Utilities\SrcOnlyExceptionHandlingUtilities.cs" />
     <Compile Include="utilities\SrcOnlyResources.cs" />

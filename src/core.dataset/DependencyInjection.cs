@@ -85,7 +85,7 @@ namespace Apollo.Core.Dataset
                 .SingleInstance();
         }
 
-        private static void RegisterScheduleStorage(ContainerBuilder builder)
+        private static void RegisterStorage(ContainerBuilder builder)
         {
             builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.BuildStorage))
                 .As<IStoreScheduleActions>()
@@ -98,6 +98,9 @@ namespace Apollo.Core.Dataset
             builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleStorage>(ScheduleStorage.BuildStorage))
                 .As<IStoreSchedules>()
                 .SingleInstance();
+
+            builder.Register(c => new HistoryMarkerStorage())
+                .As<IStoreHistoryMarkers>();
         }
 
         private static void RegisterScheduleExecutors(ContainerBuilder builder)
@@ -160,6 +163,14 @@ namespace Apollo.Core.Dataset
         private static void RegisterDatasetLock(ContainerBuilder builder)
         {
             builder.Register(c => new DatasetLock())
+                .OnActivated(
+                    a =>
+                    {
+                        DatasetLock obj = a.Instance;
+                        var notifications = a.Context.Resolve<IDatasetApplicationNotificationInvoker>();
+                        obj.OnLockForReading += (s, e) => notifications.RaiseOnReadLock();
+                        obj.OnUnlockFromReading += (s, e) => notifications.RaiseOnRemoveReadLock();
+                    })
                 .As<ITrackDatasetLocks>()
                 .SingleInstance();
         }
@@ -192,7 +203,7 @@ namespace Apollo.Core.Dataset
 
                 RegisterScheduleCommands(builder);
                 RegisterScheduleNotifications(builder);
-                RegisterScheduleStorage(builder);
+                RegisterStorage(builder);
                 RegisterScheduleExecutors(builder);
                 RegisterDatasetLock(builder);
             }

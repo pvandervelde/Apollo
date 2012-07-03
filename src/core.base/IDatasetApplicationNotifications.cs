@@ -22,13 +22,13 @@ namespace Apollo.Core.Base
         event EventHandler<ProgressEventArgs> OnProgress;
 
         /// <summary>
-        /// An event raised when the dataset is locked.
+        /// An event raised when the dataset is locked for reading.
         /// </summary>
-        event EventHandler<EventArgs> OnLock;
+        event EventHandler<EventArgs> OnReadLock;
 
         /// <summary>
-        /// An event raised when the dataset is unlocked.
+        /// An event raised when the dataset is unlocked from reading.
         /// </summary>
-        event EventHandler<EventArgs> OnUnlock;
+        event EventHandler<EventArgs> OnRemoveReadLock;
     }
 }

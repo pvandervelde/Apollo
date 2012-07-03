@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Apollo.Core.Base;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling
@@ -70,14 +71,14 @@ namespace Apollo.Core.Dataset.Scheduling
             var result = Task<ScheduleInformation>.Factory.StartNew(
                 () =>
                 {
-                    var key = m_DatasetLock.BlockLocking();
+                    var key = m_DatasetLock.LockForWriting();
                     try
                     {
                         return m_Schedules.Add(schedule, name, summary, description, produces, dependencies);
                     }
                     finally
                     {
-                        m_DatasetLock.UnblockLocking(key);
+                        m_DatasetLock.RemoveWriteLock(key);
                     }
                 },
                 TaskCreationOptions.None);
@@ -96,14 +97,14 @@ namespace Apollo.Core.Dataset.Scheduling
             var result = Task.Factory.StartNew(
                 () =>
                 {
-                    var key = m_DatasetLock.BlockLocking();
+                    var key = m_DatasetLock.LockForWriting();
                     try
                     {
                         m_Schedules.Update(scheduleToUpdate, newSchedule);
                     }
                     finally
                     {
-                        m_DatasetLock.UnblockLocking(key);
+                        m_DatasetLock.RemoveWriteLock(key);
                     }
                 },
                 TaskCreationOptions.None);

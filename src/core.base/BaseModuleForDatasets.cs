@@ -154,6 +154,7 @@ namespace Apollo.Core.Base
         {
             builder.Register(c => new DatasetApplicationCommands(
                     c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<ITrackDatasetLocks>(),
                     m_CloseDatasetAction,
                     m_LoadDatasetAction,
                     c.Resolve<SystemDiagnostics>()))

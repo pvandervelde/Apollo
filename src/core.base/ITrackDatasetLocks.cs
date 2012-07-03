@@ -4,9 +4,9 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Core.Base;
+using System;
 
-namespace Apollo.Core.Dataset
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Defines the interface for objects that provide lock tracking capabilities
@@ -26,56 +26,68 @@ namespace Apollo.Core.Dataset
     /// for changes.
     /// </para>
     /// </remarks>
-    internal interface ITrackDatasetLocks
+    public interface ITrackDatasetLocks
     {
         /// <summary>
-        /// Blocks the lock from engaging. Multiple block requests can be
-        /// layered.
+        /// Locks the dataset for writing purposes.
         /// </summary>
-        /// <returns>The key for the current lock request.</returns>
-        DatasetLockKey BlockLocking();
+        /// <returns>The key for the current request.</returns>
+        DatasetLockKey LockForWriting();
 
         /// <summary>
-        /// Unblocks the lock and allows it to engage.
+        /// Removes a write lock.
         /// </summary>
-        /// <param name="key">The key for the block request.</param>
-        void UnblockLocking(DatasetLockKey key);
+        /// <param name="key">The key for the request.</param>
+        void RemoveWriteLock(DatasetLockKey key);
 
         /// <summary>
-        /// Requests another lock to be taken out for the dataset. Multiple 
-        /// lock requests can be issued. 
+        /// Locks the dataset for reading.
         /// </summary>
-        /// <returns>The key for the current lock request.</returns>
-        DatasetLockKey Lock();
+        /// <returns>The key for the current request.</returns>
+        DatasetLockKey LockForReading();
 
         /// <summary>
-        /// Removes the lock layer that coincides with the given key.
+        /// Removes a read lock.
         /// </summary>
-        /// <param name="key">The key for the lock layer.</param>
-        void Unlock(DatasetLockKey key);
+        /// <param name="key">The key for the request.</param>
+        void RemoveReadLock(DatasetLockKey key);
 
         /// <summary>
         /// Gets a value indicating whether the dataset is currently considered
-        /// blocked or not.
+        /// locked for writing or not.
         /// </summary>
-        bool IsBlocked
+        bool IsLockedForWriting
         {
             get;
         }
 
         /// <summary>
         /// Gets a value indicating whether the dataset is currently considered
-        /// locked or not.
+        /// locked for reading or not.
         /// </summary>
-        bool IsLocked
+        bool IsLockedForReading
         {
             get;
         }
 
         /// <summary>
-        /// Returns an object that describes the lock state of the dataset.
+        /// An event raised if the write lock is engaged.
         /// </summary>
-        /// <returns>The lock state of the dataset.</returns>
-        DatasetLockInformation LockState();
+        event EventHandler<EventArgs> OnLockForWriting;
+
+        /// <summary>
+        /// An event raised if the lock for writing is removed.
+        /// </summary>
+        event EventHandler<EventArgs> OnUnlockFromWriting;
+
+        /// <summary>
+        /// An event raised if the lock for reading is engaged.
+        /// </summary>
+        event EventHandler<EventArgs> OnLockForReading;
+
+        /// <summary>
+        /// An event raised if the lock for reading is removed.
+        /// </summary>
+        event EventHandler<EventArgs> OnUnlockFromReading;
     }
 }

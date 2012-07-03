@@ -6,83 +6,261 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Threading;
 using Apollo.Core.Base;
+using Apollo.Utilities;
 
 namespace Apollo.Core.Dataset
 {
+    /// <summary>
+    /// Tracks the locks for a dataset.
+    /// </summary>
     internal sealed class DatasetLock : ITrackDatasetLocks
     {
         /// <summary>
-        /// Blocks the lock from engaging. Multiple block requests can be
-        /// layered.
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock
+            = new LockObject();
+
+        /// <summary>
+        /// The collection of current read locks.
+        /// </summary>
+        private readonly List<DatasetLockKey> m_ReadLocks
+            = new List<DatasetLockKey>();
+
+        /// <summary>
+        /// The collection of current write locks.
+        /// </summary>
+        private readonly List<DatasetLockKey> m_WriteLocks
+            = new List<DatasetLockKey>();
+
+        /// <summary>
+        /// The event that indicates if there are any read locks.
+        /// </summary>
+        private readonly ManualResetEvent m_NoReadLocks = new ManualResetEvent(true);
+
+        /// <summary>
+        /// The event that signals if there are any write locks.
+        /// </summary>
+        private readonly ManualResetEvent m_NoWriteLocks = new ManualResetEvent(true);
+
+        /// <summary>
+        /// Locks the dataset for writing purposes.
+        /// </summary>
+        /// <returns>The key for the current request.</returns>
+        public DatasetLockKey LockForWriting()
+        {
+            DatasetLockKey result = null;
+
+            var sendEvent = false;
+            var success = false;
+            while (!success)
+            {
+                // Wait for all the locks to be removed
+                m_NoReadLocks.WaitOne();
+                lock (m_Lock)
+                {
+                    // Now check that all the locks are really, really gone
+                    // If they're not then we just go around again.
+                    if (m_ReadLocks.Count == 0)
+                    {
+                        sendEvent = m_WriteLocks.Count == 0;
+
+                        result = new DatasetLockKey();
+                        m_WriteLocks.Add(result);
+                        m_NoWriteLocks.Reset();
+
+                        success = true;
+                    }
+                }
+            }
+
+            if (sendEvent)
+            {
+                RaiseOnLockForWriting();
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Removes a write lock.
+        /// </summary>
+        /// <param name="key">The key for the request.</param>
+        public void RemoveWriteLock(DatasetLockKey key)
+        {
+            var sendEvent = false;
+            lock (m_Lock)
+            {
+                if (m_WriteLocks.Contains(key))
+                {
+                    m_WriteLocks.Remove(key);
+                }
+
+                if (m_WriteLocks.Count == 0)
+                {
+                    sendEvent = true;
+                    m_NoWriteLocks.Set();
+                }
+            }
+
+            if (sendEvent)
+            {
+                RaiseOnUnlockFromWriting();
+            }
+        }
+
+        /// <summary>
+        /// Locks the dataset for reading.
         /// </summary>
         /// <returns>The key for the current lock request.</returns>
-        public DatasetLockKey BlockLocking()
+        public DatasetLockKey LockForReading()
         {
-            throw new NotImplementedException();
+            DatasetLockKey result = null;
+
+            var sendEvent = false;
+            var success = false;
+            while (!success)
+            {
+                // Wait for all the locks to be removed
+                m_NoWriteLocks.WaitOne();
+                lock (m_Lock)
+                {
+                    // Now check that all the locks are really, really gone
+                    // If they're not then we just go around again.
+                    if (m_WriteLocks.Count == 0)
+                    {
+                        sendEvent = m_ReadLocks.Count == 0;
+
+                        result = new DatasetLockKey();
+                        m_ReadLocks.Add(result);
+                        m_NoReadLocks.Reset();
+
+                        success = true;
+                    }
+                }
+            }
+
+            if (sendEvent)
+            {
+                RaiseOnLockForReading();
+            }
+
+            return result;
         }
 
         /// <summary>
-        /// Unblocks the lock and allows it to engage.
-        /// </summary>
-        /// <param name="key">The key for the block request.</param>
-        public void UnblockLocking(DatasetLockKey key)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Requests another lock to be taken out for the dataset. Multiple 
-        /// lock requests can be issued. 
-        /// </summary>
-        /// <returns>The key for the current lock request.</returns>
-        public DatasetLockKey Lock()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Removes the lock layer that coincides with the given key.
+        /// Removes a read lock.
         /// </summary>
         /// <param name="key">The key for the lock layer.</param>
-        public void Unlock(DatasetLockKey key)
+        public void RemoveReadLock(DatasetLockKey key)
         {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the dataset is currently considered
-        /// blocked or not.
-        /// </summary>
-        public bool IsBlocked
-        {
-            get
+            var sendEvent = false;
+            lock (m_Lock)
             {
-                throw new NotImplementedException();
+                if (m_ReadLocks.Contains(key))
+                {
+                    m_ReadLocks.Remove(key);
+                }
+
+                if (m_ReadLocks.Count == 0)
+                {
+                    sendEvent = true;
+                    m_NoReadLocks.Set();
+                }
+            }
+
+            if (sendEvent)
+            {
+                RaiseOnUnlockFromReading();
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether the dataset is currently considered
-        /// locked or not.
+        /// locked for writing or not.
         /// </summary>
-        public bool IsLocked
+        public bool IsLockedForWriting
         {
             get
             {
-                throw new NotImplementedException();
+                lock (m_Lock)
+                {
+                    return m_WriteLocks.Count > 0;
+                }
             }
         }
 
         /// <summary>
-        /// Returns an object that describes the lock state of the dataset.
+        /// Gets a value indicating whether the dataset is currently considered
+        /// locked for reading or not.
         /// </summary>
-        /// <returns>The lock state of the dataset.</returns>
-        public DatasetLockInformation LockState()
+        public bool IsLockedForReading
         {
-            throw new NotImplementedException();
+            get
+            {
+                lock (m_Lock)
+                {
+                    return m_ReadLocks.Count > 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// An event raised if the write lock is engaged.
+        /// </summary>
+        public event EventHandler<EventArgs> OnLockForWriting;
+
+        private void RaiseOnLockForWriting()
+        {
+            var local = OnLockForWriting;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised if the lock for writing is removed.
+        /// </summary>
+        public event EventHandler<EventArgs> OnUnlockFromWriting;
+
+        private void RaiseOnUnlockFromWriting()
+        {
+            var local = OnUnlockFromWriting;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised if the lock for reading is engaged.
+        /// </summary>
+        public event EventHandler<EventArgs> OnLockForReading;
+
+        private void RaiseOnLockForReading()
+        {
+            var local = OnLockForReading;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised if the lock for reading is removed.
+        /// </summary>
+        public event EventHandler<EventArgs> OnUnlockFromReading;
+
+        private void RaiseOnUnlockFromReading()
+        {
+            var local = OnUnlockFromReading;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
     }
 }

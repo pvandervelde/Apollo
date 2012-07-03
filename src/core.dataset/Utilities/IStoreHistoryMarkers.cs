@@ -4,16 +4,20 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Utilities
 {
-    internal interface IStoreHistoryMarkers
+    /// <summary>
+    /// Defines the interface for objects that store history markers for the dataset.
+    /// </summary>
+    internal interface IStoreHistoryMarkers : IEnumerable<TimeMarker>
     {
+        /// <summary>
+        /// Adds a <see cref="TimeMarker"/> to the storage.
+        /// </summary>
+        /// <param name="marker">The time marker.</param>
         void Add(TimeMarker marker);
     }
 }

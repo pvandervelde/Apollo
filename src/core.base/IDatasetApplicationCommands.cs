@@ -47,9 +47,15 @@ namespace Apollo.Core.Base
         Task Save();
 
         /// <summary>
-        /// Indicates what the lock state of the the dataset is.
+        /// Indicates that the dataset will be edited in the near future.
         /// </summary>
-        /// <returns>A task that will return the information about the lock state of the dataset.</returns>
-        Task<DatasetLockInformation> LockedState();
+        /// <returns>A task which will complete once the dataset is ready for editing.</returns>
+        Task StartEditing();
+
+        /// <summary>
+        /// Indicates that the editing is done.
+        /// </summary>
+        /// <returns>A task that will complete once the dataset is done with the edit process.</returns>
+        Task FinishEditing();
     }
 }

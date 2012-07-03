@@ -9,7 +9,7 @@ using System.Globalization;
 using System.Threading;
 using Apollo.Utilities;
 
-namespace Apollo.Core.Dataset
+namespace Apollo.Core.Base
 {
     /// <summary>
     /// Defines an ID number for dataset locks.
@@ -19,7 +19,7 @@ namespace Apollo.Core.Dataset
     /// have enough uploads in a single execution of an application
     /// for integer overflow to occur.
     /// </remarks>
-    internal sealed class DatasetLockKey : Id<DatasetLockKey, int>
+    public sealed class DatasetLockKey : Id<DatasetLockKey, int>
     {
         /// <summary>
         /// Defines the ID number for an invalid dataset ID.
