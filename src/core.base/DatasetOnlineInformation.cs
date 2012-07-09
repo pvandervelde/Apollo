@@ -40,6 +40,11 @@ namespace Apollo.Core.Base
         private readonly SystemDiagnostics m_Diagnostics;
 
         /// <summary>
+        /// Indicates if the dataset is in edit mode or not.
+        /// </summary>
+        private volatile bool m_IsEditMode;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetOnlineInformation"/> class.
         /// </summary>
         /// <param name="id">The ID number of the dataset.</param>
@@ -87,8 +92,28 @@ namespace Apollo.Core.Base
             Endpoint = endpoint;
             RunsOn = networkId;
             m_CommandHub = commandHub;
-            m_NotificationHub = notificationHub;
             m_Diagnostics = systemDiagnostics;
+
+            m_NotificationHub = notificationHub;
+            {
+                Debug.Assert(
+                    m_NotificationHub.HasNotificationFor(Endpoint, typeof(IDatasetApplicationNotifications)), 
+                    "Missing essential notification set.");
+
+                var notifications = m_NotificationHub.NotificationsFor<IDatasetApplicationNotifications>(Endpoint);
+                notifications.OnSwitchToEditingMode += 
+                    (s, e) => 
+                    {
+                        m_IsEditMode = true;
+                        RaiseOnSwitchToEditMode();
+                    };
+                notifications.OnSwitchToExecutingMode += 
+                    (s, e) => 
+                    {
+                        m_IsEditMode = false;
+                        RaiseOnSwitchToExecutingMode();
+                    };
+            }
         }
 
         /// <summary>
@@ -118,6 +143,97 @@ namespace Apollo.Core.Base
         {
             get;
             private set;
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the dataset is in edit mode or not.
+        /// </summary>
+        public bool IsEditMode
+        {
+            get
+            {
+                return m_IsEditMode;
+            }
+        }
+
+        /// <summary>
+        /// Switches the dataset to edit mode.
+        /// </summary>
+        public void SwitchToEditMode()
+        {
+            if (!m_IsEditMode)
+            {
+                Debug.Assert(m_CommandHub.HasCommandFor(Endpoint, typeof(IDatasetApplicationCommands)), "Missing essential command set.");
+                var commands = m_CommandHub.CommandsFor<IDatasetApplicationCommands>(Endpoint);
+                var result = commands.SwitchToEditMode();
+                result.ContinueWith(
+                        t =>
+                        {
+                            if (t.Exception != null)
+                            {
+                                m_Diagnostics.Log(
+                                    LogSeverityProxy.Error,
+                                    string.Format(
+                                        CultureInfo.InvariantCulture,
+                                        "The begin edit dataset task threw an exception. Exception details: {0}",
+                                        t.Exception));
+                            }
+                        });
+            }
+        }
+
+        /// <summary>
+        /// Switches the dataset to executing mode.
+        /// </summary>
+        public void SwitchToExecutingMode()
+        {
+            if (m_IsEditMode)
+            {
+                Debug.Assert(m_CommandHub.HasCommandFor(Endpoint, typeof(IDatasetApplicationCommands)), "Missing essential command set.");
+                var commands = m_CommandHub.CommandsFor<IDatasetApplicationCommands>(Endpoint);
+                var result = commands.SwitchToExecuteMode();
+                result.ContinueWith(
+                        t =>
+                        {
+                            if (t.Exception != null)
+                            {
+                                m_Diagnostics.Log(
+                                    LogSeverityProxy.Error,
+                                    string.Format(
+                                        CultureInfo.InvariantCulture,
+                                        "The begin edit dataset task threw an exception. Exception details: {0}",
+                                        t.Exception));
+                            }
+                        });
+            }
+        }
+
+        /// <summary>
+        /// An event fired when the dataset is switched to edit mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToEditMode;
+
+        private void RaiseOnSwitchToEditMode()
+        {
+            var local = OnSwitchToEditMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event fired when the dataset is switched to executing mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+        private void RaiseOnSwitchToExecutingMode()
+        {
+            var local = OnSwitchToExecutingMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

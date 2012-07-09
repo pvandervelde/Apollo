@@ -31,9 +31,14 @@ namespace Apollo.UI.Common.Views.Datasets
         private static readonly RoutedCommand s_RemoveDatasetCommand = new RoutedCommand();
 
         /// <summary>
-        /// The routed command that used to load and unload a dataset.
+        /// The routed command that is used to load and unload a dataset.
         /// </summary>
         private static readonly RoutedCommand s_LoadOrUnloadDatasetCommand = new RoutedCommand();
+
+        /// <summary>
+        /// The routed command that is used to show the detail view.
+        /// </summary>
+        private static readonly RoutedCommand s_ShowDetailViewCommand = new RoutedCommand();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetVertexView"/> class.
@@ -66,6 +71,13 @@ namespace Apollo.UI.Common.Views.Datasets
                 var cb = new CommandBinding(s_LoadOrUnloadDatasetCommand, CommandLoadUnloadDatasetExecuted, CommandLoadUnloadDatasetCanExecute);
                 CommandBindings.Add(cb);
                 loadOrUnloadDatasetButton.Command = s_LoadOrUnloadDatasetCommand;
+            }
+
+            // Bind the show detail view command
+            {
+                var cb = new CommandBinding(s_ShowDetailViewCommand, CommandShowDetailViewExecuted, CommandShowDetailViewCanExecute);
+                CommandBindings.Add(cb);
+                showDetailButton.Command = s_ShowDetailViewCommand;
             }
         }
 
@@ -146,13 +158,37 @@ namespace Apollo.UI.Common.Views.Datasets
             e.Handled = true;
             if (!Model.IsLoaded)
             {
-                // Should do something like this: http://presentationlayer.wordpress.com/2011/05/24/wpf-overlay-message-view-controller/
-                // For an overlay ...
                 Model.LoadDatasetCommand.Execute(null);
             }
             else
             {
                 Model.UnloadDatasetCommand.Execute(null);
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandShowDetailViewCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (Model != null)
+            {
+                e.CanExecute = Model.IsLoaded && Model.ShowDetailViewCommand.CanExecute(null);
+            }
+            else
+            {
+                e.CanExecute = false;
+            }
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandShowDetailViewExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (Model.IsLoaded)
+            {
+                Model.ShowDetailViewCommand.Execute(null);
             }
         }
     }

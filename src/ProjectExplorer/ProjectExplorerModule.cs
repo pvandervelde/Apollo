@@ -20,6 +20,7 @@ using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Events.Listeners;
 using Apollo.UI.Common.Views.Datasets;
 using Apollo.UI.Common.Views.Feedback;
+using Apollo.UI.Common.Views.Notification;
 using Apollo.UI.Common.Views.Profiling;
 using Apollo.UI.Common.Views.Progress;
 using Apollo.UI.Common.Views.Projects;
@@ -126,7 +127,7 @@ namespace Apollo.ProjectExplorer
                 builder.RegisterAssemblyTypes(commonUiAssembly)
                     .Where(
                         t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal))
-                            && t.IsClass 
+                            && t.IsClass
                             && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
@@ -148,8 +149,8 @@ namespace Apollo.ProjectExplorer
                     .PropertiesAutowired();
                 builder.RegisterAssemblyTypes(localAssembly)
                     .Where(
-                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal)) 
-                            && t.IsClass 
+                        t => (t.FullName.EndsWith("View", StringComparison.Ordinal) || t.FullName.EndsWith("Window", StringComparison.Ordinal))
+                            && t.IsClass
                             && !t.IsAbstract)
                     .InstancePerDependency()
                     .AsImplementedInterfaces();
@@ -159,7 +160,7 @@ namespace Apollo.ProjectExplorer
 
                 builder.Register(c => new DispatcherContextWrapper(Application.Current.Dispatcher))
                     .As<IContextAware>();
-                
+
                 var key = SrcOnlyExceptionHandlingUtillities.ReportingPublicKey();
                 builder.RegisterModule(new FeedbackReportingModule(() => key));
             }
@@ -214,40 +215,46 @@ namespace Apollo.ProjectExplorer
             var aggregator = m_Container.Resolve<IEventAggregator>();
             var showViewEvent = aggregator.GetEvent<ShowViewEvent>();
             showViewEvent.Publish(
-                    new ShowViewRequest(
-                        typeof(ShellPresenter), 
-                        RegionNames.Shell, 
-                        new ShellParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(ShellPresenter),
+                    RegionNames.Shell,
+                    new ShellParameter(m_Container.Resolve<IContextAware>())));
 
             showViewEvent.Publish(
-                    new ShowViewRequest(
-                        typeof(MenuPresenter), 
-                        RegionNames.MainMenu, 
-                        new MenuParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(MenuPresenter),
+                    RegionNames.MainMenu,
+                    new MenuParameter(m_Container.Resolve<IContextAware>())));
 
             showViewEvent.Publish(
-                    new ShowViewRequest(
-                        typeof(StatusBarPresenter),
-                        RegionNames.StatusBar,
-                        new StatusBarParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(StatusBarPresenter),
+                    RegionNames.StatusBar,
+                    new StatusBarParameter(m_Container.Resolve<IContextAware>())));
 
             showViewEvent.Publish(
-                   new ShowViewRequest(
-                       typeof(ErrorReportsPresenter),
-                       CommonRegionNames.StatusBarErrorReport,
-                       new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(ErrorReportsPresenter),
+                    CommonRegionNames.StatusBarErrorReport,
+                    new ErrorReportsParameter(m_Container.Resolve<IContextAware>())));
 
             showViewEvent.Publish(
-                  new ShowViewRequest(
-                      typeof(FeedbackPresenter),
-                      CommonRegionNames.StatusBarFeedback,
-                      new FeedbackParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(FeedbackPresenter),
+                    CommonRegionNames.StatusBarFeedback,
+                    new FeedbackParameter(m_Container.Resolve<IContextAware>())));
 
             showViewEvent.Publish(
-                  new ShowViewRequest(
-                      typeof(ProgressPresenter),
-                      CommonRegionNames.StatusBarProgressReport,
-                      new ProgressParameter(m_Container.Resolve<IContextAware>())));
+                new ShowViewRequest(
+                    typeof(NotificationPresenter),
+                    CommonRegionNames.StatusBarStatusText,
+                    new NotificationParameter(m_Container.Resolve<IContextAware>())));
+
+            showViewEvent.Publish(
+                new ShowViewRequest(
+                    typeof(ProgressPresenter),
+                    CommonRegionNames.StatusBarProgressReport,
+                    new ProgressParameter(m_Container.Resolve<IContextAware>())));
 
             // Only add the necessary controls if we are actually profiling. If we are not
             // profiling then we don't add any controls and anything that we did allocate
@@ -255,10 +262,10 @@ namespace Apollo.ProjectExplorer
             if (m_IsProfiling)
             {
                 showViewEvent.Publish(
-                        new ShowViewRequest(
-                            typeof(ProfilePresenter),
-                            CommonRegionNames.StatusBarProfilerReport,
-                            new ProfileParameter(m_Container.Resolve<IContextAware>())));
+                    new ShowViewRequest(
+                        typeof(ProfilePresenter),
+                        CommonRegionNames.StatusBarProfilerReport,
+                        new ProfileParameter(m_Container.Resolve<IContextAware>())));
             }
 
             ActivateProjectRegions();

@@ -17,6 +17,10 @@
         ShowInTaskbar="False"
         WindowStartupLocation="CenterOwner"
         WindowStyle="ThreeDBorderWindow">
+    <!-- 
+        Should do something like this: http://presentationlayer.wordpress.com/2011/05/24/wpf-overlay-message-view-controller/
+        For an overlay ...
+    -->
     <Window.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>

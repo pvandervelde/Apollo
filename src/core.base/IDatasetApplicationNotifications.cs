@@ -22,13 +22,13 @@ namespace Apollo.Core.Base
         event EventHandler<ProgressEventArgs> OnProgress;
 
         /// <summary>
-        /// An event raised when the dataset is locked for reading.
+        /// An event raised when the dataset is switched to edit mode.
         /// </summary>
-        event EventHandler<EventArgs> OnReadLock;
+        event EventHandler<EventArgs> OnSwitchToEditingMode;
 
         /// <summary>
-        /// An event raised when the dataset is unlocked from reading.
+        /// An event raised when the dataset is switched to executing mode.
         /// </summary>
-        event EventHandler<EventArgs> OnRemoveReadLock;
+        event EventHandler<EventArgs> OnSwitchToExecutingMode;
     }
 }

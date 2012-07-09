@@ -168,8 +168,8 @@ namespace Apollo.Core.Dataset
                     {
                         DatasetLock obj = a.Instance;
                         var notifications = a.Context.Resolve<IDatasetApplicationNotificationInvoker>();
-                        obj.OnLockForReading += (s, e) => notifications.RaiseOnReadLock();
-                        obj.OnUnlockFromReading += (s, e) => notifications.RaiseOnRemoveReadLock();
+                        obj.OnLockForReading += (s, e) => notifications.RaiseOnSwitchToEditingMode();
+                        obj.OnUnlockFromReading += (s, e) => notifications.RaiseOnSwitchToExecutingMode();
                     })
                 .As<ITrackDatasetLocks>()
                 .SingleInstance();

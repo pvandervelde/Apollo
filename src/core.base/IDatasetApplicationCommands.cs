@@ -50,12 +50,12 @@ namespace Apollo.Core.Base
         /// Indicates that the dataset will be edited in the near future.
         /// </summary>
         /// <returns>A task which will complete once the dataset is ready for editing.</returns>
-        Task StartEditing();
+        Task SwitchToEditMode();
 
         /// <summary>
-        /// Indicates that the editing is done.
+        /// Indicates that the dataset should prepare to execute a sequence.
         /// </summary>
-        /// <returns>A task that will complete once the dataset is done with the edit process.</returns>
-        Task FinishEditing();
+        /// <returns>A task that will complete once the dataset is ready for executing.</returns>
+        Task SwitchToExecuteMode();
     }
 }

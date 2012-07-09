@@ -106,6 +106,7 @@
     <Compile Include="History\ValueHistoryBase.cs" />
     <Compile Include="History\ValueTimelineRegistrationSource.cs" />
     <Compile Include="IApplicationConstants.cs" />
+    <Compile Include="ICollectNotifications.cs" />
     <Compile Include="ICollectProgressReports.cs" />
     <Compile Include="ICompanyConstants.cs" />
     <Compile Include="Id.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="ITrackSteppingProgress.cs" />
     <Compile Include="LockObject.cs" />
     <Compile Include="LogSeverityProxy.cs" />
+    <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />

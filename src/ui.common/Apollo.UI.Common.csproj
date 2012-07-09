@@ -76,6 +76,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -153,6 +154,10 @@
     <Compile Include="Commands\RunScriptCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
     <Compile Include="Commands\SendFeedbackReportCommand.cs" />
+    <Compile Include="Commands\ShowDatasetAdvancedViewCommand.cs" />
+    <Compile Include="Commands\ShowDatasetDetailViewCommand.cs" />
+    <Compile Include="Commands\SwitchDatasetToEditModeCommand.cs" />
+    <Compile Include="Commands\SwitchDatasetToExecutingModeCommand.cs" />
     <Compile Include="Commands\UndoCommand.cs" />
     <Compile Include="Commands\UnloadDatasetFromMachineCommand.cs" />
     <Compile Include="CommonRegionNames.cs" />
@@ -205,6 +210,10 @@
     </Compile>
     <Compile Include="RegionExtensions.cs" />
     <Compile Include="RegionView.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailModel.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailView.xaml.cs">
+      <DependentUpon>DatasetDetailView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Datasets\DatasetGraphLayout.cs" />
     <Compile Include="Views\Datasets\DatasetGraphModel.cs" />
     <Compile Include="Views\Datasets\DatasetGraphParameter.cs" />
@@ -213,7 +222,8 @@
       <DependentUpon>DatasetGraphView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\Datasets\DatasetModel.cs" />
-    <Compile Include="Views\Datasets\DatasetPresenter.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailParameter.cs" />
+    <Compile Include="Views\Datasets\DatasetDetailPresenter.cs" />
     <Compile Include="Views\Datasets\DatasetVertexView.xaml.cs">
       <DependentUpon>DatasetVertexView.xaml</DependentUpon>
     </Compile>
@@ -222,6 +232,7 @@
     <Compile Include="Views\Datasets\DatasetViewVertex.cs" />
     <Compile Include="Views\Datasets\DatasetViewVertexToDatasetModelConverter.cs" />
     <Compile Include="Views\Datasets\IDatasetGraphView.cs" />
+    <Compile Include="Views\Datasets\IDatasetDetailView.cs" />
     <Compile Include="Views\Datasets\IMachineSelectorView.cs" />
     <Compile Include="Views\Datasets\MachineSelectorModel.cs" />
     <Compile Include="Views\Datasets\MachineSelectorParameter.cs" />
@@ -244,6 +255,13 @@
     <Compile Include="Views\Feedback\FeedbackPresenter.cs" />
     <Compile Include="Views\Feedback\IErrorReportsView.cs" />
     <Compile Include="Views\Feedback\IFeedbackView.cs" />
+    <Compile Include="Views\Notification\INotificationView.cs" />
+    <Compile Include="Views\Notification\NotificationModel.cs" />
+    <Compile Include="Views\Notification\NotificationParameter.cs" />
+    <Compile Include="Views\Notification\NotificationPresenter.cs" />
+    <Compile Include="Views\Notification\NotificationView.xaml.cs">
+      <DependentUpon>NotificationView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Profiling\IProfileView.cs" />
     <Compile Include="Views\Profiling\ProfileModel.cs" />
     <Compile Include="Views\Profiling\ProfileParameter.cs" />
@@ -333,6 +351,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\Datasets\DatasetDetailView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\Datasets\DatasetGraphView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -350,6 +372,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Feedback\FeedbackIconView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Notification\NotificationView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -794,6 +820,45 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Text_256x256.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Views\Scheduling\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_72x72.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockClosed_128x128.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_16x16.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_24x24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_32x32.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_72x72.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LockOpen_128x128.png" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

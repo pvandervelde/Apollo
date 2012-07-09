@@ -25,17 +25,17 @@ namespace Apollo.Core.Base
         void RaiseOnProgress(int progress, IProgressMark currentlyProcessing);
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnReadLock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
-        void RaiseOnReadLock();
+        void RaiseOnSwitchToEditingMode();
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnRemoveReadLock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToExecutingMode"/> event.
         /// </summary>
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
-        void RaiseOnRemoveReadLock();
+        void RaiseOnSwitchToExecutingMode();
     }
 }

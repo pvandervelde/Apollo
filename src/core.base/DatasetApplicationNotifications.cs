@@ -35,16 +35,16 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// An event raised when the dataset is locked for reading.
+        /// An event raised when the dataset is switched to edit mode.
         /// </summary>
-        public event EventHandler<EventArgs> OnReadLock;
+        public event EventHandler<EventArgs> OnSwitchToEditingMode;
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnReadLock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.
         /// </summary>
-        public void RaiseOnReadLock()
+        public void RaiseOnSwitchToEditingMode()
         {
-            var local = OnReadLock;
+            var local = OnSwitchToEditingMode;
             if (local != null)
             {
                 local(this, EventArgs.Empty);
@@ -52,16 +52,16 @@ namespace Apollo.Core.Base
         }
 
         /// <summary>
-        /// An event raised when the dataset is unlocked from reading.
+        /// An event raised when the dataset is switched to executing mode.
         /// </summary>
-        public event EventHandler<EventArgs> OnRemoveReadLock;
+        public event EventHandler<EventArgs> OnSwitchToExecutingMode;
 
         /// <summary>
-        /// Raises the <see cref="IDatasetApplicationNotifications.OnRemoveReadLock"/> event.
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToExecutingMode"/> event.
         /// </summary>
-        public void RaiseOnRemoveReadLock()
+        public void RaiseOnSwitchToExecutingMode()
         {
-            var local = OnRemoveReadLock;
+            var local = OnSwitchToExecutingMode;
             if (local != null)
             {
                 local(this, EventArgs.Empty);

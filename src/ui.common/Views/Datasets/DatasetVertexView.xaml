@@ -3,6 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
              xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
              xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
@@ -11,7 +12,6 @@
                         lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
                         lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
-             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
              mc:Ignorable="d"
              d:DesignWidth="450"
              d:DesignHeight="300"
@@ -19,6 +19,13 @@
              MinHeight="300"
              MaxWidth="600"
              MaxHeight="600">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
     <!-- DataContext is: DatasetModel-->
     <Grid>
         <Grid.RowDefinitions>
@@ -146,32 +153,46 @@
         </Border>
 
         <!-- IsLoaded + Loading location ==> a set of hyper links to the machine description? -->
-        <Label Grid.Row="4"
-               Grid.Column="0"
-               Margin="5, 5, 5, 0"
-               VerticalAlignment="Top">
+        <Label Grid.Row="4" 
+                Grid.Column="0"
+                Margin="5, 5, 5, 0"
+                VerticalAlignment="Top">
             <TextBlock Text="{lex:Loc DatasetGraphView_DatasetRunningOn}"
-                       Foreground="SeaShell"
-                       FontWeight="Bold" />
+                        Foreground="SeaShell"
+                        FontWeight="Bold" />
         </Label>
-        <DockPanel Grid.Row="4"
-                   Grid.Column="1"
-                   Margin="0, 5, 5, 5">
+        <Grid Grid.Row="4"
+              Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+            </Grid.ColumnDefinitions>
+                
+            <TextBlock Grid.Row="0" 
+                       Grid.Column="0"
+                       Background="SeaShell"
+                       Text="{Binding Path=RunsOn}" />
+            
             <Button x:Name="loadOrUnloadDatasetButton"
                     x:FieldModifier="private"
-                    Margin="5" 
-                    DockPanel.Dock="Right">
+                    Grid.Row="0"
+                    Grid.Column="1"
+                    Margin="5">
                 <Image Width="24"
-                       Height="24">
+                        Height="24">
                     <Image.Style>
                         <Style TargetType="{x:Type Image}">
                             <Setter Property="Source" 
-                                    Value="{lex:Loc Img_Upload_48}" />
+                                    Value="{lex:BLoc Img_Upload_48}" />
                             <Style.Triggers>
                                 <DataTrigger Binding="{Binding Path=IsLoaded}" 
-                                             Value="True">
+                                                Value="True">
                                     <Setter Property="Source" 
-                                            Value="{lex:Loc Img_Delete_48}" />
+                                            Value="{lex:BLoc Img_Delete_48}" />
                                 </DataTrigger>
                             </Style.Triggers>
                         </Style>
@@ -179,10 +200,15 @@
                 </Image>
             </Button>
             
-            <TextBlock Background="SeaShell"
-                   Text="{Binding Path=RunsOn}" />
-        </DockPanel>
-        
+            <Button x:Name="showDetailButton" 
+                    x:FieldModifier="private"
+                    Grid.Row="1" 
+                    Grid.Column="0"
+                    Grid.ColumnSpan="2"
+                    Style="{StaticResource HyperlinkLikeButton}">
+                <TextBlock Text="{lex:Loc DatasetGraphView_ShowDetail}" />
+            </Button>
+        </Grid>
 
         <!-- IsRunning + progress -->
         <Grid Grid.Row="5"
