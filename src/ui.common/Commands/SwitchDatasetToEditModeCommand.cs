@@ -11,7 +11,7 @@ using Microsoft.Practices.Prism.Commands;
 namespace Apollo.UI.Common.Commands
 {
     /// <summary>
-    /// Handles the showing of the dataset advanced view.
+    /// Handles switching the dataset to edit mode.
     /// </summary>
     public sealed class SwitchDatasetToEditModeCommand : DelegateCommand<object>
     {

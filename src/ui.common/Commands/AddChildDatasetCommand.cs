@@ -22,12 +22,9 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Determines if a new child dataset can be added.
         /// </summary>
-        /// <param name="datasetFacade">
-        /// The object that contains the methods that allow interaction with
-        /// a dataset.
-        /// </param>
+        /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>
         /// <returns>
-        ///     <see langword="true"/> if the existing project can be closed; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if a new child dataset can be added; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -44,7 +41,7 @@ namespace Apollo.UI.Common.Commands
         }
         
         /// <summary>
-        /// Called when the existing project should be closed.
+        /// Called when a new child dataset should be added.
         /// </summary>
         /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="datasetFacade">The object that contains the methods that allow interaction with a dataset.</param>

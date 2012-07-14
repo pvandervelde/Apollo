@@ -25,7 +25,7 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="scriptHost">The object handles the script running.</param>
         /// <returns>
-        ///     <see langword="true"/> if a new project can be created; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the script can be opened from disk; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -42,7 +42,7 @@ namespace Apollo.UI.Common.Commands
         }
         
         /// <summary>
-        /// Called when the creation of a new project is required.
+        /// Called when a script should be read from disk.
         /// </summary>
         /// <param name="scriptHost">The object handles the script running.</param>
         /// <param name="selectScriptLanguage">The function that provides the selected script language.</param>

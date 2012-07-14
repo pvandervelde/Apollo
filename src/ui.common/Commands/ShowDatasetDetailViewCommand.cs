@@ -19,11 +19,11 @@ namespace Apollo.UI.Common.Commands
     public sealed class ShowDatasetDetailViewCommand : DelegateCommand<object>
     {
         /// <summary>
-        /// Determines if the script host can be closed.
+        /// Determines if the dataset detail view can be shown.
         /// </summary>
         /// <param name="dataset">The dataset.</param>
         /// <returns>
-        /// <see langword="true" /> if the script host can be closed; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if the dataset detail view can be shown; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -33,7 +33,7 @@ namespace Apollo.UI.Common.Commands
         }
 
         /// <summary>
-        /// Closes the script host.
+        /// Shows the dataset detail view.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>

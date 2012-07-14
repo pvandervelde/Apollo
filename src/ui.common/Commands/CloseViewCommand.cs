@@ -18,10 +18,10 @@ namespace Apollo.UI.Common.Commands
     public sealed class CloseViewCommand : DelegateCommand<object>
     {
         /// <summary>
-        /// Determines if the existing project should be saved.
+        /// Determines if the view should be closed.
         /// </summary>
         /// <returns>
-        /// <see langword="true" /> if the existing project should be saved; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if the view should be closed; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
@@ -31,7 +31,7 @@ namespace Apollo.UI.Common.Commands
         }
 
         /// <summary>
-        /// Saves the existing project.
+        /// Closes the given view.
         /// </summary>
         /// <param name="eventAggregator">The event aggregator.</param>
         /// <param name="regionName">The name of the region which must be closed.</param>
