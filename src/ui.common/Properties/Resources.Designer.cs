@@ -1996,6 +1996,33 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Add schedule....
+        /// </summary>
+        internal static string SchedulingView_AddScheduleButton {
+            get {
+                return ResourceManager.GetString("SchedulingView_AddScheduleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Copy schedule....
+        /// </summary>
+        internal static string SchedulingView_CopyScheduleButton {
+            get {
+                return ResourceManager.GetString("SchedulingView_CopyScheduleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Edit....
+        /// </summary>
+        internal static string SchedulingView_EditScheduleButton {
+            get {
+                return ResourceManager.GetString("SchedulingView_EditScheduleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Python.
         /// </summary>
         internal static string ScriptDescription_Language_IronPython {

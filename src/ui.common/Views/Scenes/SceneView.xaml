@@ -1,0 +1,103 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Scenes.SceneView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+             xmlns:local="clr-namespace:Apollo.UI.Common.Views.Scenes"
+             xmlns:regions="clr-namespace:Apollo.UI.Common.Views.Regions"
+             xmlns:scheduling="clr-namespace:Apollo.UI.Common.Views.Scheduling"
+             xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            
+            <DataTemplate DataType="{x:Type regions:RegionModel}">
+                <regions:RegionVertexView DataContext="{Binding}" />
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type regions:BoundaryModel}">
+                <regions:BoundaryVertexView DataContext="{Binding}" />
+            </DataTemplate>
+            <Style TargetType="{x:Type graphsharp:VertexControl}">
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="{x:Type graphsharp:VertexControl}">
+                            <Border x:Name="vertexBorder"
+                                    BorderBrush="MidnightBlue"
+                                    Background="LightSteelBlue"
+                                    BorderThickness="3"
+                                    CornerRadius="10,10,10,10"
+                                    Padding="{TemplateBinding Padding}">
+                                <ContentControl Content="{TemplateBinding Vertex}" />
+                            </Border>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Models -->
+            <RowDefinition Height="Auto" />
+            
+            <!-- Variables -->
+            <RowDefinition Height="Auto" />
+            
+            <!-- Components -->
+            <RowDefinition Height="Auto" />
+            
+            <!-- Schedules -->
+            <RowDefinition Height="Auto" />
+            
+            <!-- Regions & Boundaries -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        
+        <!-- Models -->
+        <!-- Variables-->
+        <!-- Components -->
+        <!-- Schedules -->
+        <Border Grid.Row="3"
+                Margin="5, 5, 5, 5"
+                Background="SeaShell"
+                BorderBrush="GoldenRod"
+                BorderThickness="3"
+                CornerRadius="5"
+                Padding="5">
+            <scheduling:SchedulingView DataContext="{Binding Path=Schedules}" />
+        </Border>
+        
+        <!-- Regions & Boundaries -->
+        <Border Grid.Row="4"
+                Background="LightSlateGray"
+                BorderBrush="Black"
+                BorderThickness="3"
+                CornerRadius="10,10,10,10"
+                Padding="4">
+            <zoom:ZoomControl Zoom="0.1"
+                              ZoomBoxOpacity="0.5"
+                              Background="Transparent">
+
+                <regions:RegionGraphLayout Margin="10"
+                                         Graph="{Binding Path=Regions.Graph}"
+                                         LayoutAlgorithmType="{Binding Path=Regions.LayoutType, Mode=OneWay}"
+                                         LayoutParameters="{Binding Path=Regions.LayoutParameters, Mode=TwoWay}"
+                                         OverlapRemovalAlgorithmType="FSA"
+                                         HighlightAlgorithmType="Simple" 
+                                         CreationTransition="{Binding Path=Regions.CreationTransition}"
+                                         DestructionTransition="{Binding Path=Regions.DestructionTransition}"/>
+            </zoom:ZoomControl>
+        </Border>
+    </Grid>
+</UserControl>

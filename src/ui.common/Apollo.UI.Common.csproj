@@ -186,6 +186,7 @@
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
     <Compile Include="Profiling\TimingReport.cs" />
     <Compile Include="Profiling\TimingReportCollection.cs" />
+    <Compile Include="Utilities\ObservableCollectionExtensions.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="IRegionView.cs" />
@@ -290,6 +291,38 @@
     <Compile Include="Views\Projects\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Regions\BoundaryModel.cs" />
+    <Compile Include="Views\Regions\BoundaryVertexView.xaml.cs">
+      <DependentUpon>BoundaryVertexView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Regions\IRegionElementModel.cs" />
+    <Compile Include="Views\Regions\RegionGraphLayout.cs" />
+    <Compile Include="Views\Regions\RegionVertexView.xaml.cs">
+      <DependentUpon>RegionVertexView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Regions\RegionViewEdge.cs" />
+    <Compile Include="Views\Regions\RegionViewGraph.cs" />
+    <Compile Include="Views\Regions\RegionModel.cs" />
+    <Compile Include="Views\Scenes\ISceneView.cs" />
+    <Compile Include="Views\Scenes\SceneModel.cs" />
+    <Compile Include="Views\Scenes\SceneParameter.cs" />
+    <Compile Include="Views\Scenes\ScenePresenter.cs" />
+    <Compile Include="Views\Scenes\SceneView.xaml.cs">
+      <DependentUpon>SceneView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Scheduling\IScheduleView.cs" />
+    <Compile Include="Views\Scheduling\ISchedulingView.cs" />
+    <Compile Include="Views\Scheduling\ScheduleActionModel.cs" />
+    <Compile Include="Views\Scheduling\ScheduleConditionModel.cs" />
+    <Compile Include="Views\Scheduling\ScheduleModel.cs" />
+    <Compile Include="Views\Scheduling\ScheduleParameter.cs" />
+    <Compile Include="Views\Scheduling\SchedulePresenter.cs" />
+    <Compile Include="Views\Scheduling\SchedulingModel.cs" />
+    <Compile Include="Views\Scheduling\SchedulingParameter.cs" />
+    <Compile Include="Views\Scheduling\SchedulingPresenter.cs" />
+    <Compile Include="Views\Scheduling\SchedulingView.xaml.cs">
+      <DependentUpon>SchedulingView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\Scripting\ISelectScriptLanguageView.cs" />
     <Compile Include="Views\Scripting\ScriptDescriptionModel.cs" />
     <Compile Include="Views\Scripting\ScriptModel.cs" />
@@ -332,6 +365,10 @@
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
       <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\core.extensions\Apollo.Core.Extensions.csproj">
+      <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
+      <Name>Apollo.Core.Extensions</Name>
     </ProjectReference>
     <ProjectReference Include="..\core.host\Apollo.Core.Host.csproj">
       <Project>{BEFCB7FA-8CDF-44D5-BC36-B4C6A03D9DDD}</Project>
@@ -392,6 +429,22 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Projects\ProjectView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Regions\BoundaryVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Regions\RegionVertexView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scenes\SceneView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Scheduling\SchedulingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -821,9 +874,7 @@
   <ItemGroup>
     <None Include="Resources\Text_256x256.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Views\Scheduling\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\LockClosed_16x16.png" />
   </ItemGroup>

@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
@@ -32,20 +33,6 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Returns a collection containing all the known schedules.
         /// </summary>
         /// <returns>A task that returns the collection containing all the known schedules.</returns>
-        Task<IEnumerable<ScheduleInformation>> AvailableSchedules();
-
-        /// <summary>
-        /// Returns the schedule description for the schedule with the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the schedule for which the information is requested.</param>
-        /// <returns>A task that returns the desired schedule description.</returns>
-        Task<ScheduleInformation> ScheduleInformation(ScheduleId id);
-
-        /// <summary>
-        /// Returns the schedule with the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the schedule.</param>
-        /// <returns>A task that returns the desired schedule.</returns>
-        Task<IEditableSchedule> Schedule(ScheduleId id);
+        Task<IEnumerable<Tuple<ScheduleInformation, IEditableSchedule>>> AvailableSchedules();
     }
 }

@@ -109,50 +109,18 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Returns a collection containing all the known schedules.
         /// </summary>
         /// <returns>A task that returns the collection containing all the known schedules.</returns>
-        public Task<IEnumerable<ScheduleInformation>> AvailableSchedules()
+        public Task<IEnumerable<Tuple<ScheduleInformation, IEditableSchedule>>> AvailableSchedules()
         {
-            var result = Task<IEnumerable<ScheduleInformation>>.Factory.StartNew(
+            var result = Task<IEnumerable<Tuple<ScheduleInformation, IEditableSchedule>>>.Factory.StartNew(
                 () =>
                 { 
-                    var list = new List<ScheduleInformation>();
+                    var list = new List<Tuple<ScheduleInformation, IEditableSchedule>>();
                     foreach (var id in m_Schedules)
                     {
-                        list.Add(m_Schedules.Information(id));
+                        list.Add(new Tuple<ScheduleInformation, IEditableSchedule>(m_Schedules.Information(id), m_Schedules.Schedule(id)));
                     }
 
                     return list;
-                });
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the schedule description for the schedule with the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the schedule for which the information is requested.</param>
-        /// <returns>A task that returns the desired schedule description.</returns>
-        public Task<ScheduleInformation> ScheduleInformation(ScheduleId id)
-        {
-            var result = Task<ScheduleInformation>.Factory.StartNew(
-                () =>
-                {
-                    return m_Schedules.Information(id);
-                });
-
-            return result;
-        }
-
-        /// <summary>
-        /// Returns the schedule with the given ID.
-        /// </summary>
-        /// <param name="id">The ID of the schedule.</param>
-        /// <returns>A task that returns the desired schedule.</returns>
-        public Task<IEditableSchedule> Schedule(ScheduleId id)
-        {
-            var result = Task<IEditableSchedule>.Factory.StartNew(
-                () =>
-                {
-                    return m_Schedules.Schedule(id);
                 });
 
             return result;

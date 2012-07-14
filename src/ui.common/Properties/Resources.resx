@@ -764,4 +764,13 @@ Please wait ...</value>
   <data name="DatasetDetailView_StartEditing" xml:space="preserve">
     <value>Make changes to dataset</value>
   </data>
+  <data name="SchedulingView_AddScheduleButton" xml:space="preserve">
+    <value>Add schedule...</value>
+  </data>
+  <data name="SchedulingView_CopyScheduleButton" xml:space="preserve">
+    <value>Copy schedule...</value>
+  </data>
+  <data name="SchedulingView_EditScheduleButton" xml:space="preserve">
+    <value>Edit...</value>
+  </data>
 </root>

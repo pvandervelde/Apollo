@@ -26,11 +26,11 @@
 
             <!-- Templates for the graph -->
             <!--
-            <DataTemplate DataType="{x:Type local:DatasetRegionModel}">
-                <local:DatasetRegionVertexView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type local:SceneRegionModel}">
+                <local:SceneRegionVertexView DataContext="{Binding}" />
             </DataTemplate>
-            <DataTemplate DataType="{x:Type local:DatasetRegionBoundaryModel}">
-                <local:DatasetRegionBoundaryVertexView DataContext="{Binding}" />
+            <DataTemplate DataType="{x:Type local:SceneRegionBoundaryModel}">
+                <local:SceneBoundaryVertexView DataContext="{Binding}" />
             </DataTemplate>
             <Style TargetType="{x:Type graphsharp:VertexControl}">
                 <Setter Property="Template">
@@ -267,14 +267,14 @@
                               ZoomBoxOpacity="0.5"
                               Background="Transparent">
 
-                <local:DatasetRegionGraphLayout Margin="10"
-                                                Graph="{Binding Path=RegionGraph}"
-                                                LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
-                                                LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"
-                                                OverlapRemovalAlgorithmType="FSA"
-                                                HighlightAlgorithmType="Simple" 
-                                                CreationTransition="{Binding Path=CreationTransition}"
-                                                DestructionTransition="{Binding Path=DestructionTransition}"/>
+                <local:RegionGraphLayout Margin="10"
+                                         Graph="{Binding Path=RegionGraph}"
+                                         LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
+                                         LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"
+                                         OverlapRemovalAlgorithmType="FSA"
+                                         HighlightAlgorithmType="Simple" 
+                                         CreationTransition="{Binding Path=CreationTransition}"
+                                         DestructionTransition="{Binding Path=DestructionTransition}"/>
             </zoom:ZoomControl>
         </Border>
         -->

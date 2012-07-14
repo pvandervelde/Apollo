@@ -45,9 +45,9 @@ namespace Apollo.UI.Common.Views.Datasets
 
             var model = new DatasetDetailModel(context, progressTracker, projectFacade, Parameter.Dataset) 
                 {
+                    // ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, Parameter.Dataset),
                     SwitchDatasetToEditModeCommand = new SwitchDatasetToEditModeCommand(Parameter.Dataset),
                     SwitchDatasetToExecutingModeCommand = new SwitchDatasetToExecutingModeCommand(Parameter.Dataset),
-                    ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, Parameter.Dataset),
                 };
 
             View.Model = model;

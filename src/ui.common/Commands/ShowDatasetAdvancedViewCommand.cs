@@ -6,6 +6,8 @@
 
 using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Events;
+using Apollo.UI.Common.Views.Scenes;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
@@ -19,13 +21,13 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Determines if the advanced view can be shown for the dataset.
         /// </summary>
-        /// <param name="dataset">The dataset.</param>
+        /// <param name="scene">The scene data.</param>
         /// <returns>
         /// <see langword="true" /> if the advanced view can be shown; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        private static bool CanShow(DatasetFacade dataset)
+        private static bool CanShow(SceneFacade scene)
         {
             return false;
         }
@@ -35,18 +37,21 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        /// <param name="dataset">The dataset.</param>
-        private static void OnShow(IContextAware context, IEventAggregator eventAggregator, DatasetFacade dataset)
+        /// <param name="scene">The scene data.</param>
+        private static void OnShow(IContextAware context, IEventAggregator eventAggregator, SceneFacade scene)
         {
             // If there is no facade then we're in design mode or something
             // else weird.
-            if (dataset == null)
+            if (scene == null)
             {
                 return;
             }
 
-            // For now we do nothing. At some point we'll have to figure out what comes next.
-            return;
+            eventAggregator.GetEvent<ShowViewEvent>().Publish(
+                new ShowViewRequest(
+                    typeof(ScenePresenter),
+                    CommonRegionNames.Content,
+                    new SceneParameter(context, scene)));
         }
 
         /// <summary>
@@ -54,9 +59,9 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        /// <param name="dataset">The dataset.</param>
-        public ShowDatasetAdvancedViewCommand(IContextAware context, IEventAggregator eventAggregator, DatasetFacade dataset)
-            : base(obj => OnShow(context, eventAggregator, dataset), obj => CanShow(dataset))
+        /// <param name="scene">The scene data.</param>
+        public ShowDatasetAdvancedViewCommand(IContextAware context, IEventAggregator eventAggregator, SceneFacade scene)
+            : base(obj => OnShow(context, eventAggregator, scene), obj => CanShow(scene))
         {
         }
     }
