@@ -72,7 +72,7 @@
     <Import Project="$(DirWorkspace)\version.xml"
             Condition="Exists('$(DirWorkspace)\version.xml')"/>
 
-    <Target Name="Run" DependsOnTargets="_Clean;_BuildBinaries;_ExecuteUnitTests;_GenerateDocumentation;_CodeAnalysis;_Package">
+    <Target Name="Run" DependsOnTargets="_Clean;_BuildBinaries;_ExecuteUnitTests;_CodeAnalysis;_Package">
         <!-- Do nothing here -->
     </Target>
     
