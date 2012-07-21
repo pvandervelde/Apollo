@@ -105,6 +105,8 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             m_Dataset.OnUnloaded += (s, e) => RaiseOnUnloaded();
             m_Dataset.OnNameChanged += (s, e) => RaiseOnNameChanged();
             m_Dataset.OnSummaryChanged += (s, e) => RaiseOnSummaryChanged();
+            m_Dataset.OnSwitchToEditMode += (s, e) => RaiseOnSwitchToEditMode();
+            m_Dataset.OnSwitchToExecutingMode += (s, e) => RaiseOnSwitchToExecutingMode();
         }
 
         /// <summary>
@@ -445,6 +447,61 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
 
             var child = m_Dataset.CreateNewChild(creationInformation);
             return new DatasetFacade(child);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the dataset is in edit mode or not.
+        /// </summary>
+        public bool IsEditMode
+        {
+            get
+            {
+                return m_Dataset.IsEditMode;
+            }
+        }
+
+        /// <summary>
+        /// Switches the dataset to edit mode.
+        /// </summary>
+        public void SwitchToEditMode()
+        {
+            m_Dataset.SwitchToEditMode();
+        }
+
+        /// <summary>
+        /// Switches the dataset to executing mode.
+        /// </summary>
+        public void SwitchToExecutingMode()
+        {
+            m_Dataset.SwitchToExecutingMode();
+        }
+
+        /// <summary>
+        /// An event fired when the dataset is switched to edit mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToEditMode;
+
+        private void RaiseOnSwitchToEditMode()
+        {
+            var local = OnSwitchToEditMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event fired when the dataset is switched to executing mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+        private void RaiseOnSwitchToExecutingMode()
+        {
+            var local = OnSwitchToExecutingMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
         }
 
         /// <summary>

@@ -45,5 +45,15 @@ namespace Apollo.Core.Host.Projects
         /// Called when the owner got notification of a change in the history of the current dataset.
         /// </summary>
         void OwnerHasBeenNotifiedOfHistoryChange();
+
+        /// <summary>
+        /// Called when the owner gets the notification that the dataset has switched to edit mode.
+        /// </summary>
+        void OwnerHasBeenNotifiedOfSwitchToEditMode();
+
+        /// <summary>
+        /// Called when the owner gets the notification that the dataset has switched to executing mode.
+        /// </summary>
+        void OwnerHasBeenNotifiedOfSwitchToExecutingMode();
     }
 }

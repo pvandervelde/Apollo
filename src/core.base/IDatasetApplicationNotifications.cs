@@ -20,5 +20,15 @@ namespace Apollo.Core.Base
         /// An event raised when progress is made on some action.
         /// </summary>
         event EventHandler<ProgressEventArgs> OnProgress;
+
+        /// <summary>
+        /// An event raised when the dataset is switched to edit mode.
+        /// </summary>
+        event EventHandler<EventArgs> OnSwitchToEditingMode;
+
+        /// <summary>
+        /// An event raised when the dataset is switched to executing mode.
+        /// </summary>
+        event EventHandler<EventArgs> OnSwitchToExecutingMode;
     }
 }

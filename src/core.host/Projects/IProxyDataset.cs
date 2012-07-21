@@ -236,6 +236,34 @@ namespace Apollo.Core.Host.Projects
         IEnumerable<IProxyDataset> CreateNewChildren(IEnumerable<DatasetCreationInformation> newChildren);
 
         /// <summary>
+        /// Gets a value indicating whether the dataset is in edit mode or not.
+        /// </summary>
+        bool IsEditMode
+        {
+            get;
+        }
+
+        /// <summary>
+        /// Switches the dataset to edit mode.
+        /// </summary>
+        void SwitchToEditMode();
+
+        /// <summary>
+        /// Switches the dataset to executing mode.
+        /// </summary>
+        void SwitchToExecutingMode();
+
+        /// <summary>
+        /// An event fired when the dataset is switched to edit mode.
+        /// </summary>
+        event EventHandler<EventArgs> OnSwitchToEditMode;
+
+        /// <summary>
+        /// An event fired when the dataset is switched to executing mode.
+        /// </summary>
+        event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+        /// <summary>
         /// Gets a value indicating the set of commands that apply to the current dataset.
         /// </summary>
         IProxyCommandSet Commands

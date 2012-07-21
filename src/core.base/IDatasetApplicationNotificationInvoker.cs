@@ -23,5 +23,19 @@ namespace Apollo.Core.Base
         [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
             Justification = "This method is used to raise an event, hence the naming.")]
         void RaiseOnProgress(int progress, IProgressMark currentlyProcessing);
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
+        void RaiseOnSwitchToEditingMode();
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToExecutingMode"/> event.
+        /// </summary>
+        [SuppressMessage("Microsoft.Design", "CA1030:UseEventsWhereAppropriate",
+            Justification = "This method is used to raise an event, hence the naming.")]
+        void RaiseOnSwitchToExecutingMode();
     }
 }

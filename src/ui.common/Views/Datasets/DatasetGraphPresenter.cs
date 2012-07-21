@@ -5,9 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Windows;
+using Apollo.Core.Base.Loaders;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Commands;
+using Apollo.Utilities;
 using Autofac;
+using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.UI.Common.Views.Datasets
 {
@@ -43,12 +49,67 @@ namespace Apollo.UI.Common.Views.Datasets
             Func<DatasetFacade, DatasetModel> builder =
                 f =>
                 {
-                    var presenter = new DatasetPresenter(m_Container);
-                    return presenter.CreateModel(f);
+                    return CreateModel(f);
                 };
 
             Debug.Assert(project != null, "There should be an active project.");
             View.Model = new DatasetGraphModel(context, project, builder);
+        }
+
+        /// <summary>
+        /// Creates a new dataset model.
+        /// </summary>
+        /// <param name="dataset">The dataset for the new model.</param>
+        /// <returns>
+        /// The dataset model for the given facade.
+        /// </returns>
+        private DatasetModel CreateModel(DatasetFacade dataset)
+        {
+            var context = m_Container.Resolve<IContextAware>();
+            var projectFacade = m_Container.Resolve<ILinkToProjects>();
+            var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
+            var timer = m_Container.Resolve<Func<string, IDisposable>>();
+            var eventAggregator = m_Container.Resolve<IEventAggregator>();
+
+            var result = new DatasetModel(context, progressTracker, projectFacade, dataset)
+            {
+                NewChildDatasetCommand = new AddChildDatasetCommand(projectFacade, dataset, timer),
+                DeleteDatasetCommand = new DeleteDatasetCommand(projectFacade, dataset, timer),
+                LoadDatasetCommand = CreateLoadDatasetCommand(dataset, timer),
+                UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(dataset, timer),
+                ShowDetailViewCommand = new ShowDatasetDetailViewCommand(context, eventAggregator, dataset),
+            };
+
+            return result;
+        }
+
+        private LoadDatasetOntoMachineCommand CreateLoadDatasetCommand(DatasetFacade dataset, Func<string, IDisposable> timer)
+        {
+            var context = m_Container.Resolve<IContextAware>();
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
+                c =>
+                {
+                    var presenter = (IPresenter)m_Container.Resolve(typeof(MachineSelectorPresenter));
+                    var view = m_Container.Resolve(presenter.ViewType) as IMachineSelectorView;
+                    presenter.Initialize(view, new MachineSelectorParameter(context, c));
+
+                    var window = view as Window;
+                    window.Owner = Application.Current.MainWindow;
+                    if (window.ShowDialog() ?? false)
+                    {
+                        return new SelectedProposal(view.Model.SelectedPlan);
+                    }
+                    else
+                    {
+                        return new SelectedProposal();
+                    }
+                };
+
+            var command = m_Container.Resolve<LoadDatasetOntoMachineCommand>(
+                new TypedParameter(typeof(DatasetFacade), dataset),
+                new TypedParameter(typeof(Func<IEnumerable<DistributionSuggestion>, SelectedProposal>), selector),
+                new TypedParameter(typeof(SystemDiagnostics), timer));
+            return command;
         }
     }
 }

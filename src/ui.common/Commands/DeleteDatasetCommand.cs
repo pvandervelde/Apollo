@@ -28,7 +28,7 @@ namespace Apollo.UI.Common.Commands
         /// a dataset.
         /// </param>
         /// <returns>
-        ///     <see langword="true"/> if the existing project can be closed; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if the dataset can be deleted; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

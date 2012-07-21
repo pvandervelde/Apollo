@@ -24,15 +24,15 @@ namespace Apollo.UI.Common.Views.Datasets
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetViewVertex"/> class.
         /// </summary>
-        /// <param name="model">The model of the dataset.</param>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
+        /// <param name="model">The model of the dataset.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="model"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
-        public DatasetViewVertex(DatasetModel model, IContextAware context)
+        public DatasetViewVertex(IContextAware context, DatasetModel model)
             : base(context)
         {
             {

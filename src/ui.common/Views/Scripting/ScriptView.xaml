@@ -4,7 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:avalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
-             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
              xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
              mc:Ignorable="d"
@@ -35,7 +40,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_New_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_New_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -47,7 +52,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Open_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Open_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -60,7 +65,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Cut_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Cut_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -72,7 +77,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Copy_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Copy_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -84,7 +89,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Paste_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Paste_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -96,7 +101,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Delete_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Delete_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -109,7 +114,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Undo_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Undo_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -121,7 +126,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}"/>
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Redo_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Redo_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -134,7 +139,7 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Play_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Play_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
@@ -146,14 +151,14 @@
                     <ToolTip DataContext="{Binding Path=PlacementTarget, RelativeSource={x:Static RelativeSource.Self}}"
                              Content="{Binding Path=Command, Converter={StaticResource commandToToolTipText}}" />
                 </Button.ToolTip>
-                <Image Source="{lex:LocImage Key=Img_Stop_24, Dict=Resources, Assembly=Apollo.UI.Common}"
+                <Image Source="{lex:Loc Img_Stop_24}"
                        gi:ImageGreyer.IsGreyable="true"
                        Width="16"
                        Height="16" />
             </Button>
         </ToolBar>
         <StatusBar DockPanel.Dock="Bottom">
-            <Label Content="{lex:LocText Key=ScriptView_CurrentScriptLanguage, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Label_CurrentScriptLanguage}" />
+            <Label Content="{lex:Loc ScriptView_CurrentScriptLanguage}" />
             <TextBlock Text="{Binding Path=ScriptLanguage, Converter={StaticResource scriptDescriptionModelToText}}" />
         </StatusBar>
         <Grid DockPanel.Dock="Left">
@@ -209,7 +214,7 @@
                             <Separator />
                             <MenuItem x:Name="clearOutputMenu"
                                       x:FieldModifier="private"
-                                      Header="{lex:LocText Key=ScriptView_Output_Menu_Clear, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Menu_Clear}"/>
+                                      Header="{lex:Loc ScriptView_Output_Menu_Clear}"/>
                         </ContextMenu>
                     </avalonEdit:TextEditor.ContextMenu>
                 </avalonEdit:TextEditor>

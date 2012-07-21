@@ -13,6 +13,7 @@ using System.Globalization;
 using System.IO;
 using System.Reflection;
 using Apollo.Utilities.Configuration;
+using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
 using NLog;
@@ -135,6 +136,26 @@ namespace Apollo.Utilities
             }
         }
 
+        private static void RegisterTimeline(ContainerBuilder builder)
+        {
+            // Apparently we can do this by registering the most generic class
+            // first and the least generic (i.e. the most limited) class last
+            // But then we also need a way to provide the correct parameters
+            // and that is a bit more tricky with a RegisterGeneric method call.
+            builder.RegisterSource(new DictionaryTimelineRegistrationSource());
+            builder.RegisterSource(new ListTimelineRegistrationSource());
+            builder.RegisterSource(new ValueTimelineRegistrationSource());
+
+            builder.Register(
+                c =>
+                {
+                    var ctx = c.Resolve<IComponentContext>();
+                    return new Timeline(t => { return ctx.Resolve(t) as IStoreTimelineValues; });
+                })
+                .As<ITimeline>()
+                .SingleInstance();
+        }
+
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
@@ -163,6 +184,7 @@ namespace Apollo.Utilities
                 RegisterLoggers(builder);
                 RegisterProfiler(builder);
                 RegisterDiagnostics(builder);
+                RegisterTimeline(builder);
             }
         }
     }

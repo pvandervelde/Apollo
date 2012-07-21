@@ -103,7 +103,10 @@ namespace Apollo.Core.Dataset
 
             // Load the communication system and get it going
             // All startables are automatically started once the container gets
-            // build
+            // build.
+            // The container will stay in scope as long as the app runs, because
+            // we won't exit the app until we exit this method, which happens
+            // when we exit the main message loop.
             var container = DependencyInjection.Load(context);
 
             // Register all global commands and notifications

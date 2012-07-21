@@ -23,7 +23,7 @@ namespace Apollo.UI.Common.Commands
         /// </summary>
         /// <param name="scriptHost">The object that controls the script system.</param>
         /// <returns>
-        /// <see langword="true" /> if the script host can be closed; otherwise, <see langword="false" />.
+        /// <see langword="true" /> if the script run can be cancelled; otherwise, <see langword="false" />.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

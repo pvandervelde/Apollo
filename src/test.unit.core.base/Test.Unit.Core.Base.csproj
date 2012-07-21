@@ -40,9 +40,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="NManto, Version=0.1.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\nManto\lib\NManto.dll</HintPath>
+    <Reference Include="NManto">
+      <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
     </Reference>
     <Reference Include="ParallelExtensionsExtras">
       <HintPath>..\..\packages\ParallelExtensionsExtras\lib\ParallelExtensionsExtras.dll</HintPath>
@@ -54,6 +53,10 @@
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>
       <Name>Apollo.Core.Base</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
     </ProjectReference>
     <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
       <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
@@ -133,6 +136,7 @@
     <Compile Include="Communication\WaitingUploadsTest.cs" />
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
+    <Compile Include="DatasetLockKeyTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />
     <Compile Include="Loaders\DatasetDistributionGeneratorTest.cs" />
     <Compile Include="Loaders\DatasetLoadingProposalComparerTest.cs" />

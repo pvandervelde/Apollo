@@ -71,6 +71,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
@@ -110,6 +111,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(
@@ -153,6 +155,7 @@ namespace Apollo.Core.Host.Projects
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
                 new DatasetOfflineInformation(

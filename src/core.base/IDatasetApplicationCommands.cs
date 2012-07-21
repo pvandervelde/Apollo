@@ -45,5 +45,17 @@ namespace Apollo.Core.Base
         /// </summary>
         /// <returns>A task which will complete once the transfer is complete.</returns>
         Task Save();
+
+        /// <summary>
+        /// Indicates that the dataset will be edited in the near future.
+        /// </summary>
+        /// <returns>A task which will complete once the dataset is ready for editing.</returns>
+        Task SwitchToEditMode();
+
+        /// <summary>
+        /// Indicates that the dataset should prepare to execute a sequence.
+        /// </summary>
+        /// <returns>A task that will complete once the dataset is ready for executing.</returns>
+        Task SwitchToExecuteMode();
     }
 }

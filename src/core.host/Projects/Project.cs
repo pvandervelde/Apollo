@@ -395,7 +395,7 @@ namespace Apollo.Core.Host.Projects
                 // Terminate all dataset applications
                 foreach (var online in m_Datasets.ActiveDatasets.Values)
                 {
-                    online.Close();
+                    CloseOnlineDataset(online);
                 }
             }
 

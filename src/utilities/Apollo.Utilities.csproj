@@ -55,6 +55,7 @@
     <Compile Include="History\DictionaryHistory.cs" />
     <Compile Include="History\DictionaryHistoryBase.CollectionChange.cs" />
     <Compile Include="History\DictionaryHistoryBase.cs" />
+    <Compile Include="History\DictionaryTimelineRegistrationSource.cs" />
     <Compile Include="History\HistoryId.cs" />
     <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
     <Compile Include="History\HistoryObjectListHistory.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="History\ListHistory.cs" />
     <Compile Include="History\ListHistoryBase.CollectionChange.cs" />
     <Compile Include="History\ListHistoryBase.cs" />
+    <Compile Include="History\ListTimelineRegistrationSource.cs" />
     <Compile Include="History\NoFutureValueRegisteredException.cs" />
     <Compile Include="History\NoPreviousValueRegisteredException.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineException.cs" />
@@ -94,6 +96,7 @@
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyException.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyException.cs" />
     <Compile Include="History\UnknownHistoryMemberTypeException.cs" />
+    <Compile Include="History\UnknownMemberNameException.cs" />
     <Compile Include="History\UnknownTimeMarkerException.cs" />
     <Compile Include="History\UpdateFromHistoryDependency.cs" />
     <Compile Include="History\ValueAtTime.cs" />
@@ -101,7 +104,9 @@
     <Compile Include="History\ValueAtTimeStorage.cs" />
     <Compile Include="History\ValueHistory.cs" />
     <Compile Include="History\ValueHistoryBase.cs" />
+    <Compile Include="History\ValueTimelineRegistrationSource.cs" />
     <Compile Include="IApplicationConstants.cs" />
+    <Compile Include="ICollectNotifications.cs" />
     <Compile Include="ICollectProgressReports.cs" />
     <Compile Include="ICompanyConstants.cs" />
     <Compile Include="Id.cs" />
@@ -117,6 +122,8 @@
     <Compile Include="ITrackSteppingProgress.cs" />
     <Compile Include="LockObject.cs" />
     <Compile Include="LogSeverityProxy.cs" />
+    <Compile Include="NotificationEventArgs.cs" />
+    <Compile Include="NotificationReportingHub.cs" />
     <Compile Include="NullPersistenceInformation.cs" />
     <Compile Include="ProgressEventArgs.cs" />
     <Compile Include="ProgressMarkEventArgs.cs" />
@@ -137,6 +144,9 @@
     <Compile Include="TypeExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="Autofac">
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
     <Reference Include="Lokad.Shared">
       <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
     </Reference>
@@ -146,7 +156,12 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -158,12 +173,6 @@
       <Link>Properties\App.snk</Link>
     </None>
     <None Include="packages.config" />
-  </ItemGroup>
-  <!-- Indicate that we depend on the SolutionLevel build projects -->
-  <ItemGroup>
-    <ProjectReference Include="$(SolutionDir)\SolutionLevel\SolutionLevel.csproj"> 
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly> 
-    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -23,7 +23,7 @@ namespace Apollo.UI.Common.Commands
         /// <param name="feedbackSender">The object that sends the report to the remote server.</param>
         /// <param name="feedbackReport">A stream that contains a feedback report.</param>
         /// <returns>
-        ///     <see langword="true"/> if the existing project can be closed; otherwise, <see langword="false"/>.
+        ///     <see langword="true"/> if a feedback report can be send; otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]

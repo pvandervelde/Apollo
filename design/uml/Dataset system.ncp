@@ -1,6 +1,6 @@
 <Project>
   <Name>Dataset system</Name>
-  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.3.1512.0, Culture=neutral, PublicKeyToken=null">
+  <ProjectItem type="NClass.DiagramEditor.ClassDiagram.Diagram" assembly="NClass.DiagramEditor, Version=2.4.1823.0, Culture=neutral, PublicKeyToken=null">
     <Name>Data set - overview</Name>
     <Language>CSharp</Language>
     <Entities>
@@ -292,9 +292,21 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <Location left="2115" top="1290" />
         <Size width="134" height="50" />
       </Entity>
+      <Entity type="Comment">
+        <Text>We should be able to let the user roll-back and roll-forward through this too</Text>
+        <Location left="2336" top="1947" />
+        <Size width="160" height="75" />
+      </Entity>
+      <Entity type="Comment">
+        <Text>How do we lock a dataset against changes from the outside? We need this if we're running the schedule</Text>
+        <Location left="376" top="1802" />
+        <Size width="181" height="92" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Association" first="1" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -309,6 +321,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -354,6 +368,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="11" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -364,6 +380,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="12" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -398,8 +416,6 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="16" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -410,6 +426,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="16" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -426,6 +444,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="16" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -438,8 +458,6 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="16" second="15">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -470,6 +488,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="17" second="3">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -486,8 +506,6 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndMultiplicity>0..*</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="2" second="18">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -514,6 +532,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -534,6 +554,8 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="17">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -550,8 +572,6 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="17" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -646,8 +666,6 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="16" second="32">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -675,6 +693,30 @@ Schedule information is passed through a IScheduleInformation object. Schedules 
         <BendPoint relativeToStartShape="False">
           <X>2395</X>
           <Y>1171</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="34" second="4">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="35" second="28">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>618</X>
+          <Y>1831</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>732</X>
+          <Y>1516</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="35" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>582</X>
+          <Y>1848</Y>
         </BendPoint>
       </Relationship>
     </Relationships>

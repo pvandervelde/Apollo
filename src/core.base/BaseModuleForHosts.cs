@@ -44,6 +44,7 @@ namespace Apollo.Core.Base
                                 endpoint,
                                 network,
                                 ctx.Resolve<ISendCommandsToRemoteEndpoints>(),
+                                ctx.Resolve<INotifyOfRemoteEndpointEvents>(),
                                 ctx.Resolve<SystemDiagnostics>());
                         },
                         () =>
@@ -77,6 +78,7 @@ namespace Apollo.Core.Base
                                endpoint,
                                network,
                                ctx.Resolve<ISendCommandsToRemoteEndpoints>(),
+                               ctx.Resolve<INotifyOfRemoteEndpointEvents>(),
                                ctx.Resolve<SystemDiagnostics>());
                        },
                        () =>

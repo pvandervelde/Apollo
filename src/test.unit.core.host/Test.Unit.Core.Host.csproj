@@ -57,11 +57,15 @@
     </Reference>
     <Reference Include="QuickGraph, Version=3.3.51106.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\QuickGraph\lib\net35\QuickGraph.dll</HintPath>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\ui.common\Apollo.UI.Common.csproj">
       <Project>{ACD26D23-36BA-4035-84CA-6E462A03B033}</Project>
       <Name>Apollo.UI.Common</Name>
@@ -108,7 +112,6 @@
     <Compile Include="Projects\ProjectServiceTest.cs" />
     <Compile Include="Projects\ProjectTest.cs" />
     <Compile Include="Projects\UnknownDatasetExceptionTest.cs" />
-    <Compile Include="Projects\UnknownMemberNameExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceCannotDependOnGenericKernelServiceExceptionTest.cs" />
     <Compile Include="ServiceCannotDependOnItselfExceptionTest.cs" />

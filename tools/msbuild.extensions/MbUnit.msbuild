@@ -20,7 +20,7 @@
                             builder.Append(string.Format("/sc "));
                             builder.Append(string.Format("/r:IsolatedProcess "));
                             builder.Append(string.Format("/rd:\"{0}\" ", OutputDir));
-                            builder.Append(string.Format("/v:Verbose /rt:XHtml-Condensed /rt:Xml-inline "));
+                            builder.Append(string.Format("/v:Verbose /rt:XHtml /rt:Xml-inline "));
                             foreach (var targetAssembly in TargetAssemblies)
                             {
                                 builder.Append(string.Format("\"{0}\" ", targetAssembly.ToString()));

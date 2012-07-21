@@ -106,7 +106,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child), InternalContext);
+                        var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
                         m_VertexMap.Add(child, vertex);
 
                         graph.AddVertex(vertex);
@@ -202,7 +202,7 @@ namespace Apollo.UI.Common.Views.Datasets
                             return;
                         }
 
-                        var vertex = new DatasetViewVertex(m_DatasetModelBuilder(child), InternalContext);
+                        var vertex = new DatasetViewVertex(InternalContext, m_DatasetModelBuilder(child));
                         m_VertexMap.Add(child, vertex);
                         graph.AddVertex(vertex);
 

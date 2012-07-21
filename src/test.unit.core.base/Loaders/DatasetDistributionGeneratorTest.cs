@@ -34,6 +34,7 @@ namespace Apollo.Core.Base.Loaders
                         new EndpointId("id"),
                         new NetworkIdentifier("machine"),
                         new Mock<ISendCommandsToRemoteEndpoints>().Object,
+                        new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t,
                     TaskCreationOptions.None,

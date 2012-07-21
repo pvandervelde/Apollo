@@ -71,6 +71,26 @@
                     KeyPath="yes" />
             </Component>
 
+            <!-- NManto.dll -->
+            <Component Id="C.NManto.dll"
+                       Guid="{852E1980-B41A-48BF-B36C-29D43AEDA26E}">
+                <File Id="File.NManto.dll"
+                      Name="NManto.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\NManto.dll"
+                      KeyPath="yes" />
+            </Component>
+
+            <!-- NSarrac.dll -->
+            <Component Id="C.NSarrac.Framework.dll"
+                       Guid="{8E63D197-4675-4C72-8EEF-8D112541EAAA}">
+                <File Id="File.NSarrac.Framework.dll"
+                      Name="NSarrac.Framework.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\NSarrac.Framework.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- System.Reactive.dll -->
             <Component Id="C.System.Reactive.dll"
                        Guid="{022520DB-88C9-4509-B692-F9FA2C736A1E}">
@@ -100,6 +120,8 @@
             <ComponentRef Id="C.Castle.Core.dll" />
             <ComponentRef Id="C.Lokad.Shared.dll" />
             <ComponentRef Id="C.NLog.dll" />
+            <ComponentRef Id="C.NManto.dll" />
+            <ComponentRef Id="C.NSarrac.Framework.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />
         </ComponentGroup>
     </Fragment>

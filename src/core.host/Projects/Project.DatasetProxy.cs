@@ -633,6 +633,77 @@ namespace Apollo.Core.Host.Projects
             }
 
             /// <summary>
+            /// Gets a value indicating whether the dataset is in edit mode or not.
+            /// </summary>
+            public bool IsEditMode
+            {
+                get
+                {
+                    return m_Owner.IsDatasetInEditMode(m_IdOfDataset);
+                }
+            }
+
+            /// <summary>
+            /// Switches the dataset to edit mode.
+            /// </summary>
+            public void SwitchToEditMode()
+            {
+                m_Owner.SwitchDatasetToEditMode(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Switches the dataset to executing mode.
+            /// </summary>
+            public void SwitchToExecutingMode()
+            {
+                m_Owner.SwitchDatasetToExecutingMode(m_IdOfDataset);
+            }
+
+            /// <summary>
+            /// Called when the owner gets the notification that the dataset has switched to edit mode.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasBeenNotifiedOfSwitchToEditMode()
+            {
+                RaiseOnSwitchToEditMode();
+            }
+
+            /// <summary>
+            /// An event fired when the dataset is switched to edit mode.
+            /// </summary>
+            public event EventHandler<EventArgs> OnSwitchToEditMode;
+
+            private void RaiseOnSwitchToEditMode()
+            {
+                var local = OnSwitchToEditMode;
+                if (local != null)
+                {
+                    local(this, EventArgs.Empty);
+                }
+            }
+
+            /// <summary>
+            /// Called when the owner gets the notification that the dataset has switched to executing mode.
+            /// </summary>
+            void IOwnedProxyDataset.OwnerHasBeenNotifiedOfSwitchToExecutingMode()
+            {
+                RaiseOnSwitchToExecutingMode();
+            }
+
+            /// <summary>
+            /// An event fired when the dataset is switched to executing mode.
+            /// </summary>
+            public event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+            private void RaiseOnSwitchToExecutingMode()
+            {
+                var local = OnSwitchToExecutingMode;
+                if (local != null)
+                {
+                    local(this, EventArgs.Empty);
+                }
+            }
+
+            /// <summary>
             /// Gets a value indicating the set of commands that apply to the current dataset.
             /// </summary>
             public IProxyCommandSet Commands

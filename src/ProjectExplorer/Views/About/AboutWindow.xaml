@@ -3,8 +3,13 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:Regions="http://www.codeplex.com/prism"
-        xmlns:lex="http://schemas.root-project.org/xaml/presentation"
-        Title="{lex:LocText Key=AboutWindow_Title, Dict=Resources, Assembly=Apollo.ProjectExplorer, DesignValue=Window_Title}"
+        xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+        xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+        xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                lexEngine:LocalizeDictionary.DesignCulture="en"
+                lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.ProjectExplorer"
+                lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+        Title="{lex:Loc AboutWindow_Title}"
         Style="{DynamicResource AboutDialogStyle}"
         WindowStartupLocation="CenterOwner">
     <Window.Resources>
@@ -85,7 +90,7 @@
     </Window.Resources>
     <StackPanel x:Uid="clientArea"
                 Style="{StaticResource BackgroundStyle}">
-        <Image Source="{lex:LocImage Key=AboutBanner_Png, Dict=Resources, Assembly=Apollo.ProjectExplorer}" />
+        <Image Source="{lex:Loc AboutBanner_Png}" />
         <StackPanel x:Uid="displayArea"
                     Style="{StaticResource DisplayAreaStyle}">
             <Label x:Name="productName"

@@ -55,6 +55,12 @@ namespace Apollo.UI.Common.Views.Datasets
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="progressTracker"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="project"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dataset"/> is <see langword="null" />.
         /// </exception>
         public DatasetModel(IContextAware context, ITrackSteppingProgress progressTracker, ILinkToProjects project, DatasetFacade dataset)
@@ -62,6 +68,7 @@ namespace Apollo.UI.Common.Views.Datasets
         {
             {
                 Enforce.Argument(() => progressTracker);
+                Enforce.Argument(() => project);
                 Enforce.Argument(() => dataset);
             }
 
@@ -140,6 +147,15 @@ namespace Apollo.UI.Common.Views.Datasets
         /// Gets or sets the unload dataset command.
         /// </summary>
         public ICommand UnloadDatasetCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the command used to show the detail view.
+        /// </summary>
+        public ICommand ShowDetailViewCommand
         {
             get;
             set;

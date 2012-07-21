@@ -46,6 +46,10 @@
     <Reference Include="System" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
     <ProjectReference Include="..\utilities.srconly\Apollo.Utilities.SrcOnly.csproj">
       <Project>{a4e93835-9467-48e1-bdff-a107cf3784c2}</Project>
       <Name>Apollo.Utilities.SrcOnly</Name>
@@ -89,6 +93,7 @@
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyExceptionTest.cs" />
     <Compile Include="History\UnknownHistoryMemberTypeExceptionTest.cs" />
+    <Compile Include="History\UnknownMemberNameExceptionTest.cs" />
     <Compile Include="History\UnknownTimeMarkerExceptionTest.cs" />
     <Compile Include="History\ValueAtTimeTest.cs" />
     <Compile Include="History\ValueHistoryTest.cs" />

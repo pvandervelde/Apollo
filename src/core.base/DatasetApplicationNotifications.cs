@@ -33,5 +33,39 @@ namespace Apollo.Core.Base
                 local(this, new ProgressEventArgs(progress, currentlyProcessing));
             }
         }
+
+        /// <summary>
+        /// An event raised when the dataset is switched to edit mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToEditingMode;
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToEditingMode"/> event.
+        /// </summary>
+        public void RaiseOnSwitchToEditingMode()
+        {
+            var local = OnSwitchToEditingMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
+
+        /// <summary>
+        /// An event raised when the dataset is switched to executing mode.
+        /// </summary>
+        public event EventHandler<EventArgs> OnSwitchToExecutingMode;
+
+        /// <summary>
+        /// Raises the <see cref="IDatasetApplicationNotifications.OnSwitchToExecutingMode"/> event.
+        /// </summary>
+        public void RaiseOnSwitchToExecutingMode()
+        {
+            var local = OnSwitchToExecutingMode;
+            if (local != null)
+            {
+                local(this, EventArgs.Empty);
+            }
+        }
     }
 }

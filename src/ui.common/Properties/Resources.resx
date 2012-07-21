@@ -701,4 +701,76 @@ Please wait ...</value>
   <data name="Img_TextDocument_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Text_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="Img_LockClosed_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockClosed_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockClosed_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockClosed_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockClosed_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockClosed_72" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockClosed_72x72.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_128" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_128x128.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_16" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_16x16.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_24" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_24x24.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_32" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_32x32.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_48" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_48x48.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Img_LockOpen_72" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\LockOpen_72x72.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="DatasetDetailView_Advanced" xml:space="preserve">
+    <value>Advanced</value>
+  </data>
+  <data name="DatasetDetailView_DatasetEndpoint" xml:space="preserve">
+    <value>Running on:</value>
+  </data>
+  <data name="DatasetDetailView_DatasetName" xml:space="preserve">
+    <value>Name:</value>
+  </data>
+  <data name="DatasetDetailView_DatasetNameSuggestion" xml:space="preserve">
+    <value>Enter the name for the dataset here</value>
+  </data>
+  <data name="DatasetDetailView_DatasetProcessing" xml:space="preserve">
+    <value>Processing:</value>
+  </data>
+  <data name="DatasetDetailView_DatasetSummary" xml:space="preserve">
+    <value>Summary:</value>
+  </data>
+  <data name="DatasetDetailView_DatasetSummarySuggestion" xml:space="preserve">
+    <value>Enter the summary for the dataset here</value>
+  </data>
+  <data name="DatasetDetailView_FinishEditing" xml:space="preserve">
+    <value>Save changes to dataset</value>
+  </data>
+  <data name="DatasetDetailView_StartEditing" xml:space="preserve">
+    <value>Make changes to dataset</value>
+  </data>
+  <data name="DatasetGraphView_ShowDetail" xml:space="preserve">
+    <value>Show details...</value>
+  </data>
+  <data name="DatasetDetailView_UnnamedDatasetName" xml:space="preserve">
+    <value>No name</value>
+  </data>
+  <data name="DatasetDetailView_ViewName" xml:space="preserve">
+    <value>Details for: {0}</value>
+  </data>
 </root>

@@ -222,6 +222,10 @@ namespace Apollo.Utilities
                 builder.Register(c => new XmlConfiguration())
                     .As<IConfiguration>();
 
+                builder.Register(c => new NotificationReportingHub())
+                    .As<ICollectNotifications>()
+                    .SingleInstance();
+
                 builder.Register(c => new ProgressReportingHub())
                     .As<ICollectProgressReports>()
                     .SingleInstance();

@@ -454,6 +454,8 @@ namespace Apollo.Core.Host.Projects
                     {
                         var dataset = t.Result;
                         m_Datasets.ActiveDatasets.Add(id, dataset);
+                        dataset.OnSwitchToEditMode += HandleDatasetSwitchedToEditMode;
+                        dataset.OnSwitchToExecutingMode += HandleDatasetSwitchedToExecutingMode;
 
                         if (m_LoadingDatsets.ContainsKey(id))
                         {
@@ -479,6 +481,40 @@ namespace Apollo.Core.Host.Projects
             }
         }
 
+        private void HandleDatasetSwitchedToEditMode(object sender, EventArgs e)
+        {
+            var info = sender as DatasetOnlineInformation;
+            Debug.Assert(info != null, "Incorrect object type to receive SwitchToEditMode.");
+
+            if (IsClosed || !m_Datasets.ActiveDatasets.ContainsKey(info.Id))
+            {
+                return;
+            }
+
+            if (m_DatasetProxies.ContainsKey(info.Id))
+            {
+                var proxy = m_DatasetProxies[info.Id];
+                proxy.OwnerHasBeenNotifiedOfSwitchToEditMode();
+            }
+        }
+
+        private void HandleDatasetSwitchedToExecutingMode(object sender, EventArgs e)
+        {
+            var info = sender as DatasetOnlineInformation;
+            Debug.Assert(info != null, "Incorrect object type to receive SwitchToExecutingMode.");
+
+            if (IsClosed || !m_Datasets.ActiveDatasets.ContainsKey(info.Id))
+            {
+                return;
+            }
+
+            if (m_DatasetProxies.ContainsKey(info.Id))
+            {
+                var proxy = m_DatasetProxies[info.Id];
+                proxy.OwnerHasBeenNotifiedOfSwitchToExecutingMode();
+            }
+        }
+
         /// <summary>
         /// Unloads the dataset from all the machines it is loaded onto.
         /// </summary>
@@ -501,9 +537,61 @@ namespace Apollo.Core.Host.Projects
             }
 
             var onlineInfo = m_Datasets.ActiveDatasets[id];
-            onlineInfo.Close();
+            CloseOnlineDataset(onlineInfo);
 
             m_Datasets.ActiveDatasets.Remove(id);
+        }
+
+        private void CloseOnlineDataset(DatasetOnlineInformation info)
+        { 
+            info.OnSwitchToEditMode -= HandleDatasetSwitchedToEditMode;
+            info.OnSwitchToExecutingMode -= HandleDatasetSwitchedToExecutingMode;
+            info.Close();
+        }
+
+        private bool IsDatasetInEditMode(DatasetId id)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
+            }
+
+            if (!m_Datasets.ActiveDatasets.ContainsKey(id))
+            {
+                return false;
+            }
+
+            var onlineInfo = m_Datasets.ActiveDatasets[id];
+            return onlineInfo.IsEditMode;
+        }
+
+        private void SwitchDatasetToEditMode(DatasetId id)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
+            }
+
+            if (!m_Datasets.ActiveDatasets.ContainsKey(id))
+            {
+                return;
+            }
+
+            var onlineInfo = m_Datasets.ActiveDatasets[id];
+            onlineInfo.SwitchToEditMode();
+        }
+
+        private void SwitchDatasetToExecutingMode(DatasetId id)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to unload a dataset from a machine.");
+            }
+
+            if (!m_Datasets.ActiveDatasets.ContainsKey(id))
+            {
+                return;
+            }
+
+            var onlineInfo = m_Datasets.ActiveDatasets[id];
+            onlineInfo.SwitchToExecutingMode();
         }
     }
 }

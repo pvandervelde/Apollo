@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
-             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:converters="clr-namespace:Apollo.UI.Common.Converters">
     <UserControl.Resources>
         <converters:FeedbackReportToTextConverter x:Key="feedbackReportToTextConverter" />
@@ -22,7 +27,7 @@
                 Grid.Column="0"
                 IsEnabled="{Binding Path=HasErrorReports}"
                 Click="OnErrorReportButtonClick">
-            <Image Source="{lex:LocImage Key=Img_Bug_48, Dict=Resources, Assembly=Apollo.UI.Common}"
+            <Image Source="{lex:LocImage Key=Img_Bug_48}"
                    gi:ImageGreyer.IsGreyable="true"
                    Width="16"
                    Height="16"
@@ -104,7 +109,7 @@
                               Margin="5,5,5,5"
                               Checked="OnSelectAllCheckBoxChecked"
                               Unchecked="OnSelectAllCheckBoxUnchecked"
-                              Content="{lex:LocText Key=ErrorReportIconView_SelectAll, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=CheckBox_SelectAllItems}" />
+                              Content="{lex:Loc ErrorReportIconView_SelectAll}" />
                     
                     <StackPanel Grid.Row="2"
                                 Orientation="Horizontal"
@@ -114,13 +119,13 @@
                                 IsDefault="True"
                                 Margin="3, 3, 3, 3"
                                 Style="{StaticResource enableOkButton}">
-                            <TextBlock Text="{lex:LocText Key=ErrorReportIconView_Ok, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Ok}" />
+                            <TextBlock Text="{lex:Loc ErrorReportIconView_Ok}" />
                         </Button>
                         <Button IsCancel="True"
                                 Margin="3, 3 3, 3"
                                 Style="{StaticResource standardButtonSize}"
                                 Click="OnErrorReportCancelButtonClick">
-                            <TextBlock Text="{lex:LocText Key=ErrorReportIconView_Cancel, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Cancel}" />
+                            <TextBlock Text="{lex:Loc ErrorReportIconView_Cancel}" />
                         </Button>
                     </StackPanel>
                 </Grid>

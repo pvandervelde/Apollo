@@ -36,4 +36,4 @@ using Tools;
     "Microsoft.Usage", 
     "CA2243:AttributeStringLiteralsShouldParseCorrectly", 
     Justification = "It's a VCS revision, not a version you stupid FxCop")]
-[assembly: AssemblyBuildInformation(buildNumber: ${BuildNumber}, versionControlRevision: "${VcsRevision}")]
+[assembly: AssemblyBuildInformation(buildNumber: ${BuildNumber}, versionControlInformation: "${VcsRevision}")]

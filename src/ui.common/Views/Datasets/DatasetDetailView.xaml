@@ -1,0 +1,249 @@
+﻿<UserControl x:Class="Apollo.UI.Common.Views.Datasets.DatasetDetailView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:converters="clr-namespace:Apollo.UI.Common.Converters"
+             xmlns:gi="clr-namespace:GreyableImage;assembly=GreyableImage"
+             xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
+             xmlns:local="clr-namespace:Apollo.UI.Common.Views.Datasets"
+             xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
+             xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
+             mc:Ignorable="d" 
+             d:DesignHeight="480" 
+             d:DesignWidth="640">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <!-- Dataset general data -->
+            <RowDefinition Height="Auto" />
+
+            <!-- Regions block -->
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- The information block describing the dataset -->
+        <Border Grid.Row="0"
+                Margin="5, 5, 5, 5"
+                Background="LightSteelBlue"
+                BorderBrush="MidnightBlue"
+                BorderThickness="3"
+                CornerRadius="10"
+                Padding="5">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <!-- Icons -->
+                    <RowDefinition Height="Auto" />
+
+                    <!-- Name -->
+                    <RowDefinition Height="Auto" />
+
+                    <!-- Summary -->
+                    <RowDefinition Height="*" />
+
+                    <!-- Endpoint -->
+                    <RowDefinition Height="*" />
+
+                    <!-- Progress -->
+                    <RowDefinition Height="Auto" />
+
+                    <!-- Commands -->
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Icons / Buttons -->
+                <Grid Grid.Row="0"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2">
+                    <StackPanel Orientation="Horizontal"
+                                FlowDirection="RightToLeft"
+                                Margin="3">
+                            <!-- Use an image that is too large so that if users zoom in, we keep fidelity of the image. -->
+                            <Image Source="{lex:Loc Img_Locked_48}"
+                                   Width="24"
+                                   Height="24"
+                                   Margin="3, 0, 3, 0">
+                                <Image.Style>
+                                    <Style TargetType="{x:Type Image}">
+                                        <Setter Property="Source" 
+                                                Value="{lex:BLoc Img_LockClosed_48}" />
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Path=IsLocked}" 
+                                                         Value="True">
+                                                <Setter Property="Source" 
+                                                        Value="{lex:BLoc Img_LockOpen_48}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Image.Style>
+                            </Image>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Name -->
+                <Label Grid.Row="1"
+                       Grid.Column="0"
+                       Margin="5, 5, 5, 0"
+                       VerticalAlignment="Center">
+                    <TextBlock Text="{lex:Loc DatasetDetailView_DatasetName}"
+                               Foreground="SeaShell"
+                               FontWeight="Bold" />
+                </Label>
+                <pix:InfoTextBox Grid.Row="1"
+                                 Grid.Column="1"
+                                 Margin="0, 5, 5, 5"
+                                 VerticalAlignment="Center"
+                                 Background="SeaShell"
+                                 TextBoxInfo="{lex:Loc DatasetDetailView_DatasetNameSuggestion}"
+                                 Text="{Binding Path=Name}" />
+
+                <!-- Summary -->
+                <Label Grid.Row="2"
+                       Grid.Column="0"
+                       Margin="5, 5, 5, 0"
+                       VerticalAlignment="Center">
+                    <TextBlock Text="{lex:Loc DatasetDetailView_DatasetSummary}"
+                               Foreground="SeaShell"
+                               FontWeight="Bold" />
+                </Label>
+                <pix:InfoTextBox Grid.Row="2"
+                                 Grid.Column="1"
+                                 Margin="0, 5, 5, 5"
+                                 Background="SeaShell"
+                                 VerticalContentAlignment="Top"
+                                 TextWrapping="WrapWithOverflow"
+                                 AcceptsReturn="True"
+                                 AcceptsTab="True"
+                                 VerticalScrollBarVisibility="Auto"
+                                 SpellCheck.IsEnabled="True"
+                                 TextBoxInfo="{lex:Loc DatasetDetailView_DatasetSummarySuggestion}"
+                                 Text="{Binding Path=Summary}" />
+
+                <!-- Endpoint -->
+                <Label Grid.Row="3"
+                       Grid.Column="0"
+                       Margin="5, 5, 5, 0"
+                       VerticalAlignment="Top">
+                    <TextBlock Text="{lex:Loc DatasetDetailView_DatasetEndpoint}"
+                               Foreground="SeaShell"
+                               FontWeight="Bold" />
+                </Label>
+                <pix:InfoTextBox Grid.Row="3"
+                                 Grid.Column="1"
+                                 Margin="0, 5, 5, 5"
+                                 Background="SeaShell"
+                                 VerticalContentAlignment="Top"
+                                 TextWrapping="WrapWithOverflow"
+                                 AcceptsReturn="False"
+                                 AcceptsTab="False"
+                                 IsReadOnly="True"
+                                 Text="{Binding Path=Endpoint, Mode=OneWay}" />
+
+                <!-- IsRunning + progress -->
+                <Grid Grid.Row="4"
+                      Grid.Column="0"
+                      Grid.ColumnSpan="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Margin="5, 5, 0, 0">
+                        <TextBlock Text="{lex:Loc DatasetDetailView_DatasetProcessing}"
+                                   Foreground="SeaShell"
+                                   FontWeight="Bold"/>
+                    </Label>
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Margin="0, 5, 5, 0">
+                        <TextBlock Text="{Binding Path=ProgressDescription, Mode=OneWay}"
+                                   Foreground="SeaShell" />
+                    </Label>
+
+                    <Grid Grid.Row="1"
+                          Grid.Column="0"
+                          Grid.ColumnSpan="2">
+                        <ProgressBar Value="{Binding Path=Progress, Mode=OneWay}"
+                                     Minimum="0"
+                                     Maximum="1"
+                                     MinHeight="15"
+                                     Margin="5, 0, 5, 5"/>
+                    </Grid>
+                </Grid>
+                
+                <!-- Commands -->
+                <StackPanel Grid.Row="5"
+                            Grid.Column="0"
+                            Grid.ColumnSpan="2"
+                            Orientation="Horizontal"
+                            FlowDirection="RightToLeft"
+                            Margin="5">
+                    <!-- BeginEdit / EndEdit -->
+                    <Button x:Name="switchEditModeButton"
+                            x:FieldModifier="private"
+                            Style="{StaticResource HyperlinkLikeButton}">
+                        <TextBlock>
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Text" 
+                                                Value="{lex:BLoc DatasetDetailView_FinishEditing}" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding Path=IsLocked}" 
+                                                         Value="True">
+                                            <Setter Property="Text" 
+                                                        Value="{lex:BLoc DatasetDetailView_StartEditing}" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                            
+                    </Button>
+                    
+                    <!-- Advanced -->
+                    <Button x:Name="showAdvancedViewButton" 
+                            x:FieldModifier="private"
+                            Style="{StaticResource HyperlinkLikeButton}">
+                        <TextBlock Text="{lex:Loc DatasetDetailView_Advanced}" />
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- The information block describing the regions in the dataset -->
+        <Border Grid.Row="1"
+                Background="LightSlateGray"
+                BorderBrush="Black"
+                BorderThickness="3"
+                CornerRadius="10,10,10,10"
+                Padding="4">
+            <TextBlock FontSize="48"
+                       FontWeight="Bold"
+                       Margin="25"
+                       Text="Watch this space for Regions ..." />
+        </Border>
+    </Grid>
+</UserControl>

@@ -27,17 +27,28 @@ namespace Apollo.Core.Base
         [Test]
         public void Create()
         {
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             var id = new DatasetId();
             var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
             var networkId = NetworkIdentifier.ForLocalMachine();
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
 
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(notifications.Object);
+            }
+
             var info = new DatasetOnlineInformation(
                 id, 
                 endpoint, 
                 networkId, 
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 systemDiagnostics);
             Assert.AreSame(id, info.Id);
             Assert.AreSame(endpoint, info.Endpoint);
@@ -67,19 +78,31 @@ namespace Apollo.Core.Base
                         new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
                     },
                 };
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.AvailableCommandsFor(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.AvailableCommandsFor(It.IsAny<EndpointId>()))
                     .Returns(commandList.Keys);
-                hub.Setup(h => h.CommandsFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
+                commandHub.Setup(h => h.CommandsFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
                     .Returns<EndpointId, Type>((e, t) => commandList[t]);
+            }
+
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(notifications.Object);
             }
 
             var info = new DatasetOnlineInformation(
                 id, 
                 endpoint, 
                 networkId, 
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 systemDiagnostics);
             var commands = info.AvailableCommands();
 
@@ -101,20 +124,119 @@ namespace Apollo.Core.Base
                         new Mock<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>().Object
                     },
                 };
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.CommandsFor<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>(It.IsAny<EndpointId>()))
                     .Returns((CommandProxyBuilderTest.IMockCommandSetWithTaskReturn)commandList.Values[0]);
+            }
+
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(notifications.Object);
             }
 
             var info = new DatasetOnlineInformation(
                 id, 
                 endpoint, 
                 networkId, 
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 systemDiagnostics);
             var commands = info.Command<CommandProxyBuilderTest.IMockCommandSetWithTaskReturn>();
             Assert.AreSame(commandList.Values[0], commands);
+        }
+
+        [Test]
+        public void AvailableNotifications()
+        {
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var id = new DatasetId();
+            var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
+            var networkId = NetworkIdentifier.ForLocalMachine();
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
+            var notificationList = new Dictionary<Type, INotificationSet> 
+                {
+                    { 
+                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithEventHandler),
+                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithEventHandler>().Object
+                    },
+                    {
+                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler),
+                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>().Object
+                    },
+                    {
+                        typeof(NotificationProxyBuilderTest.IMockNotificationSetForInternalUse),
+                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetForInternalUse>().Object
+                    },
+                };
+
+            var datasetNotifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(h => h.AvailableNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(notificationList.Keys);
+                notificationHub.Setup(h => h.NotificationsFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
+                    .Returns<EndpointId, Type>((e, t) => notificationList[t]);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(datasetNotifications.Object);
+            }
+
+            var info = new DatasetOnlineInformation(
+                id,
+                endpoint,
+                networkId,
+                commandHub.Object,
+                notificationHub.Object,
+                systemDiagnostics);
+            var notifications = info.AvailableNotifications();
+
+            Assert.AreEqual(2, notifications.Count());
+        }
+
+        [Test]
+        public void Notification()
+        {
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var id = new DatasetId();
+            var endpoint = EndpointIdExtensions.CreateEndpointIdForCurrentProcess();
+            var networkId = NetworkIdentifier.ForLocalMachine();
+            var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+
+            var notificationList = new SortedList<Type, INotificationSet> 
+                {
+                    { 
+                        typeof(NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler),
+                        new Mock<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>().Object
+                    },
+                };
+
+            var datasetNotifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(
+                        h => h.NotificationsFor<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>(It.IsAny<EndpointId>()))
+                    .Returns((NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler)notificationList.Values[0]);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(datasetNotifications.Object);
+            }
+
+            var info = new DatasetOnlineInformation(
+                id,
+                endpoint,
+                networkId,
+                commandHub.Object,
+                notificationHub.Object,
+                systemDiagnostics);
+            var notifications = info.Notification<NotificationProxyBuilderTest.IMockNotificationSetWithTypedEventHandler>();
+            Assert.AreSame(notificationList.Values[0], notifications);
         }
 
         [Test]
@@ -137,19 +259,30 @@ namespace Apollo.Core.Base
                     .Verifiable();
             }
 
-            var hub = new Mock<ISendCommandsToRemoteEndpoints>();
+            var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             {
-                hub.Setup(h => h.HasCommandFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
+                commandHub.Setup(h => h.HasCommandFor(It.IsAny<EndpointId>(), It.IsAny<Type>()))
                     .Returns(true);
-                hub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
+                commandHub.Setup(h => h.CommandsFor<IDatasetApplicationCommands>(It.IsAny<EndpointId>()))
                     .Returns(datasetCommands.Object);
+            }
+
+            var notifications = new Mock<IDatasetApplicationNotifications>();
+            var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
+            {
+                notificationHub.Setup(n => n.HasNotificationsFor(It.IsAny<EndpointId>()))
+                    .Returns(true);
+                notificationHub.Setup(n => n.NotificationsFor<IDatasetApplicationNotifications>(It.IsAny<EndpointId>()))
+                    .Callback<EndpointId>(e => Assert.AreSame(endpoint, e))
+                    .Returns(notifications.Object);
             }
 
             var info = new DatasetOnlineInformation(
                 id, 
                 endpoint, 
                 networkId, 
-                hub.Object,
+                commandHub.Object,
+                notificationHub.Object,
                 systemDiagnostics);
             info.Close();
 

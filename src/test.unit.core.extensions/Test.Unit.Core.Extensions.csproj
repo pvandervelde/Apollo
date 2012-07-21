@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <SolutionDir Condition="'$(SolutionDir)' == '' or '$(SolutionDir)' == '*undefined*'">$(MSBuildProjectDirectory)\..</SolutionDir>
+    <ProjectGuid>{EE853190-50AB-4BB0-ADE7-EAA6A53BB495}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Apollo.Core.Extensions</RootNamespace>
+    <AssemblyName>Test.Unit.Core.Extensions</AssemblyName>
+    <ShouldDoDocumentation>false</ShouldDoDocumentation>
+  </PropertyGroup>
+  <Import Project="$(SolutionDir)\BaseConfiguration.targets" />
+  <PropertyGroup>
+    <NoWarn>1685</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Autofac, Version=2.1.7.720, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Autofac\lib\NET40\Autofac.dll</HintPath>
+    </Reference>
+    <Reference Include="Gallio, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\Gallio.dll</HintPath>
+    </Reference>
+    <Reference Include="Lokad.Shared, Version=1.5.142.1, Culture=neutral, PublicKeyToken=43f0664b2b4db1fc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Lokad.Shared\lib\Lokad.Shared.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit.dll</HintPath>
+    </Reference>
+    <Reference Include="MbUnit35, Version=3.0.6.0, Culture=neutral, PublicKeyToken=eb9cfa67ee6ab36e, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Gallio.Complete\MbUnit35.dll</HintPath>
+    </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq\lib\NET40\Moq.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=1.0.0.505, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ServiceModel" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\core.extensions\Apollo.Core.Extensions.csproj">
+      <Project>{ee14fafe-8e78-11e1-b5d3-6df7bbe59b18}</Project>
+      <Name>Apollo.Core.Extensions</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
+      <Project>{b0b1c32a-53fc-4b7e-ba60-6dafb8180a42}</Project>
+      <Name>SolutionLevel</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\utilities\Apollo.Utilities.csproj">
+      <Project>{81F4563D-EAAC-4C2B-96A6-A79C9EA692CF}</Project>
+      <Name>Apollo.Utils</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="$(SOFTWARE_SIGNING_KEY_PATH)">
+      <Link>Properties\App.snk</Link>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scheduling\CannotCreateASynchronizationBlockWithoutVariablesExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotCreateInsertVertexWithLessThanOneInsertExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotCreateScheduleElementIdWithEmptyGuidExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotCreateScheduleIdWithEmptyGuidExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotExplicitlyLinkEndVertexExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotExplicitlyLinkStartVertexExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotInsertExistingVertexExceptionTest.cs" />
+    <Compile Include="Scheduling\CannotLinkAVertexToItselfExceptionTest.cs" />
+    <Compile Include="Scheduling\EditableEndVertexTest.cs" />
+    <Compile Include="Scheduling\EditableExecutingActionVertexTest.cs" />
+    <Compile Include="Scheduling\EditableInsertVertexTest.cs" />
+    <Compile Include="Scheduling\EditableMarkHistoryVertexTest.cs" />
+    <Compile Include="Scheduling\EditableScheduleEdgeTest.cs" />
+    <Compile Include="Scheduling\EditableScheduleTest.cs" />
+    <Compile Include="Scheduling\EditableStartVertexTest.cs" />
+    <Compile Include="Scheduling\EditableSubScheduleVertexTest.cs" />
+    <Compile Include="Scheduling\EditableSynchronizationEndVertexTest.cs" />
+    <Compile Include="Scheduling\EditableSynchronizationStartVertexTest.cs" />
+    <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
+    <Compile Include="Scheduling\NoInsertsLeftOnVertexExceptionTest.cs" />
+    <Compile Include="Scheduling\ScheduleElementIdTest.cs" />
+    <Compile Include="Scheduling\ScheduleIdTest.cs" />
+    <Compile Include="Scheduling\ScheduleVertifierTest.cs" />
+    <Compile Include="Scheduling\UnknownScheduleExceptionTest.cs" />
+    <Compile Include="Scheduling\UnknownScheduleVertexExceptionTest.cs" />
+  </ItemGroup>
+  <ItemGroup />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

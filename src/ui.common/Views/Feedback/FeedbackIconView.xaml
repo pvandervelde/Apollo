@@ -3,7 +3,12 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             xmlns:lex="http://schemas.root-project.org/xaml/presentation"
+             xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
+             xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
+             xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
+                        lexEngine:LocalizeDictionary.DesignCulture="en"
+                        lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
+                        lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf">
     <Grid>
         <Grid.RowDefinitions>
@@ -18,7 +23,7 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Click="OnShowFeedbackButtonClick">
-            <Image Source="{lex:LocImage Key=Img_SmileyNeutral_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+            <Image Source="{lex:Loc Img_SmileyNeutral_128}"
                    Width="16"
                    Height="16"
                    Margin="3, 0, 3, 0" />
@@ -142,7 +147,7 @@
                                 <RadioButton x:Name="positiveFeedbackRadioButton"
                                              x:FieldModifier="private"
                                              Checked="OnFeedbackRadioButtonChecked">
-                                    <Image Source="{lex:LocImage Key=Img_SmileyHappy_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                    <Image Source="{lex:Loc Img_SmileyHappy_128}"
                                            Width="48"
                                            Height="48"
                                            Margin="3, 0, 3, 0" />
@@ -151,7 +156,7 @@
                                 <RadioButton x:Name="neutralFeedbackRadioButton"
                                              x:FieldModifier="private"
                                              Checked="OnFeedbackRadioButtonChecked">
-                                    <Image Source="{lex:LocImage Key=Img_SmileyNeutral_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                    <Image Source="{lex:Loc Img_SmileyNeutral_128}"
                                            Width="48"
                                            Height="48"
                                            Margin="3, 0, 3, 0" />
@@ -160,7 +165,7 @@
                                 <RadioButton x:Name="negativeFeedbackRadioButton"
                                              x:FieldModifier="private"
                                              Checked="OnFeedbackRadioButtonChecked">
-                                    <Image Source="{lex:LocImage Key=Img_SmileySad_128, Dict=Resources, Assembly=Apollo.UI.Common}"
+                                    <Image Source="{lex:Loc Img_SmileySad_128}"
                                            Width="48"
                                            Height="48"
                                            Margin="3, 0, 3, 0" />
@@ -174,7 +179,7 @@
                                              AcceptsTab="True"
                                              VerticalScrollBarVisibility="Auto"
                                              SpellCheck.IsEnabled="True"
-                                             TextBoxInfo="{lex:LocText Key=FeedbackIconView_Description, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=FeedbackView_Description}"
+                                             TextBoxInfo="{lex:Loc FeedbackIconView_Description}"
                                              Text="{Binding Path=Description, Mode=TwoWay}" />
                         </Grid>
                     </Border>
@@ -187,13 +192,13 @@
                                 IsDefault="True"
                                 Margin="3, 3, 3, 3"
                                 Style="{StaticResource enableOkButton}">
-                            <TextBlock Text="{lex:LocText Key=FeedbackIconView_Ok, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Ok}" />
+                            <TextBlock Text="{lex:Loc FeedbackIconView_Ok}" />
                         </Button>
                         <Button IsCancel="True"
                                 Margin="3, 3 3, 3"
                                 Style="{StaticResource standardButtonSize}"
                                 Click="OnCancelButtonClick">
-                            <TextBlock Text="{lex:LocText Key=FeedbackIconView_Cancel, Dict=Resources, Assembly=Apollo.UI.Common, DesignValue=Button_Cancel}" />
+                            <TextBlock Text="{lex:Loc FeedbackIconView_Cancel}" />
                         </Button>
                     </StackPanel>
                 </Grid>
