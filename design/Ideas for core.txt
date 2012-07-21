@@ -1,8 +1,0 @@
-- Core should be modular as well. Maybe use MEF to create a core system that consists of core plug-ins (maybe allow only signed ones). That way we can slowly extend the core capabilities by adding more plug-ins. Also services could be plug-in based.
-
-- Need to setup isolation between the main blocks (data, generators, visualization) so that we can nuke one without having to nuke the other etc. This means that:
-  - Data shouldn't link to anything other than data objects. 
-  - Generators only link to data & generators
-  - Visualization only links to data & visualization
-
-- Build in verification of system & plug-ins. Especially numerical stuff!
