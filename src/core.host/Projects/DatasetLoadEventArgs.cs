@@ -38,7 +38,7 @@ namespace Apollo.Core.Host.Projects
             {
                 Enforce.Argument(() => id);
                 Enforce.Argument(() => machines);
-                Enforce.With<ArgumentException>(machines.Any(), Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetOnNoMachines);
+                Enforce.With<ArgumentException>(machines.Any(), Resources.Exceptions_Messages_CannotLoadDatasetOnNoMachines);
             }
 
             Id = id;

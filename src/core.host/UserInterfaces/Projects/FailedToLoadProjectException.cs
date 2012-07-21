@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// Initializes a new instance of the <see cref="FailedToLoadProjectException"/> class.
         /// </summary>
         public FailedToLoadProjectException()
-            : this(Resources_NonTranslatable.Exception_Messages_FailedToLoadProject)
+            : this(Resources.Exceptions_Messages_FailedToLoadProject)
         {
         }
 

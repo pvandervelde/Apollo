@@ -114,7 +114,7 @@ namespace Apollo.Core.Host.Projects
                 Enforce.Argument(() => constructionReason);
                 Enforce.With<CannotCreateDatasetWithoutCreatorException>(
                     constructionReason.CreatedOnRequestOf != DatasetCreator.None,
-                    Resources_NonTranslatable.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
+                    Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
                 Enforce.Argument(() => cleanup);
                 Enforce.Argument(() => name);
                 Enforce.Argument(() => summary);

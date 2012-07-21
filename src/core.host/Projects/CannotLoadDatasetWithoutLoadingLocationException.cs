@@ -22,7 +22,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotLoadDatasetWithoutLoadingLocationException"/> class.
         /// </summary>
         public CannotLoadDatasetWithoutLoadingLocationException()
-            : this(Resources_NonTranslatable.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation)
+            : this(Resources.Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation)
         {
         }
 

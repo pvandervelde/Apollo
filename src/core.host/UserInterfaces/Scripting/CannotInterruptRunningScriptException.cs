@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.UserInterfaces.Scripting
         /// Initializes a new instance of the <see cref="CannotInterruptRunningScriptException"/> class.
         /// </summary>
         public CannotInterruptRunningScriptException()
-            : this(Resources_NonTranslatable.Exceptions_Messages_CannotInteruptRunningScript)
+            : this(Resources.Exceptions_Messages_CannotInteruptRunningScript)
         {
         }
 

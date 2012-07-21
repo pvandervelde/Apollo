@@ -22,7 +22,7 @@ namespace Apollo.Core.Host.UserInterfaces.Scripting
         /// Initializes a new instance of the <see cref="InvalidScriptLanguageException"/> class.
         /// </summary>
         public InvalidScriptLanguageException()
-            : this(Resources_NonTranslatable.Exceptions_Messages_InvalidScriptLanguage)
+            : this(Resources.Exceptions_Messages_InvalidScriptLanguage)
         {
         }
 
@@ -34,7 +34,7 @@ namespace Apollo.Core.Host.UserInterfaces.Scripting
             : this(
                 string.Format(
                     CultureInfo.InvariantCulture, 
-                    Resources_NonTranslatable.Exceptions_Messages_InvalidScriptLanguage_WithLanguage, 
+                    Resources.Exceptions_Messages_InvalidScriptLanguage_WithLanguage, 
                     language))
         {
         }

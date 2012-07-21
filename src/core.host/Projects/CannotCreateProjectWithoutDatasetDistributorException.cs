@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotCreateProjectWithoutDatasetDistributorException"/> class.
         /// </summary>
         public CannotCreateProjectWithoutDatasetDistributorException()
-            : this(Resources_NonTranslatable.Exception_Messages_CannotCreateProjectWithoutDatasetDistributor)
+            : this(Resources.Exceptions_Messages_CannotCreateProjectWithoutDatasetDistributor)
         {
         }
 

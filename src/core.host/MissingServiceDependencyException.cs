@@ -22,7 +22,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="MissingServiceDependencyException"/> class.
         /// </summary>
         public MissingServiceDependencyException() 
-            : this(Resources_NonTranslatable.Exception_Messages_MissingServiceDependency)
+            : this(Resources.Exceptions_Messages_MissingServiceDependency)
         {
         }
 

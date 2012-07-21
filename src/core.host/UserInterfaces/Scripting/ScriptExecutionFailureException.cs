@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.UserInterfaces.Scripting
         /// Initializes a new instance of the <see cref="ScriptExecutionFailureException"/> class.
         /// </summary>
         public ScriptExecutionFailureException()
-            : this(Resources_NonTranslatable.Exceptions_Messages_ScriptExecutionFailure)
+            : this(Resources.Exceptions_Messages_ScriptExecutionFailure)
         {
         }
 

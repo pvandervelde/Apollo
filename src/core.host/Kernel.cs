@@ -130,7 +130,7 @@ namespace Apollo.Core.Host
                         throw new KernelStartupFailedException(
                             string.Format(
                                 CultureInfo.InvariantCulture,
-                                Resources_NonTranslatable.Exception_Messages_KernelStartupFailedDueToMissingServiceDependency_WithService,
+                                Resources.Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency_WithService,
                                 currentService.GetType()));
                     }
 
@@ -163,7 +163,7 @@ namespace Apollo.Core.Host
                             throw new KernelServiceStartupFailedException(
                                 string.Format(
                                     CultureInfo.InvariantCulture,
-                                    Resources_NonTranslatable.Exception_Messages_KernelServiceStartupFailed_WithService,
+                                    Resources.Exceptions_Messages_KernelServiceStartupFailed_WithService,
                                     currentService.GetType()));
                         }
                     }
