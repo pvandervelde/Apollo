@@ -141,22 +141,6 @@ namespace Apollo.Core.Extensions.Scheduling
             return result;
         }
 
-        private static bool VerifySynchronizationBlockHasStartAndEnd(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            // @TODO: Implement VerifySynchronizationBlockHasStartAndEnd
-            return true;
-        }
-
-        private static bool VerifySynchronizationVariablesAreUpdatedInBlock(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            // @TODO: Implement VerifySynchronizationVariablesAreUpdatedInBlock
-            return true;
-        }
-
         /// <summary>
         /// The collection that contains all the schedules.
         /// </summary>
@@ -225,8 +209,9 @@ namespace Apollo.Core.Extensions.Scheduling
             result &= VerifyTrackForwardsFromStart(schedule, onValidationFailure);
             result &= VerifyTrackBackwardsFromEnd(schedule, onValidationFailure);
             result &= VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(schedule, onValidationFailure);
-            result &= VerifySynchronizationBlockHasStartAndEnd(schedule, onValidationFailure);
-            result &= VerifySynchronizationVariablesAreUpdatedInBlock(schedule, onValidationFailure);
+            
+            // result &= VerifySynchronizationBlockHasStartAndEnd(schedule, onValidationFailure);
+            // result &= VerifySynchronizationVariablesAreUpdatedInBlock(schedule, onValidationFailure);
             result &= VerifySubSchedulesDoNotLinkBackToParentSchedule(id, schedule, onValidationFailure);
 
             return result;

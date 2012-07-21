@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
@@ -15,6 +16,27 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
     /// </summary>
     public sealed class SchedulingFacade
     {
+        /// <summary>
+        /// The scene that owns the current schedule.
+        /// </summary>
+        private readonly SceneFacade m_Owner;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SchedulingFacade"/> class.
+        /// </summary>
+        /// <param name="owner">The scene that owns the current set of schedules.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
+        /// </exception>
+        internal SchedulingFacade(SceneFacade owner)
+        {
+            {
+                Lokad.Enforce.Argument(() => owner);
+            }
+
+            m_Owner = owner;
+        }
+
         /// <summary>
         /// Adds a new schedule to the storage and provides an information object
         /// that describes the new schedule.
@@ -81,7 +103,10 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// <returns>The facade for the schedule with the given ID.</returns>
         public ScheduleFacade Schedule(ScheduleId id)
         {
-            throw new NotImplementedException();
+            return m_Owner.SceneData.Schedules.Schedules
+                .Where(s => s.Id.Equals(id))
+                .Select(s => new ScheduleFacade(m_Owner, s))
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -91,7 +116,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Owner.SceneData.Schedules.Schedules.Select(s => new ScheduleFacade(m_Owner, s));
             }
         }
 
@@ -130,7 +155,10 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// <returns>The facade for the action with the given ID.</returns>
         public ScheduleActionFacade Action(ScheduleElementId id)
         {
-            throw new NotImplementedException();
+            return m_Owner.SceneData.Schedules.Actions
+                .Where(s => s.Id.Equals(id))
+                .Select(s => new ScheduleActionFacade(m_Owner, s))
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -140,7 +168,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Owner.SceneData.Schedules.Actions.Select(s => new ScheduleActionFacade(m_Owner, s));
             }
         }
 
@@ -193,7 +221,10 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// <returns>The facade for the condition with the given ID.</returns>
         public ScheduleConditionFacade Condition(ScheduleElementId id)
         {
-            throw new NotImplementedException();
+            return m_Owner.SceneData.Schedules.Conditions
+                .Where(s => s.Id.Equals(id))
+                .Select(s => new ScheduleConditionFacade(m_Owner, s))
+                .FirstOrDefault();
         }
 
         /// <summary>
@@ -203,7 +234,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Owner.SceneData.Schedules.Conditions.Select(s => new ScheduleConditionFacade(m_Owner, s));
             }
         }
 

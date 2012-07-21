@@ -389,30 +389,22 @@ namespace Apollo.Core.Dataset.Scheduling
 
                 if (executeOutOfProcess)
                 {
-                    return ExecuteOutOfProcess(scheduleId, scheduleParameters, executionInfo);
+                    // Determine what data needs to be serialized for schedule to execute
+                    // Serialize all data + components + schedules
+                    // Start external app
+                    // Feed data stream of data + components + schedules
+                    // Indicate which schedule should be executed + parameters
+                    // Start
+                    // Return distributed schedule executor
+                    // --> This is all based on a set of components that can handle all kinds of distribution methods / desires
+                    //     For instance we eventually also want to do Domain Decomp this way.
+                    throw new NotImplementedException();
                 }
                 else 
                 {
                     return ExecuteInProcess(scheduleId, scheduleParameters, executionInfo);
                 }
             }
-        }
-
-        private IExecuteSchedules ExecuteOutOfProcess(
-            ScheduleId scheduleId, 
-            IEnumerable<IScheduleVariable> scheduleParameters, 
-            ScheduleExecutionInfo executionInfo)
-        {
-            // Determine what data needs to be serialized for schedule to execute
-            // Serialize all data + components + schedules
-            // Start external app
-            // Feed data stream of data + components + schedules
-            // Indicate which schedule should be executed + parameters
-            // Start
-            // Return distributed schedule executor
-            // --> This is all based on a set of components that can handle all kinds of distribution methods / desires
-            //     For instance we eventually also want to do Domain Decomp this way.
-            throw new NotImplementedException();
         }
 
         private IExecuteSchedules ExecuteInProcess(

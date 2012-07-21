@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Apollo.Core.Extensions.Scheduling;
+using Apollo.Core.Host.Projects;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
 {
@@ -18,24 +16,56 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
     public sealed class ScheduleFacade
     {
         /// <summary>
+        /// The scene that owns the current schedule.
+        /// </summary>
+        private readonly SceneFacade m_Owner;
+
+        /// <summary>
+        /// The object that provides the information about the schedule.
+        /// </summary>
+        private readonly IHoldSceneScheduleData m_Schedule;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ScheduleFacade"/> class.
+        /// </summary>
+        /// <param name="owner">The scene that owns the current schedule.</param>
+        /// <param name="schedule">The object that provides the information about the schedule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
+        /// </exception>
+        internal ScheduleFacade(SceneFacade owner, IHoldSceneScheduleData schedule)
+        {
+            {
+                Lokad.Enforce.Argument(() => owner);
+                Lokad.Enforce.Argument(() => schedule);
+            }
+
+            m_Owner = owner;
+            m_Schedule = schedule;
+        }
+
+        /// <summary>
         /// Gets the ID of the schedule.
         /// </summary>
         public ScheduleId Id
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Schedule.Id;
             }
         }
 
         /// <summary>
-        /// Gets the dataset that owns the current schedule.
+        /// Gets the scene that owns the current schedule.
         /// </summary>
-        public DatasetFacade Owner
+        public SceneFacade Owner
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Owner;
             }
         }
 
@@ -46,12 +76,12 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Schedule.Name;
             }
 
             set
             {
-                throw new NotImplementedException();
+                m_Schedule.Name = value;
             }
         }
 
@@ -62,12 +92,12 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Schedule.Summary;
             }
 
             set
             {
-                throw new NotImplementedException();
+                m_Schedule.Summary = value;
             }
         }
     }

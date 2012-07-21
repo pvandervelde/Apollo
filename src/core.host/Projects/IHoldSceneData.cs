@@ -4,10 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Apollo.Core.Host.Projects
 {
@@ -18,5 +15,12 @@ namespace Apollo.Core.Host.Projects
     /// </summary>
     internal interface IHoldSceneData
     {
+        /// <summary>
+        /// Gets the schedule information which is registered for the current scene.
+        /// </summary>
+        IHoldSchedulingData Schedules
+        {
+            get;
+        }
     }
 }

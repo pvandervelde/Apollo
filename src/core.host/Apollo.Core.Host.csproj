@@ -75,6 +75,10 @@
     <Compile Include="Projects\IBidirectionalGraphHistory.cs" />
     <Compile Include="Projects\IGraphHistoryChange.cs" />
     <Compile Include="Projects\IHoldSceneData.cs" />
+    <Compile Include="Projects\IHoldSceneScheduleActionData.cs" />
+    <Compile Include="Projects\IHoldSceneScheduleConditionData.cs" />
+    <Compile Include="Projects\IHoldSceneScheduleData.cs" />
+    <Compile Include="Projects\IHoldSchedulingData.cs" />
     <Compile Include="Projects\IOwnedProxyDataset.cs" />
     <Compile Include="Projects\IProxyCommandSet.cs" />
     <Compile Include="Projects\Project.History.cs" />

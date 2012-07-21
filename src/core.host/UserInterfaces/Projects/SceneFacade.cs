@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Apollo.Core.Host.Projects;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
@@ -23,6 +24,9 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// Initializes a new instance of the <see cref="SceneFacade"/> class.
         /// </summary>
         /// <param name="scene">The scene that the current object is a facade for.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="scene"/> is <see langword="null" />.
+        /// </exception>
         internal SceneFacade(IHoldSceneData scene)
         {
             {
@@ -32,11 +36,21 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
             m_Scene = scene;
         }
 
+        /// <summary>
+        /// Gets the object that holds the actual scene data.
+        /// </summary>
+        internal IHoldSceneData SceneData
+        {
+            get
+            {
+                return m_Scene;
+            }
+        }
+
         // Regions
         // Boundaries
         // Variables
         // Models
-        // Components
 
         /// <summary>
         /// Gets the facade that describes the schedules for the current scene.
@@ -45,7 +59,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         {
             get
             {
-                throw new NotImplementedException();
+                return new SchedulingFacade(this);
             }
         }
     }
