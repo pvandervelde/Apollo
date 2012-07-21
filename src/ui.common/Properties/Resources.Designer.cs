@@ -142,6 +142,24 @@ namespace Apollo.UI.Common.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No name.
+        /// </summary>
+        internal static string DatasetDetailView_UnnamedDatasetName {
+            get {
+                return ResourceManager.GetString("DatasetDetailView_UnnamedDatasetName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Details for: {0}.
+        /// </summary>
+        internal static string DatasetDetailView_ViewName {
+            get {
+                return ResourceManager.GetString("DatasetDetailView_ViewName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name:.
         /// </summary>
         internal static string DatasetGraphView_DatasetName {
@@ -201,6 +219,15 @@ namespace Apollo.UI.Common.Properties {
         internal static string DatasetGraphView_DatasetSummarySuggestion {
             get {
                 return ResourceManager.GetString("DatasetGraphView_DatasetSummarySuggestion", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show details....
+        /// </summary>
+        internal static string DatasetGraphView_ShowDetail {
+            get {
+                return ResourceManager.GetString("DatasetGraphView_ShowDetail", resourceCulture);
             }
         }
         
@@ -1992,33 +2019,6 @@ namespace Apollo.UI.Common.Properties {
         internal static string SaveProjectCommand_HistoryMark {
             get {
                 return ResourceManager.GetString("SaveProjectCommand_HistoryMark", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Add schedule....
-        /// </summary>
-        internal static string SchedulingView_AddScheduleButton {
-            get {
-                return ResourceManager.GetString("SchedulingView_AddScheduleButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Copy schedule....
-        /// </summary>
-        internal static string SchedulingView_CopyScheduleButton {
-            get {
-                return ResourceManager.GetString("SchedulingView_CopyScheduleButton", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Edit....
-        /// </summary>
-        internal static string SchedulingView_EditScheduleButton {
-            get {
-                return ResourceManager.GetString("SchedulingView_EditScheduleButton", resourceCulture);
             }
         }
         

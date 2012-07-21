@@ -29,6 +29,17 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         }
 
         /// <summary>
+        /// Gets the dataset that owns the current schedule.
+        /// </summary>
+        public DatasetFacade Owner
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Gets or sets the name of the schedule.
         /// </summary>
         public string Name

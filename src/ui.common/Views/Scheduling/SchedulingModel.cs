@@ -5,11 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Text;
-using System.Windows.Input;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Utilities;
@@ -178,7 +175,7 @@ namespace Apollo.UI.Common.Views.Scheduling
         /// <summary>
         /// Gets or sets the command that is used to create a new schedule.
         /// </summary>
-        public ICommand AddScheduleCommand
+        public ICommand LoadScheduleFromDiskCommand
         {
             get;
             set;

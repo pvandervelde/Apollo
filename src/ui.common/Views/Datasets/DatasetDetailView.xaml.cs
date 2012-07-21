@@ -68,9 +68,9 @@ namespace Apollo.UI.Common.Views.Datasets
         private void CommandEditModeSwitchCanExecute(object sender, CanExecuteRoutedEventArgs e)
         {
             e.Handled = true;
-            if (Model != null)
+            if ((Model != null) && Model.IsLoaded)
             {
-                if (!Model.IsLoaded)
+                if (!Model.IsLocked)
                 {
                     e.CanExecute = Model.SwitchDatasetToEditModeCommand.CanExecute(null);
                 }
@@ -90,7 +90,7 @@ namespace Apollo.UI.Common.Views.Datasets
         private void CommandEditModeSwitchExecuted(object sender, ExecutedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!Model.IsLoaded)
+            if (!Model.IsLocked)
             {
                 Model.SwitchDatasetToEditModeCommand.Execute(null);
             }

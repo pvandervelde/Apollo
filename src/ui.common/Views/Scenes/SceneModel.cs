@@ -6,6 +6,7 @@
 
 using System;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.UI.Common.Commands;
 using Apollo.UI.Common.Views.Scheduling;
 
 namespace Apollo.UI.Common.Views.Scenes
@@ -23,6 +24,11 @@ namespace Apollo.UI.Common.Views.Scenes
         /// The object that stores the scene information.
         /// </summary>
         private readonly SceneFacade m_Scene;
+
+        /// <summary>
+        /// The scheduling information.
+        /// </summary>
+        private readonly SchedulingModel m_Schedules;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SceneModel"/> class.
@@ -43,13 +49,13 @@ namespace Apollo.UI.Common.Views.Scenes
             }
 
             m_Scene = scene;
+            {
+                m_Schedules = new SchedulingModel(context, scene.Schedules) 
+                { 
+                    LoadScheduleFromDiskCommand = new LoadScheduleFromDiskCommand(scene.Schedules), 
+                };
+            }
         }
-
-        // Regions
-        // Boundaries
-        // Models
-        // Variables
-        // Components
 
         /// <summary>
         /// Gets the collection of schedules.
@@ -58,7 +64,7 @@ namespace Apollo.UI.Common.Views.Scenes
         {
             get
             {
-                throw new NotImplementedException();
+                return m_Schedules;
             }
         }
     }

@@ -32,6 +32,9 @@
                     </Setter.Value>
                 </Setter>
             </Trigger>
+            <Trigger Property="IsEnabled" Value="false">
+                <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.GrayTextBrushKey}}" />
+            </Trigger>
         </Style.Triggers>
     </Style>
 </ResourceDictionary>

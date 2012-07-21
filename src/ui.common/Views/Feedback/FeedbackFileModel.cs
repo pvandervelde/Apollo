@@ -28,9 +28,9 @@ namespace Apollo.UI.Common.Views.Feedback
         /// <summary>
         /// Initializes a new instance of the <see cref="FeedbackFileModel"/> class.
         /// </summary>
+        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="path">The path to the file that contains the feedback file.</param>
         /// <param name="date">The date on which the feedback report was generated.</param>
-        /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="path"/> is <see langword="null" />.
         /// </exception>
@@ -40,7 +40,7 @@ namespace Apollo.UI.Common.Views.Feedback
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="context"/> is <see langword="null" />.
         /// </exception>
-        public FeedbackFileModel(string path, DateTimeOffset date, IContextAware context)
+        public FeedbackFileModel(IContextAware context, string path, DateTimeOffset date)
             : base(context)
         {
             {

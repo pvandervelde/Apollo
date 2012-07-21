@@ -18,16 +18,16 @@
         </Grid.RowDefinitions>
 
         <ContentControl Grid.Row="0"
-                                Regions:RegionManager.RegionName="{x:Static infrastructure:CommonRegionNames.ProjectViewTopPane}"
-                                Margin="5, 5, 5, 5"
-                                Padding="5, 5, 5, 5" />
+                        Regions:RegionManager.RegionName="{x:Static infrastructure:CommonRegionNames.ProjectViewTopPane}"
+                        Margin="5, 5, 5, 5"
+                        Padding="5, 5, 5, 5" />
 
         <GridSplitter Grid.Row="0"
-                              Height="5" />
+                      Height="5" />
 
         <ContentControl Grid.Row="1"
-                                Regions:RegionManager.RegionName="{x:Static infrastructure:CommonRegionNames.ProjectViewContent}"
-                                Margin="5, 5, 5, 5"
-                                Padding="5, 5, 5, 5" />
+                        Regions:RegionManager.RegionName="{x:Static infrastructure:CommonRegionNames.ProjectViewContent}"
+                        Margin="5, 5, 5, 5"
+                        Padding="5, 5, 5, 5" />
     </Grid>
 </UserControl>

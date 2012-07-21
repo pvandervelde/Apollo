@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
 using Apollo.Utilities;
@@ -73,7 +74,11 @@ namespace Apollo.UI.Common.Views.Datasets
             m_ProgressTracker = progressTracker;
             m_Project = project;
             m_Dataset = dataset;
-            m_Dataset.OnNameChanged += (s, e) => Notify(() => Name);
+            m_Dataset.OnNameChanged += (s, e) => 
+                {
+                    Notify(() => Name);
+                    Notify(() => DisplayName);
+                };
             m_Dataset.OnSummaryChanged += (s, e) => Notify(() => Summary);
             m_Dataset.OnProgressOfCurrentAction += HandleDatasetProgress;
             m_Dataset.OnUnloaded += (s, e) =>
@@ -99,6 +104,30 @@ namespace Apollo.UI.Common.Views.Datasets
             {
                 m_ProgressTracker.StopTracking();
             }
+        }
+
+        /// <summary>
+        /// Gets the name of the model for uses on a display.
+        /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "These methods are being used by WPF databinding.")]
+        public string DisplayName
+        {
+            get
+            {
+                var name = !string.IsNullOrEmpty(Name) ? Name : Resources.DatasetDetailView_UnnamedDatasetName;
+                return string.Format(Resources.DatasetDetailView_ViewName, name);
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the command that closes the script sub-system
+        /// and all associated views.
+        /// </summary>
+        public ICommand CloseCommand
+        {
+            get;
+            set;
         }
 
         /// <summary>

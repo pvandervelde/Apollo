@@ -137,6 +137,7 @@
     <Compile Include="Bootstrappers\RegionBehaviorFactoryMapper.cs" />
     <Compile Include="Bootstrappers\ResolveAnythingSource.cs" />
     <Compile Include="Commands\AddChildDatasetCommand.cs" />
+    <Compile Include="Commands\LoadScheduleFromDiskCommand.cs" />
     <Compile Include="Commands\CancelScriptRunCommand.cs" />
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\CloseScriptCommand.cs" />
@@ -186,6 +187,14 @@
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
     <Compile Include="Profiling\TimingReport.cs" />
     <Compile Include="Profiling\TimingReportCollection.cs" />
+    <Compile Include="Utilities\DragDropHelpers.cs" />
+    <Compile Include="Utilities\ItemsControlDragSourceAdvisor.cs" />
+    <Compile Include="Utilities\PanelDragSourceAdvisor.cs" />
+    <Compile Include="Utilities\PanelDropTargetAdvisor.cs" />
+    <Compile Include="Utilities\DragDropManager.cs" />
+    <Compile Include="Utilities\DropPreviewAdorner.cs" />
+    <Compile Include="Utilities\IDragSourceAdvisor.cs" />
+    <Compile Include="Utilities\IDropTargetAdvisor.cs" />
     <Compile Include="Utilities\ObservableCollectionExtensions.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
     <Compile Include="IPresenter.cs" />
@@ -291,18 +300,6 @@
     <Compile Include="Views\Projects\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Regions\BoundaryModel.cs" />
-    <Compile Include="Views\Regions\BoundaryVertexView.xaml.cs">
-      <DependentUpon>BoundaryVertexView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Regions\IRegionElementModel.cs" />
-    <Compile Include="Views\Regions\RegionGraphLayout.cs" />
-    <Compile Include="Views\Regions\RegionVertexView.xaml.cs">
-      <DependentUpon>RegionVertexView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Regions\RegionViewEdge.cs" />
-    <Compile Include="Views\Regions\RegionViewGraph.cs" />
-    <Compile Include="Views\Regions\RegionModel.cs" />
     <Compile Include="Views\Scenes\ISceneView.cs" />
     <Compile Include="Views\Scenes\SceneModel.cs" />
     <Compile Include="Views\Scenes\SceneParameter.cs" />
@@ -310,19 +307,10 @@
     <Compile Include="Views\Scenes\SceneView.xaml.cs">
       <DependentUpon>SceneView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Scheduling\IScheduleView.cs" />
-    <Compile Include="Views\Scheduling\ISchedulingView.cs" />
     <Compile Include="Views\Scheduling\ScheduleActionModel.cs" />
     <Compile Include="Views\Scheduling\ScheduleConditionModel.cs" />
     <Compile Include="Views\Scheduling\ScheduleModel.cs" />
-    <Compile Include="Views\Scheduling\ScheduleParameter.cs" />
-    <Compile Include="Views\Scheduling\SchedulePresenter.cs" />
     <Compile Include="Views\Scheduling\SchedulingModel.cs" />
-    <Compile Include="Views\Scheduling\SchedulingParameter.cs" />
-    <Compile Include="Views\Scheduling\SchedulingPresenter.cs" />
-    <Compile Include="Views\Scheduling\SchedulingView.xaml.cs">
-      <DependentUpon>SchedulingView.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Scripting\ISelectScriptLanguageView.cs" />
     <Compile Include="Views\Scripting\ScriptDescriptionModel.cs" />
     <Compile Include="Views\Scripting\ScriptModel.cs" />
@@ -432,19 +420,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Regions\BoundaryVertexView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Regions\RegionVertexView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Scenes\SceneView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Scheduling\SchedulingView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

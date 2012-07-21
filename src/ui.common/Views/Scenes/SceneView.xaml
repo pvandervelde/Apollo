@@ -11,8 +11,6 @@
                         lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.UI.Common"
                         lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
              xmlns:local="clr-namespace:Apollo.UI.Common.Views.Scenes"
-             xmlns:regions="clr-namespace:Apollo.UI.Common.Views.Regions"
-             xmlns:scheduling="clr-namespace:Apollo.UI.Common.Views.Scheduling"
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -21,29 +19,6 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-            
-            <DataTemplate DataType="{x:Type regions:RegionModel}">
-                <regions:RegionVertexView DataContext="{Binding}" />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type regions:BoundaryModel}">
-                <regions:BoundaryVertexView DataContext="{Binding}" />
-            </DataTemplate>
-            <Style TargetType="{x:Type graphsharp:VertexControl}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type graphsharp:VertexControl}">
-                            <Border x:Name="vertexBorder"
-                                    BorderBrush="MidnightBlue"
-                                    Background="LightSteelBlue"
-                                    BorderThickness="3"
-                                    CornerRadius="10,10,10,10"
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentControl Content="{TemplateBinding Vertex}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -75,7 +50,6 @@
                 BorderThickness="3"
                 CornerRadius="5"
                 Padding="5">
-            <scheduling:SchedulingView DataContext="{Binding Path=Schedules}" />
         </Border>
         
         <!-- Regions & Boundaries -->
@@ -85,19 +59,6 @@
                 BorderThickness="3"
                 CornerRadius="10,10,10,10"
                 Padding="4">
-            <zoom:ZoomControl Zoom="0.1"
-                              ZoomBoxOpacity="0.5"
-                              Background="Transparent">
-
-                <regions:RegionGraphLayout Margin="10"
-                                         Graph="{Binding Path=Regions.Graph}"
-                                         LayoutAlgorithmType="{Binding Path=Regions.LayoutType, Mode=OneWay}"
-                                         LayoutParameters="{Binding Path=Regions.LayoutParameters, Mode=TwoWay}"
-                                         OverlapRemovalAlgorithmType="FSA"
-                                         HighlightAlgorithmType="Simple" 
-                                         CreationTransition="{Binding Path=Regions.CreationTransition}"
-                                         DestructionTransition="{Binding Path=Regions.DestructionTransition}"/>
-            </zoom:ZoomControl>
         </Border>
     </Grid>
 </UserControl>

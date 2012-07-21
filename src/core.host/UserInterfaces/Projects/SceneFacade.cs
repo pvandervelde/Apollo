@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using Apollo.Core.Host.Projects;
 
 namespace Apollo.Core.Host.UserInterfaces.Projects
@@ -36,6 +37,16 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         // Variables
         // Models
         // Components
-        // Schedules
+
+        /// <summary>
+        /// Gets the facade that describes the schedules for the current scene.
+        /// </summary>
+        public SchedulingFacade Schedules
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
     }
 }

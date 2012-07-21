@@ -69,7 +69,7 @@ namespace Apollo.UI.Common.Views.Feedback
             Action<FileInfo> action =
                 item =>
                 {
-                    m_Reports.Add(new FeedbackFileModel(item.FullName, item.CreationTime, InternalContext));
+                    m_Reports.Add(new FeedbackFileModel(InternalContext, item.FullName, item.CreationTime));
                 };
 
             Task.Factory.StartNew(

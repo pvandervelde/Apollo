@@ -204,7 +204,7 @@
                     x:FieldModifier="private"
                     Grid.Row="1" 
                     Grid.Column="0"
-                    Grid.ColumnSpan="2"
+                    HorizontalAlignment="Right"
                     Style="{StaticResource HyperlinkLikeButton}">
                 <TextBlock Text="{lex:Loc DatasetGraphView_ShowDetail}" />
             </Button>

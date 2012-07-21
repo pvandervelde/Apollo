@@ -9,6 +9,7 @@ using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Commands;
 using Apollo.Utilities;
 using Autofac;
+using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.UI.Common.Views.Datasets
@@ -48,9 +49,23 @@ namespace Apollo.UI.Common.Views.Datasets
                     // ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, Parameter.Dataset),
                     SwitchDatasetToEditModeCommand = new SwitchDatasetToEditModeCommand(Parameter.Dataset),
                     SwitchDatasetToExecutingModeCommand = new SwitchDatasetToExecutingModeCommand(Parameter.Dataset),
+                    ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, null),
+                    CloseCommand = CreateCloseCommand(),
                 };
 
             View.Model = model;
+        }
+
+        private CompositeCommand CreateCloseCommand()
+        {
+            var context = m_Container.Resolve<IContextAware>();
+            var closeViewCommand = m_Container.Resolve<CloseViewCommand>(
+                new TypedParameter(typeof(IEventAggregator), m_Container.Resolve<IEventAggregator>()),
+                new TypedParameter(typeof(string), CommonRegionNames.Content),
+                new TypedParameter(typeof(Parameter), Parameter));
+            var compositeCommand = new CompositeCommand();
+            compositeCommand.RegisterCommand(closeViewCommand);
+            return compositeCommand;
         }
     }
 }

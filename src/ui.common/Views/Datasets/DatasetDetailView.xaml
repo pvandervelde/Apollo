@@ -16,39 +16,13 @@
              xmlns:pix="clr-namespace:PixelLab.Wpf;assembly=PixelLab.Wpf"
              xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
              mc:Ignorable="d" 
-             d:DesignHeight="300" 
-             d:DesignWidth="300">
+             d:DesignHeight="480" 
+             d:DesignWidth="640">
     <UserControl.Resources>
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="../../Styles/ButtonStyles.xaml" />
             </ResourceDictionary.MergedDictionaries>
-
-            <!-- Templates for the graph -->
-            <!--
-            <DataTemplate DataType="{x:Type local:SceneRegionModel}">
-                <local:SceneRegionVertexView DataContext="{Binding}" />
-            </DataTemplate>
-            <DataTemplate DataType="{x:Type local:SceneRegionBoundaryModel}">
-                <local:SceneBoundaryVertexView DataContext="{Binding}" />
-            </DataTemplate>
-            <Style TargetType="{x:Type graphsharp:VertexControl}">
-                <Setter Property="Template">
-                    <Setter.Value>
-                        <ControlTemplate TargetType="{x:Type graphsharp:VertexControl}">
-                            <Border x:Name="vertexBorder"
-                                    BorderBrush="MidnightBlue"
-                                    Background="LightSteelBlue"
-                                    BorderThickness="3"
-                                    CornerRadius="10,10,10,10"
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentControl Content="{TemplateBinding Vertex}" />
-                            </Border>
-                        </ControlTemplate>
-                    </Setter.Value>
-                </Setter>
-            </Style>
-            -->
         </ResourceDictionary>
     </UserControl.Resources>
     <Grid>
@@ -63,8 +37,8 @@
         <!-- The information block describing the dataset -->
         <Border Grid.Row="0"
                 Margin="5, 5, 5, 5"
-                Background="SeaShell"
-                BorderBrush="GoldenRod"
+                Background="LightSteelBlue"
+                BorderBrush="MidnightBlue"
                 BorderThickness="3"
                 CornerRadius="10"
                 Padding="5">
@@ -88,6 +62,10 @@
                     <!-- Commands -->
                     <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
 
                 <!-- Icons / Buttons -->
                 <Grid Grid.Row="0"
@@ -172,10 +150,10 @@
                                  Background="SeaShell"
                                  VerticalContentAlignment="Top"
                                  TextWrapping="WrapWithOverflow"
-                                 AcceptsReturn="True"
-                                 AcceptsTab="True"
-                                 IsReadOnly="true"
-                                 Text="{Binding Path=Endpoint}" />
+                                 AcceptsReturn="False"
+                                 AcceptsTab="False"
+                                 IsReadOnly="True"
+                                 Text="{Binding Path=Endpoint, Mode=OneWay}" />
 
                 <!-- IsRunning + progress -->
                 <Grid Grid.Row="4"
@@ -256,27 +234,16 @@
         </Border>
 
         <!-- The information block describing the regions in the dataset -->
-        <!--
         <Border Grid.Row="1"
                 Background="LightSlateGray"
                 BorderBrush="Black"
                 BorderThickness="3"
                 CornerRadius="10,10,10,10"
                 Padding="4">
-            <zoom:ZoomControl Zoom="0.1"
-                              ZoomBoxOpacity="0.5"
-                              Background="Transparent">
-
-                <local:RegionGraphLayout Margin="10"
-                                         Graph="{Binding Path=RegionGraph}"
-                                         LayoutAlgorithmType="{Binding Path=LayoutType, Mode=OneWay}"
-                                         LayoutParameters="{Binding Path=LayoutParameters, Mode=TwoWay}"
-                                         OverlapRemovalAlgorithmType="FSA"
-                                         HighlightAlgorithmType="Simple" 
-                                         CreationTransition="{Binding Path=CreationTransition}"
-                                         DestructionTransition="{Binding Path=DestructionTransition}"/>
-            </zoom:ZoomControl>
+            <TextBlock FontSize="48"
+                       FontWeight="Bold"
+                       Margin="25"
+                       Text="Watch this space for Regions ..." />
         </Border>
-        -->
     </Grid>
 </UserControl>
