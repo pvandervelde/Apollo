@@ -169,7 +169,7 @@ namespace Apollo.Core.Host.Projects
             public void Delete()
             {
                 {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 }
 
                 // Note that after this action the current object is no longer 'valid'
@@ -405,10 +405,10 @@ namespace Apollo.Core.Host.Projects
                 CancellationToken token)
             {
                 {
-                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
                         preferredLocation != LoadingLocations.None, 
-                        Resources.Exception_Messages_CannotLoadDatasetWithoutLoadingLocation);
+                        Resources.Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation);
                     Enforce.Argument(() => machineSelector);
                 }
 
@@ -577,10 +577,10 @@ namespace Apollo.Core.Host.Projects
                 {
                     Enforce.With<ArgumentException>(
                         !m_Owner.IsClosed, 
-                        Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                        Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<DatasetCannotBecomeParentException>(
                         CanBecomeParent, 
-                        Resources.Exception_Messages_DatasetCannotBecomeParent_WithId, 
+                        Resources.Exceptions_Messages_DatasetCannotBecomeParent_WithId, 
                         m_IdOfDataset);
                     Enforce.Argument(() => newChild);
                 }
@@ -614,15 +614,15 @@ namespace Apollo.Core.Host.Projects
                 {
                     Enforce.With<ArgumentException>(
                         !m_Owner.IsClosed, 
-                        Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                        Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                     Enforce.With<DatasetCannotBecomeParentException>(
                         CanBecomeParent, 
-                        Resources.Exception_Messages_DatasetCannotBecomeParent_WithId, 
+                        Resources.Exceptions_Messages_DatasetCannotBecomeParent_WithId, 
                         m_IdOfDataset);
                     Enforce.Argument(() => newChildren);
                     Enforce.With<ArgumentException>(
                         newChildren.Any(), 
-                        Resources.Exception_Messages_MissingCreationInformation);
+                        Resources.Exceptions_Messages_MissingCreationInformation);
                 }
 
                 var result = from child in newChildren

@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotCreateProjectWithoutTimelineException"/> class.
         /// </summary>
         public CannotCreateProjectWithoutTimelineException()
-            : this(Resources.Exception_Messages_CannotCreateProjectWithoutTimeline)
+            : this(Resources.Exceptions_Messages_CannotCreateProjectWithoutTimeline)
         {
         }
 

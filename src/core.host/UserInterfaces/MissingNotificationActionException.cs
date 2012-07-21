@@ -22,7 +22,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// Initializes a new instance of the <see cref="MissingNotificationActionException"/> class.
         /// </summary>
         public MissingNotificationActionException()
-            : this(Resources.Exception_Messages_MissingNotificationAction)
+            : this(Resources.Exceptions_Messages_MissingNotificationAction)
         {
         }
 
@@ -31,7 +31,7 @@ namespace Apollo.Core.Host.UserInterfaces
         /// </summary>
         /// <param name="name">The <c>DnsName</c> which was a duplicate.</param>
         public MissingNotificationActionException(NotificationName name)
-            : this(string.Format(CultureInfo.InvariantCulture, Resources.Exception_Messages_MissingNotificationAction_WithName, name))
+            : this(string.Format(CultureInfo.InvariantCulture, Resources.Exceptions_Messages_MissingNotificationAction_WithName, name))
         {
         }
 

@@ -21,7 +21,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="ServiceCannotDependOnItselfException"/> class.
         /// </summary>
         public ServiceCannotDependOnItselfException() 
-            : this(Resources.Exception_Messages_ServiceCannotDependOnItself)
+            : this(Resources.Exceptions_Messages_ServiceCannotDependOnItself)
         {
         }
 

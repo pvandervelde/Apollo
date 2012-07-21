@@ -120,16 +120,16 @@
   <data name="Exceptions_Messages_VerificationFailure" xml:space="preserve">
     <value>The license verification has failed. Please contact your vendor.</value>
   </data>
-  <data name="Exception_Messages_ArgumentOutOfRange" xml:space="preserve">
+  <data name="Exceptions_Messages_ArgumentOutOfRange" xml:space="preserve">
     <value>The specified argument was not inside the valid range.</value>
   </data>
-  <data name="Exception_Messages_ArgumentOutOfRange_WithArgument" xml:space="preserve">
+  <data name="Exceptions_Messages_ArgumentOutOfRange_WithArgument" xml:space="preserve">
     <value>The specified argument was not inside the valid range. The argument value was: {0}.</value>
   </data>
-  <data name="Exception_Messages_InternalError_WithCode" xml:space="preserve">
+  <data name="Exceptions_Messages_InternalError_WithCode" xml:space="preserve">
     <value>An internal error occurred. The error code is: {0}. Please contact your vendor.</value>
   </data>
-  <data name="Exception_Messages_CannotLogMessageWithLogLevelSetToNone" xml:space="preserve">
+  <data name="Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone" xml:space="preserve">
     <value>It is not possible to log a message if the LogLevel is set to None.</value>
   </data>
 </root>

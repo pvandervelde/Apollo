@@ -28,7 +28,7 @@ namespace Apollo.Utilities
         {
             get
             {
-                return Resources.Exception_Messages_ArgumentOutOfRange;
+                return Resources.Exceptions_Messages_ArgumentOutOfRange;
             }
         }
 
@@ -40,7 +40,7 @@ namespace Apollo.Utilities
         {
             get
             {
-                return Resources.Exception_Messages_ArgumentOutOfRange_WithArgument;
+                return Resources.Exceptions_Messages_ArgumentOutOfRange_WithArgument;
             }
         }
 
@@ -52,7 +52,7 @@ namespace Apollo.Utilities
         {
             get
             {
-                return Resources.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
+                return Resources.Exceptions_Messages_CannotLogMessageWithLogLevelSetToNone;
             }
         }
 
@@ -66,7 +66,7 @@ namespace Apollo.Utilities
         {
             get 
             {
-                return Resources.Exception_Messages_InternalError_WithCode;
+                return Resources.Exceptions_Messages_InternalError_WithCode;
             }
         }
 

@@ -164,7 +164,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 Enforce.With<ArgumentException>(
                     IsFullyFunctional, 
-                    Resources.Exception_Messages_ServicesIsNotFullyFunctional, 
+                    Resources.Exceptions_Messages_ServicesIsNotFullyFunctional, 
                     StartupState);
             }
 
@@ -184,7 +184,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 Enforce.With<ArgumentException>(
                     IsFullyFunctional, 
-                    Resources.Exception_Messages_ServicesIsNotFullyFunctional, 
+                    Resources.Exceptions_Messages_ServicesIsNotFullyFunctional, 
                     StartupState);
             }
 

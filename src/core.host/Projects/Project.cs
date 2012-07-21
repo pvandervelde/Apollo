@@ -301,7 +301,7 @@ namespace Apollo.Core.Host.Projects
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed, 
-                    Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
             }
 
             return ObtainProxyFor(m_RootDataset);
@@ -322,7 +322,7 @@ namespace Apollo.Core.Host.Projects
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed, 
-                    Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => persistenceInfo);
             }
 
@@ -353,11 +353,11 @@ namespace Apollo.Core.Host.Projects
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
                     !IsClosed, 
-                    Resources.Exception_Messages_CannotUseProjectAfterClosingIt);
+                    Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(
                     m_Datasets.KnownDatasets.ContainsKey(datasetToExport), 
-                    Resources.Exception_Messages_UnknownDataset_WithId, 
+                    Resources.Exceptions_Messages_UnknownDataset_WithId, 
                     datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
             }

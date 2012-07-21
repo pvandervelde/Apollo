@@ -23,7 +23,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="KernelNotInInstallReadyStateException"/> class.
         /// </summary>
         public KernelNotInInstallReadyStateException() 
-            : this(Resources.Exception_Messages_MissingServiceDependency)
+            : this(Resources.Exceptions_Messages_MissingServiceDependency)
         {
         }
 

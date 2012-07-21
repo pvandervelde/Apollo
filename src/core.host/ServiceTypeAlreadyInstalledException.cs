@@ -22,7 +22,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="ServiceTypeAlreadyInstalledException"/> class.
         /// </summary>
         public ServiceTypeAlreadyInstalledException() 
-            : this(Resources.Exception_Messages_ServiceTypeAlreadyInstalled)
+            : this(Resources.Exceptions_Messages_ServiceTypeAlreadyInstalled)
         {
         }
 

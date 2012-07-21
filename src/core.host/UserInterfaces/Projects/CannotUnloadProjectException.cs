@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// Initializes a new instance of the <see cref="CannotUnloadProjectException"/> class.
         /// </summary>
         public CannotUnloadProjectException()
-            : this(Resources.Exception_Messages_CannotUnloadProject)
+            : this(Resources.Exceptions_Messages_CannotUnloadProject)
         {
         }
 

@@ -21,7 +21,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="KernelStartupFailedException"/> class.
         /// </summary>
         public KernelStartupFailedException() 
-            : this(Resources.Exception_Messages_KernelStartupFailedDueToMissingServiceDependency)
+            : this(Resources.Exceptions_Messages_KernelStartupFailedDueToMissingServiceDependency)
         {
         }
 
