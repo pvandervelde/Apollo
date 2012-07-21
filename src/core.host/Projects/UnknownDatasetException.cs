@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="UnknownDatasetException"/> class.
         /// </summary>
         public UnknownDatasetException()
-            : this(Resources_NonTranslatable.Exception_Messages_UnknownDataset)
+            : this(Resources.Exception_Messages_UnknownDataset)
         {
         }
 

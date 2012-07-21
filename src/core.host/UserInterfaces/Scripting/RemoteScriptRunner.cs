@@ -108,7 +108,7 @@ namespace Apollo.Core.Host.UserInterfaces.Scripting
             }
             catch (Exception e)
             {
-                throw new ScriptExecutionFailureException(Resources_NonTranslatable.Exceptions_Messages_ScriptExecutionFailure, e);
+                throw new ScriptExecutionFailureException(Resources.Exceptions_Messages_ScriptExecutionFailure, e);
             }
         }
 

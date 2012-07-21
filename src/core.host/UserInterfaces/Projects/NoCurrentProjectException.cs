@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         /// Initializes a new instance of the <see cref="NoCurrentProjectException"/> class.
         /// </summary>
         public NoCurrentProjectException()
-            : this(Resources_NonTranslatable.Exception_Messages_NoCurrentProject)
+            : this(Resources.Exception_Messages_NoCurrentProject)
         {
         }
 

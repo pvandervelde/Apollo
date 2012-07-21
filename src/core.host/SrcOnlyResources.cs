@@ -27,7 +27,7 @@ namespace Apollo.Core.Host
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange;
+                return Resources.Exception_Messages_ArgumentOutOfRange;
             }
         }
 
@@ -39,7 +39,7 @@ namespace Apollo.Core.Host
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_ArgumentOutOfRange_WithArgument;
+                return Resources.Exception_Messages_ArgumentOutOfRange_WithArgument;
             }
         }
 
@@ -51,7 +51,7 @@ namespace Apollo.Core.Host
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
+                return Resources.Exception_Messages_CannotLogMessageWithLogLevelSetToNone;
             }
         }
 
@@ -65,7 +65,7 @@ namespace Apollo.Core.Host
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_InternalError_WithCode;
+                return Resources.Exception_Messages_InternalError_WithCode;
             }
         }
 
@@ -79,7 +79,7 @@ namespace Apollo.Core.Host
         {
             get
             {
-                return Resources_NonTranslatable.Exception_Messages_VerificationFailure;
+                return Resources.Exception_Messages_VerificationFailure;
             }
         }
     }

@@ -164,7 +164,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 Enforce.With<ArgumentException>(
                     IsFullyFunctional, 
-                    Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, 
+                    Resources.Exception_Messages_ServicesIsNotFullyFunctional, 
                     StartupState);
             }
 
@@ -184,7 +184,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 Enforce.With<ArgumentException>(
                     IsFullyFunctional, 
-                    Resources_NonTranslatable.Exception_Messages_ServicesIsNotFullyFunctional, 
+                    Resources.Exception_Messages_ServicesIsNotFullyFunctional, 
                     StartupState);
             }
 
@@ -289,7 +289,7 @@ namespace Apollo.Core.Host.UserInterfaces
                     LogSeverityProxy.Error,
                     string.Format(
                         CultureInfo.InvariantCulture, 
-                        Resources_NonTranslatable.UserInterrface_LogMessage_StartupCompleteNotificationFailed, 
+                        Resources.UserInterrface_LogMessage_StartupCompleteNotificationFailed, 
                         e));
 
                 throw;
@@ -339,7 +339,7 @@ namespace Apollo.Core.Host.UserInterfaces
             {
                 m_Diagnostics.Log(
                     LogSeverityProxy.Error,
-                    string.Format(CultureInfo.InvariantCulture, Resources_NonTranslatable.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
+                    string.Format(CultureInfo.InvariantCulture, Resources.UserInterrface_LogMessage_DisconnectPreActionFailed, e));
 
                 throw;
             }

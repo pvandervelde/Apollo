@@ -119,11 +119,11 @@ namespace Apollo.Core.Host.Projects
             {
                 Enforce.With<CannotCreateProjectWithoutTimelineException>(
                     m_Timeline != null,
-                    Resources_NonTranslatable.Exception_Messages_CannotCreateProjectWithoutTimeline);
+                    Resources.Exception_Messages_CannotCreateProjectWithoutTimeline);
 
                 Enforce.With<CannotCreateProjectWithoutDatasetDistributorException>(
                     m_Distributor != null,
-                    Resources_NonTranslatable.Exception_Messages_CannotCreateProjectWithoutDatasetDistributor);
+                    Resources.Exception_Messages_CannotCreateProjectWithoutDatasetDistributor);
             }
 
             return new Project(m_Timeline, m_Distributor, m_ProjectStorage);

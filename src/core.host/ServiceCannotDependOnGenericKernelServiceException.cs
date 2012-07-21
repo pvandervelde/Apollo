@@ -22,7 +22,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="ServiceCannotDependOnGenericKernelServiceException"/> class.
         /// </summary>
         public ServiceCannotDependOnGenericKernelServiceException() 
-            : this(Resources_NonTranslatable.Exception_Messages_ServiceCannotDependOnGenericKernelService)
+            : this(Resources.Exception_Messages_ServiceCannotDependOnGenericKernelService)
         {
         }
 

@@ -22,7 +22,7 @@ namespace Apollo.Core.Host
         /// Initializes a new instance of the <see cref="CannotUninstallNonequivalentServiceException"/> class.
         /// </summary>
         public CannotUninstallNonequivalentServiceException() 
-            : this(Resources_NonTranslatable.Exception_Messages_CannotUninstallNonEquivalentService)
+            : this(Resources.Exception_Messages_CannotUninstallNonEquivalentService)
         {
         }
 

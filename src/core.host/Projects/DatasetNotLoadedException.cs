@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="DatasetNotLoadedException"/> class.
         /// </summary>
         public DatasetNotLoadedException()
-            : this(Resources_NonTranslatable.Exception_Messages_DatasetNotLoaded)
+            : this(Resources.Exception_Messages_DatasetNotLoaded)
         {
         }
 

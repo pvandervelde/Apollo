@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotUseProjectAfterClosingItException"/> class.
         /// </summary>
         public CannotUseProjectAfterClosingItException()
-            : this(Resources_NonTranslatable.Exception_Messages_CannotUseProjectAfterClosingIt)
+            : this(Resources.Exception_Messages_CannotUseProjectAfterClosingIt)
         {
         }
 

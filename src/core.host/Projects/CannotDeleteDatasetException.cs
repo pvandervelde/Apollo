@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotDeleteDatasetException"/> class.
         /// </summary>
         public CannotDeleteDatasetException()
-            : this(Resources_NonTranslatable.Exception_Messages_CannotDeleteDataset)
+            : this(Resources.Exception_Messages_CannotDeleteDataset)
         {
         }
 

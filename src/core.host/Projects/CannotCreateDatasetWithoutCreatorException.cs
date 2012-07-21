@@ -21,7 +21,7 @@ namespace Apollo.Core.Host.Projects
         /// Initializes a new instance of the <see cref="CannotCreateDatasetWithoutCreatorException"/> class.
         /// </summary>
         public CannotCreateDatasetWithoutCreatorException()
-            : this(Resources_NonTranslatable.Exceptions_Messages_CannotCreateDatasetWithoutCreator)
+            : this(Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator)
         {
         }
 
