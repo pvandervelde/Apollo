@@ -15,7 +15,7 @@ namespace Apollo.Core.Dataset
     /// <summary>
     /// Tracks the locks for a dataset.
     /// </summary>
-    internal sealed class DatasetLock : ITrackDatasetLocks
+    internal sealed class DatasetLock : ITrackDatasetLocks, IDisposable
     {
         /// <summary>
         /// The object used to lock on.
@@ -44,6 +44,11 @@ namespace Apollo.Core.Dataset
         /// The event that signals if there are any write locks.
         /// </summary>
         private readonly ManualResetEvent m_NoWriteLocks = new ManualResetEvent(true);
+
+        /// <summary>
+        /// Indicates if the current endpoint has been disposed.
+        /// </summary>
+        private volatile bool m_IsDisposed = false;
 
         /// <summary>
         /// Locks the dataset for writing purposes.
@@ -261,6 +266,23 @@ namespace Apollo.Core.Dataset
             {
                 local(this, EventArgs.Empty);
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                // We've already disposed of the channel. Job done.
+                return;
+            }
+
+            m_IsDisposed = true;
+            m_NoReadLocks.Dispose();
+            m_NoWriteLocks.Dispose();
         }
     }
 }

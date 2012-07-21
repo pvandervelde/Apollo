@@ -184,7 +184,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="CannotCreateASynchronizationBlockWithoutVariablesException">
         ///     Thrown if <paramref name="variables"/> is an empty collection.
         /// </exception>
-        public EditableSynchronizationStartVertex AddSynchronizationStartPoint(IEnumerable<IScheduleVariable> variables)
+        public EditableSynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables)
         {
             {
                 Lokad.Enforce.Argument(() => variables);
@@ -210,7 +210,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="UnknownScheduleVertexException">
         ///     Thrown if <paramref name="startPoint"/> is not part of the current schedule.
         /// </exception>
-        public EditableSynchronizationEndVertex AddSynchronizationEndPoint(EditableSynchronizationStartVertex startPoint)
+        public EditableSynchronizationEndVertex AddSynchronizationEnd(EditableSynchronizationStartVertex startPoint)
         {
             {
                 Lokad.Enforce.Argument(() => startPoint);

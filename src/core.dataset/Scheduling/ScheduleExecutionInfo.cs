@@ -14,7 +14,7 @@ namespace Apollo.Core.Dataset.Scheduling
     /// <summary>
     /// Stores the information used during the execution of a schedule.
     /// </summary>
-    internal sealed class ScheduleExecutionInfo
+    internal sealed class ScheduleExecutionInfo : IDisposable
     {
         /// <summary>
         /// The info object for the parent schedule.
@@ -40,6 +40,11 @@ namespace Apollo.Core.Dataset.Scheduling
         /// The object that indicates if the schedule execution should be paused or not.
         /// </summary>
         private readonly SchedulePauseHandler m_PauseHandler;
+
+        /// <summary>
+        /// Indicates if the current endpoint has been disposed.
+        /// </summary>
+        private volatile bool m_IsDisposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleExecutionInfo"/> class.
@@ -132,6 +137,24 @@ namespace Apollo.Core.Dataset.Scheduling
             {
                 return m_PauseHandler;
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                // We've already disposed of the channel. Job done.
+                return;
+            }
+
+            m_IsDisposed = true;
+            m_CombinedCancellationSource.Dispose();
+            m_LocalCancellationSource.Dispose();
+            m_PauseHandler.Dispose();
         }
     }
 }

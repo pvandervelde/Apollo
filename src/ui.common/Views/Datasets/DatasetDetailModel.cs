@@ -6,6 +6,7 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using Apollo.Core.Host.UserInterfaces.Projects;
 using Apollo.UI.Common.Properties;
 using Apollo.Utilities;
@@ -116,7 +117,7 @@ namespace Apollo.UI.Common.Views.Datasets
             get
             {
                 var name = !string.IsNullOrEmpty(Name) ? Name : Resources.DatasetDetailView_UnnamedDatasetName;
-                return string.Format(Resources.DatasetDetailView_ViewName, name);
+                return string.Format(CultureInfo.CurrentCulture, Resources.DatasetDetailView_ViewName, name);
             }
         }
 

@@ -28,16 +28,16 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleId"/> class.
         /// </summary>
-        /// <param name="guid">The ID number of the schedule.</param>
+        /// <param name="id">The ID number of the schedule.</param>
         /// <exception cref="CannotCreateScheduleIdWithEmptyGuidException">
-        /// Thrown when <paramref name="guid"/> is equal to <see cref="Guid.Empty"/>.
+        /// Thrown when <paramref name="id"/> is equal to <see cref="Guid.Empty"/>.
         /// </exception>
-        public ScheduleId(Guid guid)
-            : base(guid)
+        public ScheduleId(Guid id)
+            : base(id)
         {
             {
                 Lokad.Enforce.With<CannotCreateScheduleIdWithEmptyGuidException>(
-                    !Guid.Equals(guid, Guid.Empty), 
+                    !Guid.Equals(id, Guid.Empty), 
                     Resources.Exceptions_Messages_CannotCreateScheduleIdWithEmptyGuid);
             }
         }

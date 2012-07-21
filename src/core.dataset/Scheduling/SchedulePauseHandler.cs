@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Threading;
 
 namespace Apollo.Core.Dataset.Scheduling
@@ -11,10 +12,15 @@ namespace Apollo.Core.Dataset.Scheduling
     /// <summary>
     /// Defines methods for handling pausing the execution of a schedule.
     /// </summary>
-    internal sealed class SchedulePauseHandler
+    internal sealed class SchedulePauseHandler : IDisposable
     {
         private readonly ManualResetEventSlim m_PauseEvent
             = new ManualResetEventSlim(true);
+
+        /// <summary>
+        /// Indicates if the current endpoint has been disposed.
+        /// </summary>
+        private volatile bool m_IsDisposed = false;
 
         /// <summary>
         /// Gets a value indicating whether the schedule should be paused or not.
@@ -50,6 +56,22 @@ namespace Apollo.Core.Dataset.Scheduling
         public void WaitForUnPause(CancellationToken token)
         {
             m_PauseEvent.Wait(token);
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                // We've already disposed of the channel. Job done.
+                return;
+            }
+
+            m_IsDisposed = true;
+            m_PauseEvent.Dispose();
         }
     }
 }

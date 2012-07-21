@@ -28,7 +28,7 @@ namespace Apollo.Core.Extensions.Scheduling
 
             builder.Register(c => new ScheduleVerifier(
                     c.Resolve<IStoreSchedules>()))
-                .As<IVertifyScheduleIntegrity>();
+                .As<IVerifyScheduleIntegrity>();
         }
     }
 }

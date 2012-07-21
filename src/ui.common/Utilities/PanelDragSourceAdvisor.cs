@@ -96,7 +96,7 @@ namespace Apollo.UI.Common.Utilities
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool IsDraggable(UIElement elementToDrag)
+        public bool CanBeDragged(UIElement elementToDrag)
         {
             var obj = GetDataFromUIContainer(elementToDrag);
             return DragDropManager.IsDragAllowed(SourceUI, obj);

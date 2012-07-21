@@ -78,7 +78,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             if (executionInfo.Cancellation.IsCancellationRequested)
             {
-                return ScheduleExecutionState.Cancelled;
+                return ScheduleExecutionState.Canceled;
             }
 
             if (executionInfo.PauseHandler.IsPaused)

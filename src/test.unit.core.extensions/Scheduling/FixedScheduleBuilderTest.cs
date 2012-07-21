@@ -106,7 +106,7 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             var builder = new FixedScheduleBuilder();
             Assert.Throws<CannotCreateASynchronizationBlockWithoutVariablesException>(
-                () => builder.AddSynchronizationStartPoint(new IScheduleVariable[] { }));
+                () => builder.AddSynchronizationStart(new IScheduleVariable[] { }));
         }
 
         [Test]
@@ -115,7 +115,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var variable = new Mock<IScheduleVariable>();
 
             var builder = new FixedScheduleBuilder();
-            var synchronizationVertex = builder.AddSynchronizationStartPoint(new IScheduleVariable[] { variable.Object });
+            var synchronizationVertex = builder.AddSynchronizationStart(new IScheduleVariable[] { variable.Object });
             builder.LinkFromStart(synchronizationVertex);
             builder.LinkToEnd(synchronizationVertex);
             Assert.AreElementsEqual(new IScheduleVariable[] { variable.Object }, synchronizationVertex.VariablesToSynchronizeOn);
@@ -134,7 +134,7 @@ namespace Apollo.Core.Extensions.Scheduling
 
             var builder = new FixedScheduleBuilder();
             Assert.Throws<UnknownScheduleVertexException>(
-                () => builder.AddSynchronizationEndPoint(
+                () => builder.AddSynchronizationEnd(
                     new EditableSynchronizationStartVertex(
                         10, 
                         new IScheduleVariable[] 
@@ -149,10 +149,10 @@ namespace Apollo.Core.Extensions.Scheduling
             var variable = new Mock<IScheduleVariable>();
 
             var builder = new FixedScheduleBuilder();
-            var synchronizationStartVertex = builder.AddSynchronizationStartPoint(new IScheduleVariable[] { variable.Object });
+            var synchronizationStartVertex = builder.AddSynchronizationStart(new IScheduleVariable[] { variable.Object });
             builder.LinkFromStart(synchronizationStartVertex);
             
-            var synchronizationEndVertex = builder.AddSynchronizationEndPoint(synchronizationStartVertex);
+            var synchronizationEndVertex = builder.AddSynchronizationEnd(synchronizationStartVertex);
             builder.LinkTo(synchronizationStartVertex, synchronizationEndVertex);
             builder.LinkToEnd(synchronizationEndVertex);
             Assert.AreEqual(3, synchronizationEndVertex.Index);

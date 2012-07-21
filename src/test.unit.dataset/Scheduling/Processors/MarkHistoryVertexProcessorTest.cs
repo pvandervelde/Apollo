@@ -43,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var processor = new MarkHistoryVertexProcessor(timeline.Object, m => { });
             var state = processor.Process(new ExecutableMarkHistoryVertex(1), info);
-            Assert.AreEqual(ScheduleExecutionState.Cancelled, state);
+            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
         [Test]

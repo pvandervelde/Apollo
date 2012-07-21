@@ -85,7 +85,7 @@
     <Compile Include="Scheduling\IStoreScheduleActions.cs" />
     <Compile Include="Scheduling\IStoreScheduleConditions.cs" />
     <Compile Include="Scheduling\IStoreSchedules.cs" />
-    <Compile Include="Scheduling\IVertifyScheduleIntegrity.cs" />
+    <Compile Include="Scheduling\IVerifyScheduleIntegrity.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexException.cs" />
     <Compile Include="Scheduling\ScheduleConditionInformation.cs" />
     <Compile Include="Scheduling\ScheduleElementEventArgs.cs" />

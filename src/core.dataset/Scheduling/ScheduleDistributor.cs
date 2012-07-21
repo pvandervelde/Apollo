@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.Linq;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
@@ -108,28 +109,6 @@ namespace Apollo.Core.Dataset.Scheduling
                 m_Hash = CalculateHashCode();
             }
 
-            /// <summary>
-            /// Gets the ID of the schedule being executed.
-            /// </summary>
-            public ScheduleId Schedule
-            {
-                get
-                {
-                    return m_Id;
-                }
-            }
-
-            /// <summary>
-            /// Gets the collection of variables for this execution.
-            /// </summary>
-            public IEnumerable<IScheduleVariable> Variables
-            {
-                get
-                {
-                    return m_Variables;
-                }
-            }
-
             private int CalculateHashCode()
             {
                 // As obtained from the Jon Skeet answer to:
@@ -223,6 +202,7 @@ namespace Apollo.Core.Dataset.Scheduling
             public override string ToString()
             {
                 return string.Format(
+                    CultureInfo.InvariantCulture,
                     "Key: {0} - {1}",
                     m_Id,
                     m_Variables.Aggregate<IScheduleVariable, string>(string.Empty, (text, variable) => { return text + variable.ToString(); }));
@@ -275,6 +255,45 @@ namespace Apollo.Core.Dataset.Scheduling
                         ((EditableSubScheduleVertex)vertex).ScheduleToExecute) 
                 },
             };
+
+        private static ExecutableSchedule TransformToExecutableSchedule(ScheduleId id, IEditableSchedule editableSchedule)
+        {
+            var map = new Dictionary<IEditableScheduleVertex, IExecutableScheduleVertex>();
+            var newSchedule = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+
+            var start = new ExecutableStartVertex(editableSchedule.Start.Index);
+            newSchedule.AddVertex(start);
+            map.Add(editableSchedule.Start, start);
+
+            var end = new ExecutableEndVertex(editableSchedule.End.Index);
+            newSchedule.AddVertex(end);
+            map.Add(editableSchedule.End, end);
+
+            editableSchedule.TraverseSchedule(
+                editableSchedule.Start,
+                true,
+                (vertex, edges) =>
+                {
+                    foreach (var pair in edges)
+                    {
+                        var target = pair.Item2;
+                        if (!map.ContainsKey(target))
+                        {
+                            var executableVertex = s_VertexBuilder[target.GetType()](target);
+                            map.Add(target, executableVertex);
+                            newSchedule.AddVertex(executableVertex);
+                        }
+
+                        var executableSource = map[vertex];
+                        var executableTarget = map[target];
+                        newSchedule.AddEdge(new ExecutableScheduleEdge(executableSource, executableTarget, pair.Item1));
+                    }
+
+                    return true;
+                });
+
+            return new ExecutableSchedule(id, newSchedule, start, end);
+        }
 
         /// <summary>
         /// The object used to lock on.
@@ -422,45 +441,6 @@ namespace Apollo.Core.Dataset.Scheduling
             return executor;
         }
 
-        private ExecutableSchedule TransformToExecutableSchedule(ScheduleId id, IEditableSchedule editableSchedule)
-        {
-            var map = new Dictionary<IEditableScheduleVertex, IExecutableScheduleVertex>();
-            var newSchedule = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
-
-            var start = new ExecutableStartVertex(editableSchedule.Start.Index);
-            newSchedule.AddVertex(start);
-            map.Add(editableSchedule.Start, start);
-
-            var end = new ExecutableEndVertex(editableSchedule.End.Index);
-            newSchedule.AddVertex(end);
-            map.Add(editableSchedule.End, end);
-            
-            editableSchedule.TraverseSchedule(
-                editableSchedule.Start,
-                true,
-                (vertex, edges) =>
-                    {
-                        foreach (var pair in edges)
-                        {
-                            var target = pair.Item2;
-                            if (!map.ContainsKey(target))
-                            {
-                                var executableVertex = s_VertexBuilder[target.GetType()](target);
-                                map.Add(target, executableVertex);
-                                newSchedule.AddVertex(executableVertex);
-                            }
-
-                            var executableSource = map[vertex];
-                            var executableTarget = map[target];
-                            newSchedule.AddEdge(new ExecutableScheduleEdge(executableSource, executableTarget, pair.Item1));
-                        }
-
-                        return true;
-                    });
-
-            return new ExecutableSchedule(id, newSchedule, start, end);
-        }
-
         private void HandleScheduleExecutionStart(object sender, EventArgs e)
         {
             var executor = sender as IExecuteSchedules;
@@ -493,7 +473,6 @@ namespace Apollo.Core.Dataset.Scheduling
 
         private void HandleScheduleExecutionProgress(object sender, ProgressEventArgs e)
         {
-            var executor = sender as IExecuteSchedules;
             m_Notifications.RaiseOnExecutionProgress(e.Progress, e.CurrentlyProcessing);
         }
 

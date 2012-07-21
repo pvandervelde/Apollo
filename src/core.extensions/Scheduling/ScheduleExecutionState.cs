@@ -22,9 +22,9 @@ namespace Apollo.Core.Extensions.Scheduling
         Executing,
 
         /// <summary>
-        /// The schedule execution has been cancelled by the user.
+        /// The schedule execution has been canceled by the user.
         /// </summary>
-        Cancelled,
+        Canceled,
 
         /// <summary>
         /// The schedule execution has been terminated for some reason.

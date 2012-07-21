@@ -16,8 +16,147 @@ namespace Apollo.Core.Extensions.Scheduling
     /// <summary>
     /// Verifies if an <see cref="IEditableSchedule"/> is complete and legal.
     /// </summary>
-    internal sealed class ScheduleVerifier : IVertifyScheduleIntegrity
+    internal sealed class ScheduleVerifier : IVerifyScheduleIntegrity
     {
+        private static bool VerifyStartVertexOnlyHasOutboundEdges(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            var result = (schedule.NumberOfInboundConnections(schedule.Start) == 0) && (schedule.NumberOfOutboundConnections(schedule.Start) >= 1);
+            if (!result)
+            {
+                onValidationFailure(ScheduleIntegrityFailureType.ScheduleIsMissingStart, schedule.Start);
+            }
+
+            return result;
+        }
+
+        private static bool VerifyEndVertexOnlyHasInboundEdges(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            var result = (schedule.NumberOfOutboundConnections(schedule.End) == 0) && (schedule.NumberOfInboundConnections(schedule.End) >= 1);
+            if (!result)
+            {
+                onValidationFailure(ScheduleIntegrityFailureType.ScheduleIsMissingEnd, schedule.End);
+            }
+
+            return result;
+        }
+
+        private static bool VerifyTrackForwardsFromStart(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
+            schedule.TraverseSchedule(
+                schedule.Start,
+                true,
+                (node, edges) =>
+                {
+                    if (unvisitedNodes.Contains(node))
+                    {
+                        unvisitedNodes.Remove(node);
+                    }
+
+                    return true;
+                });
+
+            var result = unvisitedNodes.Count == 0;
+            if (!result)
+            {
+                foreach (var node in unvisitedNodes)
+                {
+                    onValidationFailure(ScheduleIntegrityFailureType.ScheduleVertexIsNotReachableFromStart, node);
+                }
+            }
+
+            return result;
+        }
+
+        private static bool VerifyTrackBackwardsFromEnd(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
+            schedule.TraverseSchedule(
+                schedule.End,
+                false,
+                (node, edges) =>
+                {
+                    if (unvisitedNodes.Contains(node))
+                    {
+                        unvisitedNodes.Remove(node);
+                    }
+
+                    return true;
+                });
+
+            var result = unvisitedNodes.Count == 0;
+            if (!result)
+            {
+                foreach (var node in unvisitedNodes)
+                {
+                    onValidationFailure(ScheduleIntegrityFailureType.ScheduleEndIsNotReachableFromVertex, node);
+                }
+            }
+
+            return result;
+        }
+
+        private static bool VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            bool result = true;
+            schedule.TraverseSchedule(
+                schedule.Start,
+                true,
+                (node, edges) =>
+                {
+                    var outNodes = new List<IEditableScheduleVertex>();
+
+                    var outEdgeCount = 0;
+                    foreach (var pair in edges)
+                    {
+                        var outNode = pair.Item2;
+                        if (!outNodes.Contains(outNode))
+                        {
+                            outNodes.Add(outNode);
+                        }
+
+                        outEdgeCount++;
+                    }
+
+                    var internalResult = outEdgeCount == outNodes.Count;
+                    result &= internalResult;
+                    if (!internalResult)
+                    {
+                        onValidationFailure(ScheduleIntegrityFailureType.VertexLinksToOtherVertexInMultipleWays, node);
+                    }
+
+                    return true;
+                });
+
+            return result;
+        }
+
+        private static bool VerifySynchronizationBlockHasStartAndEnd(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            // @TODO: Implement VerifySynchronizationBlockHasStartAndEnd
+            return true;
+        }
+
+        private static bool VerifySynchronizationVariablesAreUpdatedInBlock(
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+        {
+            // @TODO: Implement VerifySynchronizationVariablesAreUpdatedInBlock
+            return true;
+        }
+
         /// <summary>
         /// The collection that contains all the schedules.
         /// </summary>
@@ -91,145 +230,6 @@ namespace Apollo.Core.Extensions.Scheduling
             result &= VerifySubSchedulesDoNotLinkBackToParentSchedule(id, schedule, onValidationFailure);
 
             return result;
-        }
-
-        private bool VerifyStartVertexOnlyHasOutboundEdges(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            var result = (schedule.NumberOfInboundConnections(schedule.Start) == 0) && (schedule.NumberOfOutboundConnections(schedule.Start) >= 1);
-            if (!result)
-            {
-                onValidationFailure(ScheduleIntegrityFailureType.ScheduleIsMissingStart, schedule.Start);
-            }
-
-            return result;
-        }
-
-        private bool VerifyEndVertexOnlyHasInboundEdges(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            var result = (schedule.NumberOfOutboundConnections(schedule.End) == 0) && (schedule.NumberOfInboundConnections(schedule.End) >= 1);
-            if (!result)
-            {
-                onValidationFailure(ScheduleIntegrityFailureType.ScheduleIsMissingEnd, schedule.End);
-            }
-
-            return result;
-        }
-
-        private bool VerifyTrackForwardsFromStart(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
-            schedule.TraverseSchedule(
-                schedule.Start, 
-                true, 
-                (node, edges) =>
-                    {
-                        if (unvisitedNodes.Contains(node))
-                        {
-                            unvisitedNodes.Remove(node);
-                        }
-
-                        return true;
-                    });
-
-            var result = unvisitedNodes.Count == 0;
-            if (!result)
-            {
-                foreach (var node in unvisitedNodes)
-                {
-                    onValidationFailure(ScheduleIntegrityFailureType.ScheduleVertexIsNotReachableFromStart, node);
-                }
-            }
-
-            return result;
-        }
-
-        private bool VerifyTrackBackwardsFromEnd(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
-            schedule.TraverseSchedule(
-                schedule.End,
-                false,
-                (node, edges) =>
-                {
-                    if (unvisitedNodes.Contains(node))
-                    {
-                        unvisitedNodes.Remove(node);
-                    }
-
-                    return true;
-                });
-
-            var result = unvisitedNodes.Count == 0;
-            if (!result)
-            {
-                foreach (var node in unvisitedNodes)
-                {
-                    onValidationFailure(ScheduleIntegrityFailureType.ScheduleEndIsNotReachableFromVertex, node);
-                }
-            }
-
-            return result;
-        }
-
-        private bool VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            bool result = true;
-            schedule.TraverseSchedule(
-                schedule.Start, 
-                true, 
-                (node, edges) =>
-                    {
-                        var outNodes = new List<IEditableScheduleVertex>();
-
-                        var outEdgeCount = 0;
-                        foreach (var pair in edges)
-                        {
-                            var outNode = pair.Item2;
-                            if (!outNodes.Contains(outNode))
-                            {
-                                outNodes.Add(outNode);
-                            }
-
-                            outEdgeCount++;
-                        }
-
-                        var internalResult = outEdgeCount == outNodes.Count;
-                        result &= internalResult;
-                        if (!internalResult)
-                        {
-                            onValidationFailure(ScheduleIntegrityFailureType.VertexLinksToOtherVertexInMultipleWays, node);
-                        }
-
-                        return true;
-                    });
-
-            return result;
-        }
-
-        private bool VerifySynchronizationBlockHasStartAndEnd(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            // @TODO: Implement VerifySynchronizationBlockHasStartAndEnd
-            return true;
-        }
-
-        private bool VerifySynchronizationVariablesAreUpdatedInBlock(
-            IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
-        {
-            // @TODO: Implement VerifySynchronizationVariablesAreUpdatedInBlock
-            return true;
         }
 
         private bool VerifySubSchedulesDoNotLinkBackToParentSchedule(

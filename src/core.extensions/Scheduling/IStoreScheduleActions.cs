@@ -12,6 +12,8 @@ namespace Apollo.Core.Extensions.Scheduling
     /// <summary>
     /// Defines the interface for objects that store <see cref="IScheduleAction"/> objects.
     /// </summary>
+    [SuppressMessage("Microsoft.Naming", "CA1710:IdentifiersShouldHaveCorrectSuffix",
+        Justification = "While we store schedules here, it's more than just a collection.")]
     public interface IStoreScheduleActions : IEnumerable<ScheduleElementId>
     {
         /// <summary>

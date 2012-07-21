@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Apollo.Core.Dataset.Properties;
@@ -18,7 +19,7 @@ namespace Apollo.Core.Dataset.Scheduling
     /// <summary>
     /// Defines the methods necessary for the execution of a schedule inside the current application.
     /// </summary>
-    internal sealed class ScheduleExecutor : IExecuteSchedules
+    internal sealed class ScheduleExecutor : IExecuteSchedules, IDisposable
     {
         /// <summary>
         /// The object used to lock on.
@@ -54,6 +55,11 @@ namespace Apollo.Core.Dataset.Scheduling
         /// The task that is used to execute the schedule.
         /// </summary>
         private Task m_ExecutionTask;
+
+        /// <summary>
+        /// Indicates if the current endpoint has been disposed.
+        /// </summary>
+        private volatile bool m_IsDisposed = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleExecutor"/> class.
@@ -194,18 +200,19 @@ namespace Apollo.Core.Dataset.Scheduling
         // Loop counters
         // tight loop detection
         // Allow pause to be more granular (e.g. only pause outside loops etc.)
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "There is no point in letting this exception escape. We will report back in a different way.")]
         private void ExecuteSchedule()
         {
             var graph = m_Schedule.Graph;
             IExecutableScheduleVertex current = m_Schedule.Start;
 
             ScheduleExecutionState state = ScheduleExecutionState.Executing;
-            Exception unhandledException = null;
             while (state == ScheduleExecutionState.Executing)
             {
                 if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
                 {
-                    state = ScheduleExecutionState.Cancelled;
+                    state = ScheduleExecutionState.Canceled;
                     continue;
                 }
 
@@ -233,9 +240,8 @@ namespace Apollo.Core.Dataset.Scheduling
                             continue;
                         }
                     }
-                    catch (Exception e)
+                    catch (Exception)
                     {
-                        unhandledException = e;
                         state = ScheduleExecutionState.UnhandledException;
                         continue;
                     }
@@ -250,7 +256,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     {
                         if (m_ExecutionInfo.Cancellation.IsCancellationRequested)
                         {
-                            state = ScheduleExecutionState.Cancelled;
+                            state = ScheduleExecutionState.Canceled;
                             break;
                         }
 
@@ -263,9 +269,8 @@ namespace Apollo.Core.Dataset.Scheduling
                             {
                                 canTraverse = condition.CanTraverse(m_ExecutionInfo.Cancellation);
                             }
-                            catch (Exception e)
+                            catch (Exception)
                             {
-                                unhandledException = e;
                                 state = ScheduleExecutionState.UnhandledException;
                                 break;
                             }
@@ -412,6 +417,22 @@ namespace Apollo.Core.Dataset.Scheduling
             {
                 local(this, new ScheduleExecutionStateEventArgs(state));
             }
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or
+        /// resetting unmanaged resources.
+        /// </summary>
+        public void Dispose()
+        {
+            if (m_IsDisposed)
+            {
+                // We've already disposed of the channel. Job done.
+                return;
+            }
+
+            m_IsDisposed = true;
+            m_ExecutionInfo.Dispose();
         }
     }
 }

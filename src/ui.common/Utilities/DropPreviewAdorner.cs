@@ -61,9 +61,9 @@ namespace Apollo.UI.Common.Utilities
         /// Initializes a new instance of the <see cref="DropPreviewAdorner"/> class.
         /// </summary>
         /// <param name="feedbackUI">The UI element used as feedback element.</param>
-        /// <param name="adornedElt">The element to bind the adorner to.</param>
-        public DropPreviewAdorner(UIElement feedbackUI, UIElement adornedElt)
-            : base(adornedElt)
+        /// <param name="adornedElement">The element to bind the adorner to.</param>
+        public DropPreviewAdorner(UIElement feedbackUI, UIElement adornedElement)
+            : base(adornedElement)
         {
             m_Presenter = new ContentPresenter();
             m_Presenter.Content = feedbackUI;

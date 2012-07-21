@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Communication;
 
@@ -33,6 +34,8 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="scheduleToStop">The ID of the schedule that should be executed.</param>
         /// <returns>A task that will finish once the schedule execution has been stopped.</returns>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "Stop",
+            Justification = "Stop makese sense in that it stops the execution of the schedule.")]
         Task Stop(ScheduleId scheduleToStop);
     }
 }

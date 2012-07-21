@@ -38,7 +38,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var processor = new StartVertexProcessor();
             var state = processor.Process(new ExecutableStartVertex(1), info);
-            Assert.AreEqual(ScheduleExecutionState.Cancelled, state);
+            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
         [Test]

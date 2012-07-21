@@ -43,7 +43,7 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
 
             var processor = new SubScheduleVertexProcessor(distributor.Object);
             var state = processor.Process(new ExecutableSubScheduleVertex(1, new ScheduleId()), info);
-            Assert.AreEqual(ScheduleExecutionState.Cancelled, state);
+            Assert.AreEqual(ScheduleExecutionState.Canceled, state);
         }
 
         [Test]

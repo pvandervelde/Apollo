@@ -36,14 +36,14 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="variables">The collection of variables that should be synchronized.</param>
         /// <returns>The vertex that contains the synchronization information.</returns>
-        EditableSynchronizationStartVertex AddSynchronizationStartPoint(IEnumerable<IScheduleVariable> variables);
+        EditableSynchronizationStartVertex AddSynchronizationStart(IEnumerable<IScheduleVariable> variables);
 
         /// <summary>
         /// Adds a vertex that indicates the end of a synchronization block.
         /// </summary>
         /// <param name="startPoint">The vertex that forms the start point of the block.</param>
         /// <returns>The vertex that indicates the end of a synchronization block.</returns>
-        EditableSynchronizationEndVertex AddSynchronizationEndPoint(EditableSynchronizationStartVertex startPoint);
+        EditableSynchronizationEndVertex AddSynchronizationEnd(EditableSynchronizationStartVertex startPoint);
 
         /// <summary>
         /// Adds a vertex which indicates that the current values of all history-enabled data should
@@ -95,29 +95,29 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Links the given start vertex to the end vertex.
         /// </summary>
-        /// <param name="start">The start vertex.</param>
-        /// <param name="end">The end vertex.</param>
+        /// <param name="source">The start vertex.</param>
+        /// <param name="target">The end vertex.</param>
         /// <param name="traverseCondition">
-        /// The ID of the condition that determines if it is possible to move from <paramref name="start"/> to <paramref name="end"/>.
+        /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to <paramref name="target"/>.
         /// </param>
-        void LinkTo(IEditableScheduleVertex start, IEditableScheduleVertex end, ScheduleElementId traverseCondition = null);
+        void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the start point of the schedule to the given vertex.
         /// </summary>
-        /// <param name="vertex">The vertex.</param>
+        /// <param name="target">The vertex.</param>
         /// <param name="traverseCondition">
-        /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="vertex"/>.
+        /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="target"/>.
         /// </param>
-        void LinkFromStart(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null);
+        void LinkFromStart(IEditableScheduleVertex target, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the given vertex to the end point of the schedule.
         /// </summary>
-        /// <param name="vertex">The vertex.</param>
+        /// <param name="source">The vertex.</param>
         /// <param name="traverseCondition">
-        /// The ID of the condition that determines if it is possible to move from <paramref name="vertex"/> to the end point.
+        /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to the end point.
         /// </param>
-        void LinkToEnd(IEditableScheduleVertex vertex, ScheduleElementId traverseCondition = null);
+        void LinkToEnd(IEditableScheduleVertex source, ScheduleElementId traverseCondition = null);
     }
 }

@@ -41,7 +41,6 @@ namespace Apollo.UI.Common.Views.Datasets
             var context = m_Container.Resolve<IContextAware>();
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
-            var timer = m_Container.Resolve<Func<string, IDisposable>>();
             var eventAggregator = m_Container.Resolve<IEventAggregator>();
 
             var model = new DatasetDetailModel(context, progressTracker, projectFacade, Parameter.Dataset) 
@@ -58,7 +57,6 @@ namespace Apollo.UI.Common.Views.Datasets
 
         private CompositeCommand CreateCloseCommand()
         {
-            var context = m_Container.Resolve<IContextAware>();
             var closeViewCommand = m_Container.Resolve<CloseViewCommand>(
                 new TypedParameter(typeof(IEventAggregator), m_Container.Resolve<IEventAggregator>()),
                 new TypedParameter(typeof(string), CommonRegionNames.Content),

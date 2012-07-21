@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using QuickGraph;
@@ -28,6 +29,8 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <summary>
         /// Gets the end vertex for the schedule.
         /// </summary>
+        [SuppressMessage("Microsoft.Naming", "CA1716:IdentifiersShouldNotMatchKeywords", MessageId = "End",
+            Justification = "It is really the end of the schedule.")]
         EditableEndVertex End
         {
             get;
@@ -43,18 +46,18 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Traverses the schedule and applies an action to each vertex visited.
         /// </summary>
         /// <param name="start">The vertex where the traverse should be started.</param>
-        /// <param name="traverseViaOutBoundVertices">
+        /// <param name="traverseViaOutboundVertices">
         /// A flag indicating if the schedule should be traversed via the outbound edges of the vertices, or the inbound ones.
         /// </param>
         /// <param name="vertexAction">
         /// The action taken for each vertex that is encountered. The action is provided with the current vertex and
-        /// a collection of all outbound, if <paramref name="traverseViaOutBoundVertices"/> is <see langword="true" />,
+        /// a collection of all outbound, if <paramref name="traverseViaOutboundVertices"/> is <see langword="true" />,
         /// or inbound vertices and the ID of the traversing condition. The function should return <see langword="false" />
         /// to terminate the traverse.
         /// </param>
         void TraverseSchedule(
             IEditableScheduleVertex start, 
-            bool traverseViaOutBoundVertices, 
+            bool traverseViaOutboundVertices, 
             Func<IEditableScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IEditableScheduleVertex>>, bool> vertexAction);
 
         /// <summary>

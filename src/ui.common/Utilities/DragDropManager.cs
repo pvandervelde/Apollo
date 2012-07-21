@@ -99,80 +99,80 @@ namespace Apollo.UI.Common.Utilities
         /// Indicates that the DragSourceAdvisor attached property is set or is not set. This method should
         /// only be used by the WPF system.
         /// </summary>
-        /// <param name="depObj">The dependency object on which the property should be set.</param>
+        /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
-        public static void SetDragSourceAdvisor(DependencyObject depObj, bool isSet)
+        public static void SetDragSourceAdvisor(DependencyObject obj, bool isSet)
         {
-            depObj.SetValue(DragSourceAdvisorProperty, isSet);
+            obj.SetValue(DragSourceAdvisorProperty, isSet);
         }
 
         /// <summary>
         /// Indicates that the IsDragAllowed attached property is set or is not set. This method should
         /// only be used by the WPF system.
         /// </summary>
-        /// <param name="depObj">The dependency object on which the property should be set.</param>
+        /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
-        public static void SetIsDragAllowed(DependencyObject depObj, bool isSet)
+        public static void SetIsDragAllowed(DependencyObject obj, bool isSet)
         {
-            depObj.SetValue(IsDragAllowedProperty, isSet);
+            obj.SetValue(IsDragAllowedProperty, isSet);
         }
 
         /// <summary>
         /// Indicates that the DragVisualizationTemplate attached property is set or is not set. This method should
         /// only be used by the WPF system.
         /// </summary>
-        /// <param name="depObj">The dependency object on which the property should be set.</param>
+        /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
-        public static void SetDragVisualizationTemplate(DependencyObject depObj, bool isSet)
+        public static void SetDragVisualizationTemplate(DependencyObject obj, bool isSet)
         {
-            depObj.SetValue(DragVisualizationTemplateProperty, isSet);
+            obj.SetValue(DragVisualizationTemplateProperty, isSet);
         }
 
         /// <summary>
         /// Indicates that the DropTargetAdvisor attached property is set or is not set. This method should
         /// only be used by the WPF system.
         /// </summary>
-        /// <param name="depObj">The dependency object on which the property should be set.</param>
+        /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
-        public static void SetDropTargetAdvisor(DependencyObject depObj, bool isSet)
+        public static void SetDropTargetAdvisor(DependencyObject obj, bool isSet)
         {
-            depObj.SetValue(DropTargetAdvisorProperty, isSet);
+            obj.SetValue(DropTargetAdvisorProperty, isSet);
         }
 
         /// <summary>
         /// Indicates that the DropHandler attached property is set or is not set. This method should
         /// only be used by the WPF system.
         /// </summary>
-        /// <param name="depObj">The dependency object on which the property should be set.</param>
+        /// <param name="obj">The dependency object on which the property should be set.</param>
         /// <param name="isSet">Indicates if the property is set or not set.</param>
-        public static void SetDropHandler(DependencyObject depObj, bool isSet)
+        public static void SetDropHandler(DependencyObject obj, bool isSet)
         {
-            depObj.SetValue(DropHandlerProperty, isSet);
+            obj.SetValue(DropHandlerProperty, isSet);
         }
 
-        private static IDragSourceAdvisor GetDragSourceAdvisor(DependencyObject depObj)
+        private static IDragSourceAdvisor GetDragSourceAdvisor(DependencyObject obj)
         {
-            return depObj.GetValue(DragSourceAdvisorProperty) as IDragSourceAdvisor;
+            return obj.GetValue(DragSourceAdvisorProperty) as IDragSourceAdvisor;
         }
 
-        private static Func<object, bool> GetIsDragAllowed(DependencyObject depObj)
+        private static Func<object, bool> GetIsDragAllowed(DependencyObject obj)
         {
-            return depObj.GetValue(IsDragAllowedProperty) as Func<object, bool>;
+            return obj.GetValue(IsDragAllowedProperty) as Func<object, bool>;
         }
 
-        private static Func<object, UIElement> GetDragVisualizationTemplate(DependencyObject depObj)
+        private static Func<object, UIElement> GetDragVisualizationTemplate(DependencyObject obj)
         {
-            return depObj.GetValue(DragVisualizationTemplateProperty) as Func<object, UIElement>;
+            return obj.GetValue(DragVisualizationTemplateProperty) as Func<object, UIElement>;
         }
 
-        private static IDropTargetAdvisor GetDropTargetAdvisor(DependencyObject depObj)
+        private static IDropTargetAdvisor GetDropTargetAdvisor(DependencyObject obj)
         {
-            return depObj.GetValue(DropTargetAdvisorProperty) as IDropTargetAdvisor;
+            return obj.GetValue(DropTargetAdvisorProperty) as IDropTargetAdvisor;
         }
 
-        private static Action<object> GetDropHandler(DependencyObject depObj)
+        private static Action<object> GetDropHandler(DependencyObject obj)
         {
-            return depObj.GetValue(DropHandlerProperty) as Action<object>;
+            return obj.GetValue(DropHandlerProperty) as Action<object>;
         }
 
         private static UIElement GetTopContainer()
@@ -180,24 +180,24 @@ namespace Apollo.UI.Common.Utilities
             return Application.Current.MainWindow.Content as UIElement;
         }
 
-        private static void OnDragSourceAdvisorChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+        private static void OnDragSourceAdvisorChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement sourceElt = depObj as UIElement;
+            UIElement sourceElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                sourceElt.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(DragSourcePreviewMouseLeftButtonDown);
-                sourceElt.PreviewMouseMove += new MouseEventHandler(DragSourcePreviewMouseMove);
-                sourceElt.PreviewMouseUp += new MouseButtonEventHandler(DragSourcePreviewMouseUp);
+                sourceElement.PreviewMouseLeftButtonDown += new MouseButtonEventHandler(DragSourcePreviewMouseLeftButtonDown);
+                sourceElement.PreviewMouseMove += new MouseEventHandler(DragSourcePreviewMouseMove);
+                sourceElement.PreviewMouseUp += new MouseButtonEventHandler(DragSourcePreviewMouseUp);
 
                 // Set the Drag source UI
                 IDragSourceAdvisor advisor = args.NewValue as IDragSourceAdvisor;
-                advisor.SourceUI = sourceElt;
+                advisor.SourceUI = sourceElement;
             }
             else if (args.NewValue == null && args.OldValue != null)
             {
-                sourceElt.PreviewMouseLeftButtonDown -= DragSourcePreviewMouseLeftButtonDown;
-                sourceElt.PreviewMouseMove -= DragSourcePreviewMouseMove;
-                sourceElt.PreviewMouseUp -= DragSourcePreviewMouseUp;
+                sourceElement.PreviewMouseLeftButtonDown -= DragSourcePreviewMouseLeftButtonDown;
+                sourceElement.PreviewMouseMove -= DragSourcePreviewMouseMove;
+                sourceElement.PreviewMouseUp -= DragSourcePreviewMouseUp;
             }
         }
 
@@ -206,7 +206,7 @@ namespace Apollo.UI.Common.Utilities
             // Make this the new drag source
             IDragSourceAdvisor advisor = GetDragSourceAdvisor(sender as DependencyObject);
 
-            if (advisor.IsDraggable(e.Source as UIElement) == false)
+            if (advisor.CanBeDragged(e.Source as UIElement) == false)
             {
                 return;
             }
@@ -233,12 +233,12 @@ namespace Apollo.UI.Common.Utilities
             return hGesture | vGesture;
         }
 
-        private static void DragStarted(UIElement uiElt)
+        private static void DragStarted(UIElement uiElement)
         {
             s_IsMouseDown = false;
-            Mouse.Capture(uiElt);
+            Mouse.Capture(uiElement);
 
-            IDragSourceAdvisor advisor = GetDragSourceAdvisor(uiElt as DependencyObject);
+            IDragSourceAdvisor advisor = GetDragSourceAdvisor(uiElement as DependencyObject);
             DataObject data = advisor.GetDataObject(s_DraggedElement, s_OffsetPoint);
             DragDropEffects supportedEffects = advisor.SupportedEffects;
 
@@ -267,76 +267,82 @@ namespace Apollo.UI.Common.Utilities
             Mouse.Capture(null);
         }
 
-        private static void OnIsDragAllowedChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+        private static void OnIsDragAllowedChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement targetElt = depObj as UIElement;
+            UIElement targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                if (!s_IsDragAllowed.ContainsKey(targetElt))
+                if (!s_IsDragAllowed.ContainsKey(targetElement))
                 {
                     var func = args.NewValue as Func<object, bool>;
-                    s_IsDragAllowed.Add(targetElt, func);
+                    s_IsDragAllowed.Add(targetElement, func);
                 }
             }
             else if (args.NewValue == null && args.OldValue != null)
             {
-                s_IsDragAllowed.Remove(targetElt);
+                s_IsDragAllowed.Remove(targetElement);
             }
         }
 
-        private static void OnDragVisualizationTemplateChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+        private static void OnDragVisualizationTemplateChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement targetElt = depObj as UIElement;
+            UIElement targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                if (!s_DragVisualizationMap.ContainsKey(targetElt))
+                if (!s_DragVisualizationMap.ContainsKey(targetElement))
                 {
                     var func = args.NewValue as Func<object, UIElement>;
-                    s_DragVisualizationMap.Add(targetElt, func);
+                    s_DragVisualizationMap.Add(targetElement, func);
                 }
             }
             else if (args.NewValue == null && args.OldValue != null)
             {
-                s_DragVisualizationMap.Remove(targetElt);
+                s_DragVisualizationMap.Remove(targetElement);
             }
         }
 
-        private static void OnDropTargetAdvisorChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+        private static void OnDropTargetAdvisorChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement targetElt = depObj as UIElement;
+            UIElement targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                targetElt.PreviewDragEnter += new DragEventHandler(DropTargetPreviewDragEnter);
-                targetElt.PreviewDragOver += new DragEventHandler(DropTargetPreviewDragOver);
-                targetElt.PreviewDragLeave += new DragEventHandler(DropTargetPreviewDragLeave);
-                targetElt.PreviewDrop += new DragEventHandler(DropTargetPreviewDrop);
-                targetElt.AllowDrop = true;
+                targetElement.PreviewDragEnter += new DragEventHandler(DropTargetPreviewDragEnter);
+                targetElement.PreviewDragOver += new DragEventHandler(DropTargetPreviewDragOver);
+                targetElement.PreviewDragLeave += new DragEventHandler(DropTargetPreviewDragLeave);
+                targetElement.PreviewDrop += new DragEventHandler(DropTargetPreviewDrop);
+                targetElement.AllowDrop = true;
 
                 // Set the Drag source UI
                 IDropTargetAdvisor advisor = args.NewValue as IDropTargetAdvisor;
-                advisor.TargetUI = targetElt;
+                advisor.TargetUI = targetElement;
             }
             else if (args.NewValue == null && args.OldValue != null)
             {
-                targetElt.PreviewDragEnter -= DropTargetPreviewDragEnter;
-                targetElt.PreviewDragOver -= DropTargetPreviewDragOver;
-                targetElt.PreviewDragLeave -= DropTargetPreviewDragLeave;
-                targetElt.PreviewDrop -= DropTargetPreviewDrop;
-                targetElt.AllowDrop = false;
+                targetElement.PreviewDragEnter -= DropTargetPreviewDragEnter;
+                targetElement.PreviewDragOver -= DropTargetPreviewDragOver;
+                targetElement.PreviewDragLeave -= DropTargetPreviewDragLeave;
+                targetElement.PreviewDrop -= DropTargetPreviewDrop;
+                targetElement.AllowDrop = false;
             }
         }
 
         private static void DropTargetPreviewDragEnter(object sender, DragEventArgs e)
         {
+            var uiElement = sender as UIElement;
+            if (uiElement == null)
+            {
+                return;
+            }
+
             if (UpdateEffects(sender, e) == false)
             {
                 return;
             }
 
             // Setup the preview Adorner
-            UIElement feedbackUI = GetDropTargetAdvisor(sender as DependencyObject).GetVisualFeedback(e.Data);
-            s_OffsetPoint = GetDropTargetAdvisor(sender as DependencyObject).GetOffsetPoint(e.Data);
-            CreatePreviewAdorner(sender as UIElement, feedbackUI);
+            UIElement feedbackUI = GetDropTargetAdvisor(uiElement).GetVisualFeedback(e.Data);
+            s_OffsetPoint = GetDropTargetAdvisor(uiElement).GetOffsetPoint(e.Data);
+            CreatePreviewAdorner(uiElement, feedbackUI);
 
             e.Handled = true;
         }
@@ -370,13 +376,13 @@ namespace Apollo.UI.Common.Utilities
             return true;
         }
 
-        private static void CreatePreviewAdorner(UIElement adornedElt, UIElement feedbackUI)
+        private static void CreatePreviewAdorner(UIElement adornedElement, UIElement feedbackUI)
         {
             // Clear if there is an existing preview adorner
             RemovePreviewAdorner();
 
             AdornerLayer layer = AdornerLayer.GetAdornerLayer(GetTopContainer());
-            s_OverlayElement = new DropPreviewAdorner(feedbackUI, adornedElt);
+            s_OverlayElement = new DropPreviewAdorner(feedbackUI, adornedElement);
             layer.Add(s_OverlayElement);
         }
 
@@ -426,20 +432,20 @@ namespace Apollo.UI.Common.Utilities
             s_OffsetPoint = new Point(0, 0);
         }
 
-        private static void OnDropHandlerChanged(DependencyObject depObj, DependencyPropertyChangedEventArgs args)
+        private static void OnDropHandlerChanged(DependencyObject sender, DependencyPropertyChangedEventArgs args)
         {
-            UIElement targetElt = depObj as UIElement;
+            UIElement targetElement = sender as UIElement;
             if (args.NewValue != null && args.OldValue == null)
             {
-                if (!s_DropHandlers.ContainsKey(targetElt))
+                if (!s_DropHandlers.ContainsKey(targetElement))
                 {
                     var func = args.NewValue as Action<object>;
-                    s_DropHandlers.Add(targetElt, func);
+                    s_DropHandlers.Add(targetElement, func);
                 }
             }
             else if (args.NewValue == null && args.OldValue != null)
             {
-                s_DropHandlers.Remove(targetElt);
+                s_DropHandlers.Remove(targetElement);
             }
         }
 

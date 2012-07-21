@@ -12,7 +12,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// <summary>
     /// Defines the interface for objects that verify the integrity of a schedule.
     /// </summary>
-    public interface IVertifyScheduleIntegrity
+    public interface IVerifyScheduleIntegrity
     {
         /// <summary>
         /// Determines if the given schedule is a valid schedule.
