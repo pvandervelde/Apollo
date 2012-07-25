@@ -196,6 +196,7 @@
     <Compile Include="Utilities\IDragSourceAdvisor.cs" />
     <Compile Include="Utilities\IDropTargetAdvisor.cs" />
     <Compile Include="Utilities\ObservableCollectionExtensions.cs" />
+    <Compile Include="Utilities\ScrollableTabPanel.cs" />
     <Compile Include="Views\Datasets\DatasetCreatorToOpacityConverter.cs" />
     <Compile Include="IPresenter.cs" />
     <Compile Include="IRegionView.cs" />

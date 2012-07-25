@@ -2,15 +2,15 @@
         x:ClassModifier="internal"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:regions="http://www.codeplex.com/prism"
+        xmlns:common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common"
+        xmlns:infrastructure="clr-namespace:Apollo.ProjectExplorer"
         xmlns:lexEngine="clr-namespace:WPFLocalizeExtension.Engine;assembly=WPFLocalizeExtension"
         xmlns:lexProviders="clr-namespace:WPFLocalizeExtension.Providers;assembly=WPFLocalizeExtension"
         xmlns:lex="clr-namespace:WPFLocalizeExtension.Extensions;assembly=WPFLocalizeExtension"
                 lexEngine:LocalizeDictionary.DesignCulture="en"
                 lexProviders:ResxLocalizationProvider.DefaultAssembly="Apollo.ProjectExplorer"
                 lexProviders:ResxLocalizationProvider.DefaultDictionary="Resources"
-        xmlns:infrastructure="clr-namespace:Apollo.ProjectExplorer"
-        xmlns:common="clr-namespace:Apollo.UI.Common;assembly=Apollo.UI.Common"
+        xmlns:regions="http://www.codeplex.com/prism"
         Title="{lex:Loc MainWindow_Title}"
         Width="800"
         Height="600"
@@ -33,18 +33,15 @@
 
         <!-- Content -->
         <Border Grid.Row="1"
-                Background="SteelBlue"
+                Background="LightSteelBlue"
                 Margin="0">
             <TabControl x:Name="tabs"
                         x:FieldModifier="private"
                         regions:RegionManager.RegionName="{x:Static common:CommonRegionNames.Content}" 
                         Width="Auto" 
                         Height="Auto" 
-                        Style="{StaticResource TabControlStyle}"
-                        TabStripPlacement="Top"
                         HorizontalAlignment="Stretch" 
-                        Margin="3,3,3,3"
-                        Background="LightSteelBlue"/>
+                        Margin="0,3,0,3" />
         </Border>
         
         <!-- Status bar -->

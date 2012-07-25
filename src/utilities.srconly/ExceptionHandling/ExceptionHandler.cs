@@ -16,8 +16,7 @@ using NSarrac.Framework;
 namespace Apollo.Utilities.ExceptionHandling
 {
     /// <summary>
-    /// A fake exception handler. This will later be removed and replaced
-    /// by a proper one.
+    /// An exception handler.
     /// </summary>
     /// <design>
     /// This class must be public because we use it in the AppDomainBuilder.

@@ -40,6 +40,7 @@
     <Reference Include="NSarrac.Framework">
       <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Drawing" />
@@ -79,6 +80,7 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
       <Link>Utilities\ExceptionFilter.cs</Link>
     </Compile>
+    <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="Utilities\StepBasedProgressTracker.cs" />
     <Compile Include="Views\StatusBar\IStatusBarView.cs" />
     <Compile Include="Views\StatusBar\StatusBarModel.cs" />
