@@ -80,6 +80,15 @@ namespace Apollo.UI.Common.Utilities
             return childRight - (viewportRight - viewportLeft);
         }
 
+        /// <summary>
+        /// Will remove the OpacityMask for all child controls.
+        /// </summary>
+        /// <param name="child">The child.</param>
+        private static void RemoveOpacityMask(UIElement child)
+        {
+            child.OpacityMask = null;
+        }
+
         // For a description of the members below, refer to the respective property's description.
         private ScrollViewer m_OwningScrollViewer;
         private bool m_CanScrollHorizontally = true;
@@ -291,15 +300,6 @@ namespace Apollo.UI.Common.Utilities
             {
                 RemoveOpacityMask(uieChild);
             }
-        }
-
-        /// <summary>
-        /// Will remove the OpacityMask for all child controls.
-        /// </summary>
-        /// <param name="child">The child.</param>
-        private void RemoveOpacityMask(UIElement child)
-        {
-            child.OpacityMask = null;
         }
 
         /// <summary>

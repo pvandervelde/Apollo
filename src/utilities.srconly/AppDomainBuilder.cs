@@ -29,6 +29,8 @@ namespace Apollo.Utilities
             /// <summary>
             /// Attaches the exception handler to the domain.
             /// </summary>
+            [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+                Justification = "This needs to be called on a proxy so it can't be a static method.")]
             public void Attach()
             {
                 var domain = AppDomain.CurrentDomain;

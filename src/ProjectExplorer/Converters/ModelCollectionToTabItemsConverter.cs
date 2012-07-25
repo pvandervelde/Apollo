@@ -53,7 +53,7 @@ namespace Apollo.ProjectExplorer.Converters
 
             private void HandleNotifyCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
             {
-                RaiseCollectionChanged(e);
+                RaiseCollectionChanged();
             }
 
             /// <summary>
@@ -63,7 +63,7 @@ namespace Apollo.ProjectExplorer.Converters
                 Justification = "Event is inherited from the INotifyCollectionChanged interface.")]
             public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-            private void RaiseCollectionChanged(NotifyCollectionChangedEventArgs args)
+            private void RaiseCollectionChanged()
             {
                 var local = CollectionChanged;
                 if (local != null)
@@ -75,7 +75,7 @@ namespace Apollo.ProjectExplorer.Converters
             /// <summary>
             /// Returns an enumerator that iterates through the collection.
             /// </summary>
-            /// <returns>A System.Collections.Generic.IEnumerator<T> that can be used to iterate through the collection.</returns>
+            /// <returns>A System.Collections.Generic.IEnumerator{T} that can be used to iterate through the collection.</returns>
             public IEnumerator<TabItem> GetEnumerator()
             {
                 foreach (var item in m_Items)
