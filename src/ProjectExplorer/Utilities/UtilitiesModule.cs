@@ -17,6 +17,7 @@ using Apollo.Utilities.ExceptionHandling;
 using Apollo.Utilities.History;
 using Apollo.Utilities.Logging;
 using Autofac;
+using Autofac.Core;
 using NLog;
 using NManto;
 using NManto.Reporting;
@@ -76,7 +77,6 @@ namespace Apollo.Utilities
                         return AppDomainBuilder.Assemble(
                             name,
                             AppDomainResolutionPathsFor(paths),
-                            ctx.Resolve<IExceptionHandler>(),
                             ctx.Resolve<IFileConstants>());
                     };
 

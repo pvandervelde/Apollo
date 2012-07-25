@@ -51,7 +51,7 @@ namespace Apollo.UI.Common
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(Parameter other)
+        public virtual bool Equals(Parameter other)
         {
             if (ReferenceEquals(null, other))
             {
@@ -75,7 +75,7 @@ namespace Apollo.UI.Common
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public sealed override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj))
             {
@@ -101,7 +101,7 @@ namespace Apollo.UI.Common
         /// <returns>
         /// A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table. 
         /// </returns>
-        public sealed override int GetHashCode()
+        public override int GetHashCode()
         {
             unchecked
             {
