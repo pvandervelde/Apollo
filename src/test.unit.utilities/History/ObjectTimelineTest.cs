@@ -18,6 +18,9 @@ namespace Apollo.Utilities.History
     {
         private sealed class MockHistoryObject : IAmHistoryEnabled, IEquatable<MockHistoryObject>
         {
+            public const byte SomeValueIndex = 0;
+            public const byte LotsOfValuesIndex = 1;
+
             /// <summary>
             /// Implements the operator ==.
             /// </summary>
@@ -74,8 +77,10 @@ namespace Apollo.Utilities.History
 
             private readonly HistoryId m_Id;
 
+            [FieldIndexForHistoryTracking(SomeValueIndex)]
             private IVariableTimeline<int> m_SomeValue;
 
+            [FieldIndexForHistoryTracking(LotsOfValuesIndex)]
             private IListTimelineStorage<int> m_LotsOfValues;
 
             public MockHistoryObject(HistoryId id, IVariableTimeline<int> valueStorage, IListTimelineStorage<int> collectionStorage)
@@ -200,7 +205,7 @@ namespace Apollo.Utilities.History
 
         private static MockHistoryObject BuildObject(
             HistoryId id, 
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members, 
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members, 
             params object[] constructorArguments)
         {
             IVariableTimeline<int> someValue = null;
@@ -208,13 +213,13 @@ namespace Apollo.Utilities.History
 
             foreach (var pair in members)
             {
-                if (string.Equals(pair.Item1, "m_SomeValue"))
+                if (pair.Item1 == MockHistoryObject.SomeValueIndex)
                 {
                     someValue = pair.Item2 as IVariableTimeline<int>;
                     continue;
                 }
 
-                if (string.Equals(pair.Item1, "m_LotsOfValues"))
+                if (pair.Item1 == MockHistoryObject.LotsOfValuesIndex)
                 {
                     lotsOfValues = pair.Item2 as IListTimelineStorage<int>;
                     continue;

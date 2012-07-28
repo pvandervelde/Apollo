@@ -26,26 +26,14 @@ namespace Apollo.Core.Host.Projects
         private sealed class ProjectHistoryStorage : IAmHistoryEnabled
         {
             /// <summary>
-            /// Returns the name of the <see cref="Name"/> field.
+            /// The history index of the name field.
             /// </summary>
-            /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-            /// <returns>The name of the field.</returns>
-            internal static string NameOfNameField()
-            {
-                return ReflectionExtensions.MemberName<ProjectHistoryStorage, IVariableTimeline<string>>(
-                    p => p.m_Name);
-            }
+            public const byte NameIndex = 0;
 
             /// <summary>
-            /// Returns the name of the <see cref="Summary"/> field.
+            /// The history index of the summary field.
             /// </summary>
-            /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-            /// <returns>The name of the field.</returns>
-            internal static string NameOfSummaryField()
-            {
-                return ReflectionExtensions.MemberName<ProjectHistoryStorage, IVariableTimeline<string>>(
-                    p => p.m_Summary);
-            }
+            public const byte SummaryIndex = 1;
 
             /// <summary>
             /// The ID used by the timeline to uniquely identify the current object.
@@ -55,11 +43,13 @@ namespace Apollo.Core.Host.Projects
             /// <summary>
             /// The name of the project.
             /// </summary>
+            [FieldIndexForHistoryTracking(NameIndex)]
             private readonly IVariableTimeline<string> m_Name;
 
             /// <summary>
             /// The summary for the project.
             /// </summary>
+            [FieldIndexForHistoryTracking(SummaryIndex)]
             private readonly IVariableTimeline<string> m_Summary;
 
             /// <summary>
@@ -143,51 +133,36 @@ namespace Apollo.Core.Host.Projects
         private sealed class DatasetHistoryStorage : IAmHistoryEnabled
         {
             /// <summary>
-            /// Returns the name of the <see cref="KnownDatasets"/> field.
+            /// The history index of the name field.
             /// </summary>
-            /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-            /// <returns>The name of the field.</returns>
-            internal static string NameOfGraphField()
-            {
-                return ReflectionExtensions.MemberName<DatasetHistoryStorage, IMutableBidirectionalGraph<DatasetId, Edge<DatasetId>>>(
-                    p => p.m_Graph);
-            }
+            public const byte GraphIndex = 0;
 
             /// <summary>
-            /// Returns the name of the <see cref="KnownDatasets"/> field.
+            /// The history index of the summary field.
             /// </summary>
-            /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-            /// <returns>The name of the field.</returns>
-            internal static string NameOfKnownDatasetsField()
-            {
-                return ReflectionExtensions.MemberName<DatasetHistoryStorage, IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>>(
-                    p => p.m_KnownDatasets);
-            }
+            public const byte KnownDatasetsIndex = 1;
 
             /// <summary>
-            /// Returns the name of the <see cref="ActiveDatasets"/> field.
+            /// The history index of the summary field.
             /// </summary>
-            /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-            /// <returns>The name of the field.</returns>
-            internal static string NameOfActiveDatasetsField()
-            {
-                return ReflectionExtensions.MemberName<DatasetHistoryStorage, IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>>(
-                    p => p.m_ActiveDatasets);
-            }
+            public const byte ActiveDatasetsIndex = 2;
 
             /// <summary>
             /// The graph which describes the connections between the different datasets.
             /// </summary>
+            [FieldIndexForHistoryTracking(GraphIndex)]
             private readonly IBidirectionalGraphHistory<DatasetId, Edge<DatasetId>> m_Graph;
 
             /// <summary>
             /// The collection of all datasets that belong to the current project.
             /// </summary>
+            [FieldIndexForHistoryTracking(KnownDatasetsIndex)]
             private readonly IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation> m_KnownDatasets;
 
             /// <summary>
             /// The collection of all datasets which are currently loaded onto a machine.
             /// </summary>
+            [FieldIndexForHistoryTracking(ActiveDatasetsIndex)]
             private readonly IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation> m_ActiveDatasets;
 
             /// <summary>
@@ -280,7 +255,7 @@ namespace Apollo.Core.Host.Projects
 
         private static ProjectHistoryStorage BuildProjectHistoryStorage(
             HistoryId id, 
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
         {
             {
@@ -291,13 +266,13 @@ namespace Apollo.Core.Host.Projects
             IVariableTimeline<string> summary = null;
             foreach (var member in members)
             {
-                if (string.Equals(ProjectHistoryStorage.NameOfNameField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == ProjectHistoryStorage.NameIndex)
                 {
                     name = member.Item2 as IVariableTimeline<string>;
                     continue;
                 }
 
-                if (string.Equals(ProjectHistoryStorage.NameOfSummaryField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == ProjectHistoryStorage.SummaryIndex)
                 {
                     summary = member.Item2 as IVariableTimeline<string>;
                     continue;
@@ -311,7 +286,7 @@ namespace Apollo.Core.Host.Projects
 
         private static DatasetHistoryStorage BuildDatasetHistoryStorage(
             HistoryId id, 
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
         {
             {
@@ -323,19 +298,19 @@ namespace Apollo.Core.Host.Projects
             IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation> activeDatasets = null;
             foreach (var member in members)
             {
-                if (string.Equals(DatasetHistoryStorage.NameOfGraphField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == DatasetHistoryStorage.GraphIndex)
                 {
                     graph = member.Item2 as BidirectionalGraphHistory<DatasetId, Edge<DatasetId>>;
                     continue;
                 }
 
-                if (string.Equals(DatasetHistoryStorage.NameOfKnownDatasetsField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == DatasetHistoryStorage.KnownDatasetsIndex)
                 {
                     knownDatasets = member.Item2 as IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>;
                     continue;
                 }
 
-                if (string.Equals(DatasetHistoryStorage.NameOfActiveDatasetsField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == DatasetHistoryStorage.ActiveDatasetsIndex)
                 {
                     activeDatasets = member.Item2 as IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>;
                     continue;

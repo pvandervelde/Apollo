@@ -23,7 +23,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Stores the member information in the same order as the timelines are stored.
         /// </summary>
-        private static readonly IList<Tuple<string, Type>> s_Members = new List<Tuple<string, Type>>();
+        private static readonly IList<Tuple<byte, Type>> s_Members = new List<Tuple<byte, Type>>();
 
         /// <summary>
         /// Initializes static members of the <see cref="ObjectTimeline{T}"/> class.
@@ -39,7 +39,11 @@ namespace Apollo.Utilities.History
                 var fieldType = field.FieldType;
                 if (fieldType.GetCustomAttributes(typeof(DefineAsHistoryTrackingInterfaceAttribute), true).Length > 0)
                 {
-                    s_Members.Add(new Tuple<string, Type>(field.Name, fieldType));
+                    var attributes = field.GetCustomAttributes(typeof(FieldIndexForHistoryTrackingAttribute), true);
+                    Debug.Assert(attributes.Length == 1, "The field should have an ordering index.");
+
+                    var index = (attributes[0] as FieldIndexForHistoryTrackingAttribute).Index;
+                    s_Members.Add(new Tuple<byte, Type>(index, fieldType));
                 }
             }
         }
@@ -57,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// The function that builds the object.
         /// </summary>
-        private readonly Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> m_ObjectBuilder;
+        private readonly Func<HistoryId, IEnumerable<Tuple<byte, IStoreTimelineValues>>, object[], T> m_ObjectBuilder;
 
         /// <summary>
         /// The arguments that are passed to the constructor.
@@ -98,7 +102,7 @@ namespace Apollo.Utilities.History
         public ObjectTimeline(
             HistoryId id,
             Func<Type, IStoreTimelineValues> storageBuilder,
-            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            Func<HistoryId, IEnumerable<Tuple<byte, IStoreTimelineValues>>, object[], T> objectBuilder,
             params object[] constructorArguments)
         {
             {
@@ -342,12 +346,12 @@ namespace Apollo.Utilities.History
                 Debug.Assert(m_Object == null || !m_Object.IsAlive, "Can only ressurect dead objects.");
             }
 
-            var timelines = new List<Tuple<string, IStoreTimelineValues>>();
+            var timelines = new List<Tuple<byte, IStoreTimelineValues>>();
 
             Debug.Assert(s_Members.Count == m_Members.Count, "There should be as many timelines as there are members.");
             for (int i = 0; i < s_Members.Count; i++)
             {
-                timelines.Add(new Tuple<string, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
+                timelines.Add(new Tuple<byte, IStoreTimelineValues>(s_Members[i].Item1, m_Members[i]));
             }
 
             var obj = m_ObjectBuilder(Id, timelines, m_ConstructorArguments);

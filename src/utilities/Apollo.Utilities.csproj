@@ -56,6 +56,7 @@
     <Compile Include="History\DictionaryHistoryBase.CollectionChange.cs" />
     <Compile Include="History\DictionaryHistoryBase.cs" />
     <Compile Include="History\DictionaryTimelineRegistrationSource.cs" />
+    <Compile Include="History\FieldIndexForHistoryTrackingAttribute.cs" />
     <Compile Include="History\HistoryId.cs" />
     <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
     <Compile Include="History\HistoryObjectListHistory.cs" />

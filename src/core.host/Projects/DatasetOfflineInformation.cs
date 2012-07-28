@@ -20,26 +20,14 @@ namespace Apollo.Core.Host.Projects
     internal sealed class DatasetOfflineInformation : IDatasetOfflineInformation, IAmHistoryEnabled, INeedCleanupBeforeRemovalFromHistory
     {
         /// <summary>
-        /// Returns the name of the <see cref="Name"/> field.
+        /// The history index of the name field.
         /// </summary>
-        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-        /// <returns>The name of the field.</returns>
-        internal static string NameOfNameField()
-        {
-            return ReflectionExtensions.MemberName<DatasetOfflineInformation, IVariableTimeline<string>>(
-                p => p.m_Name);
-        }
+        public const byte NameIndex = 0;
 
         /// <summary>
-        /// Returns the name of the <see cref="Summary"/> field.
+        /// The history index of the summary field.
         /// </summary>
-        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-        /// <returns>The name of the field.</returns>
-        internal static string NameOfSummaryField()
-        {
-            return ReflectionExtensions.MemberName<DatasetOfflineInformation, IVariableTimeline<string>>(
-                p => p.m_Summary);
-        }
+        public const byte SummaryIndex = 1;
 
         /// <summary>
         /// The ID number of the dataset.
@@ -59,11 +47,13 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// The name of the project.
         /// </summary>
+        [FieldIndexForHistoryTracking(NameIndex)]
         private readonly IVariableTimeline<string> m_Name;
 
         /// <summary>
         /// The summary for the project.
         /// </summary>
+        [FieldIndexForHistoryTracking(SummaryIndex)]
         private readonly IVariableTimeline<string> m_Summary;
 
         /// <summary>

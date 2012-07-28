@@ -26,7 +26,7 @@ namespace Apollo.Utilities.History
         /// <param name="constructorArguments">The arguments that are passed to the constructor.</param>
         /// <returns>The newly created object of type <typeparamref name="T"/>.</returns>
         T AddToTimeline<T>(
-            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            Func<HistoryId, IEnumerable<Tuple<byte, IStoreTimelineValues>>, object[], T> objectBuilder,
             params object[] constructorArguments)
             where T : class, IAmHistoryEnabled;
 

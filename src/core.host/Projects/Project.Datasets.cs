@@ -27,7 +27,7 @@ namespace Apollo.Core.Host.Projects
     {
         private static DatasetOfflineInformation BuildDatasetOfflineInformationHistoryStorage(
             HistoryId historyId,
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
         {
             {
@@ -38,13 +38,13 @@ namespace Apollo.Core.Host.Projects
             IVariableTimeline<string> summary = null;
             foreach (var member in members)
             {
-                if (string.Equals(DatasetOfflineInformation.NameOfNameField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == DatasetOfflineInformation.NameIndex)
                 {
                     name = member.Item2 as IVariableTimeline<string>;
                     continue;
                 }
 
-                if (string.Equals(DatasetOfflineInformation.NameOfSummaryField(), member.Item1, StringComparison.Ordinal))
+                if (member.Item1 == DatasetOfflineInformation.SummaryIndex)
                 {
                     summary = member.Item2 as IVariableTimeline<string>;
                     continue;
