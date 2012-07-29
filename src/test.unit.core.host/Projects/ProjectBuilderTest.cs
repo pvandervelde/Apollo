@@ -27,9 +27,9 @@ namespace Apollo.Core.Host.Projects
     {
         private static IStoreTimelineValues BuildStorage(Type type)
         {
-            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetProxy>).IsAssignableFrom(type))
             {
-                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+                return new DictionaryHistory<DatasetId, DatasetProxy>();
             }
 
             if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))
@@ -63,6 +63,7 @@ namespace Apollo.Core.Host.Projects
         {
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
             var builder = new ProjectBuilder();
+            var offline = new Mock<IDatasetOfflineInformation>();
 
             var plan = new DistributionPlan(
                 (p, t, r) => new Task<DatasetOnlineInformation>(
@@ -74,21 +75,7 @@ namespace Apollo.Core.Host.Projects
                         new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
-                new DatasetOfflineInformation(
-                    new DatasetId(),
-                    new HistoryId(),
-                    new DatasetCreationInformation()
-                    {
-                        CreatedOnRequestOf = DatasetCreator.User,
-                        CanBecomeParent = true,
-                        CanBeAdopted = false,
-                        CanBeCopied = false,
-                        CanBeDeleted = true,
-                        LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    },
-                    datasetId => { },
-                    new ValueHistory<string>(),
-                    new ValueHistory<string>()),
+                offline.Object,
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -102,6 +89,7 @@ namespace Apollo.Core.Host.Projects
         {
             ITimeline timeline = new Timeline(BuildStorage);
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var offline = new Mock<IDatasetOfflineInformation>();
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -114,21 +102,7 @@ namespace Apollo.Core.Host.Projects
                         new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
-                new DatasetOfflineInformation(
-                    new DatasetId(),
-                    new HistoryId(),
-                    new DatasetCreationInformation()
-                    {
-                        CreatedOnRequestOf = DatasetCreator.User,
-                        CanBecomeParent = true,
-                        CanBeAdopted = false,
-                        CanBeCopied = false,
-                        CanBeDeleted = true,
-                        LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    },
-                    datasetId => { },
-                    new ValueHistory<string>(),
-                    new ValueHistory<string>()),
+                offline.Object,
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =
@@ -146,6 +120,7 @@ namespace Apollo.Core.Host.Projects
         {
             ITimeline timeline = new Timeline(BuildStorage);
             var systemDiagnostics = new SystemDiagnostics((p, s) => { }, null);
+            var offline = new Mock<IDatasetOfflineInformation>();
             var builder = new ProjectBuilder();
 
             var plan = new DistributionPlan(
@@ -158,21 +133,7 @@ namespace Apollo.Core.Host.Projects
                         new Mock<INotifyOfRemoteEndpointEvents>().Object,
                         systemDiagnostics),
                     t),
-                new DatasetOfflineInformation(
-                    new DatasetId(),
-                    new HistoryId(),
-                    new DatasetCreationInformation()
-                    {
-                        CreatedOnRequestOf = DatasetCreator.User,
-                        CanBecomeParent = true,
-                        CanBeAdopted = false,
-                        CanBeCopied = false,
-                        CanBeDeleted = true,
-                        LoadFrom = new Mock<IPersistenceInformation>().Object,
-                    },
-                    datasetId => { },
-                    new ValueHistory<string>(),
-                    new ValueHistory<string>()),
+                offline.Object,
                 new NetworkIdentifier("mymachine"),
                 new DatasetLoadingProposal());
             Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor =

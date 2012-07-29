@@ -16,16 +16,8 @@ namespace Apollo.Core.Host.Projects
     /// <summary>
     /// Defines the interface for objects that store information about datasets.
     /// </summary>
-    internal interface IProxyDataset : IEquatable<IProxyDataset>
+    internal interface IProxyDataset : IDatasetOfflineInformation, IEquatable<IProxyDataset>
     {
-        /// <summary>
-        /// Gets a value indicating the ID number of the dataset.
-        /// </summary>
-        DatasetId Id
-        { 
-            get; 
-        }
-
         /// <summary>
         /// Gets a value indicating whether the current object is valid. 
         /// </summary>
@@ -42,91 +34,9 @@ namespace Apollo.Core.Host.Projects
         }
 
         /// <summary>
-        /// Gets a value indicating whether the new dataset can be deleted from the
-        /// project.
-        /// </summary>
-        bool CanBeDeleted
-        {
-            get;
-        }
-
-        /// <summary>
         /// Deletes the current dataset and all its children.
         /// </summary>
         void Delete();
-
-        /// <summary>
-        /// An event raised when the dataset is deleted.
-        /// </summary>
-        event EventHandler<EventArgs> OnDeleted;
-
-        /// <summary>
-        /// Gets a value indicating whether the new dataset can be moved from one parent
-        /// to another parent.
-        /// </summary>
-        /// <design>
-        /// Datasets created by the user are normally movable. Datasets created by the system
-        /// may not be movable because it doesn't make sense to move a dataset whose only purpose
-        /// is to provide information to the parent.
-        /// </design>
-        bool CanBeAdopted
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether the new dataset can be copied to another
-        /// dataset.
-        /// </summary>
-        bool CanBeCopied
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets a value indicating who created the dataset.
-        /// </summary>
-        DatasetCreator CreatedBy
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets a value indicating from where the datset is or will be 
-        /// loaded.
-        /// </summary>
-        IPersistenceInformation StoredAt
-        {
-            get;
-        }
-
-        /// <summary>
-        /// Gets or sets a value indicating the name of the dataset.
-        /// </summary>
-        string Name
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// An event raised when the name of a dataset is changed.
-        /// </summary>
-        event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
-
-        /// <summary>
-        /// Gets or sets a value describing the dataset.
-        /// </summary>
-        string Summary
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// An event raised when the summary of a dataset is changed.
-        /// </summary>
-        event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
 
         /// <summary>
         /// Gets a value indicating whether the dataset is loaded on the local machine
@@ -174,25 +84,9 @@ namespace Apollo.Core.Host.Projects
             CancellationToken token);
 
         /// <summary>
-        /// An event raised when there is progress in the current action which is being
-        /// executed by the dataset.
-        /// </summary>
-        event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
-
-        /// <summary>
-        /// An event raised when the dataset is loaded onto one or more machines.
-        /// </summary>
-        event EventHandler<EventArgs> OnLoaded;
-
-        /// <summary>
         /// Unloads the dataset from the machine it is currently loaded onto.
         /// </summary>
         void UnloadFromMachine();
-
-        /// <summary>
-        /// An event raised when the dataset is unloaded from the machines it was loaded onto.
-        /// </summary>
-        event EventHandler<EventArgs> OnUnloaded;
 
         /// <summary>
         /// Returns the collection of sub-datasets.
@@ -201,20 +95,6 @@ namespace Apollo.Core.Host.Projects
         /// The collection of sub-datasets.
         /// </returns>
         IEnumerable<IProxyDataset> Children();
-
-        /// <summary>
-        /// Gets a value indicating whether the current dataset is allowed to request the 
-        /// creation of its own children.
-        /// </summary>
-        /// <design>
-        /// Normally all datasets created by the user are allowed to create their own 
-        /// children. In some cases datasets created by the system are blocked from 
-        /// creating their own children.
-        /// </design>
-        bool CanBecomeParent
-        {
-            get;
-        }
 
         /// <summary>
         /// Creates a new child dataset and returns the ID number of the child.
@@ -252,6 +132,37 @@ namespace Apollo.Core.Host.Projects
         /// Switches the dataset to executing mode.
         /// </summary>
         void SwitchToExecutingMode();
+
+        /// <summary>
+        /// An event raised when the dataset is deleted.
+        /// </summary>
+        event EventHandler<EventArgs> OnDeleted;
+
+        /// <summary>
+        /// An event raised when the name of a dataset is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnNameChanged;
+
+        /// <summary>
+        /// An event raised when the summary of a dataset is changed.
+        /// </summary>
+        event EventHandler<ValueChangedEventArgs<string>> OnSummaryChanged;
+
+        /// <summary>
+        /// An event raised when there is progress in the current action which is being
+        /// executed by the dataset.
+        /// </summary>
+        event EventHandler<ProgressEventArgs> OnProgressOfCurrentAction;
+
+        /// <summary>
+        /// An event raised when the dataset is loaded onto one or more machines.
+        /// </summary>
+        event EventHandler<EventArgs> OnLoaded;
+
+        /// <summary>
+        /// An event raised when the dataset is unloaded from the machines it was loaded onto.
+        /// </summary>
+        event EventHandler<EventArgs> OnUnloaded;
 
         /// <summary>
         /// An event fired when the dataset is switched to edit mode.

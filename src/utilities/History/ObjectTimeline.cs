@@ -238,46 +238,42 @@ namespace Apollo.Utilities.History
         /// <summary>
         /// Deletes the object from the timeline.
         /// </summary>
-        /// <exception cref="ObjectHasNotBeenCreatedYetException">
-        /// Thrown if the object has not been created yet.
-        /// </exception>
-        /// <exception cref="CannotRemoveNonLivingObjectException">
-        /// Thrown if an object has already been removed.
-        /// </exception>
         public void DeleteFromTimeline()
         {
+            if (!IsAlive())
             {
-                Lokad.Enforce.With<ObjectHasNotBeenCreatedYetException>(
-                    m_CreationTime != null,
-                    Resources.Exceptions_Messages_ObjectHasNotBeenCreatedYet);
-
-                // The object either: has to be alive with no deletion time 
-                //   OR
-                // Alive after a roll-back with a different deletion time.
-                Lokad.Enforce.With<CannotRemoveNonLivingObjectException>(
-                    IsAlive(),
-                    Resources.Exceptions_Messages_CannotRemoveNonLivingObject);
+                return;
             }
 
-            foreach (var member in m_Members)
-            {
-                member.ForgetTheFuture();
-            }
+            // Always provide clean-up for the object because for the timeline the object doesn't exist
+            // until it is 'committed' but for the object existence starts upon creation. Hence it may need
+            // some clean-up actions before destruction, regardless of the state of the timeline.
+            CleanupBeforeRemoval();
 
-            ClearObject();
-            m_DeletionTime = null;
+            if (m_CreationTime != null)
+            {
+                foreach (var member in m_Members)
+                {
+                    member.ForgetTheFuture();
+                }
+
+                m_DeletionTime = null;
+            }
         }
 
-        private void ClearObject()
+        /// <summary>
+        /// Gives the stored object a chance to do clean-up before being removed from history.
+        /// </summary>
+        private void CleanupBeforeRemoval()
         {
             if (m_Object != null)
             {
                 if (m_Object.IsAlive)
                 {
-                    var obj = m_Object.Target as INeedCleanupBeforeRemovalFromHistory;
+                    var obj = m_Object.Target as INeedNotificationOnHistoryChange;
                     if (obj != null)
                     {
-                        obj.CleanupBeforeRemovalFromHistory();
+                        obj.BeforeRemoval();
                     }
                 }
 
@@ -323,7 +319,7 @@ namespace Apollo.Utilities.History
                 timeline.RollBackToStart();
             }
             
-            ClearObject();
+            CleanupBeforeRemoval();
         }
 
         private void RollBackToPointInTime(TimeMarker marker)
@@ -405,7 +401,7 @@ namespace Apollo.Utilities.History
                 timeline.RollForwardTo(m_DeletionTime);
             }
 
-            ClearObject();
+            CleanupBeforeRemoval();
         }
 
         private void RollForwardToPointInTime(TimeMarker marker)

@@ -59,9 +59,9 @@ namespace Apollo.Core.Host.UserInterfaces
 
         private static IStoreTimelineValues BuildStorage(Type type)
         {
-            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOfflineInformation>).IsAssignableFrom(type))
+            if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetProxy>).IsAssignableFrom(type))
             {
-                return new DictionaryHistory<DatasetId, DatasetOfflineInformation>();
+                return new DictionaryHistory<DatasetId, DatasetProxy>();
             }
 
             if (typeof(IDictionaryTimelineStorage<DatasetId, DatasetOnlineInformation>).IsAssignableFrom(type))

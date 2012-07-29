@@ -199,6 +199,9 @@ namespace Apollo.Utilities.History
             {
                 // The timeline exists but the object doesn't have a creation time. Thus the creation time
                 // must be the next marker. Hence we delete the object and then nuke the timeline.
+                var timeline = m_NonMarkedObjectTimelines[id];
+                timeline.DeleteFromTimeline();
+
                 m_NonMarkedObjectTimelines.Remove(id);
             }
         }

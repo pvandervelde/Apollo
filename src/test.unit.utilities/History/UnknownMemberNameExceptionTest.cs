@@ -16,7 +16,7 @@ namespace Apollo.Utilities.History
     public sealed class UnknownMemberNameExceptionTest
     {
         [VerifyContract]
-        public readonly IContract ExceptionTests = new ExceptionContract<UnknownMemberNameException>
+        public readonly IContract ExceptionTests = new ExceptionContract<UnknownMemberException>
         {
             ImplementsSerialization = true,
             ImplementsStandardConstructors = true,

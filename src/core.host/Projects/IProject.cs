@@ -92,6 +92,13 @@ namespace Apollo.Core.Host.Projects
         IProxyDataset BaseDataset();
 
         /// <summary>
+        /// Returns the dataset with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the dataset.</param>
+        /// <returns>The dataset with the given ID if it exists; otherwise, <see langword="null" />.</returns>
+        IProxyDataset Dataset(DatasetId id);
+
+        /// <summary>
         /// Saves the project and all the datasets to the given stream.
         /// </summary>
         /// <param name="persistenceInfo">

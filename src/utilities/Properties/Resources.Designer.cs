@@ -385,11 +385,11 @@ namespace Apollo.Utilities.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to No member with the specified member name exists..
+        ///   Looks up a localized string similar to No member with the specified member index exists..
         /// </summary>
-        internal static string Exceptions_Messages_UnknownMemberName {
+        internal static string Exceptions_Messages_UnknownMember {
             get {
-                return ResourceManager.GetString("Exceptions_Messages_UnknownMemberName", resourceCulture);
+                return ResourceManager.GetString("Exceptions_Messages_UnknownMember", resourceCulture);
             }
         }
         

@@ -109,7 +109,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var pair = members.First();
             if (pair.Item1 != StorageIndex)
             {
-                throw new UnknownMemberNameException();
+                throw new UnknownMemberException();
             }
 
             var actions = pair.Item2 as IDictionaryTimelineStorage<ScheduleElementId, ActionMap>;

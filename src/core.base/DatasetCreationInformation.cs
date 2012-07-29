@@ -38,6 +38,16 @@ namespace Apollo.Core.Base
         // - Why it was created (User specified reason?
 
         /// <summary>
+        /// Gets or sets a value indicating whether the new dataset is the root dataset
+        /// for the project.
+        /// </summary>
+        public bool IsRoot
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets a value indicating whether the new dataset is allowed to request the 
         /// creation of its own children.
         /// </summary>

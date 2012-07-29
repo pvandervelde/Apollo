@@ -5,50 +5,47 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics.CodeAnalysis;
 using System.Runtime.Serialization;
 using Apollo.Utilities.Properties;
 
 namespace Apollo.Utilities.History
 {
     /// <summary>
-    /// An exception that is thrown when the user tries to delete an object that is not alive in 
-    /// the current timeline.
+    /// An exception thrown when a history enabled object is created with a member object for which 
+    /// no field is defined.
     /// </summary>
     [Serializable]
-    [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "NonLiving",
-        Justification = "The correct term is non-living, i.e. it's two words.")]
-    public sealed class CannotRemoveNonLivingObjectException : Exception
+    public sealed class UnknownMemberException : Exception
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownMemberException"/> class.
         /// </summary>
-        public CannotRemoveNonLivingObjectException() 
-            : this(Resources.Exceptions_Messages_CannotRemoveNonLivingObject)
+        public UnknownMemberException()
+            : this(Resources.Exceptions_Messages_UnknownMember)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownMemberException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
-        public CannotRemoveNonLivingObjectException(string message) 
+        public UnknownMemberException(string message) 
             : base(message)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownMemberException"/> class.
         /// </summary>
         /// <param name="message">The message.</param>
         /// <param name="innerException">The inner exception.</param>
-        public CannotRemoveNonLivingObjectException(string message, Exception innerException)
+        public UnknownMemberException(string message, Exception innerException)
             : base(message, innerException)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="CannotRemoveNonLivingObjectException"/> class.
+        /// Initializes a new instance of the <see cref="UnknownMemberException"/> class.
         /// </summary>
         /// <param name="info">
         ///     The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object
@@ -64,7 +61,7 @@ namespace Apollo.Utilities.History
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">
         /// The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
         /// </exception>
-        private CannotRemoveNonLivingObjectException(SerializationInfo info, StreamingContext context)
+        private UnknownMemberException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

@@ -302,7 +302,7 @@ namespace Apollo.Utilities.History
             var deletionTime = new TimeMarker(2);
             timeline.Mark(deletionTime);
 
-            Assert.Throws<CannotRemoveNonLivingObjectException>(() => timeline.DeleteFromTimeline());
+            Assert.DoesNotThrow(() => timeline.DeleteFromTimeline());
         }
 
         [Test]
@@ -311,7 +311,7 @@ namespace Apollo.Utilities.History
             var id = new HistoryId();
             var timeline = new ObjectTimeline<MockHistoryObject>(id, BuildStorageOfType, BuildObject);
 
-            Assert.Throws<ObjectHasNotBeenCreatedYetException>(() => timeline.DeleteFromTimeline());
+            Assert.DoesNotThrow(() => timeline.DeleteFromTimeline());
         }
 
         [Test]
