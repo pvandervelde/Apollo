@@ -115,7 +115,7 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         public Project(
             ITimeline timeline,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor, 
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             IPersistenceInformation persistenceInfo)
         {
             {
@@ -143,8 +143,8 @@ namespace Apollo.Core.Host.Projects
             {
                 var dataset = CreateDataset(
                     null,
-                    new DatasetCreationInformation 
-                        { 
+                    new DatasetCreationInformation
+                        {
                             CreatedOnRequestOf = DatasetCreator.System,
                             LoadFrom = new NullPersistenceInformation(),
                             CanBeDeleted = false,
@@ -360,7 +360,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
             }
 
@@ -373,7 +373,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="id">The ID of the dataset.</param>
         /// <returns>The dataset with the given ID if it exists; otherwise, <see langword="null" />.</returns>
         public IProxyDataset Dataset(DatasetId id)
-        { 
+        {
             IProxyDataset result = null;
             if (m_Datasets.Datasets.ContainsKey(id))
             {
@@ -397,7 +397,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => persistenceInfo);
             }
@@ -428,12 +428,12 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(
-                    m_Datasets.Datasets.ContainsKey(datasetToExport), 
-                    Resources.Exceptions_Messages_UnknownDataset_WithId, 
+                    m_Datasets.Datasets.ContainsKey(datasetToExport),
+                    Resources.Exceptions_Messages_UnknownDataset_WithId,
                     datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
             }
@@ -490,7 +490,7 @@ namespace Apollo.Core.Host.Projects
         /// <param name="parent">The parent.</param>
         /// <param name="newChild">The information required to create the new child.</param>
         /// <returns>The new child.</returns>
-        internal IProxyDataset CreateDataset(DatasetId parent, DatasetCreationInformation newChild)
+        public IProxyDataset CreateDataset(DatasetId parent, DatasetCreationInformation newChild)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
@@ -533,13 +533,24 @@ namespace Apollo.Core.Host.Projects
         {
             var id = new DatasetId();
             Action<DatasetId> cleanupAction = localId => DeleteDatasetAndChildren(localId, d => { });
+            var parameters = new DatasetConstructionParameters
+                {
+                    Id = id,
+                    Owner = this,
+                    DistributionPlanGenerator = m_DatasetDistributor,
+                    CreatedOnRequestOf = newChild.CreatedOnRequestOf,
+                    CanBecomeParent = newChild.CanBecomeParent,
+                    CanBeAdopted = newChild.CanBeAdopted,
+                    CanBeCopied = newChild.CanBeCopied,
+                    CanBeDeleted = newChild.CanBeDeleted,
+                    IsRoot = newChild.IsRoot,
+                    LoadFrom = newChild.LoadFrom,
+                    OnRemoval = cleanupAction,
+                };
+
             var newDataset = m_Timeline.AddToTimeline<DatasetProxy>(
                 DatasetProxy.Build,
-                this,
-                id,
-                newChild,
-                m_DatasetDistributor,
-                cleanupAction);
+                parameters);
 
             return newDataset;
         }
@@ -557,7 +568,7 @@ namespace Apollo.Core.Host.Projects
         /// Thrown when the dataset or one of its children cannot be deleted. The exception
         /// is thrown before any of the datasets are deleted.
         /// </exception>
-        internal void DeleteDatasetAndChildren(DatasetId dataset)
+        public void DeleteDatasetAndChildren(DatasetId dataset)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
@@ -629,7 +640,7 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         /// <param name="parent">The ID number of the parent dataset.</param>
         /// <returns>The collection of child datsets.</returns>
-        internal IEnumerable<DatasetProxy> Children(DatasetId parent)
+        public IEnumerable<DatasetProxy> Children(DatasetId parent)
         {
             {
                 Debug.Assert(!IsClosed, "The project should not be closed if we want to get the children of a dataset.");

@@ -73,10 +73,14 @@ namespace Apollo.Utilities.History
         /// </summary>
         public void Clear()
         {
+            var hadItems = Current.Count > 0;
             Current.Clear();
 
             Changes.Clear();
-            Changes.Add(new ClearListChange());
+            if (hadItems)
+            {
+                Changes.Add(new ClearListChange());
+            }
         }
 
         /// <summary>

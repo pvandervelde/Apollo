@@ -33,12 +33,17 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// The history index of the name field.
         /// </summary>
-        public const byte NameIndex = 0;
+        private const byte NameIndex = 0;
 
         /// <summary>
         /// The history index of the summary field.
         /// </summary>
-        public const byte SummaryIndex = 1;
+        private const byte SummaryIndex = 1;
+
+        /// <summary>
+        /// The history index of the IsLoaded field.
+        /// </summary>
+        private const byte LoadedLocationIndex = 2;
 
         /// <summary>
         /// Implements the operator ==.
@@ -110,11 +115,12 @@ namespace Apollo.Core.Host.Projects
             params object[] constructorArguments)
         {
             {
-                Debug.Assert(members.Count() == 2, "There should only be two members.");
+                Debug.Assert(members.Count() == 3, "There should only be three members.");
             }
 
             IVariableTimeline<string> name = null;
             IVariableTimeline<string> summary = null;
+            IVariableTimeline<NetworkIdentifier> loadedLocation = null;
             foreach (var member in members)
             {
                 if (member.Item1 == NameIndex)
@@ -129,45 +135,32 @@ namespace Apollo.Core.Host.Projects
                     continue;
                 }
 
+                if (member.Item1 == LoadedLocationIndex)
+                {
+                    loadedLocation = member.Item2 as IVariableTimeline<NetworkIdentifier>;
+                    continue;
+                }
+
                 throw new UnknownMemberException();
             }
 
             return new DatasetProxy(
-                constructorArguments[0] as Project,
-                constructorArguments[1] as DatasetId,
+                constructorArguments[0] as DatasetConstructionParameters,
                 historyId,
-                constructorArguments[2] as DatasetCreationInformation,
-                constructorArguments[3] as Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>>,
-                constructorArguments[4] as Action<DatasetId>,
                 name,
-                summary);
+                summary,
+                loadedLocation);
         }
 
         /// <summary>
-        /// The owner which stores all the data.
+        /// The constructor arguments.
         /// </summary>
-        private readonly Project m_Owner;
-
-        /// <summary>
-        /// The ID number of the dataset that is being mirrored.
-        /// </summary>
-        private readonly DatasetId m_DatasetId;
+        private readonly DatasetConstructionParameters m_ConstructorArgs;
 
         /// <summary>
         /// The ID used by the timeline to uniquely identify the current object.
         /// </summary>
         private readonly HistoryId m_HistoryId;
-
-        /// <summary>
-        /// The function which returns a <c>DistributionPlan</c> for a given
-        /// <c>DatasetRequest</c>.
-        /// </summary>
-        private readonly Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> m_DatasetDistributor;
-
-        /// <summary>
-        /// The function that handles the clean-up if the dataset is removed.
-        /// </summary>
-        private readonly Action<DatasetId> m_Cleanup;
 
         /// <summary>
         /// The name of the project.
@@ -182,14 +175,11 @@ namespace Apollo.Core.Host.Projects
         private readonly IVariableTimeline<string> m_Summary;
 
         /// <summary>
-        /// The object that describes how the dataset was persisted.
+        /// The information that describes if the dataset is loaded at a given point on the
+        /// timeline.
         /// </summary>
-        private readonly IPersistenceInformation m_LoadFrom;
-
-        /// <summary>
-        /// Indicates if the current dataset is the root dataset.
-        /// </summary>
-        private readonly bool m_IsRoot;
+        [FieldIndexForHistoryTracking(LoadedLocationIndex)]
+        private readonly IVariableTimeline<NetworkIdentifier> m_LoadedLocation;
 
         /// <summary>
         /// The data that describes the online state of the dataset.
@@ -209,37 +199,18 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetProxy"/> class.
         /// </summary>
-        /// <param name="owner">The project that owns the current dataset.</param>
-        /// <param name="id">The ID number of the dataset.</param>
+        /// <param name="constructorArgs">The object that holds all the constructor arguments that do not belong to the timeline.</param>
         /// <param name="historyId">The ID for use in the history system.</param>
-        /// <param name="constructionReason">The object describing why the dataset was created.</param>
-        /// <param name="distributor">
-        /// The function which returns a <see cref="DistributionPlan"/> for a given
-        /// <see cref="DatasetRequest"/>.
-        /// </param>
-        /// <param name="cleanup">The function that handles the clean-up if the dataset is removed.</param>
         /// <param name="name">The datastructure that stores the history information for the name of the dataset.</param>
         /// <param name="summary">The datastructure that stores the history information for the summary of the dataset.</param>
+        /// <param name="loadedLocation">
+        /// The datastructure that stores the history information indicating if the dataset is loaded at any point.
+        /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="owner"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="constructorArgs"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="historyId"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="constructionReason"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="CannotCreateDatasetWithoutCreatorException">
-        ///     Thrown if <paramref name="constructionReason"/> defines a creator as <see cref="DatasetCreator.None"/>.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown when <paramref name="distributor"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="cleanup"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="name"/> is <see langword="null" />.
@@ -247,47 +218,33 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="summary"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="loadedLocation"/> is <see langword="null" />.
+        /// </exception>
         private DatasetProxy(
-            Project owner,
-            DatasetId id, 
+            DatasetConstructionParameters constructorArgs,
             HistoryId historyId, 
-            DatasetCreationInformation constructionReason,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
-            Action<DatasetId> cleanup,
             IVariableTimeline<string> name,
-            IVariableTimeline<string> summary)
+            IVariableTimeline<string> summary,
+            IVariableTimeline<NetworkIdentifier> loadedLocation)
         {
             {
-                Lokad.Enforce.Argument(() => owner);
-                Lokad.Enforce.Argument(() => id);
-                Lokad.Enforce.Argument(() => constructionReason);
-                Lokad.Enforce.With<CannotCreateDatasetWithoutCreatorException>(
-                    constructionReason.CreatedOnRequestOf != DatasetCreator.None,
-                    Resources.Exceptions_Messages_CannotCreateDatasetWithoutCreator);
-                Lokad.Enforce.Argument(() => distributor);
-                Lokad.Enforce.Argument(() => cleanup);
+                Lokad.Enforce.Argument(() => constructorArgs);
+                Lokad.Enforce.Argument(() => historyId);
                 Lokad.Enforce.Argument(() => name);
                 Lokad.Enforce.Argument(() => summary);
+                Lokad.Enforce.Argument(() => loadedLocation);
             }
 
-            m_Owner = owner;
-            m_DatasetId = id;
-            m_DatasetDistributor = distributor;
-            CreatedBy = constructionReason.CreatedOnRequestOf;
-            CanBecomeParent = constructionReason.CanBecomeParent;
-            CanBeAdopted = constructionReason.CanBeAdopted;
-            CanBeCopied = constructionReason.CanBeCopied;
-            CanBeDeleted = constructionReason.CanBeDeleted;
-            m_IsRoot = constructionReason.IsRoot;
-            m_LoadFrom = constructionReason.LoadFrom;
-
-            m_Cleanup = cleanup;
+            m_ConstructorArgs = constructorArgs;
             m_HistoryId = historyId;
             m_Name = name;
             m_Summary = summary;
+            m_LoadedLocation = loadedLocation;
 
             m_Name.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnNameUpdate);
             m_Summary.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnSummaryUpdate);
+            m_LoadedLocation.OnExternalValueUpdate += new EventHandler<EventArgs>(HandleOnIsLoadedUpdate);
         }
 
         private void HandleOnNameUpdate(object sender, EventArgs e)
@@ -298,6 +255,50 @@ namespace Apollo.Core.Host.Projects
         private void HandleOnSummaryUpdate(object sender, EventArgs e)
         {
             RaiseOnSummaryChanged(Summary);
+        }
+
+        private void HandleOnIsLoadedUpdate(object sender, EventArgs e)
+        {
+            // See if the restored status still matches up with the online status of the dataset
+            // If not make sure that it does
+            if (m_LoadedLocation.Current != null)
+            {
+                if (m_Connection == null)
+                {
+                    // For now we go with the naive approach. Load on the same machine as last time
+                    // and if we can't find it then grab the first machine in the selection.
+                    // At some point we should make this a whole lot smarter but for now it'll do.
+                    var original = m_LoadedLocation.Current;
+                    Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector = 
+                        c =>
+                        {
+                            var selected = from suggestion in c
+                                           where suggestion.Plan.MachineToDistributeTo.Equals(original)
+                                           select suggestion;
+
+                            DistributionPlan plan = selected.Any()
+                                ? selected.First().Plan
+                                : c.Any()
+                                    ? c.First().Plan
+                                    : null;
+
+                            return new SelectedProposal(plan);
+                        };
+
+                    LoadOntoMachine(
+                        LoadingLocations.All,
+                        selector,
+                        new CancellationTokenSource().Token,
+                        false);
+                }
+            }
+            else 
+            {
+                if (m_Connection != null)
+                {
+                    UnloadFromMachine(false);
+                }
+            }
         }
 
         /// <summary>
@@ -319,11 +320,16 @@ namespace Apollo.Core.Host.Projects
         {
             m_Name.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnNameUpdate);
             m_Summary.OnExternalValueUpdate -= new EventHandler<EventArgs>(HandleOnSummaryUpdate);
-            
+
+            if (IsLoaded)
+            {
+                UnloadFromMachine();
+            }
+
             m_HasBeenDeleted = true;
             RaiseOnDeleted();
-            
-            m_Cleanup(m_DatasetId);
+
+            m_ConstructorArgs.OnRemoval(Id);
         }
 
         /// <summary>
@@ -334,7 +340,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_DatasetId;
+                return m_ConstructorArgs.Id;
             }
         }
 
@@ -343,8 +349,10 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public DatasetCreator CreatedBy
         {
-            get;
-            private set;
+            get
+            {
+                return m_ConstructorArgs.CreatedOnRequestOf;
+            }
         }
 
         /// <summary>
@@ -358,8 +366,10 @@ namespace Apollo.Core.Host.Projects
         /// </design>
         public bool CanBecomeParent
         {
-            get;
-            private set;
+            get
+            {
+                return m_ConstructorArgs.CanBecomeParent;
+            }
         }
 
         /// <summary>
@@ -368,8 +378,10 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public bool CanBeDeleted
         {
-            get;
-            private set;
+            get
+            {
+                return m_ConstructorArgs.CanBeDeleted;
+            }
         }
 
         /// <summary>
@@ -383,8 +395,10 @@ namespace Apollo.Core.Host.Projects
         /// </design>
         public bool CanBeAdopted
         {
-            get;
-            private set;
+            get
+            {
+                return m_ConstructorArgs.CanBeAdopted;
+            }
         }
 
         /// <summary>
@@ -393,8 +407,10 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public bool CanBeCopied
         {
-            get;
-            private set;
+            get
+            {
+                return m_ConstructorArgs.CanBeCopied;
+            }
         }
 
         /// <summary>
@@ -404,7 +420,18 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_LoadFrom;
+                return m_ConstructorArgs.LoadFrom;
+            }
+        }
+
+        /// <summary>
+        /// Gets the owner of the dataset.
+        /// </summary>
+        private IProject Owner
+        {
+            get
+            {
+                return m_ConstructorArgs.Owner;
             }
         }
 
@@ -462,7 +489,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return !m_Owner.IsClosed && !m_HasBeenDeleted;
+                return !Owner.IsClosed && !m_HasBeenDeleted;
             }
         }
 
@@ -475,7 +502,7 @@ namespace Apollo.Core.Host.Projects
         public void Delete()
         {
             {
-                Lokad.Enforce.With<ArgumentException>(!m_Owner.IsClosed, Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
+                Lokad.Enforce.With<ArgumentException>(!Owner.IsClosed, Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
             }
 
             // Note that after this action the current object is no longer 'valid'
@@ -485,7 +512,7 @@ namespace Apollo.Core.Host.Projects
             // Also note that the delete event is only called indirectly. The parent project
             // will handle that because the current dataset may be deleted because its parent
             // is deleted.
-            m_Owner.DeleteDatasetAndChildren(m_DatasetId);
+            Owner.DeleteDatasetAndChildren(Id);
         }
 
         /// <summary>
@@ -507,7 +534,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return !m_IsRoot && !m_IsLoading && !IsLoaded;
+                return !m_ConstructorArgs.IsRoot && !m_IsLoading && !IsLoaded;
             }
         }
 
@@ -561,12 +588,26 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Lokad.Enforce.With<ArgumentException>(
-                    !m_Owner.IsClosed, 
+                    !Owner.IsClosed, 
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Lokad.Enforce.With<CannotLoadDatasetWithoutLoadingLocationException>(
                     preferredLocation != LoadingLocations.None,
                     Resources.Exceptions_Messages_CannotLoadDatasetWithoutLoadingLocation);
                 Lokad.Enforce.Argument(() => machineSelector);
+            }
+
+            LoadOntoMachine(preferredLocation, machineSelector, token, true);
+        }
+
+        private void LoadOntoMachine(
+            LoadingLocations preferredLocation,
+            Func<IEnumerable<DistributionSuggestion>, SelectedProposal> machineSelector,
+            CancellationToken token,
+            bool storeLocation)
+        {
+            {
+                Debug.Assert(!Owner.IsClosed, "The owner should not be closed.");
+                Debug.Assert(preferredLocation != LoadingLocations.None, "A loading location should be specified.");
             }
 
             if (IsLoaded)
@@ -594,10 +635,12 @@ namespace Apollo.Core.Host.Projects
                         RelativeOnDiskExpansionAfterRunning = 2.0,
                     },
                 };
-                var suggestedPlans = m_DatasetDistributor(request, token);
+
+                var suggestedPlans = m_ConstructorArgs.DistributionPlanGenerator(request, token);
                 var selection = from plan in suggestedPlans
                                 select new DistributionSuggestion(plan);
 
+                // Ask the user where they would like their dataset loaded.
                 var selectedPlan = machineSelector(selection);
                 if (token.IsCancellationRequested)
                 {
@@ -628,6 +671,13 @@ namespace Apollo.Core.Host.Projects
                         RaiseOnLoaded();
                     },
                     TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnRanToCompletion);
+
+                // Have to do this now because as soon as we get out of this method we may be committing 
+                // information to the timeline. Note however that we are not done loading yet ....
+                if (storeLocation)
+                {
+                    m_LoadedLocation.Current = selectedPlan.Plan.MachineToDistributeTo;
+                }
             }
             finally
             {
@@ -650,6 +700,11 @@ namespace Apollo.Core.Host.Projects
         /// </summary>
         public void UnloadFromMachine()
         {
+            UnloadFromMachine(true);
+        }
+
+        private void UnloadFromMachine(bool storeUnloadData)
+        {
             if (!IsLoaded)
             {
                 return;
@@ -660,6 +715,11 @@ namespace Apollo.Core.Host.Projects
 
             m_Connection.Close();
             m_Connection = null;
+
+            if (storeUnloadData)
+            {
+                m_LoadedLocation.Current = null;
+            }
 
             RaiseOnUnloaded();
         }
@@ -672,7 +732,7 @@ namespace Apollo.Core.Host.Projects
         /// </returns>
         public IEnumerable<IProxyDataset> Children()
         {
-            var children = (from dataset in m_Owner.Children(m_DatasetId)
+            var children = (from dataset in Owner.Children(Id)
                             select dataset).ToList();
 
             return children;
@@ -698,16 +758,16 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Lokad.Enforce.With<ArgumentException>(
-                    !m_Owner.IsClosed,
+                    !Owner.IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Lokad.Enforce.With<DatasetCannotBecomeParentException>(
                     CanBecomeParent,
                     Resources.Exceptions_Messages_DatasetCannotBecomeParent_WithId,
-                    m_DatasetId);
+                    Id);
                 Lokad.Enforce.Argument(() => newChild);
             }
 
-            return m_Owner.CreateDataset(m_DatasetId, newChild);
+            return Owner.CreateDataset(Id, newChild);
         }
 
         /// <summary>
@@ -734,12 +794,12 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Lokad.Enforce.With<ArgumentException>(
-                    !m_Owner.IsClosed,
+                    !Owner.IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Lokad.Enforce.With<DatasetCannotBecomeParentException>(
                     CanBecomeParent,
                     Resources.Exceptions_Messages_DatasetCannotBecomeParent_WithId,
-                    m_DatasetId);
+                    Id);
                 Lokad.Enforce.Argument(() => newChildren);
                 Lokad.Enforce.With<ArgumentException>(
                     newChildren.Any(),
@@ -747,7 +807,7 @@ namespace Apollo.Core.Host.Projects
             }
 
             return (from child in newChildren
-                        let newDataset = m_Owner.CreateDataset(m_DatasetId, child)
+                    let newDataset = Owner.CreateDataset(Id, child)
                     select newDataset).ToList();
         }
 
@@ -932,7 +992,7 @@ namespace Apollo.Core.Host.Projects
                 return true;
             }
 
-            return other.m_DatasetId.Equals(m_DatasetId);
+            return other.Id.Equals(Id);
         }
 
         /// <summary>
@@ -988,7 +1048,7 @@ namespace Apollo.Core.Host.Projects
         /// </returns>
         public override int GetHashCode()
         {
-            return m_DatasetId.GetHashCode();
+            return Id.GetHashCode();
         }
 
         /// <summary>
@@ -999,7 +1059,7 @@ namespace Apollo.Core.Host.Projects
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "Dataset with ID: {0}", m_DatasetId);
+            return string.Format(CultureInfo.InvariantCulture, "Dataset with ID: {0}", Id);
         }
     }
 }

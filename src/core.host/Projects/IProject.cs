@@ -14,7 +14,7 @@ namespace Apollo.Core.Host.Projects
     /// <summary>
     /// Defines the interface for classes that handle project data.
     /// </summary>
-    internal interface IProject
+    internal interface IProject : IDatasetOwner
     {
         /// <summary>
         /// Gets the timeline for the project.

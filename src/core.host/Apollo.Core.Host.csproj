@@ -70,10 +70,12 @@
     <Compile Include="Projects\CannotLoadDatasetWithoutLoadingLocationException.cs" />
     <Compile Include="Projects\CannotUseProjectAfterClosingItException.cs" />
     <Compile Include="Projects\DatasetHistoryStorage.cs" />
+    <Compile Include="Projects\DatasetConstructionParameters.cs" />
     <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
     <Compile Include="Projects\DatasetNotLoadedException.cs" />
     <Compile Include="Projects\DatasetProxy.cs" />
     <Compile Include="Projects\IBidirectionalGraphHistory.cs" />
+    <Compile Include="Projects\IDatasetOwner.cs" />
     <Compile Include="Projects\IGraphHistoryChange.cs" />
     <Compile Include="Projects\IHoldSceneData.cs" />
     <Compile Include="Projects\IHoldSceneScheduleActionData.cs" />

@@ -105,8 +105,10 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtBeginOfTime())
             {
+                var hasLocalChanged = IsLastValueDifferent();
+                
                 m_Current = m_History.RollBackTo(marker);
-                if (m_HasChanged)
+                if (m_HasChanged || hasLocalChanged)
                 {
                     m_HasChanged = false;
                     IndicateExternalChangeToCurrentValue();
@@ -121,8 +123,10 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtBeginOfTime())
             {
+                var hasLocalChanged = IsLastValueDifferent();
+
                 m_Current = m_History.RollBackToStart();
-                if (m_HasChanged)
+                if (m_HasChanged || hasLocalChanged)
                 {
                     m_HasChanged = false;
                     IndicateExternalChangeToCurrentValue();
@@ -138,8 +142,10 @@ namespace Apollo.Utilities.History
         {
             if (!IsAtEndOfTime())
             {
+                var hasLocalChanged = IsLastValueDifferent();
+
                 m_Current = m_History.RollForwardTo(marker);
-                if (m_HasChanged)
+                if (m_HasChanged || hasLocalChanged)
                 {
                     m_HasChanged = false;
                     IndicateExternalChangeToCurrentValue();

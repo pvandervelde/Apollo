@@ -47,6 +47,11 @@ namespace Apollo.Core.Host.Projects
                 return new ValueHistory<string>();
             }
 
+            if (typeof(IVariableTimeline<NetworkIdentifier>).IsAssignableFrom(type))
+            {
+                return new ValueHistory<NetworkIdentifier>();
+            }
+
             throw new UnknownHistoryMemberTypeException();
         }
 
