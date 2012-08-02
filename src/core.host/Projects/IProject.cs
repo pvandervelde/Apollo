@@ -14,7 +14,7 @@ namespace Apollo.Core.Host.Projects
     /// <summary>
     /// Defines the interface for classes that handle project data.
     /// </summary>
-    internal interface IProject
+    internal interface IProject : IDatasetOwner
     {
         /// <summary>
         /// Gets the timeline for the project.
@@ -90,6 +90,13 @@ namespace Apollo.Core.Host.Projects
         /// The read-only view of the base dataset.
         /// </returns>
         IProxyDataset BaseDataset();
+
+        /// <summary>
+        /// Returns the dataset with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the dataset.</param>
+        /// <returns>The dataset with the given ID if it exists; otherwise, <see langword="null" />.</returns>
+        IProxyDataset Dataset(DatasetId id);
 
         /// <summary>
         /// Saves the project and all the datasets to the given stream.

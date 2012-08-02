@@ -75,15 +75,18 @@ namespace Apollo.UI.Common.Views.Datasets
             {
                 NewChildDatasetCommand = new AddChildDatasetCommand(projectFacade, dataset, timer),
                 DeleteDatasetCommand = new DeleteDatasetCommand(projectFacade, dataset, timer),
-                LoadDatasetCommand = CreateLoadDatasetCommand(dataset, timer),
-                UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(dataset, timer),
+                LoadDatasetCommand = CreateLoadDatasetCommand(projectFacade, dataset, timer),
+                UnloadDatasetCommand = new UnloadDatasetFromMachineCommand(projectFacade, dataset, timer),
                 ShowDetailViewCommand = new ShowDatasetDetailViewCommand(context, eventAggregator, dataset),
             };
 
             return result;
         }
 
-        private LoadDatasetOntoMachineCommand CreateLoadDatasetCommand(DatasetFacade dataset, Func<string, IDisposable> timer)
+        private LoadDatasetOntoMachineCommand CreateLoadDatasetCommand(
+            ILinkToProjects projectFacade, 
+            DatasetFacade dataset, 
+            Func<string, IDisposable> timer)
         {
             var context = m_Container.Resolve<IContextAware>();
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector =
@@ -106,6 +109,7 @@ namespace Apollo.UI.Common.Views.Datasets
                 };
 
             var command = m_Container.Resolve<LoadDatasetOntoMachineCommand>(
+                new TypedParameter(typeof(ILinkToProjects), projectFacade),
                 new TypedParameter(typeof(DatasetFacade), dataset),
                 new TypedParameter(typeof(Func<IEnumerable<DistributionSuggestion>, SelectedProposal>), selector),
                 new TypedParameter(typeof(SystemDiagnostics), timer));

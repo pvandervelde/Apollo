@@ -42,9 +42,10 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Called when the dataset should be unloaded.
         /// </summary>
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
         /// <param name="timer">The function that creates and stores timing intervals.</param>
-        private static void OnUnload(DatasetFacade dataset, Func<string, IDisposable> timer)
+        private static void OnUnload(ILinkToProjects projectFacade, DatasetFacade dataset, Func<string, IDisposable> timer)
         {
             // If there is no application facade, then we're in 
             // designer mode, or something else silly.
@@ -61,16 +62,18 @@ namespace Apollo.UI.Common.Commands
             using (var interval = timer("Unloading dataset"))
             {
                 dataset.UnloadFromMachine();
+                projectFacade.ActiveProject().History.Mark();
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnloadDatasetFromMachineCommand"/> class.
         /// </summary>
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
         /// <param name="timer">The function that creates and stores timing intervals.</param>
-        public UnloadDatasetFromMachineCommand(DatasetFacade dataset, Func<string, IDisposable> timer)
-            : base(obj => OnUnload(dataset, timer), obj => CanUnload(dataset))
+        public UnloadDatasetFromMachineCommand(ILinkToProjects projectFacade, DatasetFacade dataset, Func<string, IDisposable> timer)
+            : base(obj => OnUnload(projectFacade, dataset, timer), obj => CanUnload(dataset))
         {
         }
     }

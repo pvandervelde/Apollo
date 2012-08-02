@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Loaders;
@@ -31,6 +33,11 @@ namespace Apollo.Core.Host.Projects
     internal sealed partial class Project : IProject, ICanClose
     {
         /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
+
+        /// <summary>
         /// The function which returns a <c>DistributionPlan</c> for a given
         /// <c>DatasetRequest</c>.
         /// </summary>
@@ -40,6 +47,21 @@ namespace Apollo.Core.Host.Projects
         /// Stores the history of the project information.
         /// </summary>
         private readonly ProjectHistoryStorage m_ProjectInformation;
+
+        /// <summary>
+        /// The collection of all datasets that belong to the current project.
+        /// </summary>
+        private readonly DatasetHistoryStorage m_Datasets;
+
+        /// <summary>
+        /// The timeline for the current project.
+        /// </summary>
+        private readonly ITimeline m_Timeline;
+
+        /// <summary>
+        /// The ID number of the root dataset.
+        /// </summary>
+        private DatasetId m_RootDataset;
 
         /// <summary>
         /// A flag that indicates if the project has been closed.
@@ -93,7 +115,7 @@ namespace Apollo.Core.Host.Projects
         /// </exception>
         public Project(
             ITimeline timeline,
-            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor, 
+            Func<DatasetRequest, CancellationToken, IEnumerable<DistributionPlan>> distributor,
             IPersistenceInformation persistenceInfo)
         {
             {
@@ -107,8 +129,8 @@ namespace Apollo.Core.Host.Projects
             m_Timeline.OnRolledBack += new EventHandler<EventArgs>(OnTimelineRolledBack);
             m_Timeline.OnRolledForward += new EventHandler<EventArgs>(OnTimelineRolledForward);
 
-            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(BuildProjectHistoryStorage);
-            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(BuildDatasetHistoryStorage);
+            m_ProjectInformation = m_Timeline.AddToTimeline<ProjectHistoryStorage>(ProjectHistoryStorage.Build);
+            m_Datasets = m_Timeline.AddToTimeline<DatasetHistoryStorage>(DatasetHistoryStorage.Build);
 
             m_DatasetDistributor = distributor;
             if (persistenceInfo != null)
@@ -119,19 +141,20 @@ namespace Apollo.Core.Host.Projects
             // Create a root dataset if there isn't one
             if (m_RootDataset == null)
             {
-                m_RootDataset = CreateDataset(
+                var dataset = CreateDataset(
                     null,
-                    new DatasetCreationInformation 
-                        { 
+                    new DatasetCreationInformation
+                        {
                             CreatedOnRequestOf = DatasetCreator.System,
                             LoadFrom = new NullPersistenceInformation(),
                             CanBeDeleted = false,
                             CanBeCopied = false,
                             CanBecomeParent = true,
                             CanBeAdopted = false,
+                            IsRoot = true,
                         });
 
-                var dataset = m_Datasets.KnownDatasets[m_RootDataset];
+                m_RootDataset = dataset.Id;
                 dataset.Name = Resources.Projects_Dataset_RootDatasetName;
                 dataset.Summary = Resources.Projects_Dataset_RootDatasetSummary;
             }
@@ -139,9 +162,35 @@ namespace Apollo.Core.Host.Projects
             m_Timeline.SetCurrentAsDefault();
         }
 
+        private void OnTimelineRolledBack(object sender, EventArgs args)
+        {
+            ReloadProjectInformation();
+            ReloadProxiesDueToHistoryChange();
+        }
+
+        private void ReloadProjectInformation()
+        {
+            RaiseOnNameChanged(m_ProjectInformation.Name);
+            RaiseOnSummaryChanged(m_ProjectInformation.Summary);
+        }
+
+        private void ReloadProxiesDueToHistoryChange()
+        {
+            // this is not very nice but for now there is no way to determine if
+            // a dataset was created or deleted.
+            RaiseOnDatasetCreated();
+            RaiseOnDatasetDeleted();
+        }
+
+        private void OnTimelineRolledForward(object sender, EventArgs args)
+        {
+            ReloadProjectInformation();
+            ReloadProxiesDueToHistoryChange();
+        }
+
         private DatasetId RestoreFromStore(IPersistenceInformation persistenceInfo)
         {
-            // Restore the project here ...
+            // Restore the dataset here ...
             // Probably needs to be version safe etc.
             // Note that we also need to store the stream somewhere 
             // so that we always have access to it (which will probably be on disk)
@@ -156,6 +205,17 @@ namespace Apollo.Core.Host.Projects
             // - No parent may become a child of a child node
             //   OR better yet, no node may become a child after it is inserted
             return new DatasetId();
+        }
+
+        /// <summary>
+        /// Gets the timeline for the project.
+        /// </summary>
+        public ITimeline History
+        {
+            get
+            {
+                return m_Timeline;
+            }
         }
 
         /// <summary>
@@ -258,7 +318,7 @@ namespace Apollo.Core.Host.Projects
         {
             get
             {
-                return m_Datasets.KnownDatasets.Count;
+                return m_Datasets.Datasets.Count;
             }
         }
 
@@ -300,11 +360,27 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
             }
 
-            return ObtainProxyFor(m_RootDataset);
+            return m_Datasets.Datasets[m_RootDataset];
+        }
+
+        /// <summary>
+        /// Returns the dataset with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the dataset.</param>
+        /// <returns>The dataset with the given ID if it exists; otherwise, <see langword="null" />.</returns>
+        public IProxyDataset Dataset(DatasetId id)
+        {
+            IProxyDataset result = null;
+            if (m_Datasets.Datasets.ContainsKey(id))
+            {
+                result = m_Datasets.Datasets[id];
+            }
+
+            return result;
         }
 
         /// <summary>
@@ -321,7 +397,7 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => persistenceInfo);
             }
@@ -352,12 +428,12 @@ namespace Apollo.Core.Host.Projects
         {
             {
                 Enforce.With<CannotUseProjectAfterClosingItException>(
-                    !IsClosed, 
+                    !IsClosed,
                     Resources.Exceptions_Messages_CannotUseProjectAfterClosingIt);
                 Enforce.Argument(() => datasetToExport);
                 Enforce.With<UnknownDatasetException>(
-                    m_Datasets.KnownDatasets.ContainsKey(datasetToExport), 
-                    Resources.Exceptions_Messages_UnknownDataset_WithId, 
+                    m_Datasets.Datasets.ContainsKey(datasetToExport),
+                    Resources.Exceptions_Messages_UnknownDataset_WithId,
                     datasetToExport);
                 Enforce.Argument(() => persistenceInfo);
             }
@@ -389,17 +465,197 @@ namespace Apollo.Core.Host.Projects
             //        Technically we should abort the load
             lock (m_Lock)
             {
-                // Invalidate all datasets first.
-                m_DatasetProxies.Clear();
-
                 // Terminate all dataset applications
-                foreach (var online in m_Datasets.ActiveDatasets.Values)
+                foreach (var pair in m_Datasets.Datasets)
                 {
-                    CloseOnlineDataset(online);
+                    var dataset = pair.Value;
+                    if (dataset.IsLoaded)
+                    {
+                        CloseOnlineDataset(dataset);
+                    }
                 }
             }
 
             RaiseOnClosed();
+        }
+
+        private void CloseOnlineDataset(DatasetProxy info)
+        {
+            info.UnloadFromMachine();
+        }
+
+        /// <summary>
+        /// Creates a new datset as child of the given parent dataset.
+        /// </summary>
+        /// <param name="parent">The parent.</param>
+        /// <param name="newChild">The information required to create the new child.</param>
+        /// <returns>The new child.</returns>
+        public IProxyDataset CreateDataset(DatasetId parent, DatasetCreationInformation newChild)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
+                Debug.Assert(
+                    (parent == null) || ((parent != null) && m_Datasets.Datasets.ContainsKey(parent)),
+                    "The provided parent node does not exist.");
+                Debug.Assert(
+                    (parent == null) || ((parent != null) && m_Datasets.Datasets[parent].CanBecomeParent),
+                    "The given parent is not allowed to have children.");
+            }
+
+            var dataset = CreateNewDatasetProxy(newChild);
+
+            // When adding a new dataset there is no way we can create cycles because
+            // we can only add new children to parents, there is no way to link an
+            // existing node to the parent.
+            lock (m_Lock)
+            {
+                m_Datasets.Datasets.Add(dataset.Id, dataset);
+                m_Datasets.Graph.AddVertex(dataset.Id);
+            }
+
+            if (parent != null)
+            {
+                // Find the actual ID object that we have stored, the caller may have a copy
+                // of ID. Using a copy of the real ID might cause issues when connecting the
+                // graph so we only use the ID numbers that we have stored.
+                var realParent = m_Datasets.Datasets[parent].Id;
+                lock (m_Lock)
+                {
+                    m_Datasets.Graph.AddEdge(new Edge<DatasetId>(realParent, dataset.Id));
+                }
+            }
+
+            RaiseOnDatasetCreated();
+            return dataset;
+        }
+
+        private DatasetProxy CreateNewDatasetProxy(DatasetCreationInformation newChild)
+        {
+            var id = new DatasetId();
+            Action<DatasetId> cleanupAction = localId => DeleteDatasetAndChildren(localId, d => { });
+            var parameters = new DatasetConstructionParameters
+                {
+                    Id = id,
+                    Owner = this,
+                    DistributionPlanGenerator = m_DatasetDistributor,
+                    CreatedOnRequestOf = newChild.CreatedOnRequestOf,
+                    CanBecomeParent = newChild.CanBecomeParent,
+                    CanBeAdopted = newChild.CanBeAdopted,
+                    CanBeCopied = newChild.CanBeCopied,
+                    CanBeDeleted = newChild.CanBeDeleted,
+                    IsRoot = newChild.IsRoot,
+                    LoadFrom = newChild.LoadFrom,
+                    OnRemoval = cleanupAction,
+                };
+
+            var newDataset = m_Timeline.AddToTimeline<DatasetProxy>(
+                DatasetProxy.Build,
+                parameters);
+
+            return newDataset;
+        }
+
+        /// <summary>
+        /// Deletes the given dataset and all its children.
+        /// </summary>
+        /// <remarks>
+        /// The dataset and all its children will be deleted. If any of the datasets are
+        /// loaded onto a (remote) machine they will be unloaded just before being deleted.
+        /// No data will be saved.
+        /// </remarks>
+        /// <param name="dataset">The dataset that should be deleted.</param>
+        /// <exception cref="CannotDeleteDatasetException">
+        /// Thrown when the dataset or one of its children cannot be deleted. The exception
+        /// is thrown before any of the datasets are deleted.
+        /// </exception>
+        public void DeleteDatasetAndChildren(DatasetId dataset)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to create a new dataset.");
+            }
+
+            DeleteDatasetAndChildren(dataset, d => m_Timeline.RemoveFromTimeline(d.HistoryId));
+            RaiseOnDatasetDeleted();
+        }
+
+        private void DeleteDatasetAndChildren(DatasetId dataset, Action<DatasetProxy> onRemoval)
+        {
+            if (!m_Datasets.Datasets.ContainsKey(dataset))
+            {
+                return;
+            }
+
+            // Get all the datasets that need to be deleted
+            // make sure we do this in an ordered way. We need to 
+            // remove the children before we can remove a parent.
+            var datasetsToDelete = new Stack<DatasetId>();
+            datasetsToDelete.Push(dataset);
+
+            var nodesToProcess = new Queue<DatasetId>();
+            nodesToProcess.Enqueue(dataset);
+
+            while (nodesToProcess.Count > 0)
+            {
+                var node = nodesToProcess.Dequeue();
+
+                Debug.Assert(m_Datasets.Datasets.ContainsKey(node), "The dataset was in the graph but not in the collection.");
+                if (!m_Datasets.Datasets[node].CanBeDeleted)
+                {
+                    throw new CannotDeleteDatasetException();
+                }
+
+                var children = Children(node);
+                foreach (var child in children)
+                {
+                    nodesToProcess.Enqueue(child.Id);
+                    datasetsToDelete.Push(child.Id);
+                }
+            }
+
+            while (datasetsToDelete.Count > 0)
+            {
+                var datasetToDelete = datasetsToDelete.Pop();
+
+                var datasetObject = m_Datasets.Datasets[datasetToDelete];
+                if (datasetObject.IsLoaded)
+                {
+                    CloseOnlineDataset(datasetObject);
+                }
+
+                if (onRemoval != null)
+                {
+                    onRemoval(datasetObject);
+                }
+
+                lock (m_Lock)
+                {
+                    m_Datasets.Graph.RemoveVertex(datasetToDelete);
+                    m_Datasets.Datasets.Remove(datasetToDelete);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Returns the collection of children for a given dataset.
+        /// </summary>
+        /// <param name="parent">The ID number of the parent dataset.</param>
+        /// <returns>The collection of child datsets.</returns>
+        public IEnumerable<DatasetProxy> Children(DatasetId parent)
+        {
+            {
+                Debug.Assert(!IsClosed, "The project should not be closed if we want to get the children of a dataset.");
+            }
+
+            List<Edge<DatasetId>> outEdges;
+            lock (m_Lock)
+            {
+                outEdges = m_Datasets.Graph.OutEdges(parent).ToList();
+            }
+
+            var result = from outEdge in outEdges
+                         select m_Datasets.Datasets[outEdge.Target];
+
+            return result;
         }
     }
 }

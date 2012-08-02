@@ -105,7 +105,6 @@
     <Compile Include="Projects\DatasetIdTest.cs" />
     <Compile Include="Projects\DatasetLoadEventArgsTest.cs" />
     <Compile Include="Projects\DatasetNotLoadedExceptionTest.cs" />
-    <Compile Include="Projects\DatasetOfflineInformationTest.cs" />
     <Compile Include="Projects\DatasetProxyTest.cs" />
     <Compile Include="Projects\DatasetUnloadEventArgsTest.cs" />
     <Compile Include="Projects\ProjectBuilderTest.cs" />

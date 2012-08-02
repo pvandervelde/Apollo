@@ -158,7 +158,7 @@ namespace Apollo.Utilities.History
         /// <param name="constructorArguments">The arguments that are passed to the constructor.</param>
         /// <returns>The newly created object of type <typeparamref name="T"/>.</returns>
         public T AddToTimeline<T>(
-            Func<HistoryId, IEnumerable<Tuple<string, IStoreTimelineValues>>, object[], T> objectBuilder,
+            Func<HistoryId, IEnumerable<Tuple<byte, IStoreTimelineValues>>, object[], T> objectBuilder,
             params object[] constructorArguments)
             where T : class, IAmHistoryEnabled
         {
@@ -199,6 +199,9 @@ namespace Apollo.Utilities.History
             {
                 // The timeline exists but the object doesn't have a creation time. Thus the creation time
                 // must be the next marker. Hence we delete the object and then nuke the timeline.
+                var timeline = m_NonMarkedObjectTimelines[id];
+                timeline.DeleteFromTimeline();
+
                 m_NonMarkedObjectTimelines.Remove(id);
             }
         }

@@ -23,6 +23,11 @@ namespace Apollo.Core.Dataset.Scheduling
     internal sealed class ScheduleConditionStorage : IStoreScheduleConditions, IAmHistoryEnabled
     {
         /// <summary>
+        /// The history index of the storage field.
+        /// </summary>
+        private const byte StorageIndex = 0;
+
+        /// <summary>
         /// Maps the condition to the information describing the condition.
         /// </summary>
         private sealed class ConditionMap
@@ -77,17 +82,6 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Returns the name of the m_Conditions field.
-        /// </summary>
-        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-        /// <returns>The name of the field.</returns>
-        internal static string NameOfConditionsField()
-        {
-            return ReflectionExtensions.MemberName<ScheduleConditionStorage, IDictionaryTimelineStorage<ScheduleElementId, ConditionMap>>(
-                p => p.m_Conditions);
-        }
-
-        /// <summary>
         /// Creates a default schedule storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
@@ -105,7 +99,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <returns>The newly created instance.</returns>
         public static ScheduleConditionStorage BuildStorage(
             HistoryId id,
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
         {
             {
@@ -113,9 +107,9 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var pair = members.First();
-            if (!string.Equals(ScheduleConditionStorage.NameOfConditionsField(), pair.Item1, StringComparison.Ordinal))
+            if (pair.Item1 != StorageIndex)
             {
-                throw new UnknownMemberNameException();
+                throw new UnknownMemberException();
             }
 
             var schedules = pair.Item2 as IDictionaryTimelineStorage<ScheduleElementId, ConditionMap>;
@@ -125,6 +119,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The collection of schedule conditions.
         /// </summary>
+        [FieldIndexForHistoryTracking(StorageIndex)]
         private readonly IDictionaryTimelineStorage<ScheduleElementId, ConditionMap> m_Conditions;
 
         /// <summary>

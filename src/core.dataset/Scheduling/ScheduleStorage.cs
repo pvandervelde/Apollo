@@ -23,6 +23,11 @@ namespace Apollo.Core.Dataset.Scheduling
     internal sealed class ScheduleStorage : IStoreSchedules, IAmHistoryEnabled
     {
         /// <summary>
+        /// The history index of the storage field.
+        /// </summary>
+        private const byte StorageIndex = 0;
+
+        /// <summary>
         /// Maps the schedule to the information describing the schedule.
         /// </summary>
         private sealed class ScheduleMap
@@ -77,17 +82,6 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// Returns the name of the m_Schedules field.
-        /// </summary>
-        /// <remarks>FOR INTERNAL USE ONLY!</remarks>
-        /// <returns>The name of the field.</returns>
-        internal static string NameOfScheduleField()
-        {
-            return ReflectionExtensions.MemberName<ScheduleStorage, IDictionaryTimelineStorage<ScheduleId, ScheduleMap>>(
-                p => p.m_Schedules);
-        }
-
-        /// <summary>
         /// Creates a default storage that isn't linked to a timeline.
         /// </summary>
         /// <returns>The newly created instance.</returns>
@@ -105,7 +99,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <returns>The newly created instance.</returns>
         public static ScheduleStorage BuildStorage(
             HistoryId id,
-            IEnumerable<Tuple<string, IStoreTimelineValues>> members,
+            IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
         {
             {
@@ -113,9 +107,9 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var pair = members.First();
-            if (!string.Equals(ScheduleStorage.NameOfScheduleField(), pair.Item1, StringComparison.Ordinal))
+            if (pair.Item1 != StorageIndex)
             {
-                throw new UnknownMemberNameException();
+                throw new UnknownMemberException();
             }
 
             var schedules = pair.Item2 as IDictionaryTimelineStorage<ScheduleId, ScheduleMap>;
@@ -125,6 +119,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// The collection of schedules.
         /// </summary>
+        [FieldIndexForHistoryTracking(StorageIndex)]
         private readonly IDictionaryTimelineStorage<ScheduleId, ScheduleMap> m_Schedules;
 
         /// <summary>

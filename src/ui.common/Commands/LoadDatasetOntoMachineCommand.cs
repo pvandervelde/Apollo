@@ -45,12 +45,14 @@ namespace Apollo.UI.Common.Commands
         /// <summary>
         /// Called when the dataset should be loaded.
         /// </summary>
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
         /// <param name="selector">
         ///     The function that is used to select the most suitable machine to load the dataset onto.
         /// </param>
         /// <param name="timer">The function that creates and stores timing intervals.</param>
         private static void OnLoad(
+            ILinkToProjects projectFacade,
             DatasetFacade dataset,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
             Func<string, IDisposable> timer)
@@ -74,12 +76,14 @@ namespace Apollo.UI.Common.Commands
                     LoadingLocations.All,
                     selector,
                     source.Token);
+                projectFacade.ActiveProject().History.Mark();
             }
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LoadDatasetOntoMachineCommand"/> class.
         /// </summary>
+        /// <param name="projectFacade">The object that contains the methods that allow interaction with the project system.</param>
         /// <param name="dataset">The dataset.</param>
         /// <param name="selector">
         ///     The function that is used to select the most suitable machine to load the dataset onto.
@@ -88,10 +92,11 @@ namespace Apollo.UI.Common.Commands
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures",
             Justification = "To select an appropriate machine we need a function which requires nested generics.")]
         public LoadDatasetOntoMachineCommand(
+            ILinkToProjects projectFacade, 
             DatasetFacade dataset,
             Func<IEnumerable<DistributionSuggestion>, SelectedProposal> selector,
             Func<string, IDisposable> timer)
-            : base(obj => OnLoad(dataset, selector, timer), obj => CanLoad(dataset))
+            : base(obj => OnLoad(projectFacade, dataset, selector, timer), obj => CanLoad(dataset))
         {
         }
     }

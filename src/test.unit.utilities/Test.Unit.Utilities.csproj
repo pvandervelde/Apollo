@@ -83,8 +83,6 @@
     <Compile Include="History\NoFutureValueRegisteredExceptionTest.cs" />
     <Compile Include="History\NoPreviousValueRegisteredExceptionTest.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineExceptionTest.cs" />
-    <Compile Include="History\CannotRemoveNonLivingObjectExceptionTest.cs" />
-    <Compile Include="History\ObjectHasNotBeenCreatedYetExceptionTest.cs" />
     <Compile Include="History\ObjectTimelineTest.cs" />
     <Compile Include="History\ObjectUnknownToTimelineExceptionTest.cs" />
     <Compile Include="History\TimelineIdDoesNotMatchExceptionTest.cs" />

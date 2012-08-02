@@ -56,6 +56,7 @@
     <Compile Include="History\DictionaryHistoryBase.CollectionChange.cs" />
     <Compile Include="History\DictionaryHistoryBase.cs" />
     <Compile Include="History\DictionaryTimelineRegistrationSource.cs" />
+    <Compile Include="History\FieldIndexForHistoryTrackingAttribute.cs" />
     <Compile Include="History\HistoryId.cs" />
     <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
     <Compile Include="History\HistoryObjectListHistory.cs" />
@@ -70,7 +71,7 @@
     <Compile Include="History\IFollowObjectTimeline.cs" />
     <Compile Include="History\IHistoryChange.cs" />
     <Compile Include="History\IListTimelineStorage.cs" />
-    <Compile Include="History\INeedCleanupBeforeRemovalFromHistory.cs" />
+    <Compile Include="History\INeedNotificationOnHistoryChange.cs" />
     <Compile Include="History\InvalidTimeMarkerException.cs" />
     <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
     <Compile Include="History\IStoreTimelineValues.cs" />
@@ -84,8 +85,6 @@
     <Compile Include="History\NoFutureValueRegisteredException.cs" />
     <Compile Include="History\NoPreviousValueRegisteredException.cs" />
     <Compile Include="History\ObjectHasAlreadyBeenAddedToTheTimelineException.cs" />
-    <Compile Include="History\CannotRemoveNonLivingObjectException.cs" />
-    <Compile Include="History\ObjectHasNotBeenCreatedYetException.cs" />
     <Compile Include="History\ObjectTimeline.cs" />
     <Compile Include="History\ObjectUnknownToTimelineException.cs" />
     <Compile Include="History\Timeline.cs" />
@@ -96,7 +95,7 @@
     <Compile Include="History\UnableToPerformRollBackDueToBlockingDependencyException.cs" />
     <Compile Include="History\UnableToPerformRollForwardDueToBlockingDependencyException.cs" />
     <Compile Include="History\UnknownHistoryMemberTypeException.cs" />
-    <Compile Include="History\UnknownMemberNameException.cs" />
+    <Compile Include="History\UnknownMemberException.cs" />
     <Compile Include="History\UnknownTimeMarkerException.cs" />
     <Compile Include="History\UpdateFromHistoryDependency.cs" />
     <Compile Include="History\ValueAtTime.cs" />
