@@ -901,6 +901,7 @@
 
     <!-- The TabControl's Style. -->
     <Style
+        x:Key="ChromeLikeTabControl"
         TargetType="{x:Type TabControl}"
         x:Name="TabControl">
         <Setter
@@ -1087,6 +1088,7 @@
 
     <!-- The Style for TabItems (strips). -->
     <Style
+        x:Key="ChromeLikeTabItem"
         TargetType="{x:Type TabItem}">
         <Setter
             Property="FocusVisualStyle"

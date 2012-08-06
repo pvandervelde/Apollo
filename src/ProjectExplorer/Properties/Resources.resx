@@ -184,4 +184,49 @@
   <data name="MainWindow_Menu_Edit_Undo" xml:space="preserve">
     <value>_Undo</value>
   </data>
+  <data name="WelcomeView_Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="WelcomeView_ClosePageAfterProjectLoad" xml:space="preserve">
+    <value>Close page after project load</value>
+  </data>
+  <data name="WelcomeView_NewProject" xml:space="preserve">
+    <value>New Project</value>
+  </data>
+  <data name="WelcomeView_OpenProject" xml:space="preserve">
+    <value>Open project...</value>
+  </data>
+  <data name="WelcomeView_Recent" xml:space="preserve">
+    <value>Recent</value>
+  </data>
+  <data name="WelcomeView_ShowPageOnStartup" xml:space="preserve">
+    <value>Show page on startup</value>
+  </data>
+  <data name="Application_Name_FileOpen" xml:space="preserve">
+    <value>{0} - Apollo Project Explorer</value>
+  </data>
+  <data name="Application_Name_NoFileOpen" xml:space="preserve">
+    <value>Apollo Project Explorer</value>
+  </data>
+  <data name="MainWindow_Menu_View_StartPage" xml:space="preserve">
+    <value>S_tart page</value>
+  </data>
+  <data name="WelcomeView_Content_GettingStartedTab_Header" xml:space="preserve">
+    <value>Getting started</value>
+  </data>
+  <data name="WelcomeView_Content_GettingStarted_AboutDatasetsTab_Header" xml:space="preserve">
+    <value>Getting to grips with datasets</value>
+  </data>
+  <data name="WelcomeView_Content_GettingStarted_AboutProjectsTab_Header" xml:space="preserve">
+    <value>Starting a project</value>
+  </data>
+  <data name="WelcomeView_Content_GettingStarted_AboutScriptsTab_Header" xml:space="preserve">
+    <value>Scripting away</value>
+  </data>
+  <data name="WelcomeView_Content_LatestNewsTab_Header" xml:space="preserve">
+    <value>Latest news</value>
+  </data>
+  <data name="WelcomeView_ViewName" xml:space="preserve">
+    <value>Start page</value>
+  </data>
 </root>

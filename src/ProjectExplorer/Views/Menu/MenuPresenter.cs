@@ -5,9 +5,12 @@
 //-----------------------------------------------------------------------
 
 using Apollo.ProjectExplorer.Commands;
+using Apollo.ProjectExplorer.Views.Welcome;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Commands;
 using Autofac;
+using Microsoft.Practices.Prism.Commands;
+using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.ProjectExplorer.Views.Menu
 {
@@ -37,8 +40,8 @@ namespace Apollo.ProjectExplorer.Views.Menu
         {
             var context = m_Container.Resolve<IContextAware>();
             View.Model = new MenuModel(context);
-            View.Model.NewProjectCommand = m_Container.Resolve<NewProjectCommand>();
-            View.Model.OpenProjectCommand = m_Container.Resolve<OpenProjectCommand>();
+            View.Model.NewProjectCommand = CompositeCommandBuilder.CloseWelcomeViewAndInvokeCommand<NewProjectCommand>(m_Container);
+            View.Model.OpenProjectCommand = CompositeCommandBuilder.CloseWelcomeViewAndInvokeCommand<OpenProjectCommand>(m_Container);
             View.Model.SaveProjectCommand = m_Container.Resolve<SaveProjectCommand>();
             View.Model.CloseProjectCommand = m_Container.Resolve<CloseProjectCommand>();
             View.Model.ExitCommand = m_Container.Resolve<ExitCommand>();
@@ -46,6 +49,7 @@ namespace Apollo.ProjectExplorer.Views.Menu
             View.Model.UndoCommand = m_Container.Resolve<UndoCommand>();
             View.Model.RedoCommand = m_Container.Resolve<RedoCommand>();
 
+            View.Model.ShowStartPageCommand = m_Container.Resolve<ShowWelcomeViewTabCommand>();
             View.Model.ShowProjectsCommand = m_Container.Resolve<ShowProjectsTabCommand>();
             View.Model.ShowScriptsCommand = m_Container.Resolve<ShowScriptsTabCommand>();
             View.Model.AboutCommand = m_Container.Resolve<ShowAboutWindowCommand>();

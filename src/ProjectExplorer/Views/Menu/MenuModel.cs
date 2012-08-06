@@ -91,6 +91,15 @@ namespace Apollo.ProjectExplorer.Views.Menu
         }
 
         /// <summary>
+        /// Gets or sets the 'show start page' command.
+        /// </summary>
+        public ICommand ShowStartPageCommand
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
         /// Gets or sets the 'show projects' command.
         /// </summary>
         public ICommand ShowProjectsCommand

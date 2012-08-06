@@ -183,6 +183,10 @@
     <Compile Include="Feedback\ICollectFeedbackReports.cs" />
     <Compile Include="Feedback\ISendFeedbackReports.cs" />
     <Compile Include="IContextAware.cs" />
+    <Compile Include="Models\MostRecentlyUsed.cs" />
+    <Compile Include="Models\MostRecentlyUsedCollection.cs" />
+    <Compile Include="Models\MostRecentlyUsedCollectionConverter.cs" />
+    <Compile Include="Models\MostRecentlyUsedConverter.cs" />
     <Compile Include="Profiling\ITimingReport.cs" />
     <Compile Include="Profiling\TimingIntervalHelper.cs" />
     <Compile Include="Profiling\TimingReport.cs" />
@@ -328,6 +332,7 @@
       <DependentUpon>SelectScriptLanguageView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\Settings\MostRecentlyUsedModel.cs" />
     <Compile Include="WindowsVersionNumbers.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

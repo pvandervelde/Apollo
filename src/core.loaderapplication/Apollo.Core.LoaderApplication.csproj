@@ -27,8 +27,9 @@
     <Reference Include="NManto">
       <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
     </Reference>
-    <Reference Include="NSarrac.Framework">
-      <HintPath>..\..\packages\NSarrac\lib\NSarrac.Framework.dll</HintPath>
+    <Reference Include="NSarrac.Framework, Version=0.2.0.0, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NSarrac\lib\net40\NSarrac.Framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -34,6 +34,11 @@ namespace Apollo.ProjectExplorer.Views.Menu
         private static readonly RoutedCommand s_RedoCommand = new RoutedCommand();
 
         /// <summary>
+        /// The routed command used to show the start page tab.
+        /// </summary>
+        private static readonly RoutedCommand s_ShowStartPageCommand = new RoutedCommand();
+
+        /// <summary>
         /// The routed command used to show the projects tab.
         /// </summary>
         private static readonly RoutedCommand s_ShowProjectsCommand = new RoutedCommand();
@@ -111,6 +116,15 @@ namespace Apollo.ProjectExplorer.Views.Menu
 
         private void BindViewMenuCommands()
         {
+            // Bind the start page command
+            {
+                var cb = new CommandBinding(s_ShowStartPageCommand, CommandShowStartPageExecuted, CommandShowStartPageCanExecute);
+                CommandBindings.Add(cb);
+
+                miViewStartPage.Command = s_ShowStartPageCommand;
+                miViewStartPage.CommandTarget = this;
+            }
+
             // Bind the projects command
             {
                 var cb = new CommandBinding(s_ShowProjectsCommand, CommandShowProjectsExecuted, CommandShowProjectsCanExecute);
@@ -243,6 +257,22 @@ namespace Apollo.ProjectExplorer.Views.Menu
             // given that we're about to exit from the application. This means that
             // the profiler might be destroyed halfway the timing process.
             Model.ExitCommand.Execute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
+        private void CommandShowStartPageCanExecute(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.Handled = true;
+            e.CanExecute = Model.ShowStartPageCommand.CanExecute(null);
+        }
+
+        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
+            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
+        private void CommandShowStartPageExecuted(object sender, ExecutedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            Model.ShowStartPageCommand.Execute(null);
         }
 
         [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",

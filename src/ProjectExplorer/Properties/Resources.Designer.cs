@@ -89,6 +89,24 @@ namespace Apollo.ProjectExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} - Apollo Project Explorer.
+        /// </summary>
+        internal static string Application_Name_FileOpen {
+            get {
+                return ResourceManager.GetString("Application_Name_FileOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apollo Project Explorer.
+        /// </summary>
+        internal static string Application_Name_NoFileOpen {
+            get {
+                return ResourceManager.GetString("Application_Name_NoFileOpen", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified argument was not inside the valid range..
         /// </summary>
         internal static string Exceptions_Messages_ArgumentOutOfRange {
@@ -242,6 +260,15 @@ namespace Apollo.ProjectExplorer.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to S_tart page.
+        /// </summary>
+        internal static string MainWindow_Menu_View_StartPage {
+            get {
+                return ResourceManager.GetString("MainWindow_Menu_View_StartPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to _Window.
         /// </summary>
         internal static string MainWindow_Menu_Window {
@@ -256,6 +283,114 @@ namespace Apollo.ProjectExplorer.Properties {
         internal static string MainWindow_Title {
             get {
                 return ResourceManager.GetString("MainWindow_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close page after project load.
+        /// </summary>
+        internal static string WelcomeView_ClosePageAfterProjectLoad {
+            get {
+                return ResourceManager.GetString("WelcomeView_ClosePageAfterProjectLoad", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting to grips with datasets.
+        /// </summary>
+        internal static string WelcomeView_Content_GettingStarted_AboutDatasetsTab_Header {
+            get {
+                return ResourceManager.GetString("WelcomeView_Content_GettingStarted_AboutDatasetsTab_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Starting a project.
+        /// </summary>
+        internal static string WelcomeView_Content_GettingStarted_AboutProjectsTab_Header {
+            get {
+                return ResourceManager.GetString("WelcomeView_Content_GettingStarted_AboutProjectsTab_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scripting away.
+        /// </summary>
+        internal static string WelcomeView_Content_GettingStarted_AboutScriptsTab_Header {
+            get {
+                return ResourceManager.GetString("WelcomeView_Content_GettingStarted_AboutScriptsTab_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Getting started.
+        /// </summary>
+        internal static string WelcomeView_Content_GettingStartedTab_Header {
+            get {
+                return ResourceManager.GetString("WelcomeView_Content_GettingStartedTab_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Latest news.
+        /// </summary>
+        internal static string WelcomeView_Content_LatestNewsTab_Header {
+            get {
+                return ResourceManager.GetString("WelcomeView_Content_LatestNewsTab_Header", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Project.
+        /// </summary>
+        internal static string WelcomeView_NewProject {
+            get {
+                return ResourceManager.GetString("WelcomeView_NewProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open project....
+        /// </summary>
+        internal static string WelcomeView_OpenProject {
+            get {
+                return ResourceManager.GetString("WelcomeView_OpenProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Recent.
+        /// </summary>
+        internal static string WelcomeView_Recent {
+            get {
+                return ResourceManager.GetString("WelcomeView_Recent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show page on startup.
+        /// </summary>
+        internal static string WelcomeView_ShowPageOnStartup {
+            get {
+                return ResourceManager.GetString("WelcomeView_ShowPageOnStartup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string WelcomeView_Start {
+            get {
+                return ResourceManager.GetString("WelcomeView_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start page.
+        /// </summary>
+        internal static string WelcomeView_ViewName {
+            get {
+                return ResourceManager.GetString("WelcomeView_ViewName", resourceCulture);
             }
         }
     }
