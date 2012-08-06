@@ -5,21 +5,21 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Apollo.ProjectExplorer.Views.Welcome;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
-using Apollo.UI.Common.Views.Scripting;
 using Microsoft.Practices.Prism.Commands;
 using Microsoft.Practices.Prism.Events;
 
 namespace Apollo.ProjectExplorer.Commands
 {
     /// <summary>
-    /// Handles the showing of the scripts tab.
+    /// Handles the showing of the welcome page tab.
     /// </summary>
-    internal sealed class ShowScriptsTabCommand : DelegateCommand<object>
+    internal sealed class ShowWelcomeViewTabCommand : DelegateCommand<object>
     {
         /// <summary>
-        /// Determines if the script tab can be opened.
+        /// Determines if the tab can be opened.
         /// </summary>
         /// <returns>
         /// <see langword="true" /> if the tab can be opened; otherwise, <see langword="false" />.
@@ -28,12 +28,12 @@ namespace Apollo.ProjectExplorer.Commands
             Justification = "Documentation can start with a language keyword")]
         private static bool CanShowTab()
         {
-            // Can always open a new script
+            // Can always open the welcome page
             return true;
         }
 
         /// <summary>
-        /// Called when the command is executed.
+        /// Opens the tab.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
@@ -41,17 +41,17 @@ namespace Apollo.ProjectExplorer.Commands
         {
             eventAggregator.GetEvent<ShowViewEvent>().Publish(
                 new ShowViewRequest(
-                    typeof(ScriptPresenter),
+                    typeof(WelcomePresenter),
                     CommonRegionNames.Content,
-                    new ScriptParameter(context)));
+                    new WelcomeParameter(context)));
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ShowScriptsTabCommand"/> class.
+        /// Initializes a new instance of the <see cref="ShowWelcomeViewTabCommand"/> class.
         /// </summary>
         /// <param name="context">The context that is used to execute actions on the UI thread.</param>
         /// <param name="eventAggregator">The event aggregator.</param>
-        public ShowScriptsTabCommand(IContextAware context, IEventAggregator eventAggregator)
+        public ShowWelcomeViewTabCommand(IContextAware context, IEventAggregator eventAggregator)
             : base(obj => ShowTab(context, eventAggregator), obj => CanShowTab())
         {
         }

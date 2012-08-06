@@ -43,8 +43,10 @@
     <Reference Include="PresentationFramework.Aero" />
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Management" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core">
@@ -80,8 +82,10 @@
     <Compile Include="..\utilities.srconly\ExceptionHandling\ExceptionFilter.cs">
       <Link>Utilities\ExceptionFilter.cs</Link>
     </Compile>
+    <Compile Include="Commands\ShowWelcomeViewTabCommand.cs" />
     <Compile Include="Converters\ModelCollectionToTabItemsConverter.cs" />
     <Compile Include="Utilities\StepBasedProgressTracker.cs" />
+    <Compile Include="Views\CompositeCommandBuilder.cs" />
     <Compile Include="Views\StatusBar\IStatusBarView.cs" />
     <Compile Include="Views\StatusBar\StatusBarModel.cs" />
     <Compile Include="Views\StatusBar\StatusBarParameter.cs" />
@@ -89,6 +93,18 @@
     <Compile Include="Views\StatusBar\StatusBarView.xaml.cs">
       <DependentUpon>StatusBarView.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Welcome\IWelcomeView.cs" />
+    <Compile Include="Views\Welcome\WelcomeModel.cs" />
+    <Compile Include="Views\Welcome\WelcomeParameter.cs" />
+    <Compile Include="Views\Welcome\WelcomePresenter.cs" />
+    <Compile Include="Views\Welcome\WelcomeView.xaml.cs">
+      <DependentUpon>WelcomeView.xaml</DependentUpon>
+    </Compile>
+    <Page Include="..\ui.common\Styles\ButtonStyles.xaml">
+      <Link>Styles\ButtonStyles.xaml</Link>
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -235,7 +251,19 @@
     <Compile Include="Views\Shell\ShellWindow.xaml.cs">
       <DependentUpon>ShellWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="Styles\ChromeTabControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Styles\FlatTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\StatusBar\StatusBarView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Welcome\WelcomeView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -269,10 +297,6 @@
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Styles\TabControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Views\About\AboutWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -310,6 +334,7 @@
   <ItemGroup>
     <None Include="Resources\AboutBanner.png" />
   </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

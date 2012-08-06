@@ -12,9 +12,11 @@ using System.Windows;
 using Apollo.Core.Host;
 using Apollo.Core.Host.UserInterfaces.Application;
 using Apollo.Core.Host.UserInterfaces.Projects;
+using Apollo.ProjectExplorer.Properties;
 using Apollo.ProjectExplorer.Views.Menu;
 using Apollo.ProjectExplorer.Views.Shell;
 using Apollo.ProjectExplorer.Views.StatusBar;
+using Apollo.ProjectExplorer.Views.Welcome;
 using Apollo.UI.Common;
 using Apollo.UI.Common.Events;
 using Apollo.UI.Common.Events.Listeners;
@@ -68,6 +70,11 @@ namespace Apollo.ProjectExplorer
         private readonly bool m_IsProfiling;
 
         /// <summary>
+        /// A flag that indicates if the application should show the welcome page on start-up.
+        /// </summary>
+        private readonly bool m_ShowWelcomePage;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ProjectExplorerModule"/> class.
         /// </summary>
         /// <param name="container">The IOC container that will hold the references.</param>
@@ -82,6 +89,7 @@ namespace Apollo.ProjectExplorer
             m_Container = container;
             m_ResetEvent = resetEvent;
             m_IsProfiling = ConfigurationHelpers.ShouldBeProfiling();
+            m_ShowWelcomePage = Settings.Default.ShowWelcomePageOnStartup;
         }
 
         #region Implementation of IModule
@@ -266,6 +274,15 @@ namespace Apollo.ProjectExplorer
                         typeof(ProfilePresenter),
                         CommonRegionNames.StatusBarProfilerReport,
                         new ProfileParameter(m_Container.Resolve<IContextAware>())));
+            }
+
+            if (m_ShowWelcomePage)
+            {
+                showViewEvent.Publish(
+                    new ShowViewRequest(
+                        typeof(WelcomePresenter),
+                        CommonRegionNames.Content,
+                        new WelcomeParameter(m_Container.Resolve<IContextAware>())));
             }
 
             ActivateProjectRegions();
