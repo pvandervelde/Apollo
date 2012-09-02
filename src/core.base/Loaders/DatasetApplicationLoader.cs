@@ -5,14 +5,15 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
-using Lokad;
 
 namespace Apollo.Core.Base.Loaders
 {
@@ -36,6 +37,27 @@ namespace Apollo.Core.Base.Loaders
             = new DatasetTrackingJob();
 
         /// <summary>
+        /// The object that provides the diagnostics methods for the system.
+        /// </summary>
+        private readonly SystemDiagnostics m_Diagnostics;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DatasetApplicationLoader"/> class.
+        /// </summary>
+        /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
+        /// </exception>
+        public DatasetApplicationLoader(SystemDiagnostics diagnostics)
+        {
+            {
+                Lokad.Enforce.Argument(() => diagnostics);
+            }
+
+            m_Diagnostics = diagnostics;
+        }
+
+        /// <summary>
         /// Loads the dataset into an external application and returns when the dataset application has started.
         /// </summary>
         /// <param name="ownerConnection">
@@ -48,10 +70,17 @@ namespace Apollo.Core.Base.Loaders
         public EndpointId LoadDataset(ChannelConnectionInformation ownerConnection)
         {
             {
-                Enforce.Argument(() => ownerConnection);
+                Lokad.Enforce.Argument(() => ownerConnection);
             }
 
-            var fullFilePath = Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), DatasetApplicationFileName);
+            var deploymentDir = DeployLocation();
+            m_Diagnostics.Log(
+                LogSeverityProxy.Debug,
+                string.Format(CultureInfo.InvariantCulture, "Deploying to: {0}", deploymentDir));
+
+            DeployApplication(deploymentDir);
+
+            var fullFilePath = Path.Combine(deploymentDir, DatasetApplicationFileName);
             var arguments = string.Format(
                 CultureInfo.InvariantCulture,
                 @"--host={0} --channeltype=""{1}"" --channeluri={2}",
@@ -87,7 +116,7 @@ namespace Apollo.Core.Base.Loaders
 
                 // Set the working directory to something sane. Mostly the
                 // directory of the file that we're trying to read.
-                WorkingDirectory = Directory.GetCurrentDirectory(),
+                WorkingDirectory = deploymentDir,
             };
 
             var exec = new Process();
@@ -98,6 +127,100 @@ namespace Apollo.Core.Base.Loaders
             s_ProcessTrackingJob.LinkChildProcessToJob(exec);
 
             return exec.CreateEndpointIdForProcess();
+        }
+
+        private string DeployLocation()
+        {
+            const string baseDeployPath = @"apollo.core.dataset";
+            var baseDirectory = Path.Combine(Path.GetTempPath(), baseDeployPath);
+            if (!Directory.Exists(baseDirectory))
+            {
+                Directory.CreateDirectory(baseDirectory);
+            }
+
+            string deployPath = baseDirectory;
+            while (Directory.Exists(deployPath))
+            {
+                var subPath = Path.GetRandomFileName();
+                deployPath = Path.Combine(baseDirectory, subPath);
+            }
+
+            Directory.CreateDirectory(deployPath);
+            return deployPath;
+        }
+
+        private void DeployApplication(string deployDirectory)
+        {
+            const string exeFileExtension = "exe";
+            const string configFileExtension = "exe.config";
+            const string assemblyFileExtension = "dll";
+
+            var executables = new List<string>
+                {
+                    "Apollo.Core.Dataset",
+                };
+
+            var assemblies = new List<string>
+                {
+                    "Apollo.Core.Base",
+                    "Apollo.Core.Extensions",
+                    "Apollo.Utilities",
+                    "Autofac",
+                    "Castle.Core",
+                    "Lokad.Shared",
+                    "Mono.Options",
+                    "NLog",
+                    "NManto",
+                    "NSarrac.Framework",
+                    "QuickGraph",
+                    "System.Reactive",
+                };
+
+            var localPath = Assembly.GetExecutingAssembly().LocalDirectoryPath();
+
+            // copy all the application executables and assemblies
+            var assemblyFiles = from assemblyFile in assemblies
+                                select string.Format("{0}.{1}", assemblyFile, assemblyFileExtension);
+
+            var exeFiles = from exeFile in executables
+                           from file in new[] 
+                            {
+                                string.Format("{0}.{1}", exeFile, exeFileExtension),
+                                string.Format("{0}.{1}", exeFile, configFileExtension),
+                            }
+                           select file;
+
+            var filesToDeploy = assemblyFiles.Append(exeFiles);
+            foreach (var file in filesToDeploy)
+            {
+                var localFile = Path.Combine(localPath, file);
+                var deployedFile = Path.Combine(deployDirectory, file);
+
+                m_Diagnostics.Log(
+                    LogSeverityProxy.Debug,
+                    string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
+                File.Copy(localFile, deployedFile);
+            }
+
+#if DEBUG
+            // Copy the PDB files if we're in DEBUG mode
+            const string debugFileExtension = "pdb";
+
+            var debugFiles = from file in assemblies.Append(executables)
+                             select string.Format("{0}.{1}", file, debugFileExtension);
+            foreach (var file in debugFiles)
+            {
+                var localFile = Path.Combine(localPath, file);
+                var deployedFile = Path.Combine(deployDirectory, file);
+                if (File.Exists(localFile))
+                {
+                    m_Diagnostics.Log(
+                        LogSeverityProxy.Debug,
+                        string.Format(CultureInfo.InvariantCulture, "Deploying {1} to: {0}", file, deployedFile));
+                    File.Copy(localFile, deployedFile);
+                }
+            }
+#endif
         }
     }
 }
