@@ -28,7 +28,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public static ISerializedType FromType(Type type)
         {
-            return new SerializedType(type.AssemblyQualifiedName);
+            return new SerializedType(type.FullName, type.AssemblyQualifiedName);
         }
 
         /// <summary>

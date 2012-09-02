@@ -197,7 +197,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                 string.Format(
                     CultureInfo.InvariantCulture,
                     "Received request to execute command: {0}.{1}",
-                    invocation.Type,
+                    invocation.Type.FullName,
                     invocation.MemberName));
 
             Task result = null;
@@ -297,7 +297,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
                     string.Format(
                         CultureInfo.InvariantCulture,
                         "Error while invoking command {0}.{1}. Exception is: {2}",
-                        msg.Invocation.Type,
+                        msg.Invocation.Type.FullName,
                         msg.Invocation.MemberName,
                         e));
                 m_SendMessage(msg.OriginatingEndpoint, new FailureMessage(m_Current, msg.Id));

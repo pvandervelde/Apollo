@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Communication.Messages
         public void Create()
         {
             var id = new EndpointId("endpoint");
-            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var notification = new SerializedEvent(new SerializedType("a", "a"), "b");
             var msg = new UnregisterFromNotificationMessage(id, notification);
 
             Assert.AreSame(id, msg.OriginatingEndpoint);
@@ -29,7 +29,7 @@ namespace Apollo.Core.Base.Communication.Messages
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");
-            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var notification = new SerializedEvent(new SerializedType("a", "a"), "b");
             var msg = new UnregisterFromNotificationMessage(id, notification);
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
