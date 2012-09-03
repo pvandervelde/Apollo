@@ -7,6 +7,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using Lokad;
 using NLog;
 
@@ -128,9 +129,18 @@ namespace Apollo.Utilities.Logging
             m_Logger = m_Factory.GetLogger(template.Name);
 
             var separationLine = "============================================================================";
-            var openingText = string.Format(CultureInfo.InvariantCulture, "Starting {0} logger.", template.Name);
             m_Logger.Info(separationLine);
-            m_Logger.Info(openingText);
+
+            var openingText = string.Format(CultureInfo.InvariantCulture, "Starting {0} logger.", template.Name);
+            m_Logger.Info(template.Translate(new LogMessage(LevelToLog.Info, openingText)));
+
+            var versionInfoText = 
+                string.Format(
+                    CultureInfo.InvariantCulture, 
+                    "{0} - {1}",
+                    Assembly.GetEntryAssembly().GetName().Name,
+                    Assembly.GetEntryAssembly().GetName().Version);
+            m_Logger.Info(template.Translate(new LogMessage(LevelToLog.Info, versionInfoText)));
         }
 
         /// <summary>

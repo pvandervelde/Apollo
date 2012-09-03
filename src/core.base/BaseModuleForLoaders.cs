@@ -30,6 +30,7 @@ namespace Apollo.Core.Base
             base.Load(builder);
 
             builder.Register(c => new DatasetApplicationLoader(
+                    c.Resolve<IApplicationConstants>(),
                     c.Resolve<SystemDiagnostics>()))
                 .As<IApplicationLoader>();
 

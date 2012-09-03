@@ -37,6 +37,11 @@ namespace Apollo.Core.Base.Loaders
             = new DatasetTrackingJob();
 
         /// <summary>
+        /// The object that stores the application wide constants.
+        /// </summary>
+        private readonly IApplicationConstants m_ApplicationConstants;
+
+        /// <summary>
         /// The object that provides the diagnostics methods for the system.
         /// </summary>
         private readonly SystemDiagnostics m_Diagnostics;
@@ -44,16 +49,22 @@ namespace Apollo.Core.Base.Loaders
         /// <summary>
         /// Initializes a new instance of the <see cref="DatasetApplicationLoader"/> class.
         /// </summary>
+        /// <param name="applicationConstants">The object that stores the application wide constants.</param>
         /// <param name="diagnostics">The object that provides the diagnostics methods for the system.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="applicationConstants"/> is <see langword="null" />.
+        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="diagnostics"/> is <see langword="null" />.
         /// </exception>
-        public DatasetApplicationLoader(SystemDiagnostics diagnostics)
+        public DatasetApplicationLoader(IApplicationConstants applicationConstants, SystemDiagnostics diagnostics)
         {
             {
+                Lokad.Enforce.Argument(() => applicationConstants);
                 Lokad.Enforce.Argument(() => diagnostics);
             }
 
+            m_ApplicationConstants = applicationConstants;
             m_Diagnostics = diagnostics;
         }
 
@@ -131,18 +142,19 @@ namespace Apollo.Core.Base.Loaders
 
         private string DeployLocation()
         {
-            const string baseDeployPath = @"apollo.core.dataset";
-            var baseDirectory = Path.Combine(Path.GetTempPath(), baseDeployPath);
-            if (!Directory.Exists(baseDirectory))
+            var companyPath = Path.Combine(Path.GetTempPath(), m_ApplicationConstants.CompanyName);
+            var productPath = Path.Combine(companyPath, m_ApplicationConstants.ApplicationName);
+            var versionPath = Path.Combine(productPath, m_ApplicationConstants.ApplicationCompatibilityVersion.ToString(2));
+            if (!Directory.Exists(versionPath))
             {
-                Directory.CreateDirectory(baseDirectory);
+                Directory.CreateDirectory(versionPath);
             }
 
-            string deployPath = baseDirectory;
+            string deployPath = versionPath;
             while (Directory.Exists(deployPath))
             {
                 var subPath = Path.GetRandomFileName();
-                deployPath = Path.Combine(baseDirectory, subPath);
+                deployPath = Path.Combine(versionPath, subPath);
             }
 
             Directory.CreateDirectory(deployPath);

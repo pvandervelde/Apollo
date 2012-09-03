@@ -84,7 +84,12 @@ namespace Apollo.Utilities
         private static void RegisterLoggers(ContainerBuilder builder)
         {
             builder.Register(c => LoggerBuilder.ForFile(
-                    Path.Combine(c.Resolve<IFileConstants>().LogPath(), DefaultInfoFileName),
+                    Path.Combine(
+                        c.Resolve<IFileConstants>().LogPath(), 
+                        string.Format(
+                            CultureInfo.InvariantCulture,
+                            DefaultInfoFileName,
+                            Process.GetCurrentProcess().Id)),
                     new DebugLogTemplate(() => DateTimeOffset.Now)))
                 .As<ILogger>()
                 .SingleInstance();
