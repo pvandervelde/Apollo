@@ -16,7 +16,6 @@ using System.Threading.Tasks;
 using Apollo.Core.Base.Communication.Messages;
 using Apollo.Core.Base.Properties;
 using Apollo.Utilities;
-using Lokad;
 using NManto;
 
 namespace Apollo.Core.Base.Communication
@@ -41,8 +40,8 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// The collection of <see cref="IChannelType"/> objects which refer to a communication.
         /// </summary>
-        private readonly Dictionary<Type, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_OpenConnections =
-            new Dictionary<Type, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>>();
+        private readonly Dictionary<Type, Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_OpenConnections =
+            new Dictionary<Type, Tuple<ICommunicationChannel, IDirectIncomingMessages>>();
 
         /// <summary>
         /// The ID number of the current endpoint.
@@ -59,7 +58,7 @@ namespace Apollo.Core.Base.Communication
         /// a <see cref="IDirectIncomingMessages"/> which belong together. The return values
         /// are based on the type of the <see cref="IChannelType"/> for the channel.
         /// </summary>
-        private readonly Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
+        private readonly Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> m_ChannelBuilder;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -91,13 +90,13 @@ namespace Apollo.Core.Base.Communication
         /// </exception>
         public CommunicationLayer(
             IEnumerable<IDiscoverOtherServices> discoverySources,
-            Func<Type, EndpointId, System.Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
+            Func<Type, EndpointId, Tuple<ICommunicationChannel, IDirectIncomingMessages>> channelBuilder,
             SystemDiagnostics systemDiagnostics)
         {
             {
-                Enforce.Argument(() => discoverySources);
-                Enforce.Argument(() => channelBuilder);
-                Enforce.Argument(() => systemDiagnostics);
+                Lokad.Enforce.Argument(() => discoverySources);
+                Lokad.Enforce.Argument(() => channelBuilder);
+                Lokad.Enforce.Argument(() => systemDiagnostics);
             }
 
             m_ChannelBuilder = channelBuilder;
@@ -174,19 +173,7 @@ namespace Apollo.Core.Base.Communication
 
             using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: Signing in"))
             {
-                // First we load up our own channels so that we 
-                // can send out our own information.
-                lock (m_Lock)
-                {
-                    m_OpenConnections.Add(typeof(NamedPipeChannelType), m_ChannelBuilder(typeof(NamedPipeChannelType), m_Id));
-                    m_OpenConnections.Add(typeof(TcpChannelType), m_ChannelBuilder(typeof(TcpChannelType), m_Id));
-                    foreach (var tuple in m_OpenConnections.Values)
-                    {
-                        tuple.Item1.OpenChannel();
-                    }
-                }
-
-                // Now we initiate discovery of other services. Note that discovery only works for 
+                // Initiate discovery of other services. Note that discovery only works for 
                 // TCP based connections. It does not work with named pipes, however we have a 
                 // discovery source that can manually be controlled. This source will be able
                 // to provide the named pipe discoveries. 
@@ -264,7 +251,6 @@ namespace Apollo.Core.Base.Communication
                     info.ChannelType,
                     info.Address));
 
-            ConnectToEndpoint(info);
             RaiseOnEndpointSignIn(info.Id, info.ChannelType, info.Address);
         }
 
@@ -314,14 +300,53 @@ namespace Apollo.Core.Base.Communication
             }
         }
 
+        /// <summary>
+        /// Indicates if there is a channel for the given channel type.
+        /// </summary>
+        /// <param name="channelType">The type of the channel.</param>
+        /// <returns>
+        /// <see langword="true"/> if there is a channel of the given type; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool HasChannelFor(Type channelType)
+        {
+            return m_OpenConnections.ContainsKey(channelType);
+        }
+
+        /// <summary>
+        /// Opens a channel of the given type.
+        /// </summary>
+        /// <param name="channelType">The channel type to open.</param>
+        public void OpenChannel(Type channelType)
+        {
+            {
+                Lokad.Enforce.With<InvalidChannelTypeException>(
+                    typeof(IChannelType).IsAssignableFrom(channelType), 
+                    "The type of the channel should derrive from IChannelType.");
+            }
+
+            if (HasChannelFor(channelType))
+            {
+                return;
+            }
+
+            lock (m_Lock)
+            {
+                var pair = m_ChannelBuilder(channelType, m_Id);
+                m_OpenConnections.Add(channelType, pair);
+                pair.Item1.OpenChannel();
+            }
+        }
+
         private ICommunicationChannel ChannelForChannelType(Type connection)
         {
             return ChannelInformationForType(connection).Item1;
         }
 
-        private System.Tuple<ICommunicationChannel, IDirectIncomingMessages> ChannelInformationForType(Type connection)
+        private Tuple<ICommunicationChannel, IDirectIncomingMessages> ChannelInformationForType(Type connection)
         {
-            System.Tuple<ICommunicationChannel, IDirectIncomingMessages> channel = null;
+            Tuple<ICommunicationChannel, IDirectIncomingMessages> channel = null;
             lock (m_Lock)
             {
                 if (m_OpenConnections.ContainsKey(connection))
@@ -465,8 +490,8 @@ namespace Apollo.Core.Base.Communication
         public void ConnectToEndpoint(EndpointId endpoint)
         {
             {
-                Enforce.Argument(() => endpoint);
-                Enforce.With<EndpointNotContactableException>(
+                Lokad.Enforce.Argument(() => endpoint);
+                Lokad.Enforce.With<EndpointNotContactableException>(
                     m_PotentialEndpoints.ContainsKey(endpoint),
                     Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint,
                     endpoint);
@@ -484,7 +509,13 @@ namespace Apollo.Core.Base.Communication
                 Debug.Assert(connection != null, "The connection information should not be null.");
             }
 
+            if (!HasChannelFor(connection.ChannelType))
+            {
+                OpenChannel(connection.ChannelType);
+            }
+
             var channel = ChannelForChannelType(connection.ChannelType);
+            Debug.Assert(channel != null, "The channel should exist.");
             channel.ConnectTo(connection);
 
             m_Diagnostics.Log(
@@ -531,13 +562,13 @@ namespace Apollo.Core.Base.Communication
         public void SendMessageTo(EndpointId endpoint, ICommunicationMessage message)
         {
             {
-                Enforce.Argument(() => endpoint);
-                Enforce.With<EndpointNotContactableException>(
+                Lokad.Enforce.Argument(() => endpoint);
+                Lokad.Enforce.With<EndpointNotContactableException>(
                     m_PotentialEndpoints.ContainsKey(endpoint),
                     Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint,
                     endpoint);
 
-                Enforce.Argument(() => message);
+                Lokad.Enforce.Argument(() => message);
             }
 
             using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: sending message without waiting for response"))
@@ -545,7 +576,13 @@ namespace Apollo.Core.Base.Communication
                 var connection = SelectMostAppropriateConnection(endpoint);
                 Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
+                if (!HasChannelFor(connection.ChannelType))
+                {
+                    OpenChannel(connection.ChannelType);
+                }
+
                 var channel = ChannelForChannelType(connection.ChannelType);
+                Debug.Assert(channel != null, "The channel should exist.");
                 if (!channel.HasConnectionTo(endpoint))
                 {
                     channel.ConnectTo(connection);
@@ -559,6 +596,11 @@ namespace Apollo.Core.Base.Communication
                         message.GetType(),
                         endpoint,
                         connection.ChannelType));
+
+                if (!channel.HasConnectionTo(endpoint))
+                {
+                    channel.ConnectTo(connection);
+                }
 
                 channel.Send(endpoint, message);
             }
@@ -583,13 +625,13 @@ namespace Apollo.Core.Base.Communication
         public Task<ICommunicationMessage> SendMessageAndWaitForResponse(EndpointId endpoint, ICommunicationMessage message)
         {
             {
-                Enforce.Argument(() => endpoint);
-                Enforce.With<EndpointNotContactableException>(
+                Lokad.Enforce.Argument(() => endpoint);
+                Lokad.Enforce.With<EndpointNotContactableException>(
                     m_PotentialEndpoints.ContainsKey(endpoint),
                     Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint,
                     endpoint);
 
-                Enforce.Argument(() => message);
+                Lokad.Enforce.Argument(() => message);
             }
 
             using (var interval = m_Diagnostics.Profiler.Measure("CommunicationLayer: sending message and waiting for response"))
@@ -597,7 +639,14 @@ namespace Apollo.Core.Base.Communication
                 var connection = SelectMostAppropriateConnection(endpoint);
                 Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
+                if (!HasChannelFor(connection.ChannelType))
+                {
+                    OpenChannel(connection.ChannelType);
+                }
+
                 var pair = ChannelInformationForType(connection.ChannelType);
+                Debug.Assert(pair != null, "The channel should exist.");
+
                 var result = pair.Item2.ForwardResponse(endpoint, message.Id);
 
                 m_Diagnostics.Log(
@@ -608,6 +657,11 @@ namespace Apollo.Core.Base.Communication
                         message.GetType(),
                         endpoint,
                         connection.ChannelType));
+
+                if (!pair.Item1.HasConnectionTo(endpoint))
+                {
+                    pair.Item1.ConnectTo(connection);
+                }
 
                 pair.Item1.Send(endpoint, message);
                 return result;
@@ -642,11 +696,18 @@ namespace Apollo.Core.Base.Communication
             TaskScheduler scheduler)
         {
             {
-                Enforce.Argument(() => filePath);
-                Enforce.Argument(() => transferInfo);
+                Lokad.Enforce.Argument(() => filePath);
+                Lokad.Enforce.Argument(() => transferInfo);
+            }
+
+            if (!HasChannelFor(transferInfo.ChannelType))
+            {
+                OpenChannel(transferInfo.ChannelType);
             }
 
             var channel = ChannelForChannelType(transferInfo.ChannelType);
+            Debug.Assert(channel != null, "The channel should exist.");
+
             return channel.TransferData(filePath, transferInfo, progressReporter, token, scheduler);
         }
 
@@ -687,21 +748,32 @@ namespace Apollo.Core.Base.Communication
             TaskScheduler scheduler)
         {
             {
-                Enforce.Argument(() => endpointToDownloadFrom);
-                Enforce.With<EndpointNotContactableException>(
+                Lokad.Enforce.Argument(() => endpointToDownloadFrom);
+                Lokad.Enforce.With<EndpointNotContactableException>(
                     m_PotentialEndpoints.ContainsKey(endpointToDownloadFrom),
                     Resources.Exceptions_Messages_EndpointNotContactable_WithEndpoint,
                     endpointToDownloadFrom);
 
-                Enforce.Argument(() => uploadToken);
+                Lokad.Enforce.Argument(() => uploadToken);
             }
 
             var connection = SelectMostAppropriateConnection(endpointToDownloadFrom);
             Debug.Assert(connection != null, "There are no known ways to connect to the given endpoint.");
 
-            var channel = ChannelForChannelType(connection.ChannelType);
-            var info = channel.PrepareForDataReception(localFile, progressReporter, token, scheduler);
+            if (!HasChannelFor(connection.ChannelType))
+            {
+                OpenChannel(connection.ChannelType);
+            }
 
+            var channel = ChannelForChannelType(connection.ChannelType);
+            Debug.Assert(channel != null, "The channel should exist.");
+            if (!channel.HasConnectionTo(endpointToDownloadFrom))
+            {
+                channel.ConnectTo(connection);
+            }
+
+            var info = channel.PrepareForDataReception(localFile, progressReporter, token, scheduler);
+            
             var msg = new DataDownloadRequestMessage(Id, uploadToken, info.Item1);
             channel.Send(endpointToDownloadFrom, msg);
             return info.Item2.ContinueWith<Stream>(

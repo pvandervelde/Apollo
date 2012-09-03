@@ -179,9 +179,9 @@ namespace Apollo.Core.Base.Loaders
         private readonly Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> m_DatasetInformationBuilder;
 
         /// <summary>
-        /// The function that returns information about the channel on which the connection should be made.
+        /// The object that handles the communication for the application.
         /// </summary>
-        private readonly Func<ChannelConnectionInformation> m_ChannelInformation;
+        private readonly ICommunicationLayer m_CommunicationLayer;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -201,7 +201,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="configuration">The application specific configuration.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
-        /// <param name="channelInformation">The function that returns information about the correct channel to use for communication.</param>
+        /// <param name="communicationLayer">The object that handles the communication for the application.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks.</param>
         /// <exception cref="ArgumentNullException">
@@ -220,7 +220,7 @@ namespace Apollo.Core.Base.Loaders
         ///     Thrown if <paramref name="datasetInformationBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="communicationLayer"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
@@ -231,7 +231,7 @@ namespace Apollo.Core.Base.Loaders
             IConfiguration configuration,
             WaitingUploads uploads,
             Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
-            Func<ChannelConnectionInformation> channelInformation,
+            ICommunicationLayer communicationLayer,
             SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
@@ -240,14 +240,14 @@ namespace Apollo.Core.Base.Loaders
                 Lokad.Enforce.Argument(() => notificationHub);
                 Lokad.Enforce.Argument(() => configuration);
                 Lokad.Enforce.Argument(() => datasetInformationBuilder);
-                Lokad.Enforce.Argument(() => channelInformation);
+                Lokad.Enforce.Argument(() => communicationLayer);
                 Lokad.Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Configuration = configuration;
             m_Uploads = uploads;
             m_DatasetInformationBuilder = datasetInformationBuilder;
-            m_ChannelInformation = channelInformation;
+            m_CommunicationLayer = communicationLayer;
             m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
             m_CommandHub = commandHub;
@@ -372,7 +372,13 @@ namespace Apollo.Core.Base.Loaders
                         loaderCommands = m_LoaderCommands[planToImplement.Proposal.Endpoint];
                     }
 
-                    var endpointTask = loaderCommands.Load(m_ChannelInformation(), planToImplement.DistributionFor.Id);
+                    // We shouldn't have to load the TCP channel at this point because that channel would have
+                    // been loaded when the loaders broadcast their message indicating that they exist.
+                    var info = (from connection in m_CommunicationLayer.LocalConnectionPoints()
+                                where connection.ChannelType.Equals(typeof(TcpChannelType))
+                                select connection).First();
+
+                    var endpointTask = loaderCommands.Load(info, planToImplement.DistributionFor.Id);
                     endpointTask.Wait();
 
                     var endpoint = endpointTask.Result;

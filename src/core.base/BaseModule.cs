@@ -133,10 +133,12 @@ namespace Apollo.Core.Base
                             }
                         }
 
+                        var remoteEndpoint = EndpointIdExtensions.Deserialize(id);
                         ctx.Resolve<IAcceptExternalEndpointInformation>().RecentlyConnectedEndpoint(
-                            EndpointIdExtensions.Deserialize(id),
+                            remoteEndpoint,
                             Type.GetType(channelType, null, null, true, false),
                             new Uri(address));
+                        layer.ConnectToEndpoint(remoteEndpoint);
                     };
                 });
         }
