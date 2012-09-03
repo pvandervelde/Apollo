@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -54,9 +55,9 @@ namespace Apollo.Core.Base.Loaders
         private readonly Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> m_DatasetInformationBuilder;
 
         /// <summary>
-        /// The function that returns information about the channel on which the connection should be made.
+        /// The object that handles the communication for the application.
         /// </summary>
-        private readonly Func<ChannelConnectionInformation> m_ChannelInformation;
+        private readonly ICommunicationLayer m_CommunicationLayer;
 
         /// <summary>
         /// The object that provides the diagnostics methods for the system.
@@ -77,7 +78,7 @@ namespace Apollo.Core.Base.Loaders
         /// <param name="notificationHub">The object that receives notifications from remote endpoints.</param>
         /// <param name="uploads">The object that stores all the uploads waiting to be started.</param>
         /// <param name="datasetInformationBuilder">The function that builds <see cref="DatasetOnlineInformation"/> objects.</param>
-        /// <param name="channelInformation">The function that returns information about the correct channel to use for communication.</param>
+        /// <param name="communicationLayer">The object that handles the communication for the application.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the system.</param>
         /// <param name="scheduler">The scheduler that is used to run the tasks on.</param>
         /// <exception cref="ArgumentNullException">
@@ -99,7 +100,7 @@ namespace Apollo.Core.Base.Loaders
         ///     Thrown if <paramref name="datasetInformationBuilder"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="channelInformation"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="communicationLayer"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
@@ -111,7 +112,7 @@ namespace Apollo.Core.Base.Loaders
             INotifyOfRemoteEndpointEvents notificationHub,
             WaitingUploads uploads,
             Func<DatasetId, EndpointId, NetworkIdentifier, DatasetOnlineInformation> datasetInformationBuilder,
-            Func<ChannelConnectionInformation> channelInformation,
+            ICommunicationLayer communicationLayer,
             SystemDiagnostics systemDiagnostics,
             TaskScheduler scheduler = null)
         {
@@ -121,7 +122,7 @@ namespace Apollo.Core.Base.Loaders
                 Enforce.Argument(() => commandHub);
                 Enforce.Argument(() => notificationHub);
                 Enforce.Argument(() => datasetInformationBuilder);
-                Enforce.Argument(() => channelInformation);
+                Enforce.Argument(() => communicationLayer);
                 Enforce.Argument(() => systemDiagnostics);
             }
 
@@ -131,7 +132,7 @@ namespace Apollo.Core.Base.Loaders
             m_NotificationHub = notificationHub;
             m_Uploads = uploads;
             m_DatasetInformationBuilder = datasetInformationBuilder;
-            m_ChannelInformation = channelInformation;
+            m_CommunicationLayer = communicationLayer;
             m_Diagnostics = systemDiagnostics;
             m_Scheduler = scheduler ?? TaskScheduler.Default;
         }
@@ -178,7 +179,16 @@ namespace Apollo.Core.Base.Loaders
             Func<DatasetOnlineInformation> result =
                 () =>
                 {
-                    var endpoint = m_Loader.LoadDataset(m_ChannelInformation());
+                    if (!m_CommunicationLayer.HasChannelFor(typeof(NamedPipeChannelType)))
+                    { 
+                        m_CommunicationLayer.OpenChannel(typeof(NamedPipeChannelType)); 
+                    }
+
+                    var info = (from connection in m_CommunicationLayer.LocalConnectionPoints()
+                        where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
+                        select connection).First();
+
+                    var endpoint = m_Loader.LoadDataset(info);
                     var resetEvent = new AutoResetEvent(false);
                     var commandAvailabilityNotifier = 
                         Observable.FromEventPattern<CommandSetAvailabilityEventArgs>(

@@ -63,6 +63,23 @@ namespace Apollo.Core.Base.Communication
         void SignOut();
 
         /// <summary>
+        /// Indicates if there is a channel for the given channel type.
+        /// </summary>
+        /// <param name="channelType">The type of the channel.</param>
+        /// <returns>
+        /// <see langword="true"/> if there is a channel of the given type; otherwise, <see langword="false" />.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        bool HasChannelFor(Type channelType);
+
+        /// <summary>
+        /// Opens a channel of the given type.
+        /// </summary>
+        /// <param name="channelType">The channel type to open.</param>
+        void OpenChannel(Type channelType);
+
+        /// <summary>
         /// An event raised when the layer has signed in.
         /// </summary>
         event EventHandler<EventArgs> OnSignedIn;

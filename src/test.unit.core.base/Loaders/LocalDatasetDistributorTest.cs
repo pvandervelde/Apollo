@@ -91,15 +91,22 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(result);
             }
 
+            var connectionInfo = new ChannelConnectionInformation(
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/pipe"));
+            var communicationLayer = new Mock<ICommunicationLayer>();
+            {
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                    .Returns(true);
+                communicationLayer.Setup(s => s.LocalConnectionPoints())
+                    .Returns(new[] { connectionInfo });
+            }
+
             var loader = new Mock<IApplicationLoader>();
             var commandHub = new Mock<ISendCommandsToRemoteEndpoints>();
             var notificationHub = new Mock<INotifyOfRemoteEndpointEvents>();
             var uploads = new WaitingUploads();
-            Func<ChannelConnectionInformation> channelInfo =
-                () => new ChannelConnectionInformation(
-                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                            typeof(NamedPipeChannelType),
-                            new Uri("net.pipe://localhost/pipe"));
 
             var distributor = new LocalDatasetDistributor(
                 localDistributor.Object,
@@ -117,7 +124,7 @@ namespace Apollo.Core.Base.Loaders
                         notificationHub.Object,
                         systemDiagnostics);
                 },
-                channelInfo,
+                communicationLayer.Object,
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
@@ -192,11 +199,17 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(notifications.Object);
             }
 
-            Func<ChannelConnectionInformation> channelInfo =
-                () => new ChannelConnectionInformation(
-                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                            typeof(NamedPipeChannelType),
-                            new Uri("net.pipe://localhost/pipe"));
+            var connectionInfo = new ChannelConnectionInformation(
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                typeof(NamedPipeChannelType),
+                new Uri("net.pipe://localhost/pipe"));
+            var communicationLayer = new Mock<ICommunicationLayer>();
+            {
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                    .Returns(true);
+                communicationLayer.Setup(s => s.LocalConnectionPoints())
+                    .Returns(new[] { connectionInfo });
+            }
 
             var uploads = new WaitingUploads();
 
@@ -216,7 +229,7 @@ namespace Apollo.Core.Base.Loaders
                         notificationHub.Object,
                         systemDiagnostics);
                 },
-                channelInfo,
+                communicationLayer.Object,
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 

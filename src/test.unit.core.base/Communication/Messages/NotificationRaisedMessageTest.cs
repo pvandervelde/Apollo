@@ -34,7 +34,7 @@ namespace Apollo.Core.Base.Communication.Messages
         public void Create()
         {
             var id = new EndpointId("endpoint");
-            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var notification = new SerializedEvent(new SerializedType("a", "a"), "b");
             var args = new MockEventArgs(1);
             var msg = new NotificationRaisedMessage(id, notification, args);
 
@@ -47,7 +47,7 @@ namespace Apollo.Core.Base.Communication.Messages
         public void RoundTripSerialise()
         {
             var id = new EndpointId("endpoint");
-            var notification = new SerializedEvent(new SerializedType("a"), "b");
+            var notification = new SerializedEvent(new SerializedType("a", "a"), "b");
             var args = new MockEventArgs(1);
             var msg = new NotificationRaisedMessage(id, notification, args);
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);

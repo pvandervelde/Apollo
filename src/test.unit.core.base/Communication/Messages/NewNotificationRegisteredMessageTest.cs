@@ -22,7 +22,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var msg = new NewNotificationRegisteredMessage(id, notificationType);
 
             Assert.AreSame(id, msg.OriginatingEndpoint);
-            Assert.AreEqual(new SerializedType(notificationType.AssemblyQualifiedName), msg.Notification);
+            Assert.AreEqual(new SerializedType(notificationType.FullName, notificationType.AssemblyQualifiedName), msg.Notification);
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace Apollo.Core.Base.Communication.Messages
             var otherMsg = Assert.BinarySerializeThenDeserialize(msg);
 
             Assert.AreEqual(id, otherMsg.OriginatingEndpoint);
-            Assert.AreEqual(new SerializedType(notificationType.AssemblyQualifiedName), otherMsg.Notification);
+            Assert.AreEqual(new SerializedType(notificationType.FullName, notificationType.AssemblyQualifiedName), otherMsg.Notification);
         }
     }
 }

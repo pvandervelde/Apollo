@@ -9,6 +9,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Base.Communication;
 using Apollo.Core.Base.Loaders;
+using Apollo.Utilities;
 using Autofac;
 
 namespace Apollo.Core.Base
@@ -28,7 +29,9 @@ namespace Apollo.Core.Base
         {
             base.Load(builder);
 
-            builder.Register(c => new DatasetApplicationLoader())
+            builder.Register(c => new DatasetApplicationLoader(
+                    c.Resolve<IApplicationConstants>(),
+                    c.Resolve<SystemDiagnostics>()))
                 .As<IApplicationLoader>();
 
             builder.Register(c => new DatasetDistributionGenerator(

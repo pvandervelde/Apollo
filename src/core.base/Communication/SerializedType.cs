@@ -73,13 +73,16 @@ namespace Apollo.Core.Base.Communication
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedType"/> class.
         /// </summary>
-        /// <param name="assemblyQualifiedTypeName">The assembly qualified name of the command set type.</param>
-        public SerializedType(string assemblyQualifiedTypeName)
+        /// <param name="fullName">The fully qualified name of the type.</param>
+        /// <param name="assemblyQualifiedTypeName">The assembly qualified name of the type.</param>
+        public SerializedType(string fullName, string assemblyQualifiedTypeName)
         {
             {
+                Debug.Assert(!string.IsNullOrWhiteSpace(fullName), "No full name specified.");
                 Debug.Assert(!string.IsNullOrWhiteSpace(assemblyQualifiedTypeName), "No assembly full name specified.");
             }
 
+            FullName = fullName;
             AssemblyQualifiedTypeName = assemblyQualifiedTypeName;
         }
 
@@ -87,6 +90,15 @@ namespace Apollo.Core.Base.Communication
         /// Gets the assembly qualified name of the command set type.
         /// </summary>
         public string AssemblyQualifiedTypeName
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Gets the full name of the type.
+        /// </summary>
+        public string FullName
         {
             get;
             private set;

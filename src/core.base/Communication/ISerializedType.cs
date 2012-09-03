@@ -21,5 +21,13 @@ namespace Apollo.Core.Base.Communication
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the full name of the type.
+        /// </summary>
+        string FullName
+        {
+            get;
+        }
     }
 }

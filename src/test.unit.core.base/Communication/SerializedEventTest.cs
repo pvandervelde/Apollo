@@ -28,12 +28,12 @@ namespace Apollo.Core.Base.Communication
             DistinctInstances =
                 new List<SerializedEvent> 
                         {
-                            new SerializedEvent(new SerializedType("a"), "a"),
-                            new SerializedEvent(new SerializedType("b"), "b"),
-                            new SerializedEvent(new SerializedType("c"), "c"),
-                            new SerializedEvent(new SerializedType("a"), "d"),
-                            new SerializedEvent(new SerializedType("b"), "e"),
-                            new SerializedEvent(new SerializedType("c"), "f"),
+                            new SerializedEvent(new SerializedType("a", "a"), "a"),
+                            new SerializedEvent(new SerializedType("b", "b"), "b"),
+                            new SerializedEvent(new SerializedType("c", "c"), "c"),
+                            new SerializedEvent(new SerializedType("a", "a"), "d"),
+                            new SerializedEvent(new SerializedType("b", "b"), "e"),
+                            new SerializedEvent(new SerializedType("c", "c"), "f"),
                         },
         };
 
@@ -43,12 +43,12 @@ namespace Apollo.Core.Base.Communication
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new SerializedEvent(new SerializedType("a"), "a"),
-                        new SerializedEvent(new SerializedType("b"), "b"),
-                        new SerializedEvent(new SerializedType("c"), "c"),
-                        new SerializedEvent(new SerializedType("a"), "d"),
-                        new SerializedEvent(new SerializedType("b"), "e"),
-                        new SerializedEvent(new SerializedType("c"), "f"),
+                        new SerializedEvent(new SerializedType("a", "a"), "a"),
+                        new SerializedEvent(new SerializedType("b", "b"), "b"),
+                        new SerializedEvent(new SerializedType("c", "c"), "c"),
+                        new SerializedEvent(new SerializedType("a", "a"), "d"),
+                        new SerializedEvent(new SerializedType("b", "b"), "e"),
+                        new SerializedEvent(new SerializedType("c", "c"), "f"),
                     },
         };
     }

@@ -124,11 +124,17 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(offlimitsMachines);
             }
 
-            Func<ChannelConnectionInformation> channelInfo =
-                () => new ChannelConnectionInformation(
-                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                            typeof(NamedPipeChannelType),
-                            new Uri("net.pipe://localhost/pipe"));
+            var connectionInfo = new ChannelConnectionInformation(
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                typeof(TcpChannelType),
+                new Uri("tcp://localhost/tcp"));
+            var communicationLayer = new Mock<ICommunicationLayer>();
+            {
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                    .Returns(true);
+                communicationLayer.Setup(s => s.LocalConnectionPoints())
+                    .Returns(new[] { connectionInfo });
+            }
 
             var distributor = new RemoteDatasetDistributor(
                 commandHub.Object,
@@ -145,7 +151,7 @@ namespace Apollo.Core.Base.Loaders
                         notificationHub.Object,
                         systemDiagnostics);
                 },
-                channelInfo,
+                communicationLayer.Object,
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 
@@ -257,11 +263,17 @@ namespace Apollo.Core.Base.Loaders
                     .Returns(false);
             }
 
-            Func<ChannelConnectionInformation> channelInfo =
-                () => new ChannelConnectionInformation(
-                            EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
-                            typeof(NamedPipeChannelType),
-                            new Uri("net.pipe://localhost/pipe"));
+            var connectionInfo = new ChannelConnectionInformation(
+                EndpointIdExtensions.CreateEndpointIdForCurrentProcess(),
+                typeof(TcpChannelType),
+                new Uri("tcp://localhost/tcp"));
+            var communicationLayer = new Mock<ICommunicationLayer>();
+            {
+                communicationLayer.Setup(s => s.HasChannelFor(It.IsAny<Type>()))
+                    .Returns(true);
+                communicationLayer.Setup(s => s.LocalConnectionPoints())
+                    .Returns(new[] { connectionInfo });
+            }
 
             var distributor = new RemoteDatasetDistributor(
                 commandHub.Object,
@@ -278,7 +290,7 @@ namespace Apollo.Core.Base.Loaders
                         notificationHub.Object,
                         systemDiagnostics);
                 },
-                channelInfo,
+                communicationLayer.Object,
                 systemDiagnostics,
                 new CurrentThreadTaskScheduler());
 

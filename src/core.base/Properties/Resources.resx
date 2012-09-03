@@ -195,6 +195,9 @@
   <data name="Exceptions_Messages_IncorrectStreamTransferInformationObjectFound_WithTypes" xml:space="preserve">
     <value>Transferring the information from the stream requires a different set of information than provided. The method required {0} but was provided with {1}.</value>
   </data>
+  <data name="Exceptions_Messages_InvalidChannelType" xml:space="preserve">
+    <value>The given channel type is not valid.</value>
+  </data>
   <data name="Exceptions_Messages_MachineDomainNameMustNotBeEmpty" xml:space="preserve">
     <value>The domain name of a machine must not be an empty string.</value>
   </data>

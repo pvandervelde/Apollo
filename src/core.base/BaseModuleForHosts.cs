@@ -47,12 +47,7 @@ namespace Apollo.Core.Base
                                 ctx.Resolve<INotifyOfRemoteEndpointEvents>(),
                                 ctx.Resolve<SystemDiagnostics>());
                         },
-                        () =>
-                        {
-                            return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
-                                    where connection.ChannelType.Equals(typeof(TcpChannelType))
-                                    select connection).First();
-                        },
+                        c.Resolve<ICommunicationLayer>(),
                         c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()
@@ -81,12 +76,7 @@ namespace Apollo.Core.Base
                                ctx.Resolve<INotifyOfRemoteEndpointEvents>(),
                                ctx.Resolve<SystemDiagnostics>());
                        },
-                       () =>
-                       {
-                           return (from connection in ctx.Resolve<ICommunicationLayer>().LocalConnectionPoints()
-                                   where connection.ChannelType.Equals(typeof(NamedPipeChannelType))
-                                   select connection).First();
-                       },
+                       c.Resolve<ICommunicationLayer>(),
                        c.Resolve<SystemDiagnostics>());
                 })
                 .As<IGenerateDistributionProposals>()

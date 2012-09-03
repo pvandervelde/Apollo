@@ -90,6 +90,7 @@
     <Compile Include="Communication\INotificationSet.cs" />
     <Compile Include="Communication\INotifyOfRemoteEndpointEvents.cs" />
     <Compile Include="Communication\InternalCommandAttribute.cs" />
+    <Compile Include="Communication\InvalidChannelTypeException.cs" />
     <Compile Include="Communication\IReportNewProxies.cs" />
     <Compile Include="Communication\ISendCommandsToRemoteEndpoints.cs" />
     <Compile Include="Communication\ISendNotifications.cs" />

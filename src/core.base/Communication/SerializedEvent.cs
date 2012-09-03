@@ -183,7 +183,7 @@ namespace Apollo.Core.Base.Communication
         /// </returns>
         public override string ToString()
         {
-            return Type.ToString() + "." + MemberName;
+            return Type.FullName + "." + MemberName;
         }
     }
 }

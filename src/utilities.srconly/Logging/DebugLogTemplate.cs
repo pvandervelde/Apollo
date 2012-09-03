@@ -50,7 +50,7 @@ namespace Apollo.Utilities.Logging
         {
             get
             {
-                return "DebugLog";
+                return "Debug";
             }
         }
 
