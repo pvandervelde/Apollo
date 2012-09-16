@@ -46,6 +46,7 @@
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="FileUtilities.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationException.cs" />
     <Compile Include="History\CannotSetDefaultAfterStartOfTimeException.cs" />
     <Compile Include="History\CannotSetDefaultBeforeStartOfTimeException.cs" />

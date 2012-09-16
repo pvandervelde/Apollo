@@ -340,6 +340,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given path is not a valid path to the plugin directory..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidPluginDirectoryPath {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidPluginDirectoryPath", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The given script language is not a valid choice..
         /// </summary>
         internal static string Exceptions_Messages_InvalidScriptLanguage {
@@ -742,6 +751,60 @@ namespace Apollo.Core.Host.Properties {
         internal static string MessagePipeline_LogMessage_SenderRemoved {
             get {
                 return ResourceManager.GetString("MessagePipeline_LogMessage_SenderRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin location process completed..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanCompleted {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating all the files in {0} failed due to an exception. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating plugins in {0}..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanStarted_WithDirectory {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanStarted_WithDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the plugin assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting information from Type {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithTypeAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithTypeAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apollo plugin scan appdomain.
+        /// </summary>
+        internal static string Plugins_PluginScanDomainName {
+            get {
+                return ResourceManager.GetString("Plugins_PluginScanDomainName", resourceCulture);
             }
         }
         

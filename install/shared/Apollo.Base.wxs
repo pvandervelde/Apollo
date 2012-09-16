@@ -21,6 +21,16 @@
                       KeyPath="yes" />
             </Component>
 
+            <!-- Apollo.Core.Extensions.dll -->
+            <Component Id="C.Apollo.Core.Extensions.dll"
+                       Guid="{5A528E8B-CEEC-4431-B78F-EF17D9E365FD}">
+                <File Id="File.Apollo.Core.Extensions.dll"
+                      Name="Apollo.Core.Extensions.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\Apollo.Core.Extensions.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- Apollo.Utilities.dll -->
             <Component Id="C.Apollo.Utilities.dll"
                        Guid="{01941790-8814-48BA-BA0C-E0CB8FF8577A}">
@@ -91,6 +101,16 @@
                       KeyPath="yes" />
             </Component>
 
+            <!-- QuickGraph.dll -->
+            <Component Id="C.QuickGraph.dll"
+                       Guid="{1C6EFE39-0762-428F-86B3-F21B6E3DA0F2}">
+                <File Id="File.QuickGraph.dll"
+                      Name="QuickGraph.dll"
+                      DiskId="1"
+                      Source="$(var.Apollo_BinFolder)\QuickGraph.dll"
+                      KeyPath="yes" />
+            </Component>
+
             <!-- System.Reactive.dll -->
             <Component Id="C.System.Reactive.dll"
                        Guid="{022520DB-88C9-4509-B692-F9FA2C736A1E}">
@@ -115,6 +135,7 @@
         <!-- The feature for the main program. -->
         <ComponentGroup Id="CGroup.Apollo.Base">
             <ComponentRef Id="C.Apollo.Core.Base.dll" />
+            <ComponentRef Id="C.Apollo.Core.Extensions.dll" />
             <ComponentRef Id="C.Apollo.Utilities.dll" />
             <ComponentRef Id="C.Autofac.dll" />
             <ComponentRef Id="C.Castle.Core.dll" />
@@ -122,6 +143,7 @@
             <ComponentRef Id="C.NLog.dll" />
             <ComponentRef Id="C.NManto.dll" />
             <ComponentRef Id="C.NSarrac.Framework.dll" />
+            <ComponentRef Id="C.QuickGraph.dll" />
             <ComponentRef Id="C.System.Reactive.dll" />
         </ComponentGroup>
     </Fragment>
