@@ -15,7 +15,6 @@ namespace Apollo.Core.Base.Communication.Messages
     public sealed class EndpointConnectMessageTest
     {
         [Test]
-        [Description("Checks that a message can be created.")]
         public void Create()
         {
             var id = new EndpointId("endpoint");

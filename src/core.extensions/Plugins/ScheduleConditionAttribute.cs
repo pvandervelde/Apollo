@@ -5,9 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Apollo.Core.Extensions.Plugins
 {
@@ -16,6 +14,7 @@ namespace Apollo.Core.Extensions.Plugins
     /// in a schedule.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
+    [ExcludeFromCodeCoverage]
     public sealed class ScheduleConditionAttribute : Attribute
     {
         // Can only be placed on certain methods / properties. Will be checked in the scanner

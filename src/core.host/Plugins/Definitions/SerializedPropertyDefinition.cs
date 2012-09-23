@@ -75,7 +75,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// The type that owns the current method.
         /// </summary>
-        private readonly SerializedTypeDefinition m_DeclaringType;
+        private readonly SerializedTypeIdentity m_DeclaringType;
 
         /// <summary>
         /// The name of the property.
@@ -85,7 +85,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// The type of the property.
         /// </summary>
-        private readonly SerializedTypeDefinition m_PropertyType;
+        private readonly SerializedTypeIdentity m_PropertyType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedPropertyDefinition"/> class.
@@ -100,15 +100,15 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 Lokad.Enforce.Argument(() => property);
             }
 
-            m_DeclaringType = new SerializedTypeDefinition(property.DeclaringType);
+            m_DeclaringType = new SerializedTypeIdentity(property.DeclaringType);
             m_Name = property.Name;
-            m_PropertyType = new SerializedTypeDefinition(property.PropertyType);
+            m_PropertyType = new SerializedTypeIdentity(property.PropertyType);
         }
 
         /// <summary>
         /// Gets the type that owns the current method.
         /// </summary>
-        public SerializedTypeDefinition DeclaringType
+        public SerializedTypeIdentity DeclaringType
         {
             get
             {
@@ -130,7 +130,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Gets the type of the property.
         /// </summary>
-        public SerializedTypeDefinition PropertyType
+        public SerializedTypeIdentity PropertyType
         {
             get
             {

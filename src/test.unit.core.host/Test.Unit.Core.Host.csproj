@@ -60,6 +60,8 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Numerics" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\solutionlevel\SolutionLevel.csproj">
@@ -96,6 +98,24 @@
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
     <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedAssemblyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedConstructorDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnMethodDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnTypeDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportOnConstructorDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportOnMethodDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportOnPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedMethodDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedParameterDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleActionDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnMethodDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedTypeDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedTypeIdentityTest.cs" />
+    <Compile Include="Plugins\PluginDetectorTest.cs" />
+    <Compile Include="Plugins\RemoteAssemblyScannerTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />

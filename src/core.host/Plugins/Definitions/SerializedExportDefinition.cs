@@ -24,12 +24,12 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// The contract type that is used with the export.
         /// </summary>
-        private readonly SerializedTypeDefinition m_ContractType;
+        private readonly SerializedTypeIdentity m_ContractType;
 
         /// <summary>
         /// The serialized description of the type that owns the current export.
         /// </summary>
-        private readonly SerializedTypeDefinition m_DeclaringType;
+        private readonly SerializedTypeIdentity m_DeclaringType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedExportDefinition"/> class.
@@ -59,8 +59,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
             }
 
             m_ContractName = contractName;
-            m_ContractType = new SerializedTypeDefinition(contractType);
-            m_DeclaringType = new SerializedTypeDefinition(declaringType);
+            m_ContractType = new SerializedTypeIdentity(contractType);
+            m_DeclaringType = new SerializedTypeIdentity(declaringType);
         }
 
         /// <summary>
@@ -77,7 +77,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Gets the serialized definition of the contract type.
         /// </summary>
-        public SerializedTypeDefinition ContractType
+        public SerializedTypeIdentity ContractType
         {
             get
             {
@@ -88,7 +88,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Gets the serialized definition of the type that declares the export.
         /// </summary>
-        public SerializedTypeDefinition DeclaringType
+        public SerializedTypeIdentity DeclaringType
         {
             get
             {

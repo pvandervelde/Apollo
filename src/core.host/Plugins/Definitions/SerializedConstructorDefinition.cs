@@ -77,12 +77,12 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// The type that owns the constructor.
         /// </summary>
-        private readonly SerializedTypeDefinition m_DeclaringType;
+        private readonly SerializedTypeIdentity m_DeclaringType;
 
         /// <summary>
         /// The collection of parameters for the constructor.
         /// </summary>
-        private readonly List<SerializedParameterDefinition> m_Parameters;
+        private readonly SerializedParameterDefinition[] m_Parameters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedConstructorDefinition"/> class.
@@ -97,14 +97,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 Lokad.Enforce.Argument(() => constructor);
             }
 
-            m_DeclaringType = new SerializedTypeDefinition(constructor.DeclaringType);
-            m_Parameters = constructor.GetParameters().Select(p => new SerializedParameterDefinition(p)).ToList();
+            m_DeclaringType = new SerializedTypeIdentity(constructor.DeclaringType);
+            m_Parameters = constructor.GetParameters().Select(p => new SerializedParameterDefinition(p)).ToArray();
         }
 
         /// <summary>
         /// Gets the type that owns the current constructor.
         /// </summary>
-        public SerializedTypeDefinition DeclaringType
+        public SerializedTypeIdentity DeclaringType
         {
             get
             {

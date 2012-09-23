@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
+using System.Text;
 
 namespace Apollo.Core.Host.Plugins.Definitions
 {
@@ -73,30 +75,20 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// The name of the type.
+        /// The identity information for the type.
         /// </summary>
-        private readonly string m_Name;
-
-        /// <summary>
-        /// The namespace of the type.
-        /// </summary>
-        private readonly string m_Namespace;
-
-        /// <summary>
-        /// The assembly information for the assembly that contains the type.
-        /// </summary>
-        private readonly SerializedAssemblyDefinition m_Assembly;
+        private readonly SerializedTypeIdentity m_Identity;
 
         /// <summary>
         /// The base class for the current type. Is <c>null</c> if the current type
         /// doesn't have a base class.
         /// </summary>
-        private readonly SerializedTypeDefinition m_Base;
+        private readonly SerializedTypeIdentity m_Base;
 
         /// <summary>
         /// The interfaces that are inherited or implemented by the current type.
         /// </summary>
-        private readonly IEnumerable<SerializedTypeDefinition> m_BaseInterfaces;
+        private readonly SerializedTypeIdentity[] m_BaseInterfaces;
 
         /// <summary>
         /// A flag indicating if the current type is a class or not.
@@ -121,73 +113,32 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 Lokad.Enforce.Argument(() => type);
             }
 
-            m_Name = type.Name;
-            m_Namespace = type.Namespace;
-            m_Assembly = new SerializedAssemblyDefinition(type.Assembly);
-            
-            m_IsClass = type.IsClass;
-            m_IsInterface = type.IsInterface;
+            m_Identity = new SerializedTypeIdentity(type);
+            m_BaseInterfaces = type.GetInterfaces().Select(i => new SerializedTypeIdentity(i)).ToArray();
             if (type.BaseType != null)
             {
-                m_Base = new SerializedTypeDefinition(type.BaseType);
+                m_Base = new SerializedTypeIdentity(type.BaseType);
             }
 
-            var list = new List<SerializedTypeDefinition>();
-            m_BaseInterfaces = list;
-            foreach (var @interface in type.GetInterfaces())
-            {
-                list.Add(new SerializedTypeDefinition(@interface));
-            }
+            m_IsClass = type.IsClass;
+            m_IsInterface = type.IsInterface;
         }
 
         /// <summary>
         /// Gets the name of the type.
         /// </summary>
-        public string Name
-        {
-            get 
-            {
-                return m_Name;
-            }
-        }
-
-        /// <summary>
-        /// Gets the namespace of the type.
-        /// </summary>
-        public string Namespace
+        public SerializedTypeIdentity Identity
         {
             get
             {
-                return m_Namespace;
-            }
-        }
-
-        /// <summary>
-        /// Gets the fully qualified name of the type.
-        /// </summary>
-        public string FullName
-        {
-            get
-            {
-                return string.Format(CultureInfo.InvariantCulture, "{0}.{1}", Namespace, Name);
-            }
-        }
-
-        /// <summary>
-        /// Gets the assembly information for the type.
-        /// </summary>
-        public SerializedAssemblyDefinition Assembly
-        {
-            get
-            {
-                return m_Assembly;
+                return m_Identity;
             }
         }
 
         /// <summary>
         /// Gets the base or parent type for the type.
         /// </summary>
-        public SerializedTypeDefinition BaseType
+        public SerializedTypeIdentity BaseType
         {
             get
             {
@@ -198,7 +149,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Gets the type information for all the interfaces that are implemented by the current type.
         /// </summary>
-        public IEnumerable<SerializedTypeDefinition> BaseInterfaces
+        public IEnumerable<SerializedTypeIdentity> BaseInterfaces
         {
             get
             {
@@ -248,10 +199,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null) 
-                && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) 
-                && string.Equals(Namespace, other.Namespace, StringComparison.OrdinalIgnoreCase)
-                && Assembly.Equals(other.Assembly);
+            return !ReferenceEquals(other, null) && Identity.Equals(other.Identity);
         }
 
         /// <summary>
@@ -294,12 +242,20 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ Name.GetHashCode();
-                hash = (hash * 23) ^ Namespace.GetHashCode();
-                hash = (hash * 23) ^ Assembly.GetHashCode();
-
+                hash = (hash * 23) ^ Identity.GetHashCode();
                 return hash;
             }
+        }
+
+        /// <summary>
+        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// </summary>
+        /// <returns>
+        /// A <see cref="System.String"/> that represents this instance.
+        /// </returns>
+        public override string ToString()
+        {
+            return Identity.ToString();
         }
     }
 }

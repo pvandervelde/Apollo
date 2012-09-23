@@ -80,7 +80,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// The type of the parameter.
         /// </summary>
-        private readonly SerializedTypeDefinition m_Type;
+        private readonly SerializedTypeIdentity m_Type;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedParameterDefinition"/> class.
@@ -96,7 +96,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
             }
 
             m_Name = parameter.Name;
-            m_Type = new SerializedTypeDefinition(parameter.ParameterType);
+            m_Type = new SerializedTypeIdentity(parameter.ParameterType);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Gets the type of the parameter.
         /// </summary>
-        public SerializedTypeDefinition Type
+        public SerializedTypeIdentity Type
         {
             get
             {

@@ -66,7 +66,6 @@ namespace Apollo.Utilities.History
         };
 
         [VerifyContract]
-        [Description("Checks that the IComparable<T> contract is implemented correctly.")]
         public readonly IContract ComparableVerification = new ComparisonContract<TimeMarker>
         {
             ImplementsOperatorOverloads = true,

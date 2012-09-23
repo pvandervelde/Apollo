@@ -168,10 +168,10 @@ namespace Apollo.Core.Host.Plugins.Definitions
             {
                 return string.Format(
                     CultureInfo.InvariantCulture,
-                    "{0}, version={1}, Culture={2}, PublicKeytoken={3}",
+                    "{0}, Version={1}, Culture={2}, PublicKeyToken={3}",
                     Name,
                     Version,
-                    Culture != CultureInfo.InvariantCulture ? Culture.Name : "neutral",
+                    !Culture.Equals(CultureInfo.InvariantCulture) ? Culture.Name : "neutral",
                     PublicKeyToken);
             }
         }
@@ -198,8 +198,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null) 
                 && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) 
-                && Version == other.Version
-                && Culture == other.Culture
+                && Version.Equals(other.Version)
+                && Culture.Equals(other.Culture)
                 && string.Equals(PublicKeyToken, other.PublicKeyToken, StringComparison.OrdinalIgnoreCase);
         }
 
