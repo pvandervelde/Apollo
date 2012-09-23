@@ -146,7 +146,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 return true;
             }
 
-            var id = obj as SerializedScheduleActionDefinition;
+            var id = obj as SerializedScheduleConditionOnPropertyDefinition;
             return Equals(id);
         }
 
