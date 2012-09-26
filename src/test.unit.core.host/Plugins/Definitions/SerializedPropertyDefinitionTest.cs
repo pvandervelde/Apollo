@@ -40,11 +40,11 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedPropertyDefinition> 
                     {
-                        new SerializedPropertyDefinition(typeof(string).GetProperty("Length")),
-                        new SerializedPropertyDefinition(typeof(Version).GetProperty("Build")),
-                        new SerializedPropertyDefinition(typeof(List<int>).GetProperty("Count")),
-                        new SerializedPropertyDefinition(typeof(TimeZone).GetProperty("StandardName")),
-                        new SerializedPropertyDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
+                        SerializedPropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
+                        SerializedPropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
+                        SerializedPropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
+                        SerializedPropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
+                        SerializedPropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
                     },
         };
 
@@ -54,18 +54,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedPropertyDefinition(typeof(string).GetProperty("Length")),
-                    new SerializedPropertyDefinition(typeof(Version).GetProperty("Build")),
-                    new SerializedPropertyDefinition(typeof(List<int>).GetProperty("Count")),
-                    new SerializedPropertyDefinition(typeof(TimeZone).GetProperty("StandardName")),
-                    new SerializedPropertyDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
+                    SerializedPropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
+                    SerializedPropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
+                    SerializedPropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
+                    SerializedPropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
+                    SerializedPropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedPropertyDefinition(GetPropertyForString());
+            var original = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +75,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedPropertyDefinition first = null;
-            var second = new SerializedPropertyDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +83,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             SerializedPropertyDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +92,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            var second = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +101,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            var second = new SerializedPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +111,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedPropertyDefinition first = null;
-            var second = new SerializedPropertyDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +119,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             SerializedPropertyDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +128,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            var second = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +137,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            var second = new SerializedPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsTrue(first != second);
         }
@@ -146,18 +146,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithClass()
         {
-            var obj = new SerializedPropertyDefinition(GetPropertyForString());
+            var obj = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             var property = GetPropertyForString();
 
             Assert.AreEqual(property.Name, obj.PropertyName);
-            Assert.AreEqual(new SerializedTypeIdentity(property.PropertyType), obj.PropertyType);
-            Assert.AreEqual(new SerializedTypeIdentity(property.DeclaringType), obj.DeclaringType);
+            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(property.PropertyType), obj.PropertyType);
+            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(property.DeclaringType), obj.DeclaringType);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -166,8 +166,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            object second = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            object second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -175,8 +175,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
-            object second = new SerializedPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
+            object second = SerializedPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -184,7 +184,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedPropertyDefinition(GetPropertyForString());
+            var first = SerializedPropertyDefinition.CreateDefinition(GetPropertyForString());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

@@ -41,11 +41,16 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedParameterDefinition> 
                     {
-                        new SerializedParameterDefinition(typeof(string).GetMethod("Contains").GetParameters().First()),
-                        new SerializedParameterDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First()),
-                        new SerializedParameterDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First()),
-                        new SerializedParameterDefinition(typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
-                        new SerializedParameterDefinition(typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
+                        SerializedParameterDefinition.CreateDefinition(
+                            typeof(string).GetMethod("Contains").GetParameters().First()),
+                        SerializedParameterDefinition.CreateDefinition(
+                            typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First()),
+                        SerializedParameterDefinition.CreateDefinition(
+                            typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First()),
+                        SerializedParameterDefinition.CreateDefinition(
+                            typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
+                        SerializedParameterDefinition.CreateDefinition(
+                            typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
                     },
         };
 
@@ -55,18 +60,23 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedParameterDefinition(typeof(string).GetMethod("Contains").GetParameters().First()),
-                    new SerializedParameterDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First()),
-                    new SerializedParameterDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First()),
-                    new SerializedParameterDefinition(typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
-                    new SerializedParameterDefinition(typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
+                    SerializedParameterDefinition.CreateDefinition(
+                        typeof(string).GetMethod("Contains").GetParameters().First()),
+                    SerializedParameterDefinition.CreateDefinition(
+                        typeof(int).GetMethod("CompareTo", new[] { typeof(int) }).GetParameters().First()),
+                    SerializedParameterDefinition.CreateDefinition(
+                        typeof(double).GetMethod("CompareTo", new[] { typeof(double) }).GetParameters().First()),
+                    SerializedParameterDefinition.CreateDefinition(
+                        typeof(IComparable).GetMethod("CompareTo").GetParameters().First()),
+                    SerializedParameterDefinition.CreateDefinition(
+                        typeof(IComparable<>).GetMethod("CompareTo").GetParameters().First()),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedParameterDefinition(ParameterFromInt());
+            var original = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -76,7 +86,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedParameterDefinition first = null;
-            var second = new SerializedParameterDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
 
             Assert.IsFalse(first == second);
         }
@@ -84,7 +94,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             SerializedParameterDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -93,8 +103,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            var second = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
 
             Assert.IsTrue(first == second);
         }
@@ -102,8 +112,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            var second = new SerializedParameterDefinition(ParameterFromDouble());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromDouble());
 
             Assert.IsFalse(first == second);
         }
@@ -112,7 +122,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedParameterDefinition first = null;
-            var second = new SerializedParameterDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
 
             Assert.IsTrue(first != second);
         }
@@ -120,7 +130,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             SerializedParameterDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -129,8 +139,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            var second = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
 
             Assert.IsFalse(first != second);
         }
@@ -138,8 +148,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            var second = new SerializedParameterDefinition(ParameterFromDouble());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            var second = SerializedParameterDefinition.CreateDefinition(ParameterFromDouble());
 
             Assert.IsTrue(first != second);
         }
@@ -147,17 +157,17 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithClass()
         {
-            var obj = new SerializedParameterDefinition(ParameterFromInt());
+            var obj = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             var parameter = ParameterFromInt();
 
             Assert.AreEqual(parameter.Name, obj.Name);
-            Assert.AreEqual(new SerializedTypeIdentity(parameter.ParameterType), obj.Type);
+            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(parameter.ParameterType), obj.Type);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -166,8 +176,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            object second = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            object second = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -175,8 +185,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
-            object second = new SerializedParameterDefinition(ParameterFromDouble());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
+            object second = SerializedParameterDefinition.CreateDefinition(ParameterFromDouble());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -184,7 +194,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedParameterDefinition(ParameterFromInt());
+            var first = SerializedParameterDefinition.CreateDefinition(ParameterFromInt());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

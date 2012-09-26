@@ -53,17 +53,25 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="assemblyFilesToScan">
         /// The collection that contains the file paths to all the assemblies to be scanned.
         /// </param>
-        /// <returns>The collection that describes the plugin information in the given assembly files.</returns>
+        /// <param name="plugins">The collection that describes the plugin information in the given assembly files.</param>
+        /// <param name="nonPlugins">
+        /// The collection that provides information about all the types which are required to complete the type hierarchy
+        /// for the plugin types.
+        /// </param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="assemblyFilesToScan"/> is <see langword="null" />.
         /// </exception>
-        public IEnumerable<PluginInfo> Scan(IEnumerable<string> assemblyFilesToScan)
+        public void Scan(
+            IEnumerable<string> assemblyFilesToScan, 
+            out IEnumerable<PluginInfo> plugins, 
+            out IEnumerable<SerializedTypeDefinition> nonPlugins)
         {
             {
                 Lokad.Enforce.Argument(() => assemblyFilesToScan);
             }
 
             var pluginStorage = new ConcurrentBag<PluginInfo>();
+            var nonPluginStorage = new ConcurrentDictionary<string, SerializedTypeDefinition>();
             using (var assembliesToScan = new BlockingCollection<Assembly>())
             {
                 // It is expected that the loading of an assembly will take more
@@ -75,11 +83,12 @@ namespace Apollo.Core.Host.Plugins
 
                 // Scan the assemblies. Scanning will run as fast as 
                 // we can provide assemblies.
-                var scanningTask = Task.Factory.StartNew(() => ScanAssemblies(assembliesToScan, pluginStorage));
+                var scanningTask = Task.Factory.StartNew(() => ScanAssemblies(assembliesToScan, pluginStorage, nonPluginStorage));
                 Task.WaitAll(loadingTask, scanningTask);
             }
 
-            return pluginStorage.ToList();
+            plugins = pluginStorage.ToList();
+            nonPlugins = nonPluginStorage.Values.ToList();
         }
 
         private void LoadAssemblies(IEnumerable<string> filesToLoad, BlockingCollection<Assembly> storage)
@@ -156,14 +165,16 @@ namespace Apollo.Core.Host.Plugins
 
         private void ScanAssemblies(
             BlockingCollection<Assembly> assembliesToScan,
-            ConcurrentBag<PluginInfo> storage)
+            ConcurrentBag<PluginInfo> storage,
+            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
         {
-            Parallel.ForEach(assembliesToScan, a => ScanAssembly(a, storage));
+            Parallel.ForEach(assembliesToScan, a => ScanAssembly(a, storage, typeStorage));
         }
 
         private void ScanAssembly(
             Assembly assembly,
-            ConcurrentBag<PluginInfo> storage)
+            ConcurrentBag<PluginInfo> storage,
+            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
         {
             // We would love for MEF to do all of the scanning but it doesn't seem possible to get the detailed information
             // out of the MEF export / import objects, so we'll have to do it the rough way, i.e. manually.
@@ -172,23 +183,37 @@ namespace Apollo.Core.Host.Plugins
                 {
                     FileInfo = new PluginFileInfo(path, File.GetLastWriteTimeUtc(path)),
                 };
-            
+
+            // Fake out the compiler because we need the function inside the function itself
+            Func<Type, SerializedTypeIdentity> createTypeIdentity = null;
+            createTypeIdentity =
+                t =>
+                {
+                    if (!typeStorage.ContainsKey(t.AssemblyQualifiedName))
+                    {
+                        var typeDefinition = SerializedTypeDefinition.CreateDefinition(t, createTypeIdentity);
+                        typeStorage.TryAdd(typeDefinition.Identity.AssemblyQualifiedName, typeDefinition);
+                    }
+
+                    return typeStorage[t.AssemblyQualifiedName].Identity;
+                };
+
             foreach (var type in assembly.GetTypes())
             {
                 try
                 {
                     if (HasAttributes(type))
                     {
-                        var exports = ExtractExports(type);
-                        var imports = ExtractImports(type);
-                        var actions = ExtractActions(type);
-                        var conditions = ExtractConditions(type);
+                        var exports = ExtractExports(type, createTypeIdentity);
+                        var imports = ExtractImports(type, createTypeIdentity);
+                        var actions = ExtractActions(type, createTypeIdentity);
+                        var conditions = ExtractConditions(type, createTypeIdentity);
 
                         info.AddType(
                             new PluginTypeInfo 
-                            { 
-                                Type = new SerializedTypeDefinition(type),
-                                Assembly = new SerializedAssemblyDefinition(assembly),
+                            {
+                                Type = createTypeIdentity(type),
+                                Assembly = SerializedAssemblyDefinition.CreateDefinition(assembly),
                                 Imports = imports,
                                 Exports = exports,
                                 Actions = actions,
@@ -210,7 +235,7 @@ namespace Apollo.Core.Host.Plugins
 
             storage.Add(info);
         }
-
+        
         private bool HasAttributes(Type type)
         {
             if (type.GetCustomAttributes(true).Exists(a => a is ExportAttribute || a is ImportAttribute))
@@ -252,7 +277,7 @@ namespace Apollo.Core.Host.Plugins
             return false;
         }
 
-        private IEnumerable<SerializedExportDefinition> ExtractExports(Type type)
+        private IEnumerable<SerializedExportDefinition> ExtractExports(Type type, Func<Type, SerializedTypeIdentity> createTypeIdentity)
         {
             var result = new List<SerializedExportDefinition>();
 
@@ -261,10 +286,11 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = type.GetCustomAttributes(typeof(ExportAttribute), true);
                 foreach (ExportAttribute attribute in attributes)
                 {
-                    result.Add(new SerializedExportOnTypeDefinition(
+                    result.Add(SerializedExportOnTypeDefinition.CreateDefinition(
                         attribute.ContractName,
                         attribute.ContractType,
-                        type));
+                        type,
+                        createTypeIdentity));
                 }
             }
 
@@ -274,10 +300,11 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = property.GetCustomAttributes(typeof(ExportAttribute), true);
                 foreach (ExportAttribute attribute in attributes)
                 {
-                    result.Add(new SerializedExportOnPropertyDefinition(
+                    result.Add(SerializedExportOnPropertyDefinition.CreateDefinition(
                         attribute.ContractName,
                         attribute.ContractType,
-                        property));
+                        property,
+                        createTypeIdentity));
                 }
             }
 
@@ -287,17 +314,18 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = method.GetCustomAttributes(typeof(ExportAttribute), true);
                 foreach (ExportAttribute attribute in attributes)
                 {
-                    result.Add(new SerializedExportOnMethodDefinition(
+                    result.Add(SerializedExportOnMethodDefinition.CreateDefinition(
                         attribute.ContractName,
                         attribute.ContractType,
-                        method));
+                        method,
+                        createTypeIdentity));
                 }
             }
             
             return result;
         }
 
-        private IEnumerable<SerializedImportDefinition> ExtractImports(Type type)
+        private IEnumerable<SerializedImportDefinition> ExtractImports(Type type, Func<Type, SerializedTypeIdentity> createTypeIdentity)
         {
             var result = new List<SerializedImportDefinition>();
 
@@ -317,10 +345,11 @@ namespace Apollo.Core.Host.Plugins
                     var attributes = parameter.GetCustomAttributes(typeof(ImportAttribute), true);
                     foreach (ImportAttribute attribute in attributes)
                     {
-                        result.Add(new SerializedImportOnConstructorDefinition(
+                        result.Add(SerializedImportOnConstructorDefinition.CreateDefinition(
                             attribute.ContractName,
                             attribute.ContractType,
-                            parameter));
+                            parameter,
+                            createTypeIdentity));
                     }
                 }
             }
@@ -331,10 +360,11 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = property.GetCustomAttributes(typeof(ImportAttribute), true);
                 foreach (ImportAttribute attribute in attributes)
                 {
-                    result.Add(new SerializedImportOnPropertyDefinition(
+                    result.Add(SerializedImportOnPropertyDefinition.CreateDefinition(
                         attribute.ContractName,
                         attribute.ContractType,
-                        property));
+                        property,
+                        createTypeIdentity));
                 }
             }
 
@@ -354,10 +384,11 @@ namespace Apollo.Core.Host.Plugins
                     var attributes = parameter.GetCustomAttributes(typeof(ImportAttribute), true);
                     foreach (ImportAttribute attribute in attributes)
                     {
-                        result.Add(new SerializedImportOnMethodDefinition(
+                        result.Add(SerializedImportOnMethodDefinition.CreateDefinition(
                             attribute.ContractName,
                             attribute.ContractType,
-                            parameter));
+                            parameter,
+                            createTypeIdentity));
                     }
                 }
             }
@@ -365,7 +396,7 @@ namespace Apollo.Core.Host.Plugins
             return result;
         }
 
-        private IEnumerable<SerializedScheduleActionDefinition> ExtractActions(Type type)
+        private IEnumerable<SerializedScheduleActionDefinition> ExtractActions(Type type, Func<Type, SerializedTypeIdentity> createTypeIdentity)
         {
             var result = new List<SerializedScheduleActionDefinition>();
 
@@ -375,14 +406,14 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = method.GetCustomAttributes(typeof(ScheduleConditionAttribute), true);
                 if ((attributes.Length == 1) && (method.ReturnType == typeof(void)) && (!method.GetParameters().Any()))
                 {
-                    result.Add(new SerializedScheduleActionDefinition(method));
+                    result.Add(SerializedScheduleActionDefinition.CreateDefinition(method, createTypeIdentity));
                 }
             }
 
             return result;
         }
 
-        private IEnumerable<SerializedScheduleConditionDefinition> ExtractConditions(Type type)
+        private IEnumerable<SerializedScheduleConditionDefinition> ExtractConditions(Type type, Func<Type, SerializedTypeIdentity> createTypeIdentity)
         {
             var result = new List<SerializedScheduleConditionDefinition>();
 
@@ -392,7 +423,7 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = property.GetCustomAttributes(typeof(ScheduleConditionAttribute), true);
                 if ((attributes.Length == 1) && (property.PropertyType == typeof(bool)))
                 {
-                    result.Add(new SerializedScheduleConditionOnPropertyDefinition(property));
+                    result.Add(SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(property, createTypeIdentity));
                 }
             }
 
@@ -402,7 +433,7 @@ namespace Apollo.Core.Host.Plugins
                 var attributes = method.GetCustomAttributes(typeof(ScheduleConditionAttribute), true);
                 if ((attributes.Length == 1) && (method.ReturnType == typeof(bool)) && (!method.GetParameters().Any()))
                 {
-                    result.Add(new SerializedScheduleConditionOnMethodDefinition(method));
+                    result.Add(SerializedScheduleConditionOnMethodDefinition.CreateDefinition(method, createTypeIdentity));
                 }
             }
 

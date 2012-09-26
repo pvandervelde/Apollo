@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,6 +74,45 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedScheduleConditionOnPropertyDefinition"/> class based on 
+        /// the given <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedScheduleConditionOnPropertyDefinition CreateDefinition(
+            PropertyInfo property,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => property);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedScheduleConditionOnPropertyDefinition(
+                SerializedPropertyDefinition.CreateDefinition(property, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedMethodDefinition"/> class based on the given <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedScheduleConditionOnPropertyDefinition CreateDefinition(PropertyInfo property)
+        {
+            return CreateDefinition(property, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The method that will provide the condition result.
         /// </summary>
         private readonly SerializedPropertyDefinition m_Property;
@@ -81,16 +121,13 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Initializes a new instance of the <see cref="SerializedScheduleConditionOnPropertyDefinition"/> class.
         /// </summary>
         /// <param name="property">The property that will provide the condition result.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedScheduleConditionOnPropertyDefinition(PropertyInfo property)
+        private SerializedScheduleConditionOnPropertyDefinition(SerializedPropertyDefinition property)
         {
             {
-                Lokad.Enforce.Argument(() => property);
+                Debug.Assert(property != null, "The property object should not be null.");
             }
 
-            m_Property = new SerializedPropertyDefinition(property);
+            m_Property = property;
         }
 
         /// <summary>

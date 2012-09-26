@@ -31,11 +31,11 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedAssemblyDefinition> 
                     {
-                        new SerializedAssemblyDefinition(typeof(string).Assembly),
-                        new SerializedAssemblyDefinition(typeof(ExportAttribute).Assembly),
-                        new SerializedAssemblyDefinition(typeof(TestFixtureAttribute).Assembly),
-                        new SerializedAssemblyDefinition(typeof(BigInteger).Assembly),
-                        new SerializedAssemblyDefinition(typeof(SerializedAssemblyDefinition).Assembly),
+                        SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly),
+                        SerializedAssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly),
+                        SerializedAssemblyDefinition.CreateDefinition(typeof(TestFixtureAttribute).Assembly),
+                        SerializedAssemblyDefinition.CreateDefinition(typeof(BigInteger).Assembly),
+                        SerializedAssemblyDefinition.CreateDefinition(typeof(SerializedAssemblyDefinition).Assembly),
                     },
         };
 
@@ -45,18 +45,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedAssemblyDefinition(typeof(string).Assembly),
-                    new SerializedAssemblyDefinition(typeof(ExportAttribute).Assembly),
-                    new SerializedAssemblyDefinition(typeof(TestFixtureAttribute).Assembly),
-                    new SerializedAssemblyDefinition(typeof(BigInteger).Assembly),
-                    new SerializedAssemblyDefinition(typeof(SerializedAssemblyDefinition).Assembly),
+                    SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly),
+                    SerializedAssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly),
+                    SerializedAssemblyDefinition.CreateDefinition(typeof(TestFixtureAttribute).Assembly),
+                    SerializedAssemblyDefinition.CreateDefinition(typeof(BigInteger).Assembly),
+                    SerializedAssemblyDefinition.CreateDefinition(typeof(SerializedAssemblyDefinition).Assembly),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var original = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -66,7 +66,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedAssemblyDefinition first = null;
-            var second = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.IsFalse(first == second);
         }
@@ -74,7 +74,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             SerializedAssemblyDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -83,8 +83,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            var second = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.IsTrue(first == second);
         }
@@ -92,8 +92,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            var second = new SerializedAssemblyDefinition(typeof(ExportAttribute).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
 
             Assert.IsFalse(first == second);
         }
@@ -102,7 +102,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedAssemblyDefinition first = null;
-            var second = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.IsTrue(first != second);
         }
@@ -110,7 +110,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             SerializedAssemblyDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -119,8 +119,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            var second = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.IsFalse(first != second);
         }
@@ -128,8 +128,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            var second = new SerializedAssemblyDefinition(typeof(ExportAttribute).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            var second = SerializedAssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
 
             Assert.IsTrue(first != second);
         }
@@ -137,7 +137,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void Create()
         {
-            var obj = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var obj = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.AreEqual(typeof(string).Assembly.GetName().Name, obj.Name);
             Assert.AreEqual(typeof(string).Assembly.GetName().Version, obj.Version);
@@ -156,7 +156,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -165,8 +165,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            object second = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            object second = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -174,8 +174,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
-            object second = new SerializedAssemblyDefinition(typeof(ExportAttribute).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
+            object second = SerializedAssemblyDefinition.CreateDefinition(typeof(ExportAttribute).Assembly);
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -183,7 +183,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedAssemblyDefinition(typeof(string).Assembly);
+            var first = SerializedAssemblyDefinition.CreateDefinition(typeof(string).Assembly);
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

@@ -74,6 +74,19 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedTypeIdentity"/> class based on the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given type.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedTypeIdentity CreateDefinition(Type type)
+        {
+            return new SerializedTypeIdentity(type);
+        }
+
+        /// <summary>
         /// The name of the type.
         /// </summary>
         private readonly string m_Name;
@@ -124,7 +137,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="type"/> is <see langword="null" />.
         /// </exception>
-        public SerializedTypeIdentity(Type type)
+        private SerializedTypeIdentity(Type type)
         {
             {
                 Lokad.Enforce.Argument(() => type);
@@ -132,7 +145,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
             m_Name = type.Name;
             m_Namespace = type.Namespace;
-            m_Assembly = new SerializedAssemblyDefinition(type.Assembly);
+            m_Assembly = SerializedAssemblyDefinition.CreateDefinition(type.Assembly);
 
             m_IsGenericParameter = type.IsGenericParameter;
             if (type.IsGenericParameter)

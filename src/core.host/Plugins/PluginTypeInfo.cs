@@ -28,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the serialized type info.
         /// </summary>
-        public SerializedTypeDefinition Type
+        public SerializedTypeIdentity Type
         {
             get;
             set;

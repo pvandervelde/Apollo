@@ -73,16 +73,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// The name of the property.
+        /// Creates a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class based on 
+        /// the given <see cref="PropertyInfo"/>.
         /// </summary>
-        private readonly SerializedPropertyDefinition m_Property;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class.
-        /// </summary>
-        /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
-        /// <param name="property">The property for which the current object stores the serialized data.</param>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given property.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
         /// </exception>
@@ -95,14 +93,75 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
-        public SerializedImportOnPropertyDefinition(string contractName, Type contractType, PropertyInfo property)
-            : base(contractName, contractType, property.DeclaringType)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnPropertyDefinition CreateDefinition(
+            string contractName, 
+            Type contractType, 
+            PropertyInfo property,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => property);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedImportOnPropertyDefinition(
+                contractName,
+                identityGenerator(contractType),
+                identityGenerator(property.DeclaringType),
+                SerializedPropertyDefinition.CreateDefinition(property, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class based on the given <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnPropertyDefinition CreateDefinition(string contractName, Type contractType, PropertyInfo property)
+        {
+            return CreateDefinition(contractName, contractType, property, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
+        /// The name of the property.
+        /// </summary>
+        private readonly SerializedPropertyDefinition m_Property;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="declaringType">The type that defines the property.</param>
+        /// <param name="property">The property for which the current object stores the serialized data.</param>
+        private SerializedImportOnPropertyDefinition(
+            string contractName, 
+            SerializedTypeIdentity contractType, 
+            SerializedTypeIdentity declaringType,
+            SerializedPropertyDefinition property)
+            : base(contractName, contractType, declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => property);
             }
 
-            m_Property = new SerializedPropertyDefinition(property);
+            m_Property = property;
         }
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
         /// </exception>
-        protected SerializedExportDefinition(string contractName, Type contractType, Type declaringType)
+        protected SerializedExportDefinition(string contractName, SerializedTypeIdentity contractType, SerializedTypeIdentity declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => contractName);
@@ -59,8 +59,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
             }
 
             m_ContractName = contractName;
-            m_ContractType = new SerializedTypeIdentity(contractType);
-            m_DeclaringType = new SerializedTypeIdentity(declaringType);
+            m_ContractType = contractType;
+            m_DeclaringType = declaringType;
         }
 
         /// <summary>

@@ -34,14 +34,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedTypeDefinition> 
                     {
-                        new SerializedTypeDefinition(typeof(string)),
-                        new SerializedTypeDefinition(typeof(object)),
-                        new SerializedTypeDefinition(typeof(int)),
-                        new SerializedTypeDefinition(typeof(IComparable)),
-                        new SerializedTypeDefinition(typeof(IComparable<>)),
-                        new SerializedTypeDefinition(typeof(List<int>)),
-                        new SerializedTypeDefinition(typeof(double)),
-                        new SerializedTypeDefinition(typeof(void)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(string)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(object)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(int)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(IComparable)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(IComparable<>)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(List<int>)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(double)),
+                        SerializedTypeDefinition.CreateDefinition(typeof(void)),
                     },
         };
 
@@ -51,21 +51,21 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedTypeDefinition(typeof(string)),
-                    new SerializedTypeDefinition(typeof(object)),
-                    new SerializedTypeDefinition(typeof(int)),
-                    new SerializedTypeDefinition(typeof(IComparable)),
-                    new SerializedTypeDefinition(typeof(IComparable<>)),
-                    new SerializedTypeDefinition(typeof(List<int>)),
-                    new SerializedTypeDefinition(typeof(double)),
-                    new SerializedTypeDefinition(typeof(void)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(string)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(object)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(int)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(IComparable)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(IComparable<>)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(List<int>)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(double)),
+                    SerializedTypeDefinition.CreateDefinition(typeof(void)),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedTypeDefinition(typeof(string));
+            var original = SerializedTypeDefinition.CreateDefinition(typeof(string));
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +75,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedTypeDefinition first = null;
-            var second = new SerializedTypeDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(string));
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +83,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
             SerializedTypeDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +92,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            var second = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(string));
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +101,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            var second = new SerializedTypeDefinition(typeof(object));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(object));
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +111,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedTypeDefinition first = null;
-            var second = new SerializedTypeDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(string));
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +119,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
             SerializedTypeDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +128,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            var second = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(string));
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +137,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            var second = new SerializedTypeDefinition(typeof(object));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            var second = SerializedTypeDefinition.CreateDefinition(typeof(object));
 
             Assert.IsTrue(first != second);
         }
@@ -146,7 +146,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithClass()
         {
-            var obj = new SerializedTypeDefinition(typeof(List<int>));
+            var obj = SerializedTypeDefinition.CreateDefinition(typeof(List<int>));
 
             Assert.AreEqual(typeof(List<int>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(List<int>).IsClass, obj.IsClass);
@@ -156,14 +156,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
             var interfaces = new[]
                 {
-                    new SerializedTypeIdentity(typeof(IList<int>)),
-                    new SerializedTypeIdentity(typeof(ICollection<int>)),
-                    new SerializedTypeIdentity(typeof(IEnumerable<int>)),
-                    new SerializedTypeIdentity(typeof(IReadOnlyCollection<int>)),
-                    new SerializedTypeIdentity(typeof(IReadOnlyList<int>)),
-                    new SerializedTypeIdentity(typeof(IList)),
-                    new SerializedTypeIdentity(typeof(ICollection)),
-                    new SerializedTypeIdentity(typeof(IEnumerable)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IList<int>)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(ICollection<int>)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IEnumerable<int>)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IReadOnlyCollection<int>)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IReadOnlyList<int>)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IList)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(ICollection)),
+                    SerializedTypeIdentity.CreateDefinition(typeof(IEnumerable)),
                 };
             Assert.AreElementsEqualIgnoringOrder(interfaces, obj.BaseInterfaces);
         }
@@ -172,7 +172,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void CreateWithNestedClass()
         {
             var type = typeof(Nested<,>);
-            var obj = new SerializedTypeDefinition(type);
+            var obj = SerializedTypeDefinition.CreateDefinition(type);
 
             Assert.AreEqual(type.FullName, obj.Identity.FullName);
             Assert.AreEqual(type.IsClass, obj.IsClass);
@@ -184,19 +184,19 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithInterface()
         {
-            var obj = new SerializedTypeDefinition(typeof(IEnumerable<>));
+            var obj = SerializedTypeDefinition.CreateDefinition(typeof(IEnumerable<>));
 
             Assert.AreEqual(typeof(IEnumerable<>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(IEnumerable<>).IsClass, obj.IsClass);
             Assert.AreEqual(typeof(IEnumerable<>).IsInterface, obj.IsInterface);
             Assert.IsNull(obj.BaseType);
-            Assert.AreElementsEqual(new[] { new SerializedTypeIdentity(typeof(IEnumerable)) }, obj.BaseInterfaces);
+            Assert.AreElementsEqual(new[] { SerializedTypeIdentity.CreateDefinition(typeof(IEnumerable)) }, obj.BaseInterfaces);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -205,8 +205,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            object second = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            object second = SerializedTypeDefinition.CreateDefinition(typeof(string));
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -214,8 +214,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
-            object second = new SerializedTypeDefinition(typeof(object));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
+            object second = SerializedTypeDefinition.CreateDefinition(typeof(object));
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -223,7 +223,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedTypeDefinition(typeof(string));
+            var first = SerializedTypeDefinition.CreateDefinition(typeof(string));
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

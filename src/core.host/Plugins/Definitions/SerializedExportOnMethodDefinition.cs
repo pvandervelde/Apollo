@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,16 +74,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// The name of the method.
-        /// </summary>
-        private readonly SerializedMethodDefinition m_Method;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SerializedExportOnMethodDefinition"/> class.
+        /// Creates a new instance of the <see cref="SerializedExportOnMethodDefinition"/> class based 
+        /// on the given <see cref="MethodInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
         /// <param name="contractType">The exported type for the contract.</param>
         /// <param name="method">The method for which the current object stores the serialized data.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given method.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
         /// </exception>
@@ -95,14 +94,76 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="method"/> is <see langword="null" />.
         /// </exception>
-        public SerializedExportOnMethodDefinition(string contractName, Type contractType, MethodInfo method)
-            : base(contractName, contractType, method.DeclaringType)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedExportOnMethodDefinition CreateDefinition(
+            string contractName,
+            Type contractType,
+            MethodInfo method,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
         {
             {
                 Lokad.Enforce.Argument(() => method);
+                Lokad.Enforce.Argument(() => identityGenerator);
             }
 
-            m_Method = new SerializedMethodDefinition(method);
+            return new SerializedExportOnMethodDefinition(
+                contractName,
+                identityGenerator(contractType),
+                identityGenerator(method.DeclaringType),
+                SerializedMethodDefinition.CreateDefinition(method, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedExportOnMethodDefinition"/> class 
+        /// based on the given <see cref="MethodInfo"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="method">The method for which the current object stores the serialized data.</param>
+        /// <returns>The serialized definition for the given method.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedExportOnMethodDefinition CreateDefinition(string contractName, Type contractType, MethodInfo method)
+        {
+            return CreateDefinition(contractName, contractType, method, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
+        /// The name of the method.
+        /// </summary>
+        private readonly SerializedMethodDefinition m_Method;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializedExportOnMethodDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="declaringType">The type which declares the method on which the import is placed.</param>
+        /// <param name="method">The method for which the current object stores the serialized data.</param>
+        private SerializedExportOnMethodDefinition(
+            string contractName, 
+            SerializedTypeIdentity contractType, 
+            SerializedTypeIdentity declaringType,
+            SerializedMethodDefinition method)
+            : base(contractName, contractType, declaringType)
+        {
+            {
+                Debug.Assert(method != null, "The method object should not be null.");
+            }
+
+            m_Method = method;
         }
 
         /// <summary>

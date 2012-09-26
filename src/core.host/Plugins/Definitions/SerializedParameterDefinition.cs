@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,6 +74,43 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedParameterDefinition"/> class based on the given <see cref="ParameterInfo"/>.
+        /// </summary>
+        /// <param name="parameter">The parameter for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedParameterDefinition CreateDefinition(ParameterInfo parameter, Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => parameter);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedParameterDefinition(
+                parameter.Name,
+                identityGenerator(parameter.ParameterType));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedParameterDefinition"/> class based on the given <see cref="ParameterInfo"/>.
+        /// </summary>
+        /// <param name="parameter">The parameter for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedParameterDefinition CreateDefinition(ParameterInfo parameter)
+        {
+            return CreateDefinition(parameter, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The name of the parameter.
         /// </summary>
         private readonly string m_Name;
@@ -85,18 +123,17 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedParameterDefinition"/> class.
         /// </summary>
-        /// <param name="parameter">The parameter for which the data should be stored.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedParameterDefinition(ParameterInfo parameter)
+        /// <param name="name">The name of the parameter.</param>
+        /// <param name="type">The parameter type.</param>
+        private SerializedParameterDefinition(string name, SerializedTypeIdentity type)
         {
             {
-                Lokad.Enforce.Argument(() => parameter);
+                Debug.Assert(!string.IsNullOrEmpty(name), "The name should not be an empty string");
+                Debug.Assert(type != null, "The declaring type should not be null.");
             }
 
-            m_Name = parameter.Name;
-            m_Type = new SerializedTypeIdentity(parameter.ParameterType);
+            m_Name = name;
+            m_Type = type;
         }
 
         /// <summary>

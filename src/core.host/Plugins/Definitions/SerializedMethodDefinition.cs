@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -75,6 +76,47 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedMethodDefinition"/> class based on the given <see cref="MethodInfo"/>.
+        /// </summary>
+        /// <param name="method">The method for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given method.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedMethodDefinition CreateDefinition(
+            MethodInfo method,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => method);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedMethodDefinition(
+                identityGenerator(method.DeclaringType), 
+                method.Name, 
+                !method.ReturnType.Equals(typeof(void)) ? identityGenerator(method.ReturnType) : null, 
+                method.GetParameters().Select(p => SerializedParameterDefinition.CreateDefinition(p, identityGenerator)).ToArray());
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedMethodDefinition"/> class based on the given <see cref="MethodInfo"/>.
+        /// </summary>
+        /// <param name="method">The method for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given method.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedMethodDefinition CreateDefinition(MethodInfo method)
+        {
+            return CreateDefinition(method, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The type that owns the current method.
         /// </summary>
         private readonly SerializedTypeIdentity m_DeclaringType;
@@ -97,20 +139,26 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedMethodDefinition"/> class.
         /// </summary>
-        /// <param name="method">The method for which the data should be stored.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedMethodDefinition(MethodInfo method)
+        /// <param name="declaringType">The type that declares the method.</param>
+        /// <param name="name">The name of the method.</param>
+        /// <param name="returnType">The return type of the method.</param>
+        /// <param name="parameters">The collection containing the parameters for the method.</param>
+        private SerializedMethodDefinition(
+            SerializedTypeIdentity declaringType, 
+            string name, 
+            SerializedTypeIdentity returnType, 
+            SerializedParameterDefinition[] parameters)
         {
             {
-                Lokad.Enforce.Argument(() => method);
+                Debug.Assert(declaringType != null, "The declaring type should not be null.");
+                Debug.Assert(!string.IsNullOrEmpty(name), "The name should not be an empty string");
+                Debug.Assert(parameters != null, "The parameter array should not be null.");
             }
 
-            m_DeclaringType = new SerializedTypeIdentity(method.DeclaringType);
-            m_MethodName = method.Name;
-            m_ReturnType = !method.ReturnType.Equals(typeof(void)) ? new SerializedTypeIdentity(method.ReturnType) : null;
-            m_Parameters = method.GetParameters().Select(p => new SerializedParameterDefinition(p)).ToArray();
+            m_DeclaringType = declaringType;
+            m_MethodName = name;
+            m_ReturnType = returnType;
+            m_Parameters = parameters;
         }
 
         /// <summary>

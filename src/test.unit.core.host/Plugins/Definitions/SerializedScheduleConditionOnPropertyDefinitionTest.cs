@@ -40,11 +40,11 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedScheduleConditionOnPropertyDefinition> 
                     {
-                        new SerializedScheduleConditionOnPropertyDefinition(typeof(string).GetProperty("Length")),
-                        new SerializedScheduleConditionOnPropertyDefinition(typeof(Version).GetProperty("Build")),
-                        new SerializedScheduleConditionOnPropertyDefinition(typeof(List<int>).GetProperty("Count")),
-                        new SerializedScheduleConditionOnPropertyDefinition(typeof(TimeZone).GetProperty("StandardName")),
-                        new SerializedScheduleConditionOnPropertyDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
+                        SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
+                        SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
+                        SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
+                        SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
+                        SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
                     },
         };
 
@@ -54,18 +54,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedScheduleConditionOnPropertyDefinition(typeof(string).GetProperty("Length")),
-                    new SerializedScheduleConditionOnPropertyDefinition(typeof(Version).GetProperty("Build")),
-                    new SerializedScheduleConditionOnPropertyDefinition(typeof(List<int>).GetProperty("Count")),
-                    new SerializedScheduleConditionOnPropertyDefinition(typeof(TimeZone).GetProperty("StandardName")),
-                    new SerializedScheduleConditionOnPropertyDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
+                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(string).GetProperty("Length")),
+                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(Version).GetProperty("Build")),
+                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(List<int>).GetProperty("Count")),
+                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(TimeZone).GetProperty("StandardName")),
+                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(typeof(TimeZoneInfo).GetProperty("StandardName")),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var original = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +75,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedScheduleConditionOnPropertyDefinition first = null;
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +83,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             SerializedScheduleConditionOnPropertyDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +92,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +101,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +111,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedScheduleConditionOnPropertyDefinition first = null;
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +119,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             SerializedScheduleConditionOnPropertyDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +128,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +137,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            var second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            var second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsTrue(first != second);
         }
@@ -146,16 +146,16 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithClass()
         {
-            var obj = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var obj = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             var property = GetPropertyForString();
 
-            Assert.AreEqual(new SerializedPropertyDefinition(property), obj.Property);
+            Assert.AreEqual(SerializedPropertyDefinition.CreateDefinition(property), obj.Property);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -164,8 +164,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            object second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            object second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -173,8 +173,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
-            object second = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForVersion());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
+            object second = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForVersion());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -182,7 +182,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedScheduleConditionOnPropertyDefinition(GetPropertyForString());
+            var first = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(GetPropertyForString());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

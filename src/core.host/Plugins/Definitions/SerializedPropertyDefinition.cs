@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,6 +74,46 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedPropertyDefinition"/> class based on the given <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedPropertyDefinition CreateDefinition(
+            PropertyInfo property,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => property);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedPropertyDefinition(
+                identityGenerator(property.DeclaringType),
+                property.Name,
+                identityGenerator(property.PropertyType));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedMethodDefinition"/> class based on the given <see cref="PropertyInfo"/>.
+        /// </summary>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedPropertyDefinition CreateDefinition(PropertyInfo property)
+        {
+            return CreateDefinition(property, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The type that owns the current method.
         /// </summary>
         private readonly SerializedTypeIdentity m_DeclaringType;
@@ -90,19 +131,20 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedPropertyDefinition"/> class.
         /// </summary>
-        /// <param name="property">The property for which the data should be stored.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedPropertyDefinition(PropertyInfo property)
+        /// <param name="declaringType">The object that stores the serialized identity for the declaring type of the property.</param>
+        /// <param name="name">The name of the property.</param>
+        /// <param name="propertyType">The object that stores the serialized identity of the return type of the property.</param>
+        private SerializedPropertyDefinition(SerializedTypeIdentity declaringType, string name, SerializedTypeIdentity propertyType)
         {
             {
-                Lokad.Enforce.Argument(() => property);
+                Debug.Assert(declaringType != null, "The declaring type object should not be null.");
+                Debug.Assert(!string.IsNullOrEmpty(name), "The name should not be an empty string.");
+                Debug.Assert(propertyType != null, "The property type object should not be null.");
             }
 
-            m_DeclaringType = new SerializedTypeIdentity(property.DeclaringType);
-            m_Name = property.Name;
-            m_PropertyType = new SerializedTypeIdentity(property.PropertyType);
+            m_DeclaringType = declaringType;
+            m_Name = name;
+            m_PropertyType = propertyType;
         }
 
         /// <summary>

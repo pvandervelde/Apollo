@@ -75,11 +75,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SerializedExportOnTypeDefinition"/> class.
+        /// Creates a new instance of the <see cref="SerializedExportOnTypeDefinition"/> class based 
+        /// on the given <see cref="Type"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
         /// <param name="contractType">The exported type for the contract.</param>
-        /// <param name="owningType">The type that owns the current export.</param>
+        /// <param name="declaringType">The type for which the current object stores the serialized data.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given type.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
         /// </exception>
@@ -90,10 +93,61 @@ namespace Apollo.Core.Host.Plugins.Definitions
         ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="owningType"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
         /// </exception>
-        public SerializedExportOnTypeDefinition(string contractName, Type contractType, Type owningType)
-            : base(contractName, contractType, owningType)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedExportOnTypeDefinition CreateDefinition(
+            string contractName,
+            Type contractType,
+            Type declaringType,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => declaringType);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedExportOnTypeDefinition(
+                contractName,
+                identityGenerator(contractType),
+                identityGenerator(declaringType));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedExportOnTypeDefinition"/> class 
+        /// based on the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="declaringType">The method for which the current object stores the serialized data.</param>
+        /// <returns>The serialized definition for the given type.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedExportOnTypeDefinition CreateDefinition(string contractName, Type contractType, Type declaringType)
+        {
+            return CreateDefinition(contractName, contractType, declaringType, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializedExportOnTypeDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="declaringType">The type that owns the current export.</param>
+        private SerializedExportOnTypeDefinition(string contractName, SerializedTypeIdentity contractType, SerializedTypeIdentity declaringType)
+            : base(contractName, contractType, declaringType)
         { 
         }
 

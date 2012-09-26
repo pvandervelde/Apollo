@@ -73,6 +73,74 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedImportOnConstructorDefinition"/> class based 
+        /// on the given <see cref="ParameterInfo"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The import type for the contract.</param>
+        /// <param name="parameter">The method for which the current object stores the serialized data.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnConstructorDefinition CreateDefinition(
+            string contractName,
+            Type contractType,
+            ParameterInfo parameter,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => parameter);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedImportOnConstructorDefinition(
+                contractName,
+                identityGenerator(contractType),
+                identityGenerator(parameter.Member.DeclaringType),
+                SerializedConstructorDefinition.CreateDefinition(parameter.Member as ConstructorInfo, identityGenerator),
+                SerializedParameterDefinition.CreateDefinition(parameter, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedImportOnConstructorDefinition"/> class 
+        /// based on the given <see cref="ParameterInfo"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="parameter">The parameter for which the current object stores the serialized data.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnConstructorDefinition CreateDefinition(string contractName, Type contractType, ParameterInfo parameter)
+        {
+            return CreateDefinition(contractName, contractType, parameter, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The parameter on which the import is defined.
         /// </summary>
         private readonly SerializedParameterDefinition m_Parameter;
@@ -87,31 +155,23 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
         /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="declaringType">The type that declares the constructor on which the import is placed.</param>
+        /// <param name="constructor">The constructor that declares the import.</param>
         /// <param name="parameter">The parameter on which the import is defined.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedImportOnConstructorDefinition(
+        private SerializedImportOnConstructorDefinition(
             string contractName, 
-            Type contractType, 
-            ParameterInfo parameter)
-            : base(contractName, contractType, parameter.Member.DeclaringType)
+            SerializedTypeIdentity contractType, 
+            SerializedTypeIdentity declaringType,
+            SerializedConstructorDefinition constructor,
+            SerializedParameterDefinition parameter)
+            : base(contractName, contractType, declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => parameter);
             }
 
-            m_Constructor = new SerializedConstructorDefinition(parameter.Member as ConstructorInfo);
-            m_Parameter = new SerializedParameterDefinition(parameter);
+            m_Constructor = constructor;
+            m_Parameter = parameter;
         }
 
         /// <summary>

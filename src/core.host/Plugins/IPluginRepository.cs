@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Apollo.Core.Host.Plugins.Definitions;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -17,7 +18,7 @@ namespace Apollo.Core.Host.Plugins
 
         void RemovePlugins(IEnumerable<string> deletedFiles);
 
-        void Store(IEnumerable<PluginInfo> pluginInfo);
+        void Store(IEnumerable<PluginInfo> plugins, IEnumerable<SerializedTypeDefinition> types);
 
         // When we store the different plug-ins then we check:
         // - All types are resolved

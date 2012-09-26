@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,6 +74,45 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedScheduleActionDefinition"/> class based 
+        /// on the given <see cref="MethodInfo"/>.
+        /// </summary>
+        /// <param name="method">The method for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given method.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedScheduleActionDefinition CreateDefinition(
+            MethodInfo method,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => method);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedScheduleActionDefinition(SerializedMethodDefinition.CreateDefinition(method, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedScheduleActionDefinition"/> class 
+        /// based on the given <see cref="MethodInfo"/>.
+        /// </summary>
+        /// <param name="method">The method for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given method.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedScheduleActionDefinition CreateDefinition(MethodInfo method)
+        {
+            return CreateDefinition(method, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The action method.
         /// </summary>
         private readonly SerializedMethodDefinition m_Method;
@@ -81,16 +121,13 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Initializes a new instance of the <see cref="SerializedScheduleActionDefinition"/> class.
         /// </summary>
         /// <param name="method">The method that will perform the action.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="method"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedScheduleActionDefinition(MethodInfo method)
+        private SerializedScheduleActionDefinition(SerializedMethodDefinition method)
         {
             {
-                Lokad.Enforce.Argument(() => method);
+                Debug.Assert(method != null, "The method object should not be null.");
             }
 
-            m_Method = new SerializedMethodDefinition(method);
+            m_Method = method;
         }
 
         /// <summary>

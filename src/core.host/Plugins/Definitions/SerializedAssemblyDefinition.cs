@@ -74,6 +74,19 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedAssemblyDefinition"/> class based on the given <see cref="Assembly"/>.
+        /// </summary>
+        /// <param name="assembly">The assembly for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given assemly.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="assembly"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedAssemblyDefinition CreateDefinition(Assembly assembly)
+        {
+            return new SerializedAssemblyDefinition(assembly);
+        }
+
+        /// <summary>
         /// The name of the assembly.
         /// </summary>
         private readonly string m_Name;
@@ -100,7 +113,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="assembly"/> is <see langword="null" />.
         /// </exception>
-        public SerializedAssemblyDefinition(Assembly assembly)
+        private SerializedAssemblyDefinition(Assembly assembly)
         {
             {
                 Lokad.Enforce.Argument(() => assembly);

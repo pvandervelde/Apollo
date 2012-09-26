@@ -41,14 +41,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedConstructorDefinition> 
                     {
-                        new SerializedConstructorDefinition(
+                        SerializedConstructorDefinition.CreateDefinition(
                             typeof(string).GetConstructor(new[] 
                                 { 
                                     typeof(char[])
                                 })),
-                        new SerializedConstructorDefinition(typeof(object).GetConstructor(new Type[0])),
-                        new SerializedConstructorDefinition(typeof(List<int>).GetConstructor(new Type[0])),
-                        new SerializedConstructorDefinition(
+                        SerializedConstructorDefinition.CreateDefinition(typeof(object).GetConstructor(new Type[0])),
+                        SerializedConstructorDefinition.CreateDefinition(typeof(List<int>).GetConstructor(new Type[0])),
+                        SerializedConstructorDefinition.CreateDefinition(
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -62,14 +62,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedConstructorDefinition(
+                    SerializedConstructorDefinition.CreateDefinition(
                         typeof(string).GetConstructor(new[] 
                         { 
                             typeof(char[])
                         })),
-                    new SerializedConstructorDefinition(typeof(object).GetConstructor(new Type[0])),
-                    new SerializedConstructorDefinition(typeof(List<int>).GetConstructor(new Type[0])),
-                    new SerializedConstructorDefinition(
+                    SerializedConstructorDefinition.CreateDefinition(typeof(object).GetConstructor(new Type[0])),
+                    SerializedConstructorDefinition.CreateDefinition(typeof(List<int>).GetConstructor(new Type[0])),
+                    SerializedConstructorDefinition.CreateDefinition(
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -80,7 +80,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedConstructorDefinition(GetConstructorForString());
+            var original = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -90,7 +90,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedConstructorDefinition first = null;
-            var second = new SerializedConstructorDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
 
             Assert.IsFalse(first == second);
         }
@@ -98,7 +98,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             SerializedConstructorDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -107,8 +107,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            var second = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
 
             Assert.IsTrue(first == second);
         }
@@ -116,8 +116,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            var second = new SerializedConstructorDefinition(GetConstructorForObject());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForObject());
 
             Assert.IsFalse(first == second);
         }
@@ -126,7 +126,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedConstructorDefinition first = null;
-            var second = new SerializedConstructorDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
 
             Assert.IsTrue(first != second);
         }
@@ -134,7 +134,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             SerializedConstructorDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -143,8 +143,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            var second = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
 
             Assert.IsFalse(first != second);
         }
@@ -152,8 +152,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            var second = new SerializedConstructorDefinition(GetConstructorForObject());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            var second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForObject());
 
             Assert.IsTrue(first != second);
         }
@@ -161,17 +161,19 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void CreateWithClass()
         {
-            var obj = new SerializedConstructorDefinition(GetConstructorForString());
+            var obj = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             var constructor = GetConstructorForString();
 
-            Assert.AreElementsEqualIgnoringOrder(constructor.GetParameters().Select(p => new SerializedParameterDefinition(p)), obj.Parameters);
-            Assert.AreEqual(new SerializedTypeIdentity(constructor.DeclaringType), obj.DeclaringType);
+            Assert.AreElementsEqualIgnoringOrder(
+                constructor.GetParameters().Select(p => SerializedParameterDefinition.CreateDefinition(p)), 
+                obj.Parameters);
+            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(constructor.DeclaringType), obj.DeclaringType);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -180,8 +182,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            object second = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            object second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -189,8 +191,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
-            object second = new SerializedConstructorDefinition(GetConstructorForObject());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
+            object second = SerializedConstructorDefinition.CreateDefinition(GetConstructorForObject());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -198,7 +200,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedConstructorDefinition(GetConstructorForString());
+            var first = SerializedConstructorDefinition.CreateDefinition(GetConstructorForString());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

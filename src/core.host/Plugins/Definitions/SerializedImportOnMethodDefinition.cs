@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -73,21 +74,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// The parameter on which the import is defined.
+        /// Creates a new instance of the <see cref="SerializedImportOnMethodDefinition"/> class based 
+        /// on the given <see cref="ParameterInfo"/>.
         /// </summary>
-        private readonly SerializedParameterDefinition m_Parameter;
-
-        /// <summary>
-        /// The method on which the import is defined.
-        /// </summary>
-        private readonly SerializedMethodDefinition m_Method;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SerializedImportOnMethodDefinition"/> class.
-        /// </summary>
-        /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
-        /// <param name="parameter">The parameter on which the import is defined.</param>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The import type for the contract.</param>
+        /// <param name="parameter">The method for which the current object stores the serialized data.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
         /// </exception>
@@ -100,18 +94,86 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
         /// </exception>
-        public SerializedImportOnMethodDefinition(
-            string contractName, 
-            Type contractType, 
-            ParameterInfo parameter)
-            : base(contractName, contractType, parameter.Member.DeclaringType)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnMethodDefinition CreateDefinition(
+            string contractName,
+            Type contractType,
+            ParameterInfo parameter,
+            Func<Type, SerializedTypeIdentity> identityGenerator)
         {
             {
                 Lokad.Enforce.Argument(() => parameter);
+                Lokad.Enforce.Argument(() => identityGenerator);
             }
 
-            m_Method = new SerializedMethodDefinition(parameter.Member as MethodInfo);
-            m_Parameter = new SerializedParameterDefinition(parameter);
+            return new SerializedImportOnMethodDefinition(
+                contractName,
+                identityGenerator(contractType),
+                identityGenerator(parameter.Member.DeclaringType),
+                SerializedMethodDefinition.CreateDefinition(parameter.Member as MethodInfo, identityGenerator),
+                SerializedParameterDefinition.CreateDefinition(parameter, identityGenerator));
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedImportOnMethodDefinition"/> class 
+        /// based on the given <see cref="ParameterInfo"/>.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="parameter">The parameter for which the current object stores the serialized data.</param>
+        /// <returns>The serialized definition for the given parameter.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string..
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedImportOnMethodDefinition CreateDefinition(string contractName, Type contractType, ParameterInfo parameter)
+        {
+            return CreateDefinition(contractName, contractType, parameter, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
+        /// The parameter on which the import is defined.
+        /// </summary>
+        private readonly SerializedParameterDefinition m_Parameter;
+
+        /// <summary>
+        /// The method on which the import is defined.
+        /// </summary>
+        private readonly SerializedMethodDefinition m_Method;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializedImportOnMethodDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="contractType">The imported type for the contract.</param>
+        /// <param name="declaringType">The type that declares the method on which the import is defined.</param>
+        /// <param name="declaringMethod">The method that declares the import.</param>
+        /// <param name="parameter">The parameter on which the import is defined.</param>
+        private SerializedImportOnMethodDefinition(
+            string contractName, 
+            SerializedTypeIdentity contractType, 
+            SerializedTypeIdentity declaringType,
+            SerializedMethodDefinition declaringMethod,
+            SerializedParameterDefinition parameter)
+            : base(contractName, contractType, declaringType)
+        {
+            {
+                Debug.Assert(declaringMethod != null, "The declaring method should not be null.");
+                Debug.Assert(parameter != null, "The parameter should not be null.");
+            }
+
+            m_Method = declaringMethod;
+            m_Parameter = parameter;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -75,6 +76,45 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedConstructorDefinition"/> class based on the given <see cref="ConstructorInfo"/>.
+        /// </summary>
+        /// <param name="constructor">The constructor for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given constructor.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="constructor"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedConstructorDefinition CreateDefinition(
+            ConstructorInfo constructor, 
+            Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => constructor);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+
+            return new SerializedConstructorDefinition(
+                identityGenerator(constructor.DeclaringType),
+                constructor.GetParameters().Select(p => SerializedParameterDefinition.CreateDefinition(p, identityGenerator)).ToArray());
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedConstructorDefinition"/> class based on the given <see cref="ConstructorInfo"/>.
+        /// </summary>
+        /// <param name="constructor">The constructor for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given constructor.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="constructor"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedConstructorDefinition CreateDefinition(ConstructorInfo constructor)
+        {
+            return CreateDefinition(constructor, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The type that owns the constructor.
         /// </summary>
         private readonly SerializedTypeIdentity m_DeclaringType;
@@ -87,18 +127,19 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedConstructorDefinition"/> class.
         /// </summary>
-        /// <param name="constructor">The constructor for which the data should be stored.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="constructor"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedConstructorDefinition(ConstructorInfo constructor)
+        /// <param name="declaringType">The serialized definition for the type that declares the constructor.</param>
+        /// <param name="parameters">The array containing the definitions for the constructor parameters.</param>
+        private SerializedConstructorDefinition(
+            SerializedTypeIdentity declaringType,
+            SerializedParameterDefinition[] parameters)
         {
             {
-                Lokad.Enforce.Argument(() => constructor);
+                Debug.Assert(declaringType != null, "The declaring type should not be null.");
+                Debug.Assert(parameters != null, "The parameter array should not be null.");
             }
 
-            m_DeclaringType = new SerializedTypeIdentity(constructor.DeclaringType);
-            m_Parameters = constructor.GetParameters().Select(p => new SerializedParameterDefinition(p)).ToArray();
+            m_DeclaringType = declaringType;
+            m_Parameters = parameters;
         }
 
         /// <summary>

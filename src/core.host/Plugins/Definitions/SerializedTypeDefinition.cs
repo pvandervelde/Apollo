@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
@@ -75,6 +76,42 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedTypeDefinition"/> class based on the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given type.</returns>
+        public static SerializedTypeDefinition CreateDefinition(Type type, Func<Type, SerializedTypeIdentity> identityGenerator)
+        {
+            {
+                Lokad.Enforce.Argument(() => type);
+                Lokad.Enforce.Argument(() => identityGenerator);
+            }
+            
+            // Note that we don't want to go back to the identity generator for our own type, otherwise we'll keep looping forever.
+            // This is kinda ugly because we shouldn't have to think about this here ...
+            return new SerializedTypeDefinition(
+                SerializedTypeIdentity.CreateDefinition(type),
+                type.BaseType != null ? identityGenerator(type.BaseType) : null,
+                type.GetInterfaces().Select(i => identityGenerator(i)).ToArray(),
+                type.IsClass,
+                type.IsInterface);
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="SerializedTypeDefinition"/> class based on the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given type.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedTypeDefinition CreateDefinition(Type type)
+        {
+            return CreateDefinition(type, t => SerializedTypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
         /// The identity information for the type.
         /// </summary>
         private readonly SerializedTypeIdentity m_Identity;
@@ -103,25 +140,30 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedTypeDefinition"/> class.
         /// </summary>
-        /// <param name="type">The Type that should be serialized.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
-        /// </exception>
-        public SerializedTypeDefinition(Type type)
+        /// <param name="identity">The object that provides the serialized identity of the type.</param>
+        /// <param name="baseType">
+        /// The object that provides the serialized identity of the base class for the type. Maybe <see langword="null"/>.
+        /// </param>
+        /// <param name="baseInterfaces">The collection of identities for the implemented interfaces.</param>
+        /// <param name="isClass">Indicates if the type is a class.</param>
+        /// <param name="isInterface">Indicates if a type is an interface.</param>
+        private SerializedTypeDefinition(
+            SerializedTypeIdentity identity,
+            SerializedTypeIdentity baseType,
+            SerializedTypeIdentity[] baseInterfaces,
+            bool isClass,
+            bool isInterface)
         {
             {
-                Lokad.Enforce.Argument(() => type);
+                Debug.Assert(identity != null, "The identity object should not be null.");
+                Debug.Assert(baseInterfaces != null, "The base interfaces array should not be null.");
             }
 
-            m_Identity = new SerializedTypeIdentity(type);
-            m_BaseInterfaces = type.GetInterfaces().Select(i => new SerializedTypeIdentity(i)).ToArray();
-            if (type.BaseType != null)
-            {
-                m_Base = new SerializedTypeIdentity(type.BaseType);
-            }
-
-            m_IsClass = type.IsClass;
-            m_IsInterface = type.IsInterface;
+            m_Identity = identity;
+            m_Base = baseType;
+            m_BaseInterfaces = baseInterfaces;
+            m_IsClass = isClass;
+            m_IsInterface = isInterface;
         }
 
         /// <summary>

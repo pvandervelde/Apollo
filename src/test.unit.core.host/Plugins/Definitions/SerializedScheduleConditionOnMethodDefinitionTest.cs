@@ -40,11 +40,16 @@ namespace Apollo.Core.Host.Plugins.Definitions
             DistinctInstances =
                 new List<SerializedScheduleConditionOnMethodDefinition> 
                     {
-                        new SerializedScheduleConditionOnMethodDefinition(typeof(string).GetMethod("Contains")),
-                        new SerializedScheduleConditionOnMethodDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
-                        new SerializedScheduleConditionOnMethodDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
-                        new SerializedScheduleConditionOnMethodDefinition(typeof(IComparable).GetMethod("CompareTo")),
-                        new SerializedScheduleConditionOnMethodDefinition(typeof(IComparable<>).GetMethod("CompareTo")),
+                        SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            typeof(string).GetMethod("Contains")),
+                        SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
+                        SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
+                        SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            typeof(IComparable).GetMethod("CompareTo")),
+                        SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            typeof(IComparable<>).GetMethod("CompareTo")),
                     },
         };
 
@@ -54,18 +59,23 @@ namespace Apollo.Core.Host.Plugins.Definitions
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new SerializedScheduleConditionOnMethodDefinition(typeof(string).GetMethod("Contains")),
-                    new SerializedScheduleConditionOnMethodDefinition(typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
-                    new SerializedScheduleConditionOnMethodDefinition(typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
-                    new SerializedScheduleConditionOnMethodDefinition(typeof(IComparable).GetMethod("CompareTo")),
-                    new SerializedScheduleConditionOnMethodDefinition(typeof(IComparable<>).GetMethod("CompareTo")),
+                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                        typeof(string).GetMethod("Contains")),
+                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                        typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
+                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                        typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
+                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                        typeof(IComparable).GetMethod("CompareTo")),
+                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                        typeof(IComparable<>).GetMethod("CompareTo")),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var original = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +85,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedScheduleConditionOnMethodDefinition first = null;
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +93,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             SerializedScheduleConditionOnMethodDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +102,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +111,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForDouble());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForDouble());
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +121,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedScheduleConditionOnMethodDefinition first = null;
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +129,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             SerializedScheduleConditionOnMethodDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +138,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +147,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            var second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForDouble());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            var second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForDouble());
 
             Assert.IsTrue(first != second);
         }
@@ -146,16 +156,16 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void Create()
         {
-            var obj = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var obj = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             var method = GetMethodForInt();
 
-            Assert.AreEqual(new SerializedMethodDefinition(GetMethodForInt()), obj.Method);
+            Assert.AreEqual(SerializedMethodDefinition.CreateDefinition(GetMethodForInt()), obj.Method);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -164,8 +174,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            object second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            object second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -173,8 +183,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
-            object second = new SerializedScheduleConditionOnMethodDefinition(GetMethodForDouble());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
+            object second = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForDouble());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -182,7 +192,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new SerializedScheduleConditionOnMethodDefinition(GetMethodForInt());
+            var first = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(GetMethodForInt());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

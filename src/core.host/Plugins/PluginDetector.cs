@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 
@@ -200,8 +201,10 @@ namespace Apollo.Core.Host.Plugins
             var deletedFiles = changedFilePaths.Where(file => !File.Exists(file));
             m_Repository.RemovePlugins(deletedFiles);
 
-            var pluginInfo = ScanFiles(changedKnownFiles.Concat(newFiles));
-            m_Repository.Store(pluginInfo);
+            IEnumerable<PluginInfo> plugins;
+            IEnumerable<SerializedTypeDefinition> types;
+            ScanFiles(changedKnownFiles.Concat(newFiles), out plugins, out types);
+            m_Repository.Store(plugins, types);
 
             m_Diagnostics.Log(
                 LogSeverityProxy.Info,
@@ -211,7 +214,10 @@ namespace Apollo.Core.Host.Plugins
                     directory));
         }
 
-        private IEnumerable<PluginInfo> ScanFiles(IEnumerable<string> filesToScan)
+        private void ScanFiles(
+            IEnumerable<string> filesToScan, 
+            out IEnumerable<PluginInfo> plugins, 
+            out IEnumerable<SerializedTypeDefinition> types)
         {
             // Create a new AppDomain to use for scanning. We'll drop that later on.
             AppDomain scanDomain = null;
@@ -222,7 +228,7 @@ namespace Apollo.Core.Host.Plugins
                 var scanner = m_ScannerBuilder(scanDomain, logger);
                 Debug.Assert(scanner != null, "Injection of the assembly scanner failed.");
 
-                return scanner.Scan(filesToScan);
+                scanner.Scan(filesToScan, out plugins, out types);
             }
             finally
             {
