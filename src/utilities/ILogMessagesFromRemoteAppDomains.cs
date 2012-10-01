@@ -4,14 +4,12 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utilities;
-
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Utilities
 {
     /// <summary>
     /// Defines the interface for objects that remote logging calls.
     /// </summary>
-    internal interface ILogMessagesFromRemoteAppdomains
+    public interface ILogMessagesFromRemoteAppdomains
     {
         /// <summary>
         /// Logs the given message with the given severity.

@@ -791,11 +791,11 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Extracting information from Type {0} failed. Exception information is: {1}.
+        ///   Looks up a localized string similar to Extracting information from Assembly {0} failed. Exception information is: {1}.
         /// </summary>
-        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithTypeAndException {
+        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException {
             get {
-                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithTypeAndException", resourceCulture);
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException", resourceCulture);
             }
         }
         

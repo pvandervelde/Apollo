@@ -22,60 +22,20 @@ namespace Apollo.Core.Host.Plugins
     internal sealed class PluginDetector
     {
         /// <summary>
-        /// Provides methods to forward log messages across an <c>AppDomain</c> boundary.
-        /// </summary>
-        private sealed class LogForwardingPipe : MarshalByRefObject, ILogMessagesFromRemoteAppdomains
-        {
-            /// <summary>
-            /// The objects that provides the diagnostics methods for the application.
-            /// </summary>
-            private readonly SystemDiagnostics m_Diagnostics;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="LogForwardingPipe"/> class.
-            /// </summary>
-            /// <param name="diagnostics">The object that provides the diagnostics methods for the application.</param>
-            public LogForwardingPipe(SystemDiagnostics diagnostics)
-            {
-                {
-                    Debug.Assert(diagnostics != null, "The diagnostics object should not be null.");
-                }
-
-                m_Diagnostics = diagnostics;
-            }
-
-            /// <summary>
-            /// Logs the given message with the given severity.
-            /// </summary>
-            /// <param name="severity">The importance of the log message.</param>
-            /// <param name="message">The message.</param>
-            public void Log(LogSeverityProxy severity, string message)
-            {
-                m_Diagnostics.Log(severity, message);
-            }
-        }
-
-        /// <summary>
         /// The object that stores information about all the known plugins.
         /// </summary>
         private readonly IPluginRepository m_Repository;
 
         /// <summary>
-        /// The function that returns all existing files in a given directory and its sub-directories.
-        /// </summary>
-        private readonly Func<string, IEnumerable<string>> m_FileLocator;
-
-        /// <summary>
-        /// The function that returns a new AppDomain that has been initialized with the given
-        /// name and base and private paths.
-        /// </summary>
-        private readonly Func<string, AppDomainPaths, AppDomain> m_AppDomainBuilder;
-
-        /// <summary>
         /// The function that returns a reference to an assembly scanner which has been
         /// created in the given AppDomain.
         /// </summary>
-        private readonly Func<AppDomain, ILogMessagesFromRemoteAppdomains, IAssemblyScanner> m_ScannerBuilder;
+        private readonly Func<IAssemblyScanner> m_ScannerBuilder;
+
+        /// <summary>
+        /// The abstraction layer for the file system.
+        /// </summary>
+        private readonly IVirtualizeFileSystems m_FileSystem;
 
         /// <summary>
         /// The objects that provides the diagnostics methods for the application.
@@ -86,44 +46,37 @@ namespace Apollo.Core.Host.Plugins
         /// Initializes a new instance of the <see cref="PluginDetector"/> class.
         /// </summary>
         /// <param name="repository">The object that stores information about all the known plugins.</param>
-        /// <param name="fileLocator">The function that returns all the plugin files in a given directory and its subdirectories.</param>
-        /// <param name="appDomainBuilder">The function that returns a new AppDomain that has been initialized with the given name and paths.</param>
-        /// <param name="scannerBuilder">The function that is used to create an assembly scanner in the given AppDomain.</param>
+        /// <param name="scannerBuilder">The function that is used to create an assembly scanner.</param>
+        /// <param name="fileSystem">The abstraction layer for the file system.</param>
         /// <param name="systemDiagnostics">The object that provides the diagnostics methods for the application.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="repository"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="fileLocator"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="appDomainBuilder"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="scannerBuilder"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="fileSystem"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="systemDiagnostics"/> is <see langword="null" />.
         /// </exception>
         public PluginDetector(
             IPluginRepository repository,
-            Func<string, IEnumerable<string>> fileLocator,
-            Func<string, AppDomainPaths, AppDomain> appDomainBuilder,
-            Func<AppDomain, ILogMessagesFromRemoteAppdomains, IAssemblyScanner> scannerBuilder,
+            Func<IAssemblyScanner> scannerBuilder,
+            IVirtualizeFileSystems fileSystem,
             SystemDiagnostics systemDiagnostics)
         {
             {
                 Lokad.Enforce.Argument(() => repository);
-                Lokad.Enforce.Argument(() => fileLocator);
-                Lokad.Enforce.Argument(() => appDomainBuilder);
                 Lokad.Enforce.Argument(() => scannerBuilder);
+                Lokad.Enforce.Argument(() => fileSystem);
                 Lokad.Enforce.Argument(() => systemDiagnostics);
             }
 
             m_Repository = repository;
-            m_FileLocator = fileLocator;
-            m_AppDomainBuilder = appDomainBuilder;
             m_ScannerBuilder = scannerBuilder;
+            m_FileSystem = fileSystem;
             m_Diagnostics = systemDiagnostics;
         }
 
@@ -141,9 +94,6 @@ namespace Apollo.Core.Host.Plugins
         {
             {
                 Lokad.Enforce.Argument(() => directory);
-                Lokad.Enforce.With<DirectoryNotFoundException>(
-                    Directory.Exists(directory), 
-                    Resources.Exceptions_Messages_InvalidPluginDirectoryPath);
             }
 
             m_Diagnostics.Log(
@@ -156,7 +106,7 @@ namespace Apollo.Core.Host.Plugins
             IEnumerable<string> files = Enumerable.Empty<string>();
             try
             {
-                files = m_FileLocator(directory);
+                files = m_FileSystem.GetFilesInDirectory(directory, "*.dll", true);
             }
             catch (UnauthorizedAccessException e)
             {
@@ -191,20 +141,16 @@ namespace Apollo.Core.Host.Plugins
 
             var changedKnownFiles = knownFiles
                 .Where(p => files.Exists(f => string.Equals(p.Path, f, StringComparison.InvariantCultureIgnoreCase)))
-                .Where(p => File.GetLastWriteTimeUtc(p.Path) > p.LastWriteTimeUtc)
+                .Where(p => m_FileSystem.FileLastWriteTimeUtc(p.Path) > p.LastWriteTimeUtc)
                 .Select(p => p.Path);
 
             var changedFilePaths = new HashSet<string>(files);
             changedFilePaths.SymmetricExceptWith(knownFiles.Select(p => p.Path));
 
-            var newFiles = changedFilePaths.Where(file => File.Exists(file));
-            var deletedFiles = changedFilePaths.Where(file => !File.Exists(file));
-            m_Repository.RemovePlugins(deletedFiles);
-
-            IEnumerable<PluginInfo> plugins;
-            IEnumerable<SerializedTypeDefinition> types;
-            ScanFiles(changedKnownFiles.Concat(newFiles), out plugins, out types);
-            m_Repository.Store(plugins, types);
+            var newFiles = changedFilePaths.Where(file => m_FileSystem.DoesFileExist(file));
+            
+            RemoveDeletedPlugins(changedFilePaths);
+            StorePlugins(changedKnownFiles.Concat(newFiles));
 
             m_Diagnostics.Log(
                 LogSeverityProxy.Info,
@@ -214,34 +160,26 @@ namespace Apollo.Core.Host.Plugins
                     directory));
         }
 
-        private void ScanFiles(
-            IEnumerable<string> filesToScan, 
-            out IEnumerable<PluginInfo> plugins, 
-            out IEnumerable<SerializedTypeDefinition> types)
+        private void RemoveDeletedPlugins(IEnumerable<string> changedFilePaths)
         {
-            // Create a new AppDomain to use for scanning. We'll drop that later on.
-            AppDomain scanDomain = null;
-            try
-            {
-                scanDomain = LoadAppDomain();
-                var logger = new LogForwardingPipe(m_Diagnostics);
-                var scanner = m_ScannerBuilder(scanDomain, logger);
-                Debug.Assert(scanner != null, "Injection of the assembly scanner failed.");
-
-                scanner.Scan(filesToScan, out plugins, out types);
-            }
-            finally
-            {
-                if (scanDomain != null)
-                {
-                    AppDomain.Unload(scanDomain);
-                }
-            }
+            var deletedFiles = changedFilePaths.Where(file => !m_FileSystem.DoesFileExist(file));
+            m_Repository.RemovePlugins(deletedFiles);
         }
 
-        private AppDomain LoadAppDomain()
+        private void StorePlugins(IEnumerable<string> filesToScan)
         {
-            return m_AppDomainBuilder(Resources.Plugins_PluginScanDomainName, AppDomainPaths.Core | AppDomainPaths.Plugins);
+            if (!filesToScan.Any())
+            {
+                return;
+            }
+
+            var scanner = m_ScannerBuilder();
+
+            IEnumerable<PluginInfo> plugins;
+            IEnumerable<SerializedTypeDefinition> types;
+            scanner.Scan(filesToScan, out plugins, out types);
+
+            m_Repository.Store(plugins, types);
         }
     }
 }

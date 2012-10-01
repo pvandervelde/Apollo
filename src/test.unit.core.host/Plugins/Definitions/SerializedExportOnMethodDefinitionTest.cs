@@ -42,23 +42,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
                     {
                         SerializedExportOnMethodDefinition.CreateDefinition(
                             "A", 
-                            typeof(long), 
                             typeof(string).GetMethod("Contains")),
                         SerializedExportOnMethodDefinition.CreateDefinition(
                             "B", 
-                            typeof(bool), 
                             typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
                         SerializedExportOnMethodDefinition.CreateDefinition(
                             "C", 
-                            typeof(float), 
                             typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
                         SerializedExportOnMethodDefinition.CreateDefinition(
                             "D", 
-                            typeof(IList<>), 
                             typeof(IComparable).GetMethod("CompareTo")),
                         SerializedExportOnMethodDefinition.CreateDefinition(
                             "E", 
-                            typeof(TimeSpan), 
                             typeof(IComparable<>).GetMethod("CompareTo")),
                     },
         };
@@ -71,23 +66,18 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 { 
                     SerializedExportOnMethodDefinition.CreateDefinition(
                         "A", 
-                        typeof(long), 
                         typeof(string).GetMethod("Contains")),
                     SerializedExportOnMethodDefinition.CreateDefinition(
                         "B", 
-                        typeof(bool), 
                         typeof(int).GetMethod("CompareTo", new[] { typeof(int) })),
                     SerializedExportOnMethodDefinition.CreateDefinition(
                         "C", 
-                        typeof(float), 
                         typeof(double).GetMethod("CompareTo", new[] { typeof(double) })),
                     SerializedExportOnMethodDefinition.CreateDefinition(
                         "D", 
-                        typeof(IList<>), 
                         typeof(IComparable).GetMethod("CompareTo")),
                     SerializedExportOnMethodDefinition.CreateDefinition(
                         "E", 
-                        typeof(TimeSpan), 
                         typeof(IComparable<>).GetMethod("CompareTo")),
                 },
         };
@@ -95,7 +85,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void RoundTripSerialise()
         {
-            var original = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var original = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -105,7 +95,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void EqualsOperatorWithFirstObjectNull()
         {
             SerializedExportOnMethodDefinition first = null;
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
 
             Assert.IsFalse(first == second);
         }
@@ -113,7 +103,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             SerializedExportOnMethodDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -122,8 +112,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
 
             Assert.IsTrue(first == second);
         }
@@ -131,8 +121,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("C", typeof(long), GetMethodForDouble());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("C", GetMethodForDouble());
 
             Assert.IsFalse(first == second);
         }
@@ -141,7 +131,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             SerializedExportOnMethodDefinition first = null;
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
 
             Assert.IsTrue(first != second);
         }
@@ -149,7 +139,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             SerializedExportOnMethodDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -158,8 +148,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
 
             Assert.IsFalse(first != second);
         }
@@ -167,8 +157,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            var second = SerializedExportOnMethodDefinition.CreateDefinition("C", typeof(long), GetMethodForDouble());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            var second = SerializedExportOnMethodDefinition.CreateDefinition("C", GetMethodForDouble());
 
             Assert.IsTrue(first != second);
         }
@@ -176,11 +166,10 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void Create()
         {
-            var obj = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var obj = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             var method = GetMethodForInt();
 
             Assert.AreEqual("B", obj.ContractName);
-            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(typeof(bool)), obj.ContractType);
             Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(typeof(int)), obj.DeclaringType);
             Assert.AreEqual(SerializedMethodDefinition.CreateDefinition(GetMethodForInt()), obj.Method);
         }
@@ -188,7 +177,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -197,8 +186,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            object second = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            object second = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -206,8 +195,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
-            object second = SerializedExportOnMethodDefinition.CreateDefinition("C", typeof(long), GetMethodForDouble());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
+            object second = SerializedExportOnMethodDefinition.CreateDefinition("C", GetMethodForDouble());
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -215,7 +204,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", typeof(bool), GetMethodForInt());
+            var first = SerializedExportOnMethodDefinition.CreateDefinition("B", GetMethodForInt());
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

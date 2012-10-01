@@ -22,11 +22,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         private readonly string m_ContractName;
 
         /// <summary>
-        /// The contract type that is used with the import.
-        /// </summary>
-        private readonly SerializedTypeIdentity m_ContractType;
-
-        /// <summary>
         /// The serialized description of the type that declares the current import.
         /// </summary>
         private readonly SerializedTypeIdentity m_DeclaringType;
@@ -35,31 +30,17 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Initializes a new instance of the <see cref="SerializedImportDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The imported type for the contract.</param>
         /// <param name="declaringType">The type that declares the current import.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
         /// </exception>
-        protected SerializedImportDefinition(string contractName, SerializedTypeIdentity contractType, SerializedTypeIdentity declaringType)
+        protected SerializedImportDefinition(string contractName, SerializedTypeIdentity declaringType)
         {
             {
-                Lokad.Enforce.Argument(() => contractName);
-                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
-                Lokad.Enforce.Argument(() => contractType);
                 Lokad.Enforce.Argument(() => declaringType);
             }
 
             m_ContractName = contractName;
-            m_ContractType = contractType;
             m_DeclaringType = declaringType;
         }
 
@@ -71,17 +52,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             get
             {
                 return m_ContractName;
-            }
-        }
-
-        /// <summary>
-        /// Gets the serialized definition of the contract type.
-        /// </summary>
-        public SerializedTypeIdentity ContractType
-        {
-            get
-            {
-                return m_ContractType;
             }
         }
 

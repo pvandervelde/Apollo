@@ -77,19 +77,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// on the given <see cref="ParameterInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The import type for the contract.</param>
         /// <param name="parameter">The method for which the current object stores the serialized data.</param>
         /// <param name="identityGenerator">The function that creates type identities.</param>
         /// <returns>The serialized definition for the given parameter.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
         /// </exception>
@@ -98,7 +88,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// </exception>
         public static SerializedImportOnConstructorDefinition CreateDefinition(
             string contractName,
-            Type contractType,
             ParameterInfo parameter,
             Func<Type, SerializedTypeIdentity> identityGenerator)
         {
@@ -109,7 +98,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
             return new SerializedImportOnConstructorDefinition(
                 contractName,
-                identityGenerator(contractType),
                 identityGenerator(parameter.Member.DeclaringType),
                 SerializedConstructorDefinition.CreateDefinition(parameter.Member as ConstructorInfo, identityGenerator),
                 SerializedParameterDefinition.CreateDefinition(parameter, identityGenerator));
@@ -120,24 +108,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// based on the given <see cref="ParameterInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The imported type for the contract.</param>
         /// <param name="parameter">The parameter for which the current object stores the serialized data.</param>
         /// <returns>The serialized definition for the given parameter.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
         /// </exception>
-        public static SerializedImportOnConstructorDefinition CreateDefinition(string contractName, Type contractType, ParameterInfo parameter)
+        public static SerializedImportOnConstructorDefinition CreateDefinition(string contractName, ParameterInfo parameter)
         {
-            return CreateDefinition(contractName, contractType, parameter, t => SerializedTypeIdentity.CreateDefinition(t));
+            return CreateDefinition(contractName, parameter, t => SerializedTypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
@@ -153,18 +131,16 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializedImportOnConstructorDefinition"/> class.
         /// </summary>
-        /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
         /// <param name="declaringType">The type that declares the constructor on which the import is placed.</param>
         /// <param name="constructor">The constructor that declares the import.</param>
         /// <param name="parameter">The parameter on which the import is defined.</param>
         private SerializedImportOnConstructorDefinition(
             string contractName, 
-            SerializedTypeIdentity contractType, 
             SerializedTypeIdentity declaringType,
             SerializedConstructorDefinition constructor,
             SerializedParameterDefinition parameter)
-            : base(contractName, contractType, declaringType)
+            : base(contractName, declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => parameter);
@@ -219,7 +195,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
-                && ContractType == otherType.ContractType
                 && Constructor == otherType.Constructor
                 && Parameter == otherType.Parameter;
         }
@@ -265,7 +240,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
-                hash = (hash * 23) ^ ContractType.GetHashCode();
                 hash = (hash * 23) ^ DeclaringType.GetHashCode();
                 hash = (hash * 23) ^ Constructor.GetHashCode();
                 hash = (hash * 23) ^ Parameter.GetHashCode();
@@ -284,9 +258,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "Importing [{0}, {1}] on {2}",
+                "Importing [{0}] on {1}",
                 ContractName,
-                ContractType,
                 Constructor);
         }
     }

@@ -378,7 +378,7 @@
   <data name="Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException" xml:space="preserve">
     <value>The loading of the plugin assembly {0} failed. Exception information is: {1}</value>
   </data>
-  <data name="Plugins_LogMessage_Scanner_TypeScanFailed_WithTypeAndException" xml:space="preserve">
-    <value>Extracting information from Type {0} failed. Exception information is: {1}</value>
+  <data name="Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
+    <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
   </data>
 </root>

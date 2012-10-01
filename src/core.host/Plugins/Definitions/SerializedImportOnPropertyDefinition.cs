@@ -77,19 +77,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// the given <see cref="PropertyInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The imported type for the contract.</param>
         /// <param name="property">The property for which a serialized definition needs to be created.</param>
         /// <param name="identityGenerator">The function that creates type identities.</param>
         /// <returns>The serialized definition for the given property.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
@@ -98,7 +88,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// </exception>
         public static SerializedImportOnPropertyDefinition CreateDefinition(
             string contractName, 
-            Type contractType, 
             PropertyInfo property,
             Func<Type, SerializedTypeIdentity> identityGenerator)
         {
@@ -109,7 +98,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
             return new SerializedImportOnPropertyDefinition(
                 contractName,
-                identityGenerator(contractType),
                 identityGenerator(property.DeclaringType),
                 SerializedPropertyDefinition.CreateDefinition(property, identityGenerator));
         }
@@ -118,24 +106,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Creates a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class based on the given <see cref="PropertyInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The imported type for the contract.</param>
         /// <param name="property">The property for which a serialized definition needs to be created.</param>
         /// <returns>The serialized definition for the given property.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
-        public static SerializedImportOnPropertyDefinition CreateDefinition(string contractName, Type contractType, PropertyInfo property)
+        public static SerializedImportOnPropertyDefinition CreateDefinition(string contractName, PropertyInfo property)
         {
-            return CreateDefinition(contractName, contractType, property, t => SerializedTypeIdentity.CreateDefinition(t));
+            return CreateDefinition(contractName, property, t => SerializedTypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
@@ -147,15 +125,13 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Initializes a new instance of the <see cref="SerializedImportOnPropertyDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="contractType">The imported type for the contract.</param>
         /// <param name="declaringType">The type that defines the property.</param>
         /// <param name="property">The property for which the current object stores the serialized data.</param>
         private SerializedImportOnPropertyDefinition(
             string contractName, 
-            SerializedTypeIdentity contractType, 
             SerializedTypeIdentity declaringType,
             SerializedPropertyDefinition property)
-            : base(contractName, contractType, declaringType)
+            : base(contractName, declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => property);
@@ -198,7 +174,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
-                && ContractType == otherType.ContractType
                 && Property == otherType.Property;
         }
 
@@ -243,7 +218,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
-                hash = (hash * 23) ^ ContractType.GetHashCode();
                 hash = (hash * 23) ^ Property.GetHashCode();
 
                 return hash;
@@ -260,9 +234,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             return string.Format(
                 CultureInfo.InvariantCulture, 
-                "Importing [{0}, {1}] on {2}", 
+                "Importing [{0}] on {1}", 
                 ContractName, 
-                ContractType, 
                 Property);
         }
     }

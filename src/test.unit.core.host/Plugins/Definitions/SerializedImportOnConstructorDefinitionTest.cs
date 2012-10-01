@@ -43,28 +43,24 @@ namespace Apollo.Core.Host.Plugins.Definitions
                     {
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "A",
-                            typeof(bool),
                             typeof(string).GetConstructor(new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "B",
-                            typeof(long),
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "C",
-                            typeof(string),
                             typeof(Version).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "D",
-                            typeof(string),
                             typeof(NotImplementedException).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -80,28 +76,24 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 { 
                     SerializedImportOnConstructorDefinition.CreateDefinition(
                             "A",
-                            typeof(bool),
                             typeof(string).GetConstructor(new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "B",
-                            typeof(long),
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "C",
-                            typeof(string),
                             typeof(Version).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         SerializedImportOnConstructorDefinition.CreateDefinition(
                             "D",
-                            typeof(string),
                             typeof(NotImplementedException).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -114,7 +106,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var original = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
@@ -127,7 +118,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             SerializedImportOnConstructorDefinition first = null;
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsFalse(first == second);
@@ -138,7 +128,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             SerializedImportOnConstructorDefinition second = null;
 
@@ -150,11 +139,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first == second);
@@ -165,11 +152,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "B", 
-                typeof(short), 
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsFalse(first == second);
@@ -181,7 +166,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             SerializedImportOnConstructorDefinition first = null;
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first != second);
@@ -192,7 +176,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             SerializedImportOnConstructorDefinition second = null;
 
@@ -204,11 +187,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsFalse(first != second);
@@ -219,11 +200,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "B", 
-                typeof(short), 
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsTrue(first != second);
@@ -234,13 +213,11 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var obj = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var constructor = GetConstructorForString();
             var parameter = constructor.GetParameters().First();
 
             Assert.AreEqual("A", obj.ContractName);
-            Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(typeof(long)), obj.ContractType);
             Assert.AreEqual(SerializedConstructorDefinition.CreateDefinition(constructor), obj.Constructor);
             Assert.AreEqual(SerializedTypeIdentity.CreateDefinition(typeof(string)), obj.DeclaringType);
             Assert.AreEqual(SerializedParameterDefinition.CreateDefinition(parameter), obj.Parameter);
@@ -251,7 +228,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             object second = null;
 
@@ -263,11 +239,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             object second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first.Equals(second));
@@ -278,11 +252,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             object second = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "B", 
-                typeof(short), 
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsFalse(first.Equals(second));
@@ -293,7 +265,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             var first = SerializedImportOnConstructorDefinition.CreateDefinition(
                 "A", 
-                typeof(long), 
                 GetConstructorForString().GetParameters().First());
             var second = new object();
 

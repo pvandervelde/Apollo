@@ -78,19 +78,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// on the given <see cref="MethodInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
         /// <param name="method">The method for which the current object stores the serialized data.</param>
         /// <param name="identityGenerator">The function that creates type identities.</param>
         /// <returns>The serialized definition for the given method.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="method"/> is <see langword="null" />.
         /// </exception>
@@ -99,7 +89,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// </exception>
         public static SerializedExportOnMethodDefinition CreateDefinition(
             string contractName,
-            Type contractType,
             MethodInfo method,
             Func<Type, SerializedTypeIdentity> identityGenerator)
         {
@@ -110,7 +99,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
             return new SerializedExportOnMethodDefinition(
                 contractName,
-                identityGenerator(contractType),
                 identityGenerator(method.DeclaringType),
                 SerializedMethodDefinition.CreateDefinition(method, identityGenerator));
         }
@@ -120,24 +108,14 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// based on the given <see cref="MethodInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
         /// <param name="method">The method for which the current object stores the serialized data.</param>
         /// <returns>The serialized definition for the given method.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string..
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractType"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="method"/> is <see langword="null" />.
         /// </exception>
-        public static SerializedExportOnMethodDefinition CreateDefinition(string contractName, Type contractType, MethodInfo method)
+        public static SerializedExportOnMethodDefinition CreateDefinition(string contractName, MethodInfo method)
         {
-            return CreateDefinition(contractName, contractType, method, t => SerializedTypeIdentity.CreateDefinition(t));
+            return CreateDefinition(contractName, method, t => SerializedTypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
@@ -149,15 +127,13 @@ namespace Apollo.Core.Host.Plugins.Definitions
         /// Initializes a new instance of the <see cref="SerializedExportOnMethodDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current export.</param>
-        /// <param name="contractType">The exported type for the contract.</param>
         /// <param name="declaringType">The type which declares the method on which the import is placed.</param>
         /// <param name="method">The method for which the current object stores the serialized data.</param>
         private SerializedExportOnMethodDefinition(
             string contractName, 
-            SerializedTypeIdentity contractType, 
             SerializedTypeIdentity declaringType,
             SerializedMethodDefinition method)
-            : base(contractName, contractType, declaringType)
+            : base(contractName, declaringType)
         {
             {
                 Debug.Assert(method != null, "The method object should not be null.");
@@ -200,7 +176,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
-                && ContractType == otherType.ContractType
                 && DeclaringType == otherType.DeclaringType
                 && Method == otherType.Method;
         }
@@ -246,7 +221,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
-                hash = (hash * 23) ^ ContractType.GetHashCode();
                 hash = (hash * 23) ^ DeclaringType.GetHashCode();
                 hash = (hash * 23) ^ Method.GetHashCode();
 
@@ -264,9 +238,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         {
             return string.Format(
                 CultureInfo.InvariantCulture, 
-                "Exporting [{0}, {1}] on {2}", 
+                "Exporting [{0}] on {1}", 
                 ContractName, 
-                ContractType, 
                 Method);
         }
     }
