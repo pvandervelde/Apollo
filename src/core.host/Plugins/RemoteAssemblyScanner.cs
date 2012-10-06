@@ -16,6 +16,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
@@ -27,8 +28,22 @@ namespace Apollo.Core.Host.Plugins
     /// </summary>
     internal sealed class RemoteAssemblyScanner : MarshalByRefObject, IAssemblyScanner
     {
-        private static void ExtractImportsAndExports(Assembly assembly, PluginInfo info, Func<Type, SerializedTypeIdentity> identityGenerator)
+        private static void ExtractImportsAndExports(Assembly assembly, PluginInfo info, ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
         {
+            // Fake out the compiler because we need the function inside the function itself
+            Func<Type, SerializedTypeIdentity> createTypeIdentity = null;
+            createTypeIdentity =
+                t =>
+                {
+                    if (!typeStorage.ContainsKey(t.AssemblyQualifiedName))
+                    {
+                        var typeDefinition = SerializedTypeDefinition.CreateDefinition(t, createTypeIdentity);
+                        typeStorage.TryAdd(typeDefinition.Identity.AssemblyQualifiedName, typeDefinition);
+                    }
+
+                    return typeStorage[t.AssemblyQualifiedName].Identity;
+                };
+
             var catalog = new AssemblyCatalog(assembly);
             foreach (var part in catalog.Parts)
             {
@@ -40,16 +55,16 @@ namespace Apollo.Core.Host.Plugins
                     switch (memberInfo.MemberType)
                     {
                         case MemberTypes.Method:
-                            exportDefinition = CreateMethodExport(export, memberInfo, identityGenerator);
+                            exportDefinition = CreateMethodExport(export, memberInfo, createTypeIdentity);
                             break;
                         case MemberTypes.NestedType:
-                            exportDefinition = CreateTypeExport(export, memberInfo, identityGenerator);
+                            exportDefinition = CreateTypeExport(export, memberInfo, createTypeIdentity);
                             break;
                         case MemberTypes.Property:
-                            exportDefinition = CreatePropertyExport(export, memberInfo, identityGenerator);
+                            exportDefinition = CreatePropertyExport(export, memberInfo, createTypeIdentity);
                             break;
                         case MemberTypes.TypeInfo:
-                            exportDefinition = CreateTypeExport(export, memberInfo, identityGenerator);
+                            exportDefinition = CreateTypeExport(export, memberInfo, createTypeIdentity);
                             break;
                         default:
                             throw new NotImplementedException();
@@ -65,8 +80,8 @@ namespace Apollo.Core.Host.Plugins
                 foreach (var import in part.ImportDefinitions)
                 {
                     SerializedImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
-                        ? importDefinition = CreatePropertyImport(import, identityGenerator)
-                        : importDefinition = CreateConstructorParameterImport(import, identityGenerator);
+                        ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
+                        : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
 
                     if (importDefinition != null)
                     {
@@ -78,7 +93,7 @@ namespace Apollo.Core.Host.Plugins
                     new PluginTypeInfo
                     {
                         Assembly = SerializedAssemblyDefinition.CreateDefinition(assembly),
-                        Type = identityGenerator(ReflectionModelServices.GetPartType(part).Value),
+                        Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
                         Exports = exports,
                         Imports = imports,
                     });
@@ -159,6 +174,27 @@ namespace Apollo.Core.Host.Plugins
                 import.ContractName,
                 parameterInfo.Value,
                 identityGenerator);
+        }
+
+        private static void ExtractGroups(Assembly assembly, PluginInfo info, ILogMessagesFromRemoteAppdomains logger)
+        {
+            var groupExporters = assembly.GetTypes().Where(t => typeof(IExportGroupDefinitions).IsAssignableFrom(t));
+            foreach (var t in groupExporters)
+            {
+                try
+                {
+                    // Note that there may be an order in these things, so when we load we'll have to do it in such a way
+                    // that we don't depend on that order!
+                    foobar();
+
+                    var exporter = Activator.CreateInstance(t) as IExportGroupDefinitions;
+                    exporter.RegisterGroups();
+                }
+                catch (Exception e)
+                {
+                    logger.Log(LogSeverityProxy.Warning, e.ToString());
+                }
+            }
         }
 
         /// <summary>
@@ -302,24 +338,13 @@ namespace Apollo.Core.Host.Plugins
                     FileInfo = new PluginFileInfo(path, File.GetLastWriteTimeUtc(path)),
                 };
 
-            // Fake out the compiler because we need the function inside the function itself
-            Func<Type, SerializedTypeIdentity> createTypeIdentity = null;
-            createTypeIdentity =
-                t =>
-                {
-                    if (!typeStorage.ContainsKey(t.AssemblyQualifiedName))
-                    {
-                        var typeDefinition = SerializedTypeDefinition.CreateDefinition(t, createTypeIdentity);
-                        typeStorage.TryAdd(typeDefinition.Identity.AssemblyQualifiedName, typeDefinition);
-                    }
-
-                    return typeStorage[t.AssemblyQualifiedName].Identity;
-                };
-
             // Now get the conditions and actions
             try
             {
-                ExtractImportsAndExports(assembly, info, createTypeIdentity);
+                ExtractImportsAndExports(assembly, info, typeStorage);
+                ExtractGroups(assembly, info);
+
+                storage.Add(info);
             }
             catch (Exception e)
             {
@@ -331,8 +356,6 @@ namespace Apollo.Core.Host.Plugins
                         assembly.GetName().FullName,
                         e));
             }
-
-            storage.Add(info);
         }
     }
 }

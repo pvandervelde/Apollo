@@ -44,6 +44,15 @@
     <Compile Include="..\AssemblyInfo.VersionNumber.cs">
       <Link>Properties\AssemblyInfo.VersionNumber.cs</Link>
     </Compile>
+    <Compile Include="Plugins\ScheduleActionRegistrationId.cs" />
+    <Compile Include="Plugins\ScheduleConditionRegistrationId.cs" />
+    <Compile Include="Plugins\ExportRegistrationId.cs" />
+    <Compile Include="Plugins\GroupRegistrationId.cs" />
+    <Compile Include="Plugins\ImportRegistrationId.cs" />
+    <Compile Include="Plugins\IRegisterGroupDefinitions.cs" />
+    <Compile Include="Plugins\IExportGroupDefinitions.cs" />
+    <Compile Include="Plugins\IRegisterSchedules.cs" />
+    <Compile Include="Plugins\ObjectRegistration.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -128,9 +137,7 @@
       <Name>Apollo.Utils</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
