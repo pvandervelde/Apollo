@@ -51,5 +51,23 @@ namespace Apollo.Core.Host.Plugins
             get;
             set;
         }
+
+        /// <summary>
+        /// Gets or sets the collection of schedule actions for the current type.
+        /// </summary>
+        public IEnumerable<SerializedScheduleActionDefinition> Actions
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// Gets or sets the collection of schedule conditions for the current type.
+        /// </summary>
+        public IEnumerable<SerializedScheduleConditionDefinition> Conditions
+        {
+            get;
+            set;
+        }
     }
 }

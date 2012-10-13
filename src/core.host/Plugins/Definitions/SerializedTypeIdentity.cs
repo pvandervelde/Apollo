@@ -17,7 +17,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
     /// type in question to be loaded.
     /// </summary>
     [Serializable]
-    internal sealed class SerializedTypeIdentity : IEquatable<SerializedTypeIdentity>
+    internal sealed class SerializedTypeIdentity : IEquatable<SerializedTypeIdentity>, IEquatable<Type>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -328,6 +328,30 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 && string.Equals(Namespace, other.Namespace, StringComparison.OrdinalIgnoreCase)
                 && Assembly.Equals(other.Assembly)
                 && m_TypeArguments.SequenceEqual(other.m_TypeArguments);
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="Type"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="Type"/> to compare with this instance.</param>
+        /// <returns>
+        ///     <see langword="true"/> if the specified <see cref="Type"/> is equal to this instance;
+        ///     otherwise, <see langword="false"/>.
+        /// </returns>
+        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
+            Justification = "Documentation can start with a language keyword")]
+        public bool Equals(Type other)
+        {
+            if (ReferenceEquals(this, other))
+            {
+                return true;
+            }
+
+            // Check if other is a null reference by using ReferenceEquals because
+            // we overload the == operator. If other isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            return !ReferenceEquals(other, null)
+                && string.Equals(AssemblyQualifiedName, other.AssemblyQualifiedName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

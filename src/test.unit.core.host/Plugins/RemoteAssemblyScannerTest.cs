@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
 using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Utilities;
@@ -29,7 +30,9 @@ namespace Apollo.Core.Host.Plugins
         public void Setup()
         {
             var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
-            var scanner = new RemoteAssemblyScanner(new Mock<ILogMessagesFromRemoteAppdomains>().Object);
+            var scanner = new RemoteAssemblyScanner(
+                new Mock<ILogMessagesFromRemoteAppdomains>().Object,
+                () => new Mock<IBuildFixedSchedules>().Object);
 
             IEnumerable<PluginInfo> plugins;
             IEnumerable<SerializedTypeDefinition> types;

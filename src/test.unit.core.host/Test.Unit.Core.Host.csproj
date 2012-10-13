@@ -104,6 +104,8 @@
     <Compile Include="Mocks\Exports.cs" />
     <Compile Include="Mocks\Imports.cs" />
     <Compile Include="NotificationNameTest.cs" />
+    <Compile Include="Plugins\Definitions\GroupExportMapTest.cs" />
+    <Compile Include="Plugins\Definitions\GroupImportMapTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedAssemblyDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedConstructorDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedExportOnMethodDefinitionTest.cs" />
@@ -114,10 +116,15 @@
     <Compile Include="Plugins\Definitions\SerializedMethodDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedParameterDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleActionDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnMethodDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnPropertyDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedTypeDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedTypeIdentityTest.cs" />
+    <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />
     <Compile Include="Plugins\PluginDetectorTest.cs" />
     <Compile Include="Plugins\RemoteAssemblyScannerTest.cs" />
+    <Compile Include="Plugins\ScheduleDefinitionBuilderTest.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorExceptionTest.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineExceptionTest.cs" />

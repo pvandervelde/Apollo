@@ -1,13 +1,19 @@
-﻿using System;
+﻿//-----------------------------------------------------------------------
+// <copyright company="P. van der Velde">
+//     Copyright (c) P. van der Velde. All rights reserved.
+// </copyright>
+//-----------------------------------------------------------------------
+
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Extensions.Scheduling;
+using Apollo.Utilities.History;
 
 namespace Apollo.Core.Extensions.Plugins
 {
+    /// <summary>
+    /// Defines the interface for objects that handle the registration of schedules.
+    /// </summary>
     public interface IRegisterSchedules
     {
         /// <summary>
@@ -15,7 +21,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// </summary>
         /// <param name="action">The ID of the action that should be added.</param>
         /// <returns>The vertex that contains the information about the given action.</returns>
-        EditableExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId actionMethod);
+        EditableExecutingActionVertex AddExecutingAction(ScheduleActionRegistrationId action);
 
         /// <summary>
         /// Adds the schedule with the specified ID as a sub-schedule to the current schedule.
@@ -23,13 +29,6 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="schedule">The ID of the sub-schedule.</param>
         /// <returns>The vertex that contains the information about the given sub-schedule.</returns>
         EditableSubScheduleVertex AddSubSchedule(ScheduleId schedule);
-
-        /// <summary>
-        /// Adds the schedule with the specified ID as a sub-schedule to the current schedule.
-        /// </summary>
-        /// <param name="schedule">The ID of the sub-schedule.</param>
-        /// <returns>The vertex that contains the information about the given sub-schedule.</returns>
-        EditableSubScheduleVertex AddSubSchedule(GroupRegistrationId owningGroup, foobar3 schedule);
 
         /// <summary>
         /// Adds a vertex that indicates the start of a synchronization block over which the given variables
@@ -101,7 +100,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to <paramref name="target"/>.
         /// </param>
-        void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseConditionMethod = null);
+        void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Links the start point of the schedule to the given vertex.
@@ -110,7 +109,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="target"/>.
         /// </param>
-        void LinkFromStart(IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseConditionMethod = null);
+        void LinkFromStart(IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Links the given vertex to the end point of the schedule.
@@ -119,12 +118,12 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to the end point.
         /// </param>
-        void LinkToEnd(IEditableScheduleVertex source, ScheduleConditionRegistrationId traverseConditionMethod = null);
+        void LinkToEnd(IEditableScheduleVertex source, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Registers the schedule with the system.
         /// </summary>
-        /// <returns>The ID of the schedule.</returns>
+        /// <returns>The ID of the schedule if it passes verification; otherwise, <see langword="null" />.</returns>
         ScheduleId Register();
     }
 }

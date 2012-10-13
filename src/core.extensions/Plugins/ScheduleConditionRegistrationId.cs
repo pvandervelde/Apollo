@@ -39,23 +39,24 @@ namespace Apollo.Core.Extensions.Plugins
         /// Initializes a new instance of the <see cref="ScheduleConditionRegistrationId"/> class.
         /// </summary>
         /// <param name="owner">The type that owns the export.</param>
-        /// <param name="name">The contract name for the export.</param>
+        /// <param name="objectIndex">The index of the object in the group.</param>
+        /// <param name="contractName">The contract name for the export.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        /// Thrown if <paramref name="name"/> is <see langword="null"/>.
+        /// Thrown if <paramref name="contractName"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
-        /// Thrown if <paramref name="name"/> is an empty string.
+        /// Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
-        public ScheduleConditionRegistrationId(Type owner, string name)
-            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", owner.FullName, name))
+        public ScheduleConditionRegistrationId(Type owner, int objectIndex, string contractName)
+            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]-[{2}]", owner.AssemblyQualifiedName, objectIndex, contractName))
         {
             {
                 Lokad.Enforce.Argument(() => owner);
-                Lokad.Enforce.Argument(() => name);
-                Lokad.Enforce.Argument(() => name, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => contractName);
+                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
             }
         }
 

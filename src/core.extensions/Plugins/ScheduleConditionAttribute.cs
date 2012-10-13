@@ -10,12 +10,12 @@ using System.Diagnostics.CodeAnalysis;
 namespace Apollo.Core.Extensions.Plugins
 {
     /// <summary>
-    /// Defines the attribute that indicates that a method is an action that can be placed
+    /// Defines the attribute that indicates that a method or property is a condition that can be placed
     /// in a schedule.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method | AttributeTargets.Property, AllowMultiple = false, Inherited = true)]
     [ExcludeFromCodeCoverage]
-    public sealed class ScheduleActionAttribute : Attribute
+    public sealed class ScheduleConditionAttribute : Attribute
     {
         /// <summary>
         /// The name of the action.
@@ -23,16 +23,16 @@ namespace Apollo.Core.Extensions.Plugins
         private readonly string m_Name;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScheduleActionAttribute"/> class.
+        /// Initializes a new instance of the <see cref="ScheduleConditionAttribute"/> class.
         /// </summary>
-        /// <param name="name">The name of the action.</param>
+        /// <param name="name">The name of the condition.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="name"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="name"/> is an empty string.
         /// </exception>
-        public ScheduleActionAttribute(string name)
+        public ScheduleConditionAttribute(string name)
         {
             {
                 Lokad.Enforce.Argument(() => name);
@@ -43,7 +43,7 @@ namespace Apollo.Core.Extensions.Plugins
         }
 
         /// <summary>
-        /// Gets the name of the action.
+        /// Gets the name of the condition.
         /// </summary>
         public string Name
         {

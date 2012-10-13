@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Utilities;
 
@@ -17,28 +18,37 @@ namespace Apollo.Core.Extensions.Plugins
     public sealed class ExportRegistrationId : Id<ExportRegistrationId, string>
     {
         /// <summary>
+        /// The contract name for the export.
+        /// </summary>
+        private readonly string m_ContractName;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ExportRegistrationId"/> class.
         /// </summary>
         /// <param name="id">The ID of the export.</param>
+        /// <param name="contractName">The contract name for the export.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="id"/> is <see langword="null"/>.
         /// </exception>
         /// <exception cref="ArgumentException">
         /// Thrown if <paramref name="id"/> is an empty string.
         /// </exception>
-        private ExportRegistrationId(string id)
+        private ExportRegistrationId(string id, string contractName)
             : base(id)
         {
             {
                 Lokad.Enforce.Argument(() => id);
                 Lokad.Enforce.Argument(() => id, Lokad.Rules.StringIs.NotEmpty);
             }
+
+            m_ContractName = contractName;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ExportRegistrationId"/> class.
         /// </summary>
         /// <param name="owner">The type that owns the export.</param>
+        /// <param name="objectIndex">The index of the object in the group.</param>
         /// <param name="contractName">The contract name for the export.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
@@ -49,14 +59,16 @@ namespace Apollo.Core.Extensions.Plugins
         /// <exception cref="ArgumentException">
         /// Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
-        public ExportRegistrationId(Type owner, string contractName)
-            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", owner.FullName, contractName))
+        public ExportRegistrationId(Type owner, int objectIndex, string contractName)
+            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]-[{2}]", owner.AssemblyQualifiedName, objectIndex, contractName))
         {
             {
                 Lokad.Enforce.Argument(() => owner);
                 Lokad.Enforce.Argument(() => contractName);
                 Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
             }
+
+            m_ContractName = contractName;
         }
 
         /// <summary>
@@ -77,6 +89,19 @@ namespace Apollo.Core.Extensions.Plugins
                 Lokad.Enforce.Argument(() => owner);
                 Lokad.Enforce.Argument(() => contractType);
             }
+
+            m_ContractName = contractType.FullName;
+        }
+
+        /// <summary>
+        /// Gets the contract name for the current export.
+        /// </summary>
+        public string ContractName
+        {
+            get
+            {
+                return m_ContractName;
+            }
         }
 
         /// <summary>
@@ -88,7 +113,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// </returns>
         protected override ExportRegistrationId Clone(string value)
         {
-            return new ExportRegistrationId(value);
+            return new ExportRegistrationId(value, m_ContractName);
         }
 
         /// <summary>

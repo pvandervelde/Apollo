@@ -39,6 +39,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// Initializes a new instance of the <see cref="ScheduleActionRegistrationId"/> class.
         /// </summary>
         /// <param name="owner">The type that owns the export.</param>
+        /// <param name="objectIndex">The index of the object in the group.</param>
         /// <param name="contractName">The contract name for the export.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
@@ -49,8 +50,8 @@ namespace Apollo.Core.Extensions.Plugins
         /// <exception cref="ArgumentException">
         /// Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
-        public ScheduleActionRegistrationId(Type owner, string contractName)
-            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", owner.FullName, contractName))
+        public ScheduleActionRegistrationId(Type owner, int objectIndex, string contractName)
+            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]-[{2}]", owner.AssemblyQualifiedName, objectIndex, contractName))
         {
             {
                 Lokad.Enforce.Argument(() => owner);

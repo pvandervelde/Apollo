@@ -27,7 +27,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// An object that provides a unique ID for the registered object and provides the IDs for the imports, exports,
         /// conditions and actions on that object.
         /// </returns>
-        ObjectRegistration RegisterObject(Type type);
+        IObjectRegistration RegisterObject(Type type);
 
         /// <summary>
         /// Indicates that a sub-group should be available for the current group to use.
@@ -45,32 +45,34 @@ namespace Apollo.Core.Extensions.Plugins
         /// <summary>
         /// Connects an export of the given group with an import of the current group.
         /// </summary>
-        /// <param name="groupId">The ID of the group that defines the export.</param>
+        /// <param name="exportGroup">The ID of the group that defines the export.</param>
         /// <param name="export">The ID of the export.</param>
         /// <param name="import">The ID of the import.</param>
-        void Connect(GroupRegistrationId groupId, ExportRegistrationId export, ImportRegistrationId import);
+        void Connect(GroupRegistrationId exportGroup, ExportRegistrationId export, ImportRegistrationId import);
 
         /// <summary>
         /// Connects an export of the current group to an import of the given group.
         /// </summary>
         /// <param name="export">The ID of the export.</param>
-        /// <param name="groupId">The ID of the group that defines the import.</param>
+        /// <param name="importGroup">The ID of the group that defines the import.</param>
         /// <param name="import">The ID of import.</param>
-        void Connect(ExportRegistrationId export, GroupRegistrationId groupId, ImportRegistrationId import);
+        void Connect(ExportRegistrationId export, GroupRegistrationId importGroup, ImportRegistrationId import);
 
         /// <summary>
         /// Connects the export from the first group with the import from the second group.
         /// </summary>
-        /// <param name="groupId">The ID of the group that defines the export.</param>
+        /// <param name="exportGroup">The ID of the group that defines the export.</param>
         /// <param name="export">The ID of the export.</param>
-        /// <param name="groupId">The ID of the group that defines the import.</param>
+        /// <param name="importGroup">The ID of the group that defines the import.</param>
         /// <param name="import">The ID of the import.</param>
-        void Connect(GroupRegistrationId groupId, ExportRegistrationId export, GroupRegistrationId groupId, ImportRegistrationId import);
+        void Connect(GroupRegistrationId exportGroup, ExportRegistrationId export, GroupRegistrationId importGroup, ImportRegistrationId import);
 
         /// <summary>
         /// Registers a group with the currently stored data.
         /// </summary>
-        GroupRegistrationId Register();
+        /// <param name="name">The name of the newly created group.</param>
+        /// <returns>The registration ID of the group.</returns>
+        GroupRegistrationId Register(string name);
 
         /// <summary>
         /// Clears the registrations stored for the group that is under construction.

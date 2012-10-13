@@ -141,8 +141,14 @@
   <data name="Exceptions_Messages_CannotLinkAVertexToItself" xml:space="preserve">
     <value>Cannot link a vertex to itself.</value>
   </data>
+  <data name="Exceptions_Messages_CannotMapExportToImport" xml:space="preserve">
+    <value>The given export cannot be mapped to the given import.</value>
+  </data>
   <data name="Exceptions_Messages_NoInsertsLeftOnVertex" xml:space="preserve">
     <value>There are no more inserts left on the current insert vertex.</value>
+  </data>
+  <data name="Exceptions_Messages_UnknownPluginType" xml:space="preserve">
+    <value>The type of plugin class or interface has not been registered.</value>
   </data>
   <data name="Exceptions_Messages_UnknownSchedule" xml:space="preserve">
     <value>The specified schedule ID does not map to a known schedule.</value>
