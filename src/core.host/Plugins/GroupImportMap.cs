@@ -10,46 +10,100 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Core.Host.Plugins.Definitions
+namespace Apollo.Core.Host.Plugins
 {
     /// <summary>
-    /// Stores a group ID and an export ID to uniquely identify an export.
+    /// Stores a group ID and an import ID to uniquely identify an import.
     /// </summary>
     [Serializable]
-    internal sealed class GroupExportMap : IEquatable<GroupExportMap>
+    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
     {
         /// <summary>
-        /// The group that holds the export.
+        /// Implements the operator ==.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        {
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return true;
+            }
+
+            var nonNullObject = first;
+            var possibleNullObject = second;
+            if (ReferenceEquals(first, null))
+            {
+                nonNullObject = second;
+                possibleNullObject = first;
+            }
+
+            return nonNullObject.Equals(possibleNullObject);
+        }
+
+        /// <summary>
+        /// Implements the operator !=.
+        /// </summary>
+        /// <param name="first">The first object.</param>
+        /// <param name="second">The second object.</param>
+        /// <returns>The result of the operator.</returns>
+        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        {
+            // Check if first is a null reference by using ReferenceEquals because
+            // we overload the == operator. If first isn't actually null then
+            // we get an infinite loop where we're constantly trying to compare to null.
+            if (ReferenceEquals(first, null) && ReferenceEquals(second, null))
+            {
+                return false;
+            }
+
+            var nonNullObject = first;
+            var possibleNullObject = second;
+            if (ReferenceEquals(first, null))
+            {
+                nonNullObject = second;
+                possibleNullObject = first;
+            }
+
+            return !nonNullObject.Equals(possibleNullObject);
+        }
+
+        /// <summary>
+        /// The group that holds the import.
         /// </summary>
         private readonly GroupRegistrationId m_Group;
 
         /// <summary>
-        /// The export.
+        /// The import.
         /// </summary>
-        private readonly ExportRegistrationId m_Export;
+        private readonly ImportRegistrationId m_Import;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupExportMap"/> class.
+        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
         /// </summary>
-        /// <param name="export">The export for the map.</param>
-        public GroupExportMap(ExportRegistrationId export)
+        /// <param name="export">The import for the map.</param>
+        public GroupImportMap(ImportRegistrationId export)
             : this(null, export)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupExportMap"/> class.
+        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
         /// </summary>
         /// <param name="group">The group.</param>
-        /// <param name="export">The export for the map.</param>
-        public GroupExportMap(GroupRegistrationId group, ExportRegistrationId export)
+        /// <param name="import">The import for the map.</param>
+        public GroupImportMap(GroupRegistrationId group, ImportRegistrationId import)
         {
             {
-                Debug.Assert(export != null, "To create an ExportMap the export ID should not be null.");
+                Debug.Assert(import != null, "To create an ImportMap the import ID should not be null.");
             }
 
             m_Group = group;
-            m_Export = export;
+            m_Import = import;
         }
 
         /// <summary>
@@ -64,27 +118,27 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// Gets the export for this map.
+        /// Gets the import for this map.
         /// </summary>
-        public ExportRegistrationId Export
+        public ImportRegistrationId Import
         {
             get
             {
-                return m_Export;
+                return m_Import;
             }
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="GroupExportMap"/> is equal to this instance.
+        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="GroupExportMap"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupExportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupExportMap other)
+        public bool Equals(GroupImportMap other)
         {
             if (ReferenceEquals(this, other))
             {
@@ -95,7 +149,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null)
-                && Export == other.Export
+                && Import == other.Import
                 && (((Group != null) && (Group == other.Group)) || ((Group == null) && (other.Group == null)));
         }
 
@@ -116,7 +170,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 return true;
             }
 
-            var id = obj as GroupExportMap;
+            var id = obj as GroupImportMap;
             return Equals(id);
         }
 
@@ -139,7 +193,7 @@ namespace Apollo.Core.Host.Plugins.Definitions
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ Export.GetHashCode();
+                hash = (hash * 23) ^ Import.GetHashCode();
                 if (Group != null)
                 {
                     hash = (hash * 23) ^ Group.GetHashCode();
@@ -158,8 +212,8 @@ namespace Apollo.Core.Host.Plugins.Definitions
         public override string ToString()
         {
             return Group != null
-                ? string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", Group, Export)
-                : string.Format(CultureInfo.InvariantCulture, "[{0}]", Export);
+                ? string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", Group, Import)
+                : string.Format(CultureInfo.InvariantCulture, "[{0}]", Import);
         }
     }
 }

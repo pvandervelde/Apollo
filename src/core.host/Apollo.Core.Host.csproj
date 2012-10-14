@@ -66,7 +66,6 @@
     <Compile Include="ApplicationStartupEventArgs.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="INotificationArguments.cs" />
-    <Compile Include="Plugins\Definitions\GroupImportMap.cs" />
     <Compile Include="Plugins\Definitions\SerializedAssemblyDefinition.cs" />
     <Compile Include="Plugins\Definitions\SerializedConstructorDefinition.cs" />
     <Compile Include="Plugins\Definitions\SerializedExportDefinition.cs" />
@@ -87,7 +86,8 @@
     <Compile Include="Plugins\Definitions\SerializedTypeDefinition.cs" />
     <Compile Include="Plugins\Definitions\SerializedTypeIdentity.cs" />
     <Compile Include="Plugins\GroupDefinitionBuilder.cs" />
-    <Compile Include="Plugins\Definitions\GroupExportMap.cs" />
+    <Compile Include="Plugins\GroupExportMap.cs" />
+    <Compile Include="Plugins\GroupImportMap.cs" />
     <Compile Include="Plugins\IOwnScheduleDefinitions.cs" />
     <Compile Include="Plugins\IPluginRepository.cs" />
     <Compile Include="Plugins\IAssemblyScanner.cs" />

@@ -75,6 +75,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// Initializes a new instance of the <see cref="ExportRegistrationId"/> class.
         /// </summary>
         /// <param name="owner">The type that owns the export.</param>
+        /// <param name="objectIndex">The index of the object in the group.</param>
         /// <param name="contractType">The contract type for the export.</param>
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="owner"/> is <see langword="null"/>.
@@ -82,8 +83,8 @@ namespace Apollo.Core.Extensions.Plugins
         /// <exception cref="ArgumentNullException">
         /// Thrown if <paramref name="contractType"/> is <see langword="null"/>.
         /// </exception>
-        public ExportRegistrationId(Type owner, Type contractType)
-            : base(string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", owner.FullName, contractType.FullName))
+        public ExportRegistrationId(Type owner, int objectIndex, Type contractType)
+            : this(owner, objectIndex, contractType.FullName)
         {
             {
                 Lokad.Enforce.Argument(() => owner);
