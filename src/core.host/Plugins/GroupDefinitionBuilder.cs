@@ -7,11 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Plugins.Definitions;
@@ -51,17 +47,10 @@ namespace Apollo.Core.Host.Plugins
             = new Dictionary<Type, List<SerializedGroupObjectDefinition>>();
 
         /// <summary>
-        /// The collection that holds the sub-groups that should be pulled in with the 
-        /// current group.
-        /// </summary>
-        private List<GroupRegistrationId> m_Groups
-            = new List<GroupRegistrationId>();
-
-        /// <summary>
         /// The collection that holds the connections for the current group.
         /// </summary>
-        private Dictionary<GroupImportMap, GroupExportMap> m_Connections
-            = new Dictionary<GroupImportMap, GroupExportMap>();
+        private Dictionary<ImportRegistrationId, ExportRegistrationId> m_Connections
+            = new Dictionary<ImportRegistrationId, ExportRegistrationId>();
 
         /// <summary>
         /// The collection of actions that are registered for all the schedules in the component group.
@@ -76,16 +65,20 @@ namespace Apollo.Core.Host.Plugins
             = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();
 
         /// <summary>
-        /// The collection that maps the sub-schedules to the schedule that contains them.
+        /// The schedule for the current group.
         /// </summary>
-        private Dictionary<ScheduleId, IEnumerable<ScheduleId>> m_SubSchedules
-            = new Dictionary<ScheduleId, IEnumerable<ScheduleId>>();
+        private IEditableSchedule m_Schedule;
 
         /// <summary>
-        /// The collection that holds the schedules for the current group.
+        /// The export for the group.
         /// </summary>
-        private Dictionary<ScheduleId, IEditableSchedule> m_Schedules
-            = new Dictionary<ScheduleId, IEditableSchedule>();
+        private GroupExportMap m_GroupExport;
+
+        /// <summary>
+        /// The collection that holds all the imports for the group.
+        /// </summary>
+        private Dictionary<string, GroupImportMap> m_GroupImports
+            = new Dictionary<string, GroupImportMap>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupDefinitionBuilder"/> class.
@@ -107,9 +100,9 @@ namespace Apollo.Core.Host.Plugins
         ///     Thrown if <paramref name="knownPlugins"/> is <see langword="null" />.
         /// </exception>
         public GroupDefinitionBuilder(
-            IEnumerable<PluginTypeInfo> knownPlugins, 
-            Func<Type, SerializedTypeIdentity> identityGenerator, 
-            Func<IBuildFixedSchedules> builderGenerator, 
+            IEnumerable<PluginTypeInfo> knownPlugins,
+            Func<Type, SerializedTypeIdentity> identityGenerator,
+            Func<IBuildFixedSchedules> builderGenerator,
             Action<PluginGroupInfo> storage)
         {
             {
@@ -156,40 +149,28 @@ namespace Apollo.Core.Host.Plugins
             var collection = m_Objects[type];
 
             var exports = plugin.Exports.ToDictionary(
-                e => new ExportRegistrationId(type, collection.Count, e.ContractName), 
+                e => new ExportRegistrationId(type, collection.Count, e.ContractName),
                 e => e);
             var imports = plugin.Imports.ToDictionary(
-                i => new ImportRegistrationId(type, collection.Count, i.ContractName), 
+                i => new ImportRegistrationId(type, collection.Count, i.ContractName),
                 i => i);
             var actions = plugin.Actions.ToDictionary(
-                a => new ScheduleActionRegistrationId(type, collection.Count, a.ContractName), 
+                a => new ScheduleActionRegistrationId(type, collection.Count, a.ContractName),
                 a => a);
             var conditions = plugin.Conditions.ToDictionary(
-                c => new ScheduleConditionRegistrationId(type, collection.Count, c.ContractName), 
+                c => new ScheduleConditionRegistrationId(type, collection.Count, c.ContractName),
                 c => c);
 
             var registration = new SerializedGroupObjectDefinition(
-                m_IdentityGenerator(type), 
-                collection.Count, 
-                exports, 
-                imports, 
-                actions, 
+                m_IdentityGenerator(type),
+                collection.Count,
+                exports,
+                imports,
+                actions,
                 conditions);
             collection.Add(registration);
 
             return registration;
-        }
-
-        /// <summary>
-        /// Indicates that a sub-group should be available for the current group to use.
-        /// </summary>
-        /// <param name="groupId">The ID of the sub-group.</param>
-        public void RegisterSubgroup(GroupRegistrationId groupId)
-        {
-            if (!m_Groups.Contains(groupId))
-            {
-                m_Groups.Add(groupId);
-            }
         }
 
         /// <summary>
@@ -199,56 +180,100 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="import">The ID of the import.</param>
         public void Connect(ExportRegistrationId export, ImportRegistrationId import)
         {
-            Connect(null, export, null, import);
-        }
-
-        /// <summary>
-        /// Connects an export of the given group with an import of the current group.
-        /// </summary>
-        /// <param name="exportGroup">The ID of the group that defines the export.</param>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="import">The ID of the import.</param>
-        public void Connect(GroupRegistrationId exportGroup, ExportRegistrationId export, ImportRegistrationId import)
-        {
-            Connect(exportGroup, export, null, import);
-        }
-
-        /// <summary>
-        /// Connects an export of the current group to an import of the given group.
-        /// </summary>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="importGroup">The ID of the group that defines the import.</param>
-        /// <param name="import">The ID of import.</param>
-        public void Connect(ExportRegistrationId export, GroupRegistrationId importGroup, ImportRegistrationId import)
-        {
-            Connect(null, export, importGroup, import);
-        }
-
-        /// <summary>
-        /// Connects the export from the first group with the import from the second group.
-        /// </summary>
-        /// <param name="exportGroup">The ID of the group that defines the export.</param>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="importGroup">The ID of the group that defines the import.</param>
-        /// <param name="import">The ID of the import.</param>
-        public void Connect(
-            GroupRegistrationId exportGroup, 
-            ExportRegistrationId export, 
-            GroupRegistrationId importGroup, 
-            ImportRegistrationId import)
-        {
             if (!import.Accepts(export))
             {
                 throw new CannotMapExportToImportException();
             }
 
-            var importMap = new GroupImportMap(importGroup, import);
-            if (!m_Connections.ContainsKey(importMap))
+            if (!m_Connections.ContainsKey(import))
             {
-                m_Connections.Add(importMap, null);
+                m_Connections.Add(import, export);
+            }
+            else
+            {
+                m_Connections[import] = export;
+            }
+        }
+
+        /// <summary>
+        /// Defines an export for the group. The export is created with the specified name
+        /// and all the open exports and the group schedule.
+        /// </summary>
+        /// <param name="contractName">The contract name for the group export.</param>
+        /// <remarks>Only one export can be defined per group.</remarks>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        public void DefineExport(string contractName)
+        {
+            m_GroupExport = new GroupExportMap(contractName);
+        }
+
+        /// <summary>
+        /// Defines an import for the group with the given insert point.
+        /// </summary>
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="DuplicateContractNameException">
+        ///     Thrown if <paramref name="contractName"/> already exists in the collection of imports.
+        /// </exception>
+        public void DefineImport(string contractName, EditableInsertVertex insertPoint)
+        {
+            DefineImport(contractName, insertPoint, null);
+        }
+
+        /// <summary>
+        /// Defines an import for the group with the given imports that should be satisfied.
+        /// </summary>
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="importsToSatisfy">The imports that should be satisfied.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="DuplicateContractNameException">
+        ///     Thrown if <paramref name="contractName"/> already exists in the collection of imports.
+        /// </exception>
+        public void DefineImport(string contractName, IEnumerable<ImportRegistrationId> importsToSatisfy)
+        {
+            DefineImport(contractName, null, importsToSatisfy);
+        }
+
+        /// <summary>
+        /// Defines an import for the group with the given insert point and the given imports that should be satisfied.
+        /// </summary>
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
+        /// <param name="importsToSatisfy">The imports that should be satisfied.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="DuplicateContractNameException">
+        ///     Thrown if <paramref name="contractName"/> already exists in the collection of imports.
+        /// </exception>
+        public void DefineImport(string contractName, EditableInsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy)
+        {
+            if (m_GroupImports.ContainsKey(contractName))
+            {
+                throw new DuplicateContractNameException();
             }
 
-            m_Connections[importMap] = new GroupExportMap(exportGroup, export);
+            var import = new GroupImportMap(contractName, insertPoint, importsToSatisfy);
+            m_GroupImports.Add(contractName, import);
         }
 
         /// <summary>
@@ -258,21 +283,53 @@ namespace Apollo.Core.Host.Plugins
         /// <returns>The registration ID of the group.</returns>
         public GroupRegistrationId Register(string name)
         {
-            var definition = new PluginGroupInfo(name)
-                {
-                    Objects = m_Objects.SelectMany(p => p.Value).ToList(),
-                    SubGroups = m_Groups,
-                    Connections = m_Connections,
-                    Actions = m_Actions.ToDictionary(p => p.Value, p => p.Key),
-                    Conditions = m_Conditions.ToDictionary(p => p.Value, p => p.Key),
-                    SubSchedules = m_SubSchedules,
-                    Schedules = m_Schedules
-                };
+            var definition = new PluginGroupInfo(name);
+            definition.Objects = m_Objects.SelectMany(p => p.Value).ToList();
+            definition.InternalConnections = m_Connections;
+
+            if (m_Schedule != null)
+            {
+                definition.Schedule = SerializedScheduleDefinition.CreateDefinition(
+                    definition.Id,
+                    new ScheduleId(),
+                    m_Schedule,
+                    m_Actions.ToDictionary(p => p.Value, p => p.Key),
+                    m_Conditions.ToDictionary(p => p.Value, p => p.Key));
+            }
+
+            if (m_GroupExport != null)
+            {
+                definition.GroupExport = SerializedGroupExportDefinition.CreateDefinition(
+                    m_GroupExport.ContractName, 
+                    definition.Id, 
+                    definition.Schedule != null ? definition.Schedule.ScheduleId : null, 
+                    NonLinkedExports());
+            }
+
+            if (m_GroupImports.Count > 0)
+            {
+                definition.GroupImports = m_GroupImports.Select(
+                        i => SerializedGroupImportDefinition.CreateDefinition(
+                            i.Value.ContractName, 
+                            definition.Id, 
+                            i.Value.InsertPoint, 
+                            i.Value.ObjectImports))
+                    .ToList();
+            }
 
             Clear();
 
             m_Storage(definition);
             return definition.Id;
+        }
+
+        private IEnumerable<ExportRegistrationId> NonLinkedExports()
+        {
+            return m_Objects
+                .SelectMany(p => p.Value)
+                .SelectMany(o => o.RegisteredExports)
+                .Where(e => !m_Connections.Values.Contains(e))
+                .ToList();
         }
 
         /// <summary>
@@ -281,12 +338,14 @@ namespace Apollo.Core.Host.Plugins
         public void Clear()
         {
             m_Objects = new Dictionary<Type, List<SerializedGroupObjectDefinition>>();
-            m_Groups = new List<GroupRegistrationId>();
-            m_Connections = new Dictionary<GroupImportMap, GroupExportMap>();
+            m_Connections = new Dictionary<ImportRegistrationId, ExportRegistrationId>();
+
             m_Actions = new Dictionary<ScheduleActionRegistrationId, ScheduleElementId>();
             m_Conditions = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();
-            m_SubSchedules = new Dictionary<ScheduleId, IEnumerable<ScheduleId>>();
-            m_Schedules = new Dictionary<ScheduleId, IEditableSchedule>();
+            m_Schedule = null;
+
+            m_GroupExport = null;
+            m_GroupImports = new Dictionary<string, GroupImportMap>();
         }
 
         /// <summary>
@@ -295,13 +354,11 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="schedule">The schedule.</param>
         /// <param name="actionMap">The collection mapping the registered actions to the schedule element that holds the action.</param>
         /// <param name="conditionMap">The collection mapping the registered conditions to the schedule element that holds the condition.</param>
-        /// <param name="subSchedules">The collection of schedules that are directly linked in the current schedule.</param>
         /// <returns>The ID of the newly created schedule.</returns>
         public ScheduleId StoreSchedule(
             IEditableSchedule schedule,
             Dictionary<ScheduleActionRegistrationId, ScheduleElementId> actionMap,
-            Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap,
-            IEnumerable<ScheduleId> subSchedules)
+            Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap)
         {
             {
                 Debug.Assert(schedule != null, "The schedule should not be a null reference.");
@@ -310,7 +367,8 @@ namespace Apollo.Core.Host.Plugins
             }
 
             var id = new ScheduleId();
-            m_Schedules.Add(id, schedule);
+
+            m_Schedule = schedule;
             foreach (var pair in actionMap)
             {
                 m_Actions.Add(pair.Key, pair.Value);

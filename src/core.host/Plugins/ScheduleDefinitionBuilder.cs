@@ -31,12 +31,6 @@ namespace Apollo.Core.Host.Plugins
             = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();
 
         /// <summary>
-        /// The collection of schedules that are directly referenced from the current schedule.
-        /// </summary>
-        private readonly List<ScheduleId> m_SubSchedules
-            = new List<ScheduleId>();
-
-        /// <summary>
         /// The object that owns the group to which the current schedule will belong.
         /// </summary>
         private readonly IOwnScheduleDefinitions m_Owner;
@@ -104,11 +98,6 @@ namespace Apollo.Core.Host.Plugins
                 Lokad.Enforce.Argument(() => schedule);
             }
 
-            if (!m_SubSchedules.Contains(schedule))
-            {
-                m_SubSchedules.Add(schedule);
-            }
-
             return m_Builder.AddSubSchedule(schedule);
         }
 
@@ -161,38 +150,6 @@ namespace Apollo.Core.Host.Plugins
         public EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts)
         {
             return m_Builder.AddInsertPoint(maximumNumberOfInserts);
-        }
-
-        /// <summary>
-        /// Inserts the given vertex in the position of the given insert vertex. The insert vertex will
-        /// be removed if it has no more inserts left.
-        /// </summary>
-        /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="vertexToInsert">The new vertex.</param>
-        /// <returns>A tuple containing the insert vertices that were place before and after the newly inserted vertex.</returns>
-        public Tuple<EditableInsertVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
-            IEditableScheduleVertex vertexToInsert)
-        {
-            return m_Builder.InsertIn(insertVertex, vertexToInsert);
-        }
-
-        /// <summary>
-        /// Inserts the given schedule in the position of the insert vertex. The given schedule
-        /// will be connected via its start and end vertices. The insert vertex will be removed
-        /// if it has no more inserts left.
-        /// </summary>
-        /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="scheduleToInsert">The ID of the schedule that will be inserted.</param>
-        /// <returns>
-        /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after
-        /// the newly inserted sub-schedule vertex.
-        /// </returns>
-        public Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
-            ScheduleId scheduleToInsert)
-        {
-            return m_Builder.InsertIn(insertVertex, scheduleToInsert);
         }
 
         /// <summary>
@@ -277,7 +234,7 @@ namespace Apollo.Core.Host.Plugins
         public ScheduleId Register()
         {
             var schedule = m_Builder.Build();
-            return m_Owner.StoreSchedule(schedule, m_Actions, m_Conditions, m_SubSchedules);
+            return m_Owner.StoreSchedule(schedule, m_Actions, m_Conditions);
         }
     }
 }

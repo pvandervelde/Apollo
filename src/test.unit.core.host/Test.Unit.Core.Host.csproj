@@ -109,6 +109,8 @@
     <Compile Include="Plugins\Definitions\SerializedExportOnMethodDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedExportOnPropertyDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedExportOnTypeDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedGroupExportDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedGroupImportDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedImportOnConstructorDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedImportOnPropertyDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedMethodDefinitionTest.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="Plugins\Definitions\SerializedScheduleActionDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnMethodDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnPropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedTypeDefinitionTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedTypeIdentityTest.cs" />
     <Compile Include="Plugins\GroupDefinitionBuilderTest.cs" />

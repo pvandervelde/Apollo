@@ -13,13 +13,14 @@ using System.Linq;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Host.Plugins.Definitions
 {
     /// <summary>
-    /// Stores a group ID and an import ID to uniquely identify an import.
+    /// Stores information about an import for a component group in serialized form, i.e. without requiring the
+    /// assembly which defines the group to be loaded.
     /// </summary>
     [Serializable]
-    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
+    internal sealed class SerializedGroupImportDefinition : IEquatable<SerializedGroupImportDefinition>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -27,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        public static bool operator ==(SerializedGroupImportDefinition first, SerializedGroupImportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -54,7 +55,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        public static bool operator !=(SerializedGroupImportDefinition first, SerializedGroupImportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -76,50 +77,99 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="SerializedGroupImportDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name for the import.</param>
+        /// <param name="containingGroup">The ID of the group that has registered the import.</param>
+        /// <param name="insertPoint">The schedule insert point at which a sub-schedule can be provided.</param>
+        /// <param name="importsToMatch">The object imports that have to be provided for the current import.</param>
+        /// <returns>The serialized import definition for the group.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="containingGroup"/> is <see langword="null" />.
+        /// </exception>
+        public static SerializedGroupImportDefinition CreateDefinition(
+            string contractName, 
+            GroupRegistrationId containingGroup, 
+            EditableInsertVertex insertPoint, 
+            IEnumerable<ImportRegistrationId> importsToMatch)
+        {
+            {
+                Lokad.Enforce.Argument(() => contractName);
+                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => containingGroup);
+            }
+
+            return new SerializedGroupImportDefinition(
+                contractName, 
+                containingGroup, 
+                insertPoint, 
+                importsToMatch ?? Enumerable.Empty<ImportRegistrationId>());
+        }
+
+        /// <summary>
+        /// The ID of the group that has registered the import.
+        /// </summary>
+        private readonly GroupRegistrationId m_ContainingGroup;
+
+        /// <summary>
         /// The contract name for the import.
         /// </summary>
         private readonly string m_ContractName;
 
         /// <summary>
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// The schedule import point at which a sub-schedule can be provided.
         /// </summary>
         private readonly EditableInsertVertex m_InsertPoint;
 
         /// <summary>
-        /// The collection of object imports that should be satisfied.
+        /// The object imports that have to be provided for the current import.
         /// </summary>
-        private readonly IEnumerable<ImportRegistrationId> m_ObjectImports;
+        private readonly IEnumerable<ImportRegistrationId> m_ImportsToMatch;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
+        /// Initializes a new instance of the <see cref="SerializedGroupImportDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name for the import.</param>
-        /// <param name="insertPoint">
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </param>
-        /// <param name="objectImports">The collection of object imports that should be satisfied.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string.
-        /// </exception>
-        public GroupImportMap(string contractName, EditableInsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        /// <param name="containingGroup">The ID of the group that has registered the import.</param>
+        /// <param name="insertPoint">The schedule import point at which a sub-schedule can be provided.</param>
+        /// <param name="importsToMatch">The object imports that need to be provided for the current imports.</param>
+        private SerializedGroupImportDefinition(
+            string contractName, 
+            GroupRegistrationId containingGroup, 
+            EditableInsertVertex insertPoint, 
+            IEnumerable<ImportRegistrationId> importsToMatch)
         {
             {
-                Lokad.Enforce.Argument(() => contractName);
-                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
+                Debug.Assert(!string.IsNullOrEmpty(contractName), "The contract name for the import should not be empty.");
+                Debug.Assert(importsToMatch != null, "The collection of object imports should not be null.");
+                Debug.Assert(containingGroup != null, "The ID of the group registering the import should not be null.");
             }
 
-            m_InsertPoint = insertPoint;
+            m_ContainingGroup = containingGroup;
             m_ContractName = contractName;
-            m_ObjectImports = objectImports;
+            m_InsertPoint = insertPoint;
+            m_ImportsToMatch = importsToMatch;
         }
 
         /// <summary>
-        /// Gets the contract name for the current import.
+        /// Gets the ID of the group that has registered the current import.
+        /// </summary>
+        public GroupRegistrationId ContainingGroup
+        {
+            get
+            {
+                return m_ContainingGroup;
+            }
+        }
+
+        /// <summary>
+        /// Gets the contract name for the import.
         /// </summary>
         public string ContractName
         {
@@ -130,10 +180,9 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// Gets the schedule import point at which a sub-schedule can be provided.
         /// </summary>
-        public EditableInsertVertex InsertPoint
+        public EditableInsertVertex ScheduleInsertPosition
         {
             get
             {
@@ -142,27 +191,27 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// Gets the collection of object imports that should be satisfied.
+        /// Gets the object imports that need to be provided for the current imports.
         /// </summary>
-        public IEnumerable<ImportRegistrationId> ObjectImports
+        public IEnumerable<ImportRegistrationId> ImportsToMatch
         {
             get
             {
-                return m_ObjectImports;
+                return m_ImportsToMatch;
             }
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
+        /// Determines whether the specified <see cref="SerializedGroupImportDefinition"/> is equal to this instance.
         /// </summary>
-        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="SerializedGroupImportDefinition"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="SerializedGroupImportDefinition"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupImportMap other)
+        public bool Equals(SerializedGroupImportDefinition other)
         {
             if (ReferenceEquals(this, other))
             {
@@ -172,8 +221,7 @@ namespace Apollo.Core.Host.Plugins
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
+            return !ReferenceEquals(other, null) && string.Equals(ContractName, other.ContractName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -193,7 +241,7 @@ namespace Apollo.Core.Host.Plugins
                 return true;
             }
 
-            var id = obj as GroupImportMap;
+            var id = obj as SerializedGroupImportDefinition;
             return Equals(id);
         }
 
@@ -217,6 +265,7 @@ namespace Apollo.Core.Host.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+
                 return hash;
             }
         }
@@ -229,7 +278,11 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "Importing [{0}] on {1}",
+                ContractName,
+                ContainingGroup);
         }
     }
 }

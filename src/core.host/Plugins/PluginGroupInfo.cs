@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Plugins.Definitions;
 
 namespace Apollo.Core.Host.Plugins
@@ -55,15 +54,6 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// Gets or sets the serialized assembly info for the current type.
-        /// </summary>
-        public SerializedAssemblyDefinition Assembly
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the collection that contains all the object definitions for the current group.
         /// </summary>
         public IEnumerable<SerializedGroupObjectDefinition> Objects
@@ -73,55 +63,36 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// Gets or sets the collection that contains all the groups that are connected to the current group in
-        /// some form.
-        /// </summary>
-        public IEnumerable<GroupRegistrationId> SubGroups
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the collection that maps the imports to the connected exports.
         /// </summary>
-        public IDictionary<GroupImportMap, GroupExportMap> Connections
+        public IDictionary<ImportRegistrationId, ExportRegistrationId> InternalConnections
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the collection that maps a schedule element to a schedule action.
+        /// Gets or sets the schedule for the current group.
         /// </summary>
-        public IDictionary<ScheduleElementId, ScheduleActionRegistrationId> Actions
+        public SerializedScheduleDefinition Schedule
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the collection that maps a schedule element to a schedule condition.
+        /// Gets or sets the export for this group.
         /// </summary>
-        public IDictionary<ScheduleElementId, ScheduleConditionRegistrationId> Conditions
+        public SerializedGroupExportDefinition GroupExport
         {
             get;
             set;
         }
 
         /// <summary>
-        /// Gets or sets the collection that contains all the subschedules for each schedule.
+        /// Gets or sets the collection of imports for this group.
         /// </summary>
-        public IDictionary<ScheduleId, IEnumerable<ScheduleId>> SubSchedules
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Gets or sets the collection that contains all the schedules for the current group.
-        /// </summary>
-        public IDictionary<ScheduleId, IEditableSchedule> Schedules
+        public IEnumerable<SerializedGroupImportDefinition> GroupImports
         {
             get;
             set;

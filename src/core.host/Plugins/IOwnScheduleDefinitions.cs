@@ -21,12 +21,10 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="schedule">The schedule.</param>
         /// <param name="actionMap">The collection mapping the registered actions to the schedule element that holds the action.</param>
         /// <param name="conditionMap">The collection mapping the registered conditions to the schedule element that holds the condition.</param>
-        /// <param name="subSchedules">The collection of schedules that are directly linked in the current schedule.</param>
         /// <returns>The ID of the newly created schedule.</returns>
         ScheduleId StoreSchedule(
             IEditableSchedule schedule,
             Dictionary<ScheduleActionRegistrationId, ScheduleElementId> actionMap,
-            Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap,
-            IEnumerable<ScheduleId> subSchedules);
+            Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> conditionMap);
     }
 }

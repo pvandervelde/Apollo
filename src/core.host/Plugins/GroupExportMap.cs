@@ -5,10 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Extensions.Plugins;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -73,58 +71,38 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// The group that holds the export.
+        /// The contract name for the export.
         /// </summary>
-        private readonly GroupRegistrationId m_Group;
-
-        /// <summary>
-        /// The export.
-        /// </summary>
-        private readonly ExportRegistrationId m_Export;
+        private readonly string m_ContractName;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupExportMap"/> class.
         /// </summary>
-        /// <param name="export">The export for the map.</param>
-        public GroupExportMap(ExportRegistrationId export)
-            : this(null, export)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GroupExportMap"/> class.
-        /// </summary>
-        /// <param name="group">The group.</param>
-        /// <param name="export">The export for the map.</param>
-        public GroupExportMap(GroupRegistrationId group, ExportRegistrationId export)
+        /// <param name="contractName">The contract name for the export.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// </exception>
+        public GroupExportMap(string contractName)
         {
             {
-                Debug.Assert(export != null, "To create an ExportMap the export ID should not be null.");
+                Lokad.Enforce.Argument(() => contractName);
+                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
             }
 
-            m_Group = group;
-            m_Export = export;
+            m_ContractName = contractName;
         }
 
         /// <summary>
-        /// Gets the group for this map.
+        /// Gets the contract name for the export.
         /// </summary>
-        public GroupRegistrationId Group
+        public string ContractName
         {
             get
             {
-                return m_Group;
-            }
-        }
-
-        /// <summary>
-        /// Gets the export for this map.
-        /// </summary>
-        public ExportRegistrationId Export
-        {
-            get
-            {
-                return m_Export;
+                return m_ContractName;
             }
         }
 
@@ -149,8 +127,7 @@ namespace Apollo.Core.Host.Plugins
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null)
-                && Export == other.Export
-                && (((Group != null) && (Group == other.Group)) || ((Group == null) && (other.Group == null)));
+                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -193,11 +170,7 @@ namespace Apollo.Core.Host.Plugins
                 int hash = 17;
 
                 // Mash the hash together with yet another random prime number
-                hash = (hash * 23) ^ Export.GetHashCode();
-                if (Group != null)
-                {
-                    hash = (hash * 23) ^ Group.GetHashCode();
-                }
+                hash = (hash * 23) ^ ContractName.GetHashCode();
 
                 return hash;
             }
@@ -211,9 +184,7 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return Group != null
-                ? string.Format(CultureInfo.InvariantCulture, "[{0}]-[{1}]", Group, Export)
-                : string.Format(CultureInfo.InvariantCulture, "[{0}]", Export);
+            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
         }
     }
 }

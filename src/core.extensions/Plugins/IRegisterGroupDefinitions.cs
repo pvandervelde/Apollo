@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
+using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Extensions.Plugins 
 {
@@ -30,12 +32,6 @@ namespace Apollo.Core.Extensions.Plugins
         IObjectRegistration RegisterObject(Type type);
 
         /// <summary>
-        /// Indicates that a sub-group should be available for the current group to use.
-        /// </summary>
-        /// <param name="groupId">The ID of the sub-group.</param>
-        void RegisterSubgroup(GroupRegistrationId groupId);
-
-        /// <summary>
         /// Connects the export with the import.
         /// </summary>
         /// <param name="export">The ID of the export.</param>
@@ -43,29 +39,34 @@ namespace Apollo.Core.Extensions.Plugins
         void Connect(ExportRegistrationId export, ImportRegistrationId import);
 
         /// <summary>
-        /// Connects an export of the given group with an import of the current group.
+        /// Defines an export for the group. The export is created with the specified name
+        /// and all the open exports and the group schedule.
         /// </summary>
-        /// <param name="exportGroup">The ID of the group that defines the export.</param>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="import">The ID of the import.</param>
-        void Connect(GroupRegistrationId exportGroup, ExportRegistrationId export, ImportRegistrationId import);
+        /// <param name="contractName">The contract name for the group export.</param>
+        /// <remarks>Only one export can be defined per group.</remarks>
+        void DefineExport(string contractName);
 
         /// <summary>
-        /// Connects an export of the current group to an import of the given group.
+        /// Defines an import for the group with the given insert point.
         /// </summary>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="importGroup">The ID of the group that defines the import.</param>
-        /// <param name="import">The ID of import.</param>
-        void Connect(ExportRegistrationId export, GroupRegistrationId importGroup, ImportRegistrationId import);
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
+        void DefineImport(string contractName, EditableInsertVertex insertPoint);
 
         /// <summary>
-        /// Connects the export from the first group with the import from the second group.
+        /// Defines an import for the group with the given imports that should be satisfied.
         /// </summary>
-        /// <param name="exportGroup">The ID of the group that defines the export.</param>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="importGroup">The ID of the group that defines the import.</param>
-        /// <param name="import">The ID of the import.</param>
-        void Connect(GroupRegistrationId exportGroup, ExportRegistrationId export, GroupRegistrationId importGroup, ImportRegistrationId import);
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="importsToSatsify">The imports that should be satisfied.</param>
+        void DefineImport(string contractName, IEnumerable<ImportRegistrationId> importsToSatsify);
+
+        /// <summary>
+        /// Defines an import for the group with the given insert point and the given imports that should be satisfied.
+        /// </summary>
+        /// <param name="contractName">The contract name for the group import.</param>
+        /// <param name="insertPoint">The point at which the imported schedule will be placed in the group schedule.</param>
+        /// <param name="importsToSatisfy">The imports that should be satisfied.</param>
+        void DefineImport(string contractName, EditableInsertVertex insertPoint, IEnumerable<ImportRegistrationId> importsToSatisfy);
 
         /// <summary>
         /// Registers a group with the currently stored data.

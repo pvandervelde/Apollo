@@ -10,7 +10,11 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Apollo.Core.Extensions.Plugins;
+using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
+using Moq;
+using QuickGraph;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -19,5 +23,388 @@ namespace Apollo.Core.Host.Plugins
             Justification = "Unit tests do not need documentation.")]
     public sealed class ScheduleDefinitionBuilderTest
     {
+        [Test]
+        public void AddAction()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
+                    .Callback<ScheduleElementId>(s => id = s)
+                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var registrationId = new ScheduleActionRegistrationId(typeof(string), 0, "a");
+            var vertex = builder.AddExecutingAction(registrationId);
+
+            Assert.IsNotNull(vertex);
+            Assert.IsNotNull(id);
+        }
+
+        [Test]
+        public void AddActionWithExistingAction()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
+                    .Callback<ScheduleElementId>(s => id = s)
+                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var firstRegistration = new ScheduleActionRegistrationId(typeof(string), 0, "a");
+            var secondRegistration = new ScheduleActionRegistrationId(typeof(string), 0, "a");
+            var firstVertex = builder.AddExecutingAction(firstRegistration);
+
+            var first = id;
+            id = null;
+            var secondVertex = builder.AddExecutingAction(secondRegistration);
+            Assert.IsNotNull(firstVertex);
+            Assert.IsNotNull(secondVertex);
+            Assert.AreEqual(first, id);
+        }
+
+        [Test]
+        public void AddSubSchedule()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            var schedule = new ScheduleId();
+            ScheduleId storedId = null;
+            var scheduleVertex = new EditableSubScheduleVertex(0, schedule);
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddSubSchedule(It.IsAny<ScheduleId>()))
+                    .Callback<ScheduleId>(s => storedId = s)
+                    .Returns(scheduleVertex);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            var vertex = builder.AddSubSchedule(schedule);
+
+            Assert.AreSame(scheduleVertex, vertex);
+            Assert.AreSame(schedule, storedId);
+        }
+
+        [Test]
+        public void AddSynchronizationStartPoint()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            IEnumerable<IScheduleVariable> variables = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddSynchronizationStart(It.IsAny<IEnumerable<IScheduleVariable>>()))
+                    .Callback<IEnumerable<IScheduleVariable>>(s => variables = s)
+                    .Returns<IEnumerable<IScheduleVariable>>(s => new EditableSynchronizationStartVertex(0, s));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var synchronizationVariables = new List<IScheduleVariable> { new Mock<IScheduleVariable>().Object };
+            var vertex = builder.AddSynchronizationStart(synchronizationVariables);
+
+            Assert.IsNotNull(vertex);
+            Assert.AreElementsSame(synchronizationVariables, variables);
+        }
+
+        [Test]
+        public void AddSynchronizationEndPoint()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            EditableSynchronizationStartVertex startVertex = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddSynchronizationEnd(It.IsAny<EditableSynchronizationStartVertex>()))
+                    .Callback<EditableSynchronizationStartVertex>(s => startVertex = s)
+                    .Returns<EditableSynchronizationStartVertex>(s => new EditableSynchronizationEndVertex(0));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var inputVertex = new EditableSynchronizationStartVertex(
+                0, 
+                new List<IScheduleVariable> { new Mock<IScheduleVariable>().Object });
+            var vertex = builder.AddSynchronizationEnd(inputVertex);
+
+            Assert.IsNotNull(vertex);
+            Assert.AreSame(inputVertex, startVertex);
+        }
+
+        [Test]
+        public void AddHistoryMarkingPoint()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            EditableMarkHistoryVertex startVertex = new EditableMarkHistoryVertex(0);
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddHistoryMarkingPoint())
+                    .Returns(startVertex);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            var vertex = builder.AddHistoryMarkingPoint();
+
+            Assert.AreSame(startVertex, vertex);
+        }
+
+        [Test]
+        public void AddInsertPoint()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            var insertVertex = new EditableInsertVertex(0);
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddInsertPoint())
+                    .Returns(insertVertex);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            var vertex = builder.AddInsertPoint();
+
+            Assert.AreSame(insertVertex, vertex);
+        }
+
+        [Test]
+        public void AddInsertPointWithCount()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            int storedMaximum = 0;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.AddInsertPoint(It.IsAny<int>()))
+                    .Callback<int>(i => storedMaximum = i)
+                    .Returns<int>(i => new EditableInsertVertex(0, i));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            var vertex = builder.AddInsertPoint(10);
+            Assert.AreEqual(10, vertex.RemainingInserts);
+        }
+
+        [Test]
+        public void LinkToWithoutCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkTo(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                        (s, e, c) => Assert.IsNull(c));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var start = new EditableMarkHistoryVertex(0);
+            var end = new EditableInsertVertex(1);
+            builder.LinkTo(start, end);
+        }
+
+        [Test]
+        public void LinkToWithCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkTo(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                        (s, e, c) => id = c);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var start = new EditableMarkHistoryVertex(0);
+            var end = new EditableInsertVertex(1);
+            var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
+            builder.LinkTo(start, end, condition);
+
+            Assert.IsNotNull(id);
+        }
+
+        [Test]
+        public void LinkToWithExistingCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkTo(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                        (s, e, c) => id = c);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
+            builder.LinkTo(new EditableMarkHistoryVertex(0), new EditableInsertVertex(1), condition);
+            
+            Assert.IsNotNull(id);
+            
+            var firstId = id;
+            builder.LinkTo(new EditableMarkHistoryVertex(2), new EditableInsertVertex(3), condition);
+
+            Assert.IsNotNull(id);
+            Assert.AreSame(firstId, id);
+        }
+
+        [Test]
+        public void LinkFromStartWithoutCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkFromStart(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                        (e, c) => Assert.IsNull(c));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            builder.LinkFromStart(new EditableMarkHistoryVertex(0));
+        }
+
+        [Test]
+        public void LinkFromStartWithCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkFromStart(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                        (e, c) => id = c);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
+            builder.LinkFromStart(new EditableInsertVertex(1), condition);
+
+            Assert.IsNotNull(id);
+        }
+
+        [Test]
+        public void LinkToEndWithoutCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkToEnd(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                        (s, c) => Assert.IsNull(c));
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            builder.LinkToEnd(new EditableMarkHistoryVertex(0));
+        }
+
+        [Test]
+        public void LinkToEndWithCondition()
+        {
+            var owner = new Mock<IOwnScheduleDefinitions>();
+
+            ScheduleElementId id = null;
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(
+                        s => s.LinkToEnd(
+                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<ScheduleElementId>()))
+                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                        (s, c) => id = c);
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+
+            var condition = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
+            builder.LinkToEnd(new EditableInsertVertex(1), condition);
+
+            Assert.IsNotNull(id);
+        }
+
+        [Test]
+        [SuppressMessage("StyleCopPlus.StyleCopPlusRules", "SP2100:CodeLineMustNotBeLongerThan",
+            Justification = "Either it is a long line or we get complaints that the opening bracket should be on the same line as the method name")]
+        public void Register()
+        {
+            var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+
+            var start = new EditableStartVertex(1);
+            graph.AddVertex(start);
+
+            var end = new EditableEndVertex(2);
+            graph.AddVertex(end);
+            graph.AddEdge(new EditableScheduleEdge(start, end));
+
+            var schedule = new EditableSchedule(graph, start, end);
+            var scheduleBuilder = new Mock<IBuildFixedSchedules>();
+            {
+                scheduleBuilder.Setup(s => s.Build())
+                    .Returns(schedule);
+                scheduleBuilder.Setup(s => s.AddExecutingAction(It.IsAny<ScheduleElementId>()))
+                    .Returns<ScheduleElementId>(s => new EditableExecutingActionVertex(0, s));
+            }
+
+            var actionId = new ScheduleActionRegistrationId(typeof(string), 0, "a");
+            var conditionId = new ScheduleConditionRegistrationId(typeof(string), 0, "a");
+            var owner = new Mock<IOwnScheduleDefinitions>();
+            {
+                owner.Setup(
+                    o => o.StoreSchedule(
+                        It.IsAny<IEditableSchedule>(),
+                        It.IsAny<Dictionary<ScheduleActionRegistrationId, ScheduleElementId>>(),
+                        It.IsAny<Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>()))
+                    .Callback<IEditableSchedule, Dictionary<ScheduleActionRegistrationId, ScheduleElementId>, Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>>(
+                        (s, a, c) => 
+                        {
+                            Assert.AreElementsEqual(new List<ScheduleActionRegistrationId> { actionId }, a.Keys);
+                            Assert.AreElementsEqual(new List<ScheduleConditionRegistrationId> { conditionId }, c.Keys);
+                        });
+            }
+
+            var builder = new ScheduleDefinitionBuilder(owner.Object, scheduleBuilder.Object);
+            var vertex = builder.AddExecutingAction(actionId);
+            builder.LinkToEnd(vertex, conditionId);
+            builder.Register();
+        }
     }
 }

@@ -6,7 +6,6 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Extensions.Plugins;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
@@ -29,14 +28,13 @@ namespace Apollo.Core.Host.Plugins
             DistinctInstances =
                 new List<GroupExportMap> 
                     {
-                        new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a")),
-                        new GroupExportMap(new ExportRegistrationId(typeof(int), 0, "a")),
-                        new GroupExportMap(new ExportRegistrationId(typeof(string), 1, "a")),
-                        new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "b")),
-                        new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "a")),
-                        new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(int), 0, "a")),
-                        new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 1, "a")),
-                        new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "b")),
+                        new GroupExportMap("a"),
+                        new GroupExportMap("b"),
+                        new GroupExportMap("c"),
+                        new GroupExportMap("d"),
+                        new GroupExportMap("e"),
+                        new GroupExportMap("f"),
+                        new GroupExportMap("g"),
                     },
         };
 
@@ -46,21 +44,20 @@ namespace Apollo.Core.Host.Plugins
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a")),
-                    new GroupExportMap(new ExportRegistrationId(typeof(int), 0, "a")),
-                    new GroupExportMap(new ExportRegistrationId(typeof(string), 1, "a")),
-                    new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "b")),
-                    new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "a")),
-                    new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(int), 0, "a")),
-                    new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 1, "a")),
-                    new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "b")),
+                    new GroupExportMap("a"),
+                    new GroupExportMap("b"),
+                    new GroupExportMap("c"),
+                    new GroupExportMap("d"),
+                    new GroupExportMap("e"),
+                    new GroupExportMap("f"),
+                    new GroupExportMap("g"),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var original = new GroupExportMap("a");
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -70,7 +67,7 @@ namespace Apollo.Core.Host.Plugins
         public void EqualsOperatorWithFirstObjectNull()
         {
             GroupExportMap first = null;
-            var second = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var second = new GroupExportMap("a");
 
             Assert.IsFalse(first == second);
         }
@@ -78,7 +75,7 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
             GroupExportMap second = null;
 
             Assert.IsFalse(first == second);
@@ -87,8 +84,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            var second = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            var second = new GroupExportMap("a");
 
             Assert.IsTrue(first == second);
         }
@@ -96,8 +93,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            var second = new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            var second = new GroupExportMap("b");
 
             Assert.IsFalse(first == second);
         }
@@ -106,7 +103,7 @@ namespace Apollo.Core.Host.Plugins
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             GroupExportMap first = null;
-            var second = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var second = new GroupExportMap("a");
 
             Assert.IsTrue(first != second);
         }
@@ -114,7 +111,7 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
             GroupExportMap second = null;
 
             Assert.IsTrue(first != second);
@@ -123,8 +120,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            var second = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            var second = new GroupExportMap("a");
 
             Assert.IsFalse(first != second);
         }
@@ -132,8 +129,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            var second = new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            var second = new GroupExportMap("b");
 
             Assert.IsTrue(first != second);
         }
@@ -141,18 +138,15 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void Create()
         {
-            var group = new GroupRegistrationId("a");
-            var export = new ExportRegistrationId(typeof(string), 0, "b");
-            var obj = new GroupExportMap(group, export);
+            var obj = new GroupExportMap("a");
 
-            Assert.AreEqual(group, obj.Group);
-            Assert.AreEqual(export, obj.Export);
+            Assert.AreEqual("a", obj.ContractName);
         }
 
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -161,8 +155,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            object second = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            object second = new GroupExportMap("a");
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -170,8 +164,8 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
-            object second = new GroupExportMap(new GroupRegistrationId("a"), new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
+            object second = new GroupExportMap("b");
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -179,7 +173,7 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = new GroupExportMap(new ExportRegistrationId(typeof(string), 0, "a"));
+            var first = new GroupExportMap("a");
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

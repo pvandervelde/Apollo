@@ -7,14 +7,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using Apollo.Core.Extensions.Properties;
 using QuickGraph;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
+    /// <summary>
+    /// Stores a schedule in editable format.
+    /// </summary>
+    [Serializable]
     internal sealed class EditableSchedule : IEditableSchedule
     {
         /// <summary>

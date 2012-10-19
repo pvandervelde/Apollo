@@ -277,6 +277,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given contract name is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateContractName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateContractName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified DNS name is a duplicate of another DNS name..
         /// </summary>
         internal static string Exceptions_Messages_DuplicateDnsName {

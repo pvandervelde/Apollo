@@ -381,4 +381,7 @@
   <data name="Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException" xml:space="preserve">
     <value>Extracting information from Assembly {0} failed. Exception information is: {1}</value>
   </data>
+  <data name="Exceptions_Messages_DuplicateContractName" xml:space="preserve">
+    <value>The given contract name is already registered.</value>
+  </data>
 </root>

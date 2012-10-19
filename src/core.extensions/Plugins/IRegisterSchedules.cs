@@ -67,32 +67,6 @@ namespace Apollo.Core.Extensions.Plugins
         EditableInsertVertex AddInsertPoint(int maximumNumberOfInserts);
 
         /// <summary>
-        /// Inserts the given vertex in the position of the given insert vertex. The insert vertex will
-        /// be removed if it has no more inserts left.
-        /// </summary>
-        /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="vertexToInsert">The new vertex.</param>
-        /// <returns>A tuple containing the insert vertices that were place before and after the newly inserted vertex.</returns>
-        Tuple<EditableInsertVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
-            IEditableScheduleVertex vertexToInsert);
-
-        /// <summary>
-        /// Inserts the given schedule in the position of the insert vertex. The given schedule
-        /// will be connected via its start and end vertices. The insert vertex will be removed
-        /// if it has no more inserts left.
-        /// </summary>
-        /// <param name="insertVertex">The vertex which will be replaced.</param>
-        /// <param name="scheduleToInsert">The ID of the schedule that will be inserted.</param>
-        /// <returns>
-        /// A tuple containing newly created sub-schedule vertex and the insert vertices that were place before and after
-        /// the newly inserted sub-schedule vertex.
-        /// </returns>
-        Tuple<EditableInsertVertex, EditableSubScheduleVertex, EditableInsertVertex> InsertIn(
-            EditableInsertVertex insertVertex,
-            ScheduleId scheduleToInsert);
-
-        /// <summary>
         /// Links the given start vertex to the end vertex.
         /// </summary>
         /// <param name="source">The start vertex.</param>
