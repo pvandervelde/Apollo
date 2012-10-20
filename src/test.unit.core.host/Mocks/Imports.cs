@@ -94,7 +94,7 @@ namespace Apollo.Core.Host.Mocks
     public sealed class ImportOnProperty
     {
         [Import]
-        public int ImportingProperty
+        public IExportOnProperty ImportingProperty
         {
             get;
             set;

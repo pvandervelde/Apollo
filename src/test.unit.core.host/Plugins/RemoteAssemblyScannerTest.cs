@@ -393,7 +393,7 @@ namespace Apollo.Core.Host.Plugins
 
             var import = plugin.Imports.First() as SerializedImportOnPropertyDefinition;
             Assert.IsNotNull(import);
-            Assert.AreEqual(typeof(int).FullName, import.ContractName);
+            Assert.AreEqual(typeof(IExportOnProperty).FullName, import.ContractName);
             Assert.AreEqual(id, import.DeclaringType);
             Assert.AreEqual(
                 SerializedPropertyDefinition.CreateDefinition(

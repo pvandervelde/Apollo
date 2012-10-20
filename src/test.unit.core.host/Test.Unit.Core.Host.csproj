@@ -101,6 +101,8 @@
     <Compile Include="KernelStartupFailedExceptionTest.cs" />
     <Compile Include="KernelTest.cs" />
     <Compile Include="MissingServiceDependencyExceptionTest.cs" />
+    <Compile Include="Mocks\Actions.cs" />
+    <Compile Include="Mocks\Conditions.cs" />
     <Compile Include="Mocks\Exports.cs" />
     <Compile Include="Mocks\Imports.cs" />
     <Compile Include="NotificationNameTest.cs" />

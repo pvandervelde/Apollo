@@ -97,6 +97,28 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
+        /// Gets the type of object that has been registered.
+        /// </summary>
+        public SerializedTypeIdentity Type
+        {
+            get
+            {
+                return m_Type;
+            }
+        }
+
+        /// <summary>
+        /// Gets the index of the object that has been registered with the current type.
+        /// </summary>
+        public int Index
+        {
+            get
+            {
+                return m_Index;
+            }
+        }
+
+        /// <summary>
         /// Gets the collection of exports that have been registered for the current object.
         /// </summary>
         public IEnumerable<ExportRegistrationId> RegisteredExports
