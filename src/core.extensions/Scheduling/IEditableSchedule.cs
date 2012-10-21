@@ -37,10 +37,12 @@ namespace Apollo.Core.Extensions.Scheduling
         }
 
         /// <summary>
-        /// Returns a collection that contains all the known vertices for the schedule.
+        /// Gets a collection that contains all the known vertices for the schedule.
         /// </summary>
-        /// <returns>The collection that contains all the known vertices for the schedule.</returns>
-        IEnumerable<IEditableScheduleVertex> Vertices();
+        IEnumerable<IEditableScheduleVertex> Vertices
+        {
+            get;
+        }
 
         /// <summary>
         /// Traverses the schedule and applies an action to each vertex visited.

@@ -104,6 +104,7 @@
     <Compile Include="Mocks\Actions.cs" />
     <Compile Include="Mocks\Conditions.cs" />
     <Compile Include="Mocks\Exports.cs" />
+    <Compile Include="Mocks\GroupExporter.cs" />
     <Compile Include="Mocks\Imports.cs" />
     <Compile Include="NotificationNameTest.cs" />
     <Compile Include="Plugins\Definitions\SerializedAssemblyDefinitionTest.cs" />

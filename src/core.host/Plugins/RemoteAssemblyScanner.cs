@@ -48,69 +48,6 @@ namespace Apollo.Core.Host.Plugins
             return createTypeIdentity;
         }
 
-        private static void ExtractImportsAndExports(
-            Assembly assembly, 
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage, 
-            PluginInfo info)
-        {
-            var createTypeIdentity = IdentityFactory(typeStorage);
-
-            var catalog = new AssemblyCatalog(assembly);
-            foreach (var part in catalog.Parts)
-            {
-                var exports = new List<SerializedExportDefinition>();
-                foreach (var export in part.ExportDefinitions)
-                {
-                    var memberInfo = ReflectionModelServices.GetExportingMember(export);
-                    SerializedExportDefinition exportDefinition = null;
-                    switch (memberInfo.MemberType)
-                    {
-                        case MemberTypes.Method:
-                            exportDefinition = CreateMethodExport(export, memberInfo, createTypeIdentity);
-                            break;
-                        case MemberTypes.Property:
-                            exportDefinition = CreatePropertyExport(export, memberInfo, createTypeIdentity);
-                            break;
-                        case MemberTypes.NestedType:
-                        case MemberTypes.TypeInfo:
-                            exportDefinition = CreateTypeExport(export, memberInfo, createTypeIdentity);
-                            break;
-                        default:
-                            throw new NotImplementedException();
-                    }
-
-                    if (exportDefinition != null)
-                    {
-                        exports.Add(exportDefinition);
-                    }
-                }
-
-                var imports = new List<SerializedImportDefinition>();
-                foreach (var import in part.ImportDefinitions)
-                {
-                    SerializedImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
-                        ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
-                        : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
-
-                    if (importDefinition != null)
-                    {
-                        imports.Add(importDefinition);
-                    }
-                }
-
-                info.AddType(
-                    new PluginTypeInfo
-                    {
-                        Assembly = SerializedAssemblyDefinition.CreateDefinition(assembly),
-                        Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
-                        Exports = exports,
-                        Imports = imports,
-                        Actions = Enumerable.Empty<SerializedScheduleActionDefinition>(),
-                        Conditions = Enumerable.Empty<SerializedScheduleConditionDefinition>(),
-                    });
-            }
-        }
-
         private static SerializedExportDefinition CreateMethodExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
@@ -185,75 +122,6 @@ namespace Apollo.Core.Host.Plugins
                 import.ContractName,
                 parameterInfo.Value,
                 identityGenerator);
-        }
-
-        private static void ExtractActionsAndConditions(
-            Assembly assembly, 
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage, 
-            PluginInfo info)
-        {
-            var createTypeIdentity = IdentityFactory(typeStorage);
-            foreach (var t in assembly.GetTypes())
-            {
-                var actions = new List<SerializedScheduleActionDefinition>();
-                var conditions = new List<SerializedScheduleConditionDefinition>();
-                foreach (var method in t.GetMethods())
-                {
-                    if (method.ReturnType == typeof(void) && !method.GetParameters().Any())
-                    {
-                        var actionAttribute = method.GetCustomAttribute<ScheduleActionAttribute>(true);
-                        if (actionAttribute != null)
-                        {
-                            actions.Add(SerializedScheduleActionDefinition.CreateDefinition(actionAttribute.Name, method, createTypeIdentity));
-                        }
-
-                        continue;
-                    }
-
-                    if (method.ReturnType == typeof(bool) && !method.GetParameters().Any())
-                    {
-                        var conditionAttribute = method.GetCustomAttribute<ScheduleConditionAttribute>(true);
-                        if (conditionAttribute != null)
-                        {
-                            conditions.Add(
-                                SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
-                                    conditionAttribute.Name, 
-                                    method, 
-                                    createTypeIdentity));
-                        }
-                    }
-                }
-
-                foreach (var property in t.GetProperties())
-                {
-                    if (property.PropertyType == typeof(bool))
-                    {
-                        var conditionAttribute = property.GetCustomAttribute<ScheduleConditionAttribute>(true);
-                        if (conditionAttribute != null)
-                        {
-                            conditions.Add(
-                                SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(
-                                    conditionAttribute.Name, 
-                                    property, 
-                                    createTypeIdentity));
-                        }
-                    }
-                }
-
-                if (actions.Count > 0 || conditions.Count > 0)
-                { 
-                    var identity = createTypeIdentity(t);
-                    PluginTypeInfo typeInfo = info.Types.Where(p => p.Type == identity).FirstOrDefault();
-                    if (typeInfo == null)
-                    {
-                        typeInfo = new PluginTypeInfo();
-                        info.AddType(typeInfo);
-                    }
-
-                    typeInfo.Actions = actions;
-                    typeInfo.Conditions = conditions;
-                }
-            }
         }
 
         /// <summary>
@@ -413,7 +281,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 ExtractImportsAndExports(assembly, typeStorage, info);
                 ExtractActionsAndConditions(assembly, typeStorage, info);
-                ExtractGroups(assembly, typeStorage, storage.SelectMany(s => s.Types), info);
+                ExtractGroups(assembly, typeStorage, storage.SelectMany(s => s.Types).Union(info.Types), info);
 
                 storage.Add(info);
             }
@@ -426,6 +294,175 @@ namespace Apollo.Core.Host.Plugins
                         Resources.Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException,
                         assembly.GetName().FullName,
                         e));
+            }
+        }
+
+        private void ExtractImportsAndExports(
+            Assembly assembly,
+            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
+            PluginInfo info)
+        {
+            var createTypeIdentity = IdentityFactory(typeStorage);
+
+            var catalog = new AssemblyCatalog(assembly);
+            foreach (var part in catalog.Parts)
+            {
+                var exports = new List<SerializedExportDefinition>();
+                foreach (var export in part.ExportDefinitions)
+                {
+                    var memberInfo = ReflectionModelServices.GetExportingMember(export);
+                    SerializedExportDefinition exportDefinition = null;
+                    switch (memberInfo.MemberType)
+                    {
+                        case MemberTypes.Method:
+                            exportDefinition = CreateMethodExport(export, memberInfo, createTypeIdentity);
+                            break;
+                        case MemberTypes.Property:
+                            exportDefinition = CreatePropertyExport(export, memberInfo, createTypeIdentity);
+                            break;
+                        case MemberTypes.NestedType:
+                        case MemberTypes.TypeInfo:
+                            exportDefinition = CreateTypeExport(export, memberInfo, createTypeIdentity);
+                            break;
+                        default:
+                            throw new NotImplementedException();
+                    }
+
+                    if (exportDefinition != null)
+                    {
+                        exports.Add(exportDefinition);
+                        m_Logger.Log(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Discovered export: {0}",
+                                exportDefinition));
+                    }
+                }
+
+                var imports = new List<SerializedImportDefinition>();
+                foreach (var import in part.ImportDefinitions)
+                {
+                    SerializedImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
+                        ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
+                        : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
+
+                    if (importDefinition != null)
+                    {
+                        imports.Add(importDefinition);
+                        m_Logger.Log(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Discovered import: {0}",
+                                importDefinition));
+                    }
+                }
+
+                info.AddType(
+                    new PluginTypeInfo
+                    {
+                        Assembly = SerializedAssemblyDefinition.CreateDefinition(assembly),
+                        Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
+                        Exports = exports,
+                        Imports = imports,
+                        Actions = Enumerable.Empty<SerializedScheduleActionDefinition>(),
+                        Conditions = Enumerable.Empty<SerializedScheduleConditionDefinition>(),
+                    });
+            }
+        }
+
+        private void ExtractActionsAndConditions(
+            Assembly assembly,
+            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
+            PluginInfo info)
+        {
+            var createTypeIdentity = IdentityFactory(typeStorage);
+            foreach (var t in assembly.GetTypes())
+            {
+                var actions = new List<SerializedScheduleActionDefinition>();
+                var conditions = new List<SerializedScheduleConditionDefinition>();
+                foreach (var method in t.GetMethods())
+                {
+                    if (method.ReturnType == typeof(void) && !method.GetParameters().Any())
+                    {
+                        var actionAttribute = method.GetCustomAttribute<ScheduleActionAttribute>(true);
+                        if (actionAttribute != null)
+                        {
+                            var actionDefinition = SerializedScheduleActionDefinition.CreateDefinition(
+                                actionAttribute.Name, 
+                                method, 
+                                createTypeIdentity);
+                            actions.Add(actionDefinition);
+                            
+                            m_Logger.Log(
+                                LogSeverityProxy.Info,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Discovered action: {0}",
+                                    actionDefinition));
+                        }
+
+                        continue;
+                    }
+
+                    if (method.ReturnType == typeof(bool) && !method.GetParameters().Any())
+                    {
+                        var conditionAttribute = method.GetCustomAttribute<ScheduleConditionAttribute>(true);
+                        if (conditionAttribute != null)
+                        {
+                            var conditionDefinition = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                                conditionAttribute.Name,
+                                method,
+                                createTypeIdentity);
+                            conditions.Add(conditionDefinition);
+
+                            m_Logger.Log(
+                                LogSeverityProxy.Info,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Discovered condition: {0}",
+                                    conditionDefinition));
+                        }
+                    }
+                }
+
+                foreach (var property in t.GetProperties())
+                {
+                    if (property.PropertyType == typeof(bool))
+                    {
+                        var conditionAttribute = property.GetCustomAttribute<ScheduleConditionAttribute>(true);
+                        if (conditionAttribute != null)
+                        {
+                            var conditionDefinition = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(
+                                conditionAttribute.Name,
+                                property,
+                                createTypeIdentity);
+                            conditions.Add(conditionDefinition);
+
+                            m_Logger.Log(
+                                LogSeverityProxy.Info,
+                                string.Format(
+                                    CultureInfo.InvariantCulture,
+                                    "Discovered condition: {0}",
+                                    conditionDefinition));
+                        }
+                    }
+                }
+
+                if (actions.Count > 0 || conditions.Count > 0)
+                {
+                    var identity = createTypeIdentity(t);
+                    PluginTypeInfo typeInfo = info.Types.Where(p => p.Type == identity).FirstOrDefault();
+                    if (typeInfo == null)
+                    {
+                        typeInfo = new PluginTypeInfo();
+                        info.AddType(typeInfo);
+                    }
+
+                    typeInfo.Actions = actions;
+                    typeInfo.Conditions = conditions;
+                }
             }
         }
 
@@ -453,6 +490,13 @@ namespace Apollo.Core.Host.Plugins
                     if (group != null)
                     {
                         info.AddGroup(group);
+
+                        m_Logger.Log(
+                            LogSeverityProxy.Info,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Discovered condition: {0}",
+                                group));
                     }
                 }
                 catch (Exception e)

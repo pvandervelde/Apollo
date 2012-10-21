@@ -64,5 +64,16 @@ namespace Apollo.Core.Host.Plugins
                 return m_Types;
             }
         }
+
+        /// <summary>
+        /// Gets the collection of plugin groups.
+        /// </summary>
+        public IEnumerable<PluginGroupInfo> Groups
+        {
+            get
+            {
+                return m_Groups;
+            }
+        }
     }
 }

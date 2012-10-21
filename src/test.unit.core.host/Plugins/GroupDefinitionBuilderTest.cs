@@ -19,7 +19,7 @@ namespace Apollo.Core.Host.Plugins
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
-            Justification = "Unit tests do not need documentation.")]
+        Justification = "Unit tests do not need documentation.")]
     public sealed class GroupDefinitionBuilderTest
     {
         private static IEnumerable<PluginTypeInfo> CreatePluginTypes()
@@ -251,7 +251,7 @@ namespace Apollo.Core.Host.Plugins
 
             Assert.AreEqual(actionInfo.RegisteredActions.First(), groupInfo.Schedule.Actions.First().Value);
             Assert.AreEqual(conditionInfo.RegisteredConditions.First(), groupInfo.Schedule.Conditions.First().Value);
-            Assert.AreEqual(3, groupInfo.Schedule.Schedule.Vertices().Count());
+            Assert.AreEqual(3, groupInfo.Schedule.Schedule.Vertices.Count());
         }
 
         [Test]

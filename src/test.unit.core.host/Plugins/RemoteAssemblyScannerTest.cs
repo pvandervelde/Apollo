@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
 using Apollo.Core.Host.Plugins.Definitions;
@@ -32,7 +33,7 @@ namespace Apollo.Core.Host.Plugins
             var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
             var scanner = new RemoteAssemblyScanner(
                 new Mock<ILogMessagesFromRemoteAppdomains>().Object,
-                () => new Mock<IBuildFixedSchedules>().Object);
+                () => new FixedScheduleBuilder());
 
             IEnumerable<PluginInfo> plugins;
             IEnumerable<SerializedTypeDefinition> types;
@@ -399,6 +400,102 @@ namespace Apollo.Core.Host.Plugins
                 SerializedPropertyDefinition.CreateDefinition(
                     typeof(ImportOnProperty).GetProperty("ImportingProperty")),
                 import.Property);
+        }
+
+        [Test]
+        public void ActionOnMethod()
+        {
+            var id = SerializedTypeIdentity.CreateDefinition(typeof(ActionOnMethod));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
+            Assert.IsFalse(plugin.Imports.Any());
+            Assert.AreEqual(1, plugin.Actions.Count());
+
+            var action = plugin.Actions.First();
+            Assert.IsNotNull(action);
+            Assert.AreEqual("ActionMethod", action.ContractName);
+            Assert.AreEqual(
+                SerializedMethodDefinition.CreateDefinition(
+                    typeof(ActionOnMethod).GetMethod("ActionMethod")), 
+                action.Method);
+        }
+
+        [Test]
+        public void ConditionOnMethod()
+        {
+            var id = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnMethod));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
+            Assert.AreEqual(1, plugin.Conditions.Count());
+
+            var condition = plugin.Conditions.First() as SerializedScheduleConditionOnMethodDefinition;
+            Assert.IsNotNull(condition);
+            Assert.AreEqual("OnMethod", condition.ContractName);
+            Assert.AreEqual(
+                SerializedMethodDefinition.CreateDefinition(
+                    typeof(ConditionOnMethod).GetMethod("ConditionMethod")),
+                condition.Method);
+        }
+
+        [Test]
+        public void ConditionOnProperty()
+        {
+            var id = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnProperty));
+            Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
+
+            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            Assert.IsTrue(plugins.Count() == 1);
+
+            var plugin = plugins.First();
+            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
+            Assert.AreEqual(1, plugin.Conditions.Count());
+
+            var condition = plugin.Conditions.First() as SerializedScheduleConditionOnPropertyDefinition;
+            Assert.IsNotNull(condition);
+            Assert.AreEqual("OnProperty", condition.ContractName);
+            Assert.AreEqual(
+                SerializedPropertyDefinition.CreateDefinition(
+                    typeof(ConditionOnProperty).GetProperty("ConditionProperty")),
+                condition.Property);
+        }
+
+        [Test]
+        public void GroupWithExport()
+        {
+            var groups = s_Plugins.SelectMany(p => p.Groups);
+            Assert.AreEqual(1, groups.Count());
+
+            var group = groups.First();
+
+            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupExport.ContainingGroup);
+            Assert.AreEqual(GroupExporter.GroupExportName, group.GroupExport.ContractName);
+            Assert.AreEqual(group.Schedule.ScheduleId, group.GroupExport.ScheduleToExport);
+
+            Assert.AreEqual(3, group.GroupExport.ProvidedExports.Count());
+        }
+
+        [Test]
+        public void GroupWithImport()
+        {
+            var groups = s_Plugins.SelectMany(p => p.Groups);
+            Assert.AreEqual(1, groups.Count());
+
+            var group = groups.First();
+            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupImports.First().ContainingGroup);
+            Assert.IsNotNull(group.GroupImports.First().ScheduleInsertPosition);
+            Assert.IsTrue(group.Schedule.Schedule.Vertices.Contains(group.GroupImports.First().ScheduleInsertPosition));
+
+            Assert.IsFalse(group.GroupImports.First().ImportsToMatch.Any());
         }
     }
 }
