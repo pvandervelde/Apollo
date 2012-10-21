@@ -47,11 +47,6 @@ using System.Windows;
     Target = "Apollo.UI.Common.Eventing", 
     MessageId = "Eventing")]
 [module: SuppressMessage(
-    "Microsoft.Design", 
-    "CA1020:AvoidNamespacesWithFewTypes", 
-    Scope = "namespace", 
-    Target = "XamlGeneratedNamespace")]
-[module: SuppressMessage(
     "Microsoft.Naming", 
     "CA1702:CompoundWordsShouldBeCasedCorrectly", 
     Scope = "type", 

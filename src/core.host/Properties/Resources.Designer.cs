@@ -809,7 +809,7 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Apollo plugin scan appdomain.
+        ///   Looks up a localized string similar to Apollo plugin scan AppDomain.
         /// </summary>
         internal static string Plugins_PluginScanDomainName {
             get {

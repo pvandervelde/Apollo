@@ -222,13 +222,6 @@
                         </TextBlock>
                             
                     </Button>
-                    
-                    <!-- Advanced -->
-                    <Button x:Name="showAdvancedViewButton" 
-                            x:FieldModifier="private"
-                            Style="{StaticResource HyperlinkLikeButton}">
-                        <TextBlock Text="{lex:Loc DatasetDetailView_Advanced}" />
-                    </Button>
                 </StackPanel>
             </Grid>
         </Border>

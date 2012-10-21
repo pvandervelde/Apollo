@@ -364,7 +364,7 @@
     <value>The given path is not a valid path to the plugin directory.</value>
   </data>
   <data name="Plugins_PluginScanDomainName" xml:space="preserve">
-    <value>Apollo plugin scan appdomain</value>
+    <value>Apollo plugin scan AppDomain</value>
   </data>
   <data name="Plugins_LogMessage_Detector_FileScanCompleted" xml:space="preserve">
     <value>Plugin location process completed.</value>

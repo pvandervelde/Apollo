@@ -281,14 +281,5 @@ namespace Apollo.UI.Common.Views.Datasets
             get;
             set;
         }
-
-        /// <summary>
-        /// Gets or sets the command that whows the advanced details view for the dataset.
-        /// </summary>
-        public ICommand ShowDatasetAdvancedViewCommand
-        {
-            get;
-            set;
-        }
     }
 }

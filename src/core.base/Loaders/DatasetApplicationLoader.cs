@@ -192,13 +192,13 @@ namespace Apollo.Core.Base.Loaders
 
             // copy all the application executables and assemblies
             var assemblyFiles = from assemblyFile in assemblies
-                                select string.Format("{0}.{1}", assemblyFile, assemblyFileExtension);
+                                select string.Format(CultureInfo.InvariantCulture, "{0}.{1}", assemblyFile, assemblyFileExtension);
 
             var exeFiles = from exeFile in executables
                            from file in new[] 
                             {
-                                string.Format("{0}.{1}", exeFile, exeFileExtension),
-                                string.Format("{0}.{1}", exeFile, configFileExtension),
+                                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", exeFile, exeFileExtension),
+                                string.Format(CultureInfo.InvariantCulture, "{0}.{1}", exeFile, configFileExtension),
                             }
                            select file;
 
@@ -219,7 +219,7 @@ namespace Apollo.Core.Base.Loaders
             const string debugFileExtension = "pdb";
 
             var debugFiles = from file in assemblies.Append(executables)
-                             select string.Format("{0}.{1}", file, debugFileExtension);
+                             select string.Format(CultureInfo.InvariantCulture, "{0}.{1}", file, debugFileExtension);
             foreach (var file in debugFiles)
             {
                 var localFile = Path.Combine(localPath, file);

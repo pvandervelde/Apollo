@@ -120,7 +120,9 @@ namespace Apollo.Core.Host.Plugins.Definitions
             }
 
             var assemblyName = assembly.GetName();
-            var publicKeyToken = string.Join(string.Empty, assemblyName.GetPublicKeyToken().Select(b => b.ToString("x2")));
+            var publicKeyToken = string.Join(
+                string.Empty, 
+                assemblyName.GetPublicKeyToken().Select(b => b.ToString("x2", CultureInfo.InvariantCulture)));
 
             m_Name = assemblyName.Name;
             m_Version = assemblyName.Version;

@@ -128,10 +128,6 @@
     <Compile Include="SrcOnlyResources.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="UserInterfaces\Projects\SceneFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleActionFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleConditionFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\SchedulingFacade.cs" />
     <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />
     <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptException.cs" />
     <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScripts.cs" />
@@ -170,7 +166,6 @@
     <Compile Include="Projects\ProjectService.cs" />
     <Compile Include="Projects\ProxyCommandSet.cs" />
     <Compile Include="Projects\UnknownDatasetException.cs" />
-    <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
@@ -236,9 +231,7 @@
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UserInterfaces\Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>

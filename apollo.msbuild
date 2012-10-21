@@ -295,7 +295,9 @@
         <ItemGroup>
             <!-- Exclude: 1006: do not nest generic types in member signatures -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1006" />
-            <!-- Default parameters should not be used -->
+            <!-- Exclude: 1020: Avoid namespaces with few types -->
+            <FxCopRules Include="-Microsoft.Rules.Managed.CA1020" />
+            <!-- Exclude: 1026: Default parameters should not be used -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1026" />
             <!-- Exclude: 1030: use events where appropriate -->
             <FxCopRules Include="-Microsoft.Rules.Managed.CA1030" />

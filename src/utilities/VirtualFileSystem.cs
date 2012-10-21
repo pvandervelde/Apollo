@@ -46,16 +46,16 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="directoryPath">The full path to the directory.</param>
         /// <param name="searchPattern">The search string to match against the files in the path.</param>
-        /// <param name="searchSubDirectories">Indicates if the sub-directories of the current directory should be searched for files.</param>
+        /// <param name="searchSubdirectories">Indicates if the sub-directories of the current directory should be searched for files.</param>
         /// <returns>
         /// The collection of files that are contained in the directory and possible sub-directories.
         /// </returns>
-        public IEnumerable<string> GetFilesInDirectory(string directoryPath, string searchPattern, bool searchSubDirectories)
+        public IEnumerable<string> GetFilesInDirectory(string directoryPath, string searchPattern, bool searchSubdirectories)
         {
             return Directory.GetFiles(
                 directoryPath, 
                 searchPattern, 
-                searchSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
+                searchSubdirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly);
         }
     }
 }

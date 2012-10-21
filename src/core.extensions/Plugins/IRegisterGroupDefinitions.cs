@@ -34,9 +34,9 @@ namespace Apollo.Core.Extensions.Plugins
         /// <summary>
         /// Connects the export with the import.
         /// </summary>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="import">The ID of the import.</param>
-        void Connect(ExportRegistrationId export, ImportRegistrationId import);
+        /// <param name="exportRegistration">The ID of the export.</param>
+        /// <param name="importRegistration">The ID of the import.</param>
+        void Connect(ExportRegistrationId exportRegistration, ImportRegistrationId importRegistration);
 
         /// <summary>
         /// Defines an export for the group. The export is created with the specified name
@@ -57,8 +57,8 @@ namespace Apollo.Core.Extensions.Plugins
         /// Defines an import for the group with the given imports that should be satisfied.
         /// </summary>
         /// <param name="contractName">The contract name for the group import.</param>
-        /// <param name="importsToSatsify">The imports that should be satisfied.</param>
-        void DefineImport(string contractName, IEnumerable<ImportRegistrationId> importsToSatsify);
+        /// <param name="importsToSatisfy">The imports that should be satisfied.</param>
+        void DefineImport(string contractName, IEnumerable<ImportRegistrationId> importsToSatisfy);
 
         /// <summary>
         /// Defines an import for the group with the given insert point and the given imports that should be satisfied.

@@ -66,6 +66,8 @@ namespace Apollo.ProjectExplorer.Views.Welcome
         /// <summary>
         /// Gets the name of the application.
         /// </summary>
+        [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic",
+            Justification = "This property is used by the XAML code.")]
         public string ApplicationName
         {
             get

@@ -9,7 +9,7 @@ namespace Apollo.Utilities
     /// <summary>
     /// Defines the interface for objects that remote logging calls.
     /// </summary>
-    public interface ILogMessagesFromRemoteAppdomains
+    public interface ILogMessagesFromRemoteAppDomains
     {
         /// <summary>
         /// Logs the given message with the given severity.

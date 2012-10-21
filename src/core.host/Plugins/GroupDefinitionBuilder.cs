@@ -176,22 +176,22 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Connects the export with the import.
         /// </summary>
-        /// <param name="export">The ID of the export.</param>
-        /// <param name="import">The ID of the import.</param>
-        public void Connect(ExportRegistrationId export, ImportRegistrationId import)
+        /// <param name="exportRegistration">The ID of the export.</param>
+        /// <param name="importRegistration">The ID of the import.</param>
+        public void Connect(ExportRegistrationId exportRegistration, ImportRegistrationId importRegistration)
         {
-            if (!import.Accepts(export))
+            if (!importRegistration.Accepts(exportRegistration))
             {
                 throw new CannotMapExportToImportException();
             }
 
-            if (!m_Connections.ContainsKey(import))
+            if (!m_Connections.ContainsKey(importRegistration))
             {
-                m_Connections.Add(import, export);
+                m_Connections.Add(importRegistration, exportRegistration);
             }
             else
             {
-                m_Connections[import] = export;
+                m_Connections[importRegistration] = exportRegistration;
             }
         }
 

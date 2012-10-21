@@ -11,7 +11,7 @@ namespace Apollo.Utilities
     /// <summary>
     /// Provides methods to forward log messages across an <c>AppDomain</c> boundary.
     /// </summary>
-    public sealed class LogForwardingPipe : MarshalByRefObject, ILogMessagesFromRemoteAppdomains
+    public sealed class LogForwardingPipe : MarshalByRefObject, ILogMessagesFromRemoteAppDomains
     {
         /// <summary>
         /// The objects that provides the diagnostics methods for the application.

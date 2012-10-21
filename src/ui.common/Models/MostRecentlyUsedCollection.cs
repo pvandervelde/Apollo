@@ -92,7 +92,7 @@ namespace Apollo.UI.Common.Models
             {
                 if (value < 0)
                 {
-                    throw new ArgumentOutOfRangeException();
+                    throw new ArgumentOutOfRangeException("value");
                 }
 
                 m_MaximumSize = value;

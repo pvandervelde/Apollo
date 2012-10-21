@@ -137,7 +137,6 @@
     <Compile Include="Bootstrappers\RegionBehaviorFactoryMapper.cs" />
     <Compile Include="Bootstrappers\ResolveAnythingSource.cs" />
     <Compile Include="Commands\AddChildDatasetCommand.cs" />
-    <Compile Include="Commands\LoadScheduleFromDiskCommand.cs" />
     <Compile Include="Commands\CancelScriptRunCommand.cs" />
     <Compile Include="Commands\CloseProjectCommand.cs" />
     <Compile Include="Commands\CloseScriptCommand.cs" />
@@ -155,7 +154,6 @@
     <Compile Include="Commands\RunScriptCommand.cs" />
     <Compile Include="Commands\SaveProjectCommand.cs" />
     <Compile Include="Commands\SendFeedbackReportCommand.cs" />
-    <Compile Include="Commands\ShowDatasetAdvancedViewCommand.cs" />
     <Compile Include="Commands\ShowDatasetDetailViewCommand.cs" />
     <Compile Include="Commands\SwitchDatasetToEditModeCommand.cs" />
     <Compile Include="Commands\SwitchDatasetToExecutingModeCommand.cs" />
@@ -305,17 +303,6 @@
     <Compile Include="Views\Projects\ProjectView.xaml.cs">
       <DependentUpon>ProjectView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Scenes\ISceneView.cs" />
-    <Compile Include="Views\Scenes\SceneModel.cs" />
-    <Compile Include="Views\Scenes\SceneParameter.cs" />
-    <Compile Include="Views\Scenes\ScenePresenter.cs" />
-    <Compile Include="Views\Scenes\SceneView.xaml.cs">
-      <DependentUpon>SceneView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Scheduling\ScheduleActionModel.cs" />
-    <Compile Include="Views\Scheduling\ScheduleConditionModel.cs" />
-    <Compile Include="Views\Scheduling\ScheduleModel.cs" />
-    <Compile Include="Views\Scheduling\SchedulingModel.cs" />
     <Compile Include="Views\Scripting\ISelectScriptLanguageView.cs" />
     <Compile Include="Views\Scripting\ScriptDescriptionModel.cs" />
     <Compile Include="Views\Scripting\ScriptModel.cs" />
@@ -423,10 +410,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Projects\ProjectView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Scenes\SceneView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

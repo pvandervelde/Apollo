@@ -32,7 +32,7 @@ namespace Apollo.Core.Host.Plugins
         {
             var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
             var scanner = new RemoteAssemblyScanner(
-                new Mock<ILogMessagesFromRemoteAppdomains>().Object,
+                new Mock<ILogMessagesFromRemoteAppDomains>().Object,
                 () => new FixedScheduleBuilder());
 
             IEnumerable<PluginInfo> plugins;

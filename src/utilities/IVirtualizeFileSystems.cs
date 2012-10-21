@@ -16,6 +16,8 @@ namespace Apollo.Utilities
     /// <remarks>
     /// This class is mainly used to make the testing of interactions with the file system easier / possible.
     /// </remarks>
+    [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Virtualize",
+        Justification = "US-English spelling of making something virtual.")]
     public interface IVirtualizeFileSystems
     {
         /// <summary>
@@ -41,10 +43,10 @@ namespace Apollo.Utilities
         /// </summary>
         /// <param name="directoryPath">The full path to the directory.</param>
         /// <param name="searchPattern">The search string to match against the files in the path.</param>
-        /// <param name="searchSubDirectories">Indicates if the sub-directories of the current directory should be searched for files.</param>
+        /// <param name="searchSubdirectories">Indicates if the sub-directories of the current directory should be searched for files.</param>
         /// <returns>
         /// The collection of files that are contained in the directory and possible sub-directories.
         /// </returns>
-        IEnumerable<string> GetFilesInDirectory(string directoryPath, string searchPattern, bool searchSubDirectories);
+        IEnumerable<string> GetFilesInDirectory(string directoryPath, string searchPattern, bool searchSubdirectories);
     }
 }

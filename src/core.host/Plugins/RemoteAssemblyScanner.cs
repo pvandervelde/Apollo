@@ -11,6 +11,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using System.ComponentModel.Composition.ReflectionModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -98,7 +99,7 @@ namespace Apollo.Core.Host.Plugins
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
             if (memberInfo.MemberType != MemberTypes.Property)
             {
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException("import");
             }
 
             // this is really ugly because we assume that the underlying methods for a property are named as:
@@ -127,7 +128,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The object that will pass through the log messages.
         /// </summary>
-        private readonly ILogMessagesFromRemoteAppdomains m_Logger;
+        private readonly ILogMessagesFromRemoteAppDomains m_Logger;
 
         /// <summary>
         /// The function that creates schedule building objects.
@@ -145,7 +146,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="scheduleBuilder"/> is <see langword="null" />.
         /// </exception>
-        public RemoteAssemblyScanner(ILogMessagesFromRemoteAppdomains logger, Func<IBuildFixedSchedules> scheduleBuilder)
+        public RemoteAssemblyScanner(ILogMessagesFromRemoteAppDomains logger, Func<IBuildFixedSchedules> scheduleBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => logger);
@@ -264,7 +265,9 @@ namespace Apollo.Core.Host.Plugins
 
             return null;
         }
-
+        
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Will catch an log here because we don't actually know what exceptions can happen due to the ExtractGroups() call.")]
         private void ScanAssembly(
             Assembly assembly,
             ConcurrentBag<PluginInfo> storage,
@@ -276,7 +279,6 @@ namespace Apollo.Core.Host.Plugins
                     FileInfo = new PluginFileInfo(path, File.GetLastWriteTimeUtc(path)),
                 };
 
-            // Now get the conditions and actions
             try
             {
                 ExtractImportsAndExports(assembly, typeStorage, info);
@@ -466,6 +468,8 @@ namespace Apollo.Core.Host.Plugins
             }
         }
 
+        [SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes",
+            Justification = "Catch an log here because we don't actually know what exceptions can happen due to the exporter.RegisterGroups() call")]
         private void ExtractGroups(
             Assembly assembly, 
             ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage, 
