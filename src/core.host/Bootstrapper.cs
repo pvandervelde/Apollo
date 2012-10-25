@@ -10,6 +10,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
 using System.Threading;
+using Apollo.Core.Host.Plugins;
 using Apollo.Core.Host.Projects;
 using Apollo.Core.Host.UserInterfaces;
 using Apollo.Utilities;
@@ -95,6 +96,7 @@ namespace Apollo.Core.Host
                 builder.RegisterModule(new UtilitiesModule());
                 builder.RegisterModule(new KernelModule());
                 builder.RegisterModule(new ProjectModule());
+                builder.RegisterModule(new PluginsModule());
 
                 foreach (var module in additionalModules)
                 {

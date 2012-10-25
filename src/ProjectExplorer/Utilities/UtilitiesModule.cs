@@ -49,13 +49,13 @@ namespace Apollo.Utilities
             if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
             {
                 // Get the paths from the config
-                // throw new NotImplementedException();
+                throw new NotImplementedException();
             }
 
             if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
             {
                 // Get the paths from the config
-                // throw new NotImplementedException();
+                throw new NotImplementedException();
             }
 
             return AppDomainResolutionPaths.WithFilesAndDirectories(

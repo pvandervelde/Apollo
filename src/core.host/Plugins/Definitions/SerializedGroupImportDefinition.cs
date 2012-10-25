@@ -158,17 +158,6 @@ namespace Apollo.Core.Host.Plugins.Definitions
         }
 
         /// <summary>
-        /// Gets the ID of the group that has registered the current import.
-        /// </summary>
-        public GroupRegistrationId ContainingGroup
-        {
-            get
-            {
-                return m_ContainingGroup;
-            }
-        }
-
-        /// <summary>
         /// Gets the contract name for the import.
         /// </summary>
         public string ContractName
@@ -176,6 +165,17 @@ namespace Apollo.Core.Host.Plugins.Definitions
             get
             {
                 return m_ContractName;
+            }
+        }
+
+        /// <summary>
+        /// Gets the ID of the group that has registered the current import.
+        /// </summary>
+        public GroupRegistrationId ContainingGroup
+        {
+            get
+            {
+                return m_ContainingGroup;
             }
         }
 

@@ -17,15 +17,6 @@ namespace Apollo.Core.Host.Plugins
     internal sealed class PluginTypeInfo
     {
         /// <summary>
-        /// Gets or sets the serialized assembly info for the current type.
-        /// </summary>
-        public SerializedAssemblyDefinition Assembly
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
         /// Gets or sets the serialized type info.
         /// </summary>
         public SerializedTypeIdentity Type

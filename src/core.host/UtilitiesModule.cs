@@ -43,6 +43,9 @@ namespace Apollo.Core.Host
                         p.TypedAs<TimeSpan>()))
                     .As<IProgressTimer>()
                     .InstancePerDependency();
+
+                builder.Register(c => new VirtualFileSystem())
+                    .As<IVirtualizeFileSystems>();
             }
         }
     }

@@ -99,6 +99,7 @@
     <Compile Include="Plugins\PluginFileInfo.cs" />
     <Compile Include="Plugins\PluginGroupInfo.cs" />
     <Compile Include="Plugins\PluginInfo.cs" />
+    <Compile Include="Plugins\PluginsModule.cs" />
     <Compile Include="Plugins\PluginTypeInfo.cs" />
     <Compile Include="Plugins\RemoteAssemblyScanner.cs" />
     <Compile Include="Plugins\ScheduleDefinitionBuilder.cs" />

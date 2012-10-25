@@ -28,7 +28,6 @@ namespace Apollo.Core.Host.Plugins
                 {
                     new PluginTypeInfo
                         {
-                            Assembly = SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()),
                             Type = SerializedTypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
                             Exports = new List<SerializedExportDefinition> 
                                 {
@@ -45,7 +44,6 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PluginTypeInfo
                         {
-                            Assembly = SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()),
                             Type = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
                             Exports = new List<SerializedExportDefinition> 
                                 {
@@ -62,7 +60,6 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PluginTypeInfo
                         {
-                            Assembly = SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()),
                             Type = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
                             Exports = new List<SerializedExportDefinition> 
                                 {
@@ -79,7 +76,6 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PluginTypeInfo
                         {
-                            Assembly = SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()),
                             Type = SerializedTypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
                             Exports = new List<SerializedExportDefinition> 
                                 {
@@ -93,7 +89,6 @@ namespace Apollo.Core.Host.Plugins
                         },
                     new PluginTypeInfo
                         {
-                            Assembly = SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()),
                             Type = SerializedTypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
                             Exports = new List<SerializedExportDefinition> 
                                 {

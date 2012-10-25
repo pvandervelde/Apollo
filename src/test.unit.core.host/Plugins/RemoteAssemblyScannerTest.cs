@@ -56,7 +56,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -76,7 +75,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -96,7 +94,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -116,7 +113,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -140,7 +136,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -164,7 +159,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -188,7 +182,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -212,7 +205,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -236,7 +228,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Exports.Count());
 
@@ -262,7 +253,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnConstructorDefinition;
@@ -289,7 +279,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnConstructorDefinition;
@@ -316,7 +305,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnConstructorDefinition;
@@ -343,7 +331,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnPropertyDefinition;
@@ -366,7 +353,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnPropertyDefinition;
@@ -389,7 +375,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Imports.Count());
 
             var import = plugin.Imports.First() as SerializedImportOnPropertyDefinition;
@@ -412,7 +397,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.IsFalse(plugin.Imports.Any());
             Assert.AreEqual(1, plugin.Actions.Count());
 
@@ -435,7 +419,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Conditions.Count());
 
             var condition = plugin.Conditions.First() as SerializedScheduleConditionOnMethodDefinition;
@@ -457,7 +440,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
-            Assert.AreEqual(SerializedAssemblyDefinition.CreateDefinition(Assembly.GetExecutingAssembly()), plugin.Assembly);
             Assert.AreEqual(1, plugin.Conditions.Count());
 
             var condition = plugin.Conditions.First() as SerializedScheduleConditionOnPropertyDefinition;

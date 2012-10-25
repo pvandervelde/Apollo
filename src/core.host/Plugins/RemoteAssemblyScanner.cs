@@ -364,7 +364,6 @@ namespace Apollo.Core.Host.Plugins
                 info.AddType(
                     new PluginTypeInfo
                     {
-                        Assembly = SerializedAssemblyDefinition.CreateDefinition(assembly),
                         Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
                         Exports = exports,
                         Imports = imports,
