@@ -20,6 +20,7 @@
       <!-- Project directories -->
       <OutputPath>$(SolutionDir)\..\build\deploy\$(Platform)\</OutputPath>
       <IntermediateOutputPath>obj\$(Platform)\$(Configuration)\</IntermediateOutputPath>
+      <IntermediateOutputPath>$(SolutionDir)\..\build\temp\msi\obj\$(AssemblyName)\$(Platform)\$(Configuration)\</IntermediateOutputPath>
       
       <!-- Build configuration -->
       <SuppressAllWarnings>False</SuppressAllWarnings>
