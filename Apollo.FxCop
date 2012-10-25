@@ -39,7 +39,6 @@
     <Rule Name="AssembliesShouldHaveValidStrongNames" Enabled="True" />
     <Rule Name="AvoidEmptyInterfaces" Enabled="True" />
     <Rule Name="AvoidExcessiveParametersOnGenericTypes" Enabled="True" />
-    <Rule Name="AvoidNamespacesWithFewTypes" Enabled="True" />
     <Rule Name="AvoidOutParameters" Enabled="True" />
     <Rule Name="CollectionsShouldImplementGenericInterface" Enabled="True" />
     <Rule Name="ConsiderPassingBaseTypesAsParameters" Enabled="True" />
@@ -108,71 +107,6 @@
   <Settings />
  </Rules>
  <FxCopReport Version="10.0">
-  <Namespaces>
-   <Namespace Name="Apollo.Core.Host.UserInterfaces">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-05-18 08:26:30Z">
-      <Issue>
-       <Item>Apollo.Core.Host.UserInterfaces</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.Core.Host.UserInterfaces.Application">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2011-05-18 08:26:30Z">
-      <Issue>
-       <Item>Apollo.Core.Host.UserInterfaces.Application</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.UI.Common.Events.Listeners">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-04-21 07:45:20Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Events.Listeners</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.UI.Common.Models">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-08-06 07:47:47Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Models</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.UI.Common.Profiling">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-04-19 08:14:05Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Profiling</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.UI.Common.Views.Scheduling">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-07-21 06:19:10Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Views.Scheduling</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-   <Namespace Name="Apollo.UI.Common.Views.Settings">
-    <Messages>
-     <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Created="2012-08-06 07:47:47Z">
-      <Issue>
-       <Item>Apollo.UI.Common.Views.Settings</Item>
-      </Issue>
-     </Message>
-    </Messages>
-   </Namespace>
-  </Namespaces>
   <Targets>
    <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.Core.Dataset.exe">
     <Modules>
@@ -204,6 +138,24 @@
     <Modules>
      <Module Name="apollo.core.extensions.dll">
       <Namespaces>
+       <Namespace Name="Apollo.Core.Extensions.Plugins">
+        <Types>
+         <Type Name="IRegisterGroupDefinitions">
+          <Members>
+           <Member Name="#ScheduleRegistrator()">
+            <Messages>
+             <Message Id="Registrator" TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704" Created="2012-10-19 23:47:33Z">
+              <Issue Name="Member">
+               <Item>Registrator</Item>
+               <Item>'IRegisterGroupDefinitions.ScheduleRegistrator()'</Item>
+              </Issue>
+             </Message>
+            </Messages>
+           </Member>
+          </Members>
+         </Type>
+        </Types>
+       </Namespace>
        <Namespace Name="Apollo.Core.Extensions.Scheduling">
         <Types>
          <Type Name="IScheduleDependency">
@@ -266,312 +218,6 @@
          </Type>
         </Types>
        </Namespace>
-       <Namespace Name="Apollo.Core.Host.UserInterfaces.Projects">
-        <Types>
-         <Type Name="ScheduleActionFacade">
-          <Members>
-           <Member Name="#m_Owner">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-07-21 10:35:10Z">
-              <Issue>
-               <Item>'ScheduleActionFacade.m_Owner'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="ScheduleConditionFacade">
-          <Members>
-           <Member Name="#m_Owner">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-07-21 10:35:10Z">
-              <Issue>
-               <Item>'ScheduleConditionFacade.m_Owner'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-         <Type Name="SchedulingFacade">
-          <Members>
-           <Member Name="#AddNewSchedule(Apollo.Core.Extensions.Scheduling.IEditableSchedule,System.String,System.String,System.String,System.Collections.Generic.IEnumerable`1&lt;Apollo.Core.Extensions.Scheduling.IScheduleVariable&gt;,System.Collections.Generic.IEnumerable`1&lt;Apollo.Core.Extensions.Scheduling.IScheduleDependency&gt;)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="dependencies" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'dependencies'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="description" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'description'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="name" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'name'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="produces" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'produces'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="schedule" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'schedule'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="summary" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'summary'</Item>
-               <Item>'SchedulingFacade.AddNewSchedule(IEditableSchedule, string, string, string, IEnumerable&lt;IScheduleVariable&gt;, IEnumerable&lt;IScheduleDependency&gt;)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Pause(Apollo.Core.Extensions.Scheduling.ScheduleId)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'SchedulingFacade.Pause(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="scheduleToPause" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'scheduleToPause'</Item>
-               <Item>'SchedulingFacade.Pause(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleActionAdded(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleActionAdded(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleActionRemoved(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleActionRemoved(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleActionUpdated(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleActionUpdated(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleAdded(Apollo.Core.Extensions.Scheduling.ScheduleId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleAdded(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleConditionAdded(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleConditionAdded(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleConditionRemoved(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleConditionRemoved(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleConditionUpdated(Apollo.Core.Extensions.Scheduling.ScheduleElementId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleConditionUpdated(ScheduleElementId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#RaiseOnScheduleUpdated(Apollo.Core.Extensions.Scheduling.ScheduleId)">
-            <Messages>
-             <Message TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SchedulingFacade.RaiseOnScheduleUpdated(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Start(Apollo.Core.Extensions.Scheduling.ScheduleId)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'SchedulingFacade.Start(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="scheduleToExecute" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'scheduleToExecute'</Item>
-               <Item>'SchedulingFacade.Start(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Stop(Apollo.Core.Extensions.Scheduling.ScheduleId)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'SchedulingFacade.Stop(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="scheduleToStop" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'scheduleToStop'</Item>
-               <Item>'SchedulingFacade.Stop(ScheduleId)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-           <Member Name="#Update(Apollo.Core.Extensions.Scheduling.ScheduleId,Apollo.Core.Extensions.Scheduling.IEditableSchedule)">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'SchedulingFacade.Update(ScheduleId, IEditableSchedule)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="newSchedule" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'newSchedule'</Item>
-               <Item>'SchedulingFacade.Update(ScheduleId, IEditableSchedule)'</Item>
-              </Issue>
-             </Message>
-             <Message Id="scheduleToUpdate" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="DependsOnFix">
-              <Issue>
-               <Item>'scheduleToUpdate'</Item>
-               <Item>'SchedulingFacade.Update(ScheduleId, IEditableSchedule)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.ProjectExplorer.exe">
-    <Modules>
-     <Module Name="apollo.projectexplorer.exe">
-      <Namespaces>
-       <Namespace Name="Apollo.ProjectExplorer.Views.Welcome">
-        <Types>
-         <Type Name="WelcomeModel">
-          <Members>
-           <Member Name="#ApplicationName">
-            <Messages>
-             <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Created="2012-08-06 07:47:47Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'WelcomeModel.ApplicationName'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-      </Namespaces>
-     </Module>
-    </Modules>
-   </Target>
-   <Target Name="$(ProjectDir)/build/bin/AnyCPU/Debug/Apollo.UI.Common.dll">
-    <Modules>
-     <Module Name="apollo.ui.common.dll">
-      <Namespaces>
-       <Namespace Name="Apollo.UI.Common.Commands">
-        <Types>
-         <Type Name="ShowDatasetAdvancedViewCommand">
-          <Members>
-           <Member Name="#CanShow(Apollo.Core.Host.UserInterfaces.Projects.SceneFacade)">
-            <Messages>
-             <Message Id="scene" TypeName="ReviewUnusedParameters" Category="Microsoft.Usage" CheckId="CA1801" Created="2012-07-21 06:19:10Z" FixCategory="NonBreaking">
-              <Issue>
-               <Item>'scene'</Item>
-               <Item>'ShowDatasetAdvancedViewCommand.CanShow(SceneFacade)'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.UI.Common.Models">
-        <Types>
-         <Type Name="MostRecentlyUsedCollection">
-          <Members>
-           <Member Name="#MaximumSize">
-            <Accessors>
-             <Accessor Name="#set_MaximumSize(System.Int32)">
-              <Messages>
-               <Message TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208" Created="2012-08-06 07:47:47Z">
-                <Issue Name="NoArguments">
-                 <Item>'ArgumentOutOfRangeException'</Item>
-                </Issue>
-               </Message>
-              </Messages>
-             </Accessor>
-            </Accessors>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
-       <Namespace Name="Apollo.UI.Common.Views.Scenes">
-        <Types>
-         <Type Name="SceneModel">
-          <Members>
-           <Member Name="#m_Scene">
-            <Messages>
-             <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Created="2012-07-21 06:19:10Z">
-              <Issue>
-               <Item>'SceneModel.m_Scene'</Item>
-              </Issue>
-             </Message>
-            </Messages>
-           </Member>
-          </Members>
-         </Type>
-        </Types>
-       </Namespace>
       </Namespaces>
      </Module>
     </Modules>
@@ -581,17 +227,11 @@
    <Rule TypeName="AvoidEmptyInterfaces" Category="Microsoft.Design" CheckId="CA1040">
     <Resolution Name="Default">Define a custom attribute to replace {0}.</Resolution>
    </Rule>
-   <Rule TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020">
-    <Resolution Name="Default">Consider merging the types defined in '{0}' with another namespace.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUncalledPrivateCode" Category="Microsoft.Performance" CheckId="CA1811">
-    <Resolution Name="Default">{0} appears to have no upstream public or protected callers.</Resolution>
-   </Rule>
-   <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
-    <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
-   </Rule>
-   <Rule TypeName="InstantiateArgumentExceptionsCorrectly" Category="Microsoft.Usage" CheckId="CA2208">
-    <Resolution Name="NoArguments">Call the {0} constructor that contains a message and/or paramName parameter.</Resolution>
+   <Rule TypeName="IdentifiersShouldBeSpelledCorrectly" Category="Microsoft.Naming" CheckId="CA1704">
+    <Resolution Name="Assembly">Correct the spelling of '{0}' in assembly name {1}.</Resolution>
+    <Resolution Name="Member">Correct the spelling of '{0}' in member name {1} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="MemberParameter">In method {0}, correct the spelling of '{1}' in parameter name {2} or remove it entirely if it represents any sort of Hungarian notation.</Resolution>
+    <Resolution Name="Type">Correct the spelling of '{0}' in type name {1}.</Resolution>
    </Rule>
    <Rule TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822">
     <Resolution Name="Default">The 'this' parameter (or 'Me' in Visual Basic) of {0} is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Resolution>

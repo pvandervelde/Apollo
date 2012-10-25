@@ -225,6 +225,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
     </Entities>
     <Relationships>
       <Relationship type="Association" first="15" second="27">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -239,16 +241,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="0" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -303,8 +301,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="9" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -323,8 +319,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="14">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -487,8 +481,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
     </Entities>
     <Relationships>
       <Relationship type="Association" first="0" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -768,24 +760,18 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="18">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -804,16 +790,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="2" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="27">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -828,16 +810,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="13">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="26">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -852,8 +830,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="2" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -876,6 +852,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="3" second="25">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -916,6 +894,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="13" second="21">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1075,8 +1055,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1908,8 +1886,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
     </Entities>
     <Relationships>
       <Relationship type="Association" first="4" second="6">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -1932,8 +1908,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -1960,6 +1934,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="11" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2084,8 +2060,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="31" second="32">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2104,6 +2078,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="31" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2114,6 +2090,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="11" second="37">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2132,8 +2110,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="22">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2188,8 +2164,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="8" second="54">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2247,14 +2221,14 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="24" second="56">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="24" second="25">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2265,8 +2239,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="57" second="58">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2289,6 +2261,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="24" second="60">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2391,12 +2365,16 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="2" second="66">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="3" second="65">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -2427,6 +2405,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="11" second="67">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2437,6 +2417,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="30" second="24">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -2483,8 +2465,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="72" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2511,8 +2491,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="78" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2539,8 +2517,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="82" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2555,16 +2531,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="82" second="81">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="72" second="81">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2575,8 +2547,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="72" second="83">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -2591,8 +2561,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="8" second="85">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3000,8 +2968,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="20" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3016,8 +2982,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3032,8 +2996,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="20">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3410,6 +3372,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
     </Entities>
     <Relationships>
       <Relationship type="Association" first="2" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3436,8 +3400,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="9" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3452,8 +3414,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3468,8 +3428,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3484,8 +3442,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3524,8 +3480,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="9" second="10">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3536,8 +3490,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="16">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3560,16 +3512,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="17">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3584,8 +3532,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3600,8 +3546,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="8" second="22">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3624,14 +3568,14 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="17" second="23">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="24">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3683,8 +3627,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="28">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -3699,22 +3641,20 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="25">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="30" second="13">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3740,14 +3680,14 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="9" second="30">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="31">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -3758,8 +3698,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="32">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4042,6 +3980,11 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <Location left="2006" top="1939" />
         <Size width="259" height="139" />
       </Entity>
+      <Entity type="Comment">
+        <Text>Note that this also comes into play when we're dealing with versioning and we need to load an upgraded version of a component.</Text>
+        <Location left="2356" top="1939" />
+        <Size width="182" height="139" />
+      </Entity>
     </Entities>
     <Relationships>
       <Relationship type="Comment" first="1" second="0">
@@ -4061,8 +4004,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4077,8 +4018,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -4093,8 +4032,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="7" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -4109,6 +4046,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="11">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4155,16 +4094,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="17">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="20" second="30">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4175,8 +4110,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="23" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4234,8 +4167,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="30" second="29">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -4250,8 +4181,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="14">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4266,8 +4195,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="7" second="15">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4343,6 +4270,14 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <BendPoint relativeToStartShape="False">
           <X>2589</X>
           <Y>1697</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="34" second="35">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2290</X>
+          <Y>2007</Y>
         </BendPoint>
       </Relationship>
     </Relationships>
@@ -4794,8 +4729,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="7" second="4">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4814,8 +4747,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="10" second="9">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -4826,8 +4757,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="14" second="12">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -4854,6 +4783,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="16" second="14">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4872,6 +4803,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="10" second="25">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -4966,8 +4899,6 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="19" second="32">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -4994,6 +4925,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="14" second="36">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5004,6 +4937,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="14" second="37">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -5014,6 +4949,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="4" second="38">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5028,6 +4965,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="39">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -5038,6 +4977,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="4" second="40">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5056,6 +4997,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="15" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5082,16 +5025,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="42" second="31">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="0" second="42">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5121,16 +5060,12 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="43" second="33">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="32" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -5141,6 +5076,8 @@ Store structs everywhere is probably better because that spreads the knowledge a
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="39" second="44">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -5306,15 +5243,10 @@ Store structs everywhere is probably better because that spreads the knowledge a
     <Name>Project - Plug-ins</Name>
     <Language>CSharp</Language>
     <Entities>
-      <Entity type="Comment">
-        <Text>Plug-in (assembly) information needs to be stored with a version number so that we can always determine the version numbers. Also we'll probably need culture information. So somehow we'll need to match up to the full assembly name.</Text>
-        <Location left="2168" top="597" />
-        <Size width="237" height="135" />
-      </Entity>
       <Entity type="Class">
         <Name>PluginRepository</Name>
         <Access>Internal</Access>
-        <Location left="1391" top="980" />
+        <Location left="1973" top="1201" />
         <Size width="162" height="139" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5322,42 +5254,42 @@ Store structs everywhere is probably better because that spreads the knowledge a
       <Entity type="Comment">
         <Text>Define default objects that get substituted for specific types, attribute values etc.. This is just like an IOC container. e.g. when using Autofac you hardcode that resolving interface X always gets you an instance of object Y. We can do a similar system for simple system components (e.g. a logger, a console application runner etc.)
                 </Text>
-        <Location left="2016" top="1752" />
+        <Location left="3147" top="1734" />
         <Size width="368" height="124" />
       </Entity>
       <Entity type="Comment">
         <Text>Allow component selection to be based on many things, including meta-data (queries like: Coworker WITH TYPE = ISilly AND SomeAttribute=&lt;SomeValue&gt;</Text>
-        <Location left="2423" top="1399" />
+        <Location left="3554" top="1381" />
         <Size width="312" height="84" />
       </Entity>
       <Entity type="Comment">
         <Text>Keep track of all the assemblies we have tried to load and note the ones that we failed to load. Do not try to load those again in the next session (unless the version number changes / CRC changes)</Text>
-        <Location left="696" top="836" />
+        <Location left="2139" top="1739" />
         <Size width="237" height="123" />
       </Entity>
       <Entity type="Comment">
         <Text>Store the plug-in data in a version safe way. So that we can always map a component to it's assembly and assembly version</Text>
-        <Location left="2067" top="262" />
+        <Location left="2769" top="1381" />
         <Size width="202" height="99" />
       </Entity>
       <Entity type="Comment">
         <Text>Allow putting constraints on the loading of an assembly. For purposes of licensing etc.</Text>
-        <Location left="2148" top="799" />
+        <Location left="2266" top="276" />
         <Size width="187" height="97" />
       </Entity>
       <Entity type="Comment">
         <Text>One way to stop non-allowed assemblies from being loaded when using MEF is described here: http://blogs.msdn.com/b/dsplaisted/archive/2010/11/01/how-to-control-who-can-write-extensions-for-your-mef-application.aspx</Text>
-        <Location left="361" top="740" />
+        <Location left="2185" top="2111" />
         <Size width="270" height="118" />
       </Entity>
       <Entity type="Comment">
         <Text>How are we going to deal with versions? We need to provide some upgrade path and users should be able to not upgrade and then store their data in the original (non-upgraded) format.</Text>
-        <Location left="2168" top="429" />
+        <Location left="2865" top="1556" />
         <Size width="237" height="103" />
       </Entity>
       <Entity type="Comment">
         <Text>We'll need to know if loading a component requires an upgrade in the data somehow.</Text>
-        <Location left="2278" top="262" />
+        <Location left="2980" top="1381" />
         <Size width="160" height="103" />
       </Entity>
       <Entity type="Comment">
@@ -5382,7 +5314,7 @@ Store structs everywhere is probably better because that spreads the knowledge a
 
 Basically if you have lots of assemblies then it's going to be slow to load them all ...
                 </Text>
-        <Location left="696" top="587" />
+        <Location left="2397" top="1739" />
         <Size width="310" height="125" />
       </Entity>
       <Entity type="Comment">
@@ -5392,266 +5324,111 @@ How are we going to let plug-ins provide all the information they want to provid
 * Settings: name, description, default value and where to put the current value. Also notification of change
                     * Events (mainly for data)
                 </Text>
-        <Location left="1485" top="10" />
+        <Location left="2265" top="1381" />
         <Size width="280" height="167" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Properties &amp; Events?</Text>
-        <Location left="572" top="1245" />
-        <Size width="160" height="50" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Default values &amp; descriptions</Text>
-        <Location left="696" top="1160" />
-        <Size width="178" height="57" />
-      </Entity>
-      <Entity type="Interface">
-        <Name>IPluginFinder</Name>
-        <Access>Internal</Access>
-        <Location left="852" top="740" />
-        <Size width="244" height="78" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">void SearchDirectory(string directory)</Member>
       </Entity>
       <Entity type="Class">
         <Name>PluginDetector</Name>
         <Access>Internal</Access>
-        <Location left="923" top="980" />
-        <Size width="162" height="164" />
+        <Location left="2244" top="1967" />
+        <Size width="243" height="94" />
         <Collapsed>False</Collapsed>
+        <Member type="Method">public void SearchDirectory(string directory)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>RemoteAssemblyScanner</Name>
         <Access>Internal</Access>
-        <Location left="386" top="980" />
-        <Size width="315" height="119" />
+        <Location left="2023" top="2298" />
+        <Size width="429" height="119" />
         <Collapsed>False</Collapsed>
-        <Member type="Method">public void Scan(IEnumerable&lt;string&gt; assembliesToScan)</Member>
+        <Member type="Method">public IEnumerable&lt;PluginInfo&gt; Scan(IEnumerable&lt;string&gt; assembliesToScan)</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>MarshalByRef</Text>
-        <Location left="327" top="876" />
+        <Location left="2054" top="2167" />
         <Size width="98" height="50" />
       </Entity>
       <Entity type="Comment">
-        <Text>ImportDefnition defines what to import.
-* Can be based on contract + metadata
-* Can be based on Func&lt;ExportDefinition, bool&gt;
-
-Also have ContractBasedImportDefinition
-                </Text>
-        <Location left="915" top="286" />
-        <Size width="307" height="106" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Export definition defines what to export</Text>
-        <Location left="864" top="10" />
-        <Size width="280" height="77" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Storage in MsSQL Compact</Text>
-        <Location left="1206" top="1146" />
-        <Size width="183" height="50" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>We don't want to load the plug-in assemblies in the host but we may need the data of the template in the host.</Text>
-        <Location left="1261" top="1222" />
-        <Size width="184" height="93" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Templates may not be code in the plug-in assembly. They may have to be raw data.</Text>
-        <Location left="1261" top="1359" />
-        <Size width="184" height="74" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>This really needs to link to MEF so that we don't have to do the discovery of all of that stuff ourselves.</Text>
-        <Location left="183" top="740" />
-        <Size width="160" height="93" />
-      </Entity>
-      <Entity type="Comment">
         <Text>Features should be able to link to regions / goals / etc. etc. so that we can  indicate when to use a given feature</Text>
-        <Location left="2100" top="1399" />
+        <Location left="3231" top="1381" />
         <Size width="191" height="84" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Do we need to specify where to load from?</Text>
-        <Location left="1011" top="1321" />
-        <Size width="160" height="75" />
       </Entity>
       <Entity type="Class">
         <Name>SerializedExportDefinition</Name>
         <Access>Internal</Access>
-        <Location left="852" top="149" />
-        <Size width="300" height="94" />
+        <Location left="1248" top="732" />
+        <Size width="300" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public IEnumerable&lt;PluginMetadata&gt; Metadata { get; }</Member>
-        <Modifier>Sealed</Modifier>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity DeclaringType { get; }</Member>
+        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>SerializedImportDefinition</Name>
         <Access>Internal</Access>
-        <Location left="846" top="455" />
-        <Size width="313" height="111" />
+        <Location left="1225" top="1028" />
+        <Size width="313" height="128" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public IEnumerable&lt;PluginMetadata&gt; Metadata { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;PluginConstraint&gt; Constraints { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>SerializedModuleDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="1733" top="403" />
-        <Size width="287" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public string Location { get; }</Member>
-        <Member type="Property">public SerializedAssemblyDefinition Assembly { get; }</Member>
-        <Modifier>Sealed</Modifier>
+        <Member type="Property">public string ConstractName { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity DeclaringType { get; }</Member>
+        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>SerializedAssemblyDefinition</Name>
         <Access>Internal</Access>
-        <Location left="1733" top="635" />
-        <Size width="376" height="196" />
+        <Location left="2252" top="427" />
+        <Size width="217" height="162" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string FullName { get; }</Member>
         <Member type="Property">public Version Version { get; }</Member>
         <Member type="Property">public CultureInfo Culture { get; }</Member>
-        <Member type="Property">public bool IsInGlobalAssemblyCache { get; }</Member>
-        <Member type="Property">public string Key { get; }</Member>
-        <Member type="Property">public bool IsSystem { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;SerializedAssemblyDefinition&gt; References { get; }</Member>
+        <Member type="Property">public string PublicKeyToken { get; }</Member>
+        <Member type="Property">public string FullName { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Class">
         <Name>SerializedTypeDefinition</Name>
         <Access>Internal</Access>
-        <Location left="1279" top="455" />
-        <Size width="345" height="247" />
+        <Location left="2388" top="626" />
+        <Size width="345" height="162" />
         <Collapsed>False</Collapsed>
-        <Member type="Property">public string Name { get; }</Member>
-        <Member type="Property">public string Namespace { get; }</Member>
-        <Member type="Property">public string FullName { get; }</Member>
-        <Member type="Property">public SerializedModuleDefinition Module { get; }</Member>
-        <Member type="Property">public SerializedTypeDefinition BaseType { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;SerializedTypeDefinition&gt; Interfaces { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity Identity { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity BaseType { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedTypeIdentity&gt; Interfaces { get; }</Member>
         <Member type="Property">public bool IsClass { get; }</Member>
         <Member type="Property">public bool IsInterface { get; }</Member>
-        <Member type="Property">public bool IsAbstract { get; }</Member>
-        <Member type="Property">public bool IsPartOfNetFramework { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>PluginMetadata</Name>
-        <Access>Internal</Access>
-        <Location left="127" top="1274" />
-        <Size width="163" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public string Name { get; }</Member>
-        <Member type="Property">public object Value { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>PluginConstraint</Name>
-        <Access>Internal</Access>
-        <Location left="10" top="1136" />
-        <Size width="293" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public string name { get; }</Member>
-        <Member type="Property">public Func&lt;PluginMetadata, bool&gt; Constraint { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>PluginConstraintDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="287" top="587" />
-        <Size width="273" height="94" />
-        <Collapsed>False</Collapsed>
-        <Member type="Method">public abstract Func&lt;PluginMetadata, bool&gt; ToConstraint()</Member>
-        <Modifier>Abstract</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>DiscreteValueConstraintDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="102" top="306" />
-        <Size width="209" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public List&lt;T&gt; AllValues { get; }</Member>
-        <Member type="Property">public List&lt;T&gt; ValidValues { get; }</Member>
-        <Modifier>None</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>NumberPluginConstraintDefinition&lt;T&gt;</Name>
-        <Access>Internal</Access>
-        <Location left="374" top="286" />
-        <Size width="249" height="145" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public T Minimum { get; }</Member>
-        <Member type="Property">public T Maximum { get; }</Member>
-        <Member type="Property">public bool HasMinimum { get; }</Member>
-        <Member type="Property">public bool HasMaximum { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>SerializedComponentGroupDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="745" top="1480" />
-        <Size width="398" height="128" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public List&lt;Tuple&lt;Id, SerializedExportDefinition&gt;&gt; ExportsToLoad { get; }</Member>
-        <Member type="Property">public List&lt;Tuple&lt;Id, SerializedImportDefinition&gt;&gt; ImportsToLoad { get; }</Member>
-        <Member type="Property">public List&lt;Tuple&lt;Id, Id&gt;&gt; MatchInternally { get; }</Member>
-        <Modifier>Sealed</Modifier>
-      </Entity>
-      <Entity type="Class">
-        <Name>SerializedGroupConnectionDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="745" top="1972" />
-        <Size width="549" height="111" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public List&lt;string&gt; RequestedGroups { get; }</Member>
-        <Member type="Property">public List&lt;Tuple&lt;int, SerializedExportDefinition, int, SerializedImportDefinition&gt;&gt; Connections { get; }</Member>
         <Modifier>Sealed</Modifier>
       </Entity>
       <Entity type="Comment">
         <Text>How are we going to send this to the dataset. And how are we going to indicate that it should be send etc.?</Text>
-        <Location left="2754" top="1900" />
+        <Location left="3885" top="1882" />
         <Size width="244" height="105" />
       </Entity>
       <Entity type="Comment">
         <Text>How does this all link to the actual numerics / geometry stuff?</Text>
-        <Location left="2810" top="839" />
+        <Location left="3253" top="431" />
         <Size width="160" height="75" />
       </Entity>
       <Entity type="Comment">
         <Text>The selector is used to select the correct templates based on the settings of the geometry / goal. For instance the geometry could have a material assigned that is a fluid. That would mean that the selection criteria are "should handle fluids"</Text>
-        <Location left="2810" top="975" />
+        <Location left="3221" top="588" />
         <Size width="256" height="122" />
-      </Entity>
-      <Entity type="Class">
-        <Name>SerializedGroupDefinition</Name>
-        <Access>Internal</Access>
-        <Location left="745" top="1706" />
-        <Size width="313" height="145" />
-        <Collapsed>False</Collapsed>
-        <Member type="Property">public string Id { get; }</Member>
-        <Member type="Property">public List&lt;IEditableSchedule&gt; Schedules { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;PluginMetadata&gt; Metadata { get; }</Member>
-        <Member type="Property">public IEnumerable&lt;PluginConstraint&gt; Constraints { get; }</Member>
-        <Modifier>Abstract</Modifier>
       </Entity>
       <Entity type="Interface">
         <Name>ITranslateGroupsForTransport</Name>
         <Access>Public</Access>
-        <Location left="2768" top="1763" />
+        <Location left="3899" top="1745" />
         <Size width="186" height="61" />
         <Collapsed>False</Collapsed>
       </Entity>
       <Entity type="Class">
         <Name>GroupSelector</Name>
         <Access>Internal</Access>
-        <Location left="2076" top="1581" />
+        <Location left="3207" top="1563" />
         <Size width="630" height="91" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5659,7 +5436,7 @@ Also have ContractBasedImportDefinition
       <Entity type="Interface">
         <Name>ISelectComponentGroups</Name>
         <Access>Public</Access>
-        <Location left="2061" top="975" />
+        <Location left="3154" top="872" />
         <Size width="642" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;GroupDescriptor&gt; MatchingGroups(IEnumerable&lt;Tuple&lt;object, object&gt;&gt; selectionCriteria)</Member>
@@ -5670,13 +5447,13 @@ Also have ContractBasedImportDefinition
       </Entity>
       <Entity type="Comment">
         <Text>Should be able to specify exactly which group / component gets loaded in case you want to repeat a specific simulation</Text>
-        <Location left="1783" top="996" />
+        <Location left="2876" top="893" />
         <Size width="195" height="109" />
       </Entity>
       <Entity type="Class">
         <Name>GroupDescriptor</Name>
         <Access>Public</Access>
-        <Location left="1948" top="1205" />
+        <Location left="3041" top="1102" />
         <Size width="360" height="145" />
         <Collapsed>False</Collapsed>
         <Member type="Property">public string Name { get; }</Member>
@@ -5688,7 +5465,7 @@ Also have ContractBasedImportDefinition
       <Entity type="Interface">
         <Name>IPluginGroup</Name>
         <Access>Public</Access>
-        <Location left="2701" top="624" />
+        <Location left="2760" top="473" />
         <Size width="286" height="146" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;GroupProperty&gt; Properties()</Member>
@@ -5697,7 +5474,7 @@ Also have ContractBasedImportDefinition
       <Entity type="Class">
         <Name>GroupConnections</Name>
         <Access>Internal</Access>
-        <Location left="2492" top="231" />
+        <Location left="2531" top="63" />
         <Size width="274" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5705,7 +5482,7 @@ Also have ContractBasedImportDefinition
       <Entity type="Class">
         <Name>ComponentGroup</Name>
         <Access>Internal</Access>
-        <Location left="2863" top="356" />
+        <Location left="2922" top="205" />
         <Size width="162" height="77" />
         <Collapsed>False</Collapsed>
         <Modifier>Sealed</Modifier>
@@ -5713,520 +5490,879 @@ Also have ContractBasedImportDefinition
       <Entity type="Interface">
         <Name>IConnectComponentGroups</Name>
         <Access>Public</Access>
-        <Location left="2492" top="398" />
+        <Location left="2551" top="247" />
         <Size width="268" height="78" />
         <Collapsed>False</Collapsed>
         <Member type="Method">IEnumerable&lt;IPluginGroup&gt; Groups()</Member>
       </Entity>
       <Entity type="Comment">
-        <Text>A group either has data or actions / conditions, but never shared.</Text>
-        <Location left="1163" top="1747" />
-        <Size width="160" height="75" />
-      </Entity>
-      <Entity type="Comment">
-        <Text>Imports and Exports can define name / description by convention. We'll look at their resources under: &lt;ClassName&gt;_&lt;ExportName&gt;_XXX where XXX is either name or description</Text>
-        <Location left="668" top="286" />
-        <Size width="232" height="106" />
+        <Text>Actions and conditions can define name / description by convention. We'll look at their resources under: &lt;ClassName&gt;_&lt;XXXXName&gt;_YYY where XXX is either action or condition and YYY is either name or description</Text>
+        <Location left="1473" top="224" />
+        <Size width="232" height="126" />
       </Entity>
       <Entity type="Comment">
         <Text>Define one or more interfaces that provide access to some of the internals of the application (scheduling, component loading etc.) for plug-ins</Text>
-        <Location left="1561" top="1176" />
+        <Location left="1675" top="1394" />
         <Size width="294" height="77" />
+      </Entity>
+      <Entity type="Interface">
+        <Name>IPluginRepository</Name>
+        <Access>Public</Access>
+        <Location left="1984" top="1528" />
+        <Size width="162" height="99" />
+        <Collapsed>False</Collapsed>
+      </Entity>
+      <Entity type="Comment">
+        <Text>How are we going to deal with Transform vs Data (and how does that tie in to actions / conditions)</Text>
+        <Location left="2326" top="1268" />
+        <Size width="182" height="86" />
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedScheduleActionDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="1473" top="41" />
+        <Size width="270" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Member type="Property">public SerializedMethodDefinition Method { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedScheduleConditionDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="1473" top="412" />
+        <Size width="233" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Modifier>Abstract</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedConstructorDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="275" top="1033" />
+        <Size width="382" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedTypeIdentity DeclaringType { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedParameterDefinition&gt; Parameters { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedMethodDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="337" top="543" />
+        <Size width="382" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedTypeIdentity DeclaringType { get; }</Member>
+        <Member type="Property">public string MethodName { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity ReturnType { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedParameterDefinition&gt; Parameters { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedPropertyDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="451" top="750" />
+        <Size width="282" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string PropertyName { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity PropertyType { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedParameterDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="120" top="793" />
+        <Size width="237" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string Name { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity Type { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedExportOnMethodDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="813" top="593" />
+        <Size width="270" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedMethodDefinition Method { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedExportOnPropertyDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="813" top="750" />
+        <Size width="277" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedPropertyDefinition Property { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedExportOnTypeDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="813" top="482" />
+        <Size width="209" height="77" />
+        <Collapsed>False</Collapsed>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedImportOnConstructorDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="797" top="1097" />
+        <Size width="310" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedConstructorDefinition Constructor { get; }</Member>
+        <Member type="Property">public SerializedParameterDefinition Parameter { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedImportOnPropertyDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="813" top="922" />
+        <Size width="277" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedPropertyDefinition Property { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedScheduleConditionOnPropertyDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="935" top="329" />
+        <Size width="300" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedPropertyDefinition Property { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedScheduleConditionOnMethodDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="935" top="189" />
+        <Size width="295" height="94" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedMethodDefinition Method { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedTypeIdentity</Name>
+        <Access>Internal</Access>
+        <Location left="1880" top="626" />
+        <Size width="287" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string Name { get; }</Member>
+        <Member type="Property">public string Namespace { get; }</Member>
+        <Member type="Property">public string AssemblyQualifiedName { get; }</Member>
+        <Member type="Property">public string FullName { get; }</Member>
+        <Member type="Property">public SerializedAssemblyDefinition Assembly { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginInfo</Name>
+        <Access>Internal</Access>
+        <Location left="1579" top="2291" />
+        <Size width="292" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public PluginFileInfo FileInfo { get; set; }</Member>
+        <Member type="Method">public void AddType(PluginTypeInfo type)</Member>
+        <Member type="Method">public void AddGroup(PluginGroupInfo group)</Member>
+        <Member type="Property">public IEnumerable&lt;PluginTypeInfo&gt; Types { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;PluginGroupInfo&gt; Groups { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginFileInfo</Name>
+        <Access>Internal</Access>
+        <Location left="1388" top="2092" />
+        <Size width="260" height="111" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string Path { get; }</Member>
+        <Member type="Property">public DateTimeOffset LastWriteTimeUtc { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginTypeInfo</Name>
+        <Access>Internal</Access>
+        <Location left="1698" top="928" />
+        <Size width="447" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public SerializedAssemblyDefinition Assembly { get; set; }</Member>
+        <Member type="Property">public SerializedTypeIdentity Type { get; set; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedImportDefinition&gt; Imports { get; set; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedExportDefinition&gt; Exports { get; set; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedScheduleActionDefinition&gt; Actions { get; set; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedScheduleConditionDefinition&gt; Conditions { get; set; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>PluginGroupInfo</Name>
+        <Access>Internal</Access>
+        <Location left="1257" top="1548" />
+        <Size width="508" height="179" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public GroupRegistrationId Id { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedGroupObjectDefinition&gt; Objects { get; set; }</Member>
+        <Member type="Property">public IDictionary&lt;ImportRegistrationId, ExportRegistrationId&gt; InternalConnections { get; set; }</Member>
+        <Member type="Property">public SerializedScheduleDefinition Schedule { get; set; }</Member>
+        <Member type="Property">public SerializedGroupExportDefinition GroupExport { get; set; }</Member>
+        <Member type="Property">public IEnumerable&lt;SerializedGroupImportDefinition&gt; GroupImports { get; set; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedScheduleDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="635" top="1490" />
+        <Size width="495" height="162" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public GroupRegistrationId ContainingGroup { get; }</Member>
+        <Member type="Property">public ScheduleId ScheduleId { get; }</Member>
+        <Member type="Property">public IEditableSchedule Schedule { get; }</Member>
+        <Member type="Property">public IDictionary&lt;ScheduleElementId, ScheduleActionRegistrationId&gt; Actions { get; }</Member>
+        <Member type="Property">public IDictionary&lt;ScheduleElementId, ScheduleConditionRegistrationId&gt; Conditions { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedGroupObjectDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="635" top="1261" />
+        <Size width="454" height="196" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public ObjectRegistrationId Id { get; }</Member>
+        <Member type="Property">public SerializedTypeIdentity Type { get; }</Member>
+        <Member type="Property">public int Index { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ExportRegistrationId&gt; RegisteredExports { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ImportRegistrationId&gt; RegisteredImports { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleActionRegistrationId&gt; RegisteredActions { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ScheduleConditionRegistrationId&gt; RegisteredConditions { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedGroupImportDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="635" top="1749" />
+        <Size width="363" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Member type="Property">public GroupRegistrationId ContainingGroup { get; }</Member>
+        <Member type="Property">public EditableInsertVertex ScheduleInsertPosition { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ImportRegistrationId&gt; ImportsToMatch { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Class">
+        <Name>SerializedGroupExportDefinition</Name>
+        <Access>Internal</Access>
+        <Location left="635" top="1933" />
+        <Size width="360" height="145" />
+        <Collapsed>False</Collapsed>
+        <Member type="Property">public string ContractName { get; }</Member>
+        <Member type="Property">public GroupRegistrationId ContainingGroup { get; }</Member>
+        <Member type="Property">public ScheduleId ScheduleToExport { get; }</Member>
+        <Member type="Property">public IEnumerable&lt;ExportRegistrationId&gt; ProvidedExports { get; }</Member>
+        <Modifier>Sealed</Modifier>
+      </Entity>
+      <Entity type="Comment">
+        <Text>Push these in separately because we need all the types in the type-hierarchy, but not all types will be plugin types.</Text>
+        <Location left="2266" top="857" />
+        <Size width="198" height="102" />
       </Entity>
     </Entities>
     <Relationships>
-      <Relationship type="Comment" first="8" second="5">
+      <Relationship type="Comment" first="7" second="4">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2197</X>
-          <Y>386</Y>
+          <X>2899</X>
+          <Y>1505</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="9" second="8">
+      <Relationship type="Comment" first="8" second="7">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2368</X>
-          <Y>392</Y>
+          <X>3070</X>
+          <Y>1511</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="19" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>358</X>
-          <Y>1010</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="17" second="18">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="22" second="1">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1285</X>
-          <Y>1121</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1366</X>
-          <Y>1088</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="25" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>269</X>
-          <Y>858</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="0" second="8">
+      <Relationship type="Comment" first="15" second="14">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
-          <X>2213</X>
-          <Y>558</Y>
+          <X>2101</X>
+          <Y>2273</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="24" second="23">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1328</X>
-          <Y>1329</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="17" second="1">
+      <Relationship type="Association" first="13" second="14">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1366</X>
-          <Y>1041</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Realization" first="17" second="16">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="12" second="16">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>785</X>
-          <Y>737</Y>
+          <X>2512</X>
+          <Y>2025</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>827</X>
-          <Y>774</Y>
+          <X>2505</X>
+          <Y>2377</Y>
         </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="30" second="31">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="31">
+      <Relationship type="Comment" first="3" second="13">
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1509</X>
-          <Y>955</Y>
+          <X>2279</X>
+          <Y>1889</Y>
         </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="0" second="31">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="6" second="31">
+      <Relationship type="Comment" first="22" second="23">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>2137</X>
-          <Y>749</Y>
-        </BendPoint>
+        <EndOrientation>Vertical</EndOrientation>
       </Relationship>
-      <Relationship type="Association" first="28" second="32">
+      <Relationship type="Comment" first="6" second="14">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="25" second="24">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1178</X>
-          <Y>169</Y>
+          <X>3862</X>
+          <Y>1611</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1448</X>
-          <Y>430</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="29" second="32">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="32" second="30">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="18" second="29">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>683</X>
-          <Y>949</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>821</X>
-          <Y>505</Y>
+          <X>4006</X>
+          <Y>1720</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="28">
+      <Relationship type="Comment" first="21" second="24">
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>646</X>
-          <Y>947</Y>
+          <X>3970</X>
+          <Y>1857</Y>
         </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>827</X>
-          <Y>163</Y>
-        </BendPoint>
+      </Relationship>
+      <Relationship type="Realization" first="25" second="26">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="27" second="26">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="26" second="28">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="29">
+      <Relationship type="Realization" first="31" second="29">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Realization" first="30" second="32">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2629</X>
+          <Y>165</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="16" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>3327</X>
+          <Y>1535</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="2" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="1" second="25">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>3305</X>
+          <Y>1679</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="23" second="26">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>3329</X>
+          <Y>735</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="32" second="29">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="34" second="0">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1870</X>
+          <Y>1369</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1939</X>
+          <Y>1299</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="28" second="35">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Association</AssociationType>
+      </Relationship>
+      <Relationship type="Realization" first="0" second="35">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2100</X>
+          <Y>1365</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="11" second="13">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2433</X>
+          <Y>1942</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="13" second="35">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1358</X>
-          <Y>1019</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1127</X>
-          <Y>591</Y>
+          <X>2219</X>
+          <Y>2001</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="28">
+      <Relationship type="Comment" first="7" second="25">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="36" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2160</X>
+          <Y>1229</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="12" second="0">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2161</X>
+          <Y>1306</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Comment" first="33" second="37">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Comment" first="33" second="38">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="43" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1221</X>
+          <Y>763</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Generalization" first="44" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="45" second="17">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1317</X>
+          <Y>689</Y>
+        </BendPoint>
+      </Relationship>
+      <Relationship type="Association" first="43" second="40">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="44" second="41">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="40" second="42">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>312</X>
+          <Y>614</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>207</X>
+          <Y>768</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="39" second="42">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>246</X>
+          <Y>1071</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>220</X>
+          <Y>937</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="47" second="18">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+      </Relationship>
+      <Relationship type="Generalization" first="46" second="18">
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1303</X>
-          <Y>1003</Y>
+          <X>1132</X>
+          <Y>1140</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1177</X>
-          <Y>197</Y>
+          <X>1193</X>
+          <Y>1140</Y>
         </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="32">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Composition</AssociationType>
-      </Relationship>
-      <Relationship type="Comment" first="4" second="17">
+      <Relationship type="Association" first="46" second="42">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>960</X>
-          <Y>886</Y>
+          <X>769</X>
+          <Y>1181</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>989</X>
-          <Y>955</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="18" second="34">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>410</X>
-          <Y>1125</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>346</X>
-          <Y>1193</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="18" second="33">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>427</X>
-          <Y>1125</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>202</X>
-          <Y>1410</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Generalization" first="37" second="35">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="18" second="39">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>461</X>
-          <Y>1127</Y>
-        </BendPoint>
-        <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
-      </Relationship>
-      <Relationship type="Association" first="1" second="39">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>1489</X>
-          <Y>1147</Y>
+          <X>183</X>
+          <Y>929</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="18" second="38">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="46" second="39">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>720</X>
-          <Y>1582</Y>
-        </BendPoint>
         <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Association" first="1" second="38">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1238</X>
-          <Y>1568</Y>
+      <Relationship type="Association" first="47" second="41">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>758</X>
+          <Y>973</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="24" second="38">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="37" second="40">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1372</X>
+          <Y>72</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>637</X>
+          <Y>518</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Generalization" first="48" second="38">
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1340</X>
-          <Y>1463</Y>
+          <X>1281</X>
+          <Y>371</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1196</X>
-          <Y>1522</Y>
+          <X>1437</X>
+          <Y>445</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="27" second="38">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="36" second="35">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+      <Relationship type="Generalization" first="49" second="38">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1332</X>
+          <Y>231</Y>
+        </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>367</X>
-          <Y>562</Y>
+          <X>1442</X>
+          <Y>422</Y>
         </BendPoint>
       </Relationship>
-      <Relationship type="Comment" first="14" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="21" second="28">
-        <StartOrientation>Vertical</StartOrientation>
+      <Relationship type="Association" first="49" second="40">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1050</X>
-          <Y>112</Y>
+          <X>882</X>
+          <Y>214</Y>
         </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="20" second="29">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>936</X>
-          <Y>430</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="41" second="42">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="13" second="32">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>1551</X>
-          <Y>430</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="7" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="15" second="18">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
           <X>665</X>
-          <Y>1125</Y>
+          <Y>518</Y>
         </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="38" second="43">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Generalization" first="39" second="43">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="45" second="44">
+      <Relationship type="Association" first="48" second="41">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2731</X>
-          <Y>1629</Y>
+          <X>830</X>
+          <Y>364</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>2875</X>
-          <Y>1738</Y>
+          <X>758</X>
+          <Y>777</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="50" second="19">
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2192</X>
+          <Y>729</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2214</X>
+          <Y>465</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="20" second="50">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2503</X>
+          <Y>247</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>2099</X>
+          <Y>599</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Aggregation</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="5" second="19">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+      </Relationship>
+      <Relationship type="Association" first="35" second="51">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>2012</X>
+          <Y>1652</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="40" second="44">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>2839</X>
-          <Y>1875</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Realization" first="45" second="46">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="47" second="46">
+      <Relationship type="Association" first="14" second="51">
+        <Label>Creates</Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Association" first="46" second="48">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1976</X>
+          <Y>2367</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1896</X>
+          <Y>2367</Y>
+        </BendPoint>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
-      <Relationship type="Realization" first="51" second="49">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Realization" first="50" second="52">
+      <Relationship type="Association" first="51" second="52">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2590</X>
-          <Y>333</Y>
+          <X>1654</X>
+          <Y>2265</Y>
         </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="53" second="43">
-        <StartOrientation>Horizontal</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="54" second="28">
+      <Relationship type="Association" first="53" second="50">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="54" second="29">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Horizontal</EndOrientation>
-        <BendPoint relativeToStartShape="True">
-          <X>775</X>
-          <Y>417</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>821</X>
-          <Y>485</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Association" first="45" second="1">
+      <Relationship type="Association" first="0" second="20">
         <Label>
         </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>2051</X>
-          <Y>1631</Y>
-        </BendPoint>
-        <BendPoint relativeToStartShape="False">
-          <X>1520</X>
-          <Y>1150</Y>
+          <X>2272</X>
+          <Y>1218</Y>
         </BendPoint>
         <Direction>Unidirectional</Direction>
-        <AssociationType>Association</AssociationType>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Comment" first="26" second="45">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>2196</X>
-          <Y>1553</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="3" second="45">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="2" second="45">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-        <BendPoint relativeToStartShape="False">
-          <X>2174</X>
-          <Y>1697</Y>
-        </BendPoint>
-      </Relationship>
-      <Relationship type="Comment" first="42" second="46">
+      <Relationship type="Association" first="18" second="53">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
       </Relationship>
-      <Relationship type="Generalization" first="52" second="49">
-        <StartOrientation>Vertical</StartOrientation>
-        <EndOrientation>Vertical</EndOrientation>
-      </Relationship>
-      <Relationship type="Comment" first="55" second="1">
+      <Relationship type="Association" first="17" second="53">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1650</X>
+          <Y>993</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="37" second="53">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
-          <X>1697</X>
-          <Y>1150</Y>
+          <X>1768</X>
+          <Y>92</Y>
         </BendPoint>
         <BendPoint relativeToStartShape="False">
-          <X>1578</X>
-          <Y>1037</Y>
+          <X>1850</X>
+          <Y>900</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="38" second="53">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1751</X>
+          <Y>453</Y>
+        </BendPoint>
+        <BendPoint relativeToStartShape="False">
+          <X>1815</X>
+          <Y>903</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="54" second="56">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1114</X>
+          <Y>1361</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="54" second="55">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="54" second="57">
+        <Label>
+        </Label>
+        <StartOrientation>Horizontal</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="True">
+          <X>1232</X>
+          <Y>1687</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Association" first="54" second="58">
+        <Label>
+        </Label>
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Horizontal</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>1046</X>
+          <Y>2011</Y>
+        </BendPoint>
+        <Direction>Unidirectional</Direction>
+        <AssociationType>Composition</AssociationType>
+      </Relationship>
+      <Relationship type="Comment" first="59" second="20">
+        <StartOrientation>Vertical</StartOrientation>
+        <EndOrientation>Vertical</EndOrientation>
+        <BendPoint relativeToStartShape="False">
+          <X>2485</X>
+          <Y>813</Y>
         </BendPoint>
       </Relationship>
     </Relationships>
@@ -6956,6 +7092,8 @@ Also have ContractBasedImportDefinition
     </Entities>
     <Relationships>
       <Relationship type="Association" first="4" second="2">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -6978,8 +7116,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="4" second="77">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -6998,6 +7134,8 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="53" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7008,6 +7146,8 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="38" second="5">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -7034,6 +7174,8 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="77" second="82">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7084,6 +7226,8 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="55" second="68">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7214,8 +7358,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="47" second="36">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7230,8 +7372,6 @@ Also have ContractBasedImportDefinition
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Association" first="22" second="36">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7302,8 +7442,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="32" second="31">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Bidirectional</Direction>
@@ -7312,6 +7450,8 @@ Also have ContractBasedImportDefinition
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="34" second="31">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7322,6 +7462,8 @@ Also have ContractBasedImportDefinition
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="34" second="32">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7368,8 +7510,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="71" second="51">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7404,8 +7544,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="47" second="69">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7436,8 +7574,6 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="69" second="72">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7480,8 +7616,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="77" second="59">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7556,8 +7690,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="80" second="83">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -7570,6 +7702,8 @@ Also have ContractBasedImportDefinition
         <EndMultiplicity>1</EndMultiplicity>
       </Relationship>
       <Relationship type="Association" first="82" second="80">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7580,6 +7714,8 @@ Also have ContractBasedImportDefinition
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="82" second="83">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7873,12 +8009,16 @@ Also have ContractBasedImportDefinition
     </Entities>
     <Relationships>
       <Relationship type="Association" first="1" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="15" second="1">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -7909,16 +8049,12 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="6" second="21">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7931,8 +8067,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="7" second="27">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7947,8 +8081,6 @@ Also have ContractBasedImportDefinition
         <AssociationType>Aggregation</AssociationType>
       </Relationship>
       <Relationship type="Dependency" first="7" second="15">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7961,8 +8093,6 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="8" second="27">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -7981,8 +8111,6 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="11">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8044,6 +8172,8 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="19" second="27">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8439,8 +8569,6 @@ Also have ContractBasedImportDefinition
     </Entities>
     <Relationships>
       <Relationship type="Association" first="19" second="7">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8451,8 +8579,6 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="19" second="2">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8467,16 +8593,12 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="16" second="32">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8491,8 +8613,6 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="2" second="1">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8503,8 +8623,6 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="29" second="3">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8539,12 +8657,16 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="19">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="21" second="12">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8619,12 +8741,16 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="17" second="34">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="18" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -8698,6 +8824,8 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="31" second="30">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -8712,12 +8840,16 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="33" second="34">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="32" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -9120,12 +9252,16 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Vertical</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="9" second="0">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Composition</AssociationType>
       </Relationship>
       <Relationship type="Association" first="12" second="11">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="False">
@@ -9184,6 +9320,8 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="12" second="32">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -9290,6 +9428,8 @@ Also have ContractBasedImportDefinition
         </BendPoint>
       </Relationship>
       <Relationship type="Association" first="28" second="27">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -9300,6 +9440,8 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="33" second="31">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -9314,6 +9456,8 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="43" second="33">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -9535,8 +9679,6 @@ Also have ContractBasedImportDefinition
     </Entities>
     <Relationships>
       <Relationship type="Association" first="13" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -9547,8 +9689,6 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="0">
-        <Label>
-        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <BendPoint relativeToStartShape="True">
@@ -9559,12 +9699,16 @@ Also have ContractBasedImportDefinition
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="4">
+        <Label>
+        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>
         <AssociationType>Association</AssociationType>
       </Relationship>
       <Relationship type="Association" first="1" second="9">
+        <Label>
+        </Label>
         <StartOrientation>Vertical</StartOrientation>
         <EndOrientation>Vertical</EndOrientation>
         <Direction>Unidirectional</Direction>
@@ -9599,8 +9743,6 @@ Also have ContractBasedImportDefinition
         <EndOrientation>Horizontal</EndOrientation>
       </Relationship>
       <Relationship type="Association" first="13" second="5">
-        <Label>
-        </Label>
         <StartOrientation>Horizontal</StartOrientation>
         <EndOrientation>Horizontal</EndOrientation>
         <Direction>Unidirectional</Direction>

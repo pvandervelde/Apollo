@@ -46,6 +46,7 @@
     <Compile Include="Configuration\XmlConfiguration.cs" />
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
+    <Compile Include="FileUtilities.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationException.cs" />
     <Compile Include="History\CannotSetDefaultAfterStartOfTimeException.cs" />
     <Compile Include="History\CannotSetDefaultBeforeStartOfTimeException.cs" />
@@ -112,6 +113,7 @@
     <Compile Include="IFileConstants.cs" />
     <Compile Include="IIsId.cs" />
     <Compile Include="ILockObject.cs" />
+    <Compile Include="ILogMessagesFromRemoteAppDomains.cs" />
     <Compile Include="IndeterminateProgressMark.cs" />
     <Compile Include="IPersistenceInformation.cs" />
     <Compile Include="IProgressMark.cs" />
@@ -119,7 +121,9 @@
     <Compile Include="IProgressTimer.cs" />
     <Compile Include="ITrackProgress.cs" />
     <Compile Include="ITrackSteppingProgress.cs" />
+    <Compile Include="IVirtualizeFileSystems.cs" />
     <Compile Include="LockObject.cs" />
+    <Compile Include="LogForwardingPipe.cs" />
     <Compile Include="LogSeverityProxy.cs" />
     <Compile Include="NotificationEventArgs.cs" />
     <Compile Include="NotificationReportingHub.cs" />
@@ -141,6 +145,7 @@
     <Compile Include="TypeComparer.cs" />
     <Compile Include="TypeEqualityComparer.cs" />
     <Compile Include="TypeExtensions.cs" />
+    <Compile Include="VirtualFileSystem.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Autofac">

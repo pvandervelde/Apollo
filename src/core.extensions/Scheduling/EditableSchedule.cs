@@ -7,14 +7,16 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Linq;
 using Apollo.Core.Extensions.Properties;
 using QuickGraph;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
+    /// <summary>
+    /// Stores a schedule in editable format.
+    /// </summary>
+    [Serializable]
     internal sealed class EditableSchedule : IEditableSchedule
     {
         /// <summary>
@@ -90,6 +92,17 @@ namespace Apollo.Core.Extensions.Scheduling
         }
 
         /// <summary>
+        /// Gets a collection that contains all the known vertices for the schedule.
+        /// </summary>
+        public IEnumerable<IEditableScheduleVertex> Vertices
+        {
+            get
+            {
+                return m_Graph.Vertices;
+            }
+        }
+
+        /// <summary>
         /// Traverses the schedule and applies an action to each vertex visited.
         /// </summary>
         /// <param name="start">The vertex where the traverse should be started.</param>
@@ -147,15 +160,6 @@ namespace Apollo.Core.Extensions.Scheduling
                     uncheckedVertices.Enqueue(traverseViaOutBoundVertices ? outEdge.Target : outEdge.Source);
                 }
             }
-        }
-
-        /// <summary>
-        /// Returns a collection that contains all the known vertices for the schedule.
-        /// </summary>
-        /// <returns>The collection that contains all the known vertices for the schedule.</returns>
-        public IEnumerable<IEditableScheduleVertex> Vertices()
-        {
-            return m_Graph.Vertices;
         }
 
         /// <summary>

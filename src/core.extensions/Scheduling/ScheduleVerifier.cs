@@ -48,7 +48,7 @@ namespace Apollo.Core.Extensions.Scheduling
             IEditableSchedule schedule,
             Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
+            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices);
             schedule.TraverseSchedule(
                 schedule.Start,
                 true,
@@ -78,7 +78,7 @@ namespace Apollo.Core.Extensions.Scheduling
             IEditableSchedule schedule,
             Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
         {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices());
+            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices);
             schedule.TraverseSchedule(
                 schedule.End,
                 false,

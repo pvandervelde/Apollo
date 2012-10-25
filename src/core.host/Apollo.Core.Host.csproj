@@ -34,8 +34,13 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Reactive, Version=1.0.10621.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\Rx-Main\lib\Net4\System.Reactive.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -61,6 +66,43 @@
     <Compile Include="ApplicationStartupEventArgs.cs" />
     <Compile Include="ApplicationStartupFinishedProgressMark.cs" />
     <Compile Include="INotificationArguments.cs" />
+    <Compile Include="Plugins\Definitions\SerializedAssemblyDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedConstructorDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnMethodDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnPropertyDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedExportOnTypeDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedGroupExportDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedGroupImportDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedGroupObjectDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportOnConstructorDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedImportOnPropertyDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedMethodDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedParameterDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedPropertyDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleActionDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnMethodDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleConditionOnPropertyDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedScheduleDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedTypeDefinition.cs" />
+    <Compile Include="Plugins\Definitions\SerializedTypeIdentity.cs" />
+    <Compile Include="Plugins\DuplicateContractNameException.cs" />
+    <Compile Include="Plugins\GroupDefinitionBuilder.cs" />
+    <Compile Include="Plugins\GroupExportMap.cs" />
+    <Compile Include="Plugins\GroupImportMap.cs" />
+    <Compile Include="Plugins\IOwnScheduleDefinitions.cs" />
+    <Compile Include="Plugins\IPluginRepository.cs" />
+    <Compile Include="Plugins\IAssemblyScanner.cs" />
+    <Compile Include="Plugins\PluginDetector.cs" />
+    <Compile Include="Plugins\PluginFileInfo.cs" />
+    <Compile Include="Plugins\PluginGroupInfo.cs" />
+    <Compile Include="Plugins\PluginInfo.cs" />
+    <Compile Include="Plugins\PluginsModule.cs" />
+    <Compile Include="Plugins\PluginTypeInfo.cs" />
+    <Compile Include="Plugins\RemoteAssemblyScanner.cs" />
+    <Compile Include="Plugins\ScheduleDefinitionBuilder.cs" />
     <Compile Include="Projects\BidirectionalGraphHistory.CollectionChange.cs" />
     <Compile Include="Projects\BidirectionalGraphHistory.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
@@ -87,10 +129,6 @@
     <Compile Include="SrcOnlyResources.cs" />
     <Compile Include="UserInterfaces\Projects\ProjectHub.cs" />
     <Compile Include="UserInterfaces\Projects\SceneFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleActionFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleConditionFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\ScheduleFacade.cs" />
-    <Compile Include="UserInterfaces\Projects\SchedulingFacade.cs" />
     <Compile Include="UserInterfaces\Scripting\CancelScriptToken.cs" />
     <Compile Include="UserInterfaces\Scripting\CannotInterruptRunningScriptException.cs" />
     <Compile Include="UserInterfaces\Scripting\DatasetFacadeForScripts.cs" />
@@ -129,7 +167,6 @@
     <Compile Include="Projects\ProjectService.cs" />
     <Compile Include="Projects\ProxyCommandSet.cs" />
     <Compile Include="Projects\UnknownDatasetException.cs" />
-    <Compile Include="Properties\AssemblyInfo.SuppressMessages.cs" />
     <Compile Include="AutoLoadAttribute.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="CannotUninstallNonequivalentServiceException.cs" />
@@ -195,10 +232,7 @@
     <Compile Include="UserInterfaces\UserInterfaceModule.cs" />
     <Compile Include="UserInterfaces\UserInterfaceService.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-    <Folder Include="UserInterfaces\Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\core.base\Apollo.Core.Base.csproj">
       <Project>{5125E82C-2E8A-4CE4-8FA8-39AB82C9B856}</Project>

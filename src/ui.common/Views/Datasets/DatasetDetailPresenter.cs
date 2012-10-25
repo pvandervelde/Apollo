@@ -41,14 +41,12 @@ namespace Apollo.UI.Common.Views.Datasets
             var context = m_Container.Resolve<IContextAware>();
             var projectFacade = m_Container.Resolve<ILinkToProjects>();
             var progressTracker = m_Container.Resolve<ITrackSteppingProgress>();
-            var eventAggregator = m_Container.Resolve<IEventAggregator>();
 
             var model = new DatasetDetailModel(context, progressTracker, projectFacade, Parameter.Dataset) 
                 {
                     // ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, Parameter.Dataset),
                     SwitchDatasetToEditModeCommand = new SwitchDatasetToEditModeCommand(Parameter.Dataset),
                     SwitchDatasetToExecutingModeCommand = new SwitchDatasetToExecutingModeCommand(Parameter.Dataset),
-                    ShowDatasetAdvancedViewCommand = new ShowDatasetAdvancedViewCommand(context, eventAggregator, null),
                     CloseCommand = CreateCloseCommand(),
                 };
 

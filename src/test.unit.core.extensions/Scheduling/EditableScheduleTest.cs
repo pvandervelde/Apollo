@@ -32,7 +32,7 @@ namespace Apollo.Core.Extensions.Scheduling
 
             Assert.AreSame(start, schedule.Start);
             Assert.AreSame(end, schedule.End);
-            Assert.AreElementsSameIgnoringOrder(new IEditableScheduleVertex[] { start, end }, schedule.Vertices());
+            Assert.AreElementsSameIgnoringOrder(new IEditableScheduleVertex[] { start, end }, schedule.Vertices);
             Assert.AreEqual(1, schedule.NumberOfOutboundConnections(start));
             Assert.AreEqual(1, schedule.NumberOfInboundConnections(end));
         }

@@ -51,16 +51,5 @@ namespace Apollo.Core.Host.UserInterfaces.Projects
         // Boundaries
         // Variables
         // Models
-
-        /// <summary>
-        /// Gets the facade that describes the schedules for the current scene.
-        /// </summary>
-        public SchedulingFacade Schedules
-        {
-            get
-            {
-                return new SchedulingFacade(this);
-            }
-        }
     }
 }

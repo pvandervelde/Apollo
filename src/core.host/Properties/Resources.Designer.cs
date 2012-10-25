@@ -277,6 +277,15 @@ namespace Apollo.Core.Host.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given contract name is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateContractName {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateContractName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified DNS name is a duplicate of another DNS name..
         /// </summary>
         internal static string Exceptions_Messages_DuplicateDnsName {
@@ -336,6 +345,15 @@ namespace Apollo.Core.Host.Properties {
         internal static string Exceptions_Messages_InternalError_WithCode {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_InternalError_WithCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given path is not a valid path to the plugin directory..
+        /// </summary>
+        internal static string Exceptions_Messages_InvalidPluginDirectoryPath {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_InvalidPluginDirectoryPath", resourceCulture);
             }
         }
         
@@ -742,6 +760,60 @@ namespace Apollo.Core.Host.Properties {
         internal static string MessagePipeline_LogMessage_SenderRemoved {
             get {
                 return ResourceManager.GetString("MessagePipeline_LogMessage_SenderRemoved", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Plugin location process completed..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanCompleted {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanCompleted", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating all the files in {0} failed due to an exception. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanFailed_WithDirectoryAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Locating plugins in {0}..
+        /// </summary>
+        internal static string Plugins_LogMessage_Detector_FileScanStarted_WithDirectory {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Detector_FileScanStarted_WithDirectory", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The loading of the plugin assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_AssemblyLoadFailed_WithNameAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Extracting information from Assembly {0} failed. Exception information is: {1}.
+        /// </summary>
+        internal static string Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException {
+            get {
+                return ResourceManager.GetString("Plugins_LogMessage_Scanner_TypeScanFailed_WithAssemblyAndException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apollo plugin scan AppDomain.
+        /// </summary>
+        internal static string Plugins_PluginScanDomainName {
+            get {
+                return ResourceManager.GetString("Plugins_PluginScanDomainName", resourceCulture);
             }
         }
         

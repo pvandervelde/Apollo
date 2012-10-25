@@ -21,11 +21,6 @@ namespace Apollo.UI.Common.Views.Datasets
         private static readonly RoutedCommand s_EditModeCommand = new RoutedCommand();
 
         /// <summary>
-        /// The routed command that is used to show the advanced view.
-        /// </summary>
-        private static readonly RoutedCommand s_ShowAdvancedViewCommand = new RoutedCommand();
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="DatasetDetailView"/> class.
         /// </summary>
         public DatasetDetailView()
@@ -37,13 +32,6 @@ namespace Apollo.UI.Common.Views.Datasets
                 var cb = new CommandBinding(s_EditModeCommand, CommandEditModeSwitchExecuted, CommandEditModeSwitchCanExecute);
                 CommandBindings.Add(cb);
                 switchEditModeButton.Command = s_EditModeCommand;
-            }
-
-            // Bind the show advanced view command
-            {
-                var cb = new CommandBinding(s_ShowAdvancedViewCommand, CommandShowAdvancedViewExecuted, CommandShowAdvancedViewCanExecute);
-                CommandBindings.Add(cb);
-                showAdvancedViewButton.Command = s_ShowAdvancedViewCommand;
             }
         }
 
@@ -97,32 +85,6 @@ namespace Apollo.UI.Common.Views.Datasets
             else
             {
                 Model.SwitchDatasetToExecutingModeCommand.Execute(null);
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "This is really a CanExecute event so we probably want to preserve the semantics.")]
-        private void CommandShowAdvancedViewCanExecute(object sender, CanExecuteRoutedEventArgs e)
-        {
-            e.Handled = true;
-            if (Model != null)
-            {
-                e.CanExecute = Model.IsLoaded && Model.ShowDatasetAdvancedViewCommand.CanExecute(null);
-            }
-            else
-            {
-                e.CanExecute = false;
-            }
-        }
-
-        [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters",
-            Justification = "This is really a Execute event so we probably want to preserve the semantics.")]
-        private void CommandShowAdvancedViewExecuted(object sender, ExecutedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            if (Model.IsLoaded)
-            {
-                Model.ShowDatasetAdvancedViewCommand.Execute(null);
             }
         }
     }

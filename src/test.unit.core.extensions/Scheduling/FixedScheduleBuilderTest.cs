@@ -81,7 +81,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, actionVertex, schedule.End }, 
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, subScheduleVertex, schedule.End }, 
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -124,7 +124,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, synchronizationVertex, schedule.End },
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -160,7 +160,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, synchronizationStartVertex, synchronizationEndVertex, schedule.End },
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -175,7 +175,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, historyMarkingVertex, schedule.End },
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -190,7 +190,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace Apollo.Core.Extensions.Scheduling
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
                 new IEditableScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices());
+                schedule.Vertices);
         }
 
         [Test]
