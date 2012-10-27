@@ -273,10 +273,9 @@
     </Target>
     
     <!-- Link all code analysis targets -->
-    <Target Name="_CodeAnalysis" DependsOnTargets="_BuildBinaries;_RestorePackages;_CodeAnalysisFxCop;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor">
+    <Target Name="_CodeAnalysis" DependsOnTargets="_BuildBinaries;_RestorePackages;_CodeAnalysisFxCop;_CodeAnalysisMoma;_CodeAnalysisCcm;_CodeAnalysisSourceMonitor">
     </Target>
     
-    <!-- Run FxCop -->
     <PropertyGroup>
         <FxCopDir>$(DirPackages)\FxCop</FxCopDir>
         <FxCopCustomDictionary>$(FxCopDir)\CustomDictionary.xml</FxCopCustomDictionary>
@@ -310,7 +309,40 @@
                FxCopRuleAssemblies="@(FxCopruleAssemblies)"
                FxCopRules="@(FxCopRules)" />
     </Target>
-    
+
+    <PropertyGroup>
+        <DirMoma>$(DirPackages)\Moma</DirMoma>
+        <ExeMoma>$(DirMoma)\MoMA.exe</ExeMoma>
+        <DirMomaOutput>$(DirBuildLogs)\moma</DirMomaOutput>
+        <MomaOutputFile>$(DirMomaOutput)\moma.html</MomaOutputFile>
+    </PropertyGroup>
+    <Target Name="_CodeAnalysisMoma" DependsOnTargets="_BuildBinaries;_RestorePackages">
+        <MakeDir Directories="$(DirMomaOutput)" Condition="!Exists('$(DirMomaOutput)')" />
+        
+        <ItemGroup>
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Base.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Extensions.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Dataset.exe"/>
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.Host.dll"/>
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Core.LoaderApplication.exe" />
+            <MomaFiles Include="$(DirBuildBin)\Apollo.Utilities.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Autofac.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Castle.Core.dll" />
+            <MomaFiles Include="$(DirBuildBin)\IronPython.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Lokad.Shared.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Microsoft.Scripting.dll" />
+            <MomaFiles Include="$(DirBuildBin)\NManto.dll" />
+            <MomaFiles Include="$(DirBuildBin)\Mono.Options.dll" />
+            <MomaFiles Include="$(DirBuildBin)\NLog.dll" />
+            <MomaFiles Include="$(DirBuildBin)\NSarrac.Framework.dll" />
+            <MomaFiles Include="$(DirBuildBin)\QuickGraph.dll" />
+            <MomaFiles Include="$(DirBuildBin)\System.Reactive.dll" />
+        </ItemGroup>
+        
+        <Exec Command="$(ExeMoma) --nogui --out &quot;$(MomaOutputFile)&quot; @(MomaFiles->'%22%(FullPath)%22', ' ')"
+              WorkingDirectory="$(DirBuildTemp)" />
+    </Target>
+
     <PropertyGroup>
         <ExePathCcm>$(DirPackages)\Ccm\Ccm.exe</ExePathCcm>
         <FileTemplateCcm>$(DirTemplates)\ccm.xml.in</FileTemplateCcm>
