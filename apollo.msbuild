@@ -56,10 +56,12 @@
             Condition="Exists('$(MsBuildExtensionsPath)\NugetPack.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\NugetRestore.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\NugetRestore.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\PartCover.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\PartCover.msbuild')"/>
-    <Import Project="$(MsBuildExtensionsPath)\PartCoverExclusionWriter.msbuild"
-            Condition="Exists('$(MsBuildExtensionsPath)\PartCoverExclusionWriter.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\OpenCover.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\OpenCover.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\ReportGenerator.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\ReportGenerator.msbuild')"/>
+    <Import Project="$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild"
+            Condition="Exists('$(MsBuildExtensionsPath)\ReportGeneratorOutputToCsv.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild"
             Condition="Exists('$(MsBuildExtensionsPath)\SetEnvironmentVariable.msbuild')"/>
     <Import Project="$(MsBuildExtensionsPath)\SourceMonitor.msbuild"
@@ -157,64 +159,45 @@
     </Target>
     
     <PropertyGroup>
-        <FileTemplatePartCoverConfig>$(DirTemplates)\PartCover.Settings.xml.in</FileTemplatePartCoverConfig>
-        <FileGeneratedPartCoverConfig>$(DirBuildTemp)\PartCover.Settings.xml</FileGeneratedPartCoverConfig>
-        <FilePartCoverReport>$(DirBuildLogs)\partcover.xml</FilePartCoverReport>
-        <PartCoverExclusionWriterExe>partcoverexclusionwriter.exe</PartCoverExclusionWriterExe>
-        <PartCoverExclusionWriterDir>$(DirPackages)\partcoverexclusionwriter</PartCoverExclusionWriterDir>
-        <PartCoverExe>partcover.exe</PartCoverExe>
-        <PartCoverDir>$(DirPackages)\partcover</PartCoverDir>
+        <FileOpenCoverReport>$(DirBuildLogs)\opencover.xml</FileOpenCoverReport>
+        <OpenCoverExe>opencover.console.exe</OpenCoverExe>
+        <OpenCoverDir>$(DirPackages)\opencover</OpenCoverDir>
+        <ReportGeneratorExe>ReportGenerator.exe</ReportGeneratorExe>
+        <ReportGeneratorDir>$(DirPackages)\reportgenerator</ReportGeneratorDir>
+        <ReportGeneratorOutputDir>$(DirBuildLogs)\coverage</ReportGeneratorOutputDir>
+        <ReportGeneratorXmlSummaryFile>$(ReportGeneratorOutputDir)\Summary.xml</ReportGeneratorXmlSummaryFile>
+        <CoverageCsvFile>$(DirBuildLogs)\coverage.csv</CoverageCsvFile>
     </PropertyGroup>
     <Target Name="_ExecuteUnitTestsWithCoverage" Condition="$(ShouldHaveCoverage) AND '$(Configuration)' != 'Deploy'" DependsOnTargets="_BuildBinaries;_RestorePackages">
         <MakeDir Directories="$(DirBuildTemp)" Condition="!Exists('$(DirBuildTemp)')" />
         <MakeDir Directories="$(DirBuildLogs)" Condition="!Exists('$(DirBuildLogs)')" />
+        <MakeDir Directories="$(ReportGeneratorOutputDir)" Condition="!Exists('$(ReportGeneratorOutputDir)')" />
         
         <ItemGroup>
             <MbUnitTestAssemblies Include="$(DirBuildBin)\**\test.unit.*.dll" />
         </ItemGroup>
         <ItemGroup>
-            <PartCoverConfig Include="GallioExe">
-                <ReplacementValue>$(MbUnitExe)</ReplacementValue>
-            </PartCoverConfig>
-            <PartCoverConfig Include="DirGallio">
-                <ReplacementValue>$(MbUnitDir)</ReplacementValue>
-            </PartCoverConfig>
-            <PartCoverConfig Include="DirBin">
-                <ReplacementValue>$(DirBuildBin)</ReplacementValue>
-            </PartCoverConfig>
-            <PartCoverConfig Include="DirReports">
-                <ReplacementValue>$(DirBuildLogs)</ReplacementValue>
-            </PartCoverConfig>
-            <PartCoverConfig Include="Report">
-                <ReplacementValue>$(FilePartCoverReport)</ReplacementValue>
-            </PartCoverConfig>
-            <PartCoverConfig Include="Files">
-                <ReplacementValue>@(MbUnitTestAssemblies, ' ')</ReplacementValue>
-            </PartCoverConfig>
+            <OpenCoverIgnoreAttributes Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
+            <OpenCoverIgnoreAttributes Include="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
         </ItemGroup>
-        <TemplateFile Template="$(FileTemplatePartCoverConfig)" OutputFileName="$(FileGeneratedPartCoverConfig)" Tokens="@(PartCoverConfig)" />
-        
-        <ItemGroup>
-            <PartCoverIgnoreAttributes Include="System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverageAttribute" />
-            <PartCoverIgnoreAttributes Include="System.Runtime.CompilerServices.CompilerGeneratedAttribute" />
-        </ItemGroup>
-        <ItemGroup>
-            <PartCoverTargetAssemblies Include="$(DirBuildBin)\**\Apollo*.dll"
-                                       Exclude="$(DirBuildBin)\**\Test*;$(DirBuildBin)\**\*vshost*"/>
-        </ItemGroup>
-        <PartCoverExclusionWriter PartCoverExclusionWriterExe="$(PartCoverExclusionWriterExe)"
-                                  PartCoverExclusionWriterDir="$(PartCoverExclusionWriterDir)"
-                                  SettingsFile="$(FileGeneratedPartCoverConfig)"
-                                  IgnoreAttributes="@(PartCoverIgnoreAttributes)"
-                                  TargetAssemblies="@(PartCoverTargetAssemblies)" />
                                   
-        <PartCover PartCoverExe="$(PartCoverExe)"
-                   PartCoverDir="$(PartCoverDir)"
-                   SettingsFile="$(FileGeneratedPartCoverConfig)" />
-                   
-        <XslTransformation XmlInputPaths="$(FilePartCoverReport)"
-                           OutputPaths="$(DirBuildLogs)\partcover.html" 
-                           XslInputPath="$(PartCoverDir)\xslt\partcoverfullreport.xslt" />
+        <OpenCover OpenCoverExe="$(OpenCoverExe)"
+                   OpenCoverDir="$(OpenCoverDir)"
+                   OpenCoverOutput="$(FileOpenCoverReport)"
+                   OpenCoverFilters="+[Apollo.*]* -[*Test.Unit*]* -[Gallio]* -[Gallio.*]*"
+                   OpenCoverExcludeAttributes="@(OpenCoverIgnoreAttributes)"
+                   UnitTestDir="$(MbUnitDir)"
+                   UnitTestExe="$(MbUnitExe)"
+                   UnitTestArguments="/hd:&quot;$(MbUnitDir)&quot; /sc /v:Verbose /rt:Xhtml-Condensed /rt:Xml-inline /rt:Text-Condensed /rt:Html-Condensed /rd:&quot;$(DirBuildLogs)&quot; /r:Local @(MbUnitTestAssemblies->'%22%(FullPath)%22', ' ')"
+                   BinDir="$(DirBuildBin)" />
+        
+        <ReportGenerator ReportGeneratorExe="$(ReportGeneratorExe)"
+                         ReportGeneratorDir="$(ReportGeneratorDir)"
+                         OpenCoverOutputFile="$(FileOpenCoverReport)"
+                         OutputDir="$(ReportGeneratorOutputDir)" />
+                         
+        <ReportGeneratorOutputToCsv InputFile="$(ReportGeneratorXmlSummaryFile)"
+                                    OutputFile="$(CoverageCsvFile)" />
     </Target>
 
     <!-- Link all documentation targets -->
