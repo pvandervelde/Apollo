@@ -42,20 +42,29 @@ namespace Apollo.Utilities
         /// </summary>
         private const string DefaultProfilerFileName = "projectexplorer.profile";
 
-        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(AppDomainPaths paths)
+        /// <summary>
+        /// The name for the plugins directory.
+        /// </summary>
+        private const string PluginsDirectoryName = "plugins";
+
+        private static AppDomainResolutionPaths AppDomainResolutionPathsFor(IFileConstants fileConstants, AppDomainPaths paths)
         {
             List<string> filePaths = new List<string>();
             List<string> directoryPaths = new List<string>();
             if ((paths & AppDomainPaths.Core) == AppDomainPaths.Core)
             {
-                // Get the paths from the config
-                throw new NotImplementedException();
+                directoryPaths.Add(Assembly.GetExecutingAssembly().LocalDirectoryPath());
             }
 
             if ((paths & AppDomainPaths.Plugins) == AppDomainPaths.Plugins)
             {
-                // Get the paths from the config
-                throw new NotImplementedException();
+                // Plugins can be found in:
+                // - The plugins directory in the main app directory (i.e. <INSTALL_DIRECTORY>\plugins)
+                // - In the machine location for plugins (i.e. <COMMON_APPLICATION_DATA>\<COMPANY>\plugins)
+                // - In the user location for plugins (i.e. <LOCAL_APPLICATION_DATA>\<COMPANY>\plugins)
+                directoryPaths.Add(Path.Combine(Assembly.GetExecutingAssembly().LocalDirectoryPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(fileConstants.CompanyCommonPath(), PluginsDirectoryName));
+                directoryPaths.Add(Path.Combine(fileConstants.CompanyUserPath(), PluginsDirectoryName));
             }
 
             return AppDomainResolutionPaths.WithFilesAndDirectories(
@@ -76,7 +85,7 @@ namespace Apollo.Utilities
                     {
                         return AppDomainBuilder.Assemble(
                             name,
-                            AppDomainResolutionPathsFor(paths),
+                            AppDomainResolutionPathsFor(ctx.Resolve<IFileConstants>(), paths),
                             ctx.Resolve<IFileConstants>());
                     };
 

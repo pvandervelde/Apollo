@@ -81,9 +81,24 @@ namespace Apollo.Utilities
         /// <returns>
         /// The full path for the AppData directory for the current company.
         /// </returns>
-        public string CompanyPath()
+        public string CompanyCommonPath()
         {
             var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
+            var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
+
+            return companyDirectory;
+        }
+
+        /// <summary>
+        /// Returns the path for the directory in the user specific AppData directory which contains
+        /// all the product directories for the current company.
+        /// </summary>
+        /// <returns>
+        /// The full path for the AppData directory for the current company.
+        /// </returns>
+        public string CompanyUserPath()
+        {
+            var appDataDir = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
             var companyDirectory = Path.Combine(appDataDir, m_Constants.CompanyName);
 
             return companyDirectory;
@@ -97,9 +112,9 @@ namespace Apollo.Utilities
         /// The full path for the directory where the global settings
         /// for the product are written to.
         /// </returns>
-        public string ProductSettingsPath()
+        public string ProductSettingsUserPath()
         {
-            var companyDirectory = CompanyPath();
+            var companyDirectory = CompanyUserPath();
             var productDirectory = Path.Combine(companyDirectory, m_Constants.ApplicationName);
             var versionDirectory = Path.Combine(productDirectory, m_Constants.ApplicationCompatibilityVersion.ToString(2));
 
@@ -115,7 +130,7 @@ namespace Apollo.Utilities
         /// </returns>
         public string LogPath()
         {
-            var versionDirectory = ProductSettingsPath();
+            var versionDirectory = ProductSettingsUserPath();
             var logDirectory = Path.Combine(versionDirectory, "logs");
 
             return logDirectory;

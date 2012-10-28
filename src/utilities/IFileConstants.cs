@@ -42,7 +42,16 @@ namespace Apollo.Utilities
         /// <returns>
         /// The full path for the AppData directory for the current company.
         /// </returns>
-        string CompanyPath();
+        string CompanyCommonPath();
+
+        /// <summary>
+        /// Returns the path for the directory in the user specific AppData directory which contains
+        /// all the product directories for the current company.
+        /// </summary>
+        /// <returns>
+        /// The full path for the AppData directory for the current company.
+        /// </returns>
+        string CompanyUserPath();
 
         /// <summary>
         /// Returns the path for the directory where the global 
@@ -52,7 +61,7 @@ namespace Apollo.Utilities
         /// The full path for the directory where the global settings
         /// for the product are written to.
         /// </returns>
-        string ProductSettingsPath();
+        string ProductSettingsUserPath();
 
         /// <summary>
         /// Returns the path for the directory where the log files are
