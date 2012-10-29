@@ -151,6 +151,60 @@ namespace Apollo.Core.Base.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cannot create a synchronization block without variables to synchronize on..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to An editable insert vertex must have more than zero inserts..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot directly link the end vertex to another vertex..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotExplicitlyLinkEndVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotExplicitlyLinkEndVertex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot directly link the start vertex to another vertex..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotExplicitlyLinkStartVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotExplicitlyLinkStartVertex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot insert a vertex that already exists in the schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotInsertExistingVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotInsertExistingVertex", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cannot link a vertex to itself..
+        /// </summary>
+        internal static string Exceptions_Messages_CannotLinkAVertexToItself {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_CannotLinkAVertexToItself", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The address of a communication channel must be defined in order to connect to the channel..
         /// </summary>
         internal static string Exceptions_Messages_ChannelAddresssMustBeDefined {
@@ -363,6 +417,15 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_MissingEndpointId {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_MissingEndpointId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to There are no more inserts left on the current insert vertex..
+        /// </summary>
+        internal static string Exceptions_Messages_NoInsertsLeftOnVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_NoInsertsLeftOnVertex", resourceCulture);
             }
         }
         
@@ -647,6 +710,24 @@ namespace Apollo.Core.Base.Properties {
         internal static string Exceptions_Messages_UnknownEndpointIdFormat {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownEndpointIdFormat", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified schedule ID does not map to a known schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownSchedule {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownSchedule", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The specified vertex does not belong to the current schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownScheduleVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownScheduleVertex", resourceCulture);
             }
         }
         

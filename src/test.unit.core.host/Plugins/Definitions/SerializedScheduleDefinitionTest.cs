@@ -6,6 +6,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;

@@ -7,11 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Text;
-using QuickGraph;
+using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Verifies if an <see cref="IEditableSchedule"/> is complete and legal.

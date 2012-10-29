@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
 using Moq;
@@ -227,7 +227,6 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var distributor = new ScheduleDistributor(
                 ScheduleStorage.BuildStorageWithoutTimeline(),
-                new Mock<IScheduleExecutionNotificationInvoker>().Object,
                 (s, e) => null);
             Assert.Throws<UnknownScheduleException>(() => distributor.Execute(new ScheduleId()));
         }
@@ -260,8 +259,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     return executor.Object;
                 };
 
-            var notifications = new Mock<IScheduleExecutionNotificationInvoker>();
-            var distributor = new ScheduleDistributor(knownSchedules, notifications.Object, builder);
+            var distributor = new ScheduleDistributor(knownSchedules, builder);
             var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             VerifySchedule(schedule, storedSchedule);
@@ -304,8 +302,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     return executor.Object;
                 };
 
-            var notifications = new Mock<IScheduleExecutionNotificationInvoker>();
-            var distributor = new ScheduleDistributor(knownSchedules, notifications.Object, builder);
+            var distributor = new ScheduleDistributor(knownSchedules, builder);
             var returnedExecutor = distributor.Execute(scheduleInfo.Id);
             Assert.AreSame(executor.Object, returnedExecutor);
             Assert.AreEqual(1, index);

@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 
 namespace Apollo.Core.Dataset.Scheduling

@@ -6,13 +6,13 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using Apollo.Core.Extensions.Properties;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which marks the position where for a set of variables
+    /// A vertex for the schedule which marks the position where for a set of variables
     /// the revision numbers should be marked.
     /// </summary>
     [Serializable]
@@ -28,11 +28,19 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="variables">The collection of variables which need to be synchronized at the end of the block.</param>
-        internal EditableSynchronizationStartVertex(int index, IEnumerable<IScheduleVariable> variables)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="variables"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="CannotCreateASynchronizationBlockWithoutVariablesException">
+        ///     Thrown if <paramref name="variables"/> is an empty collection.
+        /// </exception>
+        public EditableSynchronizationStartVertex(int index, IEnumerable<IScheduleVariable> variables)
         {
             {
-                Debug.Assert(variables != null, "The collection of synchronization variables should not be a null reference.");
-                Debug.Assert(variables.Any(), "There should at least be one variable to synchronize on.");
+                Lokad.Enforce.Argument(() => variables);
+                Lokad.Enforce.With<CannotCreateASynchronizationBlockWithoutVariablesException>(
+                    variables.Any(),
+                    Resources.Exceptions_Messages_CannotCreateASynchronizationBlockWithoutVariables);
             }
 
             Index = index;

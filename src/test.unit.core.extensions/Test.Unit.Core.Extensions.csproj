@@ -40,10 +40,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NLog\lib\net40\NLog.dll</HintPath>
     </Reference>
-    <Reference Include="QuickGraph, Version=3.6.61114.0, Culture=neutral, PublicKeyToken=f3fb40175eec2af3, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
@@ -89,18 +85,13 @@
     <Compile Include="Scheduling\EditableExecutingActionVertexTest.cs" />
     <Compile Include="Scheduling\EditableInsertVertexTest.cs" />
     <Compile Include="Scheduling\EditableMarkHistoryVertexTest.cs" />
-    <Compile Include="Scheduling\EditableScheduleEdgeTest.cs" />
-    <Compile Include="Scheduling\EditableScheduleTest.cs" />
     <Compile Include="Scheduling\EditableStartVertexTest.cs" />
     <Compile Include="Scheduling\EditableSubScheduleVertexTest.cs" />
     <Compile Include="Scheduling\EditableSynchronizationEndVertexTest.cs" />
     <Compile Include="Scheduling\EditableSynchronizationStartVertexTest.cs" />
-    <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexExceptionTest.cs" />
     <Compile Include="Scheduling\ScheduleElementIdTest.cs" />
     <Compile Include="Scheduling\ScheduleIdTest.cs" />
-    <Compile Include="Scheduling\ScheduleVertifierTest.cs" />
-    <Compile Include="Scheduling\UnknownScheduleExceptionTest.cs" />
     <Compile Include="Scheduling\UnknownScheduleVertexExceptionTest.cs" />
   </ItemGroup>
   <ItemGroup />

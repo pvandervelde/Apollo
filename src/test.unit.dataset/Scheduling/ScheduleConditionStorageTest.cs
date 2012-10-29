@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using MbUnit.Framework;
 using Moq;

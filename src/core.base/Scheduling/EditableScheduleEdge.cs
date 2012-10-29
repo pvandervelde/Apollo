@@ -6,9 +6,10 @@
 
 using System;
 using System.Diagnostics;
+using Apollo.Core.Extensions.Scheduling;
 using QuickGraph;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines a graph connection between two <see cref="IEditableScheduleVertex"/> objects.

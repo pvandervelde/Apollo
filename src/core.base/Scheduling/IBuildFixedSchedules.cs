@@ -6,9 +6,10 @@
 
 using System;
 using System.Collections.Generic;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines the interface for objects that build schedules that are independant of the

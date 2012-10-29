@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using Apollo.Core.Base;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
@@ -41,7 +43,7 @@ namespace Apollo.Core.Host.Plugins
             {
                 var builder = new ContainerBuilder();
                 {
-                    builder.RegisterModule(new SchedulingModule());
+                    builder.RegisterModule(new BaseModuleForScheduling());
                 }
 
                 m_Container = builder.Build();

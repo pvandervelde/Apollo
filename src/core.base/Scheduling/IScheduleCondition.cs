@@ -7,7 +7,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines the interface for objects that implements a condition for a schedule.

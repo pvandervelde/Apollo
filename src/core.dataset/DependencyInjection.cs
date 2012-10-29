@@ -11,6 +11,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
 using Apollo.Core.Dataset.Utilities;
@@ -27,64 +28,6 @@ namespace Apollo.Core.Dataset
     [ExcludeFromCodeCoverage]
     internal static class DependencyInjection
     {
-        private static void RegisterScheduleCommands(ContainerBuilder builder)
-        {
-            builder.Register(c => new ScheduleExecutionCommands(
-                    c.Resolve<IDistributeScheduleExecutions>(),
-                    c.Resolve<ITrackDatasetLocks>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleExecutionCommands), a.Instance);
-                    })
-                .As<IScheduleExecutionCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-
-            builder.Register(c => new ScheduleCreationCommands(
-                    c.Resolve<IStoreSchedules>(),
-                    c.Resolve<ITrackDatasetLocks>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleCreationCommands), a.Instance);
-                    })
-                .As<IScheduleCreationCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-
-            builder.Register(c => new ScheduleInformationCommands(
-                    c.Resolve<IStoreScheduleActions>(),
-                    c.Resolve<IStoreScheduleConditions>(),
-                    c.Resolve<IStoreSchedules>()))
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<ICommandCollection>();
-                        collection.Register(typeof(IScheduleInformationCommands), a.Instance);
-                    })
-                .As<IScheduleInformationCommands>()
-                .As<ICommandSet>()
-                .SingleInstance();
-        }
-
-        private static void RegisterScheduleNotifications(ContainerBuilder builder)
-        {
-            builder.Register(c => new ScheduleExecutionNotifications())
-                .OnActivated(
-                    a =>
-                    {
-                        var collection = a.Context.Resolve<INotificationSendersCollection>();
-                        collection.Store(typeof(IScheduleExecutionNotifications), a.Instance);
-                    })
-                .As<IScheduleExecutionNotifications>()
-                .As<IScheduleExecutionNotificationInvoker>()
-                .As<INotificationSet>()
-                .SingleInstance();
-        }
-
         private static void RegisterStorage(ContainerBuilder builder)
         {
             builder.Register(c => c.Resolve<ITimeline>().AddToTimeline<ScheduleActionStorage>(ScheduleActionStorage.BuildStorage))
@@ -148,7 +91,6 @@ namespace Apollo.Core.Dataset
                         var ctx = c.Resolve<IComponentContext>();
                         return new ScheduleDistributor(
                             c.Resolve<IStoreSchedules>(),
-                            c.Resolve<IScheduleExecutionNotificationInvoker>(),
                             (s, i) =>
                             {
                                 return ctx.Resolve<IExecuteSchedules>(
@@ -186,7 +128,6 @@ namespace Apollo.Core.Dataset
             var builder = new ContainerBuilder();
             {
                 builder.RegisterModule(new UtilitiesModule());
-                builder.RegisterModule(new SchedulingModule());
 
                 // Don't allow discovery on the dataset application because:
                 // - The dataset application wouldn't know what to do with it anyway
@@ -201,8 +142,6 @@ namespace Apollo.Core.Dataset
                     .As<ApplicationContext>()
                     .ExternallyOwned();
 
-                RegisterScheduleCommands(builder);
-                RegisterScheduleNotifications(builder);
                 RegisterStorage(builder);
                 RegisterScheduleExecutors(builder);
                 RegisterDatasetLock(builder);

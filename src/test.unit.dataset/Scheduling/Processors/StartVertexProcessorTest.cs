@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Extensions.Scheduling;
+using Apollo.Core.Base.Scheduling;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Dataset.Scheduling.Processors

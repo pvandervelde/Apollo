@@ -6,9 +6,9 @@
 
 using System;
 using System.Runtime.Serialization;
-using Apollo.Core.Extensions.Properties;
+using Apollo.Core.Base.Properties;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// An exception thrown when the user tries to find a schedule with an unknown ID.

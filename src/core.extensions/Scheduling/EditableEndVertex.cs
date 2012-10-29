@@ -9,7 +9,7 @@ using System;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which indicates that the schedule graph ends at this position.
+    /// A vertex for the schedule which indicates that the schedule graph ends at this position.
     /// </summary>
     /// <remarks>
     /// All editable schedule vertices should be immutable because a schedule is copied
@@ -22,7 +22,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Initializes a new instance of the <see cref="EditableEndVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableEndVertex(int index)
+        public EditableEndVertex(int index)
         {
             Index = index;
         }

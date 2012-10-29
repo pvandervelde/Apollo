@@ -9,7 +9,7 @@ using System;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which marks the position where a set of variables
+    /// A vertex for the schedule which marks the position where a set of variables
     /// should be synchronized.
     /// </summary>
     [Serializable]
@@ -19,7 +19,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Initializes a new instance of the <see cref="EditableSynchronizationEndVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableSynchronizationEndVertex(int index)
+        public EditableSynchronizationEndVertex(int index)
         {
             Index = index;
         }

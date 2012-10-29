@@ -9,7 +9,7 @@ using System;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which marks the position where a snapshot of the history should be made.
+    /// A vertex for the schedule which marks the position where a snapshot of the history should be made.
     /// </summary>
     /// <remarks>
     /// All editable schedule vertices should be immutable because a schedule is copied
@@ -22,7 +22,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// Initializes a new instance of the <see cref="EditableMarkHistoryVertex"/> class.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableMarkHistoryVertex(int index)
+        public EditableMarkHistoryVertex(int index)
         {
             Index = index;
         }

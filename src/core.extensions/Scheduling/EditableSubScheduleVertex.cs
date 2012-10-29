@@ -5,12 +5,11 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Diagnostics;
 
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which links to a sub-schedule.
+    /// A vertex for the schedule which links to a sub-schedule.
     /// </summary>
     /// <remarks>
     /// All editable schedule vertices should be immutable because a schedule is copied
@@ -29,10 +28,13 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="subSchedule">The ID of the schedule that should be executed.</param>
-        internal EditableSubScheduleVertex(int index, ScheduleId subSchedule)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="subSchedule"/> is <see langword="null" />.
+        /// </exception>
+        public EditableSubScheduleVertex(int index, ScheduleId subSchedule)
         {
             {
-                Debug.Assert(subSchedule != null, "The ID of the sub-schedule cannot be a null reference.");
+                Lokad.Enforce.Argument(() => subSchedule);
             }
 
             Index = index;

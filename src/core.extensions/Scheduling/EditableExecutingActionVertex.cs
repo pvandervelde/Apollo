@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which provides the ID number of an action that should be executed.
+    /// A vertex for the schedule which provides the ID number of an action that should be executed.
     /// </summary>
     /// <remarks>
     /// All editable schedule vertices should be immutable because a schedule is copied
@@ -29,7 +29,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
         /// <param name="actionToExecute">The ID of the action that should be executed.</param>
-        internal EditableExecutingActionVertex(int index, ScheduleElementId actionToExecute)
+        public EditableExecutingActionVertex(int index, ScheduleElementId actionToExecute)
         {
             {
                 Debug.Assert(actionToExecute != null, "The ID of the action should not be a null reference.");

@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
-using Apollo.Core.Extensions.Scheduling;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Utilities.History;
 using MbUnit.Framework;
 using Moq;

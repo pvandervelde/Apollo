@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities;
 using QuickGraph;
@@ -312,11 +313,6 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly IStoreSchedules m_KnownSchedules;
 
         /// <summary>
-        /// The object that handles sending out the events.
-        /// </summary>
-        private readonly IScheduleExecutionNotificationInvoker m_Notifications;
-
-        /// <summary>
         /// The function that creates an <see cref="IExecuteSchedules"/> object with the given 
         /// executable schedule.
         /// </summary>
@@ -326,30 +322,23 @@ namespace Apollo.Core.Dataset.Scheduling
         /// Initializes a new instance of the <see cref="ScheduleDistributor"/> class.
         /// </summary>
         /// <param name="knownSchedules">The collection of known schedules.</param>
-        /// <param name="notifications">The object that handles the notifications for the schedule execution.</param>
         /// <param name="executorBuilder">The function that is used to create a new <see cref="IExecuteSchedules"/> object.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="knownSchedules"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="notifications"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="executorBuilder"/> is <see langword="null" />.
         /// </exception>
         public ScheduleDistributor(
             IStoreSchedules knownSchedules,
-            IScheduleExecutionNotificationInvoker notifications,
             Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => knownSchedules);
-                Lokad.Enforce.Argument(() => notifications);
                 Lokad.Enforce.Argument(() => executorBuilder);
             }
 
             m_KnownSchedules = knownSchedules;
-            m_Notifications = notifications;
             m_LoadExecutor = executorBuilder;
         }
 
@@ -423,8 +412,6 @@ namespace Apollo.Core.Dataset.Scheduling
                 executor.OnStart += HandleScheduleExecutionStart;
                 executor.OnPause += HandleScheduleExecutionPause;
                 executor.OnFinish += HandleScheduleExecutionFinish;
-                executor.OnExecutionProgress += HandleScheduleExecutionProgress;
-                executor.OnVertexProcess += HandleScheduleExecutionVertexProgress;
                 m_RunningExecutors.Add(new ExecutingScheduleKey(scheduleId, scheduleParameters), executor);
                 
                 executor.Start(scheduleParameters);
@@ -436,13 +423,11 @@ namespace Apollo.Core.Dataset.Scheduling
         private void HandleScheduleExecutionStart(object sender, EventArgs e)
         {
             var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnStart(executor.Schedule);
         }
 
         private void HandleScheduleExecutionPause(object sender, EventArgs e)
         {
             var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnPause(executor.Schedule);
         }
 
         private void HandleScheduleExecutionFinish(object sender, ScheduleExecutionStateEventArgs e)
@@ -455,23 +440,9 @@ namespace Apollo.Core.Dataset.Scheduling
                 executor.OnStart -= HandleScheduleExecutionStart;
                 executor.OnPause -= HandleScheduleExecutionPause;
                 executor.OnFinish -= HandleScheduleExecutionFinish;
-                executor.OnExecutionProgress -= HandleScheduleExecutionProgress;
-                executor.OnVertexProcess -= HandleScheduleExecutionVertexProgress;
 
-                m_Notifications.RaiseOnFinish(executor.Schedule);
                 m_RunningExecutors.Remove(new ExecutingScheduleKey(executor.Schedule, executor.Parameters));
             }
-        }
-
-        private void HandleScheduleExecutionProgress(object sender, ProgressEventArgs e)
-        {
-            m_Notifications.RaiseOnExecutionProgress(e.Progress, e.CurrentlyProcessing);
-        }
-
-        private void HandleScheduleExecutionVertexProgress(object sender, ExecutingVertexEventArgs e)
-        {
-            var executor = sender as IExecuteSchedules;
-            m_Notifications.RaiseOnVertexProcess(executor.Schedule, e.Vertex);
         }
     }
 }

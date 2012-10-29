@@ -8,10 +8,11 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Apollo.Core.Extensions.Properties;
+using Apollo.Core.Base.Properties;
+using Apollo.Core.Extensions.Scheduling;
 using QuickGraph;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Stores a schedule in editable format.

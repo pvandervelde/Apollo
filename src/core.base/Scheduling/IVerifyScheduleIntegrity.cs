@@ -6,8 +6,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines the interface for objects that verify the integrity of a schedule.

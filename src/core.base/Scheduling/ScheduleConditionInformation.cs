@@ -6,8 +6,9 @@
 
 using System;
 using System.Collections.Generic;
+using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Stores information about a given schedule condition.

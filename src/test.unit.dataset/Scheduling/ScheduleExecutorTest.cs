@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks.Schedulers;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Dataset.Scheduling.Processors;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;

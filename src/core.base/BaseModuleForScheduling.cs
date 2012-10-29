@@ -5,16 +5,27 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Scheduling;
 using Autofac;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base
 {
     /// <summary>
-    /// Handles the component registrations for the communication and loader components.
+    /// Handles the component registrations for the scheduling components.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public sealed class SchedulingModule : Module
+    public sealed class BaseModuleForScheduling : Module
     {
+        private static void RegisterSchedules(ContainerBuilder builder)
+        {
+            builder.Register(c => new FixedScheduleBuilder())
+                .As<IBuildFixedSchedules>();
+
+            builder.Register(c => new ScheduleVerifier(
+                    c.Resolve<IStoreSchedules>()))
+                .As<IVerifyScheduleIntegrity>();
+        }
+
         /// <summary>
         /// Override to add registrations to the container.
         /// </summary>
@@ -23,12 +34,7 @@ namespace Apollo.Core.Extensions.Scheduling
         {
             base.Load(builder);
 
-            builder.Register(c => new FixedScheduleBuilder())
-                .As<IBuildFixedSchedules>();
-
-            builder.Register(c => new ScheduleVerifier(
-                    c.Resolve<IStoreSchedules>()))
-                .As<IVerifyScheduleIntegrity>();
+            RegisterSchedules(builder);
         }
     }
 }

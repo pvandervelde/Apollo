@@ -11,7 +11,7 @@ using Apollo.Core.Extensions.Properties;
 namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// A vertex for the <see cref="IEditableSchedule"/> which allows inserting other vertices or schedules in
+    /// A vertex for the schedule which allows inserting other vertices or schedules in
     /// its position.
     /// </summary>
     /// <remarks>
@@ -31,7 +31,7 @@ namespace Apollo.Core.Extensions.Scheduling
         /// an unlimited number of inserts.
         /// </summary>
         /// <param name="index">The index of the vertex in the graph.</param>
-        internal EditableInsertVertex(int index)
+        public EditableInsertVertex(int index)
         {
             Index = index;
             m_RemainingInserts = -1;
@@ -45,10 +45,12 @@ namespace Apollo.Core.Extensions.Scheduling
         /// <exception cref="CannotCreateInsertVertexWithLessThanOneInsertException">
         /// Thrown when <paramref name="maximumNumberOfInserts"/> is not a positive integer larger than zero.
         /// </exception>
-        internal EditableInsertVertex(int index, int maximumNumberOfInserts)
+        public EditableInsertVertex(int index, int maximumNumberOfInserts)
         {
             {
-                Debug.Assert(maximumNumberOfInserts > 0, "Cannot create an insert point with less than one insert.");
+                Lokad.Enforce.With<CannotCreateInsertVertexWithLessThanOneInsertException>(
+                    maximumNumberOfInserts == -1 || maximumNumberOfInserts > 0, 
+                    Resources.Exceptions_Messages_CannotCreateInsertVertexWithLessThanOneInsert);
             }
 
             Index = index;

@@ -7,7 +7,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines the interface for objects that describe an action that is stored 

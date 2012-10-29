@@ -7,11 +7,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Apollo.Core.Extensions.Properties;
+using Apollo.Core.Base.Properties;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 using QuickGraph;
 
-namespace Apollo.Core.Extensions.Scheduling
+namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
     /// Defines the methods for creating a fixed schedule.
