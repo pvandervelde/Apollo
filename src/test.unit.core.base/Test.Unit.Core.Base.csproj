@@ -51,6 +51,8 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.ServiceModel" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +156,24 @@
     <Compile Include="Loaders\MachineTest.cs" />
     <Compile Include="Loaders\NetworkIdentifierTest.cs" />
     <Compile Include="Loaders\RemoteDatasetDistributorTest.cs" />
+    <Compile Include="Plugins\AssemblyDefinitionTest.cs" />
+    <Compile Include="Plugins\ConstructorDefinitionTest.cs" />
+    <Compile Include="Plugins\MethodBasedExportDefinitionTest.cs" />
+    <Compile Include="Plugins\PropertyBasedExportDefinitionTest.cs" />
+    <Compile Include="Plugins\TypeBasedExportDefinitionTest.cs" />
+    <Compile Include="Plugins\GroupExportDefinitionTest.cs" />
+    <Compile Include="Plugins\GroupImportDefinitionTest.cs" />
+    <Compile Include="Plugins\ConstructorBasedImportDefinitionTest.cs" />
+    <Compile Include="Plugins\PropertyBasedImportDefinitionTest.cs" />
+    <Compile Include="Plugins\MethodDefinitionTest.cs" />
+    <Compile Include="Plugins\ParameterDefinitionTest.cs" />
+    <Compile Include="Plugins\PropertyDefinitionTest.cs" />
+    <Compile Include="Plugins\ScheduleActionDefinitionTest.cs" />
+    <Compile Include="Plugins\MethodBasedScheduleConditionDefinitionTest.cs" />
+    <Compile Include="Plugins\PropertyBasedScheduleConditionDefinitionTest.cs" />
+    <Compile Include="Plugins\ScheduleDefinitionTest.cs" />
+    <Compile Include="Plugins\TypeDefinitionTest.cs" />
+    <Compile Include="Plugins\TypeIdentityTest.cs" />
     <Compile Include="Scheduling\EditableScheduleEdgeTest.cs" />
     <Compile Include="Scheduling\EditableScheduleTest.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />

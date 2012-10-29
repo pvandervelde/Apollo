@@ -17,10 +17,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
-using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 
@@ -31,16 +30,16 @@ namespace Apollo.Core.Host.Plugins
     /// </summary>
     internal sealed class RemoteAssemblyScanner : MarshalByRefObject, IAssemblyScanner
     {
-        private static Func<Type, SerializedTypeIdentity> IdentityFactory(ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
+        private static Func<Type, TypeIdentity> IdentityFactory(ConcurrentDictionary<string, TypeDefinition> typeStorage)
         {
             // Fake out the compiler because we need the function inside the function itself
-            Func<Type, SerializedTypeIdentity> createTypeIdentity = null;
+            Func<Type, TypeIdentity> createTypeIdentity = null;
             createTypeIdentity =
                 t =>
                 {
                     if (!typeStorage.ContainsKey(t.AssemblyQualifiedName))
                     {
-                        var typeDefinition = SerializedTypeDefinition.CreateDefinition(t, createTypeIdentity);
+                        var typeDefinition = TypeDefinition.CreateDefinition(t, createTypeIdentity);
                         typeStorage.TryAdd(typeDefinition.Identity.AssemblyQualifiedName, typeDefinition);
                     }
 
@@ -50,23 +49,23 @@ namespace Apollo.Core.Host.Plugins
             return createTypeIdentity;
         }
 
-        private static SerializedExportDefinition CreateMethodExport(
+        private static SerializableExportDefinition CreateMethodExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             Debug.Assert(memberInfo.GetAccessors().Count() == 1, "Only expecting one accessor for a method export.");
             Debug.Assert(memberInfo.GetAccessors().First() is MethodInfo, "Expecting the method export to be an MethodInfo object.");
-            return SerializedExportOnMethodDefinition.CreateDefinition(
+            return MethodBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 memberInfo.GetAccessors().First() as MethodInfo,
                 identityGenerator);
         }
 
-        private static SerializedExportDefinition CreatePropertyExport(
+        private static SerializableExportDefinition CreatePropertyExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             // this is really ugly because we assume that the underlying methods for a property are named as:
             // get_PROPERTYNAME and set_PROPERTYNAME. In this case we assume that exports always
@@ -74,28 +73,28 @@ namespace Apollo.Core.Host.Plugins
             var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("get_")).First();
             var name = getMember.Name.Substring("get_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
-            return SerializedExportOnPropertyDefinition.CreateDefinition(
+            return PropertyBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 property,
                 identityGenerator);
         }
 
-        private static SerializedExportDefinition CreateTypeExport(
+        private static SerializableExportDefinition CreateTypeExport(
             ExportDefinition export,
             LazyMemberInfo memberInfo,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             Debug.Assert(memberInfo.GetAccessors().Count() == 1, "Only expecting one accessor for a type export.");
             Debug.Assert(memberInfo.GetAccessors().First() is Type, "Expecting the export to be a Type.");
-            return SerializedExportOnTypeDefinition.CreateDefinition(
+            return TypeBasedExportDefinition.CreateDefinition(
                 export.ContractName,
                 memberInfo.GetAccessors().First() as Type,
                 identityGenerator);
         }
 
-        private static SerializedImportDefinition CreatePropertyImport(
+        private static SerializableImportDefinition CreatePropertyImport(
             ImportDefinition import,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
             if (memberInfo.MemberType != MemberTypes.Property)
@@ -109,18 +108,18 @@ namespace Apollo.Core.Host.Plugins
             var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("set_")).First();
             var name = getMember.Name.Substring("set_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
-            return SerializedImportOnPropertyDefinition.CreateDefinition(
+            return PropertyBasedImportDefinition.CreateDefinition(
                 import.ContractName,
                 property,
                 identityGenerator);
         }
 
-        private static SerializedImportDefinition CreateConstructorParameterImport(
+        private static SerializableImportDefinition CreateConstructorParameterImport(
             ImportDefinition import,
-            Func<Type, SerializedTypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
-            return SerializedImportOnConstructorDefinition.CreateDefinition(
+            return ConstructorBasedImportDefinition.CreateDefinition(
                 import.ContractName,
                 parameterInfo.Value,
                 identityGenerator);
@@ -176,14 +175,14 @@ namespace Apollo.Core.Host.Plugins
         public void Scan(
             IEnumerable<string> assemblyFilesToScan, 
             out IEnumerable<PluginInfo> plugins, 
-            out IEnumerable<SerializedTypeDefinition> types)
+            out IEnumerable<TypeDefinition> types)
         {
             {
                 Lokad.Enforce.Argument(() => assemblyFilesToScan);
             }
 
             var pluginStorage = new ConcurrentBag<PluginInfo>();
-            var nonPluginStorage = new ConcurrentDictionary<string, SerializedTypeDefinition>();
+            var nonPluginStorage = new ConcurrentDictionary<string, TypeDefinition>();
             
             // It is expected that the loading of an assembly will take more
             // time than the scanning of that assembly. 
@@ -272,7 +271,7 @@ namespace Apollo.Core.Host.Plugins
         private void ScanAssembly(
             Assembly assembly,
             ConcurrentBag<PluginInfo> storage,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage)
+            ConcurrentDictionary<string, TypeDefinition> typeStorage)
         {
             var path = assembly.LocalFilePath();
             var info = new PluginInfo
@@ -302,7 +301,7 @@ namespace Apollo.Core.Host.Plugins
 
         private void ExtractImportsAndExports(
             Assembly assembly,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
+            ConcurrentDictionary<string, TypeDefinition> typeStorage,
             PluginInfo info)
         {
             var createTypeIdentity = IdentityFactory(typeStorage);
@@ -310,11 +309,11 @@ namespace Apollo.Core.Host.Plugins
             var catalog = new AssemblyCatalog(assembly);
             foreach (var part in catalog.Parts)
             {
-                var exports = new List<SerializedExportDefinition>();
+                var exports = new List<SerializableExportDefinition>();
                 foreach (var export in part.ExportDefinitions)
                 {
                     var memberInfo = ReflectionModelServices.GetExportingMember(export);
-                    SerializedExportDefinition exportDefinition = null;
+                    SerializableExportDefinition exportDefinition = null;
                     switch (memberInfo.MemberType)
                     {
                         case MemberTypes.Method:
@@ -343,10 +342,10 @@ namespace Apollo.Core.Host.Plugins
                     }
                 }
 
-                var imports = new List<SerializedImportDefinition>();
+                var imports = new List<SerializableImportDefinition>();
                 foreach (var import in part.ImportDefinitions)
                 {
-                    SerializedImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
+                    SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
                         ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
                         : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
 
@@ -368,22 +367,22 @@ namespace Apollo.Core.Host.Plugins
                         Type = createTypeIdentity(ReflectionModelServices.GetPartType(part).Value),
                         Exports = exports,
                         Imports = imports,
-                        Actions = Enumerable.Empty<SerializedScheduleActionDefinition>(),
-                        Conditions = Enumerable.Empty<SerializedScheduleConditionDefinition>(),
+                        Actions = Enumerable.Empty<ScheduleActionDefinition>(),
+                        Conditions = Enumerable.Empty<ScheduleConditionDefinition>(),
                     });
             }
         }
 
         private void ExtractActionsAndConditions(
             Assembly assembly,
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage,
+            ConcurrentDictionary<string, TypeDefinition> typeStorage,
             PluginInfo info)
         {
             var createTypeIdentity = IdentityFactory(typeStorage);
             foreach (var t in assembly.GetTypes())
             {
-                var actions = new List<SerializedScheduleActionDefinition>();
-                var conditions = new List<SerializedScheduleConditionDefinition>();
+                var actions = new List<ScheduleActionDefinition>();
+                var conditions = new List<ScheduleConditionDefinition>();
                 foreach (var method in t.GetMethods())
                 {
                     if (method.ReturnType == typeof(void) && !method.GetParameters().Any())
@@ -391,7 +390,7 @@ namespace Apollo.Core.Host.Plugins
                         var actionAttribute = method.GetCustomAttribute<ScheduleActionAttribute>(true);
                         if (actionAttribute != null)
                         {
-                            var actionDefinition = SerializedScheduleActionDefinition.CreateDefinition(
+                            var actionDefinition = ScheduleActionDefinition.CreateDefinition(
                                 actionAttribute.Name, 
                                 method, 
                                 createTypeIdentity);
@@ -413,7 +412,7 @@ namespace Apollo.Core.Host.Plugins
                         var conditionAttribute = method.GetCustomAttribute<ScheduleConditionAttribute>(true);
                         if (conditionAttribute != null)
                         {
-                            var conditionDefinition = SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                            var conditionDefinition = MethodBasedScheduleConditionDefinition.CreateDefinition(
                                 conditionAttribute.Name,
                                 method,
                                 createTypeIdentity);
@@ -436,7 +435,7 @@ namespace Apollo.Core.Host.Plugins
                         var conditionAttribute = property.GetCustomAttribute<ScheduleConditionAttribute>(true);
                         if (conditionAttribute != null)
                         {
-                            var conditionDefinition = SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(
+                            var conditionDefinition = PropertyBasedScheduleConditionDefinition.CreateDefinition(
                                 conditionAttribute.Name,
                                 property,
                                 createTypeIdentity);
@@ -472,7 +471,7 @@ namespace Apollo.Core.Host.Plugins
             Justification = "Catch an log here because we don't actually know what exceptions can happen due to the exporter.RegisterGroups() call")]
         private void ExtractGroups(
             Assembly assembly, 
-            ConcurrentDictionary<string, SerializedTypeDefinition> typeStorage, 
+            ConcurrentDictionary<string, TypeDefinition> typeStorage, 
             IEnumerable<PluginTypeInfo> knownPlugins,
             PluginInfo info)
         {

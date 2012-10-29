@@ -9,11 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
-using Apollo.Core.Host.Plugins.Definitions;
 using MbUnit.Framework;
 
 namespace Apollo.Core.Host.Plugins
@@ -29,80 +29,80 @@ namespace Apollo.Core.Host.Plugins
                 {
                     new PluginTypeInfo
                         {
-                            Type = SerializedTypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
-                            Exports = new List<SerializedExportDefinition> 
+                            Type = TypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
+                            Exports = new List<SerializableExportDefinition> 
                                 {
-                                    SerializedExportOnTypeDefinition.CreateDefinition("ActionExport", typeof(ActionOnMethod))
+                                    TypeBasedExportDefinition.CreateDefinition("ActionExport", typeof(ActionOnMethod))
                                 },
-                            Imports = new List<SerializedImportDefinition>(),
-                            Actions = new List<SerializedScheduleActionDefinition>
+                            Imports = new List<SerializableImportDefinition>(),
+                            Actions = new List<ScheduleActionDefinition>
                                 {
-                                    SerializedScheduleActionDefinition.CreateDefinition(
+                                    ScheduleActionDefinition.CreateDefinition(
                                         "ActionMethod", 
                                         typeof(ActionOnMethod).GetMethod("ActionMethod"))
                                 },
-                            Conditions = new List<SerializedScheduleConditionDefinition>(),
+                            Conditions = new List<ScheduleConditionDefinition>(),
                         },
                     new PluginTypeInfo
                         {
-                            Type = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
-                            Exports = new List<SerializedExportDefinition> 
+                            Type = TypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
+                            Exports = new List<SerializableExportDefinition> 
                                 {
-                                    SerializedExportOnTypeDefinition.CreateDefinition("ConditionOnMethodExport", typeof(ConditionOnMethod))
+                                    TypeBasedExportDefinition.CreateDefinition("ConditionOnMethodExport", typeof(ConditionOnMethod))
                                 },
-                            Imports = new List<SerializedImportDefinition>(),
-                            Actions = new List<SerializedScheduleActionDefinition>(),
-                            Conditions = new List<SerializedScheduleConditionDefinition>
+                            Imports = new List<SerializableImportDefinition>(),
+                            Actions = new List<ScheduleActionDefinition>(),
+                            Conditions = new List<ScheduleConditionDefinition>
                                 {
-                                    SerializedScheduleConditionOnMethodDefinition.CreateDefinition(
+                                    MethodBasedScheduleConditionDefinition.CreateDefinition(
                                         "OnMethod",
                                         typeof(ConditionOnMethod).GetMethod("ConditionMethod"))
                                 },
                         },
                     new PluginTypeInfo
                         {
-                            Type = SerializedTypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
-                            Exports = new List<SerializedExportDefinition> 
+                            Type = TypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
+                            Exports = new List<SerializableExportDefinition> 
                                 {
-                                    SerializedExportOnTypeDefinition.CreateDefinition("ConditionOnPropertyExport", typeof(ConditionOnProperty))
+                                    TypeBasedExportDefinition.CreateDefinition("ConditionOnPropertyExport", typeof(ConditionOnProperty))
                                 },
-                            Imports = new List<SerializedImportDefinition>(),
-                            Actions = new List<SerializedScheduleActionDefinition>(),
-                            Conditions = new List<SerializedScheduleConditionDefinition>
+                            Imports = new List<SerializableImportDefinition>(),
+                            Actions = new List<ScheduleActionDefinition>(),
+                            Conditions = new List<ScheduleConditionDefinition>
                                 {
-                                    SerializedScheduleConditionOnPropertyDefinition.CreateDefinition(
+                                    PropertyBasedScheduleConditionDefinition.CreateDefinition(
                                         "OnProperty",
                                         typeof(ConditionOnProperty).GetProperty("ConditionProperty"))
                                 },
                         },
                     new PluginTypeInfo
                         {
-                            Type = SerializedTypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
-                            Exports = new List<SerializedExportDefinition> 
+                            Type = TypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
+                            Exports = new List<SerializableExportDefinition> 
                                 {
-                                    SerializedExportOnPropertyDefinition.CreateDefinition(
+                                    PropertyBasedExportDefinition.CreateDefinition(
                                         typeof(IExportOnProperty).FullName, 
                                         typeof(ExportOnProperty).GetProperty("ExportingProperty"))
                                 },
-                            Imports = new List<SerializedImportDefinition>(),
-                            Actions = new List<SerializedScheduleActionDefinition>(),
-                            Conditions = new List<SerializedScheduleConditionDefinition>(),
+                            Imports = new List<SerializableImportDefinition>(),
+                            Actions = new List<ScheduleActionDefinition>(),
+                            Conditions = new List<ScheduleConditionDefinition>(),
                         },
                     new PluginTypeInfo
                         {
-                            Type = SerializedTypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
-                            Exports = new List<SerializedExportDefinition> 
+                            Type = TypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
+                            Exports = new List<SerializableExportDefinition> 
                                 {
-                                    SerializedExportOnTypeDefinition.CreateDefinition(typeof(ImportOnProperty).FullName, typeof(ImportOnProperty))
+                                    TypeBasedExportDefinition.CreateDefinition(typeof(ImportOnProperty).FullName, typeof(ImportOnProperty))
                                 },
-                            Imports = new List<SerializedImportDefinition>
+                            Imports = new List<SerializableImportDefinition>
                                 {
-                                    SerializedImportOnPropertyDefinition.CreateDefinition(
+                                    PropertyBasedImportDefinition.CreateDefinition(
                                         typeof(IExportOnProperty).FullName,
                                         typeof(ImportOnProperty).GetProperty("ImportingProperty"))
                                 },
-                            Actions = new List<SerializedScheduleActionDefinition>(),
-                            Conditions = new List<SerializedScheduleConditionDefinition>(),
+                            Actions = new List<ScheduleActionDefinition>(),
+                            Conditions = new List<ScheduleConditionDefinition>(),
                         }
                 };
 
@@ -113,7 +113,7 @@ namespace Apollo.Core.Host.Plugins
         public void RegisterObjectWithUnknownType()
         {
             var plugins = new List<PluginTypeInfo>();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
             Action<PluginGroupInfo> storage = p => { };
 
@@ -125,7 +125,7 @@ namespace Apollo.Core.Host.Plugins
         public void RegisterObject()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
             Action<PluginGroupInfo> storage = p => { };
 
@@ -145,7 +145,7 @@ namespace Apollo.Core.Host.Plugins
         public void RegisterObjectWithMultipleSameType()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
             Action<PluginGroupInfo> storage = p => { };
 
@@ -160,7 +160,7 @@ namespace Apollo.Core.Host.Plugins
         public void ConnectWithNonMatchingExport()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
             Action<PluginGroupInfo> storage = p => { };
 
@@ -175,7 +175,7 @@ namespace Apollo.Core.Host.Plugins
         public void Connect()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;
@@ -198,7 +198,7 @@ namespace Apollo.Core.Host.Plugins
         public void ConnectOverridingCurrentConnection()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;
@@ -224,7 +224,7 @@ namespace Apollo.Core.Host.Plugins
         public void DefineSchedule()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;
@@ -254,7 +254,7 @@ namespace Apollo.Core.Host.Plugins
         public void DefineExport()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;
@@ -300,7 +300,7 @@ namespace Apollo.Core.Host.Plugins
         public void DefineImportWithScheduleElement()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;
@@ -332,7 +332,7 @@ namespace Apollo.Core.Host.Plugins
         public void DefineImportWithObjectImports()
         {
             var plugins = CreatePluginTypes();
-            Func<Type, SerializedTypeIdentity> identityGenerator = t => SerializedTypeIdentity.CreateDefinition(t);
+            Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
             PluginGroupInfo groupInfo = null;

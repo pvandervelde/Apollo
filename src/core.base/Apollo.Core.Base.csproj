@@ -28,6 +28,7 @@
       <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Management" />
@@ -234,6 +235,28 @@
     <Compile Include="Loaders\UnableToCreateJobException.cs" />
     <Compile Include="Loaders\UnableToLinkChildProcessToJobException.cs" />
     <Compile Include="Loaders\UnableToSetJobException.cs" />
+    <Compile Include="Plugins\AssemblyDefinition.cs" />
+    <Compile Include="Plugins\ConstructorBasedImportDefinition.cs" />
+    <Compile Include="Plugins\ConstructorDefinition.cs" />
+    <Compile Include="Plugins\GroupExportDefinition.cs" />
+    <Compile Include="Plugins\GroupImportDefinition.cs" />
+    <Compile Include="Plugins\GroupObjectDefinition.cs" />
+    <Compile Include="Plugins\MethodBasedExportDefinition.cs" />
+    <Compile Include="Plugins\MethodBasedScheduleConditionDefinition.cs" />
+    <Compile Include="Plugins\MethodDefinition.cs" />
+    <Compile Include="Plugins\ParameterDefinition.cs" />
+    <Compile Include="Plugins\PropertyBasedExportDefinition.cs" />
+    <Compile Include="Plugins\PropertyBasedImportDefinition.cs" />
+    <Compile Include="Plugins\PropertyBasedScheduleConditionDefinition.cs" />
+    <Compile Include="Plugins\PropertyDefinition.cs" />
+    <Compile Include="Plugins\ScheduleActionDefinition.cs" />
+    <Compile Include="Plugins\ScheduleConditionDefinition.cs" />
+    <Compile Include="Plugins\ScheduleDefinition.cs" />
+    <Compile Include="Plugins\SerializableExportDefinition.cs" />
+    <Compile Include="Plugins\SerializableImportDefinition.cs" />
+    <Compile Include="Plugins\TypeBasedExportDefinition.cs" />
+    <Compile Include="Plugins\TypeDefinition.cs" />
+    <Compile Include="Plugins\TypeIdentity.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

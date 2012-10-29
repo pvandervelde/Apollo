@@ -6,7 +6,7 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core.Host.Plugins.Definitions;
+using Apollo.Core.Base.Plugins;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -19,7 +19,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the serialized type info.
         /// </summary>
-        public SerializedTypeIdentity Type
+        public TypeIdentity Type
         {
             get;
             set;
@@ -28,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection of imports for the current type.
         /// </summary>
-        public IEnumerable<SerializedImportDefinition> Imports
+        public IEnumerable<SerializableImportDefinition> Imports
         {
             get;
             set;
@@ -37,7 +37,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection of exports for the current type.
         /// </summary>
-        public IEnumerable<SerializedExportDefinition> Exports
+        public IEnumerable<SerializableExportDefinition> Exports
         {
             get;
             set;
@@ -46,7 +46,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection of schedule actions for the current type.
         /// </summary>
-        public IEnumerable<SerializedScheduleActionDefinition> Actions
+        public IEnumerable<ScheduleActionDefinition> Actions
         {
             get;
             set;
@@ -55,7 +55,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection of schedule conditions for the current type.
         /// </summary>
-        public IEnumerable<SerializedScheduleConditionDefinition> Conditions
+        public IEnumerable<ScheduleConditionDefinition> Conditions
         {
             get;
             set;

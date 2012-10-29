@@ -5,19 +5,17 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// Stores a group ID and an import ID to uniquely identify an import.
+    /// Stores information about an exported type in serialized form, i.e. without requiring the
+    /// type in question to be loaded.
     /// </summary>
     [Serializable]
-    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
+    public sealed class TypeBasedExportDefinition : SerializableExportDefinition
     {
         /// <summary>
         /// Implements the operator ==.
@@ -25,7 +23,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        public static bool operator ==(TypeBasedExportDefinition first, TypeBasedExportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -52,7 +50,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        public static bool operator !=(TypeBasedExportDefinition first, TypeBasedExportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -74,94 +72,72 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// The contract name for the import.
+        /// Creates a new instance of the <see cref="TypeBasedExportDefinition"/> class based 
+        /// on the given <see cref="Type"/>.
         /// </summary>
-        private readonly string m_ContractName;
-
-        /// <summary>
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </summary>
-        private readonly EditableInsertVertex m_InsertPoint;
-
-        /// <summary>
-        /// The collection of object imports that should be satisfied.
-        /// </summary>
-        private readonly IEnumerable<ImportRegistrationId> m_ObjectImports;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
-        /// </summary>
-        /// <param name="contractName">The contract name for the import.</param>
-        /// <param name="insertPoint">
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </param>
-        /// <param name="objectImports">The collection of object imports that should be satisfied.</param>
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="declaringType">The type for which the current object stores the serialized data.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given type.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
         /// </exception>
-        public GroupImportMap(string contractName, EditableInsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        public static TypeBasedExportDefinition CreateDefinition(
+            string contractName,
+            Type declaringType,
+            Func<Type, TypeIdentity> identityGenerator)
         {
             {
-                Lokad.Enforce.Argument(() => contractName);
-                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => declaringType);
+                Lokad.Enforce.Argument(() => identityGenerator);
             }
 
-            m_InsertPoint = insertPoint;
-            m_ContractName = contractName;
-            m_ObjectImports = objectImports;
+            return new TypeBasedExportDefinition(
+                contractName,
+                identityGenerator(declaringType));
         }
 
         /// <summary>
-        /// Gets the contract name for the current import.
+        /// Creates a new instance of the <see cref="TypeBasedExportDefinition"/> class 
+        /// based on the given <see cref="Type"/>.
         /// </summary>
-        public string ContractName
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="declaringType">The method for which the current object stores the serialized data.</param>
+        /// <returns>The serialized definition for the given type.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="declaringType"/> is <see langword="null" />.
+        /// </exception>
+        public static TypeBasedExportDefinition CreateDefinition(string contractName, Type declaringType)
         {
-            get
-            {
-                return m_ContractName;
-            }
+            return CreateDefinition(contractName, declaringType, t => TypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
-        /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// Initializes a new instance of the <see cref="TypeBasedExportDefinition"/> class.
         /// </summary>
-        public EditableInsertVertex InsertPoint
-        {
-            get
-            {
-                return m_InsertPoint;
-            }
+        /// <param name="contractName">The contract name that is used to identify the current export.</param>
+        /// <param name="declaringType">The type that owns the current export.</param>
+        private TypeBasedExportDefinition(string contractName, TypeIdentity declaringType)
+            : base(contractName, declaringType)
+        { 
         }
 
         /// <summary>
-        /// Gets the collection of object imports that should be satisfied.
+        /// Determines whether the specified <see cref="SerializableExportDefinition"/> is equal to this instance.
         /// </summary>
-        public IEnumerable<ImportRegistrationId> ObjectImports
-        {
-            get
-            {
-                return m_ObjectImports;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="SerializableExportDefinition"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="SerializableExportDefinition"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupImportMap other)
+        public override bool Equals(SerializableExportDefinition other)
         {
+            var otherType = other as TypeBasedExportDefinition;
             if (ReferenceEquals(this, other))
             {
                 return true;
@@ -170,8 +146,9 @@ namespace Apollo.Core.Host.Plugins
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
+            return !ReferenceEquals(otherType, null)
+                && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
+                && DeclaringType == otherType.DeclaringType;
         }
 
         /// <summary>
@@ -184,14 +161,14 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public sealed override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
 
-            var id = obj as GroupImportMap;
+            var id = obj as TypeBasedExportDefinition;
             return Equals(id);
         }
 
@@ -215,6 +192,8 @@ namespace Apollo.Core.Host.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+                hash = (hash * 23) ^ DeclaringType.GetHashCode();
+
                 return hash;
             }
         }
@@ -227,7 +206,11 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
+            return string.Format(
+                CultureInfo.InvariantCulture, 
+                "Exporting [{0}] on {1}", 
+                ContractName, 
+                DeclaringType);
         }
     }
 }

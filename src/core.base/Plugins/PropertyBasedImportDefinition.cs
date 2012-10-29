@@ -5,19 +5,18 @@
 //-----------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
+using System.Reflection;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// Stores a group ID and an import ID to uniquely identify an import.
+    /// Stores information about an imported property in serialized form, i.e. without requiring the
+    /// owning type in question to be loaded.
     /// </summary>
     [Serializable]
-    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
+    public sealed class PropertyBasedImportDefinition : SerializableImportDefinition
     {
         /// <summary>
         /// Implements the operator ==.
@@ -25,7 +24,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        public static bool operator ==(PropertyBasedImportDefinition first, PropertyBasedImportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -52,7 +51,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        public static bool operator !=(PropertyBasedImportDefinition first, PropertyBasedImportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -74,94 +73,97 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// The contract name for the import.
+        /// Creates a new instance of the <see cref="PropertyBasedImportDefinition"/> class based on 
+        /// the given <see cref="PropertyInfo"/>.
         /// </summary>
-        private readonly string m_ContractName;
-
-        /// <summary>
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </summary>
-        private readonly EditableInsertVertex m_InsertPoint;
-
-        /// <summary>
-        /// The collection of object imports that should be satisfied.
-        /// </summary>
-        private readonly IEnumerable<ImportRegistrationId> m_ObjectImports;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
-        /// </summary>
-        /// <param name="contractName">The contract name for the import.</param>
-        /// <param name="insertPoint">
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </param>
-        /// <param name="objectImports">The collection of object imports that should be satisfied.</param>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <param name="identityGenerator">The function that creates type identities.</param>
+        /// <returns>The serialized definition for the given property.</returns>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentException">
-        ///     Thrown if <paramref name="contractName"/> is an empty string.
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
         /// </exception>
-        public GroupImportMap(string contractName, EditableInsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        public static PropertyBasedImportDefinition CreateDefinition(
+            string contractName, 
+            PropertyInfo property,
+            Func<Type, TypeIdentity> identityGenerator)
         {
             {
-                Lokad.Enforce.Argument(() => contractName);
-                Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => property);
+                Lokad.Enforce.Argument(() => identityGenerator);
             }
 
-            m_InsertPoint = insertPoint;
-            m_ContractName = contractName;
-            m_ObjectImports = objectImports;
+            return new PropertyBasedImportDefinition(
+                contractName,
+                identityGenerator(property.DeclaringType),
+                PropertyDefinition.CreateDefinition(property, identityGenerator));
         }
 
         /// <summary>
-        /// Gets the contract name for the current import.
+        /// Creates a new instance of the <see cref="PropertyBasedImportDefinition"/> class based on the given <see cref="PropertyInfo"/>.
         /// </summary>
-        public string ContractName
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="property">The property for which a serialized definition needs to be created.</param>
+        /// <returns>The serialized definition for the given property.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="property"/> is <see langword="null" />.
+        /// </exception>
+        public static PropertyBasedImportDefinition CreateDefinition(string contractName, PropertyInfo property)
+        {
+            return CreateDefinition(contractName, property, t => TypeIdentity.CreateDefinition(t));
+        }
+
+        /// <summary>
+        /// The name of the property.
+        /// </summary>
+        private readonly PropertyDefinition m_Property;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PropertyBasedImportDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="declaringType">The type that defines the property.</param>
+        /// <param name="property">The property for which the current object stores the serialized data.</param>
+        private PropertyBasedImportDefinition(
+            string contractName, 
+            TypeIdentity declaringType,
+            PropertyDefinition property)
+            : base(contractName, declaringType)
+        {
+            {
+                Lokad.Enforce.Argument(() => property);
+            }
+
+            m_Property = property;
+        }
+
+        /// <summary>
+        /// Gets the property.
+        /// </summary>
+        public PropertyDefinition Property
         {
             get
             {
-                return m_ContractName;
+                return m_Property;
             }
         }
 
         /// <summary>
-        /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// Determines whether the specified <see cref="SerializableImportDefinition"/> is equal to this instance.
         /// </summary>
-        public EditableInsertVertex InsertPoint
-        {
-            get
-            {
-                return m_InsertPoint;
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of object imports that should be satisfied.
-        /// </summary>
-        public IEnumerable<ImportRegistrationId> ObjectImports
-        {
-            get
-            {
-                return m_ObjectImports;
-            }
-        }
-
-        /// <summary>
-        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
-        /// </summary>
-        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
+        /// <param name="other">The <see cref="SerializableImportDefinition"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="SerializableImportDefinition"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupImportMap other)
+        public override bool Equals(SerializableImportDefinition other)
         {
+            var otherType = other as PropertyBasedImportDefinition;
             if (ReferenceEquals(this, other))
             {
                 return true;
@@ -170,8 +172,9 @@ namespace Apollo.Core.Host.Plugins
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
+            return !ReferenceEquals(otherType, null)
+                && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
+                && Property == otherType.Property;
         }
 
         /// <summary>
@@ -184,14 +187,14 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public sealed override bool Equals(object obj)
+        public override bool Equals(object obj)
         {
             if (ReferenceEquals(this, obj))
             {
                 return true;
             }
 
-            var id = obj as GroupImportMap;
+            var id = obj as PropertyBasedImportDefinition;
             return Equals(id);
         }
 
@@ -215,6 +218,8 @@ namespace Apollo.Core.Host.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+                hash = (hash * 23) ^ Property.GetHashCode();
+
                 return hash;
             }
         }
@@ -227,7 +232,11 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
+            return string.Format(
+                CultureInfo.InvariantCulture, 
+                "Importing [{0}] on {1}", 
+                ContractName, 
+                Property);
         }
     }
 }

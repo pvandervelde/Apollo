@@ -8,10 +8,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
-using Apollo.Core.Host.Plugins.Definitions;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -28,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The function that generates type identities.
         /// </summary>
-        private readonly Func<Type, SerializedTypeIdentity> m_IdentityGenerator;
+        private readonly Func<Type, TypeIdentity> m_IdentityGenerator;
 
         /// <summary>
         /// The method that is used to store the generated group definitions.
@@ -44,8 +44,8 @@ namespace Apollo.Core.Host.Plugins
         /// The collection that holds the objects that have been registered for the
         /// current group.
         /// </summary>
-        private Dictionary<Type, List<SerializedGroupObjectDefinition>> m_Objects
-            = new Dictionary<Type, List<SerializedGroupObjectDefinition>>();
+        private Dictionary<Type, List<GroupObjectDefinition>> m_Objects
+            = new Dictionary<Type, List<GroupObjectDefinition>>();
 
         /// <summary>
         /// The collection that holds the connections for the current group.
@@ -102,7 +102,7 @@ namespace Apollo.Core.Host.Plugins
         /// </exception>
         public GroupDefinitionBuilder(
             IEnumerable<PluginTypeInfo> knownPlugins,
-            Func<Type, SerializedTypeIdentity> identityGenerator,
+            Func<Type, TypeIdentity> identityGenerator,
             Func<IBuildFixedSchedules> builderGenerator,
             Action<PluginGroupInfo> storage)
         {
@@ -144,7 +144,7 @@ namespace Apollo.Core.Host.Plugins
 
             if (!m_Objects.ContainsKey(type))
             {
-                m_Objects.Add(type, new List<SerializedGroupObjectDefinition>());
+                m_Objects.Add(type, new List<GroupObjectDefinition>());
             }
 
             var collection = m_Objects[type];
@@ -162,7 +162,7 @@ namespace Apollo.Core.Host.Plugins
                 c => new ScheduleConditionRegistrationId(type, collection.Count, c.ContractName),
                 c => c);
 
-            var registration = new SerializedGroupObjectDefinition(
+            var registration = new GroupObjectDefinition(
                 m_IdentityGenerator(type),
                 collection.Count,
                 exports,
@@ -290,7 +290,7 @@ namespace Apollo.Core.Host.Plugins
 
             if (m_Schedule != null)
             {
-                definition.Schedule = SerializedScheduleDefinition.CreateDefinition(
+                definition.Schedule = ScheduleDefinition.CreateDefinition(
                     definition.Id,
                     new ScheduleId(),
                     m_Schedule,
@@ -300,7 +300,7 @@ namespace Apollo.Core.Host.Plugins
 
             if (m_GroupExport != null)
             {
-                definition.GroupExport = SerializedGroupExportDefinition.CreateDefinition(
+                definition.GroupExport = GroupExportDefinition.CreateDefinition(
                     m_GroupExport.ContractName, 
                     definition.Id, 
                     definition.Schedule != null ? definition.Schedule.ScheduleId : null, 
@@ -310,7 +310,7 @@ namespace Apollo.Core.Host.Plugins
             if (m_GroupImports.Count > 0)
             {
                 definition.GroupImports = m_GroupImports.Select(
-                        i => SerializedGroupImportDefinition.CreateDefinition(
+                        i => GroupImportDefinition.CreateDefinition(
                             i.Value.ContractName, 
                             definition.Id, 
                             i.Value.InsertPoint, 
@@ -338,7 +338,7 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         public void Clear()
         {
-            m_Objects = new Dictionary<Type, List<SerializedGroupObjectDefinition>>();
+            m_Objects = new Dictionary<Type, List<GroupObjectDefinition>>();
             m_Connections = new Dictionary<ImportRegistrationId, ExportRegistrationId>();
 
             m_Actions = new Dictionary<ScheduleActionRegistrationId, ScheduleElementId>();

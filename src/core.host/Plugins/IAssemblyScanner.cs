@@ -5,7 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System.Collections.Generic;
-using Apollo.Core.Host.Plugins.Definitions;
+using Apollo.Core.Base.Plugins;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -29,6 +29,6 @@ namespace Apollo.Core.Host.Plugins
         void Scan(
             IEnumerable<string> assemblyFilesToScan, 
             out IEnumerable<PluginInfo> plugins, 
-            out IEnumerable<SerializedTypeDefinition> types);
+            out IEnumerable<TypeDefinition> types);
     }
 }

@@ -8,11 +8,9 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using Apollo.Core.Base;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
-using Apollo.Core.Extensions.Scheduling;
-using Apollo.Core.Host.Plugins.Definitions;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 using Autofac;
@@ -117,7 +115,7 @@ namespace Apollo.Core.Host.Plugins
             public void Scan(
                 IEnumerable<string> assemblyFilesToScan,
                 out IEnumerable<PluginInfo> plugins,
-                out IEnumerable<SerializedTypeDefinition> types)
+                out IEnumerable<TypeDefinition> types)
             {
                 var domain = m_AppDomainBuilder(Resources.Plugins_PluginScanDomainName, AppDomainPaths.Plugins);
                 try

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Apollo.Core.Host.Plugins.Definitions;
+using Apollo.Core.Base.Plugins;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
@@ -23,10 +23,10 @@ namespace Apollo.Core.Host.Plugins
         private sealed class MockScanner : IAssemblyScanner
         {
             private readonly IEnumerable<PluginInfo> m_Plugins;
-            private readonly IEnumerable<SerializedTypeDefinition> m_Types;
+            private readonly IEnumerable<TypeDefinition> m_Types;
             private IEnumerable<string> m_Files;
 
-            public MockScanner(IEnumerable<PluginInfo> plugins, IEnumerable<SerializedTypeDefinition> types)
+            public MockScanner(IEnumerable<PluginInfo> plugins, IEnumerable<TypeDefinition> types)
             {
                 m_Plugins = plugins;
                 m_Types = types;
@@ -35,7 +35,7 @@ namespace Apollo.Core.Host.Plugins
             public void Scan(
                 IEnumerable<string> assemblyFilesToScan,
                 out IEnumerable<PluginInfo> plugins,
-                out IEnumerable<SerializedTypeDefinition> types)
+                out IEnumerable<TypeDefinition> types)
             {
                 m_Files = assemblyFilesToScan;
                 plugins = m_Plugins;
@@ -55,12 +55,12 @@ namespace Apollo.Core.Host.Plugins
         public void SearchWithNewFilesOnly()
         {
             var plugins = new List<PluginInfo>();
-            var types = new List<SerializedTypeDefinition>();
+            var types = new List<TypeDefinition>();
             var repository = new Mock<IPluginRepository>();
             {
                 repository.Setup(r => r.KnownPluginFiles())
                     .Returns(Enumerable.Empty<PluginFileInfo>());
-                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()))
+                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()))
                     .Verifiable();
             }
 
@@ -90,7 +90,7 @@ namespace Apollo.Core.Host.Plugins
 
             detector.SearchDirectory(@"c:\temp");
             Assert.AreElementsEqualIgnoringOrder(files, scanner.FilesToScan);
-            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()), Times.Once());
+            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()), Times.Once());
         }
 
         [Test]
@@ -109,12 +109,12 @@ namespace Apollo.Core.Host.Plugins
                 };
             
             var plugins = new List<PluginInfo>();
-            var types = new List<SerializedTypeDefinition>();
+            var types = new List<TypeDefinition>();
             var repository = new Mock<IPluginRepository>();
             {
                 repository.Setup(r => r.KnownPluginFiles())
                     .Returns(pluginFiles);
-                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()))
+                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()))
                     .Verifiable();
             }
 
@@ -139,7 +139,7 @@ namespace Apollo.Core.Host.Plugins
 
             detector.SearchDirectory(@"c:\temp");
             Assert.AreElementsEqualIgnoringOrder(files, scanner.FilesToScan);
-            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()), Times.Once());
+            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()), Times.Once());
         }
 
         [Test]
@@ -158,12 +158,12 @@ namespace Apollo.Core.Host.Plugins
                 };
 
             var plugins = new List<PluginInfo>();
-            var types = new List<SerializedTypeDefinition>();
+            var types = new List<TypeDefinition>();
             var repository = new Mock<IPluginRepository>();
             {
                 repository.Setup(r => r.KnownPluginFiles())
                     .Returns(pluginFiles);
-                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()))
+                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()))
                     .Verifiable();
             }
 
@@ -188,7 +188,7 @@ namespace Apollo.Core.Host.Plugins
 
             detector.SearchDirectory(@"c:\temp");
             Assert.AreElementsEqualIgnoringOrder(new List<string> { files[1] }, scanner.FilesToScan);
-            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()), Times.Once());
+            repository.Verify(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()), Times.Once());
         }
 
         [Test]
@@ -201,12 +201,12 @@ namespace Apollo.Core.Host.Plugins
                 };
 
             var plugins = new List<PluginInfo>();
-            var types = new List<SerializedTypeDefinition>();
+            var types = new List<TypeDefinition>();
             var repository = new Mock<IPluginRepository>();
             {
                 repository.Setup(r => r.KnownPluginFiles())
                     .Returns(pluginFiles);
-                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<SerializedTypeDefinition>>()))
+                repository.Setup(r => r.Store(It.IsAny<IEnumerable<PluginInfo>>(), It.IsAny<IEnumerable<TypeDefinition>>()))
                     .Verifiable();
             }
 

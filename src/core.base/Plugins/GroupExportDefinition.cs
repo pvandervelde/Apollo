@@ -6,18 +6,21 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Linq;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
-    /// Stores a group ID and an import ID to uniquely identify an import.
+    /// Stores information about an export for a component group in serialized form, i.e. without requiring the
+    /// assembly which defines the group to be loaded.
     /// </summary>
     [Serializable]
-    internal sealed class GroupImportMap : IEquatable<GroupImportMap>
+    public sealed class GroupExportDefinition : IEquatable<GroupExportDefinition>
     {
         /// <summary>
         /// Implements the operator ==.
@@ -25,7 +28,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator ==(GroupImportMap first, GroupImportMap second)
+        public static bool operator ==(GroupExportDefinition first, GroupExportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -52,7 +55,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="first">The first object.</param>
         /// <param name="second">The second object.</param>
         /// <returns>The result of the operator.</returns>
-        public static bool operator !=(GroupImportMap first, GroupImportMap second)
+        public static bool operator !=(GroupExportDefinition first, GroupExportDefinition second)
         {
             // Check if first is a null reference by using ReferenceEquals because
             // we overload the == operator. If first isn't actually null then
@@ -74,50 +77,88 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// The contract name for the import.
-        /// </summary>
-        private readonly string m_ContractName;
-
-        /// <summary>
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </summary>
-        private readonly EditableInsertVertex m_InsertPoint;
-
-        /// <summary>
-        /// The collection of object imports that should be satisfied.
-        /// </summary>
-        private readonly IEnumerable<ImportRegistrationId> m_ObjectImports;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="GroupImportMap"/> class.
+        /// Creates a new instance of the <see cref="GroupExportDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name for the import.</param>
-        /// <param name="insertPoint">
-        /// The location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
-        /// </param>
-        /// <param name="objectImports">The collection of object imports that should be satisfied.</param>
+        /// <param name="containingGroup">The ID of the group that has registered the import.</param>
+        /// <param name="schedule">The schedule that is exported with the group.</param>
+        /// <param name="providedExports">The object exports that are provided with the current export.</param>
+        /// <returns>The serialized export definition for the group.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentException">
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="contractName"/> is an empty string.
         /// </exception>
-        public GroupImportMap(string contractName, EditableInsertVertex insertPoint = null, IEnumerable<ImportRegistrationId> objectImports = null)
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="containingGroup"/> is <see langword="null" />.
+        /// </exception>
+        public static GroupExportDefinition CreateDefinition(
+            string contractName, 
+            GroupRegistrationId containingGroup, 
+            ScheduleId schedule, 
+            IEnumerable<ExportRegistrationId> providedExports)
         {
             {
                 Lokad.Enforce.Argument(() => contractName);
                 Lokad.Enforce.Argument(() => contractName, Lokad.Rules.StringIs.NotEmpty);
+                Lokad.Enforce.Argument(() => containingGroup);
             }
 
-            m_InsertPoint = insertPoint;
-            m_ContractName = contractName;
-            m_ObjectImports = objectImports;
+            return new GroupExportDefinition(
+                contractName, 
+                containingGroup, 
+                schedule, 
+                providedExports ?? Enumerable.Empty<ExportRegistrationId>());
         }
 
         /// <summary>
-        /// Gets the contract name for the current import.
+        /// The ID of the group that has registered the export.
+        /// </summary>
+        private readonly GroupRegistrationId m_Id;
+
+        /// <summary>
+        /// The contract name for the export.
+        /// </summary>
+        private readonly string m_ContractName;
+
+        /// <summary>
+        /// The schedule that is exported with the group.
+        /// </summary>
+        private readonly ScheduleId m_Schedule;
+
+        /// <summary>
+        /// The object exports that can be used with the current export.
+        /// </summary>
+        private readonly IEnumerable<ExportRegistrationId> m_ProvidedExports;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GroupExportDefinition"/> class.
+        /// </summary>
+        /// <param name="contractName">The contract name for the import.</param>
+        /// <param name="containingGroup">The ID of the group that has registered the import.</param>
+        /// <param name="schedule">The schedule that is exported with the group.</param>
+        /// <param name="providedExports">The object exports that are provided with the current export.</param>
+        public GroupExportDefinition(
+            string contractName, 
+            GroupRegistrationId containingGroup, 
+            ScheduleId schedule, 
+            IEnumerable<ExportRegistrationId> providedExports)
+        {
+            {
+                Debug.Assert(containingGroup != null, "The ID of the group registering the export should not be null.");
+                Debug.Assert(!string.IsNullOrEmpty(contractName), "The contract name for the export should not be empty.");
+                Debug.Assert(providedExports != null, "The collection of object exports should not be null.");
+            }
+
+            m_ContractName = contractName;
+            m_Id = containingGroup;
+            m_Schedule = schedule;
+            m_ProvidedExports = providedExports;
+        }
+
+        /// <summary>
+        /// Gets the contract name for the export.
         /// </summary>
         public string ContractName
         {
@@ -128,39 +169,49 @@ namespace Apollo.Core.Host.Plugins
         }
 
         /// <summary>
-        /// Gets the location where a sub-schedule can be inserted in the schedule owned by the group that
-        /// published the current import.
+        /// Gets the ID of the group that has registered the export.
         /// </summary>
-        public EditableInsertVertex InsertPoint
+        public GroupRegistrationId ContainingGroup
         {
             get
             {
-                return m_InsertPoint;
+                return m_Id;
             }
         }
 
         /// <summary>
-        /// Gets the collection of object imports that should be satisfied.
+        /// Gets the schedule that is exported.
         /// </summary>
-        public IEnumerable<ImportRegistrationId> ObjectImports
+        public ScheduleId ScheduleToExport
         {
             get
             {
-                return m_ObjectImports;
+                return m_Schedule;
             }
         }
 
         /// <summary>
-        /// Determines whether the specified <see cref="GroupImportMap"/> is equal to this instance.
+        /// Gets the object exports that can be used with the current export.
         /// </summary>
-        /// <param name="other">The <see cref="GroupImportMap"/> to compare with this instance.</param>
+        public IEnumerable<ExportRegistrationId> ProvidedExports
+        {
+            get
+            {
+                return m_ProvidedExports;
+            }
+        }
+
+        /// <summary>
+        /// Determines whether the specified <see cref="GroupExportDefinition"/> is equal to this instance.
+        /// </summary>
+        /// <param name="other">The <see cref="GroupExportDefinition"/> to compare with this instance.</param>
         /// <returns>
-        ///     <see langword="true"/> if the specified <see cref="GroupImportMap"/> is equal to this instance;
+        ///     <see langword="true"/> if the specified <see cref="GroupExportDefinition"/> is equal to this instance;
         ///     otherwise, <see langword="false"/>.
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        public bool Equals(GroupImportMap other)
+        public bool Equals(GroupExportDefinition other)
         {
             if (ReferenceEquals(this, other))
             {
@@ -170,8 +221,7 @@ namespace Apollo.Core.Host.Plugins
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && string.Equals(ContractName, other.ContractName, StringComparison.Ordinal);
+            return !ReferenceEquals(other, null) && string.Equals(ContractName, other.ContractName, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -191,7 +241,7 @@ namespace Apollo.Core.Host.Plugins
                 return true;
             }
 
-            var id = obj as GroupImportMap;
+            var id = obj as GroupExportDefinition;
             return Equals(id);
         }
 
@@ -215,6 +265,7 @@ namespace Apollo.Core.Host.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+
                 return hash;
             }
         }
@@ -227,7 +278,11 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture, "[{0}]", ContractName);
+            return string.Format(
+                CultureInfo.InvariantCulture,
+                "Exporting [{0}] on {1}",
+                ContractName,
+                ContainingGroup);
         }
     }
 }

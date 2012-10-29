@@ -6,8 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Host.Plugins.Definitions;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -56,7 +56,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection that contains all the object definitions for the current group.
         /// </summary>
-        public IEnumerable<SerializedGroupObjectDefinition> Objects
+        public IEnumerable<GroupObjectDefinition> Objects
         {
             get;
             set;
@@ -74,7 +74,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the schedule for the current group.
         /// </summary>
-        public SerializedScheduleDefinition Schedule
+        public ScheduleDefinition Schedule
         {
             get;
             set;
@@ -83,7 +83,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the export for this group.
         /// </summary>
-        public SerializedGroupExportDefinition GroupExport
+        public GroupExportDefinition GroupExport
         {
             get;
             set;
@@ -92,7 +92,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection of imports for this group.
         /// </summary>
-        public IEnumerable<SerializedGroupImportDefinition> GroupImports
+        public IEnumerable<GroupImportDefinition> GroupImports
         {
             get;
             set;

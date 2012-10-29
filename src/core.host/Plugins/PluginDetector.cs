@@ -6,11 +6,10 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Apollo.Core.Host.Plugins.Definitions;
+using Apollo.Core.Base.Plugins;
 using Apollo.Core.Host.Properties;
 using Apollo.Utilities;
 
@@ -176,7 +175,7 @@ namespace Apollo.Core.Host.Plugins
             var scanner = m_ScannerBuilder();
 
             IEnumerable<PluginInfo> plugins;
-            IEnumerable<SerializedTypeDefinition> types;
+            IEnumerable<TypeDefinition> types;
             scanner.Scan(filesToScan, out plugins, out types);
 
             m_Repository.Store(plugins, types);
