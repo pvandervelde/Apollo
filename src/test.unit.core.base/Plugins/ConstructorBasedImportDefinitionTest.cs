@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -43,24 +45,36 @@ namespace Apollo.Core.Base.Plugins
                     {
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "A",
+                            "AB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(string).GetConstructor(new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "B",
+                            "BB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "C",
+                            "CB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(Version).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "D",
+                            "DB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(NotImplementedException).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -76,24 +90,36 @@ namespace Apollo.Core.Base.Plugins
                 { 
                     ConstructorBasedImportDefinition.CreateDefinition(
                             "A",
+                            "AB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(string).GetConstructor(new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "B",
+                            "BB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(Uri).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "C",
+                            "CB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(Version).GetConstructor(new[] 
                             {
                                 typeof(string)
                             }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "D",
+                            "DB",
+                            ImportCardinality.ExactlyOne,
+                            CreationPolicy.NonShared,
                             typeof(NotImplementedException).GetConstructor(new[] 
                             {
                                 typeof(string)
@@ -105,7 +131,10 @@ namespace Apollo.Core.Base.Plugins
         public void RoundTripSerialise()
         {
             var original = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
@@ -117,7 +146,10 @@ namespace Apollo.Core.Base.Plugins
         {
             ConstructorBasedImportDefinition first = null;
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsFalse(first == second);
@@ -127,7 +159,10 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsOperatorWithSecondObjectNull()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             ConstructorBasedImportDefinition second = null;
 
@@ -138,10 +173,16 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsOperatorWithEqualObject()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first == second);
@@ -151,10 +192,16 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsOperatorWithNonequalObjects()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "B", 
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsFalse(first == second);
@@ -165,7 +212,10 @@ namespace Apollo.Core.Base.Plugins
         {
             ConstructorBasedImportDefinition first = null;
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first != second);
@@ -175,7 +225,10 @@ namespace Apollo.Core.Base.Plugins
         public void NotEqualsOperatorWithSecondObjectNull()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             ConstructorBasedImportDefinition second = null;
 
@@ -186,10 +239,16 @@ namespace Apollo.Core.Base.Plugins
         public void NotEqualsOperatorWithEqualObject()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsFalse(first != second);
@@ -199,25 +258,38 @@ namespace Apollo.Core.Base.Plugins
         public void NotEqualsOperatorWithNonequalObjects()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
-                "B", 
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsTrue(first != second);
         }
 
         [Test]
-        public void CreateWithClass()
+        public void Create()
         {
             var obj = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var constructor = GetConstructorForString();
             var parameter = constructor.GetParameters().First();
 
             Assert.AreEqual("A", obj.ContractName);
+            Assert.AreEqual("AB", obj.RequiredTypeIdentity);
+            Assert.AreEqual(ImportCardinality.ExactlyOne, obj.Cardinality);
+            Assert.IsFalse(obj.IsRecomposable);
+            Assert.IsTrue(obj.IsPreRequisite);
             Assert.AreEqual(ConstructorDefinition.CreateDefinition(constructor), obj.Constructor);
             Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(string)), obj.DeclaringType);
             Assert.AreEqual(ParameterDefinition.CreateDefinition(parameter), obj.Parameter);
@@ -227,7 +299,10 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsWithNullObject()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             object second = null;
 
@@ -238,10 +313,16 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsWithEqualObjects()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             object second = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
 
             Assert.IsTrue(first.Equals(second));
@@ -251,10 +332,16 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsWithUnequalObjects()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             object second = ConstructorBasedImportDefinition.CreateDefinition(
-                "B", 
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
 
             Assert.IsFalse(first.Equals(second));
@@ -264,7 +351,10 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsWithUnequalObjectTypes()
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
-                "A", 
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = new object();
 

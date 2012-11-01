@@ -93,7 +93,7 @@ namespace Apollo.Core.Host.Plugins
         }
 
         private static SerializableImportDefinition CreatePropertyImport(
-            ImportDefinition import,
+            ContractBasedImportDefinition import,
             Func<Type, TypeIdentity> identityGenerator)
         {
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
@@ -110,17 +110,24 @@ namespace Apollo.Core.Host.Plugins
             var property = getMember.DeclaringType.GetProperty(name);
             return PropertyBasedImportDefinition.CreateDefinition(
                 import.ContractName,
+                import.RequiredTypeIdentity,
+                import.Cardinality,
+                import.IsRecomposable,
+                import.RequiredCreationPolicy,
                 property,
                 identityGenerator);
         }
 
         private static SerializableImportDefinition CreateConstructorParameterImport(
-            ImportDefinition import,
+            ContractBasedImportDefinition import,
             Func<Type, TypeIdentity> identityGenerator)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
             return ConstructorBasedImportDefinition.CreateDefinition(
                 import.ContractName,
+                import.RequiredTypeIdentity,
+                import.Cardinality,
+                import.RequiredCreationPolicy,
                 parameterInfo.Value,
                 identityGenerator);
         }
@@ -345,9 +352,12 @@ namespace Apollo.Core.Host.Plugins
                 var imports = new List<SerializableImportDefinition>();
                 foreach (var import in part.ImportDefinitions)
                 {
-                    SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(import)
-                        ? importDefinition = CreatePropertyImport(import, createTypeIdentity)
-                        : importDefinition = CreateConstructorParameterImport(import, createTypeIdentity);
+                    Debug.Assert(import is ContractBasedImportDefinition, "All import objects should be ContractBasedImportDefinition objects.");
+                    var contractImport = import as ContractBasedImportDefinition;
+
+                    SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(contractImport)
+                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity)
+                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity);
 
                     if (importDefinition != null)
                     {

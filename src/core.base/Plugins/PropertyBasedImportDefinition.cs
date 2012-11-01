@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -77,6 +79,17 @@ namespace Apollo.Core.Base.Plugins
         /// the given <see cref="PropertyInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="isRecomposable">
+        ///     <see langword="true" /> to specify that the import definition can be satisfied multiple times throughout the lifetime of a parts; 
+        ///     otherwise, <see langword="false" />.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
         /// <param name="property">The property for which a serialized definition needs to be created.</param>
         /// <param name="identityGenerator">The function that creates type identities.</param>
         /// <returns>The serialized definition for the given property.</returns>
@@ -88,6 +101,10 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static PropertyBasedImportDefinition CreateDefinition(
             string contractName, 
+            string requiredTypeIdentity,
+            ImportCardinality cardinality, 
+            bool isRecomposable, 
+            CreationPolicy creationPolicy,
             PropertyInfo property,
             Func<Type, TypeIdentity> identityGenerator)
         {
@@ -98,6 +115,10 @@ namespace Apollo.Core.Base.Plugins
 
             return new PropertyBasedImportDefinition(
                 contractName,
+                requiredTypeIdentity,
+                cardinality,
+                isRecomposable,
+                creationPolicy,
                 identityGenerator(property.DeclaringType),
                 PropertyDefinition.CreateDefinition(property, identityGenerator));
         }
@@ -106,14 +127,38 @@ namespace Apollo.Core.Base.Plugins
         /// Creates a new instance of the <see cref="PropertyBasedImportDefinition"/> class based on the given <see cref="PropertyInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="isRecomposable">
+        ///     <see langword="true" /> to specify that the import definition can be satisfied multiple times throughout the lifetime of a parts; 
+        ///     otherwise, <see langword="false" />.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
         /// <param name="property">The property for which a serialized definition needs to be created.</param>
         /// <returns>The serialized definition for the given property.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
-        public static PropertyBasedImportDefinition CreateDefinition(string contractName, PropertyInfo property)
+        public static PropertyBasedImportDefinition CreateDefinition(
+            string contractName, 
+            string requiredTypeIdentity,
+            ImportCardinality cardinality, 
+            bool isRecomposable, 
+            CreationPolicy creationPolicy,
+            PropertyInfo property)
         {
-            return CreateDefinition(contractName, property, t => TypeIdentity.CreateDefinition(t));
+            return CreateDefinition(
+                contractName,
+                requiredTypeIdentity,
+                cardinality,
+                isRecomposable,
+                creationPolicy,
+                property, 
+                t => TypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
@@ -125,13 +170,35 @@ namespace Apollo.Core.Base.Plugins
         /// Initializes a new instance of the <see cref="PropertyBasedImportDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="isRecomposable">
+        ///     <see langword="true" /> to specify that the import definition can be satisfied multiple times throughout the lifetime of a parts; 
+        ///     otherwise, <see langword="false" />.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
         /// <param name="declaringType">The type that defines the property.</param>
         /// <param name="property">The property for which the current object stores the serialized data.</param>
         private PropertyBasedImportDefinition(
-            string contractName, 
+            string contractName,
+            string requiredTypeIdentity,
+            ImportCardinality cardinality, 
+            bool isRecomposable, 
+            CreationPolicy creationPolicy, 
             TypeIdentity declaringType,
             PropertyDefinition property)
-            : base(contractName, declaringType)
+            : base(
+                contractName, 
+                requiredTypeIdentity, 
+                cardinality,
+                isRecomposable,
+                false,
+                creationPolicy,
+                declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => property);
@@ -174,6 +241,7 @@ namespace Apollo.Core.Base.Plugins
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(RequiredTypeIdentity, otherType.RequiredTypeIdentity, StringComparison.Ordinal)
                 && Property == otherType.Property;
         }
 
@@ -218,6 +286,7 @@ namespace Apollo.Core.Base.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+                hash = (hash * 23) ^ RequiredTypeIdentity.GetHashCode();
                 hash = (hash * 23) ^ Property.GetHashCode();
 
                 return hash;

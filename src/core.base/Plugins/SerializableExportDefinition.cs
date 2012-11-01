@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 
@@ -14,11 +15,15 @@ namespace Apollo.Core.Base.Plugins
     /// Provides the base class for classes that store information about a MEF export in a serializable form, i.e. without 
     /// requiring the owning type to be loaded.
     /// </summary>
+    /// <design>
+    /// It would be nice if this class would derrive from the <c>System.ComponentModel.Composition.Primitives.ExportDefinition</c> but
+    /// that class is not serializable.
+    /// </design>
     [Serializable]
     public abstract class SerializableExportDefinition : IEquatable<SerializableExportDefinition>
     {
         /// <summary>
-        /// The contract name that is used with the export.
+        /// The name of the contract for the export.
         /// </summary>
         private readonly string m_ContractName;
 
@@ -46,7 +51,7 @@ namespace Apollo.Core.Base.Plugins
         }
 
         /// <summary>
-        /// Gets the contract name of the export.
+        /// Gets the contract name for the export.
         /// </summary>
         public string ContractName
         {

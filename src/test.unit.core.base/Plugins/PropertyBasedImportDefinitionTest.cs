@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using MbUnit.Framework;
@@ -40,11 +42,41 @@ namespace Apollo.Core.Base.Plugins
             DistinctInstances =
                 new List<PropertyBasedImportDefinition> 
                     {
-                        PropertyBasedImportDefinition.CreateDefinition("A", typeof(string).GetProperty("Length")),
-                        PropertyBasedImportDefinition.CreateDefinition("B", typeof(Version).GetProperty("Build")),
-                        PropertyBasedImportDefinition.CreateDefinition("C", typeof(List<int>).GetProperty("Count")),
-                        PropertyBasedImportDefinition.CreateDefinition("D", typeof(TimeZone).GetProperty("StandardName")),
-                        PropertyBasedImportDefinition.CreateDefinition("E", typeof(TimeZoneInfo).GetProperty("StandardName")),
+                        PropertyBasedImportDefinition.CreateDefinition(
+                            "A", 
+                            "AB",
+                            ImportCardinality.ExactlyOne,
+                            true,
+                            CreationPolicy.NonShared,
+                            typeof(string).GetProperty("Length")),
+                        PropertyBasedImportDefinition.CreateDefinition(
+                            "B", 
+                            "BB",
+                            ImportCardinality.ExactlyOne,
+                            true,
+                            CreationPolicy.NonShared,
+                            typeof(Version).GetProperty("Build")),
+                        PropertyBasedImportDefinition.CreateDefinition(
+                            "C", 
+                            "CB",
+                            ImportCardinality.ExactlyOne,
+                            true,
+                            CreationPolicy.NonShared,
+                            typeof(List<int>).GetProperty("Count")),
+                        PropertyBasedImportDefinition.CreateDefinition(
+                            "D", 
+                            "DB",
+                            ImportCardinality.ExactlyOne,
+                            true,
+                            CreationPolicy.NonShared,
+                            typeof(TimeZone).GetProperty("StandardName")),
+                        PropertyBasedImportDefinition.CreateDefinition(
+                            "E", 
+                            "EB",
+                            ImportCardinality.ExactlyOne,
+                            true,
+                            CreationPolicy.NonShared,
+                            typeof(TimeZoneInfo).GetProperty("StandardName")),
                     },
         };
 
@@ -54,18 +86,54 @@ namespace Apollo.Core.Base.Plugins
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    PropertyBasedImportDefinition.CreateDefinition("A", typeof(string).GetProperty("Length")),
-                    PropertyBasedImportDefinition.CreateDefinition("B", typeof(Version).GetProperty("Build")),
-                    PropertyBasedImportDefinition.CreateDefinition("C", typeof(List<int>).GetProperty("Count")),
-                    PropertyBasedImportDefinition.CreateDefinition("D", typeof(TimeZone).GetProperty("StandardName")),
-                    PropertyBasedImportDefinition.CreateDefinition("E", typeof(TimeZoneInfo).GetProperty("StandardName")),
+                    PropertyBasedImportDefinition.CreateDefinition(
+                        "A", 
+                        "AB",
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(string).GetProperty("Length")),
+                    PropertyBasedImportDefinition.CreateDefinition(
+                        "B", 
+                        "BB",
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(Version).GetProperty("Build")),
+                    PropertyBasedImportDefinition.CreateDefinition(
+                        "C", 
+                        "CB",
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(List<int>).GetProperty("Count")),
+                    PropertyBasedImportDefinition.CreateDefinition(
+                        "D", 
+                        "DB",
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(TimeZone).GetProperty("StandardName")),
+                    PropertyBasedImportDefinition.CreateDefinition(
+                        "E", 
+                        "EB",
+                        ImportCardinality.ExactlyOne,
+                        true,
+                        CreationPolicy.NonShared,
+                        typeof(TimeZoneInfo).GetProperty("StandardName")),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var original = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +143,13 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsOperatorWithFirstObjectNull()
         {
             PropertyBasedImportDefinition first = null;
-            var second = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +157,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             PropertyBasedImportDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +172,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            var second = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +193,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            var second = PropertyBasedImportDefinition.CreateDefinition("B", GetPropertyForVersion());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(Version).GetProperty("Build"));
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +215,13 @@ namespace Apollo.Core.Base.Plugins
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             PropertyBasedImportDefinition first = null;
-            var second = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +229,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             PropertyBasedImportDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +244,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            var second = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +265,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            var second = PropertyBasedImportDefinition.CreateDefinition("B", GetPropertyForVersion());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            var second = PropertyBasedImportDefinition.CreateDefinition(
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(Version).GetProperty("Build"));
 
             Assert.IsTrue(first != second);
         }
@@ -146,10 +286,21 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void CreateWithClass()
         {
-            var obj = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var obj = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             var property = GetPropertyForString();
 
             Assert.AreEqual("A", obj.ContractName);
+            Assert.AreEqual("AB", obj.RequiredTypeIdentity);
+            Assert.AreEqual(ImportCardinality.ExactlyOne, obj.Cardinality);
+            Assert.IsTrue(obj.IsRecomposable);
+            Assert.IsFalse(obj.IsPreRequisite);
+            Assert.AreEqual(CreationPolicy.NonShared, obj.RequiredCreationPolicy);
             Assert.AreEqual(TypeIdentity.CreateDefinition(property.DeclaringType), obj.DeclaringType);
             Assert.AreEqual(PropertyDefinition.CreateDefinition(property), obj.Property);
         }
@@ -157,7 +308,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -166,8 +323,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            object second = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            object second = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -175,8 +344,20 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
-            object second = PropertyBasedImportDefinition.CreateDefinition("B", GetPropertyForVersion());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
+            object second = PropertyBasedImportDefinition.CreateDefinition(
+                "B",
+                "BB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(Version).GetProperty("Build"));
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -184,7 +365,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = PropertyBasedImportDefinition.CreateDefinition("A", GetPropertyForString());
+            var first = PropertyBasedImportDefinition.CreateDefinition(
+                "A",
+                "AB",
+                ImportCardinality.ExactlyOne,
+                true,
+                CreationPolicy.NonShared,
+                typeof(string).GetProperty("Length"));
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -99,6 +101,10 @@ namespace Apollo.Core.Host.Plugins
                                 {
                                     PropertyBasedImportDefinition.CreateDefinition(
                                         typeof(IExportOnProperty).FullName,
+                                        "AB",
+                                        ImportCardinality.ExactlyOne,
+                                        false,
+                                        CreationPolicy.Shared,
                                         typeof(ImportOnProperty).GetProperty("ImportingProperty"))
                                 },
                             Actions = new List<ScheduleActionDefinition>(),

@@ -5,6 +5,8 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.ComponentModel.Composition;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
@@ -77,6 +79,13 @@ namespace Apollo.Core.Base.Plugins
         /// on the given <see cref="ParameterInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
         /// <param name="parameter">The method for which the current object stores the serialized data.</param>
         /// <param name="identityGenerator">The function that creates type identities.</param>
         /// <returns>The serialized definition for the given parameter.</returns>
@@ -88,6 +97,9 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static ConstructorBasedImportDefinition CreateDefinition(
             string contractName,
+            string requiredTypeIdentity,
+            ImportCardinality cardinality, 
+            CreationPolicy creationPolicy, 
             ParameterInfo parameter,
             Func<Type, TypeIdentity> identityGenerator)
         {
@@ -98,6 +110,9 @@ namespace Apollo.Core.Base.Plugins
 
             return new ConstructorBasedImportDefinition(
                 contractName,
+                requiredTypeIdentity,
+                cardinality,
+                creationPolicy,
                 identityGenerator(parameter.Member.DeclaringType),
                 ConstructorDefinition.CreateDefinition(parameter.Member as ConstructorInfo, identityGenerator),
                 ParameterDefinition.CreateDefinition(parameter, identityGenerator));
@@ -108,14 +123,32 @@ namespace Apollo.Core.Base.Plugins
         /// based on the given <see cref="ParameterInfo"/>.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
-        /// <param name="parameter">The parameter for which the current object stores the serialized data.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
+        /// <param name="parameter">The method for which the current object stores the serialized data.</param>
         /// <returns>The serialized definition for the given parameter.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
         /// </exception>
-        public static ConstructorBasedImportDefinition CreateDefinition(string contractName, ParameterInfo parameter)
+        public static ConstructorBasedImportDefinition CreateDefinition(
+            string contractName,
+            string requiredTypeIdentity,
+            ImportCardinality cardinality,
+            CreationPolicy creationPolicy,
+            ParameterInfo parameter)
         {
-            return CreateDefinition(contractName, parameter, t => TypeIdentity.CreateDefinition(t));
+            return CreateDefinition(
+                contractName, 
+                requiredTypeIdentity,
+                cardinality,
+                creationPolicy,
+                parameter, 
+                t => TypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>
@@ -132,15 +165,32 @@ namespace Apollo.Core.Base.Plugins
         /// Initializes a new instance of the <see cref="ConstructorBasedImportDefinition"/> class.
         /// </summary>
         /// <param name="contractName">The contract name that is used to identify the current import.</param>
+        /// <param name="requiredTypeIdentity">The type identity of the export type expected.</param>
+        /// <param name="cardinality">
+        ///     One of the enumeration values that indicates the cardinality of the export object required by the import definition.
+        /// </param>
+        /// <param name="creationPolicy">
+        ///     A value that indicates that the importer requires a specific creation policy for the exports used to satisfy this import.
+        /// </param>
         /// <param name="declaringType">The type that declares the constructor on which the import is placed.</param>
         /// <param name="constructor">The constructor that declares the import.</param>
         /// <param name="parameter">The parameter on which the import is defined.</param>
         private ConstructorBasedImportDefinition(
-            string contractName, 
+            string contractName,
+            string requiredTypeIdentity,
+            ImportCardinality cardinality, 
+            CreationPolicy creationPolicy, 
             TypeIdentity declaringType,
             ConstructorDefinition constructor,
             ParameterDefinition parameter)
-            : base(contractName, declaringType)
+            : base(
+                contractName, 
+                requiredTypeIdentity, 
+                cardinality,
+                false,
+                true,
+                creationPolicy,
+                declaringType)
         {
             {
                 Lokad.Enforce.Argument(() => parameter);
@@ -195,6 +245,7 @@ namespace Apollo.Core.Base.Plugins
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(RequiredTypeIdentity, otherType.RequiredTypeIdentity, StringComparison.Ordinal)
                 && Constructor == otherType.Constructor
                 && Parameter == otherType.Parameter;
         }
@@ -240,6 +291,7 @@ namespace Apollo.Core.Base.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContractName.GetHashCode();
+                hash = (hash * 23) ^ RequiredTypeIdentity.GetHashCode();
                 hash = (hash * 23) ^ DeclaringType.GetHashCode();
                 hash = (hash * 23) ^ Constructor.GetHashCode();
                 hash = (hash * 23) ^ Parameter.GetHashCode();
