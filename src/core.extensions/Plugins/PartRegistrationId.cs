@@ -14,23 +14,23 @@ namespace Apollo.Core.Extensions.Plugins
     /// Defines the ID for the registration of an object in an object group.
     /// </summary>
     [Serializable]
-    public sealed class ObjectRegistrationId : Id<ObjectRegistrationId, string>
+    public sealed class PartRegistrationId : Id<PartRegistrationId, string>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectRegistrationId"/> class.
+        /// Initializes a new instance of the <see cref="PartRegistrationId"/> class.
         /// </summary>
         /// <param name="typeName">The type of object for which this ID is valid.</param>
         /// <param name="number">The index of the object in the owning group.</param>
-        public ObjectRegistrationId(string typeName, int number)
+        public PartRegistrationId(string typeName, int number)
             : this(string.Format(CultureInfo.InvariantCulture, "{0}-{1}", typeName, number))
         { 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ObjectRegistrationId"/> class.
+        /// Initializes a new instance of the <see cref="PartRegistrationId"/> class.
         /// </summary>
         /// <param name="id">The text value that forms the ID.</param>
-        private ObjectRegistrationId(string id)
+        private PartRegistrationId(string id)
             : base(id)
         { 
         }
@@ -42,9 +42,9 @@ namespace Apollo.Core.Extensions.Plugins
         /// <returns>
         /// A copy of the current ID number.
         /// </returns>
-        protected override ObjectRegistrationId Clone(string value)
+        protected override PartRegistrationId Clone(string value)
         {
-            return new ObjectRegistrationId(value);
+            return new PartRegistrationId(value);
         }
 
         /// <summary>

@@ -8,13 +8,13 @@ using System;
 using System.Collections.Generic;
 using Apollo.Core.Base.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Stores the serialized information for a given <see cref="Type"/>.
     /// </summary>
     [Serializable]
-    internal sealed class PluginTypeInfo
+    public sealed class PartDefinition
     {
         /// <summary>
         /// Gets or sets the serialized type info.

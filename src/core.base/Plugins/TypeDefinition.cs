@@ -94,10 +94,16 @@ namespace Apollo.Core.Base.Plugins
             
             // Note that we don't want to go back to the identity generator for our own type, otherwise we'll keep looping forever.
             // This is kinda ugly because we shouldn't have to think about this here ...
+            var identity = TypeIdentity.CreateDefinition(type);
+
+            // Generic types that don't have a base generic type have themselves as their own generic type definition!
+            // e.g. the generic type definition for IEnumerable<T> is ... IEnumerable<T>. So we only assign a 
+            // generic type definition to a type that isn't one itself.
             return new TypeDefinition(
-                TypeIdentity.CreateDefinition(type),
+                identity,
                 type.BaseType != null ? identityGenerator(type.BaseType) : null,
                 type.GetInterfaces().Select(i => identityGenerator(i)).ToArray(),
+                identity.IsGenericType && type != type.GetGenericTypeDefinition() ? identityGenerator(type.GetGenericTypeDefinition()) : null,
                 type.IsClass,
                 type.IsInterface);
         }
@@ -132,6 +138,11 @@ namespace Apollo.Core.Base.Plugins
         private readonly TypeIdentity[] m_BaseInterfaces;
 
         /// <summary>
+        /// The generic type definition for the current type if there is one; otherwise <see langword="null" />.
+        /// </summary>
+        private readonly TypeIdentity m_GenericTypeDefinition;
+
+        /// <summary>
         /// A flag indicating if the current type is a class or not.
         /// </summary>
         private readonly bool m_IsClass;
@@ -149,12 +160,17 @@ namespace Apollo.Core.Base.Plugins
         /// The object that provides the serialized identity of the base class for the type. Maybe <see langword="null"/>.
         /// </param>
         /// <param name="baseInterfaces">The collection of identities for the implemented interfaces.</param>
+        /// <param name="genericTypeDefinition">
+        /// The generic type definition for the current type, or <see langword="null" /> if there is no generic type definition 
+        /// for the current type.
+        /// </param>
         /// <param name="isClass">Indicates if the type is a class.</param>
         /// <param name="isInterface">Indicates if a type is an interface.</param>
         private TypeDefinition(
             TypeIdentity identity,
             TypeIdentity baseType,
             TypeIdentity[] baseInterfaces,
+            TypeIdentity genericTypeDefinition,
             bool isClass,
             bool isInterface)
         {
@@ -166,6 +182,7 @@ namespace Apollo.Core.Base.Plugins
             m_Identity = identity;
             m_Base = baseType;
             m_BaseInterfaces = baseInterfaces;
+            m_GenericTypeDefinition = genericTypeDefinition;
             m_IsClass = isClass;
             m_IsInterface = isInterface;
         }
@@ -200,6 +217,19 @@ namespace Apollo.Core.Base.Plugins
             get
             {
                 return m_BaseInterfaces;
+            }
+        }
+
+        /// <summary>
+        /// Gets the identity of the type that is the generic type definition for the 
+        /// current type, or <see langword="null" /> if the current type has no
+        /// generic type definition.
+        /// </summary>
+        public TypeIdentity GenericTypeDefinition
+        {
+            get
+            {
+                return m_GenericTypeDefinition;
             }
         }
 

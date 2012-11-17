@@ -15,7 +15,7 @@ using Apollo.Utilities.History;
 namespace Apollo.Core.Host.Plugins
 {
     /// <summary>
-    /// Provides methods for the creation of schedules that belong to a specific component group.
+    /// Provides methods for the creation of schedules that belong to a specific part group.
     /// </summary>
     internal sealed class ScheduleDefinitionBuilder : IRegisterSchedules
     {
@@ -44,7 +44,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleDefinitionBuilder"/> class.
         /// </summary>
-        /// <param name="owner">The object that is building the component group to which the current schedule will belong.</param>
+        /// <param name="owner">The object that is building the part group to which the current schedule will belong.</param>
         /// <param name="scheduleBuilder">The object that is used to build the schedule.</param>
         public ScheduleDefinitionBuilder(IOwnScheduleDefinitions owner, IBuildFixedSchedules scheduleBuilder)
         {

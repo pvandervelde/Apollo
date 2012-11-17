@@ -68,9 +68,11 @@
     <Compile Include="Plugins\ExportRegistrationIdTest.cs" />
     <Compile Include="Plugins\GroupRegistrationIdTest.cs" />
     <Compile Include="Plugins\ImportRegistrationIdTest.cs" />
-    <Compile Include="Plugins\ObjectRegistrationIdTest.cs" />
+    <Compile Include="Plugins\PartRegistrationIdTest.cs" />
     <Compile Include="Plugins\ScheduleActionRegistrationIdTest.cs" />
     <Compile Include="Plugins\ScheduleConditionRegistrationIdTest.cs" />
+    <Compile Include="Plugins\UnknownExportDefinitionExceptionTest.cs" />
+    <Compile Include="Plugins\UnknownImportDefinitionExceptionTest.cs" />
     <Compile Include="Plugins\UnknownPluginTypeExceptionTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Scheduling\CannotCreateASynchronizationBlockWithoutVariablesExceptionTest.cs" />

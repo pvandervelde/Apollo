@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition.Primitives;
 using System.Diagnostics;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
@@ -16,7 +17,7 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Host.Plugins
 {
     /// <summary>
-    /// Provides methods for the creation of one or more component groups.
+    /// Provides methods for the creation of one or more part groups.
     /// </summary>
     internal sealed class GroupDefinitionBuilder : IRegisterGroupDefinitions, IOwnScheduleDefinitions
     {
@@ -33,34 +34,34 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The method that is used to store the generated group definitions.
         /// </summary>
-        private readonly Action<PluginGroupInfo> m_Storage;
+        private readonly IPluginRepository m_Repository;
 
         /// <summary>
-        /// The collection of known plugin types.
+        /// The object that matches part imports with part exports.
         /// </summary>
-        private readonly IEnumerable<PluginTypeInfo> m_KnownPlugins;
+        private readonly IConnectParts m_ImportEngine;
 
         /// <summary>
         /// The collection that holds the objects that have been registered for the
         /// current group.
         /// </summary>
-        private Dictionary<Type, List<GroupObjectDefinition>> m_Objects
-            = new Dictionary<Type, List<GroupObjectDefinition>>();
+        private Dictionary<Type, List<GroupPartDefinition>> m_Objects
+            = new Dictionary<Type, List<GroupPartDefinition>>();
 
         /// <summary>
         /// The collection that holds the connections for the current group.
         /// </summary>
-        private Dictionary<ImportRegistrationId, ExportRegistrationId> m_Connections
-            = new Dictionary<ImportRegistrationId, ExportRegistrationId>();
+        private Dictionary<ImportRegistrationId, List<ExportRegistrationId>> m_Connections
+            = new Dictionary<ImportRegistrationId, List<ExportRegistrationId>>();
 
         /// <summary>
-        /// The collection of actions that are registered for all the schedules in the component group.
+        /// The collection of actions that are registered for all the schedules in the part group.
         /// </summary>
         private Dictionary<ScheduleActionRegistrationId, ScheduleElementId> m_Actions
             = new Dictionary<ScheduleActionRegistrationId, ScheduleElementId>();
 
         /// <summary>
-        /// The collection of conditions that are registred for all the schedules in the component group.
+        /// The collection of conditions that are registred for all the schedules in the part group.
         /// </summary>
         private Dictionary<ScheduleConditionRegistrationId, ScheduleElementId> m_Conditions
             = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();
@@ -84,37 +85,39 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupDefinitionBuilder"/> class.
         /// </summary>
-        /// <param name="knownPlugins">The collection containing information about the known plugins.</param>
+        /// <param name="repository">The object that stores information about all the known parts and part groups.</param>
+        /// <param name="importEngine">The object that matches part imports with part exports.</param>
         /// <param name="identityGenerator">The function that generates type identity objects.</param>
         /// <param name="builderGenerator">The function that is used to create schedule builders.</param>
-        /// <param name="storage">The method that is used to store the generated group definitions.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="builderGenerator"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="repository"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="importEngine"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="storage"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="knownPlugins"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="builderGenerator"/> is <see langword="null" />.
         /// </exception>
         public GroupDefinitionBuilder(
-            IEnumerable<PluginTypeInfo> knownPlugins,
+            IPluginRepository repository,
+            IConnectParts importEngine,
             Func<Type, TypeIdentity> identityGenerator,
-            Func<IBuildFixedSchedules> builderGenerator,
-            Action<PluginGroupInfo> storage)
+            Func<IBuildFixedSchedules> builderGenerator)
         {
             {
+                Lokad.Enforce.Argument(() => repository);
+                Lokad.Enforce.Argument(() => importEngine);
+                Lokad.Enforce.Argument(() => identityGenerator);
                 Lokad.Enforce.Argument(() => builderGenerator);
-                Lokad.Enforce.Argument(() => knownPlugins);
             }
 
             m_BuilderGenerator = builderGenerator;
+            m_ImportEngine = importEngine;
             m_IdentityGenerator = identityGenerator;
-            m_Storage = storage;
-            m_KnownPlugins = knownPlugins;
+            m_Repository = repository;
         }
 
         /// <summary>
@@ -134,9 +137,9 @@ namespace Apollo.Core.Host.Plugins
         /// An object that provides a unique ID for the registered object and provides the IDs for the imports, exports,
         /// conditions and actions on that object.
         /// </returns>
-        public IObjectRegistration RegisterObject(Type type)
+        public IPartRegistration RegisterObject(Type type)
         {
-            var plugin = m_KnownPlugins.Where(p => p.Type.Equals(type)).FirstOrDefault();
+            var plugin = m_Repository.Parts().Where(p => p.Type.Equals(type)).FirstOrDefault();
             if (plugin == null)
             {
                 throw new UnknownPluginTypeException();
@@ -144,7 +147,7 @@ namespace Apollo.Core.Host.Plugins
 
             if (!m_Objects.ContainsKey(type))
             {
-                m_Objects.Add(type, new List<GroupObjectDefinition>());
+                m_Objects.Add(type, new List<GroupPartDefinition>());
             }
 
             var collection = m_Objects[type];
@@ -162,7 +165,7 @@ namespace Apollo.Core.Host.Plugins
                 c => new ScheduleConditionRegistrationId(type, collection.Count, c.ContractName),
                 c => c);
 
-            var registration = new GroupObjectDefinition(
+            var registration = new GroupPartDefinition(
                 m_IdentityGenerator(type),
                 collection.Count,
                 exports,
@@ -177,22 +180,35 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Connects the export with the import.
         /// </summary>
-        /// <param name="exportRegistration">The ID of the export.</param>
         /// <param name="importRegistration">The ID of the import.</param>
-        public void Connect(ExportRegistrationId exportRegistration, ImportRegistrationId importRegistration)
+        /// <param name="exportRegistration">The ID of the export.</param>
+        public void Connect(ImportRegistrationId importRegistration, ExportRegistrationId exportRegistration)
         {
-            if (!importRegistration.Accepts(exportRegistration))
+            {
+                Lokad.Enforce.Argument(() => importRegistration);
+                Lokad.Enforce.Argument(() => exportRegistration);
+            }
+
+            var import = m_Objects.SelectMany(t => t.Value).PartImportById(importRegistration);
+            var export = m_Objects.SelectMany(t => t.Value).PartExportById(exportRegistration);
+            if (!m_ImportEngine.Accepts(import, export))
             {
                 throw new CannotMapExportToImportException();
             }
 
             if (!m_Connections.ContainsKey(importRegistration))
             {
-                m_Connections.Add(importRegistration, exportRegistration);
+                m_Connections.Add(importRegistration, new List<ExportRegistrationId>());
+            }
+
+            var list = m_Connections[importRegistration];
+            if ((import.Cardinality == ImportCardinality.ExactlyOne || import.Cardinality == ImportCardinality.ZeroOrOne) && (list.Count > 0))
+            {
+                list[0] = exportRegistration;
             }
             else
             {
-                m_Connections[importRegistration] = exportRegistration;
+                list.Add(exportRegistration);
             }
         }
 
@@ -284,9 +300,9 @@ namespace Apollo.Core.Host.Plugins
         /// <returns>The registration ID of the group.</returns>
         public GroupRegistrationId Register(string name)
         {
-            var definition = new PluginGroupInfo(name);
+            var definition = new GroupDefinition(name);
             definition.Objects = m_Objects.SelectMany(p => p.Value).ToList();
-            definition.InternalConnections = m_Connections;
+            definition.InternalConnections = m_Connections.ToDictionary(p => p.Key, p => (IEnumerable<ExportRegistrationId>)p.Value);
 
             if (m_Schedule != null)
             {
@@ -320,7 +336,7 @@ namespace Apollo.Core.Host.Plugins
 
             Clear();
 
-            m_Storage(definition);
+            m_Repository.AddGroup(definition);
             return definition.Id;
         }
 
@@ -329,7 +345,7 @@ namespace Apollo.Core.Host.Plugins
             return m_Objects
                 .SelectMany(p => p.Value)
                 .SelectMany(o => o.RegisteredExports)
-                .Where(e => !m_Connections.Values.Contains(e))
+                .Where(e => !m_Connections.Values.SelectMany(l => l).Contains(e))
                 .ToList();
         }
 
@@ -338,8 +354,8 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         public void Clear()
         {
-            m_Objects = new Dictionary<Type, List<GroupObjectDefinition>>();
-            m_Connections = new Dictionary<ImportRegistrationId, ExportRegistrationId>();
+            m_Objects = new Dictionary<Type, List<GroupPartDefinition>>();
+            m_Connections = new Dictionary<ImportRegistrationId, List<ExportRegistrationId>>();
 
             m_Actions = new Dictionary<ScheduleActionRegistrationId, ScheduleElementId>();
             m_Conditions = new Dictionary<ScheduleConditionRegistrationId, ScheduleElementId>();

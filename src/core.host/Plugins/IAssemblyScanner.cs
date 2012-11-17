@@ -21,14 +21,6 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="assemblyFilesToScan">
         /// The collection that contains the file paths to all the assemblies to be scanned.
         /// </param>
-        /// <param name="plugins">The collection that describes the plugin information in the given assembly files.</param>
-        /// <param name="types">
-        /// The collection that provides information about all the types which are required to complete the type hierarchy
-        /// for the plugin types.
-        /// </param>
-        void Scan(
-            IEnumerable<string> assemblyFilesToScan, 
-            out IEnumerable<PluginInfo> plugins, 
-            out IEnumerable<TypeDefinition> types);
+        void Scan(IEnumerable<string> assemblyFilesToScan);
     }
 }

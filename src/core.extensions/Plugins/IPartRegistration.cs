@@ -12,12 +12,12 @@ namespace Apollo.Core.Extensions.Plugins
     /// Defines the interface for objects that store information about the registration of an object
     /// in a group of plugin components.
     /// </summary>
-    public interface IObjectRegistration
+    public interface IPartRegistration
     {
         /// <summary>
         /// Gets the ID of the current registration.
         /// </summary>
-        ObjectRegistrationId Id
+        PartRegistrationId Id
         {
             get;
         }

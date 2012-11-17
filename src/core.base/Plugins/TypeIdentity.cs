@@ -5,6 +5,7 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
@@ -119,6 +120,11 @@ namespace Apollo.Core.Base.Plugins
             = new TypeIdentity[0];
 
         /// <summary>
+        /// A flag indicating if the current type is a generic type.
+        /// </summary>
+        private readonly bool m_IsGenericType;
+
+        /// <summary>
         /// A flag indicating that the current type has generic parameter, some of which 
         /// have not been replaced by real types.
         /// </summary>
@@ -167,6 +173,7 @@ namespace Apollo.Core.Base.Plugins
                 m_DeclaringType = new TypeIdentity(type.DeclaringType);
             }
 
+            m_IsGenericType = type.IsGenericType;
             if (type.IsGenericType)
             {
                 // Given that it is not possible for a generic type to use itself as a generic parameter
@@ -302,6 +309,74 @@ namespace Apollo.Core.Base.Plugins
             get
             {
                 return m_Assembly;
+            }
+        }
+
+        /// <summary>
+        /// Gets the identity for the type that declares the current nested type or generic parameter type.
+        /// </summary>
+        public TypeIdentity DeclaringType
+        {
+            get
+            {
+                return m_DeclaringType;
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection that contains all the generic type arguments for the current type.
+        /// </summary>
+        public IEnumerable<TypeIdentity> TypeArguments
+        {
+            get
+            {
+                return m_TypeArguments;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current type is a generic type.
+        /// </summary>
+        public bool IsGenericType
+        {
+            get
+            {
+                return m_IsGenericType;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current type has one or more generic parameters
+        /// which have not been replaced by real types.
+        /// </summary>
+        public bool IsOpenGeneric
+        {
+            get
+            {
+                return m_IsOpenGeneric;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current type is a generic parameter (e.g. T) for a 
+        /// generic type.
+        /// </summary>
+        public bool IsGenericParameter
+        {
+            get 
+            {
+                return m_IsGenericParameter;
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the current type is a nested type or not.
+        /// </summary>
+        public bool IsNested
+        {
+            get
+            {
+                return m_IsNested;
             }
         }
 

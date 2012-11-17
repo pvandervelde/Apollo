@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -11,7 +12,6 @@ using System.Reflection;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
-using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
 using Apollo.Utilities;
 using Gallio.Framework;
@@ -25,26 +25,64 @@ namespace Apollo.Core.Host.Plugins
             Justification = "Unit tests do not need documentation.")]
     public sealed class RemoteAssemblyScannerTest
     {
-        private static IEnumerable<PluginInfo> s_Plugins;
         private static IEnumerable<TypeDefinition> s_Types;
+        private static IEnumerable<PartDefinition> s_Parts;
+        private static IEnumerable<GroupDefinition> s_Groups;
 
         [FixtureSetUp]
         public void Setup()
         {
-            var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
-            var scanner = new RemoteAssemblyScanner(
-                new Mock<ILogMessagesFromRemoteAppDomains>().Object,
-                () => new FixedScheduleBuilder());
+            try
+            {
+                var types = new List<TypeDefinition>();
+                var parts = new List<PartDefinition>();
+                var groups = new List<GroupDefinition>();
+                var repository = new Mock<IPluginRepository>();
+                {
+                    repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<string>()))
+                        .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Any());
+                    repository.Setup(r => r.ContainsDefinitionForType(It.IsAny<TypeIdentity>()))
+                        .Returns<TypeIdentity>(n => types.Where(t => t.Identity.Equals(n)).Any());
+                    repository.Setup(r => r.IdentityByName(It.IsAny<string>()))
+                        .Returns<string>(n => types.Where(t => t.Identity.AssemblyQualifiedName.Equals(n)).Select(t => t.Identity).First());
+                    repository.Setup(r => r.Parts())
+                        .Returns(parts);
+                    repository.Setup(r => r.AddType(It.IsAny<TypeDefinition>()))
+                        .Callback<TypeDefinition>(t => types.Add(t));
+                    repository.Setup(r => r.AddPart(It.IsAny<PartDefinition>()))
+                        .Callback<PartDefinition>(p => parts.Add(p));
+                    repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                        .Callback<GroupDefinition>(g => groups.Add(g));
+                }
 
-            IEnumerable<PluginInfo> plugins;
-            IEnumerable<TypeDefinition> types;
-            scanner.Scan(
-                new List<string> { localPath },
-                out plugins,
-                out types);
+                var importEngine = new Mock<IConnectParts>();
+                {
+                    importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                        .Returns(true);
+                }
 
-            s_Plugins = plugins;
-            s_Types = types;
+                var scanner = new RemoteAssemblyScanner(
+                    repository.Object,
+                    importEngine.Object,
+                    new Mock<ILogMessagesFromRemoteAppDomains>().Object,
+                    () => new FixedScheduleBuilder());
+
+                var localPath = Assembly.GetExecutingAssembly().LocalFilePath();
+                scanner.Scan(new List<string> { localPath });
+
+                s_Types = types;
+                s_Parts = parts;
+                s_Groups = groups;
+            }
+            catch (Exception e)
+            {
+                DiagnosticLog.WriteLine(
+                    string.Format(
+                        "Exception in RemoteAssemblyScannerTest.Setup: {0}",
+                        e));
+
+                throw;
+            }
         }
 
         [Test]
@@ -53,7 +91,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnTypeWithName));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -72,7 +110,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnTypeWithType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -91,7 +129,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -110,7 +148,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnPropertyWithName));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -133,7 +171,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnPropertyWithType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -156,7 +194,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnProperty));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -179,7 +217,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnMethodWithName));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -202,7 +240,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnMethodWithType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -225,7 +263,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ExportOnMethod));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -250,7 +288,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithName));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -276,7 +314,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructorWithType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -302,7 +340,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnConstructor));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -328,7 +366,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithName));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -350,7 +388,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnPropertyWithType));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -372,7 +410,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ImportOnProperty));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -394,7 +432,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ActionOnMethod));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -416,7 +454,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ConditionOnMethod));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -437,7 +475,7 @@ namespace Apollo.Core.Host.Plugins
             var id = TypeIdentity.CreateDefinition(typeof(ConditionOnProperty));
             Assert.IsTrue(s_Types.Exists(s => s.Identity.Equals(id)));
 
-            var plugins = s_Plugins.SelectMany(p => p.Types).Where(p => p.Type.Equals(id));
+            var plugins = s_Parts.Where(p => p.Type.Equals(id));
             Assert.IsTrue(plugins.Count() == 1);
 
             var plugin = plugins.First();
@@ -455,10 +493,9 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void GroupWithExport()
         {
-            var groups = s_Plugins.SelectMany(p => p.Groups);
-            Assert.AreEqual(1, groups.Count());
+            Assert.AreEqual(1, s_Groups.Count());
 
-            var group = groups.First();
+            var group = s_Groups.First();
 
             Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupExport.ContainingGroup);
             Assert.AreEqual(GroupExporter.GroupExportName, group.GroupExport.ContractName);
@@ -470,10 +507,9 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void GroupWithImport()
         {
-            var groups = s_Plugins.SelectMany(p => p.Groups);
-            Assert.AreEqual(1, groups.Count());
+            Assert.AreEqual(1, s_Groups.Count());
 
-            var group = groups.First();
+            var group = s_Groups.First();
             Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupImports.First().ContainingGroup);
             Assert.IsNotNull(group.GroupImports.First().ScheduleInsertPosition);
             Assert.IsTrue(group.Schedule.Schedule.Vertices.Contains(group.GroupImports.First().ScheduleInsertPosition));

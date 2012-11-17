@@ -13,12 +13,12 @@ namespace Apollo.Core.Base.Plugins
     /// <summary>
     /// Defines a registration of a given object type for a group of plugin components.
     /// </summary>
-    public sealed class GroupObjectDefinition : IObjectRegistration
+    public sealed class GroupPartDefinition : IPartRegistration
     {
         /// <summary>
         /// The ID of the current registration.
         /// </summary>
-        private readonly ObjectRegistrationId m_Id;
+        private readonly PartRegistrationId m_Id;
 
         /// <summary>
         /// The type of the object being registered.
@@ -53,19 +53,19 @@ namespace Apollo.Core.Base.Plugins
         private readonly Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition> m_Conditions;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupObjectDefinition"/> class.
+        /// Initializes a new instance of the <see cref="GroupPartDefinition"/> class.
         /// </summary>
-        /// <param name="objectType">The type of object for which this ID is valid.</param>
+        /// <param name="partType">The type of object for which this ID is valid.</param>
         /// <param name="number">The index of the object in the owning group.</param>
         /// <param name="exports">The collection of export registrations for the current object.</param>
         /// <param name="imports">The collection of import registrations for the current object.</param>
         /// <param name="actions">The collection of schedule action registrations for the current object.</param>
         /// <param name="conditions">The collection of schedule import registrations for the current object.</param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="objectType"/> is <see langword="null" />.
+        ///     Thrown if <paramref name="partType"/> is <see langword="null" />.
         /// </exception>
-        public GroupObjectDefinition(
-            TypeIdentity objectType,
+        public GroupPartDefinition(
+            TypeIdentity partType,
             int number,
             Dictionary<ExportRegistrationId, SerializableExportDefinition> exports,
             Dictionary<ImportRegistrationId, SerializableImportDefinition> imports,
@@ -73,11 +73,11 @@ namespace Apollo.Core.Base.Plugins
             Dictionary<ScheduleConditionRegistrationId, ScheduleConditionDefinition> conditions)
         {
             {
-                Lokad.Enforce.Argument(() => objectType);
+                Lokad.Enforce.Argument(() => partType);
             }
 
-            m_Id = new ObjectRegistrationId(objectType.AssemblyQualifiedName, number);
-            m_Type = objectType;
+            m_Id = new PartRegistrationId(partType.AssemblyQualifiedName, number);
+            m_Type = partType;
             m_Index = number;
             m_Exports = exports ?? new Dictionary<ExportRegistrationId, SerializableExportDefinition>();
             m_Imports = imports ?? new Dictionary<ImportRegistrationId, SerializableImportDefinition>();
@@ -88,7 +88,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the ID of the current registration.
         /// </summary>
-        public ObjectRegistrationId Id
+        public PartRegistrationId Id
         {
             get
             {
@@ -160,6 +160,46 @@ namespace Apollo.Core.Base.Plugins
             {
                 return m_Conditions.Keys;
             }
+        }
+
+        /// <summary>
+        /// Returns the export definition that was registered with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the export.</param>
+        /// <returns>The requested export definition.</returns>
+        public SerializableExportDefinition Export(ExportRegistrationId id)
+        {
+            return m_Exports[id];
+        }
+
+        /// <summary>
+        /// Returns the import definition that was registered with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the import.</param>
+        /// <returns>The requested import definition.</returns>
+        public SerializableImportDefinition Import(ImportRegistrationId id)
+        {
+            return m_Imports[id];
+        }
+
+        /// <summary>
+        /// Returns the action definition that was registered with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the action.</param>
+        /// <returns>The requested action definition.</returns>
+        public ScheduleActionDefinition Action(ScheduleActionRegistrationId id)
+        {
+            return m_Actions[id];
+        }
+
+        /// <summary>
+        /// Returns the condition definition that was registered with the given ID.
+        /// </summary>
+        /// <param name="id">The ID of the condition.</param>
+        /// <returns>The requested condition definition.</returns>
+        public ScheduleConditionDefinition Condition(ScheduleConditionRegistrationId id)
+        {
+            return m_Conditions[id];
         }
     }
 }

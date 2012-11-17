@@ -29,14 +29,14 @@ namespace Apollo.Core.Extensions.Plugins
         /// An object that provides a unique ID for the registered object and provides the IDs for the imports, exports,
         /// conditions and actions on that object.
         /// </returns>
-        IObjectRegistration RegisterObject(Type type);
+        IPartRegistration RegisterObject(Type type);
 
         /// <summary>
         /// Connects the export with the import.
         /// </summary>
-        /// <param name="exportRegistration">The ID of the export.</param>
         /// <param name="importRegistration">The ID of the import.</param>
-        void Connect(ExportRegistrationId exportRegistration, ImportRegistrationId importRegistration);
+        /// <param name="exportRegistration">The ID of the export.</param>
+        void Connect(ImportRegistrationId importRegistration, ExportRegistrationId exportRegistration);
 
         /// <summary>
         /// Defines an export for the group. The export is created with the specified name

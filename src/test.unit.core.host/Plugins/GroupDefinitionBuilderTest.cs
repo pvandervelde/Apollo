@@ -17,6 +17,7 @@ using Apollo.Core.Extensions.Plugins;
 using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
 using MbUnit.Framework;
+using Moq;
 
 namespace Apollo.Core.Host.Plugins
 {
@@ -25,11 +26,11 @@ namespace Apollo.Core.Host.Plugins
         Justification = "Unit tests do not need documentation.")]
     public sealed class GroupDefinitionBuilderTest
     {
-        private static IEnumerable<PluginTypeInfo> CreatePluginTypes()
+        private static IEnumerable<PartDefinition> CreatePluginTypes()
         {
-            var plugins = new List<PluginTypeInfo> 
+            var plugins = new List<PartDefinition> 
                 {
-                    new PluginTypeInfo
+                    new PartDefinition
                         {
                             Type = TypeIdentity.CreateDefinition(typeof(ActionOnMethod)),
                             Exports = new List<SerializableExportDefinition> 
@@ -45,7 +46,7 @@ namespace Apollo.Core.Host.Plugins
                                 },
                             Conditions = new List<ScheduleConditionDefinition>(),
                         },
-                    new PluginTypeInfo
+                    new PartDefinition
                         {
                             Type = TypeIdentity.CreateDefinition(typeof(ConditionOnMethod)),
                             Exports = new List<SerializableExportDefinition> 
@@ -61,7 +62,7 @@ namespace Apollo.Core.Host.Plugins
                                         typeof(ConditionOnMethod).GetMethod("ConditionMethod"))
                                 },
                         },
-                    new PluginTypeInfo
+                    new PartDefinition
                         {
                             Type = TypeIdentity.CreateDefinition(typeof(ConditionOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
@@ -77,7 +78,7 @@ namespace Apollo.Core.Host.Plugins
                                         typeof(ConditionOnProperty).GetProperty("ConditionProperty"))
                                 },
                         },
-                    new PluginTypeInfo
+                    new PartDefinition
                         {
                             Type = TypeIdentity.CreateDefinition(typeof(ExportOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
@@ -90,7 +91,7 @@ namespace Apollo.Core.Host.Plugins
                             Actions = new List<ScheduleActionDefinition>(),
                             Conditions = new List<ScheduleConditionDefinition>(),
                         },
-                    new PluginTypeInfo
+                    new PartDefinition
                         {
                             Type = TypeIdentity.CreateDefinition(typeof(ImportOnProperty)),
                             Exports = new List<SerializableExportDefinition> 
@@ -118,12 +119,12 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void RegisterObjectWithUnknownType()
         {
-            var plugins = new List<PluginTypeInfo>();
+            var repository = new Mock<IPluginRepository>();
+            var importEngine = new Mock<IConnectParts>();
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
-            Action<PluginGroupInfo> storage = p => { };
 
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             Assert.Throws<UnknownPluginTypeException>(() => builder.RegisterObject(typeof(ExportOnPropertyWithName)));
         }
 
@@ -131,11 +132,17 @@ namespace Apollo.Core.Host.Plugins
         public void RegisterObject()
         {
             var plugins = CreatePluginTypes();
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
-            Action<PluginGroupInfo> storage = p => { };
 
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var info = builder.RegisterObject(typeof(ActionOnMethod));
 
             Assert.IsFalse(info.RegisteredConditions.Any());
@@ -151,11 +158,17 @@ namespace Apollo.Core.Host.Plugins
         public void RegisterObjectWithMultipleSameType()
         {
             var plugins = CreatePluginTypes();
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
-            Action<PluginGroupInfo> storage = p => { };
 
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var secondInfo = builder.RegisterObject(typeof(ActionOnMethod));
 
@@ -166,77 +179,121 @@ namespace Apollo.Core.Host.Plugins
         public void ConnectWithNonMatchingExport()
         {
             var plugins = CreatePluginTypes();
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
-            Action<PluginGroupInfo> storage = p => { };
 
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ActionOnMethod));
             Assert.Throws<CannotMapExportToImportException>(
-                () => builder.Connect(secondInfo.RegisteredExports.First(), firstInfo.RegisteredImports.First()));
+                () => builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First()));
         }
 
         [Test]
         public void Connect()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
-
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
-            builder.Connect(secondInfo.RegisteredExports.First(), firstInfo.RegisteredImports.First());
+            builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
 
             var groupName = "MyGroup";
             builder.Register(groupName);
 
             Assert.IsNotNull(groupInfo);
             Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Key);
-            Assert.AreEqual(secondInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value);
+            Assert.AreEqual(1, groupInfo.InternalConnections.First().Value.Count());
+            Assert.AreEqual(secondInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value.First());
         }
 
         [Test]
         public void ConnectOverridingCurrentConnection()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
-            builder.Connect(secondInfo.RegisteredExports.First(), firstInfo.RegisteredImports.First());
+            builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
 
             var thirdInfo = builder.RegisterObject(typeof(ExportOnProperty));
-            builder.Connect(thirdInfo.RegisteredExports.First(), firstInfo.RegisteredImports.First());
+            builder.Connect(firstInfo.RegisteredImports.First(), thirdInfo.RegisteredExports.First());
 
             var groupName = "MyGroup";
             builder.Register(groupName);
 
             Assert.IsNotNull(groupInfo);
             Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Key);
-            Assert.AreEqual(thirdInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value);
+            Assert.AreEqual(1, groupInfo.InternalConnections.First().Value.Count());
+            Assert.AreEqual(thirdInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value.First());
         }
 
         [Test]
         public void DefineSchedule()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var actionInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionInfo = builder.RegisterObject(typeof(ConditionOnProperty));
 
@@ -260,18 +317,30 @@ namespace Apollo.Core.Host.Plugins
         public void DefineExport()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
             var secondInfo = builder.RegisterObject(typeof(ExportOnProperty));
             var thirdInfo = builder.RegisterObject(typeof(ActionOnMethod));
             var fourthInfo = builder.RegisterObject(typeof(ConditionOnProperty));
-            builder.Connect(secondInfo.RegisteredExports.First(), firstInfo.RegisteredImports.First());
+            builder.Connect(firstInfo.RegisteredImports.First(), secondInfo.RegisteredExports.First());
 
             var registrator = builder.ScheduleRegistrator();
             {
@@ -306,13 +375,25 @@ namespace Apollo.Core.Host.Plugins
         public void DefineImportWithScheduleElement()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
 
             var registrator = builder.ScheduleRegistrator();
@@ -338,13 +419,25 @@ namespace Apollo.Core.Host.Plugins
         public void DefineImportWithObjectImports()
         {
             var plugins = CreatePluginTypes();
+            GroupDefinition groupInfo = null;
+            var repository = new Mock<IPluginRepository>();
+            {
+                repository.Setup(r => r.Parts())
+                    .Returns(plugins);
+                repository.Setup(r => r.AddGroup(It.IsAny<GroupDefinition>()))
+                    .Callback<GroupDefinition>(g => groupInfo = g);
+            }
+
+            var importEngine = new Mock<IConnectParts>();
+            {
+                importEngine.Setup(i => i.Accepts(It.IsAny<SerializableImportDefinition>(), It.IsAny<SerializableExportDefinition>()))
+                    .Returns(true);
+            }
+
             Func<Type, TypeIdentity> identityGenerator = t => TypeIdentity.CreateDefinition(t);
             Func<IBuildFixedSchedules> scheduleBuilder = () => new FixedScheduleBuilder();
 
-            PluginGroupInfo groupInfo = null;
-            Action<PluginGroupInfo> storage = p => groupInfo = p;
-
-            var builder = new GroupDefinitionBuilder(plugins, identityGenerator, scheduleBuilder, storage);
+            var builder = new GroupDefinitionBuilder(repository.Object, importEngine.Object, identityGenerator, scheduleBuilder);
             var firstInfo = builder.RegisterObject(typeof(ImportOnProperty));
 
             var groupImportName = "groupImport";

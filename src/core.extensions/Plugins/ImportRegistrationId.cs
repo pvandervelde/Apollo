@@ -148,19 +148,5 @@ namespace Apollo.Core.Extensions.Plugins
         {
             return string.Format(CultureInfo.InvariantCulture, @"Import registration: {0}", InternalValue);
         }
-
-        /// <summary>
-        /// Returns a value indicating if the current import would accept the given export.
-        /// </summary>
-        /// <param name="export">The export.</param>
-        /// <returns>
-        ///     <see langword="true"/> if the current import can accept the given export; otherwise, <see langword="false" />.
-        /// </returns>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
-            Justification = "Documentation can start with a language keyword")]
-        public bool Accepts(ExportRegistrationId export)
-        {
-            return string.Equals(ContractName, export.ContractName, StringComparison.Ordinal);
-        }
     }
 }

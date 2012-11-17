@@ -4,28 +4,46 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Apollo.Core.Base.Plugins;
 
 namespace Apollo.Core.Host.Plugins
 {
-    internal interface IPluginRepository
+    /// <summary>
+    /// Defines the interface for objects that store all the information about the parts and the part groups.
+    /// </summary>
+    internal interface IPluginRepository : ISatisfyPluginRequests
     {
+        /// <summary>
+        /// Returns a collection containing the descriptions of all the known plugins.
+        /// </summary>
+        /// <returns>
+        /// A collection containing the descriptions of all the known plugins.
+        /// </returns>
         IEnumerable<PluginFileInfo> KnownPluginFiles();
 
+        /// <summary>
+        /// Removes all the plugins related to the given plugin files.
+        /// </summary>
+        /// <param name="deletedFiles">The collection of plugin file paths that were removed.</param>
         void RemovePlugins(IEnumerable<string> deletedFiles);
 
-        void Store(IEnumerable<PluginInfo> plugins, IEnumerable<TypeDefinition> types);
+        /// <summary>
+        /// Adds a new type definition to the repository.
+        /// </summary>
+        /// <param name="type">The type definition.</param>
+        void AddType(TypeDefinition type);
 
-        // When we store the different plug-ins then we check:
-        // - All types are resolved
-        // - All constructor imports can be resolved
-        // 
-        // For groups we check
-        // - Transformations do not link to data storage directly
-        // - Single transformation function is known. Takes one or more inputs and produces a single output
+        /// <summary>
+        /// Adds a new part to the repository.
+        /// </summary>
+        /// <param name="part">The part definition.</param>
+        void AddPart(PartDefinition part);
+
+        /// <summary>
+        /// Adds a new part group to the repository.
+        /// </summary>
+        /// <param name="group">The part group definition.</param>
+        void AddGroup(GroupDefinition group);
     }
 }

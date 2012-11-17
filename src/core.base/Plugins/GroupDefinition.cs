@@ -6,16 +6,15 @@
 
 using System;
 using System.Collections.Generic;
-using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Stores the serialized information for a plugin group.
     /// </summary>
     [Serializable]
-    internal sealed class PluginGroupInfo
+    public sealed class GroupDefinition
     {
         /// <summary>
         /// The ID of the group.
@@ -23,7 +22,7 @@ namespace Apollo.Core.Host.Plugins
         private readonly GroupRegistrationId m_Id;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PluginGroupInfo"/> class.
+        /// Initializes a new instance of the <see cref="GroupDefinition"/> class.
         /// </summary>
         /// <param name="groupName">The unique name of the group.</param>
         /// <exception cref="ArgumentNullException">
@@ -32,7 +31,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentException">
         ///     Thrown if <paramref name="groupName"/> is an empty string.
         /// </exception>
-        public PluginGroupInfo(string groupName)
+        public GroupDefinition(string groupName)
         {
             {
                 Lokad.Enforce.Argument(() => groupName);
@@ -56,7 +55,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection that contains all the object definitions for the current group.
         /// </summary>
-        public IEnumerable<GroupObjectDefinition> Objects
+        public IEnumerable<GroupPartDefinition> Objects
         {
             get;
             set;
@@ -65,7 +64,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Gets or sets the collection that maps the imports to the connected exports.
         /// </summary>
-        public IDictionary<ImportRegistrationId, ExportRegistrationId> InternalConnections
+        public IDictionary<ImportRegistrationId, IEnumerable<ExportRegistrationId>> InternalConnections
         {
             get;
             set;

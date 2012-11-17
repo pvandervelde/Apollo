@@ -299,7 +299,7 @@ namespace Apollo.Core.Base.Plugins
             Assert.AreEqual("AB", obj.RequiredTypeIdentity);
             Assert.AreEqual(ImportCardinality.ExactlyOne, obj.Cardinality);
             Assert.IsTrue(obj.IsRecomposable);
-            Assert.IsFalse(obj.IsPreRequisite);
+            Assert.IsFalse(obj.IsPrerequisite);
             Assert.AreEqual(CreationPolicy.NonShared, obj.RequiredCreationPolicy);
             Assert.AreEqual(TypeIdentity.CreateDefinition(property.DeclaringType), obj.DeclaringType);
             Assert.AreEqual(PropertyDefinition.CreateDefinition(property), obj.Property);

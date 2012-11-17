@@ -18,10 +18,10 @@ namespace Apollo.Core.Extensions.Plugins
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class ObjectRegistrationIdTest
+    public sealed class PartRegistrationIdTest
     {
         [VerifyContract]
-        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<ObjectRegistrationId>
+        public readonly IContract HashCodeVerification = new HashCodeAcceptanceContract<PartRegistrationId>
         {
             // Note that the collision probability depends quite a lot on the number of 
             // elements you test on. The fewer items you test on the larger the collision probability
@@ -30,31 +30,31 @@ namespace Apollo.Core.Extensions.Plugins
             CollisionProbabilityLimit = CollisionProbability.VeryLow,
             UniformDistributionQuality = UniformDistributionQuality.Excellent,
             DistinctInstances =
-                new List<ObjectRegistrationId> 
+                new List<PartRegistrationId> 
                         {
-                            new ObjectRegistrationId(typeof(string).FullName, 0),
-                            new ObjectRegistrationId(typeof(int).FullName, 0),
-                            new ObjectRegistrationId(typeof(string).FullName, 1),
+                            new PartRegistrationId(typeof(string).FullName, 0),
+                            new PartRegistrationId(typeof(int).FullName, 0),
+                            new PartRegistrationId(typeof(string).FullName, 1),
                         },
         };
 
         [VerifyContract]
-        public readonly IContract EqualityVerification = new EqualityContract<ObjectRegistrationId>
+        public readonly IContract EqualityVerification = new EqualityContract<PartRegistrationId>
         {
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                     { 
-                        new ObjectRegistrationId(typeof(string).FullName, 0),
-                        new ObjectRegistrationId(typeof(int).FullName, 0),
-                        new ObjectRegistrationId(typeof(string).FullName, 1),
+                        new PartRegistrationId(typeof(string).FullName, 0),
+                        new PartRegistrationId(typeof(int).FullName, 0),
+                        new PartRegistrationId(typeof(string).FullName, 1),
                     },
         };
 
         [Test]
         public void LargerThanOperatorWithFirstObjectNull()
         {
-            ObjectRegistrationId first = null;
-            ObjectRegistrationId second = new ObjectRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId first = null;
+            PartRegistrationId second = new PartRegistrationId(typeof(string).FullName, 0);
 
             Assert.IsFalse(first > second);
         }
@@ -62,8 +62,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void LargerThanOperatorWithSecondObjectNull()
         {
-            ObjectRegistrationId first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            ObjectRegistrationId second = null;
+            PartRegistrationId first = new PartRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId second = null;
 
             Assert.IsTrue(first > second);
         }
@@ -71,8 +71,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void LargerThanOperatorWithBothObjectsNull()
         {
-            ObjectRegistrationId first = null;
-            ObjectRegistrationId second = null;
+            PartRegistrationId first = null;
+            PartRegistrationId second = null;
 
             Assert.IsFalse(first > second);
         }
@@ -80,7 +80,7 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void LargerThanOperatorWithEqualObjects()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
             var second = first.Clone();
 
             Assert.IsFalse(first > second);
@@ -89,8 +89,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void LargerThanOperatorWithFirstObjectLarger()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 1);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 1);
+            var second = new PartRegistrationId(typeof(string).FullName, 0);
 
             Assert.IsTrue(first > second);
         }
@@ -98,8 +98,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void LargerThanOperatorWithFirstObjectSmaller()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 1);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
+            var second = new PartRegistrationId(typeof(string).FullName, 1);
 
             Assert.IsFalse(first > second);
         }
@@ -107,8 +107,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithFirstObjectNull()
         {
-            ObjectRegistrationId first = null;
-            ObjectRegistrationId second = new ObjectRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId first = null;
+            PartRegistrationId second = new PartRegistrationId(typeof(string).FullName, 0);
 
             Assert.IsTrue(first < second);
         }
@@ -116,8 +116,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithSecondObjectNull()
         {
-            ObjectRegistrationId first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            ObjectRegistrationId second = null;
+            PartRegistrationId first = new PartRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -125,8 +125,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithBothObjectsNull()
         {
-            ObjectRegistrationId first = null;
-            ObjectRegistrationId second = null;
+            PartRegistrationId first = null;
+            PartRegistrationId second = null;
 
             Assert.IsFalse(first < second);
         }
@@ -134,7 +134,7 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithEqualObjects()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
             var second = first.Clone();
 
             Assert.IsFalse(first < second);
@@ -143,8 +143,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithFirstObjectLarger()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 1);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 1);
+            var second = new PartRegistrationId(typeof(string).FullName, 0);
 
             Assert.IsFalse(first < second);
         }
@@ -152,8 +152,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void SmallerThanOperatorWithFirstObjectSmaller()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 1);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
+            var second = new PartRegistrationId(typeof(string).FullName, 1);
 
             Assert.IsTrue(first < second);
         }
@@ -161,8 +161,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void Clone()
         {
-            ObjectRegistrationId first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            ObjectRegistrationId second = first.Clone();
+            PartRegistrationId first = new PartRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId second = first.Clone();
 
             Assert.AreEqual(first, second);
         }
@@ -170,7 +170,7 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void CompareToWithNullObject()
         {
-            ObjectRegistrationId first = new ObjectRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId first = new PartRegistrationId(typeof(string).FullName, 0);
             object second = null;
 
             Assert.AreEqual(1, first.CompareTo(second));
@@ -179,7 +179,7 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void CompareToOperatorWithEqualObjects()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
             object second = first.Clone();
 
             Assert.AreEqual(0, first.CompareTo(second));
@@ -188,8 +188,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void CompareToWithLargerFirstObject()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 1);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 0);
+            var first = new PartRegistrationId(typeof(string).FullName, 1);
+            var second = new PartRegistrationId(typeof(string).FullName, 0);
 
             Assert.IsTrue(first.CompareTo(second) > 0);
         }
@@ -197,8 +197,8 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void CompareToWithSmallerFirstObject()
         {
-            var first = new ObjectRegistrationId(typeof(string).FullName, 0);
-            var second = new ObjectRegistrationId(typeof(string).FullName, 1);
+            var first = new PartRegistrationId(typeof(string).FullName, 0);
+            var second = new PartRegistrationId(typeof(string).FullName, 1);
 
             Assert.IsTrue(first.CompareTo(second) < 0);
         }
@@ -206,7 +206,7 @@ namespace Apollo.Core.Extensions.Plugins
         [Test]
         public void CompareToWithUnequalObjectTypes()
         {
-            ObjectRegistrationId first = new ObjectRegistrationId(typeof(string).FullName, 0);
+            PartRegistrationId first = new PartRegistrationId(typeof(string).FullName, 0);
             object second = new object();
 
             Assert.Throws<ArgumentException>(() => first.CompareTo(second));

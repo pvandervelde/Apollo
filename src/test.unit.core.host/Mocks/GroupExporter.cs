@@ -25,7 +25,7 @@ namespace Apollo.Core.Host.Mocks
             var exportOnProperty = builder.RegisterObject(typeof(ExportOnProperty));
             var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
-            builder.Connect(exportOnProperty.RegisteredExports.First(), importOnProperty.RegisteredImports.First());
+            builder.Connect(importOnProperty.RegisteredImports.First(), exportOnProperty.RegisteredExports.First());
 
             EditableInsertVertex insertPoint;
             var registrator = builder.ScheduleRegistrator();

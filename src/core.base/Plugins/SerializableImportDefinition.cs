@@ -152,7 +152,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets a value indicating whether the import should be satisfied before parts can be produced.
         /// </summary>
-        public bool IsPreRequisite
+        public bool IsPrerequisite
         {
             get
             {
