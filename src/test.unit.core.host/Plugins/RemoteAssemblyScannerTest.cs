@@ -493,28 +493,28 @@ namespace Apollo.Core.Host.Plugins
         [Test]
         public void GroupWithExport()
         {
-            Assert.AreEqual(1, s_Groups.Count());
+            Assert.AreEqual(3, s_Groups.Count());
 
             var group = s_Groups.First();
 
-            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupExport.ContainingGroup);
+            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName1), group.GroupExport.ContainingGroup);
             Assert.AreEqual(GroupExporter.GroupExportName, group.GroupExport.ContractName);
             Assert.AreEqual(group.Schedule.ScheduleId, group.GroupExport.ScheduleToExport);
 
-            Assert.AreEqual(3, group.GroupExport.ProvidedExports.Count());
+            Assert.AreEqual(4, group.GroupExport.ProvidedExports.Count());
         }
 
         [Test]
         public void GroupWithImport()
         {
-            Assert.AreEqual(1, s_Groups.Count());
+            Assert.AreEqual(3, s_Groups.Count());
 
             var group = s_Groups.First();
-            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName), group.GroupImports.First().ContainingGroup);
+            Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName1), group.GroupImports.First().ContainingGroup);
             Assert.IsNotNull(group.GroupImports.First().ScheduleInsertPosition);
             Assert.IsTrue(group.Schedule.Schedule.Vertices.Contains(group.GroupImports.First().ScheduleInsertPosition));
 
-            Assert.IsFalse(group.GroupImports.First().ImportsToMatch.Any());
+            Assert.AreEqual(1, group.GroupImports.First().ImportsToMatch.Count());
         }
     }
 }

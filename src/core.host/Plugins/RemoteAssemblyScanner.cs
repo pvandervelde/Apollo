@@ -29,23 +29,74 @@ namespace Apollo.Core.Host.Plugins
     /// </summary>
     internal sealed class RemoteAssemblyScanner : MarshalByRefObject, IAssemblyScanner
     {
-        private static Func<Type, TypeIdentity> IdentityFactory(IPluginRepository typeStorage)
+        private static Func<Type, TypeIdentity> IdentityFactory(IPluginRepository typeStorage, IDictionary<Type, TypeIdentity> currentlyBuilding)
         {
             // Fake out the compiler because we need the function inside the function itself
             Func<Type, TypeIdentity> createTypeIdentity = null;
             createTypeIdentity =
                 t =>
                 {
-                    if (!typeStorage.ContainsDefinitionForType(t.AssemblyQualifiedName))
+                    // First make sure we're not already creating a definition for this type. If so then we just
+                    // return the identity because at some point we'll get the definition being added.
+                    // This is necessary because if we don't check this there is a good possibility that
+                    // we end-up in an infinite loop. e.g. trying to handle
+                    // System.Boolean means we have to process System.IComparable<System.Boolean> which means ....
+                    if (currentlyBuilding.ContainsKey(t))
                     {
-                        var typeDefinition = TypeDefinition.CreateDefinition(t, createTypeIdentity);
-                        typeStorage.AddType(typeDefinition);
+                        return currentlyBuilding[t];
                     }
 
-                    return typeStorage.IdentityByName(t.AssemblyQualifiedName);
+                    // Create the type full name ourselves because generic type parameters don't have one (see
+                    // http://blogs.msdn.com/b/haibo_luo/archive/2006/02/17/534480.aspx).
+                    var name = t.AssemblyQualifiedName ?? string.Format("{0}.{1}, {2}", t.Namespace, t.Name, t.Assembly.FullName);
+                    if (!typeStorage.ContainsDefinitionForType(name))
+                    {
+                        try
+                        {
+                            // Create a local version of the TypeIdentity and store that
+                            var typeIdentity = TypeIdentity.CreateDefinition(t);
+                            currentlyBuilding.Add(t, typeIdentity);
+
+                            var typeDefinition = TypeDefinition.CreateDefinition(t, createTypeIdentity);
+                            typeStorage.AddType(typeDefinition);
+                        }
+                        finally
+                        {
+                            // Once we add the real definition then we can just remove the local copy
+                            // from the stack.
+                            currentlyBuilding.Remove(t);
+                        }
+                    }
+
+                    return typeStorage.IdentityByName(name);
                 };
 
             return createTypeIdentity;
+        }
+
+        private static Type FindType(string typeName, Assembly assembly, bool searchReferencedAssemblies)
+        {
+            foreach (var assemblyType in assembly.GetTypes())
+            {
+                if (string.Equals(typeName, assemblyType.FullName, StringComparison.Ordinal))
+                {
+                    return assemblyType;
+                }
+            }
+
+            if (searchReferencedAssemblies)
+            {
+                foreach (var referencedAssembly in assembly.GetReferencedAssemblies())
+                {
+                    var type = FindType(typeName, Assembly.Load(referencedAssembly), false);
+                    if (type != null)
+                    {
+                        return type;
+                    }
+                }
+            }
+
+            return null;
         }
 
         private static SerializableExportDefinition CreateMethodExport(
@@ -93,7 +144,8 @@ namespace Apollo.Core.Host.Plugins
 
         private static SerializableImportDefinition CreatePropertyImport(
             ContractBasedImportDefinition import,
-            Func<Type, TypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator,
+            Assembly containingAssembly)
         {
             var memberInfo = ReflectionModelServices.GetImportingMember(import);
             if (memberInfo.MemberType != MemberTypes.Property)
@@ -107,9 +159,16 @@ namespace Apollo.Core.Host.Plugins
             var getMember = memberInfo.GetAccessors().Where(m => m.Name.Contains("set_")).First();
             var name = getMember.Name.Substring("set_".Length);
             var property = getMember.DeclaringType.GetProperty(name);
+
+            var requiredType = FindType(import.RequiredTypeIdentity, containingAssembly, true);
+            if (requiredType == null)
+            {
+                return null;
+            }
+
             return PropertyBasedImportDefinition.CreateDefinition(
                 import.ContractName,
-                import.RequiredTypeIdentity,
+                TypeIdentity.CreateDefinition(requiredType),
                 import.Cardinality,
                 import.IsRecomposable,
                 import.RequiredCreationPolicy,
@@ -119,12 +178,19 @@ namespace Apollo.Core.Host.Plugins
 
         private static SerializableImportDefinition CreateConstructorParameterImport(
             ContractBasedImportDefinition import,
-            Func<Type, TypeIdentity> identityGenerator)
+            Func<Type, TypeIdentity> identityGenerator,
+            Assembly containingAssembly)
         {
             var parameterInfo = ReflectionModelServices.GetImportingParameter(import);
+            var requiredType = FindType(import.RequiredTypeIdentity, containingAssembly, true);
+            if (requiredType == null)
+            {
+                return null;
+            }
+
             return ConstructorBasedImportDefinition.CreateDefinition(
                 import.ContractName,
-                import.RequiredTypeIdentity,
+                TypeIdentity.CreateDefinition(requiredType),
                 import.Cardinality,
                 import.RequiredCreationPolicy,
                 parameterInfo.Value,
@@ -290,7 +356,7 @@ namespace Apollo.Core.Host.Plugins
         {
             try
             {
-                var createTypeIdentity = IdentityFactory(m_Repository);
+                var createTypeIdentity = IdentityFactory(m_Repository, new Dictionary<Type, TypeIdentity>());
                 var mefParts = ExtractImportsAndExports(assembly, createTypeIdentity);
                 var parts = mefParts.Select(p => ExtractActionsAndConditions(p.Item1, p.Item2, createTypeIdentity));
                 foreach (var part in parts)
@@ -366,6 +432,16 @@ namespace Apollo.Core.Host.Plugins
                                 "Discovered export: {0}",
                                 exportDefinition));
                     }
+                    else 
+                    {
+                        m_Logger.Log(
+                            LogSeverityProxy.Warning,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Unable to process export: {0} on a {1}",
+                                export.ContractName,
+                                memberInfo.MemberType));
+                    }
                 }
 
                 var imports = new List<SerializableImportDefinition>();
@@ -375,8 +451,8 @@ namespace Apollo.Core.Host.Plugins
                     var contractImport = import as ContractBasedImportDefinition;
 
                     SerializableImportDefinition importDefinition = !ReflectionModelServices.IsImportingParameter(contractImport)
-                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity)
-                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity);
+                        ? importDefinition = CreatePropertyImport(contractImport, createTypeIdentity, assembly)
+                        : importDefinition = CreateConstructorParameterImport(contractImport, createTypeIdentity, assembly);
 
                     if (importDefinition != null)
                     {
@@ -387,6 +463,15 @@ namespace Apollo.Core.Host.Plugins
                                 CultureInfo.InvariantCulture,
                                 "Discovered import: {0}",
                                 importDefinition));
+                    }
+                    else
+                    {
+                        m_Logger.Log(
+                            LogSeverityProxy.Warning,
+                            string.Format(
+                                CultureInfo.InvariantCulture,
+                                "Unable to process import: {0}",
+                                import.ContractName));
                     }
                 }
 

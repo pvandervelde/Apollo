@@ -20,11 +20,6 @@ namespace Apollo.Core.Host.Plugins
     internal sealed class GroupSelector
     {
         /// <summary>
-        /// The object that contains all the data on the different groups.
-        /// </summary>
-        private readonly ISatisfyPluginRequests m_Repository;
-
-        /// <summary>
         /// The object that matches group imports with group exports.
         /// </summary>
         private readonly IConnectGroups m_GroupImportEngine;
@@ -37,27 +32,21 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupSelector"/> class.
         /// </summary>
-        /// <param name="repository">The object that contains all the data about the different groups available to the application.</param>
         /// <param name="groupImportEngine">The object that matches group imports with group exports.</param>
         /// <param name="compositionGraph">The object that stores the connections between the different selected groups.</param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="repository"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groupImportEngine"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="compositionGraph"/> is <see langword="null" />.
         /// </exception>
-        public GroupSelector(ISatisfyPluginRequests repository, IConnectGroups groupImportEngine, GroupCompositionGraph compositionGraph)
+        public GroupSelector(IConnectGroups groupImportEngine, GroupCompositionGraph compositionGraph)
         {
             {
-                Lokad.Enforce.Argument(() => repository);
                 Lokad.Enforce.Argument(() => groupImportEngine);
                 Lokad.Enforce.Argument(() => compositionGraph);
             }
 
-            m_Repository = repository;
             m_GroupImportEngine = groupImportEngine;
             m_Graph = compositionGraph;
         }
@@ -148,10 +137,7 @@ namespace Apollo.Core.Host.Plugins
         /// </returns>
         public IEnumerable<GroupDescriptor> MatchingGroups(GroupImportDefinition groupToLinkTo, IDictionary<string, object> selectionCriteria)
         {
-            return m_Repository.Groups()
-                .Where(
-                    g => m_GroupImportEngine.Accepts(groupToLinkTo, g.GroupExport)
-                        && m_GroupImportEngine.ExportPassesSelectionCriteria(g.GroupExport, selectionCriteria))
+            return m_GroupImportEngine.MatchingGroups(groupToLinkTo, selectionCriteria)
                 .Select(
                     g => new GroupDescriptor(
                         g, 

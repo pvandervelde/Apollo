@@ -45,40 +45,44 @@ namespace Apollo.Core.Base.Plugins
                     {
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "A",
-                            "AB",
+                            TypeIdentity.CreateDefinition(typeof(char[])),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(string).GetConstructor(new[] 
+                            typeof(string).GetConstructor(
+                                new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "B",
-                            "BB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(Uri).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(Uri).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "C",
-                            "CB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(Version).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(Version).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "D",
-                            "DB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(NotImplementedException).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(NotImplementedException).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                     },
         };
 
@@ -90,40 +94,44 @@ namespace Apollo.Core.Base.Plugins
                 { 
                     ConstructorBasedImportDefinition.CreateDefinition(
                             "A",
-                            "AB",
+                            TypeIdentity.CreateDefinition(typeof(char[])),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(string).GetConstructor(new[] 
+                            typeof(string).GetConstructor(
+                                new[] 
                                 { 
                                     typeof(char[])
                                 }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "B",
-                            "BB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(Uri).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(Uri).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "C",
-                            "CB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(Version).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(Version).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                         ConstructorBasedImportDefinition.CreateDefinition(
                             "D",
-                            "DB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             CreationPolicy.NonShared,
-                            typeof(NotImplementedException).GetConstructor(new[] 
-                            {
-                                typeof(string)
-                            }).GetParameters().First()),
+                            typeof(NotImplementedException).GetConstructor(
+                                new[] 
+                                {
+                                    typeof(string)
+                                }).GetParameters().First()),
                 },
         };
 
@@ -132,7 +140,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var original = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -147,7 +155,7 @@ namespace Apollo.Core.Base.Plugins
             ConstructorBasedImportDefinition first = null;
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -160,7 +168,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -174,13 +182,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -193,13 +201,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(string)),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
@@ -213,7 +221,7 @@ namespace Apollo.Core.Base.Plugins
             ConstructorBasedImportDefinition first = null;
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -226,7 +234,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -240,13 +248,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -259,13 +267,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             var second = ConstructorBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(string)),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
@@ -278,7 +286,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var obj = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -286,7 +294,7 @@ namespace Apollo.Core.Base.Plugins
             var parameter = constructor.GetParameters().First();
 
             Assert.AreEqual("A", obj.ContractName);
-            Assert.AreEqual("AB", obj.RequiredTypeIdentity);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(char[])), obj.RequiredTypeIdentity);
             Assert.AreEqual(ImportCardinality.ExactlyOne, obj.Cardinality);
             Assert.IsFalse(obj.IsRecomposable);
             Assert.IsTrue(obj.IsPrerequisite);
@@ -300,7 +308,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -314,13 +322,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             object second = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
@@ -333,13 +341,13 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());
             object second = ConstructorBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(string)),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForUri().GetParameters().First());
@@ -352,7 +360,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ConstructorBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(char[])),
                 ImportCardinality.ExactlyOne,
                 CreationPolicy.NonShared,
                 GetConstructorForString().GetParameters().First());

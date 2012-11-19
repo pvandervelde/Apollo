@@ -102,7 +102,7 @@ namespace Apollo.Core.Host.Plugins
                                 {
                                     PropertyBasedImportDefinition.CreateDefinition(
                                         typeof(IExportOnProperty).FullName,
-                                        "AB",
+                                        TypeIdentity.CreateDefinition(typeof(IExportOnProperty)),
                                         ImportCardinality.ExactlyOne,
                                         false,
                                         CreationPolicy.Shared,

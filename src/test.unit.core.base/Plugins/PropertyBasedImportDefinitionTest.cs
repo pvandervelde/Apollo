@@ -44,35 +44,35 @@ namespace Apollo.Core.Base.Plugins
                     {
                         PropertyBasedImportDefinition.CreateDefinition(
                             "A", 
-                            "AB",
+                            TypeIdentity.CreateDefinition(typeof(int)),
                             ImportCardinality.ExactlyOne,
                             true,
                             CreationPolicy.NonShared,
                             typeof(string).GetProperty("Length")),
                         PropertyBasedImportDefinition.CreateDefinition(
                             "B", 
-                            "BB",
+                            TypeIdentity.CreateDefinition(typeof(int)),
                             ImportCardinality.ExactlyOne,
                             true,
                             CreationPolicy.NonShared,
                             typeof(Version).GetProperty("Build")),
                         PropertyBasedImportDefinition.CreateDefinition(
                             "C", 
-                            "CB",
+                            TypeIdentity.CreateDefinition(typeof(int)),
                             ImportCardinality.ExactlyOne,
                             true,
                             CreationPolicy.NonShared,
                             typeof(List<int>).GetProperty("Count")),
                         PropertyBasedImportDefinition.CreateDefinition(
                             "D", 
-                            "DB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             true,
                             CreationPolicy.NonShared,
                             typeof(TimeZone).GetProperty("StandardName")),
                         PropertyBasedImportDefinition.CreateDefinition(
                             "E", 
-                            "EB",
+                            TypeIdentity.CreateDefinition(typeof(string)),
                             ImportCardinality.ExactlyOne,
                             true,
                             CreationPolicy.NonShared,
@@ -88,35 +88,35 @@ namespace Apollo.Core.Base.Plugins
                 { 
                     PropertyBasedImportDefinition.CreateDefinition(
                         "A", 
-                        "AB",
+                        TypeIdentity.CreateDefinition(typeof(int)),
                         ImportCardinality.ExactlyOne,
                         true,
                         CreationPolicy.NonShared,
                         typeof(string).GetProperty("Length")),
                     PropertyBasedImportDefinition.CreateDefinition(
                         "B", 
-                        "BB",
+                        TypeIdentity.CreateDefinition(typeof(int)),
                         ImportCardinality.ExactlyOne,
                         true,
                         CreationPolicy.NonShared,
                         typeof(Version).GetProperty("Build")),
                     PropertyBasedImportDefinition.CreateDefinition(
                         "C", 
-                        "CB",
+                        TypeIdentity.CreateDefinition(typeof(int)),
                         ImportCardinality.ExactlyOne,
                         true,
                         CreationPolicy.NonShared,
                         typeof(List<int>).GetProperty("Count")),
                     PropertyBasedImportDefinition.CreateDefinition(
                         "D", 
-                        "DB",
+                        TypeIdentity.CreateDefinition(typeof(string)),
                         ImportCardinality.ExactlyOne,
                         true,
                         CreationPolicy.NonShared,
                         typeof(TimeZone).GetProperty("StandardName")),
                     PropertyBasedImportDefinition.CreateDefinition(
                         "E", 
-                        "EB",
+                        TypeIdentity.CreateDefinition(typeof(string)),
                         ImportCardinality.ExactlyOne,
                         true,
                         CreationPolicy.NonShared,
@@ -129,7 +129,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var original = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -145,7 +145,7 @@ namespace Apollo.Core.Base.Plugins
             PropertyBasedImportDefinition first = null;
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -159,7 +159,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -174,14 +174,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -195,14 +195,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -217,7 +217,7 @@ namespace Apollo.Core.Base.Plugins
             PropertyBasedImportDefinition first = null;
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -231,7 +231,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -246,14 +246,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -267,14 +267,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             var second = PropertyBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -288,7 +288,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var obj = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -296,7 +296,7 @@ namespace Apollo.Core.Base.Plugins
             var property = GetPropertyForString();
 
             Assert.AreEqual("A", obj.ContractName);
-            Assert.AreEqual("AB", obj.RequiredTypeIdentity);
+            Assert.AreEqual(TypeIdentity.CreateDefinition(typeof(int)), obj.RequiredTypeIdentity);
             Assert.AreEqual(ImportCardinality.ExactlyOne, obj.Cardinality);
             Assert.IsTrue(obj.IsRecomposable);
             Assert.IsFalse(obj.IsPrerequisite);
@@ -310,7 +310,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -325,14 +325,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             object second = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -346,14 +346,14 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
                 typeof(string).GetProperty("Length"));
             object second = PropertyBasedImportDefinition.CreateDefinition(
                 "B",
-                "BB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,
@@ -367,7 +367,7 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = PropertyBasedImportDefinition.CreateDefinition(
                 "A",
-                "AB",
+                TypeIdentity.CreateDefinition(typeof(int)),
                 ImportCardinality.ExactlyOne,
                 true,
                 CreationPolicy.NonShared,

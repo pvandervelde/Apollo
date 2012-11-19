@@ -97,7 +97,7 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static ConstructorBasedImportDefinition CreateDefinition(
             string contractName,
-            string requiredTypeIdentity,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             CreationPolicy creationPolicy, 
             ParameterInfo parameter,
@@ -137,7 +137,7 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static ConstructorBasedImportDefinition CreateDefinition(
             string contractName,
-            string requiredTypeIdentity,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality,
             CreationPolicy creationPolicy,
             ParameterInfo parameter)
@@ -177,7 +177,7 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="parameter">The parameter on which the import is defined.</param>
         private ConstructorBasedImportDefinition(
             string contractName,
-            string requiredTypeIdentity,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             CreationPolicy creationPolicy, 
             TypeIdentity declaringType,
@@ -245,7 +245,7 @@ namespace Apollo.Core.Base.Plugins
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(RequiredTypeIdentity, otherType.RequiredTypeIdentity, StringComparison.Ordinal)
+                && RequiredTypeIdentity.Equals(otherType.RequiredTypeIdentity)
                 && Constructor == otherType.Constructor
                 && Parameter == otherType.Parameter;
         }

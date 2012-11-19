@@ -79,17 +79,51 @@ namespace Apollo.Core.Base.Plugins
         /// Creates a new instance of the <see cref="TypeIdentity"/> class based on the given <see cref="Type"/>.
         /// </summary>
         /// <param name="type">The type for which a serialized definition needs to be created.</param>
+        /// <param name="identityStorage">
+        /// The function that stores <see cref="TypeIdentity"/> objects that are generated while creating the current
+        /// <see cref="TypeIdentity"/>.
+        /// </param>
+        /// <returns>The serialized definition for the given type.</returns>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
+        /// </exception>
+        public static TypeIdentity CreateDefinition(Type type, Func<Type, TypeIdentity> identityStorage)
+        {
+            {
+                Lokad.Enforce.Argument(() => type);
+            }
+
+            // It turns out that if the type is a generic parameter all kinds of crazy stuff happens
+            // For instance generic parameters are nested, which means that we'll try to get
+            // the identity of the declaring type, which then means we have to get the 
+            // generic parameters, which ... que infinite loop. Hence if we are a generic 
+            // parameter, then we bail early.
+            var isGenericParameter = type.IsGenericParameter;
+            return new TypeIdentity(
+                type.Name,
+                type.Namespace,
+                AssemblyDefinition.CreateDefinition(type.Assembly),
+                isGenericParameter,
+                !isGenericParameter && type.IsNested,
+                !isGenericParameter && type.IsNested ? identityStorage(type.DeclaringType) : null,
+                !isGenericParameter && type.ContainsGenericParameters,
+                !isGenericParameter && type.IsGenericType,
+                !isGenericParameter && type.IsGenericType
+                    ? type.GetGenericArguments().Select(t => identityStorage(t)).ToArray()
+                    : new TypeIdentity[0]);
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="TypeIdentity"/> class based on the given <see cref="Type"/>.
+        /// </summary>
+        /// <param name="type">The type for which a serialized definition needs to be created.</param>
         /// <returns>The serialized definition for the given type.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="type"/> is <see langword="null" />.
         /// </exception>
         public static TypeIdentity CreateDefinition(Type type)
         {
-            {
-                Lokad.Enforce.Argument(() => type);
-            }
-
-            return new TypeIdentity(type);
+            return CreateDefinition(type, t => CreateDefinition(t));
         }
 
         /// <summary>
@@ -144,42 +178,41 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Initializes a new instance of the <see cref="TypeIdentity"/> class.
         /// </summary>
-        /// <param name="type">The Type that should be serialized.</param>
-        private TypeIdentity(Type type)
+        /// <param name="typeName">The name of the type.</param>
+        /// <param name="typeNamespace">The namespace of the type.</param>
+        /// <param name="assembly">The assembly which contains the type.</param>
+        /// <param name="isGenericParameter">
+        /// A flag indicating that the current type is actually a generic parameter (e.g. T) for an generic type.
+        /// </param>
+        /// <param name="isNested">A flag indicating if the current type is a nested type or not.</param>
+        /// <param name="declaringType">
+        /// The type definition for the type that declares the current nested type or generic parameter.
+        /// </param>
+        /// <param name="isOpenGeneric">
+        /// A flag indicating that the current type has generic parameter, some of which have not been replaced by real types.
+        /// </param>
+        /// <param name="isGenericType">A flag indicating if the current type is a generic type.</param>
+        /// <param name="typeParameters">The collection that defines all the generic type arguments.</param>
+        private TypeIdentity(
+            string typeName,
+            string typeNamespace,
+            AssemblyDefinition assembly,
+            bool isGenericParameter,
+            bool isNested,
+            TypeIdentity declaringType,
+            bool isOpenGeneric,
+            bool isGenericType,
+            TypeIdentity[] typeParameters)
         {
-            {
-                Debug.Assert(type != null, "The type object should not be a null reference.");
-            }
-
-            m_Name = type.Name;
-            m_Namespace = type.Namespace;
-            m_Assembly = AssemblyDefinition.CreateDefinition(type.Assembly);
-
-            m_IsGenericParameter = type.IsGenericParameter;
-            if (type.IsGenericParameter)
-            {
-                // It turns out that if the type is a generic parameter all kinds of crazy stuff happens
-                // For instance generic parameters are nested, which means that we'll try to get
-                // the identity of the declaring type, which then means we have to get the 
-                // generic parameters, which ... que infinite loop. Hence if we are a generic 
-                // parameter, then we bail early.
-                return;
-            }
-
-            m_IsNested = type.IsNested;
-            m_IsOpenGeneric = type.ContainsGenericParameters;
-            if (type.IsNested)
-            {
-                m_DeclaringType = new TypeIdentity(type.DeclaringType);
-            }
-
-            m_IsGenericType = type.IsGenericType;
-            if (type.IsGenericType)
-            {
-                // Given that it is not possible for a generic type to use itself as a generic parameter
-                // we should be safe from infinite loops here ...
-                m_TypeArguments = type.GetGenericArguments().Select(t => new TypeIdentity(t)).ToArray();
-            }
+            m_Name = typeName;
+            m_Namespace = typeNamespace;
+            m_Assembly = assembly;
+            m_IsGenericParameter = isGenericParameter;
+            m_IsNested = isNested;
+            m_DeclaringType = declaringType;
+            m_IsOpenGeneric = isOpenGeneric;
+            m_IsGenericType = isGenericType;
+            m_TypeArguments = typeParameters;
         }
 
         /// <summary>
@@ -211,11 +244,6 @@ namespace Apollo.Core.Base.Plugins
         {
             get
             {
-                if (m_IsGenericParameter)
-                {
-                    return null;
-                }
-
                 return string.Format(CultureInfo.InvariantCulture, "{0}, {1}", FullName, Assembly);
             }
         }
@@ -227,12 +255,7 @@ namespace Apollo.Core.Base.Plugins
         {
             get
             {
-                if (m_IsGenericParameter)
-                {
-                    return null;
-                }
-
-                if (m_IsOpenGeneric)
+                if (m_IsOpenGeneric || m_IsGenericParameter)
                 {
                     return FormatWithoutTypeParameters();
                 }
@@ -363,7 +386,7 @@ namespace Apollo.Core.Base.Plugins
         /// </summary>
         public bool IsGenericParameter
         {
-            get 
+            get
             {
                 return m_IsGenericParameter;
             }
@@ -427,8 +450,33 @@ namespace Apollo.Core.Base.Plugins
             // Check if other is a null reference by using ReferenceEquals because
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
-            return !ReferenceEquals(other, null)
-                && string.Equals(AssemblyQualifiedName, other.AssemblyQualifiedName, StringComparison.OrdinalIgnoreCase);
+            //
+            // Note that generic parameters (e.g. T in IEnumerable<T>) are weird. They have 
+            // a name, namespace and assembly but not a FullName or an AssemblyQualifiedName (both are null)
+            // so we'll do the comparison manually.
+            var areEqual = !ReferenceEquals(other, null)
+                && string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Namespace, other.Namespace, StringComparison.OrdinalIgnoreCase)
+                && string.Equals(Assembly.FullName, other.Assembly.FullName, StringComparison.OrdinalIgnoreCase);
+
+            if (areEqual)
+            {
+                var typeArguments = other.GetGenericArguments();
+                areEqual = areEqual && (typeArguments.Length == m_TypeArguments.Length);
+                if (areEqual)
+                {
+                    for (int i = 0; i < m_TypeArguments.Length; i++)
+                    {
+                        areEqual = areEqual && m_TypeArguments[i].Equals(typeArguments[i]);
+                        if (!areEqual)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+
+            return areEqual;
         }
 
         /// <summary>

@@ -105,7 +105,7 @@ namespace Apollo.Core.Base.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="parameter"/> is <see langword="null" />.
         /// </exception>
-        public static ParameterDefinition CreateDefinition(ParameterInfo parameter)
+        internal static ParameterDefinition CreateDefinition(ParameterInfo parameter)
         {
             return CreateDefinition(parameter, t => TypeIdentity.CreateDefinition(t));
         }

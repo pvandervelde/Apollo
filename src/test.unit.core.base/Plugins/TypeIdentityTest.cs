@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using MbUnit.Framework;
 using MbUnit.Framework.ContractVerifiers;
 
@@ -41,6 +42,8 @@ namespace Apollo.Core.Base.Plugins
                         TypeIdentity.CreateDefinition(typeof(List<int>)),
                         TypeIdentity.CreateDefinition(typeof(double)),
                         TypeIdentity.CreateDefinition(typeof(void)),
+                        TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First()),
+                        TypeIdentity.CreateDefinition(typeof(IComparable<>).GetGenericArguments().First()),
                     },
         };
 
@@ -58,6 +61,8 @@ namespace Apollo.Core.Base.Plugins
                     TypeIdentity.CreateDefinition(typeof(List<int>)),
                     TypeIdentity.CreateDefinition(typeof(double)),
                     TypeIdentity.CreateDefinition(typeof(void)),
+                    TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First()),
+                    TypeIdentity.CreateDefinition(typeof(IComparable<>).GetGenericArguments().First()),
                 },
         };
 
@@ -208,6 +213,78 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = TypeIdentity.CreateDefinition(typeof(string));
             var second = new object();
+
+            Assert.IsFalse(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithEqualType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(object));
+            var second = typeof(object);
+
+            Assert.IsTrue(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithEqualGenericType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<int>));
+            var second = typeof(IEnumerable<int>);
+
+            Assert.IsTrue(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithEqualOpenGenericType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<>));
+            var second = typeof(IEnumerable<>);
+
+            Assert.IsTrue(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithEqualGenericTypeParameter()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First());
+            var second = typeof(IEnumerable<>).GetGenericArguments().First();
+
+            Assert.IsTrue(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithUnequalType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(object));
+            var second = typeof(string);
+
+            Assert.IsFalse(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithUnequalGenericType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<int>));
+            var second = typeof(IEnumerable<float>);
+
+            Assert.IsFalse(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithUnequalOpenGenericType()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<>));
+            var second = typeof(IComparable<>);
+
+            Assert.IsFalse(first.Equals(second));
+        }
+
+        [Test]
+        public void EqualsWithUnequalGenericTypeParameter()
+        {
+            var first = TypeIdentity.CreateDefinition(typeof(IEnumerable<>).GetGenericArguments().First());
+            var second = typeof(IComparable<>).GetGenericArguments().First();
 
             Assert.IsFalse(first.Equals(second));
         }

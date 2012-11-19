@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Apollo.Core.Extensions.Plugins;
@@ -15,14 +16,20 @@ namespace Apollo.Core.Host.Mocks
         Justification = "Unit tests do not need documentation.")]
     public sealed class GroupExporter : IExportGroupDefinitions
     {
-        public const string GroupExportName = "groupExport";
-        public const string GroupImportName = "groupImport";
-        public const string GroupName = "MyGroup";
+        public const string GroupExportName = "myExport";
+        public const string GroupImportName = "myImport";
+        public const string GroupName1 = "MyFirstGroup";
+        public const string GroupName2 = "MySecondGroup";
+        public const string GroupName3 = "MyThirdGroup";
 
-        private static void RegisterExportingGroup(IRegisterGroupDefinitions builder)
+        private static void RegisterFirstGroup(IRegisterGroupDefinitions builder)
         {
+            builder.Clear();
+
             var importOnProperty = builder.RegisterObject(typeof(ImportOnProperty));
             var exportOnProperty = builder.RegisterObject(typeof(ExportOnProperty));
+            var freeImportOnProperty = builder.RegisterObject(typeof(ImportOnProperty));
+
             var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
             var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
             builder.Connect(importOnProperty.RegisteredImports.First(), exportOnProperty.RegisteredExports.First());
@@ -40,14 +47,63 @@ namespace Apollo.Core.Host.Mocks
             }
 
             builder.DefineExport(GroupExportName);
-            builder.DefineImport(GroupImportName, insertPoint);
+            builder.DefineImport(
+                GroupImportName, 
+                insertPoint,
+                new List<ImportRegistrationId> { freeImportOnProperty.RegisteredImports.First() });
 
-            builder.Register(GroupName);
+            builder.Register(GroupName1);
+        }
+
+        private static void RegisterSecondGroup(IRegisterGroupDefinitions builder)
+        {
+            builder.Clear();
+            
+            var importOnProperty = builder.RegisterObject(typeof(ImportOnProperty));
+            
+            var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
+            var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
+
+            var registrator = builder.ScheduleRegistrator();
+            {
+                var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());
+
+                registrator.LinkFromStart(actionVertex, conditionOnProperty.RegisteredConditions.First());
+                registrator.LinkToEnd(actionVertex);
+                registrator.Register();
+            }
+
+            builder.DefineImport(GroupExportName, new List<ImportRegistrationId> { importOnProperty.RegisteredImports.First() });
+            builder.DefineExport(GroupImportName);
+            builder.Register(GroupName2);
+        }
+
+        private static void RegisterThirdGroup(IRegisterGroupDefinitions builder)
+        {
+            builder.Clear();
+
+            var exportOnProperty = builder.RegisterObject(typeof(ExportOnProperty));
+            var actionOnMethod = builder.RegisterObject(typeof(ActionOnMethod));
+            var conditionOnProperty = builder.RegisterObject(typeof(ConditionOnProperty));
+
+            var registrator = builder.ScheduleRegistrator();
+            {
+                var actionVertex = registrator.AddExecutingAction(actionOnMethod.RegisteredActions.First());
+
+                registrator.LinkFromStart(actionVertex, conditionOnProperty.RegisteredConditions.First());
+                registrator.LinkToEnd(actionVertex);
+                registrator.Register();
+            }
+
+            builder.DefineExport(GroupImportName);
+            builder.Register(GroupName3);
         }
 
         public void RegisterGroups(IRegisterGroupDefinitions builder)
         {
-            RegisterExportingGroup(builder);
+            RegisterFirstGroup(builder);
+            RegisterSecondGroup(builder);
+            RegisterThirdGroup(builder);
         }
     }
 }

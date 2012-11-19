@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// The type identity of the export type expected.
         /// </summary>
-        private readonly string m_RequiredTypeIdentity;
+        private readonly TypeIdentity m_RequiredTypeIdentity;
 
         /// <summary>
         /// The import cardinality for the import.
@@ -84,7 +84,7 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         protected SerializableImportDefinition(
             string contractName,
-            string requiredTypeIdentity,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             bool isRecomposable, 
             bool isPrerequisite,
@@ -118,7 +118,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets the type identity of the export type expected.
         /// </summary>
-        public string RequiredTypeIdentity
+        public TypeIdentity RequiredTypeIdentity
         {
             get 
             {

@@ -92,9 +92,11 @@ namespace Apollo.Core.Base.Plugins
                 Lokad.Enforce.Argument(() => identityGenerator);
             }
             
-            // Note that we don't want to go back to the identity generator for our own type, otherwise we'll keep looping forever.
-            // This is kinda ugly because we shouldn't have to think about this here ...
-            var identity = TypeIdentity.CreateDefinition(type);
+            // Note that the following call may lead to a StackOverflow if the identityGenerator function 
+            // isn't smart enough to verify if we're in the process of generating a TypeDefinition for a given
+            // type. e.g. if we're handling System.Boolean we also have to process System.IComparable<System.Boolean>
+            // which could lead to an infinite loop.
+            var identity = TypeIdentity.CreateDefinition(type, identityGenerator);
 
             // Generic types that don't have a base generic type have themselves as their own generic type definition!
             // e.g. the generic type definition for IEnumerable<T> is ... IEnumerable<T>. So we only assign a 
@@ -106,19 +108,6 @@ namespace Apollo.Core.Base.Plugins
                 identity.IsGenericType && type != type.GetGenericTypeDefinition() ? identityGenerator(type.GetGenericTypeDefinition()) : null,
                 type.IsClass,
                 type.IsInterface);
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="TypeDefinition"/> class based on the given <see cref="Type"/>.
-        /// </summary>
-        /// <param name="type">The type for which a serialized definition needs to be created.</param>
-        /// <returns>The serialized definition for the given type.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="type"/> is <see langword="null" />.
-        /// </exception>
-        public static TypeDefinition CreateDefinition(Type type)
-        {
-            return CreateDefinition(type, t => TypeIdentity.CreateDefinition(t));
         }
 
         /// <summary>

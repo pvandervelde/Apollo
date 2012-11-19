@@ -100,8 +100,8 @@ namespace Apollo.Core.Base.Plugins
         ///     Thrown if <paramref name="identityGenerator"/> is <see langword="null" />.
         /// </exception>
         public static PropertyBasedImportDefinition CreateDefinition(
-            string contractName, 
-            string requiredTypeIdentity,
+            string contractName,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             bool isRecomposable, 
             CreationPolicy creationPolicy,
@@ -144,8 +144,8 @@ namespace Apollo.Core.Base.Plugins
         ///     Thrown if <paramref name="property"/> is <see langword="null" />.
         /// </exception>
         public static PropertyBasedImportDefinition CreateDefinition(
-            string contractName, 
-            string requiredTypeIdentity,
+            string contractName,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             bool isRecomposable, 
             CreationPolicy creationPolicy,
@@ -185,7 +185,7 @@ namespace Apollo.Core.Base.Plugins
         /// <param name="property">The property for which the current object stores the serialized data.</param>
         private PropertyBasedImportDefinition(
             string contractName,
-            string requiredTypeIdentity,
+            TypeIdentity requiredTypeIdentity,
             ImportCardinality cardinality, 
             bool isRecomposable, 
             CreationPolicy creationPolicy, 
@@ -241,7 +241,7 @@ namespace Apollo.Core.Base.Plugins
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(otherType, null)
                 && string.Equals(ContractName, otherType.ContractName, StringComparison.OrdinalIgnoreCase)
-                && string.Equals(RequiredTypeIdentity, otherType.RequiredTypeIdentity, StringComparison.Ordinal)
+                && RequiredTypeIdentity.Equals(otherType.RequiredTypeIdentity)
                 && Property == otherType.Property;
         }
 

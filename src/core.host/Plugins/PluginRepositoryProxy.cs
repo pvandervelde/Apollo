@@ -21,6 +21,7 @@ namespace Apollo.Core.Host.Plugins
     /// so that the <see cref="RemoteAssemblyScanner"/> is able to refer to the plugin repository without 
     /// needing duplicates of the repository.
     /// </design>
+    [ExcludeFromCodeCoverage]
     internal sealed class PluginRepositoryProxy : MarshalByRefObject, IPluginRepository
     {
         /// <summary>

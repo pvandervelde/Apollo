@@ -34,14 +34,14 @@ namespace Apollo.Core.Base.Plugins
             DistinctInstances =
                 new List<TypeDefinition> 
                     {
-                        TypeDefinition.CreateDefinition(typeof(string)),
-                        TypeDefinition.CreateDefinition(typeof(object)),
-                        TypeDefinition.CreateDefinition(typeof(int)),
-                        TypeDefinition.CreateDefinition(typeof(IComparable)),
-                        TypeDefinition.CreateDefinition(typeof(IComparable<>)),
-                        TypeDefinition.CreateDefinition(typeof(List<int>)),
-                        TypeDefinition.CreateDefinition(typeof(double)),
-                        TypeDefinition.CreateDefinition(typeof(void)),
+                        TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(int), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(IComparable), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(IComparable<>), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(double), t => TypeIdentity.CreateDefinition(t)),
+                        TypeDefinition.CreateDefinition(typeof(void), t => TypeIdentity.CreateDefinition(t)),
                     },
         };
 
@@ -51,21 +51,21 @@ namespace Apollo.Core.Base.Plugins
             ImplementsOperatorOverloads = true,
             EquivalenceClasses = new EquivalenceClassCollection
                 { 
-                    TypeDefinition.CreateDefinition(typeof(string)),
-                    TypeDefinition.CreateDefinition(typeof(object)),
-                    TypeDefinition.CreateDefinition(typeof(int)),
-                    TypeDefinition.CreateDefinition(typeof(IComparable)),
-                    TypeDefinition.CreateDefinition(typeof(IComparable<>)),
-                    TypeDefinition.CreateDefinition(typeof(List<int>)),
-                    TypeDefinition.CreateDefinition(typeof(double)),
-                    TypeDefinition.CreateDefinition(typeof(void)),
+                    TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(int), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(IComparable), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(IComparable<>), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(double), t => TypeIdentity.CreateDefinition(t)),
+                    TypeDefinition.CreateDefinition(typeof(void), t => TypeIdentity.CreateDefinition(t)),
                 },
         };
 
         [Test]
         public void RoundTripSerialise()
         {
-            var original = TypeDefinition.CreateDefinition(typeof(string));
+            var original = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
             Assert.AreEqual(original, copy);
@@ -75,7 +75,7 @@ namespace Apollo.Core.Base.Plugins
         public void EqualsOperatorWithFirstObjectNull()
         {
             TypeDefinition first = null;
-            var second = TypeDefinition.CreateDefinition(typeof(string));
+            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsFalse(first == second);
         }
@@ -83,7 +83,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithSecondObjectNull()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
             TypeDefinition second = null;
 
             Assert.IsFalse(first == second);
@@ -92,8 +92,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            var second = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsTrue(first == second);
         }
@@ -101,8 +101,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithNonequalObjects()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            var second = TypeDefinition.CreateDefinition(typeof(object));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            var second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsFalse(first == second);
         }
@@ -111,7 +111,7 @@ namespace Apollo.Core.Base.Plugins
         public void NotEqualsOperatorWithFirstObjectNull()
         {
             TypeDefinition first = null;
-            var second = TypeDefinition.CreateDefinition(typeof(string));
+            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsTrue(first != second);
         }
@@ -119,7 +119,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithSecondObjectNull()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
             TypeDefinition second = null;
 
             Assert.IsTrue(first != second);
@@ -128,8 +128,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            var second = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            var second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsFalse(first != second);
         }
@@ -137,8 +137,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithNonequalObjects()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            var second = TypeDefinition.CreateDefinition(typeof(object));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            var second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsTrue(first != second);
         }
@@ -146,7 +146,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void CreateWithClass()
         {
-            var obj = TypeDefinition.CreateDefinition(typeof(List<int>));
+            var obj = TypeDefinition.CreateDefinition(typeof(List<int>), t => TypeIdentity.CreateDefinition(t));
 
             Assert.AreEqual(typeof(List<int>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(List<int>).IsClass, obj.IsClass);
@@ -172,7 +172,7 @@ namespace Apollo.Core.Base.Plugins
         public void CreateWithNestedClass()
         {
             var type = typeof(Nested<,>);
-            var obj = TypeDefinition.CreateDefinition(type);
+            var obj = TypeDefinition.CreateDefinition(type, t => TypeIdentity.CreateDefinition(t));
 
             Assert.AreEqual(type.FullName, obj.Identity.FullName);
             Assert.AreEqual(type.IsClass, obj.IsClass);
@@ -184,7 +184,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void CreateWithInterface()
         {
-            var obj = TypeDefinition.CreateDefinition(typeof(IEnumerable<>));
+            var obj = TypeDefinition.CreateDefinition(typeof(IEnumerable<>), t => TypeIdentity.CreateDefinition(t));
 
             Assert.AreEqual(typeof(IEnumerable<>).FullName, obj.Identity.FullName);
             Assert.AreEqual(typeof(IEnumerable<>).IsClass, obj.IsClass);
@@ -196,7 +196,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithNullObject()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
             object second = null;
 
             Assert.IsFalse(first.Equals(second));
@@ -205,8 +205,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            object second = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            object second = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsTrue(first.Equals(second));
         }
@@ -214,8 +214,8 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithUnequalObjects()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
-            object second = TypeDefinition.CreateDefinition(typeof(object));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
+            object second = TypeDefinition.CreateDefinition(typeof(object), t => TypeIdentity.CreateDefinition(t));
 
             Assert.IsFalse(first.Equals(second));
         }
@@ -223,7 +223,7 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithUnequalObjectTypes()
         {
-            var first = TypeDefinition.CreateDefinition(typeof(string));
+            var first = TypeDefinition.CreateDefinition(typeof(string), t => TypeIdentity.CreateDefinition(t));
             var second = new object();
 
             Assert.IsFalse(first.Equals(second));

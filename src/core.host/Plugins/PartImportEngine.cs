@@ -50,16 +50,22 @@ namespace Apollo.Core.Host.Plugins
             Func<TypeIdentity, TypeDefinition> toDefinition)
         {
             // Terminate recursion
-            var isAssignableFrom = type != null && !type.Equals(typeof(object));
-            
-            // typeToCheck is a closure of openGenericType OR
-            // typeToCheck is the subclass of a closure of openGenericType OR
-            // typeToCheck inherits from an interface which is the closure of openGenericType
-            isAssignableFrom &= (type.Identity.IsGenericType && type.GenericTypeDefinition.Equals(openGeneric))
-                || OpenGenericIsAssignableFrom(openGeneric, toDefinition(type.BaseType), toDefinition)
-                || type.BaseInterfaces.Any(interfaceType => OpenGenericIsAssignableFrom(openGeneric, toDefinition(interfaceType), toDefinition));
+            if ((type == null) || openGeneric.Equals(type))
+            {
+                return false;
+            }
 
-            return isAssignableFrom;
+            // typeToCheck is a closure of openGenericType
+            var isClosureOfGenericType = type.Identity.IsGenericType && openGeneric.Equals(type.GenericTypeDefinition);
+
+            // typeToCheck is the subclass of a closure of openGenericType
+            var isSubClassOfClosure = OpenGenericIsAssignableFrom(openGeneric, toDefinition(type.BaseType), toDefinition);
+
+            // typeToCheck inherits from an interface which is the closure of openGenericType
+            var inheritsClosureInterface = type.BaseInterfaces.Any(
+                interfaceType => OpenGenericIsAssignableFrom(openGeneric, toDefinition(interfaceType), toDefinition));
+
+            return isClosureOfGenericType || isSubClassOfClosure || inheritsClosureInterface;
         }
 
         /// <summary>
@@ -95,17 +101,12 @@ namespace Apollo.Core.Host.Plugins
             Justification = "Documentation can start with a language keyword")]
         public bool Accepts(SerializableImportDefinition importDefinition, SerializableExportDefinition exportDefinition)
         {
-            if (string.IsNullOrWhiteSpace(importDefinition.RequiredTypeIdentity))
-            {
-                return false;
-            }
-
             if (!string.Equals(importDefinition.ContractName, exportDefinition.ContractName, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
 
-            var importRequiredType = m_Repository.IdentityByName(importDefinition.RequiredTypeIdentity);
+            var importRequiredType = importDefinition.RequiredTypeIdentity;
             var importRequiredTypeDef = m_Repository.TypeByIdentity(importRequiredType);
 
             var exportType = ExportedType(exportDefinition);
@@ -115,24 +116,25 @@ namespace Apollo.Core.Host.Plugins
             }
 
             Func<TypeIdentity, TypeDefinition> toDefinition = t => m_Repository.TypeByIdentity(t);
-            if (ImportIsCollection(importRequiredTypeDef, toDefinition))
+            if (ImportIsCollection(importRequiredTypeDef, toDefinition) 
+                && ExportMatchesCollectionImport(importRequiredType, exportType, toDefinition))
             {
-                return ExportMatchesCollectionImport(importRequiredType, exportType, toDefinition);
+                return true;
             }
 
-            if (ImportIsLazy(importRequiredTypeDef, toDefinition))
+            if (ImportIsLazy(importRequiredTypeDef, toDefinition) && ExportMatchesLazyImport(importRequiredType, exportType))
             {
-                return ExportMatchesLazyImport(importRequiredType, exportType);
+                return true;
             }
 
-            if (ImportIsFunc(importRequiredTypeDef, toDefinition))
+            if (ImportIsFunc(importRequiredTypeDef, toDefinition) && ExportMatchesFuncImport(importRequiredType, exportType, exportDefinition))
             {
-                return ExportMatchesFuncImport(importRequiredType, exportType, exportDefinition);
+                return true;
             }
 
-            if (ImportIsAction(importRequiredTypeDef, toDefinition))
+            if (ImportIsAction(importRequiredTypeDef, toDefinition) && ExportMatchesActionImport(importRequiredType, exportType, exportDefinition))
             {
-                return ExportMatchesActionImport(importRequiredType, exportType, exportDefinition);
+                return true;
             }
 
             return false;
@@ -171,6 +173,12 @@ namespace Apollo.Core.Host.Plugins
             return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(IEnumerable<>)], importType, toDefinition);
         }
 
+        private bool ImportIsLazy(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
+        {
+            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<>)], importType, toDefinition)
+                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<,>)], importType, toDefinition);
+        }
+
         private bool ImportIsFunc(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
         {
             return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Func<>)], importType, toDefinition)
@@ -187,15 +195,13 @@ namespace Apollo.Core.Host.Plugins
                 || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Action<,,,>)], importType, toDefinition);
         }
 
-        private bool ImportIsLazy(TypeDefinition importType, Func<TypeIdentity, TypeDefinition> toDefinition)
-        {
-            return OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<>)], importType, toDefinition)
-                || OpenGenericIsAssignableFrom(s_SpecialCasesCache[typeof(Lazy<,>)], importType, toDefinition);
-        }
-
         private bool ExportMatchesCollectionImport(TypeIdentity importType, TypeIdentity exportType, Func<TypeIdentity, TypeDefinition> toDefinition)
         {
-            Debug.Assert(importType.TypeArguments.Count() == 1, "IEnumerable<T> should have 1 generic type argument");
+            if (importType.TypeArguments.Count() != 1)
+            {
+                return false;
+            }
+
             var genericType = importType.TypeArguments.First();
             if (AvailableTypeMatchesRequiredType(genericType, exportType))
             {
@@ -266,15 +272,6 @@ namespace Apollo.Core.Host.Plugins
         {
             Debug.Assert(importType.TypeArguments.Count() > 0, "Action<T> should have at least 1 generic type argument.");
             var typeArguments = importType.TypeArguments.ToList();
-            if (typeArguments.Count == 1)
-            {
-                // The export is a property that returns T (in Action<T>)
-                var genericType = typeArguments[0];
-                if (AvailableTypeMatchesRequiredType(genericType, exportType))
-                {
-                    return true;
-                }
-            }
 
             // Export is a method that matches the signature of the Action<T>
             var methodExport = exportDefinition as MethodBasedExportDefinition;
