@@ -47,6 +47,8 @@
     <Compile Include="CurrentProgressMarkNotSetException.cs" />
     <Compile Include="FileConstants.cs" />
     <Compile Include="FileUtilities.cs" />
+    <Compile Include="History\BidirectionalGraphHistory.CollectionChange.cs" />
+    <Compile Include="History\BidirectionalGraphHistory.cs" />
     <Compile Include="History\CannotDeleteObjectBeforeCreationException.cs" />
     <Compile Include="History\CannotSetDefaultAfterStartOfTimeException.cs" />
     <Compile Include="History\CannotSetDefaultBeforeStartOfTimeException.cs" />
@@ -62,23 +64,28 @@
     <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
     <Compile Include="History\HistoryObjectListHistory.cs" />
     <Compile Include="History\HistoryObjectValueHistory.cs" />
+    <Compile Include="History\HistoryPatch.cs" />
     <Compile Include="History\HistorySnapshotStorage.cs" />
     <Compile Include="History\IAmHistoryEnabled.cs" />
+    <Compile Include="History\IBidirectionalGraphHistory.cs" />
     <Compile Include="History\IChangeSet.cs" />
     <Compile Include="History\IConnectObjectsToHistory.cs" />
     <Compile Include="History\ICreateSnapshots.cs" />
     <Compile Include="History\IDictionaryTimelineStorage.cs" />
     <Compile Include="History\IFollowHistory.cs" />
     <Compile Include="History\IFollowObjectTimeline.cs" />
+    <Compile Include="History\IGraphHistoryChange.cs" />
     <Compile Include="History\IHistoryChange.cs" />
     <Compile Include="History\IListTimelineStorage.cs" />
     <Compile Include="History\INeedNotificationOnHistoryChange.cs" />
     <Compile Include="History\InvalidTimeMarkerException.cs" />
+    <Compile Include="History\ILoadHistoryPatches.cs" />
     <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
     <Compile Include="History\IStoreTimelineValues.cs" />
     <Compile Include="History\ITimeline.cs" />
     <Compile Include="History\ITrackHistoryChanges.cs" />
     <Compile Include="History\IVariableTimeline.cs" />
+    <Compile Include="History\ICreateHistoryPatches.cs" />
     <Compile Include="History\ListHistory.cs" />
     <Compile Include="History\ListHistoryBase.CollectionChange.cs" />
     <Compile Include="History\ListHistoryBase.cs" />
@@ -156,6 +163,10 @@
     </Reference>
     <Reference Include="NManto">
       <HintPath>..\..\packages\nManto\lib\net40\NManto.dll</HintPath>
+    </Reference>
+    <Reference Include="QuickGraph, Version=3.6.61114.1, Culture=neutral, PublicKeyToken=665f4d61f853b5a9, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\QuickGraph\lib\net4\QuickGraph.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />

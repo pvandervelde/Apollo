@@ -4,13 +4,17 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 using Apollo.Utilities.History;
 using QuickGraph;
 
-namespace Apollo.Core.Host.Projects
+namespace Apollo.Utilities.History
 {
-    internal sealed partial class BidirectionalGraphHistory<TVertex, TEdge>
+    /// <content>
+    /// Defines the internal classes that are used to track history changes in the graph.
+    /// </content>
+    public sealed partial class BidirectionalGraphHistory<TVertex, TEdge>
     {
         /// <summary>
         /// An <see cref="IHistoryChange{T}"/> which indicates the edge capacity was changed on a

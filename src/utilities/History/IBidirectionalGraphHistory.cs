@@ -5,10 +5,9 @@
 //-----------------------------------------------------------------------
 
 using System;
-using Apollo.Utilities.History;
 using QuickGraph;
 
-namespace Apollo.Core.Host.Projects
+namespace Apollo.Utilities.History
 {
     /// <summary>
     /// Defines the interface for graph objects that track the history of changes to the graph.
@@ -16,7 +15,8 @@ namespace Apollo.Core.Host.Projects
     /// <typeparam name="TVertex">The type of vertex that is stored in the graph.</typeparam>
     /// <typeparam name="TEdge">The type of edge that is stored in the graph.</typeparam>
     [DefineAsHistoryTrackingInterface]
-    internal interface IBidirectionalGraphHistory<TVertex, TEdge> :
+    [CLSCompliant(false)]
+    public interface IBidirectionalGraphHistory<TVertex, TEdge> :
         IEdgeListAndIncidenceGraph<TVertex, TEdge>,
         IMutableBidirectionalGraph<TVertex, TEdge>,
         ICloneable,

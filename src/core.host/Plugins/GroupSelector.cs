@@ -27,7 +27,7 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The graph of connected groups.
         /// </summary>
-        private readonly GroupCompositionGraph m_Graph;
+        private readonly IGroupCompositionGraph m_Graph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupSelector"/> class.
@@ -40,7 +40,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="compositionGraph"/> is <see langword="null" />.
         /// </exception>
-        public GroupSelector(IConnectGroups groupImportEngine, GroupCompositionGraph compositionGraph)
+        public GroupSelector(IConnectGroups groupImportEngine, IGroupCompositionGraph compositionGraph)
         {
             {
                 Lokad.Enforce.Argument(() => groupImportEngine);
@@ -168,7 +168,7 @@ namespace Apollo.Core.Host.Plugins
                 throw new CannotMapExportToImportException();
             }
 
-            m_Graph.Connect(importingGroup, importDefinition, exportingGroup, exportDefinition);
+            m_Graph.Connect(importingGroup, importDefinition, exportingGroup);
         }
 
         private void OnGroupDisconnect(GroupCompositionId importingGroup, GroupCompositionId exportingGroup)

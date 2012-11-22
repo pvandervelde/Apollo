@@ -86,6 +86,7 @@
     <Compile Include="DatasetLock.cs" />
     <Compile Include="DependencyInjection.cs" />
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
+    <Compile Include="Plugins\GroupCompositionGraph.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
     <Compile Include="Scheduling\ExecutableNoOpVertex.cs" />
     <Compile Include="Scheduling\IExecuteSchedules.cs" />
@@ -221,9 +222,7 @@
       <Name>Apollo.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Plugins\" />
-  </ItemGroup>
+  <ItemGroup />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

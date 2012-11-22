@@ -58,7 +58,7 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(true);
             }
 
-            var selector = new GroupSelector(importEngine.Object, new GroupCompositionGraph());
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
             Assert.IsFalse(
                 selector.CanConnectTo(
                     new GroupCompositionId(), 
@@ -87,7 +87,7 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(groups);
             }
 
-            var selector = new GroupSelector(importEngine.Object, new GroupCompositionGraph());
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
             var selectedGroups = selector.MatchingGroups(new Dictionary<string, object>());
             Assert.AreEqual(groups.Count, selectedGroups.Count());
         }
@@ -107,7 +107,7 @@ namespace Apollo.Core.Host.Plugins
                     .Returns(new List<GroupDefinition> { groups[0], groups[1] });
             }
 
-            var selector = new GroupSelector(importEngine.Object, new GroupCompositionGraph());
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
             var selectedGroups = selector.MatchingGroups(GroupImportDefinition.CreateDefinition("myContract", groups[0].Id, null, null));
             Assert.AreEqual(2, selectedGroups.Count());
         }

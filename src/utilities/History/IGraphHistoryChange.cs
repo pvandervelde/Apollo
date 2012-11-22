@@ -4,15 +4,13 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using Apollo.Utilities.History;
-
-namespace Apollo.Core.Host.Projects
+namespace Apollo.Utilities.History
 {
     /// <summary>
     /// Defines the interface for objects that store a single change to a graph that tracks history.
     /// </summary>
     /// <typeparam name="T">The type of history object.</typeparam>
-    internal interface IGraphHistoryChange<T> : IHistoryChange<T>
+    public interface IGraphHistoryChange<T> : IHistoryChange<T>
     {
         /// <summary>
         /// Gets a value indicating whether the change is affected by invoking the

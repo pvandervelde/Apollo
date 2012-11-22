@@ -10,14 +10,15 @@ using System.Diagnostics.CodeAnalysis;
 using Apollo.Utilities.History;
 using QuickGraph;
 
-namespace Apollo.Core.Host.Projects
+namespace Apollo.Utilities.History
 {
     /// <summary>
     /// Stores the timeline values for an <see cref="BidirectionalGraph{TVertex, TEdge}"/> collection.
     /// </summary>
     /// <typeparam name="TVertex">The type of vertex that is stored in the graph.</typeparam>
     /// <typeparam name="TEdge">The type of edge that is stored in the graph.</typeparam>
-    internal sealed partial class BidirectionalGraphHistory<TVertex, TEdge> :
+    [CLSCompliant(false)]
+    public sealed partial class BidirectionalGraphHistory<TVertex, TEdge> :
         HistorySnapshotStorage<BidirectionalGraph<TVertex, TEdge>>,
         IBidirectionalGraphHistory<TVertex, TEdge> where TEdge : IEdge<TVertex>
     {

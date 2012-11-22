@@ -89,8 +89,6 @@
     <Compile Include="Plugins\PluginsModule.cs" />
     <Compile Include="Plugins\RemoteAssemblyScanner.cs" />
     <Compile Include="Plugins\ScheduleDefinitionBuilder.cs" />
-    <Compile Include="Projects\BidirectionalGraphHistory.CollectionChange.cs" />
-    <Compile Include="Projects\BidirectionalGraphHistory.cs" />
     <Compile Include="Projects\CannotCreateDatasetWithoutCreatorException.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutDatasetDistributorException.cs" />
     <Compile Include="Projects\CannotCreateProjectWithoutTimelineException.cs" />
@@ -102,9 +100,7 @@
     <Compile Include="Projects\DatasetLoadingProgressMark.cs" />
     <Compile Include="Projects\DatasetNotLoadedException.cs" />
     <Compile Include="Projects\DatasetProxy.cs" />
-    <Compile Include="Projects\IBidirectionalGraphHistory.cs" />
     <Compile Include="Projects\IDatasetOwner.cs" />
-    <Compile Include="Projects\IGraphHistoryChange.cs" />
     <Compile Include="Projects\IHoldSceneData.cs" />
     <Compile Include="Projects\IHoldSceneScheduleActionData.cs" />
     <Compile Include="Projects\IHoldSceneScheduleConditionData.cs" />

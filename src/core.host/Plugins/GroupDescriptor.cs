@@ -10,7 +10,7 @@ using Apollo.Core.Base.Plugins;
 namespace Apollo.Core.Host.Plugins
 {
     /// <summary>
-    /// Defines methods for selecting and connecting a group with other groups in the <see cref="GroupCompositionGraph"/>.
+    /// Defines methods for selecting and connecting a group with other groups in the <see cref="IGroupCompositionGraph"/>.
     /// </summary>
     internal sealed class GroupDescriptor
     {
