@@ -13,6 +13,7 @@ namespace Apollo.Core.Base.Plugins
     /// <summary>
     /// Defines a registration of a given object type for a group of plugin components.
     /// </summary>
+    [Serializable]
     public sealed class GroupPartDefinition : IPartRegistration
     {
         /// <summary>

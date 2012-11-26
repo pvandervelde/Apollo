@@ -13,7 +13,7 @@ namespace Apollo.Core.Base.Communication
     /// An <see cref="EventArgs"/> class that stores information about a connection that can
     /// be made to a remote application.
     /// </summary>
-    internal sealed class ConnectionInformationEventArgs : EventArgs
+    public sealed class ConnectionInformationEventArgs : EventArgs
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionInformationEventArgs"/> class.

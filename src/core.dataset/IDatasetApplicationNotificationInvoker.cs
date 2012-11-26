@@ -5,15 +5,16 @@
 //-----------------------------------------------------------------------
 
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base;
 using Apollo.Utilities;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Dataset
 {
     /// <summary>
     /// Defines the interface for objects that implement <see cref="IDatasetApplicationNotifications"/>
     /// and need to provide external objects with access to their events.
     /// </summary>
-    public interface IDatasetApplicationNotificationInvoker : IDatasetApplicationNotifications
+    internal interface IDatasetApplicationNotificationInvoker : IDatasetApplicationNotifications
     {
         /// <summary>
         /// Raises the <see cref="IDatasetApplicationNotifications.OnProgress"/> event.

@@ -384,4 +384,7 @@
   <data name="Exceptions_Messages_DuplicateContractName" xml:space="preserve">
     <value>The given contract name is already registered.</value>
   </data>
+  <data name="Exceptions_Messages_UnknownPartGroup" xml:space="preserve">
+    <value>The given ID does not belong to a known part group.</value>
+  </data>
 </root>

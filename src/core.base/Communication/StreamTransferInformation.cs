@@ -15,7 +15,7 @@ namespace Apollo.Core.Base.Communication
     /// be transferred over a stream connection.
     /// </summary>
     [Serializable]
-    internal abstract class StreamTransferInformation
+    public abstract class StreamTransferInformation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamTransferInformation"/> class.

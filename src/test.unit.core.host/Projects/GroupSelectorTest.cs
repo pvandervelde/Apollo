@@ -4,18 +4,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
+using Apollo.Core.Host.Plugins;
 using MbUnit.Framework;
 using Moq;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Host.Projects
 {
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
@@ -23,21 +21,70 @@ namespace Apollo.Core.Host.Plugins
     public sealed class GroupSelectorTest
     {
         [Test]
-        [Ignore]
         public void CanConnectToWithNonExistingImportGroup()
-        { 
+        {
+            var importingId = new GroupCompositionId();
+            var exportingId = new GroupCompositionId();
+
+            var importEngine = new Mock<IConnectGroups>(); 
+            var graph = new Mock<IGroupCompositionGraph>();
+            {
+                graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
+                    .Returns<GroupCompositionId>(id => !id.Equals(importingId));
+            }
+
+            var selector = new GroupSelector(importEngine.Object, graph.Object);
+            Assert.IsFalse(
+                selector.CanConnectTo(
+                    importingId,
+                    GroupImportDefinition.CreateDefinition("myContract", new GroupRegistrationId("a"), null, null),
+                    exportingId));
         }
 
         [Test]
-        [Ignore]
         public void CanConnectToWithNonExistingExportGroup()
         {
+            var importingId = new GroupCompositionId();
+            var exportingId = new GroupCompositionId();
+
+            var importEngine = new Mock<IConnectGroups>();
+            var graph = new Mock<IGroupCompositionGraph>();
+            {
+                graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
+                    .Returns<GroupCompositionId>(id => !id.Equals(exportingId));
+            }
+
+            var selector = new GroupSelector(importEngine.Object, graph.Object);
+            Assert.IsFalse(
+                selector.CanConnectTo(
+                    importingId,
+                    GroupImportDefinition.CreateDefinition("myContract", new GroupRegistrationId("a"), null, null),
+                    exportingId));
         }
 
         [Test]
-        [Ignore]
         public void CanConnectToWithAlreadyConnectedImport()
         {
+            var importingId = new GroupCompositionId();
+            var exportingId = new GroupCompositionId();
+
+            var importEngine = new Mock<IConnectGroups>();
+            var graph = new Mock<IGroupCompositionGraph>();
+            {
+                graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
+                    .Returns(true);
+                graph.Setup(g => g.IsConnected(It.IsAny<GroupCompositionId>(), It.IsAny<GroupImportDefinition>()))
+                    .Returns(true);
+                graph.Setup(g => g.IsConnected(It.IsAny<GroupCompositionId>(), It.IsAny<GroupImportDefinition>(), It.IsAny<GroupCompositionId>()))
+                    .Returns(true);
+            }
+
+            var selector = new GroupSelector(importEngine.Object, graph.Object);
+            Assert.IsFalse(
+                selector.CanConnectTo(
+                    importingId,
+                    GroupImportDefinition.CreateDefinition("myContract", new GroupRegistrationId("a"), null, null),
+                    exportingId));
         }
 
         [Test]

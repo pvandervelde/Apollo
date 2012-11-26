@@ -17,7 +17,7 @@ namespace Apollo.Utilities.History
     /// <summary>
     /// Tracks the history of a series of objects.
     /// </summary>
-    public sealed class Timeline : ITimeline, ICreateSnapshots
+    public sealed class Timeline : ITimeline
     {
         /// <summary>
         /// Tracks the markers that are active in the past and the ones that are active in the
@@ -814,14 +814,6 @@ namespace Apollo.Utilities.History
 
             m_Current = TimeMarker.TheBeginOfTime;
             m_Latest = TimeMarker.TheBeginOfTime;
-        }
-
-        /// <summary>
-        /// Creates a new snapshot and stores it.
-        /// </summary>
-        public void CreateSnapshot()
-        {
-            throw new NotImplementedException();
         }
 
         /// <summary>

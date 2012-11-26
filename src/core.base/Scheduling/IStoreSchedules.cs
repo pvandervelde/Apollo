@@ -20,6 +20,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Adds the <see cref="IEditableSchedule"/> object with the variables it affects and the dependencies for that schedule.
         /// </summary>
+        /// <param name="id">The ID of the schedule.</param>
         /// <param name="schedule">The schedule that should be stored.</param>
         /// <param name="name">The name of the schedule that is being described by this information object.</param>
         /// <param name="summary">The summary of the schedule that is being described by this information object.</param>
@@ -28,6 +29,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="dependsOn">The variables for which data should be available in order to execute the schedule.</param>
         /// <returns>An object identifying and describing the schedule.</returns>
         ScheduleInformation Add(
+            ScheduleId id,
             IEditableSchedule schedule,
             string name,
             string summary,

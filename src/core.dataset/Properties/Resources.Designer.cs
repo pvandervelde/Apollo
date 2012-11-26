@@ -106,6 +106,24 @@ namespace Apollo.Core.Dataset.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given schedule element ID is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateScheduleElementId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateScheduleElementId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given schedule ID is already registered..
+        /// </summary>
+        internal static string Exceptions_Messages_DuplicateScheduleId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_DuplicateScheduleId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to An internal error occurred. The error code is: {0}. Please contact your vendor..
         /// </summary>
         internal static string Exceptions_Messages_InternalError_WithCode {

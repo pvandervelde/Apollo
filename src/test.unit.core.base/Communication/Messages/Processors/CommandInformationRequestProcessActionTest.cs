@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using Apollo.Core.Base.Plugins;
 using Apollo.Utilities;
 using MbUnit.Framework;
 using Moq;
@@ -35,7 +36,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -65,7 +66,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
 
             var responseMsg = storedMsg as EndpointProxyTypesResponseMessage;
             Assert.AreElementsEqual(
-                new List<ISerializedType> { ProxyExtensions.FromType(typeof(IHostCommands)) }, 
+                new List<ISerializedType> { ProxyExtensions.FromType(typeof(IGroupCompositionCommands)) }, 
                 responseMsg.ProxyTypes, 
                 (x, y) => x.Equals(y));
         }
@@ -75,7 +76,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");
@@ -116,7 +117,7 @@ namespace Apollo.Core.Base.Communication.Messages.Processors
         {
             var commandSets = new List<KeyValuePair<Type, ICommandSet>> 
                 { 
-                    new KeyValuePair<Type, ICommandSet>(typeof(IHostCommands), new Mock<IHostCommands>().Object)
+                    new KeyValuePair<Type, ICommandSet>(typeof(IGroupCompositionCommands), new Mock<IGroupCompositionCommands>().Object)
                 };
 
             var endpoint = new EndpointId("id");

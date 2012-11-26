@@ -4,33 +4,29 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 using System.Globalization;
-using System.Threading;
 using Apollo.Utilities;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Dataset.Plugins
 {
     /// <summary>
-    /// Defines an ID number for dataset locks.
+    /// Defines an ID number for a part that is included in a composition graph.
     /// </summary>
-    /// <remarks>
-    /// This token uses integers internally. We don't expect to
-    /// have enough uploads in a single execution of an application
-    /// for integer overflow to occur.
-    /// </remarks>
-    public sealed class DatasetLockKey : Id<DatasetLockKey, int>
+    /// <design>
+    /// <para>
+    /// Graph ID objects are never re-used, even after groups are removed from the graph.
+    /// </para>
+    /// </design>
+    [Serializable]
+    internal sealed class PartCompositionId : Id<PartCompositionId, Guid>
     {
         /// <summary>
         /// Defines the ID number for an invalid dataset ID.
         /// </summary>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private const int InvalidId = -1;
-
-        /// <summary>
-        /// The value of the last ID number.
-        /// </summary>
-        private static int s_LastId = 0;
+        private static readonly Guid s_InvalidId = new Guid("{9C5C17FA-53A1-44C2-AB65-2F155D249081}");
 
         /// <summary>
         /// Returns the next integer that can be used for an ID number.
@@ -38,28 +34,27 @@ namespace Apollo.Core.Base
         /// <returns>
         /// The next unused ID value.
         /// </returns>
-        private static int NextIdValue()
+        private static Guid NextIdValue()
         {
-            var current = Interlocked.Increment(ref s_LastId);
-            return current;
+            return Guid.NewGuid();
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetLockKey"/> class.
+        /// Initializes a new instance of the <see cref="PartCompositionId"/> class.
         /// </summary>
-        public DatasetLockKey()
+        public PartCompositionId()
             : this(NextIdValue())
         { 
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DatasetLockKey"/> class with the given integer as ID number.
+        /// Initializes a new instance of the <see cref="PartCompositionId"/> class with the given integer as ID number.
         /// </summary>
         /// <param name="id">The ID number. Must be larger than -1.</param>
-        internal DatasetLockKey(int id)
+        internal PartCompositionId(Guid id)
             : base(id)
         {
-            Debug.Assert(id > InvalidId, "The key should not be invalid"); 
+            Debug.Assert(id != s_InvalidId, "The ID number should not be invalid"); 
         }
 
         /// <summary>
@@ -69,9 +64,9 @@ namespace Apollo.Core.Base
         /// <returns>
         /// A copy of the current ID number.
         /// </returns>
-        protected override DatasetLockKey Clone(int value)
+        protected override PartCompositionId Clone(Guid value)
         {
-            var result = new DatasetLockKey(value);
+            var result = new PartCompositionId(value);
             return result;
         }
 
@@ -85,7 +80,7 @@ namespace Apollo.Core.Base
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "Dataset lock key: [{0}]",
+                "PartCompositionId: [{0}]",
                 InternalValue);
         }
     }

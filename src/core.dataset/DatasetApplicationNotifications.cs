@@ -5,10 +5,10 @@
 //-----------------------------------------------------------------------
 
 using System;
+using Apollo.Core.Base;
 using Apollo.Utilities;
-using Lokad;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Dataset
 {
     /// <summary>
     /// Defines the notifications that allow a dataset to signal the outside world.

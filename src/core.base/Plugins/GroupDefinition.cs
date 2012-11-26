@@ -64,7 +64,7 @@ namespace Apollo.Core.Base.Plugins
         /// <summary>
         /// Gets or sets the collection that maps the imports to the connected exports.
         /// </summary>
-        public IDictionary<ImportRegistrationId, IEnumerable<ExportRegistrationId>> InternalConnections
+        public IEnumerable<PartImportToPartExportMap> InternalConnections
         {
             get;
             set;

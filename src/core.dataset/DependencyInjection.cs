@@ -4,6 +4,7 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
@@ -117,6 +118,43 @@ namespace Apollo.Core.Dataset
                 .SingleInstance();
         }
 
+        private static void RegisterNotifications(ContainerBuilder builder)
+        {
+            builder.Register(c => new DatasetApplicationNotifications())
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<INotificationSendersCollection>();
+                        collection.Store(typeof(IDatasetApplicationNotifications), a.Instance);
+                    })
+                .As<IDatasetApplicationNotificationInvoker>()
+                .As<IDatasetApplicationNotifications>()
+                .As<INotificationSet>()
+                .SingleInstance();
+        }
+
+        private static void RegisterCommands(
+            ContainerBuilder builder,
+            Action closeAction,
+            Action<FileInfo> loadAction)
+        {
+            builder.Register(c => new DatasetApplicationCommands(
+                    c.Resolve<ICommunicationLayer>(),
+                    c.Resolve<ITrackDatasetLocks>(),
+                    closeAction,
+                    loadAction,
+                    c.Resolve<SystemDiagnostics>()))
+                .OnActivated(
+                    a =>
+                    {
+                        var collection = a.Context.Resolve<ICommandCollection>();
+                        collection.Register(typeof(IDatasetApplicationCommands), a.Instance);
+                    })
+                .As<IDatasetApplicationCommands>()
+                .As<ICommandSet>()
+                .SingleInstance();
+        }
+
         /// <summary>
         /// Creates the DI container.
         /// </summary>
@@ -134,9 +172,11 @@ namespace Apollo.Core.Dataset
                 // - We don't want anybody talking to the application except for the
                 //   application that started it.
                 builder.RegisterModule(new BaseModule(false));
-                builder.RegisterModule(new BaseModuleForDatasets(
+                RegisterCommands(
+                    builder,
                     () => CloseApplication(result),
-                    file => LoadDatasetFile(result, file)));
+                    file => LoadDatasetFile(result, file));
+                RegisterNotifications(builder);
 
                 builder.Register(c => context)
                     .As<ApplicationContext>()

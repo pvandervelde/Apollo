@@ -227,9 +227,9 @@ namespace Apollo.Core.Host.Plugins
             builder.Register(groupName);
 
             Assert.IsNotNull(groupInfo);
-            Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Key);
-            Assert.AreEqual(1, groupInfo.InternalConnections.First().Value.Count());
-            Assert.AreEqual(secondInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value.First());
+            Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Import);
+            Assert.AreEqual(1, groupInfo.InternalConnections.First().Exports.Count());
+            Assert.AreEqual(secondInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Exports.First());
         }
 
         [Test]
@@ -266,9 +266,9 @@ namespace Apollo.Core.Host.Plugins
             builder.Register(groupName);
 
             Assert.IsNotNull(groupInfo);
-            Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Key);
-            Assert.AreEqual(1, groupInfo.InternalConnections.First().Value.Count());
-            Assert.AreEqual(thirdInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Value.First());
+            Assert.AreEqual(firstInfo.RegisteredImports.First(), groupInfo.InternalConnections.First().Import);
+            Assert.AreEqual(1, groupInfo.InternalConnections.First().Exports.Count());
+            Assert.AreEqual(thirdInfo.RegisteredExports.First(), groupInfo.InternalConnections.First().Exports.First());
         }
 
         [Test]

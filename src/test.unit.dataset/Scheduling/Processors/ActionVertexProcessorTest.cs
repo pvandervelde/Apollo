@@ -46,7 +46,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             }
 
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(
+                new ScheduleElementId(), 
+                action.Object, 
+                "a", 
+                "b", 
+                "c", 
+                new List<IScheduleVariable>(), 
+                new List<IScheduleDependency>());
 
             var executionInfo = new ScheduleExecutionInfo();
             executionInfo.CancelScheduleExecution();
@@ -72,7 +79,14 @@ namespace Apollo.Core.Dataset.Scheduling.Processors
             }
 
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var info = collection.Add(action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(
+                new ScheduleElementId(), 
+                action.Object, 
+                "a", 
+                "b", 
+                "c", 
+                new List<IScheduleVariable>(), 
+                new List<IScheduleDependency>());
 
             var processor = new ActionVertexProcessor(collection);
             var state = processor.Process(new ExecutableActionVertex(1, info.Id), new ScheduleExecutionInfo());

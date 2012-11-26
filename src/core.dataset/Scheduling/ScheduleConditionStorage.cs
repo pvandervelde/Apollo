@@ -166,6 +166,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// Adds the <see cref="IScheduleCondition"/> object with the dependencies for that condition.
         /// </summary>
+        /// <param name="id">The ID of the condition.</param>
         /// <param name="condition">The condition that should be stored.</param>
         /// <param name="name">The name of the condition that is being described by this information object.</param>
         /// <param name="summary">The summary of the condition that is being described by this information object.</param>
@@ -173,12 +174,19 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="dependsOn">The variables for which data should be available in order to evaluate the condition.</param>
         /// <returns>An object identifying and describing the condition.</returns>
         /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="condition"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="DuplicateScheduleElementIdException">
+        ///     Thrown if a condition with the <paramref name="id"/> is already registered.
+        /// </exception>
         public ScheduleConditionInformation Add(
+            ScheduleElementId id,
             IScheduleCondition condition,
             string name,
             string summary,
@@ -186,11 +194,14 @@ namespace Apollo.Core.Dataset.Scheduling
             IEnumerable<IScheduleDependency> dependsOn)
         {
             {
+                Lokad.Enforce.Argument(() => id);
                 Lokad.Enforce.Argument(() => condition);
                 Lokad.Enforce.Argument(() => dependsOn);
+                Lokad.Enforce.With<DuplicateScheduleElementIdException>(
+                    !m_Conditions.ContainsKey(id),
+                    Resources.Exceptions_Messages_DuplicateScheduleElementId);
             }
 
-            var id = new ScheduleElementId();
             var info = new ScheduleConditionInformation(id, name, summary, description, dependsOn);
             m_Conditions.Add(id, new ConditionMap(info, condition));
 

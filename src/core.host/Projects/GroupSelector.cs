@@ -8,10 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
+using Apollo.Core.Host.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// Defines the interface for objects that provide the ability to select suitable part groups based on a set of selection
@@ -90,7 +92,7 @@ namespace Apollo.Core.Host.Plugins
                 return false;
             }
 
-            if (m_Graph.Contains(exportingGroup))
+            if (!m_Graph.Contains(exportingGroup))
             {
                 return false;
             }
@@ -147,17 +149,17 @@ namespace Apollo.Core.Host.Plugins
                         OnGroupDisconnect));
         }
 
-        private GroupCompositionId OnGroupSelect(GroupDefinition exportingGroup)
+        private Task<GroupCompositionId> OnGroupSelect(GroupDefinition exportingGroup)
         {
             return m_Graph.Add(exportingGroup);
         }
 
-        private void OnGroupDeselect(GroupCompositionId id)
+        private Task OnGroupDeselect(GroupCompositionId id)
         {
-            m_Graph.Remove(id);
+            return m_Graph.Remove(id);
         }
 
-        private void OnGroupConnect(
+        private Task OnGroupConnect(
             GroupCompositionId importingGroup,
             GroupImportDefinition importDefinition,
             GroupCompositionId exportingGroup,
@@ -168,12 +170,12 @@ namespace Apollo.Core.Host.Plugins
                 throw new CannotMapExportToImportException();
             }
 
-            m_Graph.Connect(importingGroup, importDefinition, exportingGroup);
+            return m_Graph.Connect(importingGroup, importDefinition, exportingGroup);
         }
 
-        private void OnGroupDisconnect(GroupCompositionId importingGroup, GroupCompositionId exportingGroup)
+        private Task OnGroupDisconnect(GroupCompositionId importingGroup, GroupCompositionId exportingGroup)
         {
-            m_Graph.Disconnect(importingGroup, exportingGroup);
+            return m_Graph.Disconnect(importingGroup, exportingGroup);
         }
     }
 }

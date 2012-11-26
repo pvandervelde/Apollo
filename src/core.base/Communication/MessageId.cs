@@ -14,7 +14,7 @@ namespace Apollo.Core.Base.Communication
     /// Defines an ID number for messages.
     /// </summary>
     [Serializable]
-    internal sealed class MessageId : Id<MessageId, Guid>
+    public sealed class MessageId : Id<MessageId, Guid>
     {
         /// <summary>
         /// The GUID that indicates that the message ID is the 'none' ID.

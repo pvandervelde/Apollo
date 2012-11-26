@@ -248,7 +248,14 @@ namespace Apollo.Core.Dataset.Scheduling
                 passThroughCondition);
 
             var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
-            var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var scheduleInfo = knownSchedules.Add(
+                new ScheduleId(), 
+                schedule, 
+                "a", 
+                "b", 
+                "c", 
+                new List<IScheduleVariable>(), 
+                new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
@@ -288,7 +295,14 @@ namespace Apollo.Core.Dataset.Scheduling
                 passThroughCondition);
 
             var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
-            var scheduleInfo = knownSchedules.Add(schedule, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var scheduleInfo = knownSchedules.Add(
+                new ScheduleId(), 
+                schedule, 
+                "a", 
+                "b", 
+                "c", 
+                new List<IScheduleVariable>(), 
+                new List<IScheduleDependency>());
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();

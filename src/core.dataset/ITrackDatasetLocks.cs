@@ -6,7 +6,7 @@
 
 using System;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Dataset
 {
     /// <summary>
     /// Defines the interface for objects that provide lock tracking capabilities
@@ -26,7 +26,7 @@ namespace Apollo.Core.Base
     /// for changes.
     /// </para>
     /// </remarks>
-    public interface ITrackDatasetLocks
+    internal interface ITrackDatasetLocks
     {
         /// <summary>
         /// Locks the dataset for writing purposes.

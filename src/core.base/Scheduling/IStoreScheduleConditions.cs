@@ -20,6 +20,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Adds the <see cref="IScheduleCondition"/> object with the dependencies for that condition.
         /// </summary>
+        /// <param name="id">The ID of the condition.</param>
         /// <param name="condition">The condition that should be stored.</param>
         /// <param name="name">The name of the condition that is being described by this information object.</param>
         /// <param name="summary">The summary of the condition that is being described by this information object.</param>
@@ -27,6 +28,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="dependsOn">The variables for which data should be available in order to evaluate the condition.</param>
         /// <returns>An object identifying and describing the condition.</returns>
         ScheduleConditionInformation Add(
+            ScheduleElementId id,
             IScheduleCondition condition,
             string name,
             string summary,

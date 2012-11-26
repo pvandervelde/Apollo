@@ -5,15 +5,22 @@
 //-----------------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
+using Apollo.Utilities;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Host.Projects
 {
     /// <summary>
     /// Defines methods for selecting and connecting a group with other groups in the <see cref="IGroupCompositionGraph"/>.
     /// </summary>
     internal sealed class GroupDescriptor
     {
+        /// <summary>
+        /// The object used to lock on.
+        /// </summary>
+        private readonly ILockObject m_Lock = new LockObject();
+        
         /// <summary>
         /// The object that stores the data about the group.
         /// </summary>
@@ -22,22 +29,22 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// The method used to add the current group to the composition graph.
         /// </summary>
-        private readonly Func<GroupDefinition, GroupCompositionId> m_OnSelect;
+        private readonly Func<GroupDefinition, Task<GroupCompositionId>> m_OnSelect;
 
         /// <summary>
         /// The method used to remove the current group from the composition graph.
         /// </summary>
-        private readonly Action<GroupCompositionId> m_OnDeselect;
+        private readonly Func<GroupCompositionId, Task> m_OnDeselect;
 
         /// <summary>
         /// The method used to connect the export of the current group to an import of another group.
         /// </summary>
-        private readonly Action<GroupCompositionId, GroupImportDefinition, GroupCompositionId, GroupExportDefinition> m_OnConnect;
+        private readonly Func<GroupCompositionId, GroupImportDefinition, GroupCompositionId, GroupExportDefinition, Task> m_OnConnect;
 
         /// <summary>
         /// The method used to disconnect the export of the current group from an import of another group.
         /// </summary>
-        private readonly Action<GroupCompositionId, GroupCompositionId> m_OnDisconnect;
+        private readonly Func<GroupCompositionId, GroupCompositionId, Task> m_OnDisconnect;
 
         /// <summary>
         /// The composition ID that is provided once the group is added to the composition graph.
@@ -69,10 +76,10 @@ namespace Apollo.Core.Host.Plugins
         /// </exception>
         public GroupDescriptor(
             GroupDefinition group, 
-            Func<GroupDefinition, GroupCompositionId> onSelect, 
-            Action<GroupCompositionId> onDeselect,
-            Action<GroupCompositionId, GroupImportDefinition, GroupCompositionId, GroupExportDefinition> onConnect,
-            Action<GroupCompositionId, GroupCompositionId> onDisconnect)
+            Func<GroupDefinition, Task<GroupCompositionId>> onSelect, 
+            Func<GroupCompositionId, Task> onDeselect,
+            Func<GroupCompositionId, GroupImportDefinition, GroupCompositionId, GroupExportDefinition, Task> onConnect,
+            Func<GroupCompositionId, GroupCompositionId, Task> onDisconnect)
         {
             {
                 Lokad.Enforce.Argument(() => group);
@@ -92,19 +99,31 @@ namespace Apollo.Core.Host.Plugins
         /// <summary>
         /// Selects the current group and adds it to the composition graph.
         /// </summary>
-        /// <returns>The ID for the group in the graph.</returns>
-        public GroupCompositionId Select()
+        /// <returns>The task that will return the ID for the group in the graph.</returns>
+        public Task<GroupCompositionId> Select()
         {
-            m_Id = m_OnSelect(m_Group);
-            return m_Id;
+            var task = m_OnSelect(m_Group);
+            var continuationTask = task.ContinueWith(
+                t =>
+                {
+                    lock (m_Lock)
+                    {
+                        m_Id = t.Result;
+                    }
+
+                    return t.Result;
+                });
+
+            return continuationTask;
         }
 
         /// <summary>
         /// Deselects the current group and removes it from the composition graph.
         /// </summary>
-        public void Deselect()
+        /// <returns>The task that will finish once the current group is removed from the graph.</returns>
+        public Task Deselect()
         {
-            m_OnDeselect(m_Id);
+            return m_OnDeselect(m_Id);
         }
 
         /// <summary>
@@ -112,18 +131,20 @@ namespace Apollo.Core.Host.Plugins
         /// </summary>
         /// <param name="group">The ID of the group containing the import.</param>
         /// <param name="importToMatch">The import.</param>
-        public void ConnectTo(GroupCompositionId group, GroupImportDefinition importToMatch)
+        /// <returns>The task that will finish once the give connection has been made.</returns>
+        public Task ConnectTo(GroupCompositionId group, GroupImportDefinition importToMatch)
         {
-            m_OnConnect(group, importToMatch, m_Id, m_Group.GroupExport);
+            return m_OnConnect(group, importToMatch, m_Id, m_Group.GroupExport);
         }
 
         /// <summary>
         /// Disconnects the current group from the import of the given group.
         /// </summary>
         /// <param name="group">The ID of the importing group.</param>
-        public void DisconnectFrom(GroupCompositionId group)
+        /// <returns>The task that will finish once the given connection is removed.</returns>
+        public Task DisconnectFrom(GroupCompositionId group)
         {
-            m_OnDisconnect(group, m_Id);
+            return m_OnDisconnect(group, m_Id);
         }
     }
 }

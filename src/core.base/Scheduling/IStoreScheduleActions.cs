@@ -20,6 +20,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Adds the <see cref="IScheduleAction"/> object with the variables it affects and the dependencies for that action.
         /// </summary>
+        /// <param name="id">The ID of the action.</param>
         /// <param name="action">The action that should be stored.</param>
         /// <param name="name">The name of the action that is being described by this information object.</param>
         /// <param name="summary">The summary of the action that is being described by this information object.</param>
@@ -28,6 +29,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="dependsOn">The variables for which data should be available in order to execute the action.</param>
         /// <returns>An object identifying and describing the action.</returns>
         ScheduleActionInformation Add(
+            ScheduleElementId id,
             IScheduleAction action, 
             string name,
             string summary,

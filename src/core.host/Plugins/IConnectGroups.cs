@@ -64,5 +64,17 @@ namespace Apollo.Core.Host.Plugins
         /// selection criteria.
         /// </returns>
         IEnumerable<GroupDefinition> MatchingGroups(GroupImportDefinition groupToLinkTo, IDictionary<string, object> selectionCriteria);
+
+        /// <summary>
+        /// Creates the connection data that describes how the importing group and the exporting group should be connected.
+        /// </summary>
+        /// <param name="importingGroup">The ID of the group containing the import.</param>
+        /// <param name="importDefinition">The import definition.</param>
+        /// <param name="exportingGroup">The ID of the group containing the export.</param>
+        /// <returns>An object describing the way in which the two groups should be connected.</returns>
+        GroupConnection GenerateConnectionFor(
+            GroupCompositionId importingGroup, 
+            GroupImportDefinition importDefinition, 
+            GroupCompositionId exportingGroup);
     }
 }

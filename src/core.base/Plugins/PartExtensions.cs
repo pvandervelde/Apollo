@@ -6,16 +6,38 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using Apollo.Core.Base.Plugins;
 using Apollo.Core.Extensions.Plugins;
 
-namespace Apollo.Core.Host.Plugins
+namespace Apollo.Core.Base.Plugins
 {
     /// <summary>
     /// Defines extension methods for composable parts.
     /// </summary>
-    internal static class PartExtensions
+    public static class PartExtensions
     {
+        /// <summary>
+        /// Provides the part definition that owns the given export registration.
+        /// </summary>
+        /// <param name="partDefinitions">The collection of parts that should be searched for the given export.</param>
+        /// <param name="exportRegistration">The ID of the export.</param>
+        /// <returns>The requested part.</returns>
+        /// <exception cref="UnknownExportDefinitionException">Thrown when the part does not define an export with the given ID.</exception>
+        public static GroupPartDefinition PartByExport(
+            this IEnumerable<GroupPartDefinition> partDefinitions,
+            ExportRegistrationId exportRegistration)
+        {
+            var part = partDefinitions
+                .Where(o => o.RegisteredExports.Contains(exportRegistration))
+                .FirstOrDefault();
+
+            if (part == null)
+            {
+                throw new UnknownExportDefinitionException();
+            }
+
+            return part;
+        }
+
         /// <summary>
         /// Provides the export definition from the part definition based on the export ID.
         /// </summary>
@@ -55,6 +77,29 @@ namespace Apollo.Core.Host.Plugins
             }
 
             return export;
+        }
+
+        /// <summary>
+        /// Provides the part definition that owns the given import registration.
+        /// </summary>
+        /// <param name="partDefinitions">The collection of parts that should be searched for the given import.</param>
+        /// <param name="importRegistration">The ID of the import.</param>
+        /// <returns>The requested part.</returns>
+        /// <exception cref="UnknownImportDefinitionException">Thrown when the part does not define an import with the given ID.</exception>
+        public static GroupPartDefinition PartByImport(
+            this IEnumerable<GroupPartDefinition> partDefinitions,
+            ImportRegistrationId importRegistration)
+        {
+            var part = partDefinitions
+                .Where(o => o.RegisteredImports.Contains(importRegistration))
+                .FirstOrDefault();
+
+            if (part == null)
+            {
+                throw new UnknownImportDefinitionException();
+            }
+
+            return part;
         }
 
         /// <summary>

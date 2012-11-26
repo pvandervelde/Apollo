@@ -64,13 +64,11 @@
     <Compile Include="History\HistoryObjectDictionaryHistory.cs" />
     <Compile Include="History\HistoryObjectListHistory.cs" />
     <Compile Include="History\HistoryObjectValueHistory.cs" />
-    <Compile Include="History\HistoryPatch.cs" />
     <Compile Include="History\HistorySnapshotStorage.cs" />
     <Compile Include="History\IAmHistoryEnabled.cs" />
     <Compile Include="History\IBidirectionalGraphHistory.cs" />
     <Compile Include="History\IChangeSet.cs" />
     <Compile Include="History\IConnectObjectsToHistory.cs" />
-    <Compile Include="History\ICreateSnapshots.cs" />
     <Compile Include="History\IDictionaryTimelineStorage.cs" />
     <Compile Include="History\IFollowHistory.cs" />
     <Compile Include="History\IFollowObjectTimeline.cs" />
@@ -79,13 +77,11 @@
     <Compile Include="History\IListTimelineStorage.cs" />
     <Compile Include="History\INeedNotificationOnHistoryChange.cs" />
     <Compile Include="History\InvalidTimeMarkerException.cs" />
-    <Compile Include="History\ILoadHistoryPatches.cs" />
     <Compile Include="History\IReceiveMessagesFromTheFuture.cs" />
     <Compile Include="History\IStoreTimelineValues.cs" />
     <Compile Include="History\ITimeline.cs" />
     <Compile Include="History\ITrackHistoryChanges.cs" />
     <Compile Include="History\IVariableTimeline.cs" />
-    <Compile Include="History\ICreateHistoryPatches.cs" />
     <Compile Include="History\ListHistory.cs" />
     <Compile Include="History\ListHistoryBase.CollectionChange.cs" />
     <Compile Include="History\ListHistoryBase.cs" />

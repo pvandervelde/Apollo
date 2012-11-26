@@ -10,12 +10,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Apollo.Core.Base;
 using Apollo.Core.Base.Communication;
 using Apollo.Utilities;
 using Lokad;
 using NManto;
 
-namespace Apollo.Core.Base
+namespace Apollo.Core.Dataset
 {
     /// <summary>
     /// Defines the commands that allow a dataset application to handle the dataset 

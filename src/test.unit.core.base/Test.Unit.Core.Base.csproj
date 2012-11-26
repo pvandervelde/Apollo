@@ -146,7 +146,6 @@
     <Compile Include="Communication\WaitingUploadsTest.cs" />
     <Compile Include="DatasetCannotBecomeParentExceptionTest.cs" />
     <Compile Include="DatasetIdTest.cs" />
-    <Compile Include="DatasetLockKeyTest.cs" />
     <Compile Include="DatasetOnlineInformationTest.cs" />
     <Compile Include="Loaders\DatasetDistributionGeneratorTest.cs" />
     <Compile Include="Loaders\DatasetLoadingProposalComparerTest.cs" />

@@ -161,5 +161,20 @@ namespace Apollo.Core.Host.Plugins
             return m_Repository.Groups()
                 .Where(g => Accepts(groupToLinkTo, g.GroupExport) && ExportPassesSelectionCriteria(g.GroupExport, selectionCriteria));
         }
+
+        /// <summary>
+        /// Creates the connection data that describes how the importing group and the exporting group should be connected.
+        /// </summary>
+        /// <param name="importingGroup">The ID of the group containing the import.</param>
+        /// <param name="importDefinition">The import definition.</param>
+        /// <param name="exportingGroup">The ID of the group containing the export.</param>
+        /// <returns>An object describing the way in which the two groups should be connected.</returns>
+        public GroupConnection GenerateConnectionFor(
+            GroupCompositionId importingGroup,
+            GroupImportDefinition importDefinition,
+            GroupCompositionId exportingGroup)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

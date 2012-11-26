@@ -302,7 +302,8 @@ namespace Apollo.Core.Host.Plugins
         {
             var definition = new GroupDefinition(name);
             definition.Objects = m_Objects.SelectMany(p => p.Value).ToList();
-            definition.InternalConnections = m_Connections.ToDictionary(p => p.Key, p => (IEnumerable<ExportRegistrationId>)p.Value);
+            definition.InternalConnections = m_Connections.Select(
+                p => new PartImportToPartExportMap(p.Key, (IEnumerable<ExportRegistrationId>)p.Value));
 
             if (m_Schedule != null)
             {
