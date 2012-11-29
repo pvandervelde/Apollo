@@ -12,10 +12,11 @@ using QuickGraph;
 namespace Apollo.Core.Base.Scheduling
 {
     /// <summary>
-    /// Defines a graph connection between two <see cref="IEditableScheduleVertex"/> objects.
+    /// Defines a graph connection between two <see cref="IScheduleVertex"/> objects.
     /// </summary>
     [Serializable]
-    internal sealed class EditableScheduleEdge : Edge<IEditableScheduleVertex>
+    [CLSCompliant(false)]
+    public sealed class ScheduleEdge : Edge<IScheduleVertex>
     {
         /// <summary>
         /// The ID of the condition that indicates if the current edge can be traversed.
@@ -23,12 +24,12 @@ namespace Apollo.Core.Base.Scheduling
         private readonly ScheduleElementId m_TraversingCondition;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EditableScheduleEdge"/> class.
+        /// Initializes a new instance of the <see cref="ScheduleEdge"/> class.
         /// </summary>
         /// <param name="source">The start vertex for the edge.</param>
         /// <param name="target">The end vertex for the edge.</param>
         /// <param name="traversingCondition">The ID of the condition that determines if this edge can be traversed.</param>
-        public EditableScheduleEdge(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleElementId traversingCondition = null)
+        public ScheduleEdge(IScheduleVertex source, IScheduleVertex target, ScheduleElementId traversingCondition = null)
             : base(source, target)
         {
             {

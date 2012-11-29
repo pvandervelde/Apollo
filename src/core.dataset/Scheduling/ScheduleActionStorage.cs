@@ -166,49 +166,24 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <summary>
         /// Adds the <see cref="IScheduleAction"/> object with the variables it affects and the dependencies for that action.
         /// </summary>
-        /// <param name="id">The ID of the action.</param>
         /// <param name="action">The action that should be stored.</param>
         /// <param name="name">The name of the action that is being described by this information object.</param>
-        /// <param name="summary">The summary of the action that is being described by this information object.</param>
         /// <param name="description">The description of the action that is being described by this information object.</param>
-        /// <param name="produces">The variables that are affected by the action.</param>
-        /// <param name="dependsOn">The variables for which data should be available in order to execute the action.</param>
         /// <returns>An object identifying and describing the action.</returns>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
-        /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="action"/> is <see langword="null" />.
         /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="produces"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="dependsOn"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="DuplicateScheduleElementIdException">
-        ///     Thrown if an action with the <paramref name="id"/> is already registered.
-        /// </exception>
         public ScheduleActionInformation Add(
-            ScheduleElementId id,
             IScheduleAction action,
             string name,
-            string summary,
-            string description,
-            IEnumerable<IScheduleVariable> produces,
-            IEnumerable<IScheduleDependency> dependsOn)
+            string description)
         {
             {
-                Lokad.Enforce.Argument(() => id);
                 Lokad.Enforce.Argument(() => action);
-                Lokad.Enforce.Argument(() => produces);
-                Lokad.Enforce.Argument(() => dependsOn);
-                Lokad.Enforce.With<DuplicateScheduleElementIdException>(
-                    !m_Actions.ContainsKey(id),
-                    Resources.Exceptions_Messages_DuplicateScheduleElementId);
             }
 
-            var info = new ScheduleActionInformation(id, name, summary, description, produces, dependsOn);
+            var id = new ScheduleElementId();
+            var info = new ScheduleActionInformation(id, name, description);
             m_Actions.Add(id, new ActionMap(info, action));
 
             return info;
@@ -244,10 +219,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var info = new ScheduleActionInformation(
                 actionToReplace, 
                 oldInfo.Name, 
-                oldInfo.Summary, 
-                oldInfo.Description, 
-                oldInfo.Produces(), 
-                oldInfo.DependsOn());
+                oldInfo.Description);
             m_Actions[actionToReplace] = new ActionMap(info, newAction);
         }
 

@@ -18,7 +18,7 @@ namespace Apollo.Core.Base.Scheduling
     {
         private static bool VerifyStartVertexOnlyHasOutboundEdges(
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var result = (schedule.NumberOfInboundConnections(schedule.Start) == 0) && (schedule.NumberOfOutboundConnections(schedule.Start) >= 1);
             if (!result)
@@ -31,7 +31,7 @@ namespace Apollo.Core.Base.Scheduling
 
         private static bool VerifyEndVertexOnlyHasInboundEdges(
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             var result = (schedule.NumberOfOutboundConnections(schedule.End) == 0) && (schedule.NumberOfInboundConnections(schedule.End) >= 1);
             if (!result)
@@ -44,9 +44,9 @@ namespace Apollo.Core.Base.Scheduling
 
         private static bool VerifyTrackForwardsFromStart(
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices);
+            var unvisitedNodes = new List<IScheduleVertex>(schedule.Vertices);
             schedule.TraverseSchedule(
                 schedule.Start,
                 true,
@@ -74,9 +74,9 @@ namespace Apollo.Core.Base.Scheduling
 
         private static bool VerifyTrackBackwardsFromEnd(
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
-            var unvisitedNodes = new List<IEditableScheduleVertex>(schedule.Vertices);
+            var unvisitedNodes = new List<IScheduleVertex>(schedule.Vertices);
             schedule.TraverseSchedule(
                 schedule.End,
                 false,
@@ -104,7 +104,7 @@ namespace Apollo.Core.Base.Scheduling
 
         private static bool VerifyVerticesAreOnlyConnectedByOneEdgeInGivenDirection(
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             bool result = true;
             schedule.TraverseSchedule(
@@ -112,7 +112,7 @@ namespace Apollo.Core.Base.Scheduling
                 true,
                 (node, edges) =>
                 {
-                    var outNodes = new List<IEditableScheduleVertex>();
+                    var outNodes = new List<IScheduleVertex>();
 
                     var outEdgeCount = 0;
                     foreach (var pair in edges)
@@ -194,8 +194,8 @@ namespace Apollo.Core.Base.Scheduling
             Justification = "Documentation can start with a language keyword")]
         public bool IsValid(
             ScheduleId id, 
-            IEditableSchedule schedule, 
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            IEditableSchedule schedule,
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             {
                 Lokad.Enforce.Argument(() => schedule);
@@ -218,7 +218,7 @@ namespace Apollo.Core.Base.Scheduling
         private bool VerifySubSchedulesDoNotLinkBackToParentSchedule(
             ScheduleId id,
             IEditableSchedule schedule,
-            Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure)
+            Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure)
         {
             bool result = true;
             schedule.TraverseSchedule(

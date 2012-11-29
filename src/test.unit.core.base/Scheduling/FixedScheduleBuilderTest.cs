@@ -19,6 +19,26 @@ namespace Apollo.Core.Base.Scheduling
                 Justification = "Unit tests do not need documentation.")]
     public sealed class FixedScheduleBuilderTest
     {
+        private static bool AreVerticesEqual(IScheduleVertex first, IScheduleVertex second)
+        {
+            if (first.GetType() != second.GetType())
+            {
+                return false;
+            }
+
+            if (first is EditableExecutingActionVertex)
+            {
+                return ((EditableExecutingActionVertex)first).ActionToExecute == ((EditableExecutingActionVertex)second).ActionToExecute;
+            }
+
+            if (first is EditableSubScheduleVertex)
+            {
+                return ((EditableSubScheduleVertex)first).ScheduleToExecute == ((EditableSubScheduleVertex)second).ScheduleToExecute;
+            }
+
+            return true;
+        }
+
         [Test]
         public void CreateWithTemplateSchedule()
         {
@@ -33,7 +53,7 @@ namespace Apollo.Core.Base.Scheduling
             var templateSchedule = templateBuilder.Build();
 
             var builder = new FixedScheduleBuilder(templateSchedule);
-            var markHistoryVertex = new EditableMarkHistoryVertex(10);
+            var markHistoryVertex = builder.AddHistoryMarkingPoint();
             builder.InsertIn(insertVertex, markHistoryVertex);
             var schedule = builder.Build();
 
@@ -81,8 +101,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, actionVertex, schedule.End }, 
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, actionVertex, schedule.End }, 
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -98,8 +119,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, subScheduleVertex, schedule.End }, 
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, subScheduleVertex, schedule.End }, 
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -124,8 +146,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, synchronizationVertex, schedule.End },
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, synchronizationVertex, schedule.End },
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -160,8 +183,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, synchronizationStartVertex, synchronizationEndVertex, schedule.End },
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, synchronizationStartVertex, synchronizationEndVertex, schedule.End },
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -175,8 +199,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, historyMarkingVertex, schedule.End },
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, historyMarkingVertex, schedule.End },
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -190,8 +215,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]
@@ -214,8 +240,9 @@ namespace Apollo.Core.Base.Scheduling
 
             var schedule = builder.Build();
             Assert.AreElementsEqualIgnoringOrder(
-                new IEditableScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
-                schedule.Vertices);
+                new IScheduleVertex[] { schedule.Start, insertVertex, schedule.End },
+                schedule.Vertices,
+                AreVerticesEqual);
         }
 
         [Test]

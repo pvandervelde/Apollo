@@ -4,12 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Apollo.Core.Extensions.Scheduling;
+
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates the start point of a schedule.
+    /// Defines an <see cref="IScheduleVertex"/> which indicates the start point of a schedule.
     /// </summary>
-    internal sealed class ExecutableStartVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableStartVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutableStartVertex"/> class.

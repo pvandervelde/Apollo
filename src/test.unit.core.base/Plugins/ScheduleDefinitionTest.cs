@@ -22,14 +22,14 @@ namespace Apollo.Core.Base.Plugins
     {
         private static IEditableSchedule BuildSchedule()
         {
-            var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
             var start = new EditableStartVertex(1);
             graph.AddVertex(start);
 
             var end = new EditableEndVertex(2);
             graph.AddVertex(end);
-            graph.AddEdge(new EditableScheduleEdge(start, end));
+            graph.AddEdge(new ScheduleEdge(start, end));
 
             return new EditableSchedule(graph, start, end);
         }
@@ -48,25 +48,21 @@ namespace Apollo.Core.Base.Plugins
                     {
                         ScheduleDefinition.CreateDefinition(
                             new GroupRegistrationId("a"), 
-                            new ScheduleId(), 
                             BuildSchedule(),
                             new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                             new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                         ScheduleDefinition.CreateDefinition(
                             new GroupRegistrationId("b"), 
-                            new ScheduleId(), 
                             BuildSchedule(),
                             new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                             new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                         ScheduleDefinition.CreateDefinition(
                             new GroupRegistrationId("c"), 
-                            new ScheduleId(), 
                             BuildSchedule(),
                             new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                             new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                         ScheduleDefinition.CreateDefinition(
                             new GroupRegistrationId("d"), 
-                            new ScheduleId(), 
                             BuildSchedule(),
                             new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                             new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
@@ -81,25 +77,21 @@ namespace Apollo.Core.Base.Plugins
                 { 
                     ScheduleDefinition.CreateDefinition(
                         new GroupRegistrationId("a"), 
-                        new ScheduleId(), 
                         BuildSchedule(),
                         new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                         new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                     ScheduleDefinition.CreateDefinition(
                         new GroupRegistrationId("b"), 
-                        new ScheduleId(), 
                         BuildSchedule(),
                         new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                         new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                     ScheduleDefinition.CreateDefinition(
                         new GroupRegistrationId("c"), 
-                        new ScheduleId(), 
                         BuildSchedule(),
                         new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                         new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
                     ScheduleDefinition.CreateDefinition(
                         new GroupRegistrationId("d"), 
-                        new ScheduleId(), 
                         BuildSchedule(),
                         new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(), 
                         new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>()),
@@ -111,7 +103,6 @@ namespace Apollo.Core.Base.Plugins
         {
             var original = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -126,7 +117,6 @@ namespace Apollo.Core.Base.Plugins
             ScheduleDefinition first = null;
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -139,7 +129,6 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -151,16 +140,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsOperatorWithEqualObject()
         {
-            var id = new ScheduleId();
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -173,13 +159,11 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("b"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -193,7 +177,6 @@ namespace Apollo.Core.Base.Plugins
             ScheduleDefinition first = null;
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -206,7 +189,6 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -218,16 +200,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void NotEqualsOperatorWithEqualObject()
         {
-            var id = new ScheduleId();
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -240,13 +219,11 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             var second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("b"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -258,7 +235,6 @@ namespace Apollo.Core.Base.Plugins
         public void Create()
         {
             var groupId = new GroupRegistrationId("a");
-            var scheduleId = new ScheduleId();
             var schedule = BuildSchedule();
             var actions = new Dictionary<ScheduleElementId, ScheduleActionRegistrationId> 
                 {
@@ -270,13 +246,11 @@ namespace Apollo.Core.Base.Plugins
                 };
             var obj = ScheduleDefinition.CreateDefinition(
                 groupId,
-                scheduleId,
                 schedule,
                 actions,
                 conditions);
 
             Assert.AreEqual(groupId, obj.ContainingGroup);
-            Assert.AreEqual(scheduleId, obj.ScheduleId);
             Assert.AreEqual(schedule, obj.Schedule);
             Assert.AreElementsEqual(actions, obj.Actions);
             Assert.AreElementsEqual(conditions, obj.Conditions);
@@ -287,7 +261,6 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -299,16 +272,13 @@ namespace Apollo.Core.Base.Plugins
         [Test]
         public void EqualsWithEqualObjects()
         {
-            var id = new ScheduleId();
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             object second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                id,
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -321,13 +291,11 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
             object second = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("b"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());
@@ -340,7 +308,6 @@ namespace Apollo.Core.Base.Plugins
         {
             var first = ScheduleDefinition.CreateDefinition(
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 BuildSchedule(),
                 new Dictionary<ScheduleElementId, ScheduleActionRegistrationId>(),
                 new Dictionary<ScheduleElementId, ScheduleConditionRegistrationId>());

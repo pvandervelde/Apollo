@@ -71,17 +71,17 @@ namespace Apollo.Core.Host.Plugins
                 return false;
             }
 
-            bool isMatch = true;
-            if (exportDefinition.ScheduleToExport != null)
+            var importingGroup = m_Repository.Group(importDefinition.ContainingGroup);
+            var exportingGroup = m_Repository.Group(exportDefinition.ContainingGroup);
+
+            var isMatch = true;
+            if (exportingGroup.Schedule != null)
             {
                 isMatch = importDefinition.ScheduleInsertPosition != null;
             }
 
             if (isMatch)
             {
-                var importingGroup = m_Repository.Group(importDefinition.ContainingGroup);
-                var exportingGroup = m_Repository.Group(exportDefinition.ContainingGroup);
-
                 var imports = importDefinition.ImportsToMatch.Select(i => importingGroup.Objects.PartImportById(i));
                 var exports = exportDefinition.ProvidedExports.Select(e => exportingGroup.Objects.PartExportById(e));
                 foreach (var import in imports)

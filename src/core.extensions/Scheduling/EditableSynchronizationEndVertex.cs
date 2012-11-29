@@ -13,7 +13,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// should be synchronized.
     /// </summary>
     [Serializable]
-    public sealed class EditableSynchronizationEndVertex : IEditableScheduleVertex
+    public sealed class EditableSynchronizationEndVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableSynchronizationEndVertex"/> class.

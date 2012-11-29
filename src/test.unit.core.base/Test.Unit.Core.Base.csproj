@@ -173,7 +173,7 @@
     <Compile Include="Plugins\ScheduleDefinitionTest.cs" />
     <Compile Include="Plugins\TypeDefinitionTest.cs" />
     <Compile Include="Plugins\TypeIdentityTest.cs" />
-    <Compile Include="Scheduling\EditableScheduleEdgeTest.cs" />
+    <Compile Include="Scheduling\ScheduleEdgeTest.cs" />
     <Compile Include="Scheduling\EditableScheduleTest.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilderTest.cs" />
     <Compile Include="Scheduling\ScheduleVerifierTest.cs" />

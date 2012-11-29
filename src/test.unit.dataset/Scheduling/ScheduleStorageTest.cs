@@ -20,42 +20,12 @@ namespace Apollo.Core.Dataset.Scheduling
     public sealed class ScheduleStorageTest
     {
         [Test]
-        public void AddWithNullScheduleId()
-        {
-            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(null, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
-        }
-
-        [Test]
         public void AddWithNullSchedule()
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleId(), null, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
-        }
-
-        [Test]
-        public void AddWithNullProductionVariables()
-        {
-            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleId(), schedule.Object, "a", "b", "c", null, new List<IScheduleDependency>()));
-        }
-
-        [Test]
-        public void AddWithNullDependencies()
-        {
-            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleId(), schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), null));
+                () => collection.Add(null, "a", "b"));
         }
 
         [Test]
@@ -63,24 +33,10 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(id, info.Id);
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(schedule.Object, collection.Schedule(info.Id));
-        }
-
-        [Test]
-        public void AddWithDuplicateId()
-        {
-            var collection = ScheduleStorage.BuildStorageWithoutTimeline();
-            var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
-
-            collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.Throws<DuplicateScheduleIdException>(
-                () => collection.Add(id, schedule.Object, "d", "e", "f", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
         }
 
         [Test]
@@ -88,16 +44,12 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var firstId = new ScheduleId();
-            var secondId = new ScheduleId();
 
-            var info = collection.Add(firstId, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(firstId, info.Id);
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(schedule.Object, collection.Schedule(info.Id));
 
-            var otherInfo = collection.Add(secondId, schedule.Object, "d", "e", "f", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(secondId, otherInfo.Id);
+            var otherInfo = collection.Add(schedule.Object, "d", "e");
             Assert.AreSame(otherInfo, collection.Information(otherInfo.Id));
             Assert.AreSame(schedule.Object, collection.Schedule(otherInfo.Id));
         }
@@ -107,9 +59,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             var otherSchedule = new Mock<IEditableSchedule>();
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, otherSchedule.Object));
         }
@@ -119,9 +70,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             var otherSchedule = new Mock<IEditableSchedule>();
             Assert.Throws<UnknownScheduleException>(() => collection.Update(new ScheduleId(), otherSchedule.Object));
         }
@@ -131,9 +81,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.Throws<ArgumentNullException>(() => collection.Update(info.Id, null));
         }
 
@@ -142,9 +91,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.AreSame(schedule.Object, collection.Schedule(info.Id));
 
             var otherSchedule = new Mock<IEditableSchedule>();
@@ -152,10 +100,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var otherInfo = collection.Information(info.Id);
             Assert.AreEqual(info.Id, otherInfo.Id);
             Assert.AreEqual(info.Name, otherInfo.Name);
-            Assert.AreEqual(info.Summary, otherInfo.Summary);
             Assert.AreEqual(info.Description, otherInfo.Description);
-            Assert.AreElementsEqual(info.Produces(), otherInfo.Produces());
-            Assert.AreElementsEqual(info.DependsOn(), otherInfo.DependsOn());
 
             Assert.AreSame(otherSchedule.Object, collection.Schedule(info.Id));
         }
@@ -172,9 +117,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
 
             collection.Remove(info.Id);
@@ -186,9 +130,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleStorage.BuildStorageWithoutTimeline();
             var schedule = new Mock<IEditableSchedule>();
-            var id = new ScheduleId();
 
-            var info = collection.Add(id, schedule.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(schedule.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
             Assert.IsFalse(collection.Contains(new ScheduleId()));
             Assert.IsFalse(collection.Contains(null));

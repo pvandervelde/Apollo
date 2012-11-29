@@ -34,22 +34,18 @@ namespace Apollo.Core.Base.Plugins
                         GroupExportDefinition.CreateDefinition(
                             "a", 
                             new GroupRegistrationId("b"), 
-                            null, 
                             Enumerable.Empty<ExportRegistrationId>()),
                         GroupExportDefinition.CreateDefinition(
                             "c", 
                             new GroupRegistrationId("d"), 
-                            null, 
                             Enumerable.Empty<ExportRegistrationId>()),
                         GroupExportDefinition.CreateDefinition(
                             "e", 
                             new GroupRegistrationId("f"), 
-                            null, 
                             Enumerable.Empty<ExportRegistrationId>()),
                         GroupExportDefinition.CreateDefinition(
                             "g", 
                             new GroupRegistrationId("h"), 
-                            new ScheduleId(), 
                             Enumerable.Empty<ExportRegistrationId>()),
                     },
         };
@@ -63,22 +59,18 @@ namespace Apollo.Core.Base.Plugins
                     GroupExportDefinition.CreateDefinition(
                         "a", 
                         new GroupRegistrationId("b"), 
-                        null, 
                         Enumerable.Empty<ExportRegistrationId>()),
                     GroupExportDefinition.CreateDefinition(
                         "c", 
                         new GroupRegistrationId("d"), 
-                        null, 
                         Enumerable.Empty<ExportRegistrationId>()),
                     GroupExportDefinition.CreateDefinition(
                         "e", 
                         new GroupRegistrationId("f"), 
-                        null, 
                         Enumerable.Empty<ExportRegistrationId>()),
                     GroupExportDefinition.CreateDefinition(
                         "g", 
                         new GroupRegistrationId("h"), 
-                        new ScheduleId(), 
                         Enumerable.Empty<ExportRegistrationId>()),
                 },
         };
@@ -89,7 +81,6 @@ namespace Apollo.Core.Base.Plugins
             var original = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 new List<ExportRegistrationId> { new ExportRegistrationId(typeof(string), 1, "a") });
             var copy = Assert.BinarySerializeThenDeserialize(original);
 
@@ -103,7 +94,6 @@ namespace Apollo.Core.Base.Plugins
             var second = GroupExportDefinition.CreateDefinition(
                 "b", 
                 new GroupRegistrationId("a"), 
-                new ScheduleId(), 
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsFalse(first == second);
@@ -115,7 +105,6 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b", 
                 new GroupRegistrationId("a"), 
-                new ScheduleId(), 
                 Enumerable.Empty<ExportRegistrationId>());
             GroupExportDefinition second = null;
 
@@ -128,12 +117,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             var second = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsTrue(first == second);
@@ -145,12 +132,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             var second = GroupExportDefinition.CreateDefinition(
                 "c",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsFalse(first == second);
@@ -163,7 +148,6 @@ namespace Apollo.Core.Base.Plugins
             var second = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsTrue(first != second);
@@ -175,7 +159,6 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             GroupExportDefinition second = null;
 
@@ -188,12 +171,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             var second = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsFalse(first != second);
@@ -205,12 +186,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             var second = GroupExportDefinition.CreateDefinition(
                 "c",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsTrue(first != second);
@@ -221,13 +200,11 @@ namespace Apollo.Core.Base.Plugins
         {
             var groupId = new GroupRegistrationId("a");
             var contractName = "b";
-            var schedule = new ScheduleId();
             var imports = new List<ExportRegistrationId> { new ExportRegistrationId(typeof(string), 0, "a") };
-            var obj = GroupExportDefinition.CreateDefinition(contractName, groupId, schedule, imports);
+            var obj = GroupExportDefinition.CreateDefinition(contractName, groupId, imports);
 
             Assert.AreEqual(groupId, obj.ContainingGroup);
             Assert.AreEqual(contractName, obj.ContractName);
-            Assert.AreEqual(schedule, obj.ScheduleToExport);
             Assert.AreElementsEqual(imports, obj.ProvidedExports);
         }
 
@@ -237,7 +214,6 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             object second = null;
 
@@ -250,12 +226,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             object second = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsTrue(first.Equals(second));
@@ -267,12 +241,10 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             object second = GroupExportDefinition.CreateDefinition(
                 "c",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
 
             Assert.IsFalse(first.Equals(second));
@@ -284,7 +256,6 @@ namespace Apollo.Core.Base.Plugins
             var first = GroupExportDefinition.CreateDefinition(
                 "b",
                 new GroupRegistrationId("a"),
-                new ScheduleId(),
                 Enumerable.Empty<ExportRegistrationId>());
             var second = new object();
 

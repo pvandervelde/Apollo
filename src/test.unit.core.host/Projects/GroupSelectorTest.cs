@@ -27,7 +27,7 @@ namespace Apollo.Core.Host.Projects
             var exportingId = new GroupCompositionId();
 
             var importEngine = new Mock<IConnectGroups>(); 
-            var graph = new Mock<IGroupCompositionGraph>();
+            var graph = new Mock<IGroupCompositionLayer>();
             {
                 graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
                     .Returns<GroupCompositionId>(id => !id.Equals(importingId));
@@ -48,7 +48,7 @@ namespace Apollo.Core.Host.Projects
             var exportingId = new GroupCompositionId();
 
             var importEngine = new Mock<IConnectGroups>();
-            var graph = new Mock<IGroupCompositionGraph>();
+            var graph = new Mock<IGroupCompositionLayer>();
             {
                 graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
                     .Returns<GroupCompositionId>(id => !id.Equals(exportingId));
@@ -69,7 +69,7 @@ namespace Apollo.Core.Host.Projects
             var exportingId = new GroupCompositionId();
 
             var importEngine = new Mock<IConnectGroups>();
-            var graph = new Mock<IGroupCompositionGraph>();
+            var graph = new Mock<IGroupCompositionLayer>();
             {
                 graph.Setup(g => g.Contains(It.IsAny<GroupCompositionId>()))
                     .Returns(true);
@@ -105,7 +105,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(true);
             }
 
-            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionLayer>().Object);
             Assert.IsFalse(
                 selector.CanConnectTo(
                     new GroupCompositionId(), 
@@ -134,7 +134,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(groups);
             }
 
-            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionLayer>().Object);
             var selectedGroups = selector.MatchingGroups(new Dictionary<string, object>());
             Assert.AreEqual(groups.Count, selectedGroups.Count());
         }
@@ -154,7 +154,7 @@ namespace Apollo.Core.Host.Projects
                     .Returns(new List<GroupDefinition> { groups[0], groups[1] });
             }
 
-            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionGraph>().Object);
+            var selector = new GroupSelector(importEngine.Object, new Mock<IGroupCompositionLayer>().Object);
             var selectedGroups = selector.MatchingGroups(GroupImportDefinition.CreateDefinition("myContract", groups[0].Id, null, null));
             Assert.AreEqual(2, selectedGroups.Count());
         }

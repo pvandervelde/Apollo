@@ -92,13 +92,13 @@
     <Compile Include="InvalidCommandLineArgumentsException.cs" />
     <Compile Include="ITrackDatasetLocks.cs" />
     <Compile Include="Plugins\GroupCompositionCommands.cs" />
-    <Compile Include="Plugins\GroupCompositionLayer.cs" />
+    <Compile Include="Plugins\CompositionLayer.cs" />
     <Compile Include="Plugins\GroupCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\IStoreGroupsAndConnections.cs" />
     <Compile Include="Plugins\IStorePartInstances.cs" />
-    <Compile Include="Plugins\PartCompositionLayer.cs" />
     <Compile Include="Plugins\PartCompositionId.cs" />
-    <Compile Include="Plugins\PartInstanceLayer.cs" />
-    <Compile Include="Plugins\ScheduleCompositionLayer.cs" />
+    <Compile Include="Plugins\InstanceLayer.cs" />
+    <Compile Include="Plugins\UnknownGroupCompositionIdException.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
     <Compile Include="Scheduling\DuplicateScheduleElementIdException.cs" />
     <Compile Include="Scheduling\DuplicateScheduleIdException.cs" />
@@ -110,7 +110,6 @@
     <Compile Include="Scheduling\ExecutableEndVertex.cs" />
     <Compile Include="Scheduling\ExecutableMarkHistoryVertex.cs" />
     <Compile Include="Scheduling\ExecutableSchedule.cs" />
-    <Compile Include="Scheduling\ExecutableScheduleEdge.cs" />
     <Compile Include="Scheduling\ExecutableStartVertex.cs" />
     <Compile Include="Scheduling\ExecutableSubScheduleVertex.cs" />
     <Compile Include="Scheduling\ExecutableSynchronizationEndVertex.cs" />
@@ -118,7 +117,6 @@
     <Compile Include="Scheduling\Processors\NoOpVertexProcessor.cs" />
     <Compile Include="Scheduling\ScheduleConditionStorage.cs" />
     <Compile Include="Scheduling\ScheduleDistributor.cs" />
-    <Compile Include="Scheduling\IExecutableScheduleVertex.cs" />
     <Compile Include="Scheduling\IProcesExecutableScheduleVertices.cs" />
     <Compile Include="Scheduling\IDistributeScheduleExecutions.cs" />
     <Compile Include="Scheduling\Processors\MarkHistoryVertexProcessor.cs" />

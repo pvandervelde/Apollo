@@ -14,7 +14,7 @@ namespace Apollo.Core.Dataset.Plugins
     /// <summary>
     /// Defines the interface for objects that manage part instances.
     /// </summary>
-    internal interface IStorePartInstances : IEnumerable<PartCompositionId>
+    internal interface IStoreInstances : IEnumerable<PartCompositionId>
     {
         /// <summary>
         /// Adds a new part definition to the layer and creates an instance of that part with the given constructor parameters.

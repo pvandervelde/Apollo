@@ -83,6 +83,7 @@ namespace Apollo.Core.Dataset
                     c.Resolve<IEnumerable<IProcesExecutableScheduleVertices>>(),
                     c.Resolve<IStoreScheduleConditions>(),
                     p.TypedAs<ExecutableSchedule>(),
+                    p.TypedAs<ScheduleId>(),
                     p.TypedAs<ScheduleExecutionInfo>()))
                 .As<IExecuteSchedules>();
 
@@ -92,10 +93,11 @@ namespace Apollo.Core.Dataset
                         var ctx = c.Resolve<IComponentContext>();
                         return new ScheduleDistributor(
                             c.Resolve<IStoreSchedules>(),
-                            (s, i) =>
+                            (s, id, i) =>
                             {
                                 return ctx.Resolve<IExecuteSchedules>(
                                     new TypedParameter(typeof(ExecutableSchedule), s),
+                                    new TypedParameter(typeof(ScheduleId), id),
                                     new TypedParameter(typeof(ScheduleExecutionInfo), i));
                             });
                     })

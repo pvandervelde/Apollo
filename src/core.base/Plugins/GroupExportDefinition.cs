@@ -81,7 +81,6 @@ namespace Apollo.Core.Base.Plugins
         /// </summary>
         /// <param name="contractName">The contract name for the import.</param>
         /// <param name="containingGroup">The ID of the group that has registered the import.</param>
-        /// <param name="schedule">The schedule that is exported with the group.</param>
         /// <param name="providedExports">The object exports that are provided with the current export.</param>
         /// <returns>The serialized export definition for the group.</returns>
         /// <exception cref="ArgumentNullException">
@@ -96,7 +95,6 @@ namespace Apollo.Core.Base.Plugins
         public static GroupExportDefinition CreateDefinition(
             string contractName, 
             GroupRegistrationId containingGroup, 
-            ScheduleId schedule, 
             IEnumerable<ExportRegistrationId> providedExports)
         {
             {
@@ -108,7 +106,6 @@ namespace Apollo.Core.Base.Plugins
             return new GroupExportDefinition(
                 contractName, 
                 containingGroup, 
-                schedule, 
                 providedExports ?? Enumerable.Empty<ExportRegistrationId>());
         }
 
@@ -123,11 +120,6 @@ namespace Apollo.Core.Base.Plugins
         private readonly string m_ContractName;
 
         /// <summary>
-        /// The schedule that is exported with the group.
-        /// </summary>
-        private readonly ScheduleId m_Schedule;
-
-        /// <summary>
         /// The object exports that can be used with the current export.
         /// </summary>
         private readonly IEnumerable<ExportRegistrationId> m_ProvidedExports;
@@ -137,12 +129,10 @@ namespace Apollo.Core.Base.Plugins
         /// </summary>
         /// <param name="contractName">The contract name for the import.</param>
         /// <param name="containingGroup">The ID of the group that has registered the import.</param>
-        /// <param name="schedule">The schedule that is exported with the group.</param>
         /// <param name="providedExports">The object exports that are provided with the current export.</param>
         public GroupExportDefinition(
             string contractName, 
             GroupRegistrationId containingGroup, 
-            ScheduleId schedule, 
             IEnumerable<ExportRegistrationId> providedExports)
         {
             {
@@ -153,7 +143,6 @@ namespace Apollo.Core.Base.Plugins
 
             m_ContractName = contractName;
             m_Id = containingGroup;
-            m_Schedule = schedule;
             m_ProvidedExports = providedExports;
         }
 
@@ -176,17 +165,6 @@ namespace Apollo.Core.Base.Plugins
             get
             {
                 return m_Id;
-            }
-        }
-
-        /// <summary>
-        /// Gets the schedule that is exported.
-        /// </summary>
-        public ScheduleId ScheduleToExport
-        {
-            get
-            {
-                return m_Schedule;
             }
         }
 

@@ -22,32 +22,12 @@ namespace Apollo.Core.Dataset.Scheduling
     public sealed class ScheduleConditionStorageTest
     {
         [Test]
-        public void AddWithNullConditionId()
-        {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var condition = new Mock<IScheduleCondition>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(null, condition.Object, "a", "b", "c", new List<IScheduleDependency>()));
-        }
-
-        [Test]
         public void AddWithNullCondition()
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleElementId(), null, "a", "b", "c", new List<IScheduleDependency>()));
-        }
-
-        [Test]
-        public void AddWithNullDependencies()
-        {
-            var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var condition = new Mock<IScheduleCondition>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleElementId(), condition.Object, "a", "b", "c", null));
+                () => collection.Add(null, "a", "b"));
         }
 
         [Test]
@@ -55,10 +35,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
-            Assert.AreSame(id, info.Id);
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(condition.Object, collection.Condition(info.Id));
         }
@@ -68,16 +46,12 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var firstId = new ScheduleElementId();
-            var secondId = new ScheduleElementId();
 
-            var info = collection.Add(firstId, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
-            Assert.AreSame(firstId, info.Id);
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(condition.Object, collection.Condition(info.Id));
 
-            var otherInfo = collection.Add(secondId, condition.Object, "d", "e", "f", new List<IScheduleDependency>());
-            Assert.AreSame(secondId, otherInfo.Id);
+            var otherInfo = collection.Add(condition.Object, "d", "e");
             Assert.AreSame(otherInfo, collection.Information(otherInfo.Id));
             Assert.AreSame(condition.Object, collection.Condition(otherInfo.Id));
         }
@@ -87,9 +61,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             var otherCondition = new Mock<IScheduleCondition>();
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, otherCondition.Object));
         }
@@ -99,9 +72,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             var otherCondition = new Mock<IScheduleCondition>();
             Assert.Throws<UnknownScheduleConditionException>(() => collection.Update(new ScheduleElementId(), otherCondition.Object));
         }
@@ -111,9 +83,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.Throws<ArgumentNullException>(() => collection.Update(info.Id, null));
         }
 
@@ -122,9 +93,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.AreSame(condition.Object, collection.Condition(info.Id));
 
             var otherCondition = new Mock<IScheduleCondition>();
@@ -132,9 +102,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var otherInfo = collection.Information(info.Id);
             Assert.AreEqual(info.Id, otherInfo.Id);
             Assert.AreEqual(info.Name, otherInfo.Name);
-            Assert.AreEqual(info.Summary, otherInfo.Summary);
             Assert.AreEqual(info.Description, otherInfo.Description);
-            Assert.AreElementsEqual(info.DependsOn(), otherInfo.DependsOn());
 
             Assert.AreSame(otherCondition.Object, collection.Condition(info.Id));
         }
@@ -151,9 +119,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
 
             collection.Remove(info.Id);
@@ -165,9 +132,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var condition = new Mock<IScheduleCondition>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var info = collection.Add(condition.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
             Assert.IsFalse(collection.Contains(new ScheduleElementId()));
             Assert.IsFalse(collection.Contains(null));

@@ -13,9 +13,9 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates the start of a synchronization block.
+    /// Defines an <see cref="IScheduleVertex"/> which indicates the start of a synchronization block.
     /// </summary>
-    internal sealed class ExecutableSynchronizationStartVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableSynchronizationStartVertex : IScheduleVertex
     {
         /// <summary>
         /// The collection of variables which should be synchronized at the end of the block.

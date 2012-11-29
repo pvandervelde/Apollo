@@ -4,15 +4,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Utilities.History;
 
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates that the changes should be 
+    /// Defines an <see cref="IScheduleVertex"/> which indicates that the changes should be 
     /// stored in a <see cref="Timeline"/>.
     /// </summary>
-    internal sealed class ExecutableMarkHistoryVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableMarkHistoryVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutableMarkHistoryVertex"/> class.

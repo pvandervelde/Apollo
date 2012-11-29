@@ -211,11 +211,11 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         /// <summary>
-        /// The collection that maps an <see cref="IEditableScheduleVertex"/> type to a function that can create the
-        /// equivalent <see cref="IExecutableScheduleVertex"/>.
+        /// The collection that maps an editable <see cref="IScheduleVertex"/> type to a function that can create the
+        /// equivalent executable <see cref="IScheduleVertex"/>.
         /// </summary>
-        private static readonly Dictionary<Type, Func<IEditableScheduleVertex, IExecutableScheduleVertex>> s_VertexBuilder
-            = new Dictionary<Type, Func<IEditableScheduleVertex, IExecutableScheduleVertex>>
+        private static readonly Dictionary<Type, Func<IScheduleVertex, IScheduleVertex>> s_VertexBuilder
+            = new Dictionary<Type, Func<IScheduleVertex, IScheduleVertex>>
             {
                 { 
                     typeof(EditableStartVertex), 
@@ -257,21 +257,21 @@ namespace Apollo.Core.Dataset.Scheduling
                 },
             };
 
-        private static ExecutableSchedule TransformToExecutableSchedule(ScheduleId id, IEditableSchedule editableSchedule)
+        private static ExecutableSchedule TransformToExecutableSchedule(IEditableSchedule schedule)
         {
-            var map = new Dictionary<IEditableScheduleVertex, IExecutableScheduleVertex>();
-            var newSchedule = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+            var map = new Dictionary<IScheduleVertex, IScheduleVertex>();
+            var newSchedule = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
-            var start = new ExecutableStartVertex(editableSchedule.Start.Index);
+            var start = s_VertexBuilder[schedule.Start.GetType()](schedule.Start);
             newSchedule.AddVertex(start);
-            map.Add(editableSchedule.Start, start);
+            map.Add(schedule.Start, start);
 
-            var end = new ExecutableEndVertex(editableSchedule.End.Index);
+            var end = s_VertexBuilder[schedule.End.GetType()](schedule.End);
             newSchedule.AddVertex(end);
-            map.Add(editableSchedule.End, end);
+            map.Add(schedule.End, end);
 
-            editableSchedule.TraverseSchedule(
-                editableSchedule.Start,
+            schedule.TraverseSchedule(
+                schedule.Start,
                 true,
                 (vertex, edges) =>
                 {
@@ -287,13 +287,13 @@ namespace Apollo.Core.Dataset.Scheduling
 
                         var executableSource = map[vertex];
                         var executableTarget = map[target];
-                        newSchedule.AddEdge(new ExecutableScheduleEdge(executableSource, executableTarget, pair.Item1));
+                        newSchedule.AddEdge(new ScheduleEdge(executableSource, executableTarget, pair.Item1));
                     }
 
                     return true;
                 });
 
-            return new ExecutableSchedule(id, newSchedule, start, end);
+            return new ExecutableSchedule(newSchedule, start, end);
         }
 
         /// <summary>
@@ -316,7 +316,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// The function that creates an <see cref="IExecuteSchedules"/> object with the given 
         /// executable schedule.
         /// </summary>
-        private readonly Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> m_LoadExecutor;
+        private readonly Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> m_LoadExecutor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ScheduleDistributor"/> class.
@@ -331,7 +331,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// </exception>
         public ScheduleDistributor(
             IStoreSchedules knownSchedules,
-            Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
+            Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> executorBuilder)
         {
             {
                 Lokad.Enforce.Argument(() => knownSchedules);
@@ -403,10 +403,10 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             // Translate the schedule to an executable schedule
             var editableSchedule = m_KnownSchedules.Schedule(scheduleId);
-            var executableSchedule = TransformToExecutableSchedule(scheduleId, editableSchedule);
+            var executableSchedule = TransformToExecutableSchedule(editableSchedule);
 
             // Create a new executor and provide it with the schedule
-            var executor = m_LoadExecutor(executableSchedule, executionInfo);
+            var executor = m_LoadExecutor(executableSchedule, scheduleId, executionInfo);
             {
                 // Attach to events. We want to remove the executor from the collection as soon as it's finished
                 executor.OnStart += HandleScheduleExecutionStart;

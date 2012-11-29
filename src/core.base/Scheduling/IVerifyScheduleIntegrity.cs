@@ -26,6 +26,6 @@ namespace Apollo.Core.Base.Scheduling
         /// </returns>
         [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1628:DocumentationTextMustBeginWithACapitalLetter",
             Justification = "Documentation can start with a language keyword")]
-        bool IsValid(ScheduleId id, IEditableSchedule schedule, Action<ScheduleIntegrityFailureType, IEditableScheduleVertex> onValidationFailure);
+        bool IsValid(ScheduleId id, IEditableSchedule schedule, Action<ScheduleIntegrityFailureType, IScheduleVertex> onValidationFailure);
     }
 }

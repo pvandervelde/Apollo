@@ -6,12 +6,9 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Apollo.Core.Base.Plugins;
-using Apollo.Core.Extensions.Plugins;
 
 namespace Apollo.Core.Dataset.Plugins
 {
@@ -29,42 +26,24 @@ namespace Apollo.Core.Dataset.Plugins
         /// <summary>
         /// The object that stores all the selected groups and their connections.
         /// </summary>
-        private readonly GroupCompositionLayer m_Groups;
-
-        /// <summary>
-        /// The object that stores all the parts belonging to the selected groups and their connections.
-        /// </summary>
-        private readonly PartCompositionLayer m_Parts;
-
-        /// <summary>
-        /// The object that stores all the schedules belonging to the selected groups and their connections.
-        /// </summary>
-        private readonly ScheduleCompositionLayer m_Schedules;
+        private readonly IStoreGroupsAndConnections m_Groups;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupCompositionCommands"/> class.
         /// </summary>
         /// <param name="datasetLock">The object used to lock the dataset for reading or writing.</param>
         /// <param name="groups">The object that stores all the selected groups and their connections.</param>
-        /// <param name="parts">The object that stores all the parts belonging to the selected groups and their connections.</param>
-        /// <param name="schedules">The object that stores all the schedules belonging to the selected groups and their connections.</param>
         public GroupCompositionCommands(
             ITrackDatasetLocks datasetLock,
-            GroupCompositionLayer groups,
-            PartCompositionLayer parts,
-            ScheduleCompositionLayer schedules)
+            IStoreGroupsAndConnections groups)
         {
             {
                 Lokad.Enforce.Argument(() => datasetLock);
                 Lokad.Enforce.Argument(() => groups);
-                Lokad.Enforce.Argument(() => parts);
-                Lokad.Enforce.Argument(() => schedules);
             }
 
             m_DatasetLock = datasetLock;
             m_Groups = groups;
-            m_Parts = parts;
-            m_Schedules = schedules;
         }
 
         /// <summary>
@@ -82,17 +61,6 @@ namespace Apollo.Core.Dataset.Plugins
                     try
                     {
                         m_Groups.Add(id, group);
-                        foreach (var part in group.Objects)
-                        {
-                            var partId = new PartCompositionId();
-                            m_Parts.Add(partId, part, id);
-                        }
-
-                        var parts = m_Parts.PartsByGroup(id)
-                            .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
-                        ConnectParts(group.InternalConnections, parts, parts);
-
-                        m_Schedules.Add(group.Schedule, id);
                     }
                     finally
                     {
@@ -101,24 +69,6 @@ namespace Apollo.Core.Dataset.Plugins
                 });
 
             return globalTask;
-        }
-
-        private void ConnectParts(
-            IEnumerable<PartImportToPartExportMap> connections, 
-            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> importingParts,
-            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> exportingParts)
-        {
-            foreach (var map in connections)
-            {
-                var importingPart = importingParts.Where(p => p.Item2.RegisteredImports.Contains(map.Import)).FirstOrDefault();
-                Debug.Assert(importingPart != null, "Cannot connect parts that are not registered.");
-
-                foreach (var export in map.Exports)
-                {
-                    var exportingPart = exportingParts.Where(p => p.Item2.RegisteredExports.Contains(export)).FirstOrDefault();
-                    m_Parts.Connect(importingPart.Item1, map.Import, exportingPart.Item1, export);
-                }
-            }
         }
 
         /// <summary>
@@ -135,8 +85,6 @@ namespace Apollo.Core.Dataset.Plugins
                     try
                     {
                         m_Groups.Remove(id);
-                        m_Parts.Remove(id);
-                        m_Schedules.Remove(id);
                     }
                     finally
                     {
@@ -162,17 +110,6 @@ namespace Apollo.Core.Dataset.Plugins
                     try
                     {
                         m_Groups.Connect(connection.ImportingGroup, connection.GroupImport, connection.ExportingGroup);
-
-                        var importingParts = m_Parts.PartsByGroup(connection.ImportingGroup)
-                            .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
-                        var exportingParts = m_Parts.PartsByGroup(connection.ExportingGroup)
-                            .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
-                        ConnectParts(connection.PartConnections, importingParts, exportingParts);
-
-                        m_Schedules.Connect(
-                            connection.ImportingGroup,
-                            connection.GroupImport.ScheduleInsertPosition,
-                            connection.ExportingGroup);
                     }
                     finally
                     {
@@ -197,8 +134,6 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Parts.Disconnect(importingGroup, exportingGroup);
-                        m_Schedules.Disconnect(importingGroup, exportingGroup);
                         m_Groups.Disconnect(importingGroup, exportingGroup);
                     }
                     finally
@@ -223,8 +158,6 @@ namespace Apollo.Core.Dataset.Plugins
                     var key = m_DatasetLock.LockForWriting();
                     try
                     {
-                        m_Parts.Disconnect(group);
-                        m_Schedules.Disconnect(group);
                         m_Groups.Disconnect(group);
                     }
                     finally

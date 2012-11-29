@@ -12,6 +12,7 @@ using System.Reflection;
 using Apollo.Core.Base.Plugins;
 using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
+using Apollo.Core.Extensions.Scheduling;
 using Apollo.Core.Host.Mocks;
 using Apollo.Utilities;
 using Gallio.Framework;
@@ -28,6 +29,26 @@ namespace Apollo.Core.Host.Plugins
         private static IEnumerable<TypeDefinition> s_Types;
         private static IEnumerable<PartDefinition> s_Parts;
         private static IEnumerable<GroupDefinition> s_Groups;
+
+        private static bool AreVerticesEqual(IScheduleVertex first, IScheduleVertex second)
+        {
+            if (first.GetType() != second.GetType())
+            {
+                return false;
+            }
+
+            if (first is EditableExecutingActionVertex)
+            {
+                return ((EditableExecutingActionVertex)first).ActionToExecute == ((EditableExecutingActionVertex)second).ActionToExecute;
+            }
+
+            if (first is EditableSubScheduleVertex)
+            {
+                return ((EditableSubScheduleVertex)first).ScheduleToExecute == ((EditableSubScheduleVertex)second).ScheduleToExecute;
+            }
+
+            return true;
+        }
 
         [FixtureSetUp]
         public void Setup()
@@ -499,7 +520,6 @@ namespace Apollo.Core.Host.Plugins
 
             Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName1), group.GroupExport.ContainingGroup);
             Assert.AreEqual(GroupExporter.GroupExportName, group.GroupExport.ContractName);
-            Assert.AreEqual(group.Schedule.ScheduleId, group.GroupExport.ScheduleToExport);
 
             Assert.AreEqual(4, group.GroupExport.ProvidedExports.Count());
         }
@@ -512,7 +532,17 @@ namespace Apollo.Core.Host.Plugins
             var group = s_Groups.First();
             Assert.AreEqual(new GroupRegistrationId(GroupExporter.GroupName1), group.GroupImports.First().ContainingGroup);
             Assert.IsNotNull(group.GroupImports.First().ScheduleInsertPosition);
-            Assert.IsTrue(group.Schedule.Schedule.Vertices.Contains(group.GroupImports.First().ScheduleInsertPosition));
+            
+            Assert.AreElementsEqualIgnoringOrder(
+                new IScheduleVertex[] 
+                    { 
+                        group.Schedule.Schedule.Start, 
+                        new EditableExecutingActionVertex(2, group.Schedule.Actions.First().Key), 
+                        new EditableInsertVertex(3),
+                        group.Schedule.Schedule.End 
+                    },
+                group.Schedule.Schedule.Vertices,
+                AreVerticesEqual);
 
             Assert.AreEqual(1, group.GroupImports.First().ImportsToMatch.Count());
         }

@@ -11,7 +11,7 @@ using QuickGraph;
 namespace Apollo.Core.Host.Projects
 {
     /// <summary>
-    /// Defines an <see cref="Edge{T}"/> that links two part groups in the <see cref="GroupCompositionGraphProxy"/>.
+    /// Defines an <see cref="Edge{T}"/> that links two part groups in the <see cref="GroupCompositionLayerProxy"/>.
     /// </summary>
     internal sealed class GroupCompositionGraphProxyEdge : Edge<GroupCompositionId>
     {

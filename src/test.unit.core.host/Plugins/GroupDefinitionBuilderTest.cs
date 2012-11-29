@@ -359,7 +359,6 @@ namespace Apollo.Core.Host.Plugins
             Assert.IsNotNull(groupInfo);
             Assert.AreEqual(new GroupRegistrationId(groupName), groupInfo.GroupExport.ContainingGroup);
             Assert.AreEqual(groupExportName, groupInfo.GroupExport.ContractName);
-            Assert.AreEqual(groupInfo.Schedule.ScheduleId, groupInfo.GroupExport.ScheduleToExport);
 
             Assert.AreElementsEqualIgnoringOrder(
                 new List<ExportRegistrationId> 

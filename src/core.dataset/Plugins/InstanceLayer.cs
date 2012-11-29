@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Apollo.Core.Base.Plugins;
+using Apollo.Core.Base.Scheduling;
 using Apollo.Core.Extensions.Plugins;
 using Apollo.Utilities;
 using Apollo.Utilities.History;
@@ -19,7 +20,7 @@ namespace Apollo.Core.Dataset.Plugins
     /// <summary>
     /// Stores the part instances and their connections.
     /// </summary>
-    internal sealed class PartInstanceLayer : IStorePartInstances, IAmHistoryEnabled
+    internal sealed class InstanceLayer : IStoreInstances, IAmHistoryEnabled
     {
         /// <summary>
         /// The history index of the history object collection field.
@@ -32,14 +33,14 @@ namespace Apollo.Core.Dataset.Plugins
         private const byte NonHistoryObjectDefinitionCollectionIndex = 1;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="PartInstanceLayer"/> class with the given 
+        /// Creates a new instance of the <see cref="InstanceLayer"/> class with the given 
         /// history information.
         /// </summary>
         /// <param name="id">The history ID for the part instance layer.</param>
         /// <param name="members">The collection that holds all the members for the current object.</param>
         /// <param name="constructorArguments">The optional constructor arguments.</param>
-        /// <returns>A new instance of the <see cref="PartInstanceLayer"/> class.</returns>
-        internal static PartInstanceLayer Build(
+        /// <returns>A new instance of the <see cref="InstanceLayer"/> class.</returns>
+        internal static InstanceLayer Build(
             HistoryId id,
             IEnumerable<Tuple<byte, IStoreTimelineValues>> members,
             params object[] constructorArguments)
@@ -67,7 +68,7 @@ namespace Apollo.Core.Dataset.Plugins
                 throw new UnknownMemberException();
             }
 
-            return new PartInstanceLayer(id, historyObjects, nonHistoryObjectDefinitions);
+            return new InstanceLayer(id, historyObjects, nonHistoryObjectDefinitions);
         }
 
         /// <summary>
@@ -94,20 +95,26 @@ namespace Apollo.Core.Dataset.Plugins
         [FieldIndexForHistoryTracking(NonHistoryObjectDefinitionCollectionIndex)]
         private readonly IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition> m_NonHistoryObjectDefinitions;
 
+        //// private readonly IVariableTimeline<IStoreSchedules> m_Schedules;
+        ////
+        //// private readonly IVariableTimeline<IStoreScheduleActions> m_Actions;
+        ////
+        //// private readonly IVariableTimeline<IStoreScheduleConditions> m_Conditions;
+
         /// <summary>
         /// The ID used by the timeline to uniquely identify the current object.
         /// </summary>
         private readonly HistoryId m_HistoryId;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PartInstanceLayer"/> class.
+        /// Initializes a new instance of the <see cref="InstanceLayer"/> class.
         /// </summary>
         /// <param name="id">The ID used by the timeline to uniquely identify the current object.</param>
         /// <param name="historyObjects">The collection that stores the part instances that partake in history tracking.</param>
         /// <param name="nonHistoryObjectDefinitions">
         /// The collection of part definitions of the parts that do not partake in history tracking.
         /// </param>
-        private PartInstanceLayer(
+        private InstanceLayer(
             HistoryId id,
             IDictionaryTimelineStorage<PartCompositionId, IAmHistoryEnabled> historyObjects,
             IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition> nonHistoryObjectDefinitions)

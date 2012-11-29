@@ -16,7 +16,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// by reusing the vertices.
     /// </remarks>
     [Serializable]
-    public sealed class EditableSubScheduleVertex : IEditableScheduleVertex
+    public sealed class EditableSubScheduleVertex : IScheduleVertex
     {
         /// <summary>
         /// The ID of the schedule that must be executed.

@@ -161,7 +161,7 @@ namespace Apollo.Core.Host.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to <paramref name="target"/>.
         /// </param>
-        public void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null)
+        public void LinkTo(IScheduleVertex source, IScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => source);
@@ -198,7 +198,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="target"/> is <see langword="null" />.
         /// </exception>
-        public void LinkFromStart(IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null)
+        public void LinkFromStart(IScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => target);
@@ -218,7 +218,7 @@ namespace Apollo.Core.Host.Plugins
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="source"/> is <see langword="null" />.
         /// </exception>
-        public void LinkToEnd(IEditableScheduleVertex source, ScheduleConditionRegistrationId traverseCondition = null)
+        public void LinkToEnd(IScheduleVertex source, ScheduleConditionRegistrationId traverseCondition = null)
         {
             {
                 Lokad.Enforce.Argument(() => source);

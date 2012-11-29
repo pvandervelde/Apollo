@@ -204,10 +204,10 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkTo(
-                            It.IsAny<IEditableScheduleVertex>(),
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, IScheduleVertex, ScheduleElementId>(
                         (s, e, c) => Assert.IsNull(c));
             }
 
@@ -228,10 +228,10 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkTo(
-                            It.IsAny<IEditableScheduleVertex>(),
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, IScheduleVertex, ScheduleElementId>(
                         (s, e, c) => id = c);
             }
 
@@ -255,10 +255,10 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkTo(
-                            It.IsAny<IEditableScheduleVertex>(),
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, IScheduleVertex, ScheduleElementId>(
                         (s, e, c) => id = c);
             }
 
@@ -285,9 +285,9 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkFromStart(
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, ScheduleElementId>(
                         (e, c) => Assert.IsNull(c));
             }
 
@@ -305,9 +305,9 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkFromStart(
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, ScheduleElementId>(
                         (e, c) => id = c);
             }
 
@@ -328,9 +328,9 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkToEnd(
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, ScheduleElementId>(
                         (s, c) => Assert.IsNull(c));
             }
 
@@ -348,9 +348,9 @@ namespace Apollo.Core.Host.Plugins
             {
                 scheduleBuilder.Setup(
                         s => s.LinkToEnd(
-                            It.IsAny<IEditableScheduleVertex>(),
+                            It.IsAny<IScheduleVertex>(),
                             It.IsAny<ScheduleElementId>()))
-                    .Callback<IEditableScheduleVertex, ScheduleElementId>(
+                    .Callback<IScheduleVertex, ScheduleElementId>(
                         (s, c) => id = c);
             }
 
@@ -367,14 +367,14 @@ namespace Apollo.Core.Host.Plugins
             Justification = "Either it is a long line or we get complaints that the opening bracket should be on the same line as the method name")]
         public void Register()
         {
-            var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
             var start = new EditableStartVertex(1);
             graph.AddVertex(start);
 
             var end = new EditableEndVertex(2);
             graph.AddVertex(end);
-            graph.AddEdge(new EditableScheduleEdge(start, end));
+            graph.AddEdge(new ScheduleEdge(start, end));
 
             var schedule = new EditableSchedule(graph, start, end);
             var scheduleBuilder = new Mock<IBuildFixedSchedules>();

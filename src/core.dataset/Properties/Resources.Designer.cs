@@ -142,6 +142,15 @@ namespace Apollo.Core.Dataset.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to The given group composition ID is not related to a known group..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownGroupCompositionId {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownGroupCompositionId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The specified schedule ID does not have an associated schedule..
         /// </summary>
         internal static string Exceptions_Messages_UnknownSchedule {
@@ -165,6 +174,15 @@ namespace Apollo.Core.Dataset.Properties {
         internal static string Exceptions_Messages_UnknownScheduleCondition {
             get {
                 return ResourceManager.GetString("Exceptions_Messages_UnknownScheduleCondition", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The given schedule vertext is not part of the current schedule..
+        /// </summary>
+        internal static string Exceptions_Messages_UnknownScheduleVertex {
+            get {
+                return ResourceManager.GetString("Exceptions_Messages_UnknownScheduleVertex", resourceCulture);
             }
         }
         

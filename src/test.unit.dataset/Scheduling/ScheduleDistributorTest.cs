@@ -40,7 +40,7 @@ namespace Apollo.Core.Dataset.Scheduling
             //                      |--------------|
             EditableSchedule schedule = null;
             {
-                var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
                 graph.AddVertex(start);
@@ -69,20 +69,20 @@ namespace Apollo.Core.Dataset.Scheduling
                 var vertex7 = new EditableInsertVertex(9);
                 graph.AddVertex(vertex7);
 
-                graph.AddEdge(new EditableScheduleEdge(start, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex2, end, exitCondition));
-                graph.AddEdge(new EditableScheduleEdge(vertex2, vertex3));
+                graph.AddEdge(new ScheduleEdge(vertex2, end, exitCondition));
+                graph.AddEdge(new ScheduleEdge(vertex2, vertex3));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex3, vertex4));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex4));
                 
-                graph.AddEdge(new EditableScheduleEdge(vertex4, vertex5, passThroughCondition));
-                graph.AddEdge(new EditableScheduleEdge(vertex4, vertex6));
+                graph.AddEdge(new ScheduleEdge(vertex4, vertex5, passThroughCondition));
+                graph.AddEdge(new ScheduleEdge(vertex4, vertex6));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex5, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex6, vertex7));
-                graph.AddEdge(new EditableScheduleEdge(vertex7, vertex4));
+                graph.AddEdge(new ScheduleEdge(vertex5, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex6, vertex7));
+                graph.AddEdge(new ScheduleEdge(vertex7, vertex4));
 
                 schedule = new EditableSchedule(graph, start, end);
             }
@@ -92,21 +92,21 @@ namespace Apollo.Core.Dataset.Scheduling
 
         private static void VerifySchedule(EditableSchedule editableSchedule, ExecutableSchedule executableSchedule)
         {
-            var linearisedEditableGraph = new List<Tuple<IEditableScheduleVertex, List<Tuple<ScheduleElementId, IEditableScheduleVertex>>>>();
+            var linearisedEditableGraph = new List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>>();
             editableSchedule.TraverseSchedule(
                 editableSchedule.Start,
                 true,
                 (vertex, edges) =>
                 {
                     linearisedEditableGraph.Add(
-                        new Tuple<IEditableScheduleVertex, List<Tuple<ScheduleElementId, IEditableScheduleVertex>>>(
+                        new Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>(
                             vertex, 
                             edges.ToList()));
 
                     return true;
                 });
 
-            var linearisedExecutableGraph = new List<Tuple<IExecutableScheduleVertex, List<Tuple<ScheduleElementId, IExecutableScheduleVertex>>>>();
+            var linearisedExecutableGraph = new List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>>();
             var executableGraph = executableSchedule.Graph;
             TraverseExecutableSchedule(
                 executableSchedule.Graph,
@@ -114,7 +114,7 @@ namespace Apollo.Core.Dataset.Scheduling
                 (vertex, edges) =>
                 {
                     linearisedExecutableGraph.Add(
-                        new Tuple<IExecutableScheduleVertex, List<Tuple<ScheduleElementId, IExecutableScheduleVertex>>>(
+                        new Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>(
                             vertex,
                             edges.ToList()));
                 });
@@ -123,13 +123,13 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         private static void TraverseExecutableSchedule(
-            IVertexListGraph<IExecutableScheduleVertex, ExecutableScheduleEdge> executableGraph,
-            IExecutableScheduleVertex start,
-            Action<IExecutableScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IExecutableScheduleVertex>>> vertexAction)
+            IVertexListGraph<IScheduleVertex, ScheduleEdge> executableGraph,
+            IScheduleVertex start,
+            Action<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>> vertexAction)
         {
-            var nodeCounter = new List<IExecutableScheduleVertex>();
+            var nodeCounter = new List<IScheduleVertex>();
 
-            var uncheckedVertices = new Queue<IExecutableScheduleVertex>();
+            var uncheckedVertices = new Queue<IScheduleVertex>();
             uncheckedVertices.Enqueue(start);
             while (uncheckedVertices.Count > 0)
             {
@@ -143,7 +143,7 @@ namespace Apollo.Core.Dataset.Scheduling
 
                 var outEdges = executableGraph.OutEdges(source);
                 var traverseMap = from edge in outEdges
-                                  select new Tuple<ScheduleElementId, IExecutableScheduleVertex>(
+                                  select new Tuple<ScheduleElementId, IScheduleVertex>(
                                       edge.TraversingCondition,
                                       edge.Target);
 
@@ -156,8 +156,8 @@ namespace Apollo.Core.Dataset.Scheduling
         }
 
         private static void CompareLinearisedGraphs(
-            List<Tuple<IEditableScheduleVertex, List<Tuple<ScheduleElementId, IEditableScheduleVertex>>>> expected,
-            List<Tuple<IExecutableScheduleVertex, List<Tuple<ScheduleElementId, IExecutableScheduleVertex>>>> given)
+            List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>> expected,
+            List<Tuple<IScheduleVertex, List<Tuple<ScheduleElementId, IScheduleVertex>>>> given)
         {
             Assert.AreEqual(expected.Count, given.Count);
             for (int i = 0; i < expected.Count; i++)
@@ -227,7 +227,7 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var distributor = new ScheduleDistributor(
                 ScheduleStorage.BuildStorageWithoutTimeline(),
-                (s, e) => null);
+                (s, id, e) => null);
             Assert.Throws<UnknownScheduleException>(() => distributor.Execute(new ScheduleId()));
         }
 
@@ -249,18 +249,14 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(
-                new ScheduleId(), 
                 schedule, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
-            Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> builder =
-                (s, e) => 
+            Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
+                (s, i, e) => 
                 {
                     storedSchedule = s;
                     return executor.Object;
@@ -296,20 +292,16 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var knownSchedules = ScheduleStorage.BuildStorageWithoutTimeline();
             var scheduleInfo = knownSchedules.Add(
-                new ScheduleId(), 
                 schedule, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
 
             ExecutableSchedule storedSchedule = null;
             var executor = new Mock<IExecuteSchedules>();
 
             int index = 0;
-            Func<ExecutableSchedule, ScheduleExecutionInfo, IExecuteSchedules> builder =
-                (s, e) =>
+            Func<ExecutableSchedule, ScheduleId, ScheduleExecutionInfo, IExecuteSchedules> builder =
+                (s, id, e) =>
                 {
                     storedSchedule = s;
                     index++;

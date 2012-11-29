@@ -79,8 +79,8 @@
     <Compile Include="Scheduling\EditableSynchronizationEndVertex.cs" />
     <Compile Include="Scheduling\EditableSynchronizationStartVertex.cs" />
     <Compile Include="Scheduling\ExecutingVertexEventArgs.cs" />
-    <Compile Include="Scheduling\IEditableScheduleVertex.cs" />
     <Compile Include="Scheduling\IScheduleVariable.cs" />
+    <Compile Include="Scheduling\IScheduleVertex.cs" />
     <Compile Include="Scheduling\NoInsertsLeftOnVertexException.cs" />
     <Compile Include="Scheduling\ScheduleElementId.cs" />
     <Compile Include="Scheduling\ScheduleId.cs" />

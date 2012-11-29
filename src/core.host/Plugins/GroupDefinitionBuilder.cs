@@ -309,7 +309,6 @@ namespace Apollo.Core.Host.Plugins
             {
                 definition.Schedule = ScheduleDefinition.CreateDefinition(
                     definition.Id,
-                    new ScheduleId(),
                     m_Schedule,
                     m_Actions.ToDictionary(p => p.Value, p => p.Key),
                     m_Conditions.ToDictionary(p => p.Value, p => p.Key));
@@ -320,7 +319,6 @@ namespace Apollo.Core.Host.Plugins
                 definition.GroupExport = GroupExportDefinition.CreateDefinition(
                     m_GroupExport.ContractName, 
                     definition.Id, 
-                    definition.Schedule != null ? definition.Schedule.ScheduleId : null, 
                     NonLinkedExports());
             }
 

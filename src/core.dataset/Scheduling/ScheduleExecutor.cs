@@ -48,6 +48,11 @@ namespace Apollo.Core.Dataset.Scheduling
         private readonly ExecutableSchedule m_Schedule;
 
         /// <summary>
+        /// The ID of the schedule that is being executed.
+        /// </summary>
+        private readonly ScheduleId m_ScheduleId;
+
+        /// <summary>
         /// The parameters that were provided when the schedule execution started.
         /// </summary>
         private IEnumerable<IScheduleVariable> m_Parameters;
@@ -68,6 +73,7 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="executors">The collection of vertex processors.</param>
         /// <param name="conditions">The collection of execution conditions.</param>
         /// <param name="schedule">The schedule that should be executed.</param>
+        /// <param name="id">The ID of the schedule that is being executed.</param>
         /// <param name="executionInfo">The object that stores information about the current running schedule.</param>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="executors"/> is <see langword="null" />.
@@ -81,10 +87,14 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
         /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="id"/> is <see langword="null" />.
+        /// </exception>
         public ScheduleExecutor(
             IEnumerable<IProcesExecutableScheduleVertices> executors,
             IStoreScheduleConditions conditions,
             ExecutableSchedule schedule,
+            ScheduleId id,
             ScheduleExecutionInfo executionInfo = null)
         {
             {
@@ -95,11 +105,13 @@ namespace Apollo.Core.Dataset.Scheduling
 
                 Lokad.Enforce.Argument(() => conditions);
                 Lokad.Enforce.Argument(() => schedule);
+                Lokad.Enforce.Argument(() => id);
             }
 
             m_Executors = executors.ToDictionary(v => v.VertexTypeToProcess, v => v);
             m_Conditions = conditions;
             m_Schedule = schedule;
+            m_ScheduleId = id;
             m_ExecutionInfo = new ScheduleExecutionInfo(executionInfo);
         }
 
@@ -110,7 +122,7 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             get
             {
-                return m_Schedule.Id;
+                return m_ScheduleId;
             }
         }
 
@@ -206,7 +218,7 @@ namespace Apollo.Core.Dataset.Scheduling
         private void ExecuteSchedule()
         {
             var graph = m_Schedule.Graph;
-            IExecutableScheduleVertex current = m_Schedule.Start;
+            var current = m_Schedule.Start;
 
             ScheduleExecutionState state = ScheduleExecutionState.Executing;
             while (state == ScheduleExecutionState.Executing)

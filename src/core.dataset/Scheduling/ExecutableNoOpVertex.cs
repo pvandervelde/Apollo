@@ -9,14 +9,14 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates that no operation should take place at
+    /// Defines an <see cref="IScheduleVertex"/> which indicates that no operation should take place at
     /// the current point in the schedule.
     /// </summary>
     /// <remarks>
     /// No-op nodes are used as fill in nodes, normally used to replace the <see cref="EditableInsertVertex"/>
     /// in the editable schedule.
     /// </remarks>
-    internal sealed class ExecutableNoOpVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableNoOpVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutableNoOpVertex"/> class.

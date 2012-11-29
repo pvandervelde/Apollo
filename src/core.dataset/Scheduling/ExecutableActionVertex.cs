@@ -10,9 +10,9 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which has an action that should be executed.
+    /// Defines an <see cref="IScheduleVertex"/> which has an action that should be executed.
     /// </summary>
-    internal sealed class ExecutableActionVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableActionVertex : IScheduleVertex
     {
         /// <summary>
         /// The ID of the action which should be executed.

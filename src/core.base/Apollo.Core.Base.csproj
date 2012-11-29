@@ -240,7 +240,7 @@
     <Compile Include="Plugins\GroupImportDefinition.cs" />
     <Compile Include="Plugins\GroupPartDefinition.cs" />
     <Compile Include="Plugins\IGroupCompositionCommands.cs" />
-    <Compile Include="Plugins\IGroupCompositionGraph.cs" />
+    <Compile Include="Plugins\IGroupCompositionLayer.cs" />
     <Compile Include="Plugins\MethodBasedExportDefinition.cs" />
     <Compile Include="Plugins\MethodBasedScheduleConditionDefinition.cs" />
     <Compile Include="Plugins\MethodDefinition.cs" />
@@ -266,14 +266,15 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Scheduling\EditableSchedule.cs" />
-    <Compile Include="Scheduling\EditableScheduleEdge.cs" />
     <Compile Include="Scheduling\FixedScheduleBuilder.cs" />
     <Compile Include="Scheduling\IBuildFixedSchedules.cs" />
     <Compile Include="Scheduling\IBuildSchedules.cs" />
     <Compile Include="Scheduling\IEditableSchedule.cs" />
+    <Compile Include="Scheduling\ISchedule.cs" />
     <Compile Include="Scheduling\IScheduleAction.cs" />
     <Compile Include="Scheduling\IScheduleCondition.cs" />
     <Compile Include="Scheduling\IScheduleDependency.cs" />
+    <Compile Include="Scheduling\ScheduleEdge.cs" />
     <Compile Include="Scheduling\IStoreScheduleActions.cs" />
     <Compile Include="Scheduling\IStoreScheduleConditions.cs" />
     <Compile Include="Scheduling\IStoreSchedules.cs" />

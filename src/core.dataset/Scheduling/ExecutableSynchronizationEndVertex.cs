@@ -4,12 +4,14 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
+using Apollo.Core.Extensions.Scheduling;
+
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which indicates the end of a synchronization block.
+    /// Defines an <see cref="IScheduleVertex"/> which indicates the end of a synchronization block.
     /// </summary>
-    internal sealed class ExecutableSynchronizationEndVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableSynchronizationEndVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ExecutableSynchronizationEndVertex"/> class.

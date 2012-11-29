@@ -16,7 +16,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// by reusing the vertices.
     /// </remarks>
     [Serializable]
-    public sealed class EditableStartVertex : IEditableScheduleVertex
+    public sealed class EditableStartVertex : IScheduleVertex
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableStartVertex"/> class.

@@ -19,7 +19,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// by reusing the vertices.
     /// </remarks>
     [Serializable]
-    public sealed class EditableInsertVertex : IEditableScheduleVertex
+    public sealed class EditableInsertVertex : IScheduleVertex
     {
         /// <summary>
         /// The number of times the current vertex can be replaced with another vertex.

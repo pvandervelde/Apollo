@@ -80,16 +80,12 @@ namespace Apollo.Core.Base.Plugins
         /// Creates a new instance of the <see cref="ScheduleDefinition"/> class.
         /// </summary>
         /// <param name="containingGroup">The ID of the group that has registered the schedule.</param>
-        /// <param name="scheduleId">The ID of the schedule that is described.</param>
         /// <param name="schedule">The schedule.</param>
         /// <param name="actions">The collection that maps a schedule element to an action.</param>
         /// <param name="conditions">The collection that maps a schedule element to a condition.</param>
         /// <returns>The newly created definition.</returns>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="containingGroup"/> is <see langword="null" />.
-        /// </exception>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if <paramref name="scheduleId"/> is <see langword="null" />.
         /// </exception>
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="schedule"/> is <see langword="null" />.
@@ -102,31 +98,24 @@ namespace Apollo.Core.Base.Plugins
         /// </exception>
         public static ScheduleDefinition CreateDefinition(
             GroupRegistrationId containingGroup,
-            ScheduleId scheduleId,
             IEditableSchedule schedule,
             IDictionary<ScheduleElementId, ScheduleActionRegistrationId> actions,
             IDictionary<ScheduleElementId, ScheduleConditionRegistrationId> conditions)
         {
             {
                 Lokad.Enforce.Argument(() => containingGroup);
-                Lokad.Enforce.Argument(() => scheduleId);
                 Lokad.Enforce.Argument(() => schedule);
                 Lokad.Enforce.Argument(() => actions);
                 Lokad.Enforce.Argument(() => conditions);
             }
 
-            return new ScheduleDefinition(containingGroup, scheduleId, schedule, actions, conditions);
+            return new ScheduleDefinition(containingGroup, schedule, actions, conditions);
         }
 
         /// <summary>
         /// The ID of the group that has registered the schedule.
         /// </summary>
         private readonly GroupRegistrationId m_GroupId;
-
-        /// <summary>
-        /// The ID of the schedule that is described by this definition.
-        /// </summary>
-        private readonly ScheduleId m_ScheduleId;
 
         /// <summary>
         /// The schedule that is described by this definition.
@@ -147,27 +136,23 @@ namespace Apollo.Core.Base.Plugins
         /// Initializes a new instance of the <see cref="ScheduleDefinition"/> class.
         /// </summary>
         /// <param name="containingGroup">The ID of the group that has registered the schedule.</param>
-        /// <param name="scheduleId">The ID of the schedule that is described.</param>
         /// <param name="schedule">The schedule.</param>
         /// <param name="actions">The collection that maps a schedule element to an action.</param>
         /// <param name="conditions">The collection that maps a schedule element to a condition.</param>
         private ScheduleDefinition(
             GroupRegistrationId containingGroup,
-            ScheduleId scheduleId,
             IEditableSchedule schedule,
             IDictionary<ScheduleElementId, ScheduleActionRegistrationId> actions,
             IDictionary<ScheduleElementId, ScheduleConditionRegistrationId> conditions)
         {
             {
                 Debug.Assert(containingGroup != null, "The containing group ID should not be a null reference.");
-                Debug.Assert(scheduleId != null, "The schedule ID should not be a null reference.");
                 Debug.Assert(schedule != null, "The schedule should not be a null reference.");
                 Debug.Assert(actions != null, "The collection of actions should not be a null reference.");
                 Debug.Assert(conditions != null, "The collection of conditions should not be a null reference.");
             }
 
             m_GroupId = containingGroup;
-            m_ScheduleId = scheduleId;
             m_Schedule = schedule;
             m_Actions = actions;
             m_Conditions = conditions;
@@ -181,17 +166,6 @@ namespace Apollo.Core.Base.Plugins
             get
             {
                 return m_GroupId;
-            }
-        }
-
-        /// <summary>
-        /// Gets the ID of the schedule.
-        /// </summary>
-        public ScheduleId ScheduleId
-        {
-            get
-            {
-                return m_ScheduleId;
             }
         }
 
@@ -249,8 +223,7 @@ namespace Apollo.Core.Base.Plugins
             // we overload the == operator. If other isn't actually null then
             // we get an infinite loop where we're constantly trying to compare to null.
             return !ReferenceEquals(other, null) 
-                && ContainingGroup == other.ContainingGroup 
-                && ScheduleId == other.ScheduleId;
+                && ContainingGroup == other.ContainingGroup;
         }
 
         /// <summary>
@@ -294,7 +267,6 @@ namespace Apollo.Core.Base.Plugins
 
                 // Mash the hash together with yet another random prime number
                 hash = (hash * 23) ^ ContainingGroup.GetHashCode();
-                hash = (hash * 23) ^ ScheduleId.GetHashCode();
 
                 return hash;
             }
@@ -310,8 +282,7 @@ namespace Apollo.Core.Base.Plugins
         {
             return string.Format(
                 CultureInfo.InvariantCulture,
-                "Exporting [{0}] on {1}",
-                ScheduleId,
+                "Exporting a schedule on {0}",
                 ContainingGroup);
         }
     }

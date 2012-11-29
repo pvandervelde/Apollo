@@ -74,7 +74,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to <paramref name="target"/>.
         /// </param>
-        void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
+        void LinkTo(IScheduleVertex source, IScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Links the start point of the schedule to the given vertex.
@@ -83,7 +83,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="target"/>.
         /// </param>
-        void LinkFromStart(IEditableScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
+        void LinkFromStart(IScheduleVertex target, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Links the given vertex to the end point of the schedule.
@@ -92,7 +92,7 @@ namespace Apollo.Core.Extensions.Plugins
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to the end point.
         /// </param>
-        void LinkToEnd(IEditableScheduleVertex source, ScheduleConditionRegistrationId traverseCondition = null);
+        void LinkToEnd(IScheduleVertex source, ScheduleConditionRegistrationId traverseCondition = null);
 
         /// <summary>
         /// Registers the schedule with the system.

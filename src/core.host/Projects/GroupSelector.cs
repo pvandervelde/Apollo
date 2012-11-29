@@ -29,7 +29,7 @@ namespace Apollo.Core.Host.Projects
         /// <summary>
         /// The graph of connected groups.
         /// </summary>
-        private readonly IGroupCompositionGraph m_Graph;
+        private readonly IGroupCompositionLayer m_Graph;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GroupSelector"/> class.
@@ -42,7 +42,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="compositionGraph"/> is <see langword="null" />.
         /// </exception>
-        public GroupSelector(IConnectGroups groupImportEngine, IGroupCompositionGraph compositionGraph)
+        public GroupSelector(IConnectGroups groupImportEngine, IGroupCompositionLayer compositionGraph)
         {
             {
                 Lokad.Enforce.Argument(() => groupImportEngine);

@@ -13,16 +13,16 @@ namespace Apollo.Core.Base.Scheduling
     [TestFixture]
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1600:ElementsMustBeDocumented",
                 Justification = "Unit tests do not need documentation.")]
-    public sealed class EditableScheduleEdgeTest
+    public sealed class ScheduleEdgeTest
     {
         [Test]
         public void Create()
         {
-            IEditableScheduleVertex source = new EditableStartVertex(10);
-            IEditableScheduleVertex target = new EditableEndVertex(11);
+            IScheduleVertex source = new EditableStartVertex(10);
+            IScheduleVertex target = new EditableEndVertex(11);
 
             var condition = new ScheduleElementId();
-            var edge = new EditableScheduleEdge(source, target, condition);
+            var edge = new ScheduleEdge(source, target, condition);
 
             Assert.AreSame(source, edge.Source);
             Assert.AreSame(target, edge.Target);

@@ -70,7 +70,6 @@
     <Compile Include="Scheduling\ExecutableEndVertexTest.cs" />
     <Compile Include="Scheduling\ExecutableMarkHistoryVertexTest.cs" />
     <Compile Include="Scheduling\ExecutableNoOpVertexTest.cs" />
-    <Compile Include="Scheduling\ExecutableScheduleEdgeTest.cs" />
     <Compile Include="Scheduling\ExecutableScheduleTest.cs" />
     <Compile Include="Scheduling\ExecutableStartVertexTest.cs" />
     <Compile Include="Scheduling\ExecutableSubScheduleVertexTest.cs" />

@@ -20,7 +20,7 @@ namespace Apollo.Core.Host.Projects
     /// Defines a proxy for the group composition graph in a dataset. Also caches the current state of the graph for faster
     /// access.
     /// </summary>
-    internal sealed class GroupCompositionGraphProxy : IGroupCompositionGraph, IAmProxyForDataset
+    internal sealed class GroupCompositionLayerProxy : IGroupCompositionLayer, IAmProxyForDataset
     {
         /// <summary>
         /// The object used to lock on.
@@ -53,7 +53,7 @@ namespace Apollo.Core.Host.Projects
         private readonly IConnectGroups m_Connector;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="GroupCompositionGraphProxy"/> class.
+        /// Initializes a new instance of the <see cref="GroupCompositionLayerProxy"/> class.
         /// </summary>
         /// <param name="commands">The object that provides the commands for the composition of part groups.</param>
         /// <param name="groupConnector">The object that handles the connection of part groups.</param>
@@ -63,7 +63,7 @@ namespace Apollo.Core.Host.Projects
         /// <exception cref="ArgumentNullException">
         ///     Thrown if <paramref name="groupConnector"/> is <see langword="null" />.
         /// </exception>
-        public GroupCompositionGraphProxy(
+        public GroupCompositionLayerProxy(
             IGroupCompositionCommands commands,
             IConnectGroups groupConnector)
         {
@@ -236,7 +236,12 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => exportingGroup);
             }
 
-            return m_Commands.Disconnect(importingGroup, exportingGroup);
+            var remoteTask = m_Commands.Disconnect(importingGroup, exportingGroup);
+            return remoteTask.ContinueWith(
+                t =>
+                {
+                    m_GroupConnections.RemoveInEdgeIf(importingGroup, edge => edge.Source.Equals(exportingGroup));
+                });
         }
 
         /// <summary>
@@ -253,7 +258,13 @@ namespace Apollo.Core.Host.Projects
                 Lokad.Enforce.Argument(() => group);
             }
 
-            return m_Commands.Disconnect(group);
+            var remoteTask = m_Commands.Disconnect(group);
+            return remoteTask.ContinueWith(
+                t =>
+                {
+                    m_GroupConnections.RemoveInEdgeIf(group, edge => true);
+                    m_GroupConnections.RemoveOutEdgeIf(group, edge => true);
+                });
         }
 
         /// <summary>

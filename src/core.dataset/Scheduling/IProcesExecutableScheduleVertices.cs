@@ -12,12 +12,12 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines the interface for objects that process actions provided by a <see cref="IExecutableScheduleVertex"/>.
+    /// Defines the interface for objects that process actions provided by a <see cref="IScheduleVertex"/>.
     /// </summary>
     internal interface IProcesExecutableScheduleVertices
     {
         /// <summary>
-        /// Gets the type of the <see cref="IExecutableScheduleVertex"/> that will be processed by
+        /// Gets the type of the <see cref="IScheduleVertex"/> that will be processed by
         /// this processor.
         /// </summary>
         Type VertexTypeToProcess
@@ -31,6 +31,6 @@ namespace Apollo.Core.Dataset.Scheduling
         /// <param name="vertex">The vertex.</param>
         /// <param name="executionInfo">The object that stores the information about the execution of the schedule.</param>
         /// <returns>A value indicating if the execution of the schedule should continue.</returns>
-        ScheduleExecutionState Process(IExecutableScheduleVertex vertex, ScheduleExecutionInfo executionInfo);
+        ScheduleExecutionState Process(IScheduleVertex vertex, ScheduleExecutionInfo executionInfo);
     }
 }

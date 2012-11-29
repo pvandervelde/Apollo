@@ -14,7 +14,7 @@ namespace Apollo.Core.Base.Plugins
     /// Defines the interface for objects which store the graph of components groups that describes how the different
     /// groups are connected.
     /// </summary>
-    public interface IGroupCompositionGraph
+    public interface IGroupCompositionLayer
     {
         /// <summary>
         /// Adds a new <see cref="GroupDefinition"/> to the graph and returns the ID for that group.

@@ -76,7 +76,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <returns>A tuple containing the insert vertices that were place before and after the newly inserted vertex.</returns>
         Tuple<EditableInsertVertex, EditableInsertVertex> InsertIn(
             EditableInsertVertex insertVertex,
-            IEditableScheduleVertex vertexToInsert);
+            IScheduleVertex vertexToInsert);
 
         /// <summary>
         /// Inserts the given schedule in the position of the insert vertex. The given schedule
@@ -101,7 +101,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to <paramref name="target"/>.
         /// </param>
-        void LinkTo(IEditableScheduleVertex source, IEditableScheduleVertex target, ScheduleElementId traverseCondition = null);
+        void LinkTo(IScheduleVertex source, IScheduleVertex target, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the start point of the schedule to the given vertex.
@@ -110,7 +110,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from the start point to <paramref name="target"/>.
         /// </param>
-        void LinkFromStart(IEditableScheduleVertex target, ScheduleElementId traverseCondition = null);
+        void LinkFromStart(IScheduleVertex target, ScheduleElementId traverseCondition = null);
 
         /// <summary>
         /// Links the given vertex to the end point of the schedule.
@@ -119,6 +119,6 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="traverseCondition">
         /// The ID of the condition that determines if it is possible to move from <paramref name="source"/> to the end point.
         /// </param>
-        void LinkToEnd(IEditableScheduleVertex source, ScheduleElementId traverseCondition = null);
+        void LinkToEnd(IScheduleVertex source, ScheduleElementId traverseCondition = null);
     }
 }

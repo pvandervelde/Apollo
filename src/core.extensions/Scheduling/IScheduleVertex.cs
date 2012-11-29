@@ -4,12 +4,16 @@
 // </copyright>
 //-----------------------------------------------------------------------
 
-namespace Apollo.Core.Dataset.Scheduling
+namespace Apollo.Core.Extensions.Scheduling
 {
     /// <summary>
-    /// Defines the interface for objects that form the vertices in a <see cref="ExecutableSchedule"/>.
+    /// Defines the interface for objects that are stored in an schedule as vertices.
     /// </summary>
-    internal interface IExecutableScheduleVertex
+    /// <remarks>
+    /// All schedule vertices should be immutable because a schedule is copied
+    /// by reusing the vertices.
+    /// </remarks>
+    public interface IScheduleVertex
     {
         /// <summary>
         /// Gets the index of the vertex in the graph.

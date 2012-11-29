@@ -16,7 +16,7 @@ namespace Apollo.Core.Extensions.Scheduling
     /// the revision numbers should be marked.
     /// </summary>
     [Serializable]
-    public sealed class EditableSynchronizationStartVertex : IEditableScheduleVertex
+    public sealed class EditableSynchronizationStartVertex : IScheduleVertex
     {
         /// <summary>
         /// The collection of variables which should be synchronized at the end of the block.

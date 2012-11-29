@@ -13,9 +13,9 @@ using Apollo.Core.Extensions.Scheduling;
 namespace Apollo.Core.Dataset.Scheduling
 {
     /// <summary>
-    /// Defines an <see cref="IExecutableScheduleVertex"/> which has the ID of a sub-schedule that should be executed.
+    /// Defines an <see cref="IScheduleVertex"/> which has the ID of a sub-schedule that should be executed.
     /// </summary>
-    internal sealed class ExecutableSubScheduleVertex : IExecutableScheduleVertex
+    internal sealed class ExecutableSubScheduleVertex : IScheduleVertex
     {
         /// <summary>
         /// The ID of the sub-schedule.

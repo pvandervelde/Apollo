@@ -23,7 +23,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// The graph of schedule nodes.
         /// </summary>
-        private readonly BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> m_Graph;
+        private readonly BidirectionalGraph<IScheduleVertex, ScheduleEdge> m_Graph;
 
         /// <summary>
         /// The vertex that is forms the start of the schedule.
@@ -32,7 +32,7 @@ namespace Apollo.Core.Base.Scheduling
         /// If the current schedule is inserted in another schedule as a schedule-block then this end vertex will
         /// be connected to the insert node.
         /// </remarks>
-        private readonly EditableStartVertex m_Start;
+        private readonly IScheduleVertex m_Start;
 
         /// <summary>
         /// The vertex that forms the end of the schedule.
@@ -41,7 +41,7 @@ namespace Apollo.Core.Base.Scheduling
         /// If the current schedule is inserted in another schedule as a schedule-block then this end vertex will
         /// be connected to the insert node.
         /// </remarks>
-        private readonly EditableEndVertex m_End;
+        private readonly IScheduleVertex m_End;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EditableSchedule"/> class.
@@ -50,17 +50,19 @@ namespace Apollo.Core.Base.Scheduling
         /// <param name="start">The start node for the schedule.</param>
         /// <param name="end">The end node for the schedule.</param>
         public EditableSchedule(
-            BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge> graph,
-            EditableStartVertex start,
-            EditableEndVertex end)
+            BidirectionalGraph<IScheduleVertex, ScheduleEdge> graph,
+            IScheduleVertex start,
+            IScheduleVertex end)
         {
             {
                 Debug.Assert(graph != null, "The graph should not be a null reference.");
 
                 Debug.Assert(start != null, "The start vertex should not be a null reference.");
+                Debug.Assert(start is EditableStartVertex, "The start vertex should be an editable start vertex.");
                 Debug.Assert(graph.ContainsVertex(start), "The start vertex should be part of the graph.");
 
                 Debug.Assert(end != null, "The end vertex should not be a null reference.");
+                Debug.Assert(end is EditableEndVertex, "The end vertex should be an editable end vertex.");
                 Debug.Assert(graph.ContainsVertex(end), "The end vertex should be part of the graph.");
             }
 
@@ -73,7 +75,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Gets the start vertex for the schedule.
         /// </summary>
-        public EditableStartVertex Start
+        public IScheduleVertex Start
         {
             get
             {
@@ -84,7 +86,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Gets the end vertex for the schedule.
         /// </summary>
-        public EditableEndVertex End
+        public IScheduleVertex End
         {
             get
             {
@@ -95,7 +97,7 @@ namespace Apollo.Core.Base.Scheduling
         /// <summary>
         /// Gets a collection that contains all the known vertices for the schedule.
         /// </summary>
-        public IEnumerable<IEditableScheduleVertex> Vertices
+        public IEnumerable<IScheduleVertex> Vertices
         {
             get
             {
@@ -117,9 +119,9 @@ namespace Apollo.Core.Base.Scheduling
         /// to terminate the traverse.
         /// </param>
         public void TraverseSchedule(
-            IEditableScheduleVertex start,
+            IScheduleVertex start,
             bool traverseViaOutBoundVertices,
-            Func<IEditableScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IEditableScheduleVertex>>, bool> vertexAction)
+            Func<IScheduleVertex, IEnumerable<Tuple<ScheduleElementId, IScheduleVertex>>, bool> vertexAction)
         {
             {
                 Lokad.Enforce.Argument(() => start);
@@ -130,9 +132,9 @@ namespace Apollo.Core.Base.Scheduling
                 Lokad.Enforce.Argument(() => vertexAction);
             }
 
-            var nodeCounter = new List<IEditableScheduleVertex>();
+            var nodeCounter = new List<IScheduleVertex>();
 
-            var uncheckedVertices = new Queue<IEditableScheduleVertex>();
+            var uncheckedVertices = new Queue<IScheduleVertex>();
             uncheckedVertices.Enqueue(start);
             while (uncheckedVertices.Count > 0)
             {
@@ -146,7 +148,7 @@ namespace Apollo.Core.Base.Scheduling
 
                 var outEdges = traverseViaOutBoundVertices ? m_Graph.OutEdges(source) : m_Graph.InEdges(source);
                 var traverseMap = from edge in outEdges
-                                  select new Tuple<ScheduleElementId, IEditableScheduleVertex>(
+                                  select new Tuple<ScheduleElementId, IScheduleVertex>(
                                       edge.TraversingCondition,
                                       traverseViaOutBoundVertices ? edge.Target : edge.Source);
 
@@ -168,7 +170,7 @@ namespace Apollo.Core.Base.Scheduling
         /// </summary>
         /// <param name="origin">The vertex for which the number of inbound connections should be returned.</param>
         /// <returns>The number of inbound connections for the current vertex.</returns>
-        public int NumberOfInboundConnections(IEditableScheduleVertex origin)
+        public int NumberOfInboundConnections(IScheduleVertex origin)
         {
             return m_Graph.InDegree(origin);
         }
@@ -178,7 +180,7 @@ namespace Apollo.Core.Base.Scheduling
         /// </summary>
         /// <param name="origin">The vertex for which the number of outbound connections should be returned.</param>
         /// <returns>The number of outbound connections for the current vertex.</returns>
-        public int NumberOfOutboundConnections(IEditableScheduleVertex origin)
+        public int NumberOfOutboundConnections(IScheduleVertex origin)
         {
             return m_Graph.OutDegree(origin);
         }

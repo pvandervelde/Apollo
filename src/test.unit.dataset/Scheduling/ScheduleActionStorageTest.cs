@@ -20,42 +20,12 @@ namespace Apollo.Core.Dataset.Scheduling
     public sealed class ScheduleActionStorageTest
     {
         [Test]
-        public void AddWithNullActionId()
-        {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var action = new Mock<IScheduleAction>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(null, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
-        }
-
-        [Test]
         public void AddWithNullAction()
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
 
             Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleElementId(), null, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>()));
-        }
-
-        [Test]
-        public void AddWithNullProductionVariables()
-        {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var action = new Mock<IScheduleAction>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleElementId(), action.Object, "a", "b", "c", null, new List<IScheduleDependency>()));
-        }
-
-        [Test]
-        public void AddWithNullDependencies()
-        {
-            var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
-            var action = new Mock<IScheduleAction>();
-
-            Assert.Throws<ArgumentNullException>(
-                () => collection.Add(new ScheduleElementId(), action.Object, "a", "b", "c", new List<IScheduleVariable>(), null));
+                () => collection.Add(null, "a", "b"));
         }
 
         [Test]
@@ -63,10 +33,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>(); 
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(id, info.Id);
+            var info = collection.Add(action.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(action.Object, collection.Action(info.Id));
         }
@@ -76,16 +44,12 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var firstId = new ScheduleElementId();
-            var secondId = new ScheduleElementId();
 
-            var info = collection.Add(firstId, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(firstId, info.Id);
+            var info = collection.Add(action.Object, "a", "b");
             Assert.AreSame(info, collection.Information(info.Id));
             Assert.AreSame(action.Object, collection.Action(info.Id));
 
-            var otherInfo = collection.Add(secondId, action.Object, "d", "e", "f", new List<IScheduleVariable>(), new List<IScheduleDependency>());
-            Assert.AreSame(secondId, otherInfo.Id);
+            var otherInfo = collection.Add(action.Object, "d", "e");
             Assert.AreSame(otherInfo, collection.Information(otherInfo.Id));
             Assert.AreSame(action.Object, collection.Action(otherInfo.Id));
         }
@@ -95,9 +59,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             var otherAction = new Mock<IScheduleAction>();
             Assert.Throws<ArgumentNullException>(() => collection.Update(null, otherAction.Object));
         }
@@ -107,9 +70,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             var otherAction = new Mock<IScheduleAction>();
             Assert.Throws<UnknownScheduleActionException>(() => collection.Update(new ScheduleElementId(), otherAction.Object));
         }
@@ -119,9 +81,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             Assert.Throws<ArgumentNullException>(() => collection.Update(info.Id, null));
         }
 
@@ -130,9 +91,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             Assert.AreSame(action.Object, collection.Action(info.Id));
 
             var otherAction = new Mock<IScheduleAction>();
@@ -140,10 +100,7 @@ namespace Apollo.Core.Dataset.Scheduling
             var otherInfo = collection.Information(info.Id);
             Assert.AreEqual(info.Id, otherInfo.Id);
             Assert.AreEqual(info.Name, otherInfo.Name);
-            Assert.AreEqual(info.Summary, otherInfo.Summary);
             Assert.AreEqual(info.Description, otherInfo.Description);
-            Assert.AreElementsEqual(info.Produces(), otherInfo.Produces());
-            Assert.AreElementsEqual(info.DependsOn(), otherInfo.DependsOn());
 
             Assert.AreSame(otherAction.Object, collection.Action(info.Id));
         }
@@ -160,9 +117,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
             
             collection.Remove(info.Id);
@@ -174,9 +130,8 @@ namespace Apollo.Core.Dataset.Scheduling
         {
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var action = new Mock<IScheduleAction>();
-            var id = new ScheduleElementId();
 
-            var info = collection.Add(id, action.Object, "a", "b", "c", new List<IScheduleVariable>(), new List<IScheduleDependency>());
+            var info = collection.Add(action.Object, "a", "b");
             Assert.IsTrue(collection.Contains(info.Id));
             Assert.IsFalse(collection.Contains(new ScheduleElementId()));
             Assert.IsFalse(collection.Contains(null));

@@ -23,9 +23,9 @@ namespace Apollo.Core.Dataset.Scheduling
                 Justification = "Unit tests do not need documentation.")]
     public sealed class ScheduleExecutorTest
     {
-        private static ExecutableSchedule BuildThreeVertexSchedule(IExecutableScheduleVertex middle)
+        private static ExecutableSchedule BuildThreeVertexSchedule(IScheduleVertex middle)
         {
-            var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
             var start = new ExecutableStartVertex(1);
             graph.AddVertex(start);
 
@@ -33,10 +33,10 @@ namespace Apollo.Core.Dataset.Scheduling
             graph.AddVertex(end);
 
             graph.AddVertex(middle);
-            graph.AddEdge(new ExecutableScheduleEdge(start, middle, null));
-            graph.AddEdge(new ExecutableScheduleEdge(middle, end, null));
+            graph.AddEdge(new ScheduleEdge(start, middle, null));
+            graph.AddEdge(new ScheduleEdge(middle, end, null));
 
-            return new ExecutableSchedule(new ScheduleId(), graph, start, end);
+            return new ExecutableSchedule(graph, start, end);
         }
 
         [Test]
@@ -51,6 +51,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;
@@ -77,13 +78,9 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var info = collection.Add(
-                new ScheduleElementId(), 
                 action.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
 
             var schedule = BuildThreeVertexSchedule(new ExecutableActionVertex(3, info.Id));
             var executor = new ScheduleExecutor(
@@ -95,6 +92,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;
@@ -126,6 +124,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;
@@ -167,6 +166,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;
@@ -189,6 +189,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 ScheduleConditionStorage.BuildStorageWithoutTimeline(),
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;
@@ -208,11 +209,11 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var conditionInfo = conditionStorage.Add(new ScheduleElementId(), condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b");
 
             ExecutableSchedule schedule = null;
             {
-                var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new ExecutableStartVertex(1);
                 graph.AddVertex(start);
 
@@ -225,13 +226,13 @@ namespace Apollo.Core.Dataset.Scheduling
                 var middle2 = new ExecutableNoOpVertex(4);
                 graph.AddVertex(middle2);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionInfo.Id));
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, null));
+                graph.AddEdge(new ScheduleEdge(start, middle1, conditionInfo.Id));
+                graph.AddEdge(new ScheduleEdge(start, middle2, null));
 
-                graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
-                graph.AddEdge(new ExecutableScheduleEdge(middle2, end, null));
+                graph.AddEdge(new ScheduleEdge(middle1, end, null));
+                graph.AddEdge(new ScheduleEdge(middle2, end, null));
 
-                schedule = new ExecutableSchedule(new ScheduleId(), graph, start, end);
+                schedule = new ExecutableSchedule(graph, start, end);
             }
 
             var executor = new ScheduleExecutor(
@@ -243,6 +244,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 conditionStorage,
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             var executionOrder = new List<int>();
@@ -262,11 +264,11 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var conditionInfo = conditionStorage.Add(new ScheduleElementId(), condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b");
 
             ExecutableSchedule schedule = null;
             {
-                var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new ExecutableStartVertex(1);
                 graph.AddVertex(start);
 
@@ -279,13 +281,13 @@ namespace Apollo.Core.Dataset.Scheduling
                 var middle2 = new ExecutableNoOpVertex(4);
                 graph.AddVertex(middle2);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, null));
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionInfo.Id));
+                graph.AddEdge(new ScheduleEdge(start, middle1, null));
+                graph.AddEdge(new ScheduleEdge(start, middle2, conditionInfo.Id));
 
-                graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
-                graph.AddEdge(new ExecutableScheduleEdge(middle2, end, null));
+                graph.AddEdge(new ScheduleEdge(middle1, end, null));
+                graph.AddEdge(new ScheduleEdge(middle2, end, null));
 
-                schedule = new ExecutableSchedule(new ScheduleId(), graph, start, end);
+                schedule = new ExecutableSchedule(graph, start, end);
             }
 
             var executor = new ScheduleExecutor(
@@ -297,6 +299,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 conditionStorage,
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             var executionOrder = new List<int>();
@@ -317,7 +320,7 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var conditionInfo = conditionStorage.Add(new ScheduleElementId(), condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b");
 
             var action = new Mock<IScheduleAction>();
             {
@@ -327,13 +330,9 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var info = collection.Add(
-                new ScheduleElementId(), 
                 action.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
 
             // Making a schedule that looks like:
             // start -> node1 --> node2 -> end
@@ -341,7 +340,7 @@ namespace Apollo.Core.Dataset.Scheduling
             //            |-- node3 <-|
             ExecutableSchedule schedule = null;
             {
-                var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new ExecutableStartVertex(1);
                 graph.AddVertex(start);
 
@@ -357,15 +356,15 @@ namespace Apollo.Core.Dataset.Scheduling
                 var vertex3 = new ExecutableActionVertex(5, info.Id);
                 graph.AddVertex(vertex3);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, vertex1, null));
-                graph.AddEdge(new ExecutableScheduleEdge(vertex1, vertex2, null));
+                graph.AddEdge(new ScheduleEdge(start, vertex1, null));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2, null));
 
-                graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, conditionInfo.Id));
-                graph.AddEdge(new ExecutableScheduleEdge(vertex2, vertex3, null));
+                graph.AddEdge(new ScheduleEdge(vertex2, end, conditionInfo.Id));
+                graph.AddEdge(new ScheduleEdge(vertex2, vertex3, null));
 
-                graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex1, null));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex1, null));
 
-                schedule = new ExecutableSchedule(new ScheduleId(), graph, start, end);
+                schedule = new ExecutableSchedule(graph, start, end);
             }
 
             var executor = new ScheduleExecutor(
@@ -378,6 +377,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 conditionStorage,
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             var executionOrder = new List<int>();
@@ -406,19 +406,13 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
             var outerLoopConditionInfo = conditionStorage.Add(
-                new ScheduleElementId(), 
                 outerLoopCondition.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleDependency>());
+                "b");
             var innerLoopConditionInfo = conditionStorage.Add(
-                new ScheduleElementId(), 
                 innerLoopCondition.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleDependency>());
+                "b");
 
             var outerLoopAction = new Mock<IScheduleAction>();
             {
@@ -434,21 +428,13 @@ namespace Apollo.Core.Dataset.Scheduling
 
             var collection = ScheduleActionStorage.BuildStorageWithoutTimeline();
             var outerLoopInfo = collection.Add(
-                new ScheduleElementId(), 
                 outerLoopAction.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
             var innerLoopInfo = collection.Add(
-                new ScheduleElementId(), 
                 innerLoopAction.Object, 
                 "a", 
-                "b", 
-                "c", 
-                new List<IScheduleVariable>(), 
-                new List<IScheduleDependency>());
+                "b");
 
             // Making a schedule that looks like:
             // start -> node1 --> node2 -> end
@@ -473,6 +459,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 conditionStorage,
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             var executionOrder = new List<int>();
@@ -488,7 +475,7 @@ namespace Apollo.Core.Dataset.Scheduling
             ScheduleActionInformation outerLoopInfo, 
             ScheduleActionInformation innerLoopInfo)
         {
-            var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
             var start = new ExecutableStartVertex(1);
             graph.AddVertex(start);
 
@@ -510,19 +497,19 @@ namespace Apollo.Core.Dataset.Scheduling
             var vertex5 = new ExecutableActionVertex(7, innerLoopInfo.Id);
             graph.AddVertex(vertex5);
 
-            graph.AddEdge(new ExecutableScheduleEdge(start, vertex1, null));
-            graph.AddEdge(new ExecutableScheduleEdge(vertex1, vertex2, null));
+            graph.AddEdge(new ScheduleEdge(start, vertex1, null));
+            graph.AddEdge(new ScheduleEdge(vertex1, vertex2, null));
 
-            graph.AddEdge(new ExecutableScheduleEdge(vertex2, end, outerLoopConditionInfo.Id));
-            graph.AddEdge(new ExecutableScheduleEdge(vertex2, vertex3, null));
+            graph.AddEdge(new ScheduleEdge(vertex2, end, outerLoopConditionInfo.Id));
+            graph.AddEdge(new ScheduleEdge(vertex2, vertex3, null));
 
-            graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex1, innerLoopConditionInfo.Id));
-            graph.AddEdge(new ExecutableScheduleEdge(vertex3, vertex4, null));
+            graph.AddEdge(new ScheduleEdge(vertex3, vertex1, innerLoopConditionInfo.Id));
+            graph.AddEdge(new ScheduleEdge(vertex3, vertex4, null));
 
-            graph.AddEdge(new ExecutableScheduleEdge(vertex4, vertex5, null));
-            graph.AddEdge(new ExecutableScheduleEdge(vertex5, vertex3, null));
+            graph.AddEdge(new ScheduleEdge(vertex4, vertex5, null));
+            graph.AddEdge(new ScheduleEdge(vertex5, vertex3, null));
 
-            return new ExecutableSchedule(new ScheduleId(), graph, start, end);
+            return new ExecutableSchedule(graph, start, end);
         }
 
         [Test]
@@ -541,11 +528,11 @@ namespace Apollo.Core.Dataset.Scheduling
             }
 
             var conditionStorage = ScheduleConditionStorage.BuildStorageWithoutTimeline();
-            var conditionInfo = conditionStorage.Add(new ScheduleElementId(), condition.Object, "a", "b", "c", new List<IScheduleDependency>());
+            var conditionInfo = conditionStorage.Add(condition.Object, "a", "b");
 
             ExecutableSchedule schedule = null;
             {
-                var graph = new AdjacencyGraph<IExecutableScheduleVertex, ExecutableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
                 var start = new ExecutableStartVertex(1);
                 graph.AddVertex(start);
 
@@ -558,13 +545,13 @@ namespace Apollo.Core.Dataset.Scheduling
                 var middle2 = new ExecutableNoOpVertex(4);
                 graph.AddVertex(middle2);
 
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle1, conditionInfo.Id));
-                graph.AddEdge(new ExecutableScheduleEdge(start, middle2, conditionInfo.Id));
+                graph.AddEdge(new ScheduleEdge(start, middle1, conditionInfo.Id));
+                graph.AddEdge(new ScheduleEdge(start, middle2, conditionInfo.Id));
 
-                graph.AddEdge(new ExecutableScheduleEdge(middle1, end, null));
-                graph.AddEdge(new ExecutableScheduleEdge(middle2, end, null));
+                graph.AddEdge(new ScheduleEdge(middle1, end, null));
+                graph.AddEdge(new ScheduleEdge(middle2, end, null));
 
-                schedule = new ExecutableSchedule(new ScheduleId(), graph, start, end);
+                schedule = new ExecutableSchedule(graph, start, end);
             }
 
             var executor = new ScheduleExecutor(
@@ -576,6 +563,7 @@ namespace Apollo.Core.Dataset.Scheduling
                     },
                 conditionStorage,
                 schedule,
+                new ScheduleId(),
                 new ScheduleExecutionInfo(new CurrentThreadTaskScheduler()));
 
             ScheduleExecutionState state = ScheduleExecutionState.None;

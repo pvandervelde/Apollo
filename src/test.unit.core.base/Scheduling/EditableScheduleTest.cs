@@ -20,20 +20,20 @@ namespace Apollo.Core.Base.Scheduling
         [Test]
         public void Create()
         {
-            var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+            var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
             var start = new EditableStartVertex(1);
             graph.AddVertex(start);
 
             var end = new EditableEndVertex(2);
             graph.AddVertex(end);
-            graph.AddEdge(new EditableScheduleEdge(start, end));
+            graph.AddEdge(new ScheduleEdge(start, end));
 
             var schedule = new EditableSchedule(graph, start, end);
 
             Assert.AreSame(start, schedule.Start);
             Assert.AreSame(end, schedule.End);
-            Assert.AreElementsSameIgnoringOrder(new IEditableScheduleVertex[] { start, end }, schedule.Vertices);
+            Assert.AreElementsSameIgnoringOrder(new IScheduleVertex[] { start, end }, schedule.Vertices);
             Assert.AreEqual(1, schedule.NumberOfOutboundConnections(start));
             Assert.AreEqual(1, schedule.NumberOfInboundConnections(end));
         }
@@ -43,7 +43,7 @@ namespace Apollo.Core.Base.Scheduling
         {
             EditableSchedule schedule = null;
             {
-                var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
                 graph.AddVertex(start);
@@ -57,9 +57,9 @@ namespace Apollo.Core.Base.Scheduling
                 var vertex2 = new EditableInsertVertex(4);
                 graph.AddVertex(vertex2);
 
-                graph.AddEdge(new EditableScheduleEdge(start, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
-                graph.AddEdge(new EditableScheduleEdge(vertex2, end));
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
+                graph.AddEdge(new ScheduleEdge(vertex2, end));
 
                 schedule = new EditableSchedule(graph, start, end);
             }
@@ -82,7 +82,7 @@ namespace Apollo.Core.Base.Scheduling
         {
             EditableSchedule schedule = null;
             {
-                var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
                 graph.AddVertex(start);
@@ -96,9 +96,9 @@ namespace Apollo.Core.Base.Scheduling
                 var vertex2 = new EditableInsertVertex(4);
                 graph.AddVertex(vertex2);
 
-                graph.AddEdge(new EditableScheduleEdge(start, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
-                graph.AddEdge(new EditableScheduleEdge(vertex2, end));
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
+                graph.AddEdge(new ScheduleEdge(vertex2, end));
 
                 schedule = new EditableSchedule(graph, start, end);
             }
@@ -125,7 +125,7 @@ namespace Apollo.Core.Base.Scheduling
             //            |-- node3 <-|
             EditableSchedule schedule = null;
             {
-                var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
                 graph.AddVertex(start);
@@ -142,13 +142,13 @@ namespace Apollo.Core.Base.Scheduling
                 var vertex3 = new EditableInsertVertex(5);
                 graph.AddVertex(vertex3);
 
-                graph.AddEdge(new EditableScheduleEdge(start, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex2, end));
-                graph.AddEdge(new EditableScheduleEdge(vertex2, vertex3));
+                graph.AddEdge(new ScheduleEdge(vertex2, end));
+                graph.AddEdge(new ScheduleEdge(vertex2, vertex3));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex3, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex1));
 
                 schedule = new EditableSchedule(graph, start, end);
             }
@@ -179,7 +179,7 @@ namespace Apollo.Core.Base.Scheduling
             //           |--------------|
             EditableSchedule schedule = null;
             {
-                var graph = new BidirectionalGraph<IEditableScheduleVertex, EditableScheduleEdge>();
+                var graph = new BidirectionalGraph<IScheduleVertex, ScheduleEdge>();
 
                 var start = new EditableStartVertex(1);
                 graph.AddVertex(start);
@@ -202,17 +202,17 @@ namespace Apollo.Core.Base.Scheduling
                 var vertex5 = new EditableInsertVertex(7);
                 graph.AddVertex(vertex5);
 
-                graph.AddEdge(new EditableScheduleEdge(start, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex1, vertex2));
+                graph.AddEdge(new ScheduleEdge(start, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex1, vertex2));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex2, end));
-                graph.AddEdge(new EditableScheduleEdge(vertex2, vertex3));
+                graph.AddEdge(new ScheduleEdge(vertex2, end));
+                graph.AddEdge(new ScheduleEdge(vertex2, vertex3));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex3, vertex1));
-                graph.AddEdge(new EditableScheduleEdge(vertex3, vertex4));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex1));
+                graph.AddEdge(new ScheduleEdge(vertex3, vertex4));
 
-                graph.AddEdge(new EditableScheduleEdge(vertex4, vertex5));
-                graph.AddEdge(new EditableScheduleEdge(vertex5, vertex3));
+                graph.AddEdge(new ScheduleEdge(vertex4, vertex5));
+                graph.AddEdge(new ScheduleEdge(vertex5, vertex3));
 
                 schedule = new EditableSchedule(graph, start, end);
             }
