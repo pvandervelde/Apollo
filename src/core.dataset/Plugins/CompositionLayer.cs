@@ -40,6 +40,16 @@ namespace Apollo.Core.Dataset.Plugins
         private const byte GroupConnectionIndex = 2;
 
         /// <summary>
+        /// The history index of the part definition field.
+        /// </summary>
+        private const byte PartCompositionIndex = 3;
+
+        /// <summary>
+        /// The history index of the part connections field.
+        /// </summary>
+        private const byte PartConnectionIndex = 4;
+
+        /// <summary>
         /// Creates a new instance of the <see cref="CompositionLayer"/> class with the given 
         /// history information.
         /// </summary>
@@ -58,7 +68,9 @@ namespace Apollo.Core.Dataset.Plugins
 
             IDictionaryTimelineStorage<GroupRegistrationId, GroupDefinition> definitions = null;
             IDictionaryTimelineStorage<GroupCompositionId, GroupRegistrationId> groups = null;
-            BidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> graph = null;
+            IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> graph = null;
+            IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo> parts = null;
+            IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> partConnections = null;
             foreach (var member in members)
             {
                 if (member.Item1 == GroupDefinitionIndex)
@@ -75,14 +87,26 @@ namespace Apollo.Core.Dataset.Plugins
 
                 if (member.Item1 == GroupConnectionIndex)
                 {
-                    graph = member.Item2 as BidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge>;
+                    graph = member.Item2 as IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge>;
+                    continue;
+                }
+
+                if (member.Item1 == PartCompositionIndex)
+                {
+                    parts = member.Item2 as IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo>;
+                    continue;
+                }
+
+                if (member.Item1 == PartConnectionIndex)
+                {
+                    partConnections = member.Item2 as IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge>;
                     continue;
                 }
 
                 throw new UnknownMemberException();
             }
 
-            return new CompositionLayer(id, definitions, groups, graph);
+            return new CompositionLayer(id, definitions, groups, graph, parts, partConnections);
         }
 
         /// <summary>
@@ -112,29 +136,52 @@ namespace Apollo.Core.Dataset.Plugins
         private readonly IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> m_GroupConnections;
 
         /// <summary>
+        /// The collection that contains all the parts for the currently selected groups.
+        /// </summary>
+        [FieldIndexForHistoryTracking(PartCompositionIndex)]
+        private readonly IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo> m_Parts;
+
+        /// <summary>
+        /// The graph that determines how the different parts are connected.
+        /// </summary>
+        /// <design>
+        /// Note that the edges point from the export to the import.
+        /// </design>
+        [FieldIndexForHistoryTracking(PartConnectionIndex)]
+        private readonly IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> m_PartConnections; 
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="CompositionLayer"/> class.
         /// </summary>
         /// <param name="id">The ID used by the timeline to uniquely identify the current object.</param>
         /// <param name="definitions">The collection containing all the known group definitions.</param>
         /// <param name="groups">The collection containing the known groups for the current dataset.</param>
-        /// <param name="connections">The graph that describes the connections between the groups.</param>
+        /// <param name="groupConnections">The graph that describes the connections between the groups.</param>
+        /// <param name="parts">The collection that contains all the parts for the currently selected groups.</param>
+        /// <param name="partConnections">The graph that determines how the different parts are connected.</param>
         private CompositionLayer(
             HistoryId id,
             IDictionaryTimelineStorage<GroupRegistrationId, GroupDefinition> definitions,
             IDictionaryTimelineStorage<GroupCompositionId, GroupRegistrationId> groups,
-            IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> connections)
+            IBidirectionalGraphHistory<GroupCompositionId, GroupCompositionGraphEdge> groupConnections,
+            IDictionaryTimelineStorage<PartCompositionId, PartCompositionInfo> parts,
+            IBidirectionalGraphHistory<PartCompositionId, PartCompositionGraphEdge> partConnections)
         {
             {
                 Debug.Assert(id != null, "The ID object should not be a null reference.");
                 Debug.Assert(definitions != null, "The definition collectino should not be a null reference.");
                 Debug.Assert(groups != null, "The groups collection should not be a null reference.");
-                Debug.Assert(connections != null, "The connection graph should not be a null reference.");
+                Debug.Assert(groupConnections != null, "The group connection graph should not be a null reference.");
+                Debug.Assert(parts != null, "The parts collection should not be a null reference.");
+                Debug.Assert(partConnections != null, "The part connection graph should not be a null reference.");
             }
 
             m_HistoryId = id;
             m_Definitions = definitions;
             m_Groups = groups;
-            m_GroupConnections = connections;
+            m_GroupConnections = groupConnections;
+            m_Parts = parts;
+            m_PartConnections = partConnections;
         }
 
         /// <summary>
@@ -173,6 +220,39 @@ namespace Apollo.Core.Dataset.Plugins
 
             m_Groups.Add(id, group.Id);
             m_GroupConnections.AddVertex(id);
+
+            foreach (var part in group.Parts)
+            {
+                m_Parts.Add(new PartCompositionId(id, part.Id), new PartCompositionInfo(part));
+            }
+
+            var parts = PartsForGroup(id);
+            ConnectParts(group.InternalConnections, parts, parts);
+        }
+
+        private IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> PartsForGroup(GroupCompositionId group)
+        {
+            return m_Parts
+                .Where(pair => pair.Key.Group.Equals(group))
+                .Select(pair => new Tuple<PartCompositionId, GroupPartDefinition>(pair.Key, m_Parts[pair.Key].Definition));
+        }
+
+        private void ConnectParts(
+            IEnumerable<PartImportToPartExportMap> connections,
+            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> importingParts,
+            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> exportingParts)
+        {
+            foreach (var map in connections)
+            {
+                var importingPart = importingParts.Where(p => p.Item2.RegisteredImports.Contains(map.Import)).FirstOrDefault();
+                Debug.Assert(importingPart != null, "Cannot connect parts that are not registered.");
+
+                foreach (var export in map.Exports)
+                {
+                    var exportingPart = exportingParts.Where(p => p.Item2.RegisteredExports.Contains(export)).FirstOrDefault();
+                    m_PartConnections.AddEdge(new PartCompositionGraphEdge(importingPart.Item1, map.Import, exportingPart.Item1, export));
+                }
+            }
         }
 
         /// <summary>
@@ -191,12 +271,23 @@ namespace Apollo.Core.Dataset.Plugins
                 return;
             }
 
+            var definitionId = m_Groups[group];
+            var definition = m_Definitions[definitionId];
+
+            foreach (var part in definition.Parts)
+            {
+                var key = new PartCompositionId(group, part.Id);
+                Debug.Assert(m_PartConnections.ContainsVertex(key), "The part connections graph should have the given part ID.");
+                m_PartConnections.RemoveVertex(key);
+
+                Debug.Assert(m_Parts.ContainsKey(key), "The part collection should have the given part ID.");
+                m_Parts.Remove(key);
+            }
+
             Debug.Assert(m_GroupConnections.ContainsVertex(group), "The connections graph should have the given group ID.");
             m_GroupConnections.RemoveVertex(group);
 
-            var definitionId = m_Groups[group];
             m_Groups.Remove(group);
-
             if (!m_Groups.Where(p => p.Value.Equals(definitionId)).Any())
             {
                 m_Definitions.Remove(definitionId);
@@ -257,31 +348,11 @@ namespace Apollo.Core.Dataset.Plugins
             m_GroupConnections.AddEdge(new GroupCompositionGraphEdge(connection.ImportingGroup, connection.GroupImport, connection.ExportingGroup));
 
             // Parts
-            // var importingParts = m_Parts.PartsByGroup(connection.ImportingGroup)
-            //                 .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
-            // var exportingParts = m_Parts.PartsByGroup(connection.ExportingGroup)
-            //     .Select(partId => new Tuple<PartCompositionId, GroupPartDefinition>(partId, m_Parts.Part(partId)));
-            // ConnectParts(connection.PartConnections, bla, bla);
-            //
+            var importingParts = PartsForGroup(connection.ImportingGroup);
+            var exportingParts = PartsForGroup(connection.ExportingGroup);
+            ConnectParts(connection.PartConnections, importingParts, exportingParts);
+            
             // Schedules
-        }
-
-        private void ConnectParts(
-            IEnumerable<PartImportToPartExportMap> connections,
-            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> importingParts,
-            IEnumerable<Tuple<PartCompositionId, GroupPartDefinition>> exportingParts)
-        {
-            foreach (var map in connections)
-            {
-                var importingPart = importingParts.Where(p => p.Item2.RegisteredImports.Contains(map.Import)).FirstOrDefault();
-                Debug.Assert(importingPart != null, "Cannot connect parts that are not registered.");
-
-                foreach (var export in map.Exports)
-                {
-                    var exportingPart = exportingParts.Where(p => p.Item2.RegisteredExports.Contains(export)).FirstOrDefault();
-                    //// m_Parts.Connect(importingPart.Item1, map.Import, exportingPart.Item1, export);
-                }
-            }
         }
 
         /// <summary>
@@ -301,7 +372,44 @@ namespace Apollo.Core.Dataset.Plugins
                 return;
             }
 
+            var importDefinition = m_GroupConnections
+                .InEdges(importingGroup)
+                .Where(edge => edge.Source.Equals(exportingGroup))
+                .Select(edge => edge.Import)
+                .FirstOrDefault();
             m_GroupConnections.RemoveInEdgeIf(importingGroup, edge => edge.Source.Equals(exportingGroup));
+            
+            DisconnectParts(importingGroup, importDefinition, exportingGroup);
+        }
+
+        private void DisconnectParts(GroupCompositionId importingGroup, GroupImportDefinition importDefinition, GroupCompositionId exportingGroup)
+        { 
+            var definitionId = m_Groups[importingGroup];
+            var importingGroupDefinition = m_Definitions[definitionId];
+            var importingParts = importDefinition
+                .ImportsToMatch
+                .Select(id => importingGroupDefinition.Parts.PartByImport(id))
+                .Join(
+                    m_Parts,
+                    partDef => new PartCompositionId(importingGroup, partDef.Id),
+                    pair => pair.Key,
+                    (partDef, pair) => pair.Key);
+
+            definitionId = m_Groups[exportingGroup];
+            var exportingGroupDefinition = m_Definitions[definitionId];
+            var exportingParts = exportingGroupDefinition.GroupExport
+                .ProvidedExports
+                .Select(id => exportingGroupDefinition.Parts.PartByExport(id))
+                .Join(
+                    m_Parts,
+                    partDef => new PartCompositionId(exportingGroup, partDef.Id),
+                    pair => pair.Key,
+                    (partDef, pair) => pair.Key);
+
+            foreach(var importingPart in importingParts)
+            {
+                m_PartConnections.RemoveInEdgeIf(importingPart, edge => exportingParts.Contains(edge.Source));
+            }
         }
 
         /// <summary>
@@ -313,6 +421,22 @@ namespace Apollo.Core.Dataset.Plugins
             if ((group == null) || !m_GroupConnections.ContainsVertex(group))
             {
                 return;
+            }
+
+            var matchingExports = m_GroupConnections
+                .InEdges(group)
+                .Select(edge => new Tuple<GroupCompositionId, GroupImportDefinition>(edge.Source, edge.Import));
+            foreach (var pair in matchingExports)
+            {
+                DisconnectParts(group, pair.Item2, pair.Item1);
+            }
+
+            var matchingImports = m_GroupConnections
+                .OutEdges(group)
+                .Select(edge => new Tuple<GroupCompositionId, GroupImportDefinition>(edge.Target, edge.Import));
+            foreach (var pair in matchingImports)
+            {
+                DisconnectParts(pair.Item1, pair.Item2, group);
             }
 
             m_GroupConnections.RemoveInEdgeIf(group, edge => true);

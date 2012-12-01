@@ -33,6 +33,12 @@ namespace Apollo.Core.Dataset.Plugins
         /// </summary>
         /// <param name="datasetLock">The object used to lock the dataset for reading or writing.</param>
         /// <param name="groups">The object that stores all the selected groups and their connections.</param>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="datasetLock"/> is <see langword="null" />.
+        /// </exception>
+        /// <exception cref="ArgumentNullException">
+        ///     Thrown if <paramref name="groups"/> is <see langword="null" />.
+        /// </exception>
         public GroupCompositionCommands(
             ITrackDatasetLocks datasetLock,
             IStoreGroupsAndConnections groups)

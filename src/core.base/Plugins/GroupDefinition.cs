@@ -53,9 +53,9 @@ namespace Apollo.Core.Base.Plugins
         }
 
         /// <summary>
-        /// Gets or sets the collection that contains all the object definitions for the current group.
+        /// Gets or sets the collection that contains all the part definitions for the current group.
         /// </summary>
-        public IEnumerable<GroupPartDefinition> Objects
+        public IEnumerable<GroupPartDefinition> Parts
         {
             get;
             set;

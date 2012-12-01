@@ -96,8 +96,11 @@
     <Compile Include="Plugins\GroupCompositionGraphEdge.cs" />
     <Compile Include="Plugins\IStoreGroupsAndConnections.cs" />
     <Compile Include="Plugins\IStoreInstances.cs" />
-    <Compile Include="Plugins\PartCompositionId.cs" />
+    <Compile Include="Plugins\PartCompositionGraphEdge.cs" />
+    <Compile Include="Plugins\PartInstanceId.cs" />
     <Compile Include="Plugins\InstanceLayer.cs" />
+    <Compile Include="Plugins\PartCompositionInfo.cs" />
+    <Compile Include="Plugins\PartCompositionId.cs" />
     <Compile Include="Plugins\UnknownGroupCompositionIdException.cs" />
     <Compile Include="Scheduling\CannotExecuteScheduleWithoutProcessorsException.cs" />
     <Compile Include="Scheduling\DuplicateScheduleElementIdException.cs" />

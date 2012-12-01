@@ -301,7 +301,7 @@ namespace Apollo.Core.Host.Plugins
         public GroupRegistrationId Register(string name)
         {
             var definition = new GroupDefinition(name);
-            definition.Objects = m_Objects.SelectMany(p => p.Value).ToList();
+            definition.Parts = m_Objects.SelectMany(p => p.Value).ToList();
             definition.InternalConnections = m_Connections.Select(
                 p => new PartImportToPartExportMap(p.Key, (IEnumerable<ExportRegistrationId>)p.Value));
 

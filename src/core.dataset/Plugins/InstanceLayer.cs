@@ -49,19 +49,19 @@ namespace Apollo.Core.Dataset.Plugins
                 Debug.Assert(members.Count() == 2, "There should only be 2 members.");
             }
 
-            IDictionaryTimelineStorage<PartCompositionId, IAmHistoryEnabled> historyObjects = null;
-            IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition> nonHistoryObjectDefinitions = null;
+            IDictionaryTimelineStorage<PartInstanceId, IAmHistoryEnabled> historyObjects = null;
+            IDictionaryTimelineStorage<PartInstanceId, GroupPartDefinition> nonHistoryObjectDefinitions = null;
             foreach (var member in members)
             {
                 if (member.Item1 == HistoryObjectCollectionIndex)
                 {
-                    historyObjects = member.Item2 as IDictionaryTimelineStorage<PartCompositionId, IAmHistoryEnabled>;
+                    historyObjects = member.Item2 as IDictionaryTimelineStorage<PartInstanceId, IAmHistoryEnabled>;
                     continue;
                 }
 
                 if (member.Item1 == NonHistoryObjectDefinitionCollectionIndex)
                 {
-                    nonHistoryObjectDefinitions = member.Item2 as IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition>;
+                    nonHistoryObjectDefinitions = member.Item2 as IDictionaryTimelineStorage<PartInstanceId, GroupPartDefinition>;
                     continue;
                 }
 
@@ -80,20 +80,20 @@ namespace Apollo.Core.Dataset.Plugins
         /// The collection of part instances that should not be tracked in history. All part instances in this
         /// collection will be disposed of when history roll-back or roll-forward occurs.
         /// </summary>
-        private readonly IDictionary<PartCompositionId, object> m_NonHistoryObjects
-            = new Dictionary<PartCompositionId, object>();
+        private readonly IDictionary<PartInstanceId, object> m_NonHistoryObjects
+            = new Dictionary<PartInstanceId, object>();
 
         /// <summary>
         /// The collection of part instances that are tracked in history.
         /// </summary>
         [FieldIndexForHistoryTracking(HistoryObjectCollectionIndex)]
-        private readonly IDictionaryTimelineStorage<PartCompositionId, IAmHistoryEnabled> m_HistoryObjects;
+        private readonly IDictionaryTimelineStorage<PartInstanceId, IAmHistoryEnabled> m_HistoryObjects;
 
         /// <summary>
         /// The collection contraining the part definitions for the parts that do not participate in history tracking.
         /// </summary>
         [FieldIndexForHistoryTracking(NonHistoryObjectDefinitionCollectionIndex)]
-        private readonly IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition> m_NonHistoryObjectDefinitions;
+        private readonly IDictionaryTimelineStorage<PartInstanceId, GroupPartDefinition> m_NonHistoryObjectDefinitions;
 
         //// private readonly IVariableTimeline<IStoreSchedules> m_Schedules;
         ////
@@ -116,8 +116,8 @@ namespace Apollo.Core.Dataset.Plugins
         /// </param>
         private InstanceLayer(
             HistoryId id,
-            IDictionaryTimelineStorage<PartCompositionId, IAmHistoryEnabled> historyObjects,
-            IDictionaryTimelineStorage<PartCompositionId, GroupPartDefinition> nonHistoryObjectDefinitions)
+            IDictionaryTimelineStorage<PartInstanceId, IAmHistoryEnabled> historyObjects,
+            IDictionaryTimelineStorage<PartInstanceId, GroupPartDefinition> nonHistoryObjectDefinitions)
         {
             {
                 Debug.Assert(id != null, "The history ID object should not be a null reference.");
@@ -156,9 +156,9 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="partDefinition">The part definition of which an instance should be created.</param>
         /// <param name="constructorParameters">The constructor parameters for the new part instance.</param>
         /// <returns>The ID of the newly created part.</returns>
-        public PartCompositionId CreateInstanceOf(
+        public PartInstanceId CreateInstanceOf(
             GroupPartDefinition partDefinition, 
-            params Tuple<ImportRegistrationId, PartCompositionId>[] constructorParameters)
+            params Tuple<ImportRegistrationId, PartInstanceId>[] constructorParameters)
         {
             throw new NotImplementedException();
         }
@@ -170,7 +170,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// Note that removing a part may also remove other parts if the current part was used as a constructor parameter for those parts.
         /// </remarks>
         /// <param name="part">The ID of the part instance.</param>
-        public void Remove(PartCompositionId part)
+        public void Remove(PartInstanceId part)
         {
             throw new NotImplementedException();
         }
@@ -182,7 +182,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// Note that removing a part may also remove other parts if the current part was used as a constructor parameter for those parts.
         /// </remarks>
         /// <param name="parts">The collection containing all the instance IDs of the instances that should be removed.</param>
-        public void Remove(IEnumerable<PartCompositionId> parts)
+        public void Remove(IEnumerable<PartInstanceId> parts)
         {
             throw new NotImplementedException();
         }
@@ -195,9 +195,9 @@ namespace Apollo.Core.Dataset.Plugins
         /// <param name="export">The ID of the exporting part instance.</param>
         /// <param name="exportingMember">The ID of the export definition which will be used to satisfy the import.</param>
         public void Connect(
-            PartCompositionId importingObject, 
+            PartInstanceId importingObject, 
             ImportRegistrationId importingMember, 
-            PartCompositionId export, 
+            PartInstanceId export, 
             ExportRegistrationId exportingMember)
         {
             throw new NotImplementedException();
@@ -209,7 +209,7 @@ namespace Apollo.Core.Dataset.Plugins
         /// <returns>
         /// The element in the collection at the current position of the enumerator.
         /// </returns>
-        public IEnumerator<PartCompositionId> GetEnumerator()
+        public IEnumerator<PartInstanceId> GetEnumerator()
         {
             throw new NotImplementedException();
         }

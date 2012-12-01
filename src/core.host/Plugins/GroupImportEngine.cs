@@ -82,8 +82,8 @@ namespace Apollo.Core.Host.Plugins
 
             if (isMatch)
             {
-                var imports = importDefinition.ImportsToMatch.Select(i => importingGroup.Objects.PartImportById(i));
-                var exports = exportDefinition.ProvidedExports.Select(e => exportingGroup.Objects.PartExportById(e));
+                var imports = importDefinition.ImportsToMatch.Select(i => importingGroup.Parts.PartImportById(i));
+                var exports = exportDefinition.ProvidedExports.Select(e => exportingGroup.Parts.PartExportById(e));
                 foreach (var import in imports)
                 {
                     var foundMatch = false;
@@ -174,7 +174,7 @@ namespace Apollo.Core.Host.Plugins
             GroupImportDefinition importDefinition,
             GroupCompositionId exportingGroup)
         {
-            // foobar();
+            foobar();
             throw new NotImplementedException();
         }
     }
